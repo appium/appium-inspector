@@ -1,4 +1,4 @@
-import { getAutoUpdaterFeedUrl } from '../../../../shared/util';
+import { getAutoUpdaterFeedUrl } from '../../../gui-common/util';
 
 // TODO create new feed URL for inspector so it's not the same as server
 const baseFeedUrl = `https://hazel-server-pxufsrwofl.now.sh`;

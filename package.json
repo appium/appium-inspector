@@ -1,6 +1,6 @@
 {
   "name": "appium-inspector",
-  "version": "2021.3.1",
+  "version": "2021.5.1",
   "description": "An app inspector for use with an Appium server",
   "repository": {
     "type": "git",
@@ -26,22 +26,20 @@
     "test:unit": "cd .. && npm run test:inspector:unit",
     "test:lint": "cd .. && npm run test:inspector:lint",
     "e2e": "cd .. && npm run e2e:inspector",
-    "build": "run-s build:*",
-    "build:main": "cross-env NODE_ENV=production parcel build --target node --public-url . --out-dir ./dist --out-file main.js ./app/main.js",
-    "build:renderer": "cross-env NODE_ENV=production parcel build --no-content-hash --out-dir ./dist --target electron --public-url . ./app/renderer/*.html",
-    "watch": "concurrently \"npm run watch-main\" \"npm run watch-renderer\"",
-    "watch:main": "cross-env NODE_ENV=development parcel --target node --out-dir ./dist --out-file main.js ./app/main.js",
-    "watch:renderer": "cross-env NODE_ENV=development parcel --out-dir ./dist --target electron --public-url . ./app/renderer/*.html",
+    "build": "run-s build:prod:*",
+    "build:main": "parcel build --target node --public-url . --out-dir ./dist --out-file main.js ./app/main.js",
+    "build:renderer": "parcel build --no-content-hash --out-dir ./dist --target electron --public-url . ./app/renderer/*.html",
+    "build:prod:main": "cross-env NODE_ENV=production npm run build:main",
+    "build:prod:renderer": "cross-env NODE_ENV=production npm run build:renderer",
+    "build:dev:main": "cross-env NODE_ENV=development npm run build:main",
+    "build:dev:renderer": "cross-env NODE_ENV=development npm run build:renderer",
     "start": "cross-env RUNNING_LOCALLY=true electron ./",
+    "start:dev": "cross-env RUNNING_LOCALLY=true FORCE_NO_WRONG_FOLDER=true NODE_ENV=development electron --inspect ./",
+    "watch:dev": "concurrently npm:build:dev:main npm:build:dev:renderer",
+    "dev": "run-s build:dev:* && concurrently --kill-others \"npm run start:dev\" npm:watch:dev",
     "clean": "run-s clean:*",
     "clean:electron": "rimraf dist/ && rimraf .cache",
     "clean:npm": "rimraf package-lock.json && rimraf node_modules && npm install",
-    "watch-main": "cross-env NODE_ENV=development parcel --target node --out-dir ./dist --out-file main.js ./app/main.js",
-    "watch-renderer": "cross-env NODE_ENV=development parcel --out-dir ./dist --target electron --public-url . ./app/renderer/*.html",
-    "build-main-dev": "cross-env NODE_ENV=development parcel build --target node --out-dir ./dist --out-file main.js ./app/main.js",
-    "build-renderer-dev": "cross-env NODE_ENV=development parcel build --out-dir ./dist --target electron --public-url . ./app/renderer/*.html",
-    "start-dev": "cross-env RUNNING_LOCALLY=true FORCE_NO_WRONG_FOLDER=true NODE_ENV=development electron --inspect ./",
-    "dev": "cross-env NODE_ENV=development npm run build-main-dev && npm run build-renderer-dev && concurrently --kill-others \"npm run start-dev\" \"npm run watch:main\" \"npm run watch:renderer\" ",
     "postversion": "git pull --tags && git push && git push --tags"
   },
   "build": {
@@ -53,7 +51,10 @@
     },
     "mac": {
       "category": "public.app-category.developer-tools",
-      "target": ["dmg", "zip"]
+      "target": [
+        "dmg",
+        "zip"
+      ]
     },
     "dmg": {
       "artifactName": "${productName}-mac-${version}.${ext}",
@@ -129,7 +130,6 @@
     "prop-types": "^15.6.2",
     "react": "^16.13.0",
     "react-dom": "^16.9.0",
-    "react-hot-loader": "^4.3.12",
     "react-i18next": "^11.0.0",
     "react-redux": "^7.0.0",
     "react-router": "^5.0.0",
@@ -144,7 +144,15 @@
     "xpath": "0.0.32"
   },
   "devDependencies": {
+    "@babel/core": "^7.4.0",
+    "@babel/eslint-parser": "^7.13.4",
+    "@babel/eslint-plugin": "^7.13.0",
+    "@babel/plugin-transform-runtime": "^7.4.0",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-react": "^7.12.13",
+    "@babel/register": "^7.4.0",
     "appium-fake-driver": "^1.0.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "asyncbox": "^2.5.3",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
@@ -155,6 +163,13 @@
     "electron": "^7.1.2",
     "electron-builder": "^22.10.5",
     "electron-devtools-installer": "^3.0.0",
+    "eslint-config-appium": "^4.5.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-mocha": "^8.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-react-native": "^3.6.0",
     "less": "^3.12.2",
     "node-libs-browser": "^2.1.0",
     "npm-run-all": "^4.1.5",

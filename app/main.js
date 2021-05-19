@@ -1,7 +1,7 @@
 import i18n from './configs/i18next.config';
 import { app, BrowserWindow, Menu, webContents } from 'electron';
-import { installExtensions } from '../../shared/debug';
-import { setupMainWindow } from '../../shared/windows';
+import { installExtensions } from '../gui-common/debug';
+import { setupMainWindow } from '../gui-common/windows';
 import { rebuildMenus } from './main/menus';
 import settings from './shared/settings';
 

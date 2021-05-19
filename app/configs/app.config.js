@@ -1,3 +1,3 @@
-import defaultConfig from '../../../shared/configs/app.config.default';
+import defaultConfig from '../../gui-common/configs/app.config.default';
 
 export default defaultConfig;

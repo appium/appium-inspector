@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { retryInterval } from 'asyncbox';
-import BasePage from '../../../../shared/base-page-object';
+import BasePage from '../../../gui-common/base-page-object';
 import { setValueReact } from './utils';
 
 export default class InspectorPage extends BasePage {
