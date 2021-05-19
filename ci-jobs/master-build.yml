@@ -1,0 +1,13 @@
+# Master build. Runs on any commit to master.
+jobs:
+- job: crowdin
+  steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '11.x'
+    - script: npm install
+      displayName: NPM install
+    - script: npm run crowdin-update
+      env:
+        CROWDIN_PROJECT_KEY: $(CROWDIN_PROJECT_KEY)
+      displayName: Crowdin Update
