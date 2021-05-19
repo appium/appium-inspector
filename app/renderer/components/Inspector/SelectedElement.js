@@ -13,7 +13,7 @@ import {
   UndoOutlined,
   HourglassOutlined,
 } from '@ant-design/icons';
-import { ROW, ALERT } from '../../../../../shared/components/AntdTypes';
+import { ROW, ALERT } from '../../../../gui-common/components/AntdTypes';
 
 const ButtonGroup = Button.Group;
 const NATIVE_APP = 'NATIVE_APP';

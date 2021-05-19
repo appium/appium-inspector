@@ -7,7 +7,7 @@ import {
   DeleteOutlined,
   PlusOutlined
 } from '@ant-design/icons';
-import { ROW } from '../../../../../shared/components/AntdTypes';
+import { ROW } from '../../../../gui-common/components/AntdTypes';
 
 const {Item: FormItem} = Form;
 const {Option} = Select;
