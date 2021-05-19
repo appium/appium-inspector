@@ -1,0 +1,54 @@
+# Node.js
+# Build a general Node.js application with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/vsts/pipelines/languages/javascript
+parameters:
+  name: ''
+  pool: ''
+  xvfb: false
+  target: ''
+  buildScript: 'npx electron-builder build --publish always'
+jobs:
+  - job: ${{parameters.name}}
+    pool: ${{parameters.pool}}
+    variables:
+      PYTHON_ENV: 'python'
+      TARGET: ${{ parameters.target }}
+      E2E_TIMEOUT: 600000
+      CI: true
+      CSC_IDENTITY_AUTO_DISCOVERY: true
+      USE_HARD_LINKS: 'false'
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '10.x'
+    - script: |
+        npm install npm-run-all mkdirp ncp
+        npm run i18n-copy
+      displayName: Copy i18n files
+    - script: npm ci
+      workingDirectory: inspector
+      displayName: Install inspector dependencies
+    - script: npm run build
+      displayName: Build inspector
+      workingDirectory: inspector
+    - script: ${{ parameters.buildScript }}
+      displayName: Bundle inspector
+      workingDirectory: inspector
+      env:
+        GH_TOKEN: $(GH_TOKEN)
+        CSC_LINK: $(CSC_LINK)
+        CSC_KEY_PASSWORD: $(CSC_KEY_PASSWORD)
+    - script: npm ci
+      workingDirectory: server
+      displayName: Install server dependencies
+    - script: npm run build
+      displayName: Build server
+      workingDirectory: server
+    - script: ${{ parameters.buildScript }}
+      displayName: Bundle server
+      workingDirectory: server
+      env:
+        GH_TOKEN: $(GH_TOKEN)
+        CSC_LINK: $(CSC_LINK)
+        CSC_KEY_PASSWORD: $(CSC_KEY_PASSWORD)

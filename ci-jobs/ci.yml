@@ -1,0 +1,21 @@
+# CI Build. Runs on every commit to any branch.
+jobs:
+  - job: BuildAndTest
+    variables:
+      PYTHON_ENV: 'python'
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '11.x'
+    - script: npm install
+      displayName: 'Install global dependencies'
+    - script: npm install
+      workingDirectory: 'server'
+      displayName: 'Install server app dependencies'
+    - script: npm install
+      workingDirectory: 'inspector'
+      displayName: 'Install inspector app dependencies'
+    - script: npm run build
+      displayName: Build project
+    - script: npm test
+      displayName: NPM test
