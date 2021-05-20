@@ -5,7 +5,7 @@ import { getLocators, APP_MODE } from '../components/Inspector/shared';
 import { showError } from './Session';
 import { xmlToJSON } from '../util';
 import frameworks from '../lib/client-frameworks';
-import settings, { SAVED_FRAMEWORK } from 'shared/settings';
+import settings, { SAVED_FRAMEWORK } from '../../shared/settings';
 import i18n from '../../configs/i18next.config.renderer';
 import AppiumClient from '../lib/appium-client';
 import { notification } from 'antd';
