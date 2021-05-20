@@ -1,5 +1,5 @@
 import settings, { SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE, SESSION_SERVER_PARAMS
-} from 'shared/settings';
+} from '../../shared/settings';
 import { v4 as UUID } from 'uuid';
 import url from 'url';
 import { push } from 'connected-react-router';
