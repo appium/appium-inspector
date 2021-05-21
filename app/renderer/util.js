@@ -70,7 +70,10 @@ export function xmlToJSON (source) {
   };
   const isIOS = source.includes('XCUIElement');
   const xmlDoc = new DOMParser().parseFromString(source);
-  const firstChild = childNodesOf(xmlDoc.documentElement)[0];
+  // get the first child element node in the doc. some drivers write their xml differently so we
+  // first try to find an element as a direct descendend of the doc, then look for one in
+  // documentElement
+  const firstChild = childNodesOf(xmlDoc)[0] || childNodesOf(xmlDoc.documentElement)[0];
 
   return firstChild ? translateRecursively(firstChild) : {};
 }

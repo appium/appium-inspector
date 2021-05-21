@@ -66,7 +66,12 @@ export function setHtmlElementAttributes (obj) {
  * - all custom attributes need to be transformed to normal width/height/x/y
  */
 export function parseSource (source) {
-  if (!source.includes('<html')) {
+  // TODO this check is a bit brittle, figure out a better way to check whether we have a web
+  // source vs something else. Just checking for <html in the source doesn't work because fake
+  // driver app sources can include embedded <html elements even though the overall source is not
+  // html. So for now just look for fake-drivery things like <app> or <mock...> and ensure we don't
+  // parse that as html
+  if (!source.includes('<html') || source.includes('<app ') || source.includes('<mock')) {
     return source;
   }
 
