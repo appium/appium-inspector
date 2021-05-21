@@ -4,6 +4,9 @@ jobs:
     variables:
       PYTHON_ENV: 'python'
     steps:
+    - checkout: self
+      submodules: true
+      persistCredentials: true
     - task: NodeTool@0
       inputs:
         versionSpec: '11.x'
