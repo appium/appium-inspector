@@ -186,7 +186,7 @@
     "release": "^6.0.1",
     "rimraf": "^3.0.0",
     "sinon": "^9.0.0",
-    "spectron": "^9.0.0"
+    "spectron": "^14.0.0"
   },
   "devEngines": {
     "node": ">=6.x",
