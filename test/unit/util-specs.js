@@ -36,37 +36,45 @@ describe('util.js', function () {
       </hierarchy>`);
       json.should.eql({
         children: [{
-          children: [],
-          tagName: 'XCUIElementTypeWindow',
+          children: [{
+            children: [],
+            tagName: 'XCUIElementTypeWindow',
+            attributes: {
+              type: 'XCUIElementTypeWindow',
+              enabled: 'true',
+              visible: 'false',
+              x: '0',
+              y: '0',
+              width: '1024',
+              height: '768',
+            },
+            xpath: '//XCUIElementTypeApplication[@name="🦋"]/XCUIElementTypeWindow',
+            path: '0.0',
+            classChain: '**/XCUIElementTypeWindow',
+            predicateString: 'type == "XCUIElementTypeWindow"',
+          }],
+          tagName: 'XCUIElementTypeApplication',
           attributes: {
-            type: 'XCUIElementTypeWindow',
+            type: 'XCUIElementTypeApplication',
+            name: '🦋',
+            label: '',
             enabled: 'true',
-            visible: 'false',
+            visible: 'true',
             x: '0',
             y: '0',
-            width: '1024',
-            height: '768',
+            width: '768',
+            height: '1024',
           },
-          xpath: '//XCUIElementTypeApplication[@name="🦋"]/XCUIElementTypeWindow',
+          xpath: '//XCUIElementTypeApplication[@name="🦋"]',
           path: '0',
-          classChain: '**/XCUIElementTypeWindow',
-          predicateString: 'type == "XCUIElementTypeWindow"',
+          classChain: '',
+          predicateString: '',
         }],
-        tagName: 'XCUIElementTypeApplication',
-        attributes: {
-          type: 'XCUIElementTypeApplication',
-          name: '🦋',
-          label: '',
-          enabled: 'true',
-          visible: 'true',
-          x: '0',
-          y: '0',
-          width: '768',
-          height: '1024',
-        },
-        xpath: '//XCUIElementTypeApplication[@name="🦋"]',
+        attributes: {},
+        xpath: '/hierarchy',
         path: '',
-        classChain: '',
+        tagName: 'hierarchy',
+        classChain: '**/hierarchy',
         predicateString: '',
       });
     });
@@ -74,90 +82,102 @@ describe('util.js', function () {
     it('should convert xml to json for Android', function () {
       const json = xmlToJSON(`<hierarchy index="0" class="hierarchy" rotation="0" width="1080" height="2028">
         <android.widget.FrameLayout
-            index="0" 
-            package="com.appiumdesktop" 
-            class="android.widget.FrameLayout" 
-            text="" 
-            checkable="false" 
-            checked="false" 
-            clickable="false" 
-            enabled="true" 
-            focusable="false" 
-            focused="false" 
-            long-clickable="false" 
-            password="false" 
-            scrollable="false" 
-            selected="false" 
-            bounds="[0,0][1080,2028]" 
+            index="0"
+            package="com.appiumdesktop"
+            class="android.widget.FrameLayout"
+            text=""
+            checkable="false"
+            checked="false"
+            clickable="false"
+            enabled="true"
+            focusable="false"
+            focused="false"
+            long-clickable="false"
+            password="false"
+            scrollable="false"
+            selected="false"
+            bounds="[0,0][1080,2028]"
             displayed="true">
-          <android.widget.LinearLayout 
-            index="0" 
-            package="com.appiumdesktop" 
-            class="android.widget.LinearLayout" 
-            text="" 
-            checkable="false" 
-            checked="false" 
-            clickable="false" 
-            enabled="true" 
-            focusable="false" 
-            focused="false" 
-            long-clickable="false" 
-            password="false" 
-            scrollable="false" 
-            selected="false" 
-            bounds="[0,0][1080,2028]" 
+          <android.widget.LinearLayout
+            index="0"
+            package="com.appiumdesktop"
+            class="android.widget.LinearLayout"
+            text=""
+            checkable="false"
+            checked="false"
+            clickable="false"
+            enabled="true"
+            focusable="false"
+            focused="false"
+            long-clickable="false"
+            password="false"
+            scrollable="false"
+            selected="false"
+            bounds="[0,0][1080,2028]"
             displayed="true">
            </android.widget.LinearLayout>
         </android.widget.FrameLayout>
       </hierarchy>`);
       json.should.eql({
-        children: [
-          {
-            children: [],
-            tagName: 'android.widget.LinearLayout',
-            attributes: {
-              index: '0',
-              package: 'com.appiumdesktop',
-              class: 'android.widget.LinearLayout',
-              text: '',
-              checkable: 'false',
-              checked: 'false',
-              clickable: 'false',
-              enabled: 'true',
-              focusable: 'false',
-              focused: 'false',
-              'long-clickable': 'false',
-              password: 'false',
-              scrollable: 'false',
-              selected: 'false',
-              bounds: '[0,0][1080,2028]',
-              displayed: 'true'
-            },
-            xpath: '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout',
-            path: '0'
-          }
-        ],
-        tagName: 'android.widget.FrameLayout',
+        children: [{
+          children: [
+            {
+              children: [],
+              tagName: 'android.widget.LinearLayout',
+              attributes: {
+                index: '0',
+                package: 'com.appiumdesktop',
+                class: 'android.widget.LinearLayout',
+                text: '',
+                checkable: 'false',
+                checked: 'false',
+                clickable: 'false',
+                enabled: 'true',
+                focusable: 'false',
+                focused: 'false',
+                'long-clickable': 'false',
+                password: 'false',
+                scrollable: 'false',
+                selected: 'false',
+                bounds: '[0,0][1080,2028]',
+                displayed: 'true'
+              },
+              xpath: '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout',
+              path: '0.0'
+            }
+          ],
+          tagName: 'android.widget.FrameLayout',
+          attributes: {
+            index: '0',
+            package: 'com.appiumdesktop',
+            class: 'android.widget.FrameLayout',
+            text: '',
+            checkable: 'false',
+            checked: 'false',
+            clickable: 'false',
+            enabled: 'true',
+            focusable: 'false',
+            focused: 'false',
+            'long-clickable': 'false',
+            password: 'false',
+            scrollable: 'false',
+            selected: 'false',
+            bounds: '[0,0][1080,2028]',
+            displayed: 'true'
+          },
+          xpath: '/hierarchy/android.widget.FrameLayout',
+          path: '0'
+        }],
         attributes: {
+          'class': 'hierarchy',
+          height: '2028',
+          rotation: '0',
+          width: '1080',
           index: '0',
-          package: 'com.appiumdesktop',
-          class: 'android.widget.FrameLayout',
-          text: '',
-          checkable: 'false',
-          checked: 'false',
-          clickable: 'false',
-          enabled: 'true',
-          focusable: 'false',
-          focused: 'false',
-          'long-clickable': 'false',
-          password: 'false',
-          scrollable: 'false',
-          selected: 'false',
-          bounds: '[0,0][1080,2028]',
-          displayed: 'true'
         },
-        xpath: '/hierarchy/android.widget.FrameLayout',
-        path: ''
+        tagName: 'hierarchy',
+        xpath: '/hierarchy',
+        path: '',
       });
     });
 
@@ -187,8 +207,8 @@ describe('util.js', function () {
           </XCUIElementTypeWindow>
         </XCUIElementTypeApplication>
       </hierarchy>`);
-      json.should.eql(
-        {
+      json.should.eql({
+        children: [{
           children: [
             {
               children: [
@@ -218,7 +238,7 @@ describe('util.js', function () {
                                   xpath: '//XCUIElementTypeStaticText[@name="Login"]',
                                   classChain: '**/XCUIElementTypeStaticText[`label == "Login"`]',
                                   predicateString: 'label == "Login" AND name == "Login" AND value == "Login"',
-                                  path: '0.0.0.0.0.0'
+                                  path: '0.0.0.0.0.0.0'
                                 }
                               ],
                               tagName: 'XCUIElementTypeOther',
@@ -236,7 +256,7 @@ describe('util.js', function () {
                               xpath: '//XCUIElementTypeOther[@name="Login"]',
                               classChain: '**/XCUIElementTypeOther[`label == "Login"`][2]',
                               predicateString: 'label == "Login" AND name == "Login" AND type == "XCUIElementTypeOther"',
-                              path: '0.0.0.0.0'
+                              path: '0.0.0.0.0.0'
                             }
                           ],
                           tagName: 'XCUIElementTypeOther',
@@ -254,7 +274,7 @@ describe('util.js', function () {
                           xpath: '//XCUIElementTypeOther[@name="button-login-container"]',
                           classChain: '**/XCUIElementTypeOther[`label == "Login"`][1]',
                           predicateString: 'label == "Login" AND name == "button-login-container"',
-                          path: '0.0.0.0'
+                          path: '0.0.0.0.0'
                         }
                       ],
                       tagName: 'XCUIElementTypeOther',
@@ -272,7 +292,7 @@ describe('util.js', function () {
                       xpath: '(//XCUIElementTypeOther[@name="Appium Desktop"])[2]',
                       classChain: '**/XCUIElementTypeOther[`label == "Appium Desktop"`][2]',
                       predicateString: '',
-                      path: '0.0.0'
+                      path: '0.0.0.0'
                     },
                     {
                       children: [
@@ -296,7 +316,7 @@ describe('util.js', function () {
                               xpath: '//XCUIElementTypeButton[@name="Login"]',
                               classChain: '**/XCUIElementTypeButton[`label == "Login"`]',
                               predicateString: 'label == "Login" AND name == "Login" AND value == "1"',
-                              path: '0.0.1.0.0'
+                              path: '0.0.0.1.0.0'
                             }
                           ],
                           tagName: 'XCUIElementTypeOther',
@@ -314,7 +334,7 @@ describe('util.js', function () {
                           xpath: '(//XCUIElementTypeOther[@name="Home WebView Login Forms Swipe"])[2]',
                           classChain: '**/XCUIElementTypeOther[`label == "Home WebView Login Forms Swipe"`][2]',
                           predicateString: '',
-                          path: '0.0.1.0'
+                          path: '0.0.0.1.0'
                         }
                       ],
                       tagName: 'XCUIElementTypeOther',
@@ -332,7 +352,7 @@ describe('util.js', function () {
                       xpath: '(//XCUIElementTypeOther[@name="Home WebView Login Forms Swipe"])[1]',
                       classChain: '**/XCUIElementTypeOther[`label == "Home WebView Login Forms Swipe"`][1]',
                       predicateString: '',
-                      path: '0.0.1'
+                      path: '0.0.0.1'
                     }
                   ],
                   tagName: 'XCUIElementTypeOther',
@@ -350,7 +370,7 @@ describe('util.js', function () {
                   xpath: '(//XCUIElementTypeOther[@name="Appium Desktop"])[1]',
                   classChain: '**/XCUIElementTypeOther[`label == "Appium Desktop"`][1]',
                   predicateString: '',
-                  path: '0.0'
+                  path: '0.0.0'
                 }
               ],
               tagName: 'XCUIElementTypeWindow',
@@ -366,7 +386,7 @@ describe('util.js', function () {
               xpath: '//XCUIElementTypeApplication[@name="wdioDemoApp"]/XCUIElementTypeWindow[1]',
               classChain: '**/XCUIElementTypeWindow[1]',
               predicateString: '',
-              path: '0'
+              path: '0.0'
             },
             {
               children: [
@@ -387,7 +407,7 @@ describe('util.js', function () {
                       xpath: '//XCUIElementTypeApplication[@name="wdioDemoApp"]/XCUIElementTypeWindow[2]/XCUIElementTypeOther/XCUIElementTypeOther',
                       classChain: '**/XCUIElementTypeWindow[2]/XCUIElementTypeOther/XCUIElementTypeOther',
                       predicateString: '',
-                      path: '1.0.0'
+                      path: '0.1.0.0'
                     }
                   ],
                   tagName: 'XCUIElementTypeOther',
@@ -403,7 +423,7 @@ describe('util.js', function () {
                   xpath: '//XCUIElementTypeApplication[@name="wdioDemoApp"]/XCUIElementTypeWindow[2]/XCUIElementTypeOther',
                   classChain: '**/XCUIElementTypeWindow[2]/XCUIElementTypeOther',
                   predicateString: '',
-                  path: '1.0'
+                  path: '0.1.0'
                 }
               ],
               tagName: 'XCUIElementTypeWindow',
@@ -419,7 +439,7 @@ describe('util.js', function () {
               xpath: '//XCUIElementTypeApplication[@name="wdioDemoApp"]/XCUIElementTypeWindow[2]',
               classChain: '**/XCUIElementTypeWindow[2]',
               predicateString: '',
-              path: '1'
+              path: '0.1'
             }
           ],
           tagName: 'XCUIElementTypeApplication',
@@ -437,9 +457,15 @@ describe('util.js', function () {
           xpath: '//XCUIElementTypeApplication[@name="wdioDemoApp"]',
           classChain: '',
           predicateString: '',
-          path: ''
-        }
-      );
+          path: '0'
+        }],
+        attributes: {},
+        classChain: '**/hierarchy',
+        tagName: 'hierarchy',
+        xpath: '/hierarchy',
+        path: '',
+        predicateString: '',
+      });
     });
   });
 
