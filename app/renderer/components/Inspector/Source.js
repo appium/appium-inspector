@@ -74,6 +74,8 @@ class Source extends Component {
       }));
     };
 
+    const treeData = source && recursive(source);
+
     return <div id='sourceContainer' className={InspectorStyles['tree-container']}>
       {source &&
         <Tree
@@ -82,7 +84,7 @@ class Source extends Component {
           expandedKeys={expandedPaths}
           onSelect={(selectedPaths) => this.handleSelectElement(selectedPaths[0])}
           selectedKeys={[path]}
-          treeData={recursive(source)} />
+          treeData={treeData} />
       }
       {!source && !sourceError &&
         <i>{t('Gathering initial app source…')}</i>
