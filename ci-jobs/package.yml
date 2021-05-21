@@ -1,4 +1,8 @@
 # Packager. Runs on refs/tags/*
+trigger:
+  branches:
+    include:
+      - refs/tags/*
 jobs:
 - template: templates/package.yml
   parameters:
