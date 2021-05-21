@@ -16,8 +16,14 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 12.x
+    - name: Clone server repo
+      uses: actions/checkout@v2
+      with:
+        repository: appium/appium-desktop
     - run: npm ci
       name: Install dependencies
+    - run: npm run copy-en-i18n ./appium-desktop
+      name: Copy English Resources
     - run: npm run crowdin-sync
       name: Crowdin Sync
       env:
