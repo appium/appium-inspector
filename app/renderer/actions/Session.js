@@ -4,7 +4,7 @@ import { v4 as UUID } from 'uuid';
 import url from 'url';
 import { push } from 'connected-react-router';
 import { notification } from 'antd';
-import { debounce, toPairs, union, without, keys, isUndefined } from 'lodash';
+import { includes, debounce, toPairs, union, without, keys, isUndefined } from 'lodash';
 import { setSessionDetails, quitSession } from './Inspector';
 import i18n from '../../configs/i18next.config.renderer';
 import CloudProviders from '../components/Session/CloudProviders';
@@ -117,7 +117,7 @@ export function showError (e, methodName, secs = 5) {
   } else {
     errMessage = i18n.t('Could not start session');
   }
-  if (errMessage === 'ECONNREFUSED') {
+  if (errMessage === 'ECONNREFUSED' || includes('Failed to fetch')) {
     errMessage = i18n.t('couldNotConnect');
   }
 
