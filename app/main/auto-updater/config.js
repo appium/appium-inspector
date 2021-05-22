@@ -1,7 +1,6 @@
 import { getAutoUpdaterFeedUrl } from '../../../gui-common/util';
 
-// TODO create new feed URL for inspector so it's not the same as server
-const baseFeedUrl = `https://hazel-server-pxufsrwofl.now.sh`;
+const baseFeedUrl = `https://appium-inspector-hazel.vercel.app`;
 
 export function getFeedUrl (version) {
   return getAutoUpdaterFeedUrl(version, baseFeedUrl);
