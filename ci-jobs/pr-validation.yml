@@ -1,4 +1,5 @@
-# Runs on pull requests
+# Runs only on pull requests, not commits to branches
+trigger: none
 jobs:
 - template: templates/pr-validation.yml
   parameters:
