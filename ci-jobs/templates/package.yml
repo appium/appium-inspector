@@ -27,6 +27,10 @@ jobs:
         versionSpec: '10.x'
     - script: npm ci
       displayName: Install dependencies
+    - script: |
+        git clone https://github.com/appium/appium-desktop.git
+        npm run copy-en-18n ./appium-desktop
+      displayName: Copy EN translations from server
     - script: npm run build
       displayName: Build
     - script: ${{ parameters.buildScript }}
