@@ -1,12 +1,5 @@
-# CI Build. Runs on every commit to any branch.
-trigger:
-  branches:
-    include:
-      - "*"
-pr:
-  branches:
-    exclude:
-      - "*"
+# CI Build. Runs on every commit to any branch but not PRs
+pr: none
 jobs:
   - job: BuildAndTest
     variables:
