@@ -360,7 +360,7 @@ export function newSession (caps, attachSessId = null) {
         host = 'api.robotic.mobi';
         path = '/wd/hub';
         port = 443;
-        https = 'https:';
+        https = session.server.roboticmobi.ssl = true;
         if (caps) {
           desiredCapabilities.robotic_mobi_token = session.server.roboticmobi.token || process.env.ROBOTIC_MOBI_TOKEN;
         }
