@@ -117,7 +117,7 @@ export function showError (e, methodName, secs = 5) {
   } else {
     errMessage = i18n.t('Could not start session');
   }
-  if (errMessage === 'ECONNREFUSED' || includes('Failed to fetch')) {
+  if (errMessage === 'ECONNREFUSED' || includes(errMessage, 'Failed to fetch')) {
     errMessage = i18n.t('couldNotConnect');
   }
 
