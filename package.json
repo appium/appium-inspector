@@ -124,7 +124,7 @@
     "format-json": "1.x",
     "highlight.js": "11.x",
     "history": "^4.7.2",
-    "i18next": "^20.3.0",
+    "i18next": "^20.3.1",
     "i18next-node-fs-backend": "^2.1.1",
     "ky": "^0.24.0",
     "lodash": "4.x",
