@@ -114,7 +114,7 @@
   "dependencies": {
     "antd": "^4.16.2",
     "bluebird": "^3.5.5",
-    "cheerio": "^1.0.0-rc.3",
+    "cheerio": "^1.0.0-rc.10",
     "connected-react-router": "^6.0.0",
     "electron-debug": "^3.0.0",
     "electron-log": "^4.0.0",
