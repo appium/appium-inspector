@@ -147,7 +147,7 @@
     "xpath": "0.0.32"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.0",
+    "@babel/core": "^7.14.5",
     "@babel/eslint-parser": "^7.14.4",
     "@babel/eslint-plugin": "^7.14.5",
     "@babel/plugin-transform-runtime": "^7.4.0",
