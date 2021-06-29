@@ -62,7 +62,7 @@ export default class Session extends Component {
     return [
       <Spin spinning={!!sessionLoading} key="main">
         <div className={SessionStyles.sessionContainer}>
-          <div id='serverTypeTabs' className={SessionStyles.serverTab}>
+          <div id='serverTypeTabs' className={SessionStyles.serverTabs}>
             <Tabs activeKey={serverType} onChange={(tab) => this.handleSelectServerTab(tab)} className={SessionStyles.serverTabs}>
               {[
                 <TabPane tab={t('Appium Server')} key="remote">

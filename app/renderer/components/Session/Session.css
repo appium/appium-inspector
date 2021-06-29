@@ -71,9 +71,12 @@
 }
 
 .serverTabs :global(.ant-tabs-bar) {
-  -webkit-app-region: drag;
   padding-top: 2em;
   margin-top: -1em;
+}
+
+.serverTabs :global(.ant-tabs-nav-wrap) {
+  -webkit-app-region: drag;
 }
 
 .scrollingTabCont {
