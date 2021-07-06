@@ -17,7 +17,7 @@ async function main () {
   serverPath = path.resolve(__dirname, serverPath);
 
   const enPath = path.resolve(serverPath, ...EN_RESOURCE_PATH);
-  log.info(`Attempting to copy en resourcces from ${enPath}`);
+  log.info(`Attempting to copy en resources from ${enPath}`);
   if (!await fs.exists(enPath)) {
     throw new Error(`Could not find en resources at ${enPath}`);
   }

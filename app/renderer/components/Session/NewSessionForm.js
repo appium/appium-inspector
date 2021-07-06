@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, Modal, Form, Row, Col, Select } from 'antd';
+import { Button, Checkbox, Input, Modal, Form, Row, Col, Select } from 'antd';
 import FormattedCaps from './FormattedCaps';
 import CapabilityControl from './CapabilityControl';
 import SessionStyles from './Session.css';
@@ -54,7 +54,8 @@ export default class NewSessionForm extends Component {
 
   render () {
     const {setCapabilityParam, caps, addCapability, removeCapability, saveSession, hideSaveAsModal,
-           saveAsText, showSaveAsModal, setSaveAsText, isEditingDesiredCaps, t} = this.props;
+           saveAsText, showSaveAsModal, setSaveAsText, isEditingDesiredCaps, t,
+           setAddVendorPrefixes, addVendorPrefixes} = this.props;
 
     return <>
       <Row type={ROW.FLEX} align="top" justify="start" className={SessionStyles.capsFormRow}>
@@ -98,7 +99,17 @@ export default class NewSessionForm extends Component {
               </Col>
             </Row>)}
             <Row>
-              <Col span={24}>
+              <Col span={22}>
+                <FormItem>
+                  <Checkbox
+                    onChange={(e) => setAddVendorPrefixes(e.target.checked)}
+                    checked={addVendorPrefixes}
+                  >
+                    {t('autoAddPrefixes')}
+                  </Checkbox>
+                </FormItem>
+              </Col>
+              <Col span={2}>
                 <FormItem>
                   <Button
                     disabled={isEditingDesiredCaps} id='btnAddDesiredCapability'

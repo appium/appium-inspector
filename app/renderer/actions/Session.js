@@ -53,11 +53,16 @@ export const IS_ADDING_CLOUD_PROVIDER = 'IS_ADDING_CLOUD_PROVIDER';
 
 export const SET_PROVIDERS = 'SET_PROVIDERS';
 
+export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
+
 
 const CAPS_NEW_COMMAND = 'appium:newCommandTimeout';
 const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
 const CAPS_NATIVE_WEB_SCREENSHOT = 'appium:nativeWebScreenshot';
 const CAPS_ENSURE_WEBVIEW_HAVE_PAGES = 'appium:ensureWebviewsHavePages';
+
+const VALID_W3C_CAPS = ['platformName', 'browserName', 'browserVersion', 'acceptInsecureCerts',
+  'pageLoadStrategy', 'proxy', 'setWindowRect', 'timeouts', 'unhandledPromptBehavior'];
 
 // Multiple requests sometimes send a new session request
 // after establishing a session.
@@ -174,16 +179,33 @@ export function removeCapability (index) {
   };
 }
 
+function addVendorPrefixes (caps, dispatch, getState) {
+  const prefixedCaps = caps.map((cap) => {
+    // if we don't have a valid unprefixed cap or a cap with an existing prefix, update it
+    if (!VALID_W3C_CAPS.includes(cap.name) && !includes(caps.name, ':')) {
+      cap.name = `appium:${cap.name}`;
+    }
+    return cap;
+  });
+  setCaps(prefixedCaps, getState().session.capsUUID)(dispatch);
+  return prefixedCaps;
+}
+
 /**
  * Start a new appium session with the given caps
  */
 export function newSession (caps, attachSessId = null) {
   return async (dispatch, getState) => {
+    let session = getState().session;
+
+    // first add vendor prefixes to caps if requested
+    if (session.addVendorPrefixes) {
+      caps = addVendorPrefixes(caps, dispatch, getState);
+    }
 
     dispatch({type: NEW_SESSION_REQUESTED, caps});
 
     let desiredCapabilities = caps ? getCapsObject(caps) : {};
-    let session = getState().session;
     let host, port, username, accessKey, https, path, token;
     desiredCapabilities = addCustomCaps(desiredCapabilities);
 
@@ -809,5 +831,11 @@ export function bindWindowClose () {
       // longer has any 'returnValue' property
       delete evt.returnValue;
     });
+  };
+}
+
+export function setAddVendorPrefixes (addVendorPrefixes) {
+  return (dispatch) => {
+    dispatch({type: SET_ADD_VENDOR_PREFIXES, addVendorPrefixes});
   };
 }
