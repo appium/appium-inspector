@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { clipboard } from 'electron';
+import { clipboard } from '../../polyfills';
 import { Input, Row, Col, Button } from 'antd';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';

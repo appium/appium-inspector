@@ -1,4 +1,4 @@
-import { shell } from 'electron';
+import { shell } from '../../polyfills';
 import React, { Component } from 'react';
 import _ from 'lodash';
 import NewSessionForm from './NewSessionForm';

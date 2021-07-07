@@ -8,7 +8,7 @@ import {
   SaveOutlined,
   EditOutlined
 } from '@ant-design/icons';
-import { remote } from 'electron';
+import { remote } from '../../polyfills';
 import { HEIGHT_OF_SESSION_CONFIG_AREA } from './Layout';
 import { ALERT } from '../../../../gui-common/components/AntdTypes';
 

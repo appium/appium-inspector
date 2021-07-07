@@ -1,4 +1,3 @@
-import { ipcRenderer } from 'electron';
 import _ from 'lodash';
 import { push } from 'connected-react-router';
 import { getLocators, APP_MODE } from '../components/Inspector/shared';
@@ -271,7 +270,6 @@ export function pauseRecording () {
 export function clearRecording () {
   return (dispatch) => {
     dispatch({type: CLEAR_RECORDING});
-    ipcRenderer.send('appium-restart-recorder'); // Tell the main thread to start the variable count from 1
     dispatch({type: CLEAR_ASSIGNED_VAR_CACHE}); // Get rid of the variable cache
   };
 }
