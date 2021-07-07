@@ -4,7 +4,7 @@ import {getLocators} from './shared';
 import styles from './Inspector.css';
 import { Button, Row, Col, Input, Modal, Table, Alert, Tooltip, Select } from 'antd';
 import { withTranslation } from '../../util';
-import {clipboard, shell} from 'electron';
+import {clipboard, shell} from '../../polyfills';
 import {
   LoadingOutlined,
   CopyOutlined,

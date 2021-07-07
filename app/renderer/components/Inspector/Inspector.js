@@ -8,7 +8,7 @@ import Source from './Source';
 import InspectorStyles from './Inspector.css';
 import RecordedActions from './RecordedActions';
 import Actions from './Actions';
-import { clipboard } from 'electron';
+import { clipboard } from '../../polyfills';
 import {
   SelectOutlined,
   ScanOutlined,
