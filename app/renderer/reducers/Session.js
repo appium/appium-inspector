@@ -28,7 +28,7 @@ for (const serverName of _.keys(ServerTypes)) {
 const INITIAL_STATE = {
   savedSessions: [],
   tabKey: 'new',
-  serverType: ServerTypes.local,
+  serverType: ServerTypes.remote,
   visibleProviders,
   server: {
     local: {},

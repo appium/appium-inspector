@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Switch, Input } from 'antd';
 import SessionStyles from './Session.css';
-import { remote } from 'electron';
+import { remote, log } from '../../polyfills';
 import { FileOutlined } from '@ant-design/icons';
 import { INPUT } from '../../../../gui-common/components/AntdTypes';
 import _ from 'lodash';
-import log from 'electron-log';
 
 const {dialog} = remote;
 

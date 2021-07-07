@@ -1,4 +1,4 @@
-import settings from 'electron-settings';
+import { settings } from '../renderer/polyfills';
 
 export const PRESETS = 'presets';
 export const SAVED_SESSIONS = 'SAVED_SESSIONS';
