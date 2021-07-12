@@ -9,6 +9,7 @@ import { setSessionDetails, quitSession } from './Inspector';
 import i18n from '../../configs/i18next.config.renderer';
 import CloudProviders from '../components/Session/CloudProviders';
 import { Web2Driver } from 'web2driver';
+import { addVendorPrefixes } from '../util';
 import ky from 'ky/umd';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
@@ -60,9 +61,6 @@ const CAPS_NEW_COMMAND = 'appium:newCommandTimeout';
 const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
 const CAPS_NATIVE_WEB_SCREENSHOT = 'appium:nativeWebScreenshot';
 const CAPS_ENSURE_WEBVIEW_HAVE_PAGES = 'appium:ensureWebviewsHavePages';
-
-const VALID_W3C_CAPS = ['platformName', 'browserName', 'browserVersion', 'acceptInsecureCerts',
-  'pageLoadStrategy', 'proxy', 'setWindowRect', 'timeouts', 'unhandledPromptBehavior'];
 
 // Multiple requests sometimes send a new session request
 // after establishing a session.
@@ -179,14 +177,8 @@ export function removeCapability (index) {
   };
 }
 
-function addVendorPrefixes (caps, dispatch, getState) {
-  const prefixedCaps = caps.map((cap) => {
-    // if we don't have a valid unprefixed cap or a cap with an existing prefix, update it
-    if (!VALID_W3C_CAPS.includes(cap.name) && !includes(caps.name, ':')) {
-      cap.name = `appium:${cap.name}`;
-    }
-    return cap;
-  });
+function _addVendorPrefixes (caps, dispatch, getState) {
+  const prefixedCaps = addVendorPrefixes(caps);
   setCaps(prefixedCaps, getState().session.capsUUID)(dispatch);
   return prefixedCaps;
 }
@@ -200,7 +192,7 @@ export function newSession (caps, attachSessId = null) {
 
     // first add vendor prefixes to caps if requested
     if (session.addVendorPrefixes) {
-      caps = addVendorPrefixes(caps, dispatch, getState);
+      caps = _addVendorPrefixes(caps, dispatch, getState);
     }
 
     dispatch({type: NEW_SESSION_REQUESTED, caps});
