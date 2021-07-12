@@ -5,6 +5,10 @@ import { log } from './polyfills';
 import config from '../configs/app.config';
 import { DOMParser } from 'xmldom';
 
+const VALID_W3C_CAPS = ['platformName', 'browserName', 'browserVersion', 'acceptInsecureCerts',
+  'pageLoadStrategy', 'proxy', 'setWindowRect', 'timeouts', 'unhandledPromptBehavior'];
+
+
 // Attributes on nodes that we know are unique to the node
 const UNIQUE_XPATH_ATTRIBUTES = [
   'name',
@@ -268,4 +272,14 @@ export function withTranslation (componentCls, ...hocs) {
     ...hocs,
     wt(config.namespace),
   )(componentCls);
+}
+
+export function addVendorPrefixes (caps) {
+  return caps.map((cap) => {
+    // if we don't have a valid unprefixed cap or a cap with an existing prefix, update it
+    if (!VALID_W3C_CAPS.includes(cap.name) && !_.includes(cap.name, ':')) {
+      cap.name = `appium:${cap.name}`;
+    }
+    return cap;
+  });
 }
