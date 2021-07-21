@@ -56,11 +56,15 @@ export const SET_PROVIDERS = 'SET_PROVIDERS';
 
 export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
 
+export const SET_STATE_FROM_URL = 'SET_STATE_FROM_URL';
+
 
 const CAPS_NEW_COMMAND = 'appium:newCommandTimeout';
 const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
 const CAPS_NATIVE_WEB_SCREENSHOT = 'appium:nativeWebScreenshot';
 const CAPS_ENSURE_WEBVIEW_HAVE_PAGES = 'appium:ensureWebviewsHavePages';
+
+const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to turn it on
 
 // Multiple requests sometimes send a new session request
 // after establishing a session.
@@ -68,6 +72,8 @@ const CAPS_ENSURE_WEBVIEW_HAVE_PAGES = 'appium:ensureWebviewsHavePages';
 // so let's set zero so far.
 // TODO: increase this retry when we get issues
 export const CONN_RETRIES = 0;
+
+let isFirstRun = true; // we only want to auto start a session on a first run
 
 const serverTypes = {};
 for (const key of keys(CloudProviders)) {
@@ -424,7 +430,7 @@ export function newSession (caps, attachSessId = null) {
         driver = await Web2Driver.remote(serverOpts, desiredCapabilities);
       }
     } catch (err) {
-      showError(err, 0);
+      showError(err, null, 0);
       return;
     } finally {
       dispatch({type: SESSION_LOADING_DONE});
@@ -829,5 +835,36 @@ export function bindWindowClose () {
 export function setAddVendorPrefixes (addVendorPrefixes) {
   return (dispatch) => {
     dispatch({type: SET_ADD_VENDOR_PREFIXES, addVendorPrefixes});
+  };
+}
+
+export function initFromQueryString () {
+  return async (dispatch, getState) => {
+    if (!isFirstRun) {
+      return;
+    }
+
+    isFirstRun = false;
+
+    const url = new URL(window.location.href);
+    const initialState = url.searchParams.get('state');
+    const autoStartSession = url.searchParams.get('autoStart');
+
+    if (initialState) {
+      try {
+        const state = JSON.parse(initialState);
+        dispatch({type: SET_STATE_FROM_URL, state});
+      } catch (e) {
+        showError(new Error('Could not parse initial state from URL'), null, 0);
+      }
+    }
+
+    if (autoStartSession === AUTO_START_URL_PARAM) {
+      const {attachSessId, caps} = getState().session;
+      if (attachSessId) {
+        return await newSession(null, attachSessId)(dispatch, getState);
+      }
+      await newSession(caps)(dispatch, getState);
+    }
   };
 }

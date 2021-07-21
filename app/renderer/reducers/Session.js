@@ -10,7 +10,7 @@ import { NEW_SESSION_REQUESTED, NEW_SESSION_BEGAN, NEW_SESSION_DONE,
          CHANGE_SERVER_TYPE, SET_SERVER_PARAM, SET_SERVER, SET_ATTACH_SESS_ID,
          GET_SESSIONS_REQUESTED, GET_SESSIONS_DONE,
          ENABLE_DESIRED_CAPS_EDITOR, ABORT_DESIRED_CAPS_EDITOR, SAVE_RAW_DESIRED_CAPS, SET_RAW_DESIRED_CAPS, SHOW_DESIRED_CAPS_JSON_ERROR,
-         IS_ADDING_CLOUD_PROVIDER, SET_PROVIDERS, SET_ADD_VENDOR_PREFIXES,
+         IS_ADDING_CLOUD_PROVIDER, SET_PROVIDERS, SET_ADD_VENDOR_PREFIXES, SET_STATE_FROM_URL,
          ServerTypes } from '../actions/Session';
 
 const visibleProviders = []; // Pull this from "electron-settings"
@@ -326,6 +326,16 @@ export default function session (state = INITIAL_STATE, action) {
       return {
         ...state,
         addVendorPrefixes: action.addVendorPrefixes,
+      };
+
+    case SET_STATE_FROM_URL:
+      return {
+        ...state,
+        server: {
+          ...state.server,
+          ...(action.state.server || {})
+        },
+        ...omit(action.state, ['server']),
       };
 
     default:
