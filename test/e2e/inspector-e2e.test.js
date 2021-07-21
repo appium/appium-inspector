@@ -50,7 +50,7 @@ describe('inspector window', function () {
   });
 
   beforeEach(async function () {
-    await client.waitForExist(inspector.inspectorToolbar);
+    await client.waitForExist(inspector.inspectorToolbar, {timeout: 7000});
   });
 
   it('shows content in "Selected Element" pane when clicking on an item in the Source inspector', async function () {
