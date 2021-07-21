@@ -15,7 +15,7 @@ import { NEW_SESSION_REQUESTED, NEW_SESSION_LOADING, NEW_SESSION_DONE,
          ServerTypes } from '../actions/Session';
 import { notification } from 'antd';
 
-const visibleProviders = []; // Pull this from "electron-settings"
+const visibleProviders = [ServerTypes.headspin];
 const server = {
   local: {},
   remote: {},
@@ -30,7 +30,7 @@ for (const serverName of _.keys(ServerTypes)) {
 const INITIAL_STATE = {
   savedSessions: [],
   tabKey: 'new',
-  serverType: ServerTypes.remote,
+  serverType: ServerTypes.headspin,
   visibleProviders,
   server: {
     local: {},
