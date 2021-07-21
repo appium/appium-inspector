@@ -21,7 +21,7 @@ export default class Session extends Component {
 
   componentDidMount () {
     const {setLocalServerParams, getSavedSessions, setSavedServerParams, setVisibleProviders,
-           getRunningSessions, bindWindowClose} = this.props;
+           getRunningSessions, bindWindowClose, initFromQueryString} = this.props;
     (async () => {
       try {
         bindWindowClose();
@@ -30,6 +30,7 @@ export default class Session extends Component {
         await setLocalServerParams();
         await setVisibleProviders();
         getRunningSessions();
+        await initFromQueryString();
       } catch (e) {
         console.error(e); // eslint-disable-line no-console
       }
