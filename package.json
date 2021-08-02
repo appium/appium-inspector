@@ -116,7 +116,7 @@
     "electron": "./node_modules/.bin/electron"
   },
   "dependencies": {
-    "antd": "^4.16.7",
+    "antd": "^4.16.9",
     "bluebird": "^3.5.5",
     "cheerio": "^1.0.0-rc.3",
     "connected-react-router": "^6.0.0",
