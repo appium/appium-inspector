@@ -115,6 +115,9 @@
   "bin": {
     "electron": "./node_modules/.bin/electron"
   },
+  "//dependencies": {
+    "history": "Can't upgrade to v5 yet because it breaks connected-react-router so far"
+  },
   "dependencies": {
     "antd": "^4.16.7",
     "bluebird": "^3.5.5",
