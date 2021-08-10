@@ -18,12 +18,8 @@ const browser = {
 };
 
 class BrowserSettings {
-  defaults (settingsObj) {
-    for (const key of Object.keys(settingsObj)) {
-      if (!Object.prototype.hasOwnProperty.call(localStorage, key)) {
-        this.set(key, settingsObj[key]);
-      }
-    }
+  has (key) {
+    return this.get(key) !== null;
   }
 
   set (key, val) {
