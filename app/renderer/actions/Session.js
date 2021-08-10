@@ -1,5 +1,5 @@
-import settings, { SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE, SESSION_SERVER_PARAMS
-} from '../../shared/settings';
+import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE,
+         SESSION_SERVER_PARAMS } from '../../shared/settings';
 import { v4 as UUID } from 'uuid';
 import url from 'url';
 import { push } from 'connected-react-router';
@@ -435,7 +435,7 @@ export function newSession (caps, attachSessId = null) {
     } finally {
       dispatch({type: SESSION_LOADING_DONE});
       // Save the current server settings
-      await settings.set(SESSION_SERVER_PARAMS, session.server);
+      await setSetting(SESSION_SERVER_PARAMS, session.server);
     }
 
     // The homepage arg in ChromeDriver is not working with Appium. iOS can have a default url, but
@@ -473,7 +473,7 @@ export function saveSession (caps, params) {
   return async (dispatch) => {
     let {name, uuid} = params;
     dispatch({type: SAVE_SESSION_REQUESTED});
-    let savedSessions = await settings.get(SAVED_SESSIONS);
+    let savedSessions = await getSetting(SAVED_SESSIONS);
     if (!uuid) {
 
       // If it's a new session, add it to the list
@@ -494,7 +494,7 @@ export function saveSession (caps, params) {
         }
       }
     }
-    await settings.set(SAVED_SESSIONS, savedSessions);
+    await setSetting(SAVED_SESSIONS, savedSessions);
     const action = getSavedSessions();
     await action(dispatch);
     dispatch({type: SET_CAPS, caps, uuid});
@@ -508,7 +508,7 @@ export function saveSession (caps, params) {
 export function getSavedSessions () {
   return async (dispatch) => {
     dispatch({type: GET_SAVED_SESSIONS_REQUESTED});
-    let savedSessions = await settings.get(SAVED_SESSIONS);
+    let savedSessions = await getSetting(SAVED_SESSIONS);
     dispatch({type: GET_SAVED_SESSIONS_DONE, savedSessions});
   };
 }
@@ -555,9 +555,9 @@ export function setSaveAsText (saveAsText) {
 export function deleteSavedSession (uuid) {
   return async (dispatch) => {
     dispatch({type: DELETE_SAVED_SESSION_REQUESTED, uuid});
-    let savedSessions = await settings.get(SAVED_SESSIONS);
+    let savedSessions = await getSetting(SAVED_SESSIONS);
     let newSessions = savedSessions.filter((session) => session.uuid !== uuid);
-    await settings.set(SAVED_SESSIONS, newSessions);
+    await setSetting(SAVED_SESSIONS, newSessions);
     dispatch({type: DELETE_SAVED_SESSION_DONE});
     dispatch({type: GET_SAVED_SESSIONS_DONE, savedSessions: newSessions});
   };
@@ -577,7 +577,7 @@ export function setAttachSessId (attachSessId) {
  */
 export function changeServerType (serverType) {
   return async (dispatch, getState) => {
-    await settings.set(SESSION_SERVER_TYPE, serverType);
+    await setSetting(SESSION_SERVER_TYPE, serverType);
     dispatch({type: CHANGE_SERVER_TYPE, serverType});
     const action = getRunningSessions();
     action(dispatch, getState);
@@ -591,7 +591,7 @@ export function setServerParam (name, value, serverType) {
   const debounceGetRunningSessions = debounce(getRunningSessions(), 5000);
   return async (dispatch, getState) => {
     serverType = serverType || getState().session.serverType;
-    await settings.set(SESSION_SERVER_TYPE, serverType);
+    await setSetting(SESSION_SERVER_TYPE, serverType);
     dispatch({type: SET_SERVER_PARAM, serverType, name, value});
     debounceGetRunningSessions(dispatch, getState);
   };
@@ -603,7 +603,7 @@ export function setServerParam (name, value, serverType) {
  */
 export function setLocalServerParams () {
   return async (dispatch, getState) => {
-    let serverArgs = await settings.get(SERVER_ARGS);
+    let serverArgs = await getSetting(SERVER_ARGS);
     // Get saved server args from settings and set local server settings to it. If there are no saved args, set local
     // host and port to undefined
     if (serverArgs) {
@@ -626,8 +626,8 @@ export function setLocalServerParams () {
  */
 export function setSavedServerParams () {
   return async (dispatch, getState) => {
-    let server = await settings.get(SESSION_SERVER_PARAMS);
-    let serverType = await settings.get(SESSION_SERVER_TYPE);
+    let server = await getSetting(SESSION_SERVER_PARAMS);
+    let serverType = await getSetting(SESSION_SERVER_TYPE);
     let currentProviders = getState().session.visibleProviders;
 
     if (server) {
@@ -761,7 +761,7 @@ export function addVisibleProvider (provider) {
   return async (dispatch, getState) => {
     let currentProviders = getState().session.visibleProviders;
     const providers = union(currentProviders, [provider]);
-    await settings.set(VISIBLE_PROVIDERS, providers);
+    await setSetting(VISIBLE_PROVIDERS, providers);
     dispatch({type: SET_PROVIDERS, providers});
   };
 }
@@ -770,14 +770,14 @@ export function removeVisibleProvider (provider) {
   return async (dispatch, getState) => {
     let currentProviders = getState().session.visibleProviders;
     const providers = without(currentProviders, provider);
-    await settings.set(VISIBLE_PROVIDERS, providers);
+    await setSetting(VISIBLE_PROVIDERS, providers);
     dispatch({type: SET_PROVIDERS, providers});
   };
 }
 
 export function setVisibleProviders () {
   return async (dispatch) => {
-    const providers = await settings.get(VISIBLE_PROVIDERS);
+    const providers = await getSetting(VISIBLE_PROVIDERS);
     dispatch({type: SET_PROVIDERS, providers});
   };
 }

@@ -4,7 +4,7 @@ import { getLocators, APP_MODE } from '../components/Inspector/shared';
 import { showError } from './Session';
 import { xmlToJSON } from '../util';
 import frameworks from '../lib/client-frameworks';
-import settings, { SAVED_FRAMEWORK } from '../../shared/settings';
+import { getSetting, setSetting, SAVED_FRAMEWORK } from '../../shared/settings';
 import i18n from '../../configs/i18next.config.renderer';
 import AppiumClient from '../lib/appium-client';
 import { notification } from 'antd';
@@ -276,7 +276,7 @@ export function clearRecording () {
 
 export function getSavedActionFramework () {
   return async (dispatch) => {
-    let framework = await settings.get(SAVED_FRAMEWORK);
+    let framework = await getSetting(SAVED_FRAMEWORK);
     dispatch({type: SET_ACTION_FRAMEWORK, framework});
   };
 }
@@ -286,7 +286,7 @@ export function setActionFramework (framework) {
     if (!frameworks[framework]) {
       throw new Error(i18n.t('frameworkNotSupported', {framework}));
     }
-    await settings.set(SAVED_FRAMEWORK, framework);
+    await setSetting(SAVED_FRAMEWORK, framework);
     dispatch({type: SET_ACTION_FRAMEWORK, framework});
   };
 }
