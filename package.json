@@ -161,6 +161,7 @@
     "postcss-modules": "Can't upgrade any further until we upgrade to Parcel v2"
   },
   "devDependencies": {
+    "@appium/fake-driver": "^2.2.0",
     "@babel/core": "^7.14.5",
     "@babel/eslint-parser": "^7.14.4",
     "@babel/eslint-plugin": "^7.14.5",
@@ -168,7 +169,6 @@
     "@babel/preset-env": "^7.14.4",
     "@babel/preset-react": "^7.12.13",
     "@babel/register": "^7.14.5",
-    "appium-fake-driver": "^2.2.0",
     "asyncbox": "^2.5.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "chai": "^4.2.0",
@@ -201,7 +201,7 @@
     "release": "^6.0.1",
     "rimraf": "^3.0.0",
     "sinon": "^11.1.1",
-    "spectron": "^9.0.0"
+    "spectron": "^15.0.0"
   },
   "devEngines": {
     "node": ">=6.x",
