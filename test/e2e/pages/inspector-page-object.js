@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { retryInterval } from 'asyncbox';
 import BasePage from '../../../gui-common/base-page-object';
-import { setValueReact } from './utils';
 
 export default class InspectorPage extends BasePage {
   constructor (client) {
@@ -18,45 +17,49 @@ export default class InspectorPage extends BasePage {
   }
 
   async setCustomServerHost (host) {
-    await this.client.execute(setValueReact(this.customServerHost, host));
+    await (await this.client.$(this.customServerHost)).setValue(host);
   }
 
   async setCustomServerPort (port) {
-    await this.client.execute(setValueReact(this.customServerPort, port));
+    await (await this.client.$(this.customServerPort)).setValue(port);
+  }
+
+  async setCustomServerPath (path) {
+    await (await this.client.$(this.customServerPath)).setValue(path);
   }
 
   async addDCaps (dcaps) {
     const dcapsPairs = _.toPairs(dcaps);
     for (let i = 0; i < dcapsPairs.length; i++) {
       const [name, value] = dcapsPairs[i];
-      await this.client.setValue(this.desiredCapabilityNameInput(i), name);
-      await this.client.setValue(this.desiredCapabilityValueInput(i), value);
-      await this.client.click(this.addDesiredCapabilityButton);
+      await (await this.client.$(this.desiredCapabilityNameInput(i))).setValue(name);
+      await (await this.client.$(this.desiredCapabilityValueInput(i))).setValue(value);
+      await (await this.client.$(this.addDesiredCapabilityButton)).click();
     }
   }
 
   async startSession () {
-    await this.client.click(this.formSubmitButton);
+    await (await this.client.$(this.formSubmitButton)).click();
   }
 
   async closeNotification () {
     try {
-      await retryInterval(5, 500, () => {
-        this.client.click('.ant-notification-notice-close');
+      await retryInterval(5, 500, async () => {
+        await (await this.client.$('.ant-notification-notice-close')).click();
       });
     } catch (ign) { }
   }
 
   async startRecording () {
-    await this.client.click(this.startRecordingButton);
+    await (await this.client.$(this.startRecordingButton)).click();
   }
 
   async pauseRecording () {
-    await this.client.click(this.pauseRecordingButton);
+    await (await this.client.$(this.pauseRecordingButton)).click();
   }
 
   async reload () {
-    await this.client.click(this.reloadButton);
+    await (await this.client.$(this.reloadButton)).click();
   }
 
 }
@@ -64,6 +67,7 @@ export default class InspectorPage extends BasePage {
 InspectorPage.selectors = {
   customServerHost: '#customServerHost',
   customServerPort: '#customServerPort',
+  customServerPath: '#customServerPath',
   addDesiredCapabilityButton: '#btnAddDesiredCapability',
   formSubmitButton: '#btnStartSession',
   inspectorToolbar: 'div[class*=_inspector-toolbar]',
