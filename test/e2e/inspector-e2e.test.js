@@ -1,7 +1,7 @@
 import path from 'path';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { startServer as startAppiumFakeDriverServer } from 'appium-fake-driver';
+import { startServer as startAppiumFakeDriverServer } from '@appium/fake-driver';
 import { retryInterval } from 'asyncbox';
 import InspectorPage from './pages/inspector-page-object';
 
@@ -10,7 +10,8 @@ chai.use(chaiAsPromised);
 
 const FAKE_DRIVER_PORT = 12121;
 
-const TEST_APP = path.resolve(__dirname, '..', '..', 'node_modules', 'appium-fake-driver', 'test', 'fixtures', 'app.xml');
+const FAKE_DRIVER_PATH = path.resolve(path.dirname(require.resolve('@appium/fake-driver')), '..');
+const TEST_APP = path.resolve(FAKE_DRIVER_PATH, 'test', 'fixtures', 'app.xml');
 
 const DEFAULT_CAPS = {
   platformName: 'Fake',
@@ -33,12 +34,15 @@ describe('inspector window', function () {
     inspector = new InspectorPage(client);
 
     // Set the desired capabilities
-    await client.waitForExist(inspector.addDesiredCapabilityButton);
+    await (await client.$(inspector.addDesiredCapabilityButton)).waitForExist({timeout: 5000});
     await inspector.addDCaps(DEFAULT_CAPS);
 
     // Set the fake driver server and port
     await inspector.setCustomServerHost('127.0.0.1');
     await inspector.setCustomServerPort(FAKE_DRIVER_PORT);
+    await inspector.setCustomServerPath('/wd/hub');
+
+    await client.pause(1000);
 
     // Start the session
     await inspector.startSession();
@@ -50,44 +54,43 @@ describe('inspector window', function () {
   });
 
   beforeEach(async function () {
-    await client.waitForExist(inspector.inspectorToolbar, {timeout: 7000});
+    await (await client.$(inspector.inspectorToolbar)).waitForExist({timeout: 7000});
   });
 
   it('shows content in "Selected Element" pane when clicking on an item in the Source inspector', async function () {
-    await client.getHTML(inspector.selectedElementBody).should.eventually.contain('Select an element');
-    await client.waitForExist(inspector.sourceTreeNode);
-    await client.click(inspector.sourceTreeNode);
-    await client.waitForExist(inspector.tapSelectedElementButton);
-    await client.waitForEnabled(inspector.tapSelectedElementButton);
-    await client.getHTML(inspector.selectedElementBody).should.eventually.contain('btnTapElement');
-    await client.click(inspector.tapSelectedElementButton);
-    await inspector.closeNotification();
+    await (await client.$(inspector.selectedElementBody)).getHTML().should.eventually.contain('Select an element');
+    await (await client.$(inspector.sourceTreeNode)).waitForExist({timeout: 3000});
+    await (await client.$(inspector.sourceTreeNode)).click();
+    await (await client.$(inspector.tapSelectedElementButton)).waitForExist({timeout: 3000});
+    await (await client.$(inspector.tapSelectedElementButton)).waitForEnabled({timeout: 4000});
+    await (await client.$(inspector.selectedElementBody)).getHTML().should.eventually.contain('btnTapElement');
+    await (await client.$(inspector.tapSelectedElementButton)).click();
   });
 
   it('shows a loading indicator in screenshot after clicking "Refresh" and then indicator goes away when refresh is complete', async function () {
     await inspector.reload();
-    const spinDots = await client.elements(inspector.screenshotLoadingIndicator);
-    spinDots.value.length.should.equal(1);
+    const spinDots = await client.$$(inspector.screenshotLoadingIndicator);
+    spinDots.length.should.equal(1);
     await retryInterval(15, 1000, async function () {
-      const spinDots = await client.elements(inspector.screenshotLoadingIndicator);
-      spinDots.value.length.should.equal(0);
+      const spinDots = await client.$$(inspector.screenshotLoadingIndicator);
+      spinDots.length.should.equal(0);
     });
   });
 
   it('shows a new pane when click "Start Recording" button and then the pane disappears when clicking "Pause"', async function () {
     // Check that there's no recorded actions pane
-    let recordedPanes = await client.elements(inspector.recordedActionsPane);
-    recordedPanes.value.length.should.equal(0);
+    let recordedPanes = await client.$$(inspector.recordedActionsPane);
+    recordedPanes.length.should.equal(0);
 
     // Start a recording and check that there is a recorded actions pane
     await inspector.startRecording();
-    await client.waitForExist(inspector.recordedActionsPane);
-    recordedPanes = await client.elements(inspector.recordedActionsPane);
-    recordedPanes.value.length.should.equal(1);
+    await (await client.$(inspector.recordedActionsPane)).waitForExist({timeout: 2000});
+    recordedPanes = await client.$$(inspector.recordedActionsPane);
+    recordedPanes.length.should.equal(1);
 
     // Pause the recording and check that the recorded actions pane is gone again
     await inspector.pauseRecording();
-    recordedPanes = await client.elements(inspector.recordedActionsPane);
-    recordedPanes.value.length.should.equal(0);
+    recordedPanes = await client.$$(inspector.recordedActionsPane);
+    recordedPanes.length.should.equal(0);
   });
 });
