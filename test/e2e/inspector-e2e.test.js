@@ -34,7 +34,7 @@ describe('inspector window', function () {
     inspector = new InspectorPage(client);
 
     // Set the desired capabilities
-    await (await client.$(inspector.addDesiredCapabilityButton)).waitForExist({timeout: 5000});
+    await (await client.$(inspector.addDesiredCapabilityButton)).waitForExist({timeout: 10000});
     await inspector.addDCaps(DEFAULT_CAPS);
 
     // Set the fake driver server and port
