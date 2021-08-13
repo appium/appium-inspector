@@ -84,6 +84,9 @@ serverTypes.remote = 'remote';
 
 export const ServerTypes = serverTypes;
 
+export const DEFAULT_SERVER_PATH = '/';
+export const DEFAULT_SERVER_HOST = '127.0.0.1';
+
 const JSON_TYPES = ['object', 'number', 'boolean'];
 
 export function getCapsObject (caps) {
@@ -390,6 +393,9 @@ export function newSession (caps, attachSessId = null) {
       default:
         break;
     }
+
+    // if the server path is '' (or any other kind of falsy) set it to default
+    path = path || DEFAULT_SERVER_PATH;
 
     // TODO W2D handle proxy and rejectUnauthorized cases
     //let rejectUnauthorized = !session.server.advanced.allowUnauthorized;
