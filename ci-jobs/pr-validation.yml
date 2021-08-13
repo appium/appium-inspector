@@ -12,7 +12,9 @@ jobs:
     pool:
       vmImage: 'windows-2019'
     name: 'windows_build'
-    e2e: true
+    # TODO XXX skipping e2e on win for now, since spectron doesn't seem to be able to launch the app
+    # reliably, even though launching it on its own is reliable.
+    # e2e: true
 - template: templates/pr-validation.yml
   parameters:
     pool:
