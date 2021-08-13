@@ -34,15 +34,13 @@ describe('inspector window', function () {
     inspector = new InspectorPage(client);
 
     // Set the desired capabilities
-    await (await client.$(inspector.addDesiredCapabilityButton)).waitForExist({timeout: 10000});
+    await (await client.$(inspector.addDesiredCapabilityButton)).waitForExist({timeout: 20000});
     await inspector.addDCaps(DEFAULT_CAPS);
 
     // Set the fake driver server and port
     await inspector.setCustomServerHost('127.0.0.1');
     await inspector.setCustomServerPort(FAKE_DRIVER_PORT);
     await inspector.setCustomServerPath('/wd/hub');
-
-    await client.pause(1000);
 
     // Start the session
     await inspector.startSession();
