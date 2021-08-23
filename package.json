@@ -181,7 +181,7 @@
     "electron-builder": "^22.11.11",
     "electron-devtools-installer": "^3.0.0",
     "eslint-config-appium": "^4.5.0",
-    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-import": "^2.24.1",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-mocha": "^9.0.0",
     "eslint-plugin-promise": "^5.1.0",
