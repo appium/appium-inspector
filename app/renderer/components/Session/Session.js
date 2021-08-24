@@ -1,7 +1,7 @@
 import { shell } from '../../polyfills';
 import React, { Component } from 'react';
 import _ from 'lodash';
-import NewSessionForm from './NewSessionForm';
+import CapabilityEditor from './CapabilityEditor';
 import SavedSessions from './SavedSessions';
 import AttachToSession from './AttachToSession';
 import ServerTabCustom from './ServerTabCustom';
@@ -92,7 +92,7 @@ export default class Session extends Component {
 
           {!newSessionBegan && <Tabs activeKey={tabKey} onChange={switchTabs} className={SessionStyles.scrollingTabCont}>
             <TabPane tab={t('Desired Capabilities')} key='new' className={SessionStyles.scrollingTab}>
-              <NewSessionForm {...this.props} />
+              <CapabilityEditor {...this.props} />
             </TabPane>
             <TabPane tab={t('Saved Capability Sets', {savedSessionsCount: savedSessions.length})} key='saved' className={SessionStyles.scrollingTab} disabled={savedSessions.length === 0}>
               <SavedSessions {...this.props} />
