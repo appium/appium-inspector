@@ -18,6 +18,11 @@
     -webkit-app-region: drag;
 }
 
+.inspector-toolbar .ant-btn {
+    height: auto !important;
+    width: auto !important;
+}
+
 .inspector-toolbar button {
     border-color: #cacaca;
     -webkit-app-region: no-drag;

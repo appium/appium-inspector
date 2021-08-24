@@ -167,7 +167,7 @@ export default class Inspector extends Component {
     </div>;
 
     const appModeControls = <div className={InspectorStyles['action-controls']}>
-      <ButtonGroup size="large" value={appMode}>
+      <ButtonGroup value={appMode}>
         <Tooltip title={t('Native App Mode')}>
           <Button icon={<AppstoreOutlined/>} onClick={() => {selectAppMode(APP_MODE.NATIVE);}}
             type={appMode === APP_MODE.NATIVE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
@@ -182,7 +182,7 @@ export default class Inspector extends Component {
     </div>;
 
     let actionControls = <div className={InspectorStyles['action-controls']}>
-      <ButtonGroup size="large" value={screenshotInteractionMode}>
+      <ButtonGroup value={screenshotInteractionMode}>
         <Tooltip title={t('Select Elements')}>
           <Button icon={<SelectOutlined/>} onClick={() => {this.screenshotInteractionChange(SELECT);}}
             type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
@@ -201,7 +201,7 @@ export default class Inspector extends Component {
       </ButtonGroup>
     </div>;
 
-    const generalControls = <ButtonGroup size="large">
+    const generalControls = <ButtonGroup>
       <Tooltip title={t('Back')}>
         <Button id='btnGoBack' icon={<ArrowLeftOutlined/>} onClick={() => applyClientMethod({methodName: 'back'})}/>
       </Tooltip>
