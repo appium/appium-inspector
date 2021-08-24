@@ -116,9 +116,9 @@ export default class Inspector extends Component {
     const {screenshot, screenshotError, selectedElement = {},
            applyClientMethod, quitSession, isRecording, showRecord, startRecording,
            pauseRecording, showLocatorTestModal, appMode,
-           screenshotInteractionMode, isFindingElementsTimes,
-           selectedInteractionMode, selectInteractionMode, selectAppMode,
-           showKeepAlivePrompt, keepSessionAlive, sourceXML, t} = this.props;
+           screenshotInteractionMode, isFindingElementsTimes, visibleCommandMethod,
+           selectedInteractionMode, selectInteractionMode, selectAppMode, setVisibleCommandResult,
+           showKeepAlivePrompt, keepSessionAlive, sourceXML, t, visibleCommandResult} = this.props;
     const {path} = selectedElement;
 
     let main = <div className={InspectorStyles['inspector-main']} ref={(el) => {this.screenAndSourceEl = el;}}>
@@ -248,6 +248,14 @@ export default class Inspector extends Component {
           cancelText={t('Quit Session')}
         >
           <p>{t('Your session is about to expire')}</p>
+        </Modal>
+        <Modal
+          title={t('methodCallResult', {methodName: visibleCommandMethod})}
+          visible={!!visibleCommandResult}
+          onOk={() => setVisibleCommandResult(null)}
+          onCancel={() => setVisibleCommandResult(null)}
+        >
+          <pre><code>{visibleCommandResult}</code></pre>
         </Modal>
       </div>
     </Spin>);
