@@ -12,7 +12,7 @@ import { remote } from '../../polyfills';
 import { HEIGHT_OF_SESSION_CONFIG_AREA } from './Layout';
 import { ALERT } from '../../../../gui-common/components/AntdTypes';
 
-export default class NewSessionForm extends Component {
+export default class FormattedCaps extends Component {
 
   getFormattedJSON (caps) {
     return formatJSON.plain(getCapsObject(caps));
