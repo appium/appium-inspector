@@ -22,24 +22,24 @@ export default class CapabilityControl extends Component {
   }
 
   render () {
-    const {cap, onSetCapabilityParam, isEditingDesiredCaps, id, t} = this.props;
+    const {cap, onSetCapabilityParam, isEditingDesiredCaps, id, t, onPressEnter} = this.props;
 
     const buttonAfter = (currentFilePath) => <FileOutlined
       className={SessionStyles['filepath-button']}
       onClick={async () => {onSetCapabilityParam(await this.getLocalFilePath() || currentFilePath);}} />;
 
     switch (cap.type) {
-      case 'text': return <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value} onChange={(e) => onSetCapabilityParam(e.target.value)} />;
+      case 'text': return <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value} onChange={(e) => onSetCapabilityParam(e.target.value)} onPressEnter={onPressEnter}/>;
       case 'boolean': return <Switch disabled={isEditingDesiredCaps} id={id} checkedChildren={'true'} unCheckedChildren={'false'}
         placeholder={t('Value')} checked={cap.value} onChange={(value) => onSetCapabilityParam(value)} />;
       case 'number': return <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value}
-        onChange={(e) => !isNaN(parseInt(e.target.value, 10)) ? onSetCapabilityParam(parseInt(e.target.value, 10)) : onSetCapabilityParam(undefined)} />;
+        onChange={(e) => !isNaN(parseInt(e.target.value, 10)) ? onSetCapabilityParam(parseInt(e.target.value, 10)) : onSetCapabilityParam(undefined)} onPressEnter={onPressEnter} />;
       case 'object':
       case 'json_object':
         return <Input disabled={isEditingDesiredCaps} id={id} type={INPUT.TEXTAREA} rows={4} placeholder={t('Value')} value={cap.value}
           onChange={(e) => onSetCapabilityParam(e.target.value)} />;
       case 'file': return <div className={SessionStyles.fileControlWrapper}>
-        <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value} addonAfter={buttonAfter(cap.value)} />
+        <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value} addonAfter={buttonAfter(cap.value)} onPressEnter={onPressEnter}/>
       </div>;
 
       default:

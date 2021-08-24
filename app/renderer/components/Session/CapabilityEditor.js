@@ -14,6 +14,11 @@ const {Option} = Select;
 
 export default class CapabilityEditor extends Component {
 
+  constructor (props) {
+    super(props);
+    this.latestCapField = React.createRef();
+  }
+
   /**
    * Callback when the type of a dcap is changed
    */
@@ -52,10 +57,17 @@ export default class CapabilityEditor extends Component {
     setCapabilityParam(index, 'value', translatedValue);
   }
 
+  componentDidUpdate () {
+    if (!this.latestCapField.current.input.value) {
+      this.latestCapField.current.focus();
+    }
+  }
+
   render () {
     const {setCapabilityParam, caps, addCapability, removeCapability, saveSession, hideSaveAsModal,
            saveAsText, showSaveAsModal, setSaveAsText, isEditingDesiredCaps, t,
            setAddVendorPrefixes, addVendorPrefixes} = this.props;
+    const numCaps = caps.length;
 
     return <>
       <Row type={ROW.FLEX} align="top" justify="start" className={SessionStyles.capsFormRow}>
@@ -68,7 +80,9 @@ export default class CapabilityEditor extends Component {
               <Col span={7}>
                 <FormItem>
                   <Input disabled={isEditingDesiredCaps} id={`desiredCapabilityName_${index}`} placeholder={t('Name')}
-                    value={cap.name} onChange={(e) => setCapabilityParam(index, 'name', e.target.value)}/>
+                    value={cap.name} onChange={(e) => setCapabilityParam(index, 'name', e.target.value)}
+                    ref={index === numCaps - 1 ? this.latestCapField : ''}
+                  />
                 </FormItem>
               </Col>
               <Col span={8}>
@@ -85,7 +99,9 @@ export default class CapabilityEditor extends Component {
               <Col span={7}>
                 <FormItem>
                   <CapabilityControl {...this.props} cap={cap} id={`desiredCapabilityValue_${index}`}
-                    onSetCapabilityParam={(value) => setCapabilityParam(index, 'value', value)} />
+                    onSetCapabilityParam={(value) => setCapabilityParam(index, 'value', value)}
+                    onPressEnter={(index === numCaps - 1) ? addCapability : () => {}}
+                  />
                 </FormItem>
               </Col>
               <Col span={2}>
