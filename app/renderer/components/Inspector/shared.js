@@ -132,13 +132,13 @@ export const actionDefinitions = {
       'Get Data Types': {methodName: 'getPerformanceDataTypes'},
     },
     'iOS Simulator': {
-      'Perform Touch Id': {methodName: 'touchId', args: [['match', BOOLEAN]], refresh: true},
-      'Toggle Touch Id Enrollment': {methodName: 'toggleEnrollTouchId', args: [['enroll', STRING]]},
+      'Perform Touch Id': {methodName: 'touchId', args: [['shouldMatch', BOOLEAN]], refresh: true},
+      'Toggle Touch Id Enrollment': {methodName: 'toggleEnrollTouchId', args: [['shouldEnroll', BOOLEAN]]},
     },
     'System': {
       'Open Notifications': {methodName: 'openNotifications', refresh: true},
       'Get System Time': {methodName: 'getDeviceTime'},
-      'Fingerprint (Android)': {methodName: 'fingerprint', args: [['fingerPrintId', NUMBER]], refresh: true}
+      'Fingerprint (Android)': {methodName: 'fingerPrint', args: [['fingerPrintId', NUMBER]], refresh: true}
     },
   },
   'Session': {
@@ -146,7 +146,9 @@ export const actionDefinitions = {
       'Get Session Capabilities': {methodName: 'getSession'}
     },
     'Timeouts': {
-      'Set Timeouts': {methodName: 'setTimeouts', args: [['timeoutsJson', STRING]]},
+      'Set Timeouts': {methodName: 'setTimeouts', args: [
+        ['implicitTimeout', NUMBER], ['pageLoadTimeout', NUMBER], ['scriptTimeout', NUMBER]
+      ]},
     },
     'Orientation': {
       'Get Orientation': {methodName: 'getOrientation'},
@@ -154,7 +156,7 @@ export const actionDefinitions = {
     },
     'Geolocation': {
       'Get Geolocation': {methodName: 'getGeoLocation'},
-      'Set Geolocation': {methodName: 'setGeoLocation', args: [['latitude', NUMBER], ['longitude', NUMBER], ['altitude', NUMBER]]},
+      'Set Geolocation': {methodName: 'setGeoLocation', args: [['locationJSONObject', STRING]]},
     },
     'Logs': {
       'Get Log Types': {methodName: 'getLogTypes'},
@@ -176,9 +178,9 @@ export const actionDefinitions = {
   },
   'Context': {
     'Context': {
-      'Get Context': {methodName: 'getContext'},
-      'Get All Context': {methodName: 'getContexts'},
-      'Set Context': {methodName: 'switchContexts', args: [['name', STRING]], refresh: true}
+      'Get Current Context': {methodName: 'getContext'},
+      'Get Context List': {methodName: 'getContexts'},
+      'Set Context': {methodName: 'switchContext', args: [['name', STRING]], refresh: true}
     },
     'Window (W3C)': {
       'Get Window Handle': {methodName: 'getWindowHandle'},
