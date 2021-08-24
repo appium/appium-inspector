@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Select, Row, Col } from 'antd';
+import { Input, Select, Row } from 'antd';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
 
@@ -47,21 +47,18 @@ class ElementLocator extends Component {
 
     return <div>
       <Row>
-        <Col>
-          {t('locatorStrategy')}
-          <Select className={InspectorStyles['locator-strategy-selector']}
-            onChange={(value) => setLocatorTestStrategy(value)}
-            value={locatorTestStrategy}>
-            {locatorStrategies.map(([strategyValue, strategyName]) => (
-              <Option key={strategyValue} value={strategyValue}>{strategyName}</Option>
-            ))}
-          </Select>
-        </Col>
-      </Row> <Row>
+        {t('locatorStrategy')}
+        <Select className={InspectorStyles['locator-strategy-selector']}
+          onChange={(value) => setLocatorTestStrategy(value)}
+          value={locatorTestStrategy}>
+          {locatorStrategies.map(([strategyValue, strategyName]) => (
+            <Option key={strategyValue} value={strategyValue}>{strategyName}</Option>
+          ))}
+        </Select>
+      </Row>
+      <Row>
         {t('selector')}
-        <Col>
-          <Input.TextArea onChange={(e) => setLocatorTestValue(e.target.value)} value={locatorTestValue} />
-        </Col>
+        <Input.TextArea className={InspectorStyles['locator-strategy-selector']} onChange={(e) => setLocatorTestValue(e.target.value)} value={locatorTestValue} />
       </Row>
     </div>;
   }
