@@ -12,7 +12,7 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          PROMPT_KEEP_ALIVE, HIDE_PROMPT_KEEP_ALIVE, GET_FIND_ELEMENTS_TIMES, GET_FIND_ELEMENTS_TIMES_COMPLETED,
          SELECT_ACTION_GROUP, SELECT_SUB_ACTION_GROUP, SET_APP_MODE,
          SELECT_INTERACTION_MODE, ENTERING_ACTION_ARGS, SET_ACTION_ARG, REMOVE_ACTION, SET_CONTEXT,
-         SET_KEEP_ALIVE_INTERVAL, SET_USER_WAIT_TIMEOUT, SET_LAST_ACTIVE_MOMENT,
+         SET_KEEP_ALIVE_INTERVAL, SET_USER_WAIT_TIMEOUT, SET_LAST_ACTIVE_MOMENT, SET_VISIBLE_COMMAND_RESULT,
 } from '../actions/Inspector';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from '../components/Inspector/shared';
 
@@ -45,6 +45,8 @@ const INITIAL_STATE = {
   pendingAction: null,
   findElementsExecutionTimes: [],
   isFindingElementsTimes: false,
+  visibleCommandResult: null,
+  visibleCommandMethod: null,
 };
 
 /**
@@ -435,6 +437,13 @@ export default function inspector (state = INITIAL_STATE, action) {
       return {
         ...state,
         lastActiveMoment: action.lastActiveMoment,
+      };
+
+    case SET_VISIBLE_COMMAND_RESULT:
+      return {
+        ...state,
+        visibleCommandResult: action.result,
+        visibleCommandMethod: action.methodName,
       };
 
     default:

@@ -73,6 +73,8 @@ export const SET_KEEP_ALIVE_INTERVAL = 'SET_KEEP_ALIVE_INTERVAL';
 export const SET_USER_WAIT_TIMEOUT = 'SET_USER_WAIT_TIMEOUT';
 export const SET_LAST_ACTIVE_MOMENT = 'SET_LAST_ACTIVE_MOMENT';
 
+export const SET_VISIBLE_COMMAND_RESULT = 'SET_VISIBLE_COMMAND_RESULT';
+
 const KEEP_ALIVE_PING_INTERVAL = 5 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
 const WAIT_FOR_USER_KEEP_ALIVE = 60 * 60 * 1000; // Give user 1 hour to reply
@@ -601,16 +603,21 @@ export function callClientMethod (params) {
     }
 
     if (!ignoreResult) {
-      const truncatedResult = _.truncate(JSON.stringify(commandRes), {length: 2000});
+      // if the user is running actions manually, we want to show the full response with the
+      // ability to scroll etc...
+      const result = JSON.stringify(commandRes, null, '  ');
+      const truncatedResult = _.truncate(result, {length: 2000});
       console.log(`Result of client command was:`); // eslint-disable-line no-console
       console.log(truncatedResult); // eslint-disable-line no-console
-      notification.success({
-        message: i18n.t('methodCallResult', {methodName}),
-        description: truncatedResult,
-        duration: 0,
-      });
+      setVisibleCommandResult(result, methodName)(dispatch);
     }
     res.elementId = res.id;
     return res;
+  };
+}
+
+export function setVisibleCommandResult (result, methodName) {
+  return (dispatch) => {
+    dispatch({type: SET_VISIBLE_COMMAND_RESULT, result, methodName});
   };
 }

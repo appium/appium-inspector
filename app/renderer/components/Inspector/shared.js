@@ -61,15 +61,16 @@ export const APP_MODE = {
 export const actionArgTypes = {
   STRING: 'string',
   NUMBER: 'number',
+  BOOLEAN: 'boolean',
 };
 
-const { STRING, NUMBER } = actionArgTypes;
+const { STRING, NUMBER, BOOLEAN } = actionArgTypes;
 
 // Note: When adding or removing actionDefinitions, update `en/translation.json`
 export const actionDefinitions = {
   'Device': {
-    'Execute Mobile': {
-      'Execute': {methodName: 'executeScript', args: [['command', STRING], ['jsonArgument', STRING]]}
+    'Execute Script': {
+      'Execute': {methodName: 'executeScript', args: [['executeScriptCommand', STRING], ['jsonArgument', STRING]]}
     },
     'Android Activity': {
       'Start Activity': {methodName: 'startActivity', args: [
@@ -86,13 +87,15 @@ export const actionDefinitions = {
       'Launch App': {methodName: 'launchApp', refresh: true},
       'Background App': {methodName: 'background', args: [['timeout', NUMBER]], refresh: true},
       'Close App': {methodName: 'closeApp', refresh: true},
-      'Reset App': {methodName: 'reset', refresh: true},
-      'Remove App': {methodName: 'removeApp', args: [['bundleId', STRING]]},
+      'Reset App': {methodName: 'resetApp', refresh: true},
+      'Remove App': {methodName: 'removeApp', args: [['appId', STRING]]},
       'Get App Strings': {methodName: 'getStrings', args: [['language', STRING], ['stringFile', STRING]], refresh: true},
     },
     'Clipboard': {
       'Get Clipboard': {methodName: 'getClipboard'},
-      'Set Clipboard': {methodName: 'setClipboard', args: [['clipboardText', STRING]]},
+      'Set Clipboard': {methodName: 'setClipboard', args: [
+        ['clipboardText', STRING], ['contentType', STRING], ['contentLabel', STRING]
+      ]},
     },
     'File': {
       'Push File': {methodName: 'pushFile', args: [['pathToInstallTo', STRING], ['fileContentString', STRING]]},
@@ -129,7 +132,7 @@ export const actionDefinitions = {
       'Get Data Types': {methodName: 'getPerformanceDataTypes'},
     },
     'iOS Simulator': {
-      'Perform Touch Id': {methodName: 'touchId', args: [['match', STRING]], refresh: true},
+      'Perform Touch Id': {methodName: 'touchId', args: [['match', BOOLEAN]], refresh: true},
       'Toggle Touch Id Enrollment': {methodName: 'toggleEnrollTouchId', args: [['enroll', STRING]]},
     },
     'System': {
