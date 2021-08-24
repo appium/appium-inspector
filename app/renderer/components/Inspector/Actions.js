@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { Row, Col, Button, Select, Modal, Input, notification, } from 'antd';
+import { Row, Col, Button, Select, Modal, Input, Switch, notification, } from 'antd';
 import { actionDefinitions, actionArgTypes } from './shared';
 import InspectorStyles from './Inspector.css';
 import { INPUT } from '../../../../gui-common/components/AntdTypes';
@@ -20,14 +20,6 @@ export default class Actions extends Component {
     const { pendingAction, cancelPendingAction, applyClientMethod, t } = this.props;
     let {args, action} = pendingAction;
     let {methodName} = action;
-
-    // Special case for 'startActivity'
-    // TODO: Fix these... args aren't getting through
-    if (action.methodName === 'startActivity') {
-      args = {appPackage: args[0], appActivity: args[1], appWaitPackage: args[2],
-              intentAction: args[3], intentCategory: args[4], intentFlags: args[5],
-              optionalIntentArguments: args[6], dontStopAppOnReset: args[7]};
-    }
 
     // Special case for 'rotateDevice'
     if (action.methodName === 'rotateDevice') {
@@ -109,6 +101,7 @@ export default class Actions extends Component {
                   onChange={(e) => setActionArg(index, _.toNumber(e.target.value))}
                 />
               }
+              {argType === actionArgTypes.BOOLEAN && <div>{t(argName)} <Switch checked={pendingAction.args[index]} onChange={(v) => setActionArg(index, v)} /></div>}
               {argType === actionArgTypes.STRING && <Input addonBefore={t(argName)} onChange={(e) => setActionArg(index, e.target.value)}/>}
             </Col>
           </Row>)
