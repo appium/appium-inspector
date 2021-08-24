@@ -86,7 +86,7 @@ export default class Session extends Component {
           </div>
 
 
-          {newSessionBegan && <div key={2}>
+          {newSessionBegan && <div>
             <p>{t('sessionInProgress')}</p>
           </div>}
 
@@ -101,6 +101,7 @@ export default class Session extends Component {
               <AttachToSession {...this.props} />
             </TabPane>
           </Tabs>}
+
           <div className={SessionStyles.sessionFooter}>
             <div className={SessionStyles.desiredCapsLink}>
               <a href="#" onClick={(e) => e.preventDefault() || shell.openExternal('https://github.com/appium/appium/blob/master/docs/en/writing-running-appium/caps.md')}>
@@ -119,9 +120,10 @@ export default class Session extends Component {
               </Button>
             }
           </div>
+
         </div>
       </Spin>,
-      <CloudProviderSelector {...this.props} />
+      <CloudProviderSelector {...this.props} key='CloudProviderSelector' />
     ];
   }
 }
