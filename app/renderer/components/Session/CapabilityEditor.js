@@ -12,7 +12,7 @@ import { ROW } from '../../../../gui-common/components/AntdTypes';
 const {Item: FormItem} = Form;
 const {Option} = Select;
 
-export default class NewSessionForm extends Component {
+export default class CapabilityEditor extends Component {
 
   /**
    * Callback when the type of a dcap is changed

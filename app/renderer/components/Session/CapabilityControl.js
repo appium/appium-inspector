@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 const {dialog} = remote;
 
-export default class NewSessionForm extends Component {
+export default class CapabilityControl extends Component {
 
   async getLocalFilePath () {
     try {
