@@ -68,6 +68,7 @@ export default class CapabilityEditor extends Component {
            saveAsText, showSaveAsModal, setSaveAsText, isEditingDesiredCaps, t,
            setAddVendorPrefixes, addVendorPrefixes} = this.props;
     const numCaps = caps.length;
+    const onSaveAsOk = () => saveSession(caps, {name: saveAsText});
 
     return <>
       <Row type={ROW.FLEX} align="top" justify="start" className={SessionStyles.capsFormRow}>
@@ -144,8 +145,8 @@ export default class CapabilityEditor extends Component {
             okText='Save'
             cancelText='Cancel'
             onCancel={hideSaveAsModal}
-            onOk={() => saveSession(caps, {name: saveAsText})}>
-            <Input onChange={(e) => setSaveAsText(e.target.value)} addonBefore={t('Name')} value={saveAsText}/>
+            onOk={onSaveAsOk}>
+            <Input onChange={(e) => setSaveAsText(e.target.value)} addonBefore={t('Name')} value={saveAsText} onPressEnter={onSaveAsOk}/>
           </Modal>
         </Col>
       </Row>
