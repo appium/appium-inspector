@@ -200,7 +200,7 @@ export function newSession (caps, attachSessId = null) {
     let session = getState().session;
 
     // first add vendor prefixes to caps if requested
-    if (session.addVendorPrefixes) {
+    if (!attachSessId && session.addVendorPrefixes) {
       caps = _addVendorPrefixes(caps, dispatch, getState);
     }
 
