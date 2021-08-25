@@ -58,8 +58,17 @@ export default class CapabilityEditor extends Component {
   }
 
   componentDidUpdate () {
-    if (!this.latestCapField.current.input.value) {
+    const {caps} = this.props;
+    // if we have more than one cap and the most recent cap name is empty, it means we've just
+    // added a new cap field, so focus that input element. But only do this once, so we don't annoy
+    // the user if they decide to unfocus and do something else.
+    if (
+      caps.length > 1 &&
+      !this.latestCapField.current.input.value &&
+      !this.latestCapField.current.__didFocus
+    ) {
       this.latestCapField.current.focus();
+      this.latestCapField.current.__didFocus = true;
     }
   }
 
