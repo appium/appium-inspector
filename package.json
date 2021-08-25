@@ -161,7 +161,7 @@
     "postcss-modules": "Can't upgrade any further until we upgrade to Parcel v2"
   },
   "devDependencies": {
-    "@appium/fake-driver": "^2.2.0",
+    "@appium/fake-driver": "^3.0.0",
     "@babel/core": "^7.14.5",
     "@babel/eslint-parser": "^7.14.4",
     "@babel/eslint-plugin": "^7.14.5",
