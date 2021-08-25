@@ -86,6 +86,7 @@ export const ServerTypes = serverTypes;
 
 export const DEFAULT_SERVER_PATH = '/';
 export const DEFAULT_SERVER_HOST = '127.0.0.1';
+export const DEFAULT_SERVER_PORT = 4723;
 
 const JSON_TYPES = ['object', 'number', 'boolean'];
 
@@ -222,8 +223,8 @@ export function newSession (caps, attachSessId = null) {
         port = session.server.local.port;
         break;
       case ServerTypes.remote:
-        host = session.server.remote.hostname || '127.0.0.1';
-        port = session.server.remote.port || 4723;
+        host = session.server.remote.hostname;
+        port = session.server.remote.port;
         path = session.server.remote.path;
         https = session.server.remote.ssl;
         break;
@@ -396,6 +397,8 @@ export function newSession (caps, attachSessId = null) {
 
     // if the server path is '' (or any other kind of falsy) set it to default
     path = path || DEFAULT_SERVER_PATH;
+    host = host || DEFAULT_SERVER_HOST;
+    port = port || DEFAULT_SERVER_PORT;
 
     // TODO W2D handle proxy and rejectUnauthorized cases
     //let rejectUnauthorized = !session.server.advanced.allowUnauthorized;
@@ -657,7 +660,15 @@ export function getRunningSessions () {
     const state = getState().session;
     const {server, serverType} = state;
     const serverInfo = server[serverType];
-    const {hostname, port, path, ssl, username, accessKey} = serverInfo;
+    let {hostname, port, path, ssl, username, accessKey} = serverInfo;
+
+    // if we have a standard remote server, fill out connection info based on placeholder defaults
+    // in case the user hasn't adjusted those fields
+    if (serverType === ServerTypes.remote) {
+      hostname = hostname || DEFAULT_SERVER_HOST;
+      port = port || DEFAULT_SERVER_PORT;
+      path = path || DEFAULT_SERVER_PATH;
+    }
 
     if (!hostname || !port || !path) {
       // no need to get sessions if we don't have complete server info

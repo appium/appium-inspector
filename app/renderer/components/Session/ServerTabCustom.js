@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Input, Checkbox } from 'antd';
-import { DEFAULT_SERVER_PATH, DEFAULT_SERVER_HOST } from '../../actions/Session';
+import { DEFAULT_SERVER_PATH, DEFAULT_SERVER_HOST, DEFAULT_SERVER_PORT } from '../../actions/Session';
 
 const FormItem = Form.Item;
 
@@ -20,7 +20,7 @@ export default class ServerTabCustom extends Component {
         </Col>
         <Col span={12}>
           <FormItem>
-            <Input id='customServerPort' placeholder={4723} addonBefore={t('Remote Port')} value={server.remote.port}
+            <Input id='customServerPort' placeholder={DEFAULT_SERVER_PORT} addonBefore={t('Remote Port')} value={server.remote.port}
               onChange={(e) => setServerParam('port', e.target.value)} />
           </FormItem>
         </Col>
