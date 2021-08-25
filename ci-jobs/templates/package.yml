@@ -24,7 +24,7 @@ jobs:
       persistCredentials: true
     - task: NodeTool@0
       inputs:
-        versionSpec: '10.x'
+        versionSpec: '14.x'
     - script: npm ci
       displayName: Install dependencies
     - script: |
