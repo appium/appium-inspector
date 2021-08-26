@@ -13,7 +13,7 @@ Appium Inspector is basically just an Appium client (like WebdriverIO, Appium's 
 Appium Inspector is released in two formats:
 
 1. As a desktop app for macOS, Windows, and Linux. You can get the most recent published version of this app at the [Releases](https://github.com/appium/appium-inspector/releases) section of this repo. Simply grab the appropriate version for your OS and follow standard installation procedures (but see the note below for macOS).
-2. As a [web application](https://inspector.appiumpro.com), hosted by [Appium Pro](https://appiumpro.com). (It's currently a [known issue](https://github.com/appium/appium-inspector/issues/103) that the web version does not work on Safari).
+2. As a [web application](https://inspector.appiumpro.com), hosted by [Appium Pro](https://appiumpro.com). (It's currently a [known issue](https://github.com/appium/appium-inspector/issues/103) that the web version does not work on Safari). Please make sure to read the note below on CORS as well.
 
 Both apps have the exact same set of features, so you might find that simply opening the web version is going to be easier and save you on disk space (and you can keep multiple tabs open!).
 
@@ -64,6 +64,14 @@ As mentioned above, the Inspector is basically an Appium client, so for it to fu
 2. All of the appropriate Appium drivers, plugins, and other dependencies that those might entail.
 
 Basically, if you can start an Appium session from your typical client library, you should be able to do the same with the Inspector.
+
+### Connecting to a local server from the browser inspector (CORS)
+
+Web browsers have security features which prevent [cross-origin resource sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) in general. The browser version of the Inspector needs to make requests to the Appium server directly from the browser via JavaScript, but these requests are typically not made to the same host (for example, the Inspector is accessed at `appiumpro.com`, whereas your local Appium Server is `localhost:4723`).
+
+In this scenario, you will be unable to start a session, because the browser will prevent it. To work around this limitation, you can start your Appium server with `--allow-cors`, so that the Appium server knows to send the appropriate CORS-related headers.
+
+If you run into this issue with a cloud platform, then the cloud platform needs to update their server frontend to support the CORS scenario as well.
 
 ## Reporting issues
 
