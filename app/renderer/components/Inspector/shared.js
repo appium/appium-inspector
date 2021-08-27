@@ -84,9 +84,9 @@ export const actionDefinitions = {
     'App': {
       'Install App': {methodName: 'installApp', args: [['appPathOrUrl', STRING]]},
       'Is App Installed': {methodName: 'isAppInstalled', args: [['appId', STRING]]},
-      'Launch App': {methodName: 'launchApp', refresh: true},
       'Background App': {methodName: 'background', args: [['timeout', NUMBER]], refresh: true},
-      'Close App': {methodName: 'closeApp', refresh: true},
+      'Activate App': {methodName: 'activateApp', args: [['appId', STRING]], refresh: true},
+      'Terminate App': {methodName: 'terminateApp', args: [['appId', STRING]], refresh: true},
       'Reset App': {methodName: 'resetApp', refresh: true},
       'Remove App': {methodName: 'removeApp', args: [['appId', STRING]]},
       'Get App Strings': {methodName: 'getStrings', args: [['language', STRING], ['stringFile', STRING]], refresh: true},
