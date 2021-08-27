@@ -7,7 +7,7 @@ parameters:
   pool: ''
   xvfb: false
   target: ''
-  buildScript: 'npx electron-builder build --publish always'
+  buildScript: 'electron-builder build --publish always'
 jobs:
   - job: ${{parameters.name}}
     pool: ${{parameters.pool}}
@@ -25,14 +25,18 @@ jobs:
     - task: NodeTool@0
       inputs:
         versionSpec: '14.x'
-    - script: npm ci
+    - script: npm install
       displayName: Install dependencies
+    - script: npm install -g electron-builder@22.13.0
+      displayName: Install electron builder globally
     - script: |
         git clone https://github.com/appium/appium-desktop.git
         npm run copy-en-i18n ./appium-desktop
       displayName: Copy EN translations from server
     - script: npm run build
       displayName: Build
+    - script: npm install --production
+      displayName: Remove dev dependencies
     - script: ${{ parameters.buildScript }}
       displayName: Bundle
       env:
