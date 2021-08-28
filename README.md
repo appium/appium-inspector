@@ -47,7 +47,7 @@ The reason for this is that the Appium team does not have a paid Apple developer
 | ---------------- | ------|
 | [Sauce Labs](https://saucelabs.com) | [Documentation](https://wiki.saucelabs.com/)            |
 | [TestObject](https://testobject.com) | [Documentation](https://wiki.saucelabs.com/)           |
-| [Headspin](https://headspin.io) | [Documentation](https://headspin.io/)                 |
+| [HeadSpin](https://headspin.io) | [Documentation](https://headspin.io/)                 |
 | [Browserstack](https://browserstack.com) | [Documentation](https://www.browserstack.com/docs) |
 | [Bitbar](https://bitbar.com) | [Documentation](http://docs.bitbar.com/)                       |
 | [Kobiton](https://kobiton.com) | [Documentation](https://docs.kobiton.com/)                       |
