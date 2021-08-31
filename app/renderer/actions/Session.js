@@ -410,14 +410,18 @@ export function newSession (caps, attachSessId = null) {
     dispatch({type: SESSION_LOADING});
 
 
-    const hostname = username && accessKey ? `${username}:${accessKey}@${host}` : host;
     const serverOpts = {
-      hostname,
+      hostname: host,
       port: parseInt(port, 10),
       protocol: https ? 'https' : 'http',
       path,
       connectionRetryCount: CONN_RETRIES,
     };
+
+    if (username && accessKey) {
+      serverOpts.user = username;
+      serverOpts.key = accessKey;
+    }
 
     // If a newCommandTimeout wasn't provided, set it to 0 so that sessions don't close on users
     if (isUndefined(desiredCapabilities[CAPS_NEW_COMMAND])) {
