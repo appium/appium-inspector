@@ -1,7 +1,6 @@
 import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE,
          SESSION_SERVER_PARAMS } from '../../shared/settings';
 import { v4 as UUID } from 'uuid';
-import url from 'url';
 import { push } from 'connected-react-router';
 import { notification } from 'antd';
 import { includes, debounce, toPairs, union, without, keys, isUndefined } from 'lodash';
@@ -256,7 +255,7 @@ export function newSession (caps, attachSessId = null) {
         }
         break;
       case ServerTypes.headspin: {
-        const headspinUrl = url.parse(session.server.headspin.webDriverUrl);
+        const headspinUrl = new URL(session.server.headspin.webDriverUrl);
         host = session.server.headspin.hostname = headspinUrl.hostname;
         port = session.server.headspin.port = headspinUrl.port;
         path = session.server.headspin.path = headspinUrl.pathname;
@@ -334,11 +333,10 @@ export function newSession (caps, attachSessId = null) {
         host = session.server.pcloudy.hostname;
         port = session.server.pcloudy.port = 443;
         path = session.server.pcloudy.path = '/objectspy/wd/hub';
-        username = session.server.pcloudy.username || process.env.PCLOUDY_USERNAME;
-        desiredCapabilities.pCloudy_Username = username;
-        accessKey = session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
-        desiredCapabilities.pCloudy_ApiKey = accessKey;
-        if (!username || !accessKey) {
+        desiredCapabilities.pCloudy_Username = session.server.pcloudy.username || process.env.PCLOUDY_USERNAME;
+        desiredCapabilities.pCloudy_ApiKey = session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
+        if (!(session.server.pcloudy.username || process.env.PCLOUDY_USERNAME) ||
+              !(session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY)) {
           notification.error({
             message: 'Error',
             description: 'PCLOUDY username and api key are required!',
@@ -374,7 +372,7 @@ export function newSession (caps, attachSessId = null) {
           return;
         }
         desiredCapabilities['experitest:accessKey'] = session.server.experitest.accessKey;
-        let experitestUrl = url.parse(session.server.experitest.url);
+        let experitestUrl = new URL(session.server.experitest.url);
         host = session.server.experitest.hostname = experitestUrl.hostname;
         path = session.server.experitest.path = '/wd/hub';
         port = session.server.experitest.port = experitestUrl.port;
