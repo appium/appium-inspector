@@ -255,7 +255,13 @@ export function newSession (caps, attachSessId = null) {
         }
         break;
       case ServerTypes.headspin: {
-        const headspinUrl = new URL(session.server.headspin.webDriverUrl);
+        let headspinUrl;
+        try {
+          headspinUrl = new URL(session.server.headspin.webDriverUrl);
+        } catch (ign) {
+          showError(new Error(`${session.server.headspin.webDriverUrl} is invalid url`), null, 0);
+          return;
+        }
         host = session.server.headspin.hostname = headspinUrl.hostname;
         port = session.server.headspin.port = headspinUrl.port;
         path = session.server.headspin.path = headspinUrl.pathname;
@@ -372,7 +378,15 @@ export function newSession (caps, attachSessId = null) {
           return;
         }
         desiredCapabilities['experitest:accessKey'] = session.server.experitest.accessKey;
-        let experitestUrl = new URL(session.server.experitest.url);
+
+        let experitestUrl;
+        try {
+          experitestUrl = new URL(session.server.experitest.url);
+        } catch (ign) {
+          showError(new Error(`${session.server.experitest.url} is invalid url`), null, 0);
+          return;
+        }
+
         host = session.server.experitest.hostname = experitestUrl.hostname;
         path = session.server.experitest.path = '/wd/hub';
         port = session.server.experitest.port = experitestUrl.port;
