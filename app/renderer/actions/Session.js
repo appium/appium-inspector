@@ -355,10 +355,12 @@ export function newSession (caps, attachSessId = null) {
       case ServerTypes.testingbot:
         host = session.server.testingbot.hostname = process.env.TB_HOST || 'hub.testingbot.com';
         port = session.server.testingbot.port = 443;
-        username = session.server.testingbot.key || process.env.TB_KEY;
-        accessKey = session.server.testingbot.secret || process.env.TB_SECRET;
-        desiredCapabilities['tb.source'] = 'appiumdesktop';
-        if (!username || !accessKey) {
+        path = session.server.testingbot.path = '/wd/hub';
+        desiredCapabilities['tb:options'] = {}
+        desiredCapabilities['tb:options'].key = session.server.testingbot.key || process.env.TB_KEY;
+        desiredCapabilities['tb:options'].secret = session.server.testingbot.secret || process.env.TB_SECRET;
+        if (!(session.server.testingbot.key || process.env.TB_KEY) ||
+              !(session.server.testingbot.secret || process.env.TB_SECRET)) {
           notification.error({
             message: 'Error',
             description: i18n.t('testingbotCredentialsRequired'),
