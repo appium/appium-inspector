@@ -228,6 +228,7 @@ export function newSession (caps, attachSessId = null) {
         https = session.server.remote.ssl;
         break;
       case ServerTypes.sauce:
+        path = '/wd/hub';
         host = `ondemand.${session.server.sauce.dataCenter}.saucelabs.com`;
         port = 80;
         if (session.server.sauce.useSCProxy) {
