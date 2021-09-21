@@ -1,4 +1,4 @@
-import { clipboard } from 'electron';
+import { clipboard } from '../../polyfills';
 import React, { Component } from 'react';
 import { Card, Select, Tooltip, Button } from 'antd';
 import InspectorStyles from './Inspector.css';

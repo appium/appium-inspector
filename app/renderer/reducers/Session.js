@@ -10,7 +10,7 @@ import { NEW_SESSION_REQUESTED, NEW_SESSION_BEGAN, NEW_SESSION_DONE,
          CHANGE_SERVER_TYPE, SET_SERVER_PARAM, SET_SERVER, SET_ATTACH_SESS_ID,
          GET_SESSIONS_REQUESTED, GET_SESSIONS_DONE,
          ENABLE_DESIRED_CAPS_EDITOR, ABORT_DESIRED_CAPS_EDITOR, SAVE_RAW_DESIRED_CAPS, SET_RAW_DESIRED_CAPS, SHOW_DESIRED_CAPS_JSON_ERROR,
-         IS_ADDING_CLOUD_PROVIDER, SET_PROVIDERS,
+         IS_ADDING_CLOUD_PROVIDER, SET_PROVIDERS, SET_ADD_VENDOR_PREFIXES, SET_STATE_FROM_URL,
          ServerTypes } from '../actions/Session';
 
 const visibleProviders = []; // Pull this from "electron-settings"
@@ -28,16 +28,13 @@ for (const serverName of _.keys(ServerTypes)) {
 const INITIAL_STATE = {
   savedSessions: [],
   tabKey: 'new',
-  serverType: ServerTypes.local,
+  serverType: ServerTypes.remote,
   visibleProviders,
   server: {
     local: {},
     remote: {},
     sauce: {
       dataCenter: 'us-west-1',
-    },
-    testobject: {
-      dataCenter: 'US',
     },
     headspin: {},
     browserstack: {},
@@ -64,6 +61,7 @@ const INITIAL_STATE = {
   isValidCapsJson: true,
   isValidatingCapsJson: false,
   isAddingCloudProvider: false,
+  addVendorPrefixes: true,
 };
 
 let nextState;
@@ -216,7 +214,7 @@ export default function session (state = INITIAL_STATE, action) {
             // Copy current server state and extend it with new server state
             const nextServerState = _.cloneDeep(currentServerState || {});
 
-            // Extend each server (sauce, testobject, remote, kobiton, etc...)
+            // Extend each server (sauce, remote, kobiton, etc...)
             for (let serverName of _.keys(nextServerState)) {
               nextServerState[serverName] = {
                 ...(nextServerState[serverName] || {}),
@@ -319,6 +317,22 @@ export default function session (state = INITIAL_STATE, action) {
       return {
         ...state,
         visibleProviders: action.providers || []
+      };
+
+    case SET_ADD_VENDOR_PREFIXES:
+      return {
+        ...state,
+        addVendorPrefixes: action.addVendorPrefixes,
+      };
+
+    case SET_STATE_FROM_URL:
+      return {
+        ...state,
+        server: {
+          ...state.server,
+          ...(action.state.server || {})
+        },
+        ...omit(action.state, ['server']),
       };
 
     default:

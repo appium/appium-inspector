@@ -1,11 +1,10 @@
-import { ipcRenderer } from 'electron';
 import _ from 'lodash';
 import { push } from 'connected-react-router';
 import { getLocators, APP_MODE } from '../components/Inspector/shared';
 import { showError } from './Session';
 import { xmlToJSON } from '../util';
 import frameworks from '../lib/client-frameworks';
-import settings, { SAVED_FRAMEWORK } from '../../shared/settings';
+import { getSetting, setSetting, SAVED_FRAMEWORK } from '../../shared/settings';
 import i18n from '../../configs/i18next.config.renderer';
 import AppiumClient from '../lib/appium-client';
 import { notification } from 'antd';
@@ -73,6 +72,8 @@ export const SET_CONTEXT = 'SET_CONTEXT';
 export const SET_KEEP_ALIVE_INTERVAL = 'SET_KEEP_ALIVE_INTERVAL';
 export const SET_USER_WAIT_TIMEOUT = 'SET_USER_WAIT_TIMEOUT';
 export const SET_LAST_ACTIVE_MOMENT = 'SET_LAST_ACTIVE_MOMENT';
+
+export const SET_VISIBLE_COMMAND_RESULT = 'SET_VISIBLE_COMMAND_RESULT';
 
 const KEEP_ALIVE_PING_INTERVAL = 5 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -271,14 +272,13 @@ export function pauseRecording () {
 export function clearRecording () {
   return (dispatch) => {
     dispatch({type: CLEAR_RECORDING});
-    ipcRenderer.send('appium-restart-recorder'); // Tell the main thread to start the variable count from 1
     dispatch({type: CLEAR_ASSIGNED_VAR_CACHE}); // Get rid of the variable cache
   };
 }
 
 export function getSavedActionFramework () {
   return async (dispatch) => {
-    let framework = await settings.get(SAVED_FRAMEWORK);
+    let framework = await getSetting(SAVED_FRAMEWORK);
     dispatch({type: SET_ACTION_FRAMEWORK, framework});
   };
 }
@@ -288,7 +288,7 @@ export function setActionFramework (framework) {
     if (!frameworks[framework]) {
       throw new Error(i18n.t('frameworkNotSupported', {framework}));
     }
-    await settings.set(SAVED_FRAMEWORK, framework);
+    await setSetting(SAVED_FRAMEWORK, framework);
     dispatch({type: SET_ACTION_FRAMEWORK, framework});
   };
 }
@@ -603,16 +603,21 @@ export function callClientMethod (params) {
     }
 
     if (!ignoreResult) {
-      const truncatedResult = _.truncate(JSON.stringify(commandRes), {length: 2000});
+      // if the user is running actions manually, we want to show the full response with the
+      // ability to scroll etc...
+      const result = JSON.stringify(commandRes, null, '  ');
+      const truncatedResult = _.truncate(result, {length: 2000});
       console.log(`Result of client command was:`); // eslint-disable-line no-console
       console.log(truncatedResult); // eslint-disable-line no-console
-      notification.success({
-        message: i18n.t('methodCallResult', {methodName}),
-        description: truncatedResult,
-        duration: 0,
-      });
+      setVisibleCommandResult(result, methodName)(dispatch);
     }
     res.elementId = res.id;
     return res;
+  };
+}
+
+export function setVisibleCommandResult (result, methodName) {
+  return (dispatch) => {
+    dispatch({type: SET_VISIBLE_COMMAND_RESULT, result, methodName});
   };
 }

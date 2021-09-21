@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, Modal, Form, Row, Col, Select } from 'antd';
+import { Button, Checkbox, Input, Modal, Form, Row, Col, Select } from 'antd';
 import FormattedCaps from './FormattedCaps';
 import CapabilityControl from './CapabilityControl';
 import SessionStyles from './Session.css';
@@ -12,7 +12,12 @@ import { ROW } from '../../../../gui-common/components/AntdTypes';
 const {Item: FormItem} = Form;
 const {Option} = Select;
 
-export default class NewSessionForm extends Component {
+export default class CapabilityEditor extends Component {
+
+  constructor (props) {
+    super(props);
+    this.latestCapField = React.createRef();
+  }
 
   /**
    * Callback when the type of a dcap is changed
@@ -52,9 +57,27 @@ export default class NewSessionForm extends Component {
     setCapabilityParam(index, 'value', translatedValue);
   }
 
+  componentDidUpdate () {
+    const {caps} = this.props;
+    // if we have more than one cap and the most recent cap name is empty, it means we've just
+    // added a new cap field, so focus that input element. But only do this once, so we don't annoy
+    // the user if they decide to unfocus and do something else.
+    if (
+      caps.length > 1 &&
+      !this.latestCapField.current.input.value &&
+      !this.latestCapField.current.__didFocus
+    ) {
+      this.latestCapField.current.focus();
+      this.latestCapField.current.__didFocus = true;
+    }
+  }
+
   render () {
     const {setCapabilityParam, caps, addCapability, removeCapability, saveSession, hideSaveAsModal,
-           saveAsText, showSaveAsModal, setSaveAsText, isEditingDesiredCaps, t} = this.props;
+           saveAsText, showSaveAsModal, setSaveAsText, isEditingDesiredCaps, t,
+           setAddVendorPrefixes, addVendorPrefixes} = this.props;
+    const numCaps = caps.length;
+    const onSaveAsOk = () => saveSession(caps, {name: saveAsText});
 
     return <>
       <Row type={ROW.FLEX} align="top" justify="start" className={SessionStyles.capsFormRow}>
@@ -67,7 +90,9 @@ export default class NewSessionForm extends Component {
               <Col span={7}>
                 <FormItem>
                   <Input disabled={isEditingDesiredCaps} id={`desiredCapabilityName_${index}`} placeholder={t('Name')}
-                    value={cap.name} onChange={(e) => setCapabilityParam(index, 'name', e.target.value)}/>
+                    value={cap.name} onChange={(e) => setCapabilityParam(index, 'name', e.target.value)}
+                    ref={index === numCaps - 1 ? this.latestCapField : ''}
+                  />
                 </FormItem>
               </Col>
               <Col span={8}>
@@ -84,7 +109,9 @@ export default class NewSessionForm extends Component {
               <Col span={7}>
                 <FormItem>
                   <CapabilityControl {...this.props} cap={cap} id={`desiredCapabilityValue_${index}`}
-                    onSetCapabilityParam={(value) => setCapabilityParam(index, 'value', value)} />
+                    onSetCapabilityParam={(value) => setCapabilityParam(index, 'value', value)}
+                    onPressEnter={(index === numCaps - 1) ? addCapability : () => {}}
+                  />
                 </FormItem>
               </Col>
               <Col span={2}>
@@ -98,7 +125,17 @@ export default class NewSessionForm extends Component {
               </Col>
             </Row>)}
             <Row>
-              <Col span={24}>
+              <Col span={22}>
+                <FormItem>
+                  <Checkbox
+                    onChange={(e) => setAddVendorPrefixes(e.target.checked)}
+                    checked={addVendorPrefixes}
+                  >
+                    {t('autoAddPrefixes')}
+                  </Checkbox>
+                </FormItem>
+              </Col>
+              <Col span={2}>
                 <FormItem>
                   <Button
                     disabled={isEditingDesiredCaps} id='btnAddDesiredCapability'
@@ -117,8 +154,8 @@ export default class NewSessionForm extends Component {
             okText='Save'
             cancelText='Cancel'
             onCancel={hideSaveAsModal}
-            onOk={() => saveSession(caps, {name: saveAsText})}>
-            <Input onChange={(e) => setSaveAsText(e.target.value)} addonBefore={t('Name')} value={saveAsText}/>
+            onOk={onSaveAsOk}>
+            <Input onChange={(e) => setSaveAsText(e.target.value)} addonBefore={t('Name')} value={saveAsText} onPressEnter={onSaveAsOk}/>
           </Modal>
         </Col>
       </Row>

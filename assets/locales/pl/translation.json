@@ -108,7 +108,7 @@
   "logsNotAvailableError": "Wystąpił błąd: Logi niedostępne",
   "findElementFailure": "Nie udało się znaleźć elementu dla '{{methodName}}'. Odśwież stronę i spróbuj ponownie.",
   "Could not start session": "Nie można uruchomić sesji",
-  "couldNotConnect": "Nie można połączyć się z serwerem; czy jesteś pewien, że jest uruchomiony?",
+  "couldNotConnect": "Could not connect to server; are you sure it's running? If you are using the browser version, also ensure your Appium server has been started with --allow-cors.",
   "sauceCredentialsRequired": "Sauce username and access key are required!",
   "testingbotCredentialsRequired": "TestingBot key and secret are required!",
   "Perfecto SecurityToken is required": "Perfecto SecurityToken is required",
@@ -195,7 +195,6 @@
   "elementsCount": "Elementy ({{elementCount}})",
   "xCoordinate": "X: {{x}}",
   "yCoordinate": "Y: {{y}}",
-  "TestObject Data Center": "TestObject Data Center",
   "SauceLabs Data Center": "SauceLabs Data Center",
   "US": "US",
   "EU": "EU",
@@ -221,8 +220,6 @@
   "Port": "Port",
   "Preset name": "Nazwa presetu",
   "usingDataFoundIn": "Używanie danych znalezionych w {{environmentVariable}}",
-  "testobjectApiKey": "klucz api testobject",
-  "TestObject API Key": "Klucz API TestObject",
   "yourUsername": "Twoja nazwa użytkownika",
   "Sauce Username": "Nazwa użytkownika Sause",
   "Sauce Access Key": "Klucz dostępu do Sause",
@@ -337,5 +334,11 @@
   "Select Cloud Providers": "Wybierz dostawców chmury",
   "Advanced Settings": "Ustawienia zaawansowane",
   "Native App Mode": "Tryb natywnej aplikacji",
-  "Web/Hybrid App Mode": "Web/Hybrid App Mode"
+  "Web/Hybrid App Mode": "Web/Hybrid App Mode",
+  "autoAddPrefixes": "Automatically add necessary Appium vendor prefixes on start",
+  "jsonArgument": "JSON argument array",
+  "executeScriptCommand": "Script to execute",
+  "appPathOrUrl": "Path or URL for app",
+  "fileContentString": "File contents as Base64-encoded string",
+  "inspectorMoved": "The Inspector is now released as a separate app. Please visit {{url}}"
 }

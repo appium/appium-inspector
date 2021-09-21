@@ -1,7 +1,7 @@
-import { shell } from 'electron';
+import { shell } from '../../polyfills';
 import React, { Component } from 'react';
 import _ from 'lodash';
-import NewSessionForm from './NewSessionForm';
+import CapabilityEditor from './CapabilityEditor';
 import SavedSessions from './SavedSessions';
 import AttachToSession from './AttachToSession';
 import ServerTabCustom from './ServerTabCustom';
@@ -21,7 +21,7 @@ export default class Session extends Component {
 
   componentDidMount () {
     const {setLocalServerParams, getSavedSessions, setSavedServerParams, setVisibleProviders,
-           getRunningSessions, bindWindowClose} = this.props;
+           getRunningSessions, bindWindowClose, initFromQueryString} = this.props;
     (async () => {
       try {
         bindWindowClose();
@@ -30,6 +30,7 @@ export default class Session extends Component {
         await setLocalServerParams();
         await setVisibleProviders();
         getRunningSessions();
+        await initFromQueryString();
       } catch (e) {
         console.error(e); // eslint-disable-line no-console
       }
@@ -85,13 +86,13 @@ export default class Session extends Component {
           </div>
 
 
-          {newSessionBegan && <div key={2}>
+          {newSessionBegan && <div>
             <p>{t('sessionInProgress')}</p>
           </div>}
 
           {!newSessionBegan && <Tabs activeKey={tabKey} onChange={switchTabs} className={SessionStyles.scrollingTabCont}>
             <TabPane tab={t('Desired Capabilities')} key='new' className={SessionStyles.scrollingTab}>
-              <NewSessionForm {...this.props} />
+              <CapabilityEditor {...this.props} />
             </TabPane>
             <TabPane tab={t('Saved Capability Sets', {savedSessionsCount: savedSessions.length})} key='saved' className={SessionStyles.scrollingTab} disabled={savedSessions.length === 0}>
               <SavedSessions {...this.props} />
@@ -100,6 +101,7 @@ export default class Session extends Component {
               <AttachToSession {...this.props} />
             </TabPane>
           </Tabs>}
+
           <div className={SessionStyles.sessionFooter}>
             <div className={SessionStyles.desiredCapsLink}>
               <a href="#" onClick={(e) => e.preventDefault() || shell.openExternal('https://github.com/appium/appium/blob/master/docs/en/writing-running-appium/caps.md')}>
@@ -118,9 +120,10 @@ export default class Session extends Component {
               </Button>
             }
           </div>
+
         </div>
       </Spin>,
-      <CloudProviderSelector {...this.props} />
+      <CloudProviderSelector {...this.props} key='CloudProviderSelector' />
     ];
   }
 }

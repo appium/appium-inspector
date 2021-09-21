@@ -108,7 +108,7 @@
   "logsNotAvailableError": "出现错误: 日志不可用",
   "findElementFailure": "找不到 '{{methodName}}' 的元素。请刷新页面并重试。",
   "Could not start session": "无法启动会话",
-  "couldNotConnect": "无法连接到服务器；您确定要运行吗？",
+  "couldNotConnect": "无法连接到服务器；您确定它正在运行吗？ 如果您正在使用浏览器版本，同时也确保您的 Appium 服务器使用 --allow-cors 启动。",
   "sauceCredentialsRequired": "需要 Sauce 用户名和访问密钥！",
   "testingbotCredentialsRequired": "TestingBot key 与 secret是必需的!",
   "Perfecto SecurityToken is required": "需要填写 Security Token",
@@ -195,7 +195,6 @@
   "elementsCount": "元素 ({{elementCount}})",
   "xCoordinate": "X: {{x}}",
   "yCoordinate": "Y: {{y}}",
-  "TestObject Data Center": "TestObject 数据中心",
   "SauceLabs Data Center": "SauceLabs 数据中心",
   "US": "US",
   "EU": "EU",
@@ -221,8 +220,6 @@
   "Port": "端口",
   "Preset name": "预设名称",
   "usingDataFoundIn": "使用在 {{environmentVariable}} 中找到的数据",
-  "testobjectApiKey": "testobject api 键",
-  "TestObject API Key": "TestObject API 密钥",
   "yourUsername": "您的用户名",
   "Sauce Username": "Sauce 用户名",
   "Sauce Access Key": "Sauce 访问密钥",
@@ -337,5 +334,11 @@
   "Select Cloud Providers": "选择云提供商",
   "Advanced Settings": "高级设置",
   "Native App Mode": "Native App Mode",
-  "Web/Hybrid App Mode": "Web/Hybrid App Mode"
+  "Web/Hybrid App Mode": "Web/Hybrid App Mode",
+  "autoAddPrefixes": "启动时自动添加必要的 Appium 供应商前缀",
+  "jsonArgument": "JSON 参数数组",
+  "executeScriptCommand": "执行脚本",
+  "appPathOrUrl": "应用路径或 URL",
+  "fileContentString": "文件内容为 Base64 编码字符串",
+  "inspectorMoved": "检查员现在作为一个单独的应用程序发布。请访问 {{url}}"
 }

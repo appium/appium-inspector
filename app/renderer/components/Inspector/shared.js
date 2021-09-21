@@ -61,15 +61,16 @@ export const APP_MODE = {
 export const actionArgTypes = {
   STRING: 'string',
   NUMBER: 'number',
+  BOOLEAN: 'boolean',
 };
 
-const { STRING, NUMBER } = actionArgTypes;
+const { STRING, NUMBER, BOOLEAN } = actionArgTypes;
 
 // Note: When adding or removing actionDefinitions, update `en/translation.json`
 export const actionDefinitions = {
   'Device': {
-    'Execute Mobile': {
-      'Execute': {methodName: 'executeScript', args: [['command', STRING], ['jsonArgument', STRING]]}
+    'Execute Script': {
+      'Execute': {methodName: 'executeScript', args: [['executeScriptCommand', STRING], ['jsonArgument', STRING]]}
     },
     'Android Activity': {
       'Start Activity': {methodName: 'startActivity', args: [
@@ -83,16 +84,18 @@ export const actionDefinitions = {
     'App': {
       'Install App': {methodName: 'installApp', args: [['appPathOrUrl', STRING]]},
       'Is App Installed': {methodName: 'isAppInstalled', args: [['appId', STRING]]},
-      'Launch App': {methodName: 'launchApp', refresh: true},
       'Background App': {methodName: 'background', args: [['timeout', NUMBER]], refresh: true},
-      'Close App': {methodName: 'closeApp', refresh: true},
-      'Reset App': {methodName: 'reset', refresh: true},
-      'Remove App': {methodName: 'removeApp', args: [['bundleId', STRING]]},
+      'Activate App': {methodName: 'activateApp', args: [['appId', STRING]], refresh: true},
+      'Terminate App': {methodName: 'terminateApp', args: [['appId', STRING]], refresh: true},
+      'Reset App': {methodName: 'resetApp', refresh: true},
+      'Remove App': {methodName: 'removeApp', args: [['appId', STRING]]},
       'Get App Strings': {methodName: 'getStrings', args: [['language', STRING], ['stringFile', STRING]], refresh: true},
     },
     'Clipboard': {
       'Get Clipboard': {methodName: 'getClipboard'},
-      'Set Clipboard': {methodName: 'setClipboard', args: [['clipboardText', STRING]]},
+      'Set Clipboard': {methodName: 'setClipboard', args: [
+        ['clipboardText', STRING], ['contentType', STRING], ['contentLabel', STRING]
+      ]},
     },
     'File': {
       'Push File': {methodName: 'pushFile', args: [['pathToInstallTo', STRING], ['fileContentString', STRING]]},
@@ -129,13 +132,13 @@ export const actionDefinitions = {
       'Get Data Types': {methodName: 'getPerformanceDataTypes'},
     },
     'iOS Simulator': {
-      'Perform Touch Id': {methodName: 'touchId', args: [['match', STRING]], refresh: true},
-      'Toggle Touch Id Enrollment': {methodName: 'toggleEnrollTouchId', args: [['enroll', STRING]]},
+      'Perform Touch Id': {methodName: 'touchId', args: [['shouldMatch', BOOLEAN]], refresh: true},
+      'Toggle Touch Id Enrollment': {methodName: 'toggleEnrollTouchId', args: [['shouldEnroll', BOOLEAN]]},
     },
     'System': {
       'Open Notifications': {methodName: 'openNotifications', refresh: true},
       'Get System Time': {methodName: 'getDeviceTime'},
-      'Fingerprint (Android)': {methodName: 'fingerprint', args: [['fingerPrintId', NUMBER]], refresh: true}
+      'Fingerprint (Android)': {methodName: 'fingerPrint', args: [['fingerPrintId', NUMBER]], refresh: true}
     },
   },
   'Session': {
@@ -143,7 +146,9 @@ export const actionDefinitions = {
       'Get Session Capabilities': {methodName: 'getSession'}
     },
     'Timeouts': {
-      'Set Timeouts': {methodName: 'setTimeouts', args: [['timeoutsJson', STRING]]},
+      'Set Timeouts': {methodName: 'setTimeouts', args: [
+        ['implicitTimeout', NUMBER], ['pageLoadTimeout', NUMBER], ['scriptTimeout', NUMBER]
+      ]},
     },
     'Orientation': {
       'Get Orientation': {methodName: 'getOrientation'},
@@ -151,7 +156,7 @@ export const actionDefinitions = {
     },
     'Geolocation': {
       'Get Geolocation': {methodName: 'getGeoLocation'},
-      'Set Geolocation': {methodName: 'setGeoLocation', args: [['latitude', NUMBER], ['longitude', NUMBER], ['altitude', NUMBER]]},
+      'Set Geolocation': {methodName: 'setGeoLocation', args: [['locationJSONObject', STRING]]},
     },
     'Logs': {
       'Get Log Types': {methodName: 'getLogTypes'},
@@ -173,9 +178,9 @@ export const actionDefinitions = {
   },
   'Context': {
     'Context': {
-      'Get Context': {methodName: 'getContext'},
-      'Get All Context': {methodName: 'getContexts'},
-      'Set Context': {methodName: 'switchContexts', args: [['name', STRING]], refresh: true}
+      'Get Current Context': {methodName: 'getContext'},
+      'Get Context List': {methodName: 'getContexts'},
+      'Set Context': {methodName: 'switchContext', args: [['name', STRING]], refresh: true}
     },
     'Window (W3C)': {
       'Get Window Handle': {methodName: 'getWindowHandle'},

@@ -108,7 +108,7 @@
   "logsNotAvailableError": "An error has occurred: Logs not available",
   "findElementFailure": "Failed to find element for '{{methodName}}'. Please refresh page and try again.",
   "Could not start session": "Die Session konnte nicht gestartet werden",
-  "couldNotConnect": "Could not connect to server; are you sure it's running?",
+  "couldNotConnect": "Could not connect to server; are you sure it's running? If you are using the browser version, also ensure your Appium server has been started with --allow-cors.",
   "sauceCredentialsRequired": "Sauce username and access key are required!",
   "testingbotCredentialsRequired": "TestingBot key and secret are required!",
   "Perfecto SecurityToken is required": "Perfecto SecurityToken is required",
@@ -195,7 +195,6 @@
   "elementsCount": "Elements ({{elementCount}})",
   "xCoordinate": "X: {{x}}",
   "yCoordinate": "Y: {{y}}",
-  "TestObject Data Center": "TestObject Data Center",
   "SauceLabs Data Center": "SauceLabs Data Center",
   "US": "US",
   "EU": "EU",
@@ -221,8 +220,6 @@
   "Port": "Port",
   "Preset name": "Preset name",
   "usingDataFoundIn": "Using data found in {{environmentVariable}}",
-  "testobjectApiKey": "testobject api key",
-  "TestObject API Key": "TestObject API Key",
   "yourUsername": "Your Username",
   "Sauce Username": "Sauce Username",
   "Sauce Access Key": "Sauce Access Key",
@@ -337,5 +334,11 @@
   "Select Cloud Providers": "Cloud-Anbieter auswählen",
   "Advanced Settings": "Erweiterte Einstellungen",
   "Native App Mode": "Native App Mode",
-  "Web/Hybrid App Mode": "Web/Hybrid App Mode"
+  "Web/Hybrid App Mode": "Web/Hybrid App Mode",
+  "autoAddPrefixes": "Automatically add necessary Appium vendor prefixes on start",
+  "jsonArgument": "JSON argument array",
+  "executeScriptCommand": "Script to execute",
+  "appPathOrUrl": "Path or URL for app",
+  "fileContentString": "File contents as Base64-encoded string",
+  "inspectorMoved": "The Inspector is now released as a separate app. Please visit {{url}}"
 }

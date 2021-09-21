@@ -1,6 +1,6 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { startServer as startAppiumFakeDriverServer } from 'appium-fake-driver';
+import { startServer as startAppiumFakeDriverServer } from '@appium/fake-driver';
 import path from 'path';
 import { Web2Driver } from 'web2driver/node';
 import AppiumClient from '../../app/renderer/lib/appium-client';
@@ -10,7 +10,8 @@ chai.use(chaiAsPromised);
 
 const FAKE_DRIVER_PORT = 12121;
 
-const TEST_APP = path.resolve(__dirname, '..', '..', 'node_modules', 'appium-fake-driver', 'test', 'fixtures', 'app.xml');
+const FAKE_DRIVER_PATH = path.resolve(path.dirname(require.resolve('@appium/fake-driver')), '..');
+const TEST_APP = path.resolve(FAKE_DRIVER_PATH, 'test', 'fixtures', 'app.xml');
 
 const DEFAULT_CAPS = {
   platformName: 'Fake',

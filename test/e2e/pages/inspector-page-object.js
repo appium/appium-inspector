@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { retryInterval } from 'asyncbox';
-import BasePage from '../../../gui-common/base-page-object';
 import { setValueReact } from './utils';
+import BasePage from '../../../gui-common/base-page-object';
 
 export default class InspectorPage extends BasePage {
   constructor (client) {
@@ -18,45 +18,60 @@ export default class InspectorPage extends BasePage {
   }
 
   async setCustomServerHost (host) {
-    await this.client.execute(setValueReact(this.customServerHost, host));
+    await this.setValueWithPlaceholder(this.customServerHost, host);
   }
 
   async setCustomServerPort (port) {
-    await this.client.execute(setValueReact(this.customServerPort, port));
+    await this.setValueWithPlaceholder(this.customServerPort, port);
+  }
+
+  async setCustomServerPath (path) {
+    await this.setValueWithPlaceholder(this.customServerPath, path);
+  }
+
+  async setValueWithPlaceholder (locator, value) {
+    // for some reason, antd's placeholder based input fields screw with the way wdio or
+    // chromedriver fills out the fields. so we need to set the value using some complicated
+    // javascript. moreover this on its own isn't sufficient because it doesn't seem to trigger the
+    // inspector's internal state updates, so we also click the field a few times which seems to do
+    // the trick. ugh.
+    await (await this.client.$(locator)).click();
+    await this.client.execute(setValueReact(locator, value));
+    await (await this.client.$(locator)).click();
   }
 
   async addDCaps (dcaps) {
     const dcapsPairs = _.toPairs(dcaps);
     for (let i = 0; i < dcapsPairs.length; i++) {
       const [name, value] = dcapsPairs[i];
-      await this.client.setValue(this.desiredCapabilityNameInput(i), name);
-      await this.client.setValue(this.desiredCapabilityValueInput(i), value);
-      await this.client.click(this.addDesiredCapabilityButton);
+      await (await this.client.$(this.desiredCapabilityNameInput(i))).setValue(name);
+      await (await this.client.$(this.desiredCapabilityValueInput(i))).setValue(value);
+      await (await this.client.$(this.addDesiredCapabilityButton)).click();
     }
   }
 
   async startSession () {
-    await this.client.click(this.formSubmitButton);
+    await (await this.client.$(this.formSubmitButton)).click();
   }
 
   async closeNotification () {
     try {
-      await retryInterval(5, 500, () => {
-        this.client.click('.ant-notification-notice-close');
+      await retryInterval(5, 500, async () => {
+        await (await this.client.$('.ant-notification-notice-close')).click();
       });
     } catch (ign) { }
   }
 
   async startRecording () {
-    await this.client.click(this.startRecordingButton);
+    await (await this.client.$(this.startRecordingButton)).click();
   }
 
   async pauseRecording () {
-    await this.client.click(this.pauseRecordingButton);
+    await (await this.client.$(this.pauseRecordingButton)).click();
   }
 
   async reload () {
-    await this.client.click(this.reloadButton);
+    await (await this.client.$(this.reloadButton)).click();
   }
 
 }
@@ -64,6 +79,7 @@ export default class InspectorPage extends BasePage {
 InspectorPage.selectors = {
   customServerHost: '#customServerHost',
   customServerPort: '#customServerPort',
+  customServerPath: '#customServerPath',
   addDesiredCapabilityButton: '#btnAddDesiredCapability',
   formSubmitButton: '#btnStartSession',
   inspectorToolbar: 'div[class*=_inspector-toolbar]',

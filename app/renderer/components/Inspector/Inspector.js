@@ -8,7 +8,7 @@ import Source from './Source';
 import InspectorStyles from './Inspector.css';
 import RecordedActions from './RecordedActions';
 import Actions from './Actions';
-import { clipboard } from 'electron';
+import { clipboard } from '../../polyfills';
 import {
   SelectOutlined,
   ScanOutlined,
@@ -116,9 +116,9 @@ export default class Inspector extends Component {
     const {screenshot, screenshotError, selectedElement = {},
            applyClientMethod, quitSession, isRecording, showRecord, startRecording,
            pauseRecording, showLocatorTestModal, appMode,
-           screenshotInteractionMode, isFindingElementsTimes,
-           selectedInteractionMode, selectInteractionMode, selectAppMode,
-           showKeepAlivePrompt, keepSessionAlive, sourceXML, t} = this.props;
+           screenshotInteractionMode, isFindingElementsTimes, visibleCommandMethod,
+           selectedInteractionMode, selectInteractionMode, selectAppMode, setVisibleCommandResult,
+           showKeepAlivePrompt, keepSessionAlive, sourceXML, t, visibleCommandResult} = this.props;
     const {path} = selectedElement;
 
     let main = <div className={InspectorStyles['inspector-main']} ref={(el) => {this.screenAndSourceEl = el;}}>
@@ -167,7 +167,7 @@ export default class Inspector extends Component {
     </div>;
 
     const appModeControls = <div className={InspectorStyles['action-controls']}>
-      <ButtonGroup size="large" value={appMode}>
+      <ButtonGroup value={appMode}>
         <Tooltip title={t('Native App Mode')}>
           <Button icon={<AppstoreOutlined/>} onClick={() => {selectAppMode(APP_MODE.NATIVE);}}
             type={appMode === APP_MODE.NATIVE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
@@ -182,7 +182,7 @@ export default class Inspector extends Component {
     </div>;
 
     let actionControls = <div className={InspectorStyles['action-controls']}>
-      <ButtonGroup size="large" value={screenshotInteractionMode}>
+      <ButtonGroup value={screenshotInteractionMode}>
         <Tooltip title={t('Select Elements')}>
           <Button icon={<SelectOutlined/>} onClick={() => {this.screenshotInteractionChange(SELECT);}}
             type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
@@ -201,7 +201,7 @@ export default class Inspector extends Component {
       </ButtonGroup>
     </div>;
 
-    const generalControls = <ButtonGroup size="large">
+    const generalControls = <ButtonGroup>
       <Tooltip title={t('Back')}>
         <Button id='btnGoBack' icon={<ArrowLeftOutlined/>} onClick={() => applyClientMethod({methodName: 'back'})}/>
       </Tooltip>
@@ -248,6 +248,14 @@ export default class Inspector extends Component {
           cancelText={t('Quit Session')}
         >
           <p>{t('Your session is about to expire')}</p>
+        </Modal>
+        <Modal
+          title={t('methodCallResult', {methodName: visibleCommandMethod})}
+          visible={!!visibleCommandResult}
+          onOk={() => setVisibleCommandResult(null)}
+          onCancel={() => setVisibleCommandResult(null)}
+        >
+          <pre><code>{visibleCommandResult}</code></pre>
         </Modal>
       </div>
     </Spin>);

@@ -4,7 +4,7 @@ import {getLocators} from './shared';
 import styles from './Inspector.css';
 import { Button, Row, Col, Input, Modal, Table, Alert, Tooltip, Select } from 'antd';
 import { withTranslation } from '../../util';
-import {clipboard, shell} from 'electron';
+import {clipboard, shell} from '../../polyfills';
 import {
   LoadingOutlined,
   CopyOutlined,
@@ -146,14 +146,12 @@ class SelectedElement extends Component {
 
     // Add class chain to the data source as well
     if (classChain && currentContext === NATIVE_APP) {
-      const classChainText = <Tooltip title={t('This selector is in BETA, it is the XML selector translated to `-ios class chain`.')}>
-        <span>
-          -ios class chain
-          <strong>
-            <a onClick={(e) => e.preventDefault() || shell.openExternal('https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules')}>(beta)</a>
-          </strong>
-        </span>
-      </Tooltip>;
+      const classChainText = <span>
+        -ios class chain
+        <strong>
+          <a onClick={(e) => e.preventDefault() || shell.openExternal('https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules')}>&nbsp;(docs)</a>
+        </strong>
+      </span>;
 
       findDataSource.push({
         key: '-ios class chain',
@@ -164,14 +162,12 @@ class SelectedElement extends Component {
 
     // Add predicate string to the data source as well
     if (predicateString && currentContext === NATIVE_APP) {
-      const predicateStringText = <Tooltip title={t('This selector is in BETA, it is the XML selector translated to `-ios predicate string`.')}>
-        <span>
-          -ios predicate string
-          <strong>
-            <a onClick={(e) => e.preventDefault() || shell.openExternal('https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules')}>(beta)</a>
-          </strong>
-        </span>
-      </Tooltip>;
+      const predicateStringText = <span>
+        -ios predicate string
+        <strong>
+          <a onClick={(e) => e.preventDefault() || shell.openExternal('https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules')}>&nbsp;(docs)</a>
+        </strong>
+      </span>;
 
       findDataSource.push({
         key: '-ios predicate string',

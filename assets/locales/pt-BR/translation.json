@@ -108,7 +108,7 @@
   "logsNotAvailableError": "Ocorreu um erro: Logs não disponíveis",
   "findElementFailure": "Falha ao encontrar elemento para '{{methodName}}'. Por favor, atualize a página e tente novamente.",
   "Could not start session": "Não foi possível iniciar a sessão",
-  "couldNotConnect": "Não foi possível conectar ao servidor; tem certeza que está em execução?",
+  "couldNotConnect": "Não foi possível conectar ao servidor. Tem certeza que está sendo executado? Se você estiver usando a versão do navegador, também certifique-se de que seu servidor Appium foi iniciado com --allow-cors.",
   "sauceCredentialsRequired": "Nome de usuário e chave de acesso SauceLabs são necessários!",
   "testingbotCredentialsRequired": "Chave e segredo do TestingBot são necessários!",
   "Perfecto SecurityToken is required": "Perfecto SecurityToken é necessário",
@@ -195,7 +195,6 @@
   "elementsCount": "Elementos ({{elementCount}})",
   "xCoordinate": "X: {{x}}",
   "yCoordinate": "Y: {{y}}",
-  "TestObject Data Center": "Centro de Dados do TestObject",
   "SauceLabs Data Center": "Centro de Dados do SauceLabs",
   "US": "EUA",
   "EU": "EU",
@@ -221,8 +220,6 @@
   "Port": "Porta",
   "Preset name": "Nome da configuração",
   "usingDataFoundIn": "Usando dados encontrados em {{environmentVariable}}",
-  "testobjectApiKey": "chave de api testobject",
-  "TestObject API Key": "Chave API TestObject",
   "yourUsername": "Seu usuário",
   "Sauce Username": "Nome de usuário do Sauce",
   "Sauce Access Key": "Chave de acesso Sauce",
@@ -337,5 +334,11 @@
   "Select Cloud Providers": "Selecione os provedores de serviço na nuvem",
   "Advanced Settings": "Configurações Avançadas",
   "Native App Mode": "Modo nativo do app",
-  "Web/Hybrid App Mode": "Modo Web / Híbrido do App"
+  "Web/Hybrid App Mode": "Modo Web / Híbrido do App",
+  "autoAddPrefixes": "Adicionar automaticamente os prefixos necessários do fornecedor de Appium ao iniciar",
+  "jsonArgument": "Array de Argumentos JSON",
+  "executeScriptCommand": "Script para executar",
+  "appPathOrUrl": "Caminho ou URL do aplicativo",
+  "fileContentString": "Conteúdo do arquivo como string codificada em Base64",
+  "inspectorMoved": "O Inspetor agora é lançado como um aplicativo separado. Visite {{url}}"
 }

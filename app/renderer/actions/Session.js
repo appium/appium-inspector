@@ -1,14 +1,14 @@
-import settings, { SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE, SESSION_SERVER_PARAMS
-} from '../../shared/settings';
+import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE,
+         SESSION_SERVER_PARAMS } from '../../shared/settings';
 import { v4 as UUID } from 'uuid';
-import url from 'url';
 import { push } from 'connected-react-router';
 import { notification } from 'antd';
-import { debounce, toPairs, union, without, keys, isUndefined } from 'lodash';
+import { includes, debounce, toPairs, union, without, keys, isUndefined } from 'lodash';
 import { setSessionDetails, quitSession } from './Inspector';
 import i18n from '../../configs/i18next.config.renderer';
 import CloudProviders from '../components/Session/CloudProviders';
 import { Web2Driver } from 'web2driver';
+import { addVendorPrefixes } from '../util';
 import ky from 'ky/umd';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
@@ -53,11 +53,17 @@ export const IS_ADDING_CLOUD_PROVIDER = 'IS_ADDING_CLOUD_PROVIDER';
 
 export const SET_PROVIDERS = 'SET_PROVIDERS';
 
+export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
+
+export const SET_STATE_FROM_URL = 'SET_STATE_FROM_URL';
+
 
 const CAPS_NEW_COMMAND = 'appium:newCommandTimeout';
 const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
 const CAPS_NATIVE_WEB_SCREENSHOT = 'appium:nativeWebScreenshot';
 const CAPS_ENSURE_WEBVIEW_HAVE_PAGES = 'appium:ensureWebviewsHavePages';
+
+const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to turn it on
 
 // Multiple requests sometimes send a new session request
 // after establishing a session.
@@ -65,6 +71,8 @@ const CAPS_ENSURE_WEBVIEW_HAVE_PAGES = 'appium:ensureWebviewsHavePages';
 // so let's set zero so far.
 // TODO: increase this retry when we get issues
 export const CONN_RETRIES = 0;
+
+let isFirstRun = true; // we only want to auto start a session on a first run
 
 const serverTypes = {};
 for (const key of keys(CloudProviders)) {
@@ -74,6 +82,10 @@ serverTypes.local = 'local';
 serverTypes.remote = 'remote';
 
 export const ServerTypes = serverTypes;
+
+export const DEFAULT_SERVER_PATH = '/';
+export const DEFAULT_SERVER_HOST = '127.0.0.1';
+export const DEFAULT_SERVER_PORT = 4723;
 
 const JSON_TYPES = ['object', 'number', 'boolean'];
 
@@ -117,7 +129,7 @@ export function showError (e, methodName, secs = 5) {
   } else {
     errMessage = i18n.t('Could not start session');
   }
-  if (errMessage === 'ECONNREFUSED') {
+  if (errMessage === 'ECONNREFUSED' || includes(errMessage, 'Failed to fetch')) {
     errMessage = i18n.t('couldNotConnect');
   }
 
@@ -174,16 +186,27 @@ export function removeCapability (index) {
   };
 }
 
+function _addVendorPrefixes (caps, dispatch, getState) {
+  const prefixedCaps = addVendorPrefixes(caps);
+  setCaps(prefixedCaps, getState().session.capsUUID)(dispatch);
+  return prefixedCaps;
+}
+
 /**
  * Start a new appium session with the given caps
  */
 export function newSession (caps, attachSessId = null) {
   return async (dispatch, getState) => {
+    let session = getState().session;
+
+    // first add vendor prefixes to caps if requested
+    if (!attachSessId && session.addVendorPrefixes) {
+      caps = _addVendorPrefixes(caps, dispatch, getState);
+    }
 
     dispatch({type: NEW_SESSION_REQUESTED, caps});
 
     let desiredCapabilities = caps ? getCapsObject(caps) : {};
-    let session = getState().session;
     let host, port, username, accessKey, https, path, token;
     desiredCapabilities = addCustomCaps(desiredCapabilities);
 
@@ -199,12 +222,13 @@ export function newSession (caps, attachSessId = null) {
         port = session.server.local.port;
         break;
       case ServerTypes.remote:
-        host = session.server.remote.hostname || '127.0.0.1';
-        port = session.server.remote.port || 4723;
+        host = session.server.remote.hostname;
+        port = session.server.remote.port;
         path = session.server.remote.path;
         https = session.server.remote.ssl;
         break;
       case ServerTypes.sauce:
+        path = '/wd/hub';
         host = `ondemand.${session.server.sauce.dataCenter}.saucelabs.com`;
         port = 80;
         if (session.server.sauce.useSCProxy) {
@@ -223,16 +247,14 @@ export function newSession (caps, attachSessId = null) {
         }
         https = false;
         break;
-      case ServerTypes.testobject:
-        host = process.env.TESTOBJECT_HOST || `${session.server.testobject.dataCenter || 'us1'}.appium.testobject.com`;
-        port = 443;
-        https = true;
-        if (caps) {
-          desiredCapabilities.testobject_api_key = session.server.testobject.apiKey || process.env.TESTOBJECT_API_KEY;
-        }
-        break;
       case ServerTypes.headspin: {
-        const headspinUrl = url.parse(session.server.headspin.webDriverUrl);
+        let headspinUrl;
+        try {
+          headspinUrl = new URL(session.server.headspin.webDriverUrl);
+        } catch (ign) {
+          showError(new Error(`${session.server.headspin.webDriverUrl} is invalid url`), null, 0);
+          return;
+        }
         host = session.server.headspin.hostname = headspinUrl.hostname;
         port = session.server.headspin.port = headspinUrl.port;
         path = session.server.headspin.path = headspinUrl.pathname;
@@ -260,7 +282,8 @@ export function newSession (caps, attachSessId = null) {
         port = session.server.browserstack.port = process.env.BROWSERSTACK_PORT || 443;
         path = session.server.browserstack.path = '/wd/hub';
         username = session.server.browserstack.username || process.env.BROWSERSTACK_USERNAME;
-        desiredCapabilities['browserstack.source'] = 'appiumdesktop';
+        desiredCapabilities['bstack:options'] = {};
+        desiredCapabilities['bstack:options'].source = 'appiumdesktop';
         accessKey = session.server.browserstack.accessKey || process.env.BROWSERSTACK_ACCESS_KEY;
         if (!username || !accessKey) {
           notification.error({
@@ -310,11 +333,10 @@ export function newSession (caps, attachSessId = null) {
         host = session.server.pcloudy.hostname;
         port = session.server.pcloudy.port = 443;
         path = session.server.pcloudy.path = '/objectspy/wd/hub';
-        username = session.server.pcloudy.username || process.env.PCLOUDY_USERNAME;
-        desiredCapabilities.pCloudy_Username = username;
-        accessKey = session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
-        desiredCapabilities.pCloudy_ApiKey = accessKey;
-        if (!username || !accessKey) {
+        desiredCapabilities.pCloudy_Username = session.server.pcloudy.username || process.env.PCLOUDY_USERNAME;
+        desiredCapabilities.pCloudy_ApiKey = session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
+        if (!(session.server.pcloudy.username || process.env.PCLOUDY_USERNAME) ||
+              !(session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY)) {
           notification.error({
             message: 'Error',
             description: 'PCLOUDY username and api key are required!',
@@ -327,10 +349,12 @@ export function newSession (caps, attachSessId = null) {
       case ServerTypes.testingbot:
         host = session.server.testingbot.hostname = process.env.TB_HOST || 'hub.testingbot.com';
         port = session.server.testingbot.port = 443;
-        username = session.server.testingbot.key || process.env.TB_KEY;
-        accessKey = session.server.testingbot.secret || process.env.TB_SECRET;
-        desiredCapabilities['tb.source'] = 'appiumdesktop';
-        if (!username || !accessKey) {
+        path = session.server.testingbot.path = '/wd/hub';
+        desiredCapabilities['tb:options'] = {};
+        desiredCapabilities['tb:options'].key = session.server.testingbot.key || process.env.TB_KEY;
+        desiredCapabilities['tb:options'].secret = session.server.testingbot.secret || process.env.TB_SECRET;
+        if (!(session.server.testingbot.key || process.env.TB_KEY) ||
+              !(session.server.testingbot.secret || process.env.TB_SECRET)) {
           notification.error({
             message: 'Error',
             description: i18n.t('testingbotCredentialsRequired'),
@@ -350,7 +374,15 @@ export function newSession (caps, attachSessId = null) {
           return;
         }
         desiredCapabilities['experitest:accessKey'] = session.server.experitest.accessKey;
-        let experitestUrl = url.parse(session.server.experitest.url);
+
+        let experitestUrl;
+        try {
+          experitestUrl = new URL(session.server.experitest.url);
+        } catch (ign) {
+          showError(new Error(`${session.server.experitest.url} is invalid url`), null, 0);
+          return;
+        }
+
         host = session.server.experitest.hostname = experitestUrl.hostname;
         path = session.server.experitest.path = '/wd/hub';
         port = session.server.experitest.port = experitestUrl.port;
@@ -373,6 +405,11 @@ export function newSession (caps, attachSessId = null) {
         break;
     }
 
+    // if the server path is '' (or any other kind of falsy) set it to default
+    path = path || DEFAULT_SERVER_PATH;
+    host = host || DEFAULT_SERVER_HOST;
+    port = port || DEFAULT_SERVER_PORT;
+
     // TODO W2D handle proxy and rejectUnauthorized cases
     //let rejectUnauthorized = !session.server.advanced.allowUnauthorized;
     //let proxy;
@@ -383,14 +420,18 @@ export function newSession (caps, attachSessId = null) {
     dispatch({type: SESSION_LOADING});
 
 
-    const hostname = username && accessKey ? `${username}:${accessKey}@${host}` : host;
     const serverOpts = {
-      hostname,
+      hostname: host,
       port: parseInt(port, 10),
       protocol: https ? 'https' : 'http',
       path,
       connectionRetryCount: CONN_RETRIES,
     };
+
+    if (username && accessKey) {
+      serverOpts.user = username;
+      serverOpts.key = accessKey;
+    }
 
     // If a newCommandTimeout wasn't provided, set it to 0 so that sessions don't close on users
     if (isUndefined(desiredCapabilities[CAPS_NEW_COMMAND])) {
@@ -412,12 +453,12 @@ export function newSession (caps, attachSessId = null) {
         driver = await Web2Driver.remote(serverOpts, desiredCapabilities);
       }
     } catch (err) {
-      showError(err, 0);
+      showError(err, null, 0);
       return;
     } finally {
       dispatch({type: SESSION_LOADING_DONE});
       // Save the current server settings
-      await settings.set(SESSION_SERVER_PARAMS, session.server);
+      await setSetting(SESSION_SERVER_PARAMS, session.server);
     }
 
     // The homepage arg in ChromeDriver is not working with Appium. iOS can have a default url, but
@@ -455,7 +496,7 @@ export function saveSession (caps, params) {
   return async (dispatch) => {
     let {name, uuid} = params;
     dispatch({type: SAVE_SESSION_REQUESTED});
-    let savedSessions = await settings.get(SAVED_SESSIONS);
+    let savedSessions = await getSetting(SAVED_SESSIONS);
     if (!uuid) {
 
       // If it's a new session, add it to the list
@@ -476,7 +517,7 @@ export function saveSession (caps, params) {
         }
       }
     }
-    await settings.set(SAVED_SESSIONS, savedSessions);
+    await setSetting(SAVED_SESSIONS, savedSessions);
     const action = getSavedSessions();
     await action(dispatch);
     dispatch({type: SET_CAPS, caps, uuid});
@@ -490,7 +531,7 @@ export function saveSession (caps, params) {
 export function getSavedSessions () {
   return async (dispatch) => {
     dispatch({type: GET_SAVED_SESSIONS_REQUESTED});
-    let savedSessions = await settings.get(SAVED_SESSIONS);
+    let savedSessions = await getSetting(SAVED_SESSIONS);
     dispatch({type: GET_SAVED_SESSIONS_DONE, savedSessions});
   };
 }
@@ -537,9 +578,9 @@ export function setSaveAsText (saveAsText) {
 export function deleteSavedSession (uuid) {
   return async (dispatch) => {
     dispatch({type: DELETE_SAVED_SESSION_REQUESTED, uuid});
-    let savedSessions = await settings.get(SAVED_SESSIONS);
+    let savedSessions = await getSetting(SAVED_SESSIONS);
     let newSessions = savedSessions.filter((session) => session.uuid !== uuid);
-    await settings.set(SAVED_SESSIONS, newSessions);
+    await setSetting(SAVED_SESSIONS, newSessions);
     dispatch({type: DELETE_SAVED_SESSION_DONE});
     dispatch({type: GET_SAVED_SESSIONS_DONE, savedSessions: newSessions});
   };
@@ -559,7 +600,7 @@ export function setAttachSessId (attachSessId) {
  */
 export function changeServerType (serverType) {
   return async (dispatch, getState) => {
-    await settings.set(SESSION_SERVER_TYPE, serverType);
+    await setSetting(SESSION_SERVER_TYPE, serverType);
     dispatch({type: CHANGE_SERVER_TYPE, serverType});
     const action = getRunningSessions();
     action(dispatch, getState);
@@ -573,7 +614,7 @@ export function setServerParam (name, value, serverType) {
   const debounceGetRunningSessions = debounce(getRunningSessions(), 5000);
   return async (dispatch, getState) => {
     serverType = serverType || getState().session.serverType;
-    await settings.set(SESSION_SERVER_TYPE, serverType);
+    await setSetting(SESSION_SERVER_TYPE, serverType);
     dispatch({type: SET_SERVER_PARAM, serverType, name, value});
     debounceGetRunningSessions(dispatch, getState);
   };
@@ -585,7 +626,7 @@ export function setServerParam (name, value, serverType) {
  */
 export function setLocalServerParams () {
   return async (dispatch, getState) => {
-    let serverArgs = await settings.get(SERVER_ARGS);
+    let serverArgs = await getSetting(SERVER_ARGS);
     // Get saved server args from settings and set local server settings to it. If there are no saved args, set local
     // host and port to undefined
     if (serverArgs) {
@@ -608,8 +649,8 @@ export function setLocalServerParams () {
  */
 export function setSavedServerParams () {
   return async (dispatch, getState) => {
-    let server = await settings.get(SESSION_SERVER_PARAMS);
-    let serverType = await settings.get(SESSION_SERVER_TYPE);
+    let server = await getSetting(SESSION_SERVER_PARAMS);
+    let serverType = await getSetting(SESSION_SERVER_TYPE);
     let currentProviders = getState().session.visibleProviders;
 
     if (server) {
@@ -627,13 +668,21 @@ export function setSavedServerParams () {
 export function getRunningSessions () {
   return async (dispatch, getState) => {
     const avoidServerTypes = [
-      'sauce', 'testobject'
+      'sauce'
     ];
     // Get currently running sessions for this server
     const state = getState().session;
     const {server, serverType} = state;
     const serverInfo = server[serverType];
-    const {hostname, port, path, ssl, username, accessKey} = serverInfo;
+    let {hostname, port, path, ssl, username, accessKey} = serverInfo;
+
+    // if we have a standard remote server, fill out connection info based on placeholder defaults
+    // in case the user hasn't adjusted those fields
+    if (serverType === ServerTypes.remote) {
+      hostname = hostname || DEFAULT_SERVER_HOST;
+      port = port || DEFAULT_SERVER_PORT;
+      path = path || DEFAULT_SERVER_PATH;
+    }
 
     if (!hostname || !port || !path) {
       // no need to get sessions if we don't have complete server info
@@ -743,7 +792,7 @@ export function addVisibleProvider (provider) {
   return async (dispatch, getState) => {
     let currentProviders = getState().session.visibleProviders;
     const providers = union(currentProviders, [provider]);
-    await settings.set(VISIBLE_PROVIDERS, providers);
+    await setSetting(VISIBLE_PROVIDERS, providers);
     dispatch({type: SET_PROVIDERS, providers});
   };
 }
@@ -752,14 +801,14 @@ export function removeVisibleProvider (provider) {
   return async (dispatch, getState) => {
     let currentProviders = getState().session.visibleProviders;
     const providers = without(currentProviders, provider);
-    await settings.set(VISIBLE_PROVIDERS, providers);
+    await setSetting(VISIBLE_PROVIDERS, providers);
     dispatch({type: SET_PROVIDERS, providers});
   };
 }
 
 export function setVisibleProviders () {
   return async (dispatch) => {
-    const providers = await settings.get(VISIBLE_PROVIDERS);
+    const providers = await getSetting(VISIBLE_PROVIDERS);
     dispatch({type: SET_PROVIDERS, providers});
   };
 }
@@ -811,5 +860,42 @@ export function bindWindowClose () {
       // longer has any 'returnValue' property
       delete evt.returnValue;
     });
+  };
+}
+
+export function setAddVendorPrefixes (addVendorPrefixes) {
+  return (dispatch) => {
+    dispatch({type: SET_ADD_VENDOR_PREFIXES, addVendorPrefixes});
+  };
+}
+
+export function initFromQueryString () {
+  return async (dispatch, getState) => {
+    if (!isFirstRun) {
+      return;
+    }
+
+    isFirstRun = false;
+
+    const url = new URL(window.location.href);
+    const initialState = url.searchParams.get('state');
+    const autoStartSession = url.searchParams.get('autoStart');
+
+    if (initialState) {
+      try {
+        const state = JSON.parse(initialState);
+        dispatch({type: SET_STATE_FROM_URL, state});
+      } catch (e) {
+        showError(new Error('Could not parse initial state from URL'), null, 0);
+      }
+    }
+
+    if (autoStartSession === AUTO_START_URL_PARAM) {
+      const {attachSessId, caps} = getState().session;
+      if (attachSessId) {
+        return await newSession(null, attachSessId)(dispatch, getState);
+      }
+      await newSession(caps)(dispatch, getState);
+    }
   };
 }
