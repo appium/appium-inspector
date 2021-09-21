@@ -362,8 +362,10 @@ export function newSession (caps, attachSessId = null) {
         port = 443;
         https = session.server.roboticmobi.ssl = true;
         if (caps) {
-          desiredCapabilities.robotic_mobi_token = session.server.roboticmobi.token || process.env.ROBOTIC_MOBI_TOKEN;
-        }
+          desiredCapabilities['roboticmobi:options'] = {};
+          desiredCapabilities['roboticmobi:options'].robotic_mobi_token = session.server.roboticmobi.token || process.env.ROBOTIC_MOBI_TOKEN;
+        } 
+
         break;
       }
 
