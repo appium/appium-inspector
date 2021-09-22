@@ -54,6 +54,7 @@ The reason for this is that the Appium team does not have a paid Apple developer
 | [Pcloudy](https://www.pcloudy.com) | [Documentation](https://www.pcloudy.com/mobile-application-testing-documentation) |
 | [TestingBot](https://testingbot.com) | [Documentation](https://testingbot.com/support) |
 | [Experitest](http://www.experitest.com) | [Documentation](https://docs.experitest.com/display/TE/Appium) |
+| [Robotic.mobi](https://www.robotic.mobi) | [Documentation](https://robotic.mobi/appium-remote) |
 
 ## Requirements
 
