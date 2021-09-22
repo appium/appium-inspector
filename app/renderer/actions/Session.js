@@ -388,7 +388,7 @@ export function newSession (caps, attachSessId = null) {
         if (caps) {
           desiredCapabilities['roboticmobi:options'] = {};
           desiredCapabilities['roboticmobi:options'].robotic_mobi_token = session.server.roboticmobi.token || process.env.ROBOTIC_MOBI_TOKEN;
-        } 
+        }
         break;
       }
 
