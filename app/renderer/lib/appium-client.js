@@ -123,14 +123,13 @@ export default class AppiumClient {
 
     let contextUpdate = {}, sourceUpdate = {}, screenshotUpdate = {}, windowSizeUpdate = {};
     if (!skipRefresh) {
-      sourceUpdate = await this.getSourceUpdate();
       screenshotUpdate = await this.getScreenshotUpdate();
       windowSizeUpdate = await this.getWindowUpdate();
-
       // only do context updates if user has selected web/hybrid mode (takes forever)
       if (appMode === APP_MODE.WEB_HYBRID) {
         contextUpdate = await this.getContextUpdate();
       }
+      sourceUpdate = await this.getSourceUpdate();
     }
     return {
       ...cachedEl,
@@ -202,8 +201,23 @@ export default class AppiumClient {
 
   async getWindowUpdate () {
     let windowSize, windowSizeError;
+    const {client:{capabilities:{deviceScreenSize, platformName}}} = this.driver
     try {
-      windowSize = await this.driver.getWindowRect();
+      // The call doesn't need to be made for Android for two reasons
+      // - when appMode is hybrid Chrome driver doesn't know this this command
+      // - the data is already on the driver
+      //   this.driver.client.capabilities.deviceScreenSize => "{width}x{length}"
+      if (platformName.toLowerCase() === 'android') {
+        const widthHeight = deviceScreenSize.split('x');
+        windowSize = {
+          width: widthHeight[0],
+          height: widthHeight[1],
+          x:0,
+          y:0,
+        }
+      } else {
+        windowSize = await this.driver.getWindowRect();
+      }
     } catch (e) {
       windowSizeError = e;
     }
@@ -212,8 +226,7 @@ export default class AppiumClient {
   }
 
   async getContextUpdate () {
-    let contexts, contextsError, currentContext, currentContextError, platformName, statBarHeight;
-
+    let contexts, contextsError, currentContext, currentContextError, platformName, statBarHeight, webViewPosition;
     if (!await this.hasContextsCommand()) {
       return {currentContext: null, contexts: []};
     }
@@ -233,6 +246,7 @@ export default class AppiumClient {
 
     try {
       contexts = await this.driver.executeScript('mobile:getContexts', []);
+      contexts = platformName.toLowerCase() === 'android' ? this.parseAndroidContexts(contexts) : contexts;
     } catch (e) {
       contextsError = e;
     }
@@ -291,6 +305,55 @@ export default class AppiumClient {
 
     // If the app under test returns non JSON format response
     return false;
+  }
+
+  /**
+   * Parse the Android contexts webview data
+   *
+   * Returns
+   * {
+   *   id: string;             // NATIVE_APP or the webview name
+   *   title?: string;         // the name of the page
+   *   url?: string;           // the url
+   *   bundleId?: string;      // for iOS
+   *   packageName?: string;   // for Android
+   *   handle?: string;        // the id of the active page in the webview of Android
+   * }[];
+   */
+  parseAndroidContexts (contexts) {
+    return [
+      // The Android contexts dont have the `NATIVE_APP` context so add it here
+      {id: 'NATIVE_APP'},
+      // Now parse the contexts
+      ...contexts
+        // filter out all contexts that have a webviewName
+        .filter((webview) => 'webviewName' in webview)
+        // Now construct a new array with data
+        .map(({info, pages, webviewName}) => {
+          // First find the active page, this will only be one
+          const activePage = pages
+            .filter((page) => {
+              // Description is a string which needs to be turned into JSON
+              // It can also be an empty string
+              let descriptionJSON = {attached: false};
+              try {
+                descriptionJSON = JSON.parse(page.description);
+              } catch (ign) {
+              }
+
+              // An active page is also of type `page`
+              return page.type === 'page' && descriptionJSON.attached;
+            })[0];
+
+          return {
+            id: webviewName,
+            ...(activePage.title ? {title: activePage.title} : {}),
+            ...(activePage.url ? {url: activePage.url} : {}),
+            ...('Android-Package' in info ? {packageName: info['Android-Package']} : {}),
+            ...(activePage.id ? {handle: activePage.id} : {}),
+          };
+        }),
+    ];
   }
 }
 
