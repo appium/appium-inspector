@@ -82,6 +82,11 @@ export function parseSource (source) {
   const scripts = $('script');
   scripts.remove();
 
-  // remove all `data-appium-desktop-` prefixes
-  return $.html().replace(/data-appium-desktop-/g, '');
+  return $.html()
+    // Remove all html entity / special chars that could break the parsing
+    .replace(/(&(.*?);)/ig, '')
+    // remove all existing width height or x/y attributes
+    .replace(/\s((width|height|x|y)="(.*?)")/ig, '')
+    // remove all `data-appium-desktop-` prefixes so only the width|height|x|y are there
+    .replace(/data-appium-desktop-/g, '');
 }

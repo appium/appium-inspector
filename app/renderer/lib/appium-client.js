@@ -23,7 +23,7 @@ export default class AppiumClient {
       elementId, // Optional. Element being operated on
       args = [], // Optional. Arguments passed to method
       skipRefresh = false, // Optional. Do we want the updated source and screenshot?
-      appMode = APP_MODE.NATIVE_APP, // Optional. Whether we're in a native or hybrid mode
+      appMode = APP_MODE.NATIVE, // Optional. Whether we're in a native or hybrid mode
     } = params;
 
     if (methodName === 'quit') {
@@ -201,20 +201,14 @@ export default class AppiumClient {
 
   async getWindowUpdate () {
     let windowSize, windowSizeError;
-    const {client:{capabilities:{deviceScreenSize, platformName}}} = this.driver
+    const {client: {capabilities: {deviceScreenSize, platformName}}} = this.driver;
     try {
       // The call doesn't need to be made for Android for two reasons
-      // - when appMode is hybrid Chrome driver doesn't know this this command
+      // - when appMode is hybrid Chrome driver doesn't know this command
       // - the data is already on the driver
-      //   this.driver.client.capabilities.deviceScreenSize => "{width}x{length}"
-      if (platformName.toLowerCase() === 'android') {
-        const widthHeight = deviceScreenSize.split('x');
-        windowSize = {
-          width: widthHeight[0],
-          height: widthHeight[1],
-          x:0,
-          y:0,
-        }
+      if (_.toLower(platformName) === 'android') {
+        const [width, height] = deviceScreenSize.split('x');
+        windowSize = { width, height, x: 0, y: 0 };
       } else {
         windowSize = await this.driver.getWindowRect();
       }
@@ -226,7 +220,15 @@ export default class AppiumClient {
   }
 
   async getContextUpdate () {
-    let contexts, contextsError, currentContext, currentContextError, platformName, statBarHeight, webViewPosition;
+    let contexts,
+        contextsError,
+        currentContext,
+        currentContextError,
+        pixelRatio,
+        platformName,
+        statBarHeight,
+        viewportRect,
+        webViewPosition;
     if (!await this.hasContextsCommand()) {
       return {currentContext: null, contexts: []};
     }
@@ -242,16 +244,45 @@ export default class AppiumClient {
       await this.driver.switchContext(NATIVE_APP);
     }
 
-    ({platformName, statBarHeight} = await this.driver.getSession());
+    ({platformName, pixelRatio, statBarHeight, viewportRect} = await this.driver.getSession());
+    const isAndroid = _.toLower(platformName) === 'android';
 
     try {
       contexts = await this.driver.executeScript('mobile:getContexts', []);
-      contexts = platformName.toLowerCase() === 'android' ? this.parseAndroidContexts(contexts) : contexts;
+      contexts = isAndroid ? this.parseAndroidContexts(contexts) : contexts;
     } catch (e) {
       contextsError = e;
     }
 
+
     if (currentContext !== NATIVE_APP) {
+      try {
+        // Get the webview offset
+        if (viewportRect) {
+          // The viewport rectangles are based on the screen density,
+          // iOS needs CSS pixels
+          webViewPosition = {
+            x: isAndroid ? viewportRect.left : Math.round(viewportRect.left / pixelRatio),
+            y: isAndroid ? viewportRect.top : Math.round(viewportRect.top / pixelRatio),
+          };
+        } else {
+          // Fallback
+        const el = await this.driver.findElement(
+          isAndroid ? 'xpath' : '-ios class chain',
+          isAndroid ? '//android.webkit.WebView' : '**/XCUIElementTypeWebView'
+        );
+          if ('elementId' in el) {
+            // Strange is that this command is failing, isn't it exposed by Web2Driver
+            // ign =  TypeError: this.driver.getElementRect is not a function
+            //     at s.getContextUpdate (renderer.e31bb0bc.js:42)
+            //     at async s.executeMethod (renderer.e31bb0bc.js:42)
+            //     at async s.run (renderer.e31bb0bc.js:42)
+            //     at async renderer.e31bb0bc.js:44
+            //     at async renderer.e31bb0bc.js:44
+            webViewPosition = await this.driver.getElementRect(el.elementId);
+          }
+        }
+      } catch (ign) {}
       await this.driver.switchContext(currentContext);
     }
 
@@ -261,12 +292,21 @@ export default class AppiumClient {
      */
     try {
       if (currentContext !== NATIVE_APP) {
-        const webviewStatusAddressBarHeight = await this.driver.executeScript(getWebviewStatusAddressBarHeight,
-          [{platformName, statBarHeight}]);
-        await this.driver.executeScript(setHtmlElementAttributes, [{
-          platformName,
-          webviewStatusAddressBarHeight
-        }]);
+        // Fallback if the webview position can't be determined,
+        // then do it based on the web context
+        if (!webViewPosition) {
+          webViewPosition = {
+            x: 0,
+            y: await this.driver.executeScript(
+              `return (${getWebviewStatusAddressBarHeight}).apply(null, arguments)`,
+              [{platformName, statBarHeight}],
+            ),
+          };
+        }
+        await this.driver.executeScript(
+          `return (${setHtmlElementAttributes}).apply(null, arguments)`,
+          [{platformName, webviewStatusAddressBarHeight: webViewPosition.y}],
+        );
       }
     } catch (ign) {}
 
