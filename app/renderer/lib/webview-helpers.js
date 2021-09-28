@@ -1,4 +1,5 @@
 import {load} from 'cheerio';
+import {parseDocument} from 'htmlparser2';
 
 /**
  * JS code that is executed in the webview to determine the status+address bar height
@@ -75,18 +76,35 @@ export function parseSource (source) {
     return source;
   }
 
-  const $ = load(source);
+  const dom = parseDocument(source);
+  const $ = load(dom);
+
   // Remove the head and the scripts
   const head = $('head');
   head.remove();
   const scripts = $('script');
   scripts.remove();
 
-  return $.html()
-    // Remove all html entity / special chars that could break the parsing
-    .replace(/(&(.*?);)/ig, '')
+  // Clean the source
+  $('*')
     // remove all existing width height or x/y attributes
-    .replace(/\s((width|height|x|y)="(.*?)")/ig, '')
+    .removeAttr('width')
+    .removeAttr('height')
+    .removeAttr('x')
+    .removeAttr('y')
     // remove all `data-appium-desktop-` prefixes so only the width|height|x|y are there
-    .replace(/data-appium-desktop-/g, '');
+    .each(function () {
+      const $el = $(this);
+
+      ['width', 'height', 'x', 'y'].forEach((rectAttr) => {
+        if ($el.attr(`data-appium-desktop-${rectAttr}`)) {
+          $el.attr(rectAttr, $el.attr(`data-appium-desktop-${rectAttr}`));
+
+          /* remove the old attribute */
+          $el.removeAttr(`data-appium-desktop-${rectAttr}`);
+        }
+      });
+    });
+
+  return $.xml();
 }
