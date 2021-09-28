@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Bluebird from 'bluebird';
-import { getWebviewStatusAddressBarHeight, parseSource, setHtmlElementAttributes } from './webview-helpers';
-import { SCREENSHOT_INTERACTION_MODE, APP_MODE } from '../components/Inspector/shared';
+import {getWebviewStatusAddressBarHeight, parseSource, setHtmlElementAttributes} from './webview-helpers';
+import {SCREENSHOT_INTERACTION_MODE, APP_MODE} from '../components/Inspector/shared';
 
 const NATIVE_APP = 'NATIVE_APP';
 let _instance = null;
@@ -29,7 +29,8 @@ export default class AppiumClient {
     if (methodName === 'quit') {
       try {
         await this.driver.quit();
-      } catch (ign) {}
+      } catch (ign) {
+      }
 
       _instance = null;
 
@@ -208,7 +209,7 @@ export default class AppiumClient {
       // - the data is already on the driver
       if (_.toLower(platformName) === 'android') {
         const [width, height] = deviceScreenSize.split('x');
-        windowSize = { width, height, x: 0, y: 0 };
+        windowSize = {width, height, x: 0, y: 0};
       } else {
         windowSize = await this.driver.getWindowRect();
       }
@@ -267,22 +268,16 @@ export default class AppiumClient {
           };
         } else {
           // Fallback
-        const el = await this.driver.findElement(
-          isAndroid ? 'xpath' : '-ios class chain',
-          isAndroid ? '//android.webkit.WebView' : '**/XCUIElementTypeWebView'
-        );
-          if ('elementId' in el) {
-            // Strange is that this command is failing, isn't it exposed by Web2Driver
-            // ign =  TypeError: this.driver.getElementRect is not a function
-            //     at s.getContextUpdate (renderer.e31bb0bc.js:42)
-            //     at async s.executeMethod (renderer.e31bb0bc.js:42)
-            //     at async s.run (renderer.e31bb0bc.js:42)
-            //     at async renderer.e31bb0bc.js:44
-            //     at async renderer.e31bb0bc.js:44
-            webViewPosition = await this.driver.getElementRect(el.elementId);
+          const el = await this.driver.findElement(
+            isAndroid ? 'xpath' : '-ios class chain',
+            isAndroid ? '//android.webkit.WebView' : '**/XCUIElementTypeWebView'
+          );
+          if (el) {
+            webViewPosition = await el.getRect();
           }
         }
-      } catch (ign) {}
+      } catch (ign) {
+      }
       await this.driver.switchContext(currentContext);
     }
 
@@ -308,7 +303,8 @@ export default class AppiumClient {
           [{platformName, webviewStatusAddressBarHeight: webViewPosition.y}],
         );
       }
-    } catch (ign) {}
+    } catch (ign) {
+    }
 
     return {contexts, contextsError, currentContext, currentContextError};
   }
@@ -341,7 +337,8 @@ export default class AppiumClient {
     try {
       await this.driver.getContexts();
       return true;
-    } catch (ign) { }
+    } catch (ign) {
+    }
 
     // If the app under test returns non JSON format response
     return false;
@@ -361,38 +358,57 @@ export default class AppiumClient {
    * }[];
    */
   parseAndroidContexts (contexts) {
+    const parsedWebviews = [];
+
+    // Walk over every context and add all webviews into the parsedWebviews array
+    contexts
+      // Filter out all contexts that have a webviewName
+      .filter((webview) => _.has(webview, 'webviewName'))
+      // Now construct a new array with data
+      .map(({info, pages, webviewName}) => {
+        // The context result can have:
+        // - no pages => this might be Chrome running in the background
+        // - pages => this can be:
+        //   - Chrome with one or multiple tabs open
+        //   - A webview with one or multiple webviews
+        if (!pages) {
+          return;
+        }
+
+        pages.filter((page) => {
+          // The description is a string and:
+          // 1. can contain a JSON string for webviews which can contain
+          //    an `attached`-value telling if the webview is active
+          // 2. can be an empty string, this is most of the times for tabs
+          //    in Chrome
+          const description = _.has(page, 'description') ? page.description : '';
+          let descriptionJSON = {attached: false};
+          try {
+            descriptionJSON = JSON.parse(page.description);
+          } catch (ign) {}
+
+          // You can have multiple `type` of pages, like service workers
+          // We need to have pages with or 1. an attached view or 2. with an empty description
+          return page.type === 'page' && (description === '' || descriptionJSON.attached);
+        })
+          .map((page) => {
+            parsedWebviews.push({
+              id: webviewName,
+              ...(page && _.has(page, 'title') ? {title: page.title} : {}),
+              ...(page && _.has(page, 'url') ? {url: page.url} : {}),
+              ...(page && _.has(info, 'Android-Package') ? {packageName: info['Android-Package']} : {}),
+              ...(page && _.has(page, 'id') ? {handle: page.id} : {}),
+            });
+          });
+
+        return parsedWebviews;
+      });
+
     return [
       // The Android contexts dont have the `NATIVE_APP` context so add it here
       {id: 'NATIVE_APP'},
-      // Now parse the contexts
-      ...contexts
-        // filter out all contexts that have a webviewName
-        .filter((webview) => 'webviewName' in webview)
-        // Now construct a new array with data
-        .map(({info, pages, webviewName}) => {
-          // First find the active page, this will only be one
-          const activePage = pages
-            .filter((page) => {
-              // Description is a string which needs to be turned into JSON
-              // It can also be an empty string
-              let descriptionJSON = {attached: false};
-              try {
-                descriptionJSON = JSON.parse(page.description);
-              } catch (ign) {
-              }
-
-              // An active page is also of type `page`
-              return page.type === 'page' && descriptionJSON.attached;
-            })[0];
-
-          return {
-            id: webviewName,
-            ...(activePage.title ? {title: activePage.title} : {}),
-            ...(activePage.url ? {url: activePage.url} : {}),
-            ...('Android-Package' in info ? {packageName: info['Android-Package']} : {}),
-            ...(activePage.id ? {handle: activePage.id} : {}),
-          };
-        }),
+      // Add the parsedWebviews, but make sure to filter out all undefined webviews
+      ...parsedWebviews.filter(Boolean),
     ];
   }
 }
