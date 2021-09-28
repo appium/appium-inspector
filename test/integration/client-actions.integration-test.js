@@ -111,4 +111,107 @@ describe('Appium client actions', function () {
 
     });
   });
+  describe('parseAndroidContexts methods', function () {
+    it('should parse the android contexts into a proper format', async function () {
+      const res = await client.parseAndroidContexts([
+        {
+          'proc': '@webview_devtools_remote_8960',
+          'webview': 'WEBVIEW_8960',
+          'info': {
+            'Android-Package': 'com.demoapp',
+            'Browser': 'Chrome/74.0.3729.185',
+            'Protocol-Version': '1.3',
+            'User-Agent': 'string',
+            'V8-Version': 'string',
+            'WebKit-Version': 'string',
+            'webSocketDebuggerUrl': 'ws://127.0.0.1:10900/devtools/browser'
+          },
+          'pages': [
+            {
+              'description': '{"attached":true,"empty":false,"height":1797,"screenX":0,"screenY":66,"visible":true,"width":1080}',
+              'devtoolsFrontendUrl': 'http://devtoolsFrontendUrl.com',
+              'faviconUrl': 'https://webdriver.io/img/logo-webdriver-io.png',
+              'id': '7E1BAB0FC5AD6947AFD8AADE88E0D89F',
+              'title': 'Demo app title',
+              'type': 'page',
+              'url': 'https://demoapp.com/',
+              'webSocketDebuggerUrl': 'ws://127.0.0.1:10900/devtools/page/7E1BAB0FC5AD6947AFD8AADE88E0D89F'
+            },
+            {
+              'description': '',
+              'devtoolsFrontendUrl': 'http://devtoolsFrontendUrl.com',
+              'id': 'A503B9A60433B84A065D5F98250D3853',
+              'title': 'Service Worker title',
+              'type': 'service_worker',
+              'url': 'https://demoapp.com/sw.js?params=%7B%22offlineMode%22%3Afalse%2C%22debug%22%3Afalse%7D',
+              'webSocketDebuggerUrl': 'ws://127.0.0.1:10900/devtools/page/A503B9A60433B84A065D5F98250D3853'
+            }
+          ],
+          'webviewName': 'WEBVIEW_com.demoapp'
+        },
+        {
+          'proc': '@chrome_devtools_remote',
+          'webview': 'WEBVIEW_chrome',
+          'info': {
+            'Android-Package': 'com.android.chrome',
+            'Browser': 'string',
+            'Protocol-Version': '1.3',
+            'User-Agent': 'string',
+            'V8-Version': 'string',
+            'WebKit-Version': 'string',
+            'webSocketDebuggerUrl': 'ws://127.0.0.1:10900/devtools/browser'
+          },
+          'pages': [
+            {
+              'description': '',
+              'devtoolsFrontendUrl': 'http://devtoolsFrontendUrl.com',
+              'id': '1',
+              'title': 'Chrome tab 1',
+              'type': 'page',
+              'url': 'https://www.chrome.com/tab/1/',
+              'webSocketDebuggerUrl': 'ws://127.0.0.1:10900/devtools/page/1'
+            },
+            {
+              'description': '',
+              'devtoolsFrontendUrl': 'http://devtoolsFrontendUrl.com',
+              'id': '0',
+              'title': 'Chrome tab 0',
+              'type': 'page',
+              'url': 'https://www.chrome.com/tab/0/',
+              'webSocketDebuggerUrl': 'ws://127.0.0.1:10900/devtools/page/0'
+            }
+          ],
+          'webviewName': 'WEBVIEW_chrome'
+        }
+      ]);
+
+      res.should.eql([
+        {
+          'id': 'NATIVE_APP'
+        },
+        {
+          'id': 'WEBVIEW_com.demoapp',
+          'title': 'Demo app title',
+          'url': 'https://demoapp.com/',
+          'packageName': 'com.demoapp',
+          'handle': '7E1BAB0FC5AD6947AFD8AADE88E0D89F'
+        },
+        {
+          'id': 'WEBVIEW_chrome',
+          'title': 'Chrome tab 1',
+          'url': 'https://www.chrome.com/tab/1/',
+          'packageName': 'com.android.chrome',
+          'handle': '1'
+        },
+        {
+          'id': 'WEBVIEW_chrome',
+          'title': 'Chrome tab 0',
+          'url': 'https://www.chrome.com/tab/0/',
+          'packageName': 'com.android.chrome',
+          'handle': '0'
+        }
+      ]
+      );
+    });
+  });
 });

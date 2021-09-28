@@ -62,6 +62,7 @@ const CAPS_NEW_COMMAND = 'appium:newCommandTimeout';
 const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
 const CAPS_NATIVE_WEB_SCREENSHOT = 'appium:nativeWebScreenshot';
 const CAPS_ENSURE_WEBVIEW_HAVE_PAGES = 'appium:ensureWebviewsHavePages';
+const CAPS_INCLUDE_SAFARI_IN_WEBVIEWS = 'appium:includeSafariInWebviews';
 
 const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to turn it on
 
@@ -818,25 +819,21 @@ export function setVisibleProviders () {
  * @param {object} caps
  */
 function addCustomCaps (caps) {
-  const {browserName = '', platformName = ''} = caps;
-  const safariCustomCaps = {
-    // Add the includeSafariInWebviews for future HTML detection
-    includeSafariInWebviews: true,
-  };
-  const chromeCustomCaps = {};
-  // Make sure the screenshot is taken of the whole screen when the ChromeDriver is used
-  chromeCustomCaps[CAPS_NATIVE_WEB_SCREENSHOT] = true;
-
+  const {platformName = ''} = caps;
   const androidCustomCaps = {};
   // @TODO: remove when this is defaulted in the newest Appium 1.8.x release
   androidCustomCaps[CAPS_ENSURE_WEBVIEW_HAVE_PAGES] = true;
+  // Make sure the screenshot is taken of the whole screen when the ChromeDriver is used
+  androidCustomCaps[CAPS_NATIVE_WEB_SCREENSHOT] = true;
 
   const iosCustomCaps = {};
+  // Always add the includeSafariInWebviews for future HTML detection
+  // This will ensure that if you use AD to switch between App and browser
+  // that it can detect Safari as a webview
+  iosCustomCaps[CAPS_INCLUDE_SAFARI_IN_WEBVIEWS] = true;
 
   return {
     ...caps,
-    ...(browserName.toLowerCase() === 'safari' ? safariCustomCaps : {}),
-    ...(browserName.toLowerCase() === 'chrome' ? chromeCustomCaps : {}),
     ...(platformName.toLowerCase() === 'android' ? androidCustomCaps : {}),
     ...(platformName.toLowerCase() === 'ios' ? iosCustomCaps : {}),
   };
