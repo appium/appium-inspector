@@ -193,7 +193,7 @@
     "less": "^4.1.1",
     "mkdirp": "^1.0.4",
     "mocha": "^9.0.2",
-    "mocha-junit-reporter": "^2.0.0",
+    "mocha-junit-reporter": "^2.0.2",
     "mocha-multi-reporters": "^1.1.7",
     "ncp": "^2.0.0",
     "node-libs-browser": "^2.1.0",
