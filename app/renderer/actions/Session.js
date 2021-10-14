@@ -321,7 +321,6 @@ export function newSession (caps, attachSessId = null) {
         accessKey = session.server.kobiton.accessKey || process.env.KOBITON_ACCESS_KEY;
         desiredCapabilities['kobiton:options'] = {};
         desiredCapabilities['kobiton:options'].source = 'appiumdesktop';
-        
         if (!username || !accessKey) {
           notification.error({
             message: i18n.t('Error'),
