@@ -318,8 +318,9 @@ export function newSession (caps, attachSessId = null) {
         port = session.server.kobiton.port = 443;
         path = session.server.kobiton.path = '/wd/hub';
         username = session.server.kobiton.username || process.env.KOBITON_USERNAME;
-        desiredCapabilities['kobiton.source'] = 'appiumdesktop';
         accessKey = session.server.kobiton.accessKey || process.env.KOBITON_ACCESS_KEY;
+        desiredCapabilities['kobiton:options'] = {};
+        desiredCapabilities['kobiton:options'].source = 'appiumdesktop';
         if (!username || !accessKey) {
           notification.error({
             message: i18n.t('Error'),
