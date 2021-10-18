@@ -275,7 +275,7 @@ export function newSession (caps, attachSessId = null) {
           });
           return;
         }
-        desiredCapabilities.securityToken = token;
+        desiredCapabilities['perfecto:options'] = {securityToken: token};
         https = session.server.perfecto.ssl = false;
         break;
       case ServerTypes.browserstack:
