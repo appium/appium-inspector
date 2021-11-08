@@ -257,9 +257,10 @@ export function newSession (caps, attachSessId = null) {
           return;
         }
         host = session.server.headspin.hostname = headspinUrl.hostname;
-        port = session.server.headspin.port = headspinUrl.port;
         path = session.server.headspin.path = headspinUrl.pathname;
         https = session.server.headspin.ssl = headspinUrl.protocol === 'https:';
+        // new URL() does not have the port of 443 when `https` and 80 when `http`
+        port = session.server.headspin.port = headspinUrl.port === '' ? (https ? 443 : 80) : headspinUrl.port;
         break;
       }
       case ServerTypes.perfecto:
