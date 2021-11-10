@@ -14,8 +14,8 @@ export default class ServerTabPerfecto extends Component {
 
     const perfectoTokenPlaceholder = process.env.PERFECTO_TOKEN ?
       t('usingDataFoundIn', {environmentVariable: 'PERFECTO_TOKEN'}) : t('Add your token');
-	  
-	const portPlaceholder = server.perfecto.ssl ? '443' : '80';
+
+    const portPlaceholder = server.perfecto.ssl ? '443' : '80';
 
     return <Form>
       <Row gutter={8}>
@@ -36,7 +36,7 @@ export default class ServerTabPerfecto extends Component {
             <Input id='token' placeholder={perfectoTokenPlaceholder} addonBefore={t('Perfecto Token')} value={server.perfecto.token} onChange={(e) => setServerParam('token', e.target.value)} />
           </FormItem>
         </Col>
-		<Col span={12}>
+        <Col span={12}>
           <FormItem>
             <Checkbox checked={!!server.perfecto.ssl} onChange={(e) => setServerParam('ssl', e.target.checked)}> {'SSL'}</Checkbox>
           </FormItem>
