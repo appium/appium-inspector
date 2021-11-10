@@ -277,7 +277,7 @@ export function newSession (caps, attachSessId = null) {
           return;
         }
         desiredCapabilities['perfecto:options'] = {securityToken: token};
-		https = session.server.perfecto.ssl;
+        https = session.server.perfecto.ssl;
         break;
       case ServerTypes.browserstack:
         host = session.server.browserstack.hostname = process.env.BROWSERSTACK_HOST || 'hub-cloud.browserstack.com';
