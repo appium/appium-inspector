@@ -265,7 +265,7 @@ export function newSession (caps, attachSessId = null) {
       }
       case ServerTypes.perfecto:
         host = session.server.perfecto.hostname;
-        port = session.server.perfecto.port || 80;
+        port = session.server.perfecto.port || (session.server.perfecto.ssl ? 443 : 80);
         token = session.server.perfecto.token || process.env.PERFECTO_TOKEN;
         path = session.server.perfecto.path = '/nexperience/perfectomobile/wd/hub';
         if (!token) {
@@ -277,7 +277,7 @@ export function newSession (caps, attachSessId = null) {
           return;
         }
         desiredCapabilities['perfecto:options'] = {securityToken: token};
-        https = session.server.perfecto.ssl = false;
+		https = session.server.perfecto.ssl;
         break;
       case ServerTypes.browserstack:
         host = session.server.browserstack.hostname = process.env.BROWSERSTACK_HOST || 'hub-cloud.browserstack.com';
