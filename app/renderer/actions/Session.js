@@ -449,6 +449,11 @@ export function newSession (caps, attachSessId = null) {
     let driver = null;
     try {
       if (attachSessId) {
+        // When attaching to a session id, webdriver does not check if the device
+        // is mobile or not. Since we're attaching in appium-inspector, we can
+        // assume the device is mobile so that Appium protocols are included
+        // in the userPrototype.
+        serverOpts.isMobile = true;
         driver = await Web2Driver.attachToSession(attachSessId, serverOpts);
         driver._isAttachedSession = true;
       } else {
