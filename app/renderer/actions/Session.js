@@ -310,8 +310,9 @@ export function newSession (caps, attachSessId = null) {
           });
           return;
         }
-        desiredCapabilities.testdroid_source = 'appiumdesktop';
-        desiredCapabilities.testdroid_apiKey = accessKey;
+        desiredCapabilities['bitbar:options'] = {};
+        desiredCapabilities['bitbar:options'].source = 'appiumdesktop';
+        desiredCapabilities['bitbar:options'].apiKey = accessKey;
         https = session.server.bitbar.ssl = true;
         break;
       case ServerTypes.kobiton:
