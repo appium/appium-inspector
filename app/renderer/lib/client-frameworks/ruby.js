@@ -10,19 +10,17 @@ class RubyFramework extends Framework {
   wrapWithBoilerplate (code) {
     let capStr = Object.keys(this.caps).map((k) => `caps[${JSON.stringify(k)}] = ${JSON.stringify(this.caps[k])}`).join('\n');
     return `# This sample code uses the Appium ruby client
-# gem install appium_lib
+# gem install appium_lib_core
 # Then you can paste this into a file and simply run with Ruby
 
-require 'rubygems'
-require 'appium_lib'
+require 'appium_lib_core'
 
 caps = {}
 ${capStr}
 opts = {
-    sauce_username: nil,
     server_url: "${this.serverUrl}"
 }
-driver = Appium::Driver.new({caps: caps, appium_lib: opts}).start_driver
+driver = Appium::Core.for({caps: caps, appium_lib: opts}).start_driver
 
 ${code}
 driver.quit`;
@@ -49,9 +47,9 @@ driver.quit`;
       throw new Error(`Strategy ${strategy} can't be code-gened`);
     }
     if (isArray) {
-      return `${localVar} = driver.find_element(${suffixMap[strategy]}, ${JSON.stringify(locator)})`;
+      return `${localVar} = driver.find_element :${suffixMap[strategy]}, ${JSON.stringify(locator)}`;
     } else {
-      return `${localVar} = driver.find_elements(${suffixMap[strategy]}, ${JSON.stringify(locator)})`;
+      return `${localVar} = driver.find_elements :${suffixMap[strategy]}, ${JSON.stringify(locator)}`;
     }
   }
 
@@ -71,6 +69,7 @@ driver.quit`;
     return `driver.back`;
   }
 
+  // TODO: change to W3C actions
   codeFor_tap (varNameIgnore, varIndexIgnore, x, y) {
     return `TouchAction
   .new
@@ -79,6 +78,7 @@ driver.quit`;
     `;
   }
 
+  // TODO: change to W3C actions
   codeFor_swipe (varNameIgnore, varIndexIgnore, x1, y1, x2, y2) {
     return `TouchAction
   .new
@@ -99,11 +99,11 @@ driver.quit`;
 
 
   codeFor_installApp (varNameIgnore, varIndexIgnore, app) {
-    return `driver.app_installed?('${app}')`;
+    return `driver.app_installed? '${app}'`;
   }
 
   codeFor_isAppInstalled (varNameIgnore, varIndexIgnore, app) {
-    return `is_app_installed = driver.isAppInstalled("${app}");`;
+    return `is_app_installed = driver.app_installed? '${app}'`;
   }
 
   codeFor_launchApp () {
@@ -111,7 +111,7 @@ driver.quit`;
   }
 
   codeFor_background (varNameIgnore, varIndexIgnore, timeout) {
-    return `driver.background_app(${timeout})`;
+    return `driver.background_app ${timeout}`;
   }
 
   codeFor_closeApp () {
@@ -123,11 +123,11 @@ driver.quit`;
   }
 
   codeFor_removeApp (varNameIgnore, varIndexIgnore, app) {
-    return `driver.remove_app('${app}')`;
+    return `driver.remove_app '${app}'`;
   }
 
   codeFor_getStrings (varNameIgnore, varIndexIgnore, language, stringFile) {
-    return `driver.app_strings(${language ? `${language}, ` : ''}${stringFile ? `"${stringFile}` : ''})`;
+    return `driver.app_strings ${language ? `${language}, ` : ''}${stringFile ? `"${stringFile}` : ''}`;
   }
 
   codeFor_getClipboard () {
