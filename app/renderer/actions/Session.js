@@ -73,6 +73,9 @@ const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to 
 // TODO: increase this retry when we get issues
 export const CONN_RETRIES = 0;
 
+// 1 hour default newCommandTimeout
+const NEW_COMMAND_TIMEOUT_SEC = 3600;
+
 let isFirstRun = true; // we only want to auto start a session on a first run
 
 const serverTypes = {};
@@ -439,7 +442,7 @@ export function newSession (caps, attachSessId = null) {
     // I saw sometimes infinit session timeout was not so good for cloud providers.
     // So, let me define this value as 1 hour by default.
     if (isUndefined(desiredCapabilities[CAPS_NEW_COMMAND])) {
-      desiredCapabilities[CAPS_NEW_COMMAND] = 60 * 60; // 1 hour
+      desiredCapabilities[CAPS_NEW_COMMAND] = NEW_COMMAND_TIMEOUT_SEC;
     }
 
     // If someone didn't specify connectHardwareKeyboard, set it to true by
