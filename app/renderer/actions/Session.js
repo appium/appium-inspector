@@ -440,7 +440,7 @@ export function newSession (caps, attachSessId = null) {
 
     // If a newCommandTimeout wasn't provided, set it to 60 * 60 so that sessions don't close on users in short term.
     // I saw sometimes infinit session timeout was not so good for cloud providers.
-    // So, let me define this value as 1 hour by default.
+    // So, let me define this value as NEW_COMMAND_TIMEOUT_SEC by default.
     if (isUndefined(desiredCapabilities[CAPS_NEW_COMMAND])) {
       desiredCapabilities[CAPS_NEW_COMMAND] = NEW_COMMAND_TIMEOUT_SEC;
     }
