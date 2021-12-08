@@ -435,9 +435,11 @@ export function newSession (caps, attachSessId = null) {
       serverOpts.key = accessKey;
     }
 
-    // If a newCommandTimeout wasn't provided, set it to 0 so that sessions don't close on users
+    // If a newCommandTimeout wasn't provided, set it to 60 * 60 so that sessions don't close on users in short term.
+    // I saw sometimes infinit session timeout was not so good for cloud providers.
+    // So, let me define this value as 1 hour by default.
     if (isUndefined(desiredCapabilities[CAPS_NEW_COMMAND])) {
-      desiredCapabilities[CAPS_NEW_COMMAND] = 0;
+      desiredCapabilities[CAPS_NEW_COMMAND] = 60 * 60; // 1 hour
     }
 
     // If someone didn't specify connectHardwareKeyboard, set it to true by
