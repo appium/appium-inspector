@@ -388,6 +388,7 @@ export function newSession (caps, attachSessId = null) {
           showError(new Error(`${session.server.experitest.url} is invalid url`), null, 0);
           return;
         }
+        
         host = session.server.experitest.hostname = experitestUrl.hostname;
         path = session.server.experitest.path = '/wd/hub';
         https = session.server.experitest.ssl = experitestUrl.protocol === 'https:';
