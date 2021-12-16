@@ -391,8 +391,8 @@ export function newSession (caps, attachSessId = null) {
 
         host = session.server.experitest.hostname = experitestUrl.hostname;
         path = session.server.experitest.path = '/wd/hub';
-        port = session.server.experitest.port = experitestUrl.port;
         https = session.server.experitest.ssl = experitestUrl.protocol === 'https:';
+        port = session.server.experitest.port = experitestUrl.port === '' ? (https ? 443 : 80) : experitestUrl.port;
         break;
       } case ServerTypes.roboticmobi: {
         host = 'api.robotic.mobi';
