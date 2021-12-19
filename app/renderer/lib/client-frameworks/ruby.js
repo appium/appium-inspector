@@ -26,13 +26,13 @@ ${code}
 driver.quit`;
   }
 
-  codeFor_executeScript (/*varNameIgnore, varIndexIgnore, args*/) {
-    return `# TODO implement executeScript`;
+  codeFor_executeScript (varNameIgnore, varIndexIgnore, args) {
+    return `driver.execute_script ${args}`;
   }
 
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
     let suffixMap = {
-      xpath: ':xpath',
+      'xpath': ':xpath',
       'accessibility id': ':accessibility_id',
       'id': ':id',
       'name': ':name',
@@ -47,9 +47,9 @@ driver.quit`;
       throw new Error(`Strategy ${strategy} can't be code-gened`);
     }
     if (isArray) {
-      return `${localVar} = driver.find_element :${suffixMap[strategy]}, ${JSON.stringify(locator)}`;
+      return `${localVar} = driver.find_elements ${suffixMap[strategy]}, ${JSON.stringify(locator)}`;
     } else {
-      return `${localVar} = driver.find_elements :${suffixMap[strategy]}, ${JSON.stringify(locator)}`;
+      return `${localVar} = driver.find_element ${suffixMap[strategy]}, ${JSON.stringify(locator)}`;
     }
   }
 
@@ -69,21 +69,22 @@ driver.quit`;
     return `driver.back`;
   }
 
-  // TODO: change to W3C actions
   codeFor_tap (varNameIgnore, varIndexIgnore, x, y) {
-    return `TouchAction
-  .new
-  .tap(x: ${x}, y: ${y})
+    return `driver
+  .action
+  .move_to_location(${x}, ${y})
+  .pointer_down(:left)
+  .release
   .perform
-    `;
+  `;
   }
 
-  // TODO: change to W3C actions
   codeFor_swipe (varNameIgnore, varIndexIgnore, x1, y1, x2, y2) {
-    return `TouchAction
-  .new
-  .press({x: ${x1}, y: ${y1}})
-  .move_to({x: ${x2}, y: ${y2}})
+    return `driver
+  .action
+  .move_to_location(${x1}, ${y1})
+  .pointer_down(:left)
+  .move_to_location(${x2}, ${y2})
   .release
   .perform
     `;
@@ -139,11 +140,11 @@ driver.quit`;
   }
 
   codeFor_pressKeyCode (varNameIgnore, varIndexIgnore, keyCode, metaState, flags) {
-    return `driver.press_keycode(${keyCode}, ${metaState}, ${flags})`;
+    return `driver.press_keycode ${keyCode}, ${metaState}, ${flags}`;
   }
 
   codeFor_longPressKeyCode (varNameIgnore, varIndexIgnore, keyCode, metaState, flags) {
-    return `driver.long_press_keycode(${keyCode}, ${metaState}, ${flags})`;
+    return `driver.long_press_keycode ${keyCode}, ${metaState}, ${flags}`;
   }
 
   codeFor_hideKeyboard () {
@@ -155,15 +156,15 @@ driver.quit`;
   }
 
   codeFor_pushFile (varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
-    return `driver.push_file('${pathToInstallTo}', '${fileContentString}')`;
+    return `driver.push_file '${pathToInstallTo}', '${fileContentString}'`;
   }
 
   codeFor_pullFile (varNameIgnore, varIndexIgnore, pathToPullFrom) {
-    return `driver.pull_file('${pathToPullFrom}')`;
+    return `driver.pull_file '${pathToPullFrom}'`;
   }
 
   codeFor_pullFolder (varNameIgnore, varIndexIgnore, folderToPullFrom) {
-    return `driver.pull_folder('${folderToPullFrom}')`;
+    return `driver.pull_folder '${folderToPullFrom}'`;
   }
 
   codeFor_toggleAirplaneMode () {
@@ -183,11 +184,11 @@ driver.quit`;
   }
 
   codeFor_sendSMS (varNameIgnore, varIndexIgnore, phoneNumber, text) {
-    return `driver.send_sms(phone_number: '${phoneNumber}', message: '${text}')`;
+    return `driver.send_sms phone_number: '${phoneNumber}', message: '${text}'`;
   }
 
   codeFor_gsmCall (varNameIgnore, varIndexIgnore, phoneNumber, action) {
-    return `driver.gsm_call(phone_number: '${phoneNumber}', action: :${action})`;
+    return `driver.gsm_call phone_number: '${phoneNumber}', action: :${action}`;
   }
 
   codeFor_gsmSignal (varNameIgnore, varIndexIgnore, signalStrength) {
@@ -203,7 +204,7 @@ driver.quit`;
   }
 
   codeFor_lock (varNameIgnore, varIndexIgnore, seconds) {
-    return `driver.lock(${seconds})`;
+    return `driver.lock ${seconds}`;
   }
 
   codeFor_unlock () {
@@ -259,7 +260,7 @@ driver.quit`;
   }
 
   codeFor_setOrientation (varNameIgnore, varIndexIgnore, orientation) {
-    return `driver.rotation = :${orientation}`;
+    return `driver.rotation = :${_.lowerCase(orientation)}`;
   }
 
   codeFor_getGeoLocation () {
@@ -267,7 +268,7 @@ driver.quit`;
   }
 
   codeFor_setGeoLocation (varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
-    return `driver.set_location(${latitude}, ${longitude}, ${altitude})`;
+    return `driver.set_location ${latitude}, ${longitude}, ${altitude}`;
   }
 
   codeFor_getLogTypes () {
@@ -282,7 +283,7 @@ driver.quit`;
     try {
       let settings = '';
       for (let [settingName, settingValue] of _.toPairs(JSON.parse(settingsJson))) {
-        settings += `driver.update_settings(${settingName}: '${settingValue}')\n`;
+        settings += `driver.settings.update ${settingName}: '${settingValue}'\n`;
       }
       return settings;
     } catch (e) {
@@ -291,7 +292,7 @@ driver.quit`;
   }
 
   codeFor_getSettings () {
-    return `settings = driver.get_settings`;
+    return `settings = driver.settings.get`;
   }
 
   // Web
