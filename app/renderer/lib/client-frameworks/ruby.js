@@ -9,32 +9,30 @@ class RubyFramework extends Framework {
 
   wrapWithBoilerplate (code) {
     let capStr = Object.keys(this.caps).map((k) => `caps[${JSON.stringify(k)}] = ${JSON.stringify(this.caps[k])}`).join('\n');
-    return `# This sample code uses the Appium ruby client
-# gem install appium_lib
+    return `# This sample code uses the Appium ruby lib core client v5
+# gem install appium_lib_core
 # Then you can paste this into a file and simply run with Ruby
 
-require 'rubygems'
-require 'appium_lib'
+require 'appium_lib_core'
 
 caps = {}
 ${capStr}
 opts = {
-    sauce_username: nil,
     server_url: "${this.serverUrl}"
 }
-driver = Appium::Driver.new({caps: caps, appium_lib: opts}).start_driver
+driver = Appium::Core.for({caps: caps, appium_lib: opts}).start_driver
 
 ${code}
 driver.quit`;
   }
 
-  codeFor_executeScript (/*varNameIgnore, varIndexIgnore, args*/) {
-    return `# TODO implement executeScript`;
+  codeFor_executeScript (varNameIgnore, varIndexIgnore, args) {
+    return `driver.execute_script ${args}`;
   }
 
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
     let suffixMap = {
-      xpath: ':xpath',
+      'xpath': ':xpath',
       'accessibility id': ':accessibility_id',
       'id': ':id',
       'name': ':name',
@@ -49,9 +47,9 @@ driver.quit`;
       throw new Error(`Strategy ${strategy} can't be code-gened`);
     }
     if (isArray) {
-      return `${localVar} = driver.find_element(${suffixMap[strategy]}, ${JSON.stringify(locator)})`;
+      return `${localVar} = driver.find_elements ${suffixMap[strategy]}, ${JSON.stringify(locator)}`;
     } else {
-      return `${localVar} = driver.find_elements(${suffixMap[strategy]}, ${JSON.stringify(locator)})`;
+      return `${localVar} = driver.find_element ${suffixMap[strategy]}, ${JSON.stringify(locator)}`;
     }
   }
 
@@ -72,18 +70,21 @@ driver.quit`;
   }
 
   codeFor_tap (varNameIgnore, varIndexIgnore, x, y) {
-    return `TouchAction
-  .new
-  .tap(x: ${x}, y: ${y})
+    return `driver
+  .action
+  .move_to_location(${x}, ${y})
+  .pointer_down(:left)
+  .release
   .perform
-    `;
+  `;
   }
 
   codeFor_swipe (varNameIgnore, varIndexIgnore, x1, y1, x2, y2) {
-    return `TouchAction
-  .new
-  .press({x: ${x1}, y: ${y1}})
-  .move_to({x: ${x2}, y: ${y2}})
+    return `driver
+  .action
+  .move_to_location(${x1}, ${y1})
+  .pointer_down(:left)
+  .move_to_location(${x2}, ${y2})
   .release
   .perform
     `;
@@ -99,11 +100,11 @@ driver.quit`;
 
 
   codeFor_installApp (varNameIgnore, varIndexIgnore, app) {
-    return `driver.app_installed?('${app}')`;
+    return `driver.app_installed? '${app}'`;
   }
 
   codeFor_isAppInstalled (varNameIgnore, varIndexIgnore, app) {
-    return `is_app_installed = driver.isAppInstalled("${app}");`;
+    return `is_app_installed = driver.app_installed? '${app}'`;
   }
 
   codeFor_launchApp () {
@@ -111,7 +112,7 @@ driver.quit`;
   }
 
   codeFor_background (varNameIgnore, varIndexIgnore, timeout) {
-    return `driver.background_app(${timeout})`;
+    return `driver.background_app ${timeout}`;
   }
 
   codeFor_closeApp () {
@@ -123,11 +124,11 @@ driver.quit`;
   }
 
   codeFor_removeApp (varNameIgnore, varIndexIgnore, app) {
-    return `driver.remove_app('${app}')`;
+    return `driver.remove_app '${app}'`;
   }
 
   codeFor_getStrings (varNameIgnore, varIndexIgnore, language, stringFile) {
-    return `driver.app_strings(${language ? `${language}, ` : ''}${stringFile ? `"${stringFile}` : ''})`;
+    return `driver.app_strings ${language ? `${language}, ` : ''}${stringFile ? `"${stringFile}` : ''}`;
   }
 
   codeFor_getClipboard () {
@@ -139,11 +140,11 @@ driver.quit`;
   }
 
   codeFor_pressKeyCode (varNameIgnore, varIndexIgnore, keyCode, metaState, flags) {
-    return `driver.press_keycode(${keyCode}, ${metaState}, ${flags})`;
+    return `driver.press_keycode ${keyCode}, ${metaState}, ${flags}`;
   }
 
   codeFor_longPressKeyCode (varNameIgnore, varIndexIgnore, keyCode, metaState, flags) {
-    return `driver.long_press_keycode(${keyCode}, ${metaState}, ${flags})`;
+    return `driver.long_press_keycode ${keyCode}, ${metaState}, ${flags}`;
   }
 
   codeFor_hideKeyboard () {
@@ -155,15 +156,15 @@ driver.quit`;
   }
 
   codeFor_pushFile (varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
-    return `driver.push_file('${pathToInstallTo}', '${fileContentString}')`;
+    return `driver.push_file '${pathToInstallTo}', '${fileContentString}'`;
   }
 
   codeFor_pullFile (varNameIgnore, varIndexIgnore, pathToPullFrom) {
-    return `driver.pull_file('${pathToPullFrom}')`;
+    return `driver.pull_file '${pathToPullFrom}'`;
   }
 
   codeFor_pullFolder (varNameIgnore, varIndexIgnore, folderToPullFrom) {
-    return `driver.pull_folder('${folderToPullFrom}')`;
+    return `driver.pull_folder '${folderToPullFrom}'`;
   }
 
   codeFor_toggleAirplaneMode () {
@@ -183,11 +184,11 @@ driver.quit`;
   }
 
   codeFor_sendSMS (varNameIgnore, varIndexIgnore, phoneNumber, text) {
-    return `driver.send_sms(phone_number: '${phoneNumber}', message: '${text}')`;
+    return `driver.send_sms phone_number: '${phoneNumber}', message: '${text}'`;
   }
 
   codeFor_gsmCall (varNameIgnore, varIndexIgnore, phoneNumber, action) {
-    return `driver.gsm_call(phone_number: '${phoneNumber}', action: :${action})`;
+    return `driver.gsm_call phone_number: '${phoneNumber}', action: :${action}`;
   }
 
   codeFor_gsmSignal (varNameIgnore, varIndexIgnore, signalStrength) {
@@ -203,7 +204,7 @@ driver.quit`;
   }
 
   codeFor_lock (varNameIgnore, varIndexIgnore, seconds) {
-    return `driver.lock(${seconds})`;
+    return `driver.lock ${seconds}`;
   }
 
   codeFor_unlock () {
@@ -259,7 +260,7 @@ driver.quit`;
   }
 
   codeFor_setOrientation (varNameIgnore, varIndexIgnore, orientation) {
-    return `driver.rotation = :${orientation}`;
+    return `driver.rotation = :${_.lowerCase(orientation)}`;
   }
 
   codeFor_getGeoLocation () {
@@ -267,7 +268,7 @@ driver.quit`;
   }
 
   codeFor_setGeoLocation (varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
-    return `driver.set_location(${latitude}, ${longitude}, ${altitude})`;
+    return `driver.set_location ${latitude}, ${longitude}, ${altitude}`;
   }
 
   codeFor_getLogTypes () {
@@ -282,7 +283,7 @@ driver.quit`;
     try {
       let settings = '';
       for (let [settingName, settingValue] of _.toPairs(JSON.parse(settingsJson))) {
-        settings += `driver.update_settings(${settingName}: '${settingValue}')\n`;
+        settings += `driver.settings.update ${settingName}: '${settingValue}'\n`;
       }
       return settings;
     } catch (e) {
@@ -291,7 +292,7 @@ driver.quit`;
   }
 
   codeFor_getSettings () {
-    return `settings = driver.get_settings`;
+    return `settings = driver.settings.get`;
   }
 
   // Web
