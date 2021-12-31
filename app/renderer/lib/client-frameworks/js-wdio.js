@@ -297,7 +297,7 @@ ${this.indent(this.chainifyCode(code), 2)}
 
   // Web
 
-  codeFor_navigateTo (url) {
+  codeFor_navigateTo (varNameIgnore, varIndexIgnore, url) {
     return `driver.navigateTo('${url}');`;
   }
 
@@ -323,7 +323,7 @@ ${this.indent(this.chainifyCode(code), 2)}
     return `driver.getContexts();`;
   }
 
-  codeFor_switchContext (name) {
+  codeFor_switchContext (varNameIgnore, varIndexIgnore, name) {
     return `driver.switchContext('${name}');`;
   }
 }

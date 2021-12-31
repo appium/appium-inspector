@@ -297,7 +297,7 @@ driver.quit`;
 
   // Web
 
-  codeFor_navigateTo (url) {
+  codeFor_navigateTo (varNameIgnore, varIndexIgnore, url) {
     return `driver.get '${url}'`;
   }
 
@@ -323,7 +323,7 @@ driver.quit`;
     return `driver.available_contexts`;
   }
 
-  codeFor_switchContext (name) {
+  codeFor_switchContext (varNameIgnore, varIndexIgnore, name) {
     return `driver.context = '${name}'`;
   }
 }

@@ -338,7 +338,7 @@ ${this.indent(code, 4)}
 
   // Web
 
-  codeFor_navigateTo (url) {
+  codeFor_navigateTo (varNameIgnore, varIndexIgnore, url) {
     return `driver.get("${url}");`;
   }
 
@@ -364,7 +364,7 @@ ${this.indent(code, 4)}
     return `driver.getContextHandles();`;
   }
 
-  codeFor_switchContext (name) {
+  codeFor_switchContext (varNameIgnore, varIndexIgnore, name) {
     return `driver.context("${name}");`;
   }
 }
