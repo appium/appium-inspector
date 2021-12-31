@@ -311,7 +311,7 @@ main().catch(console.log);
     return `driver.contexts();`;
   }
 
-  codeFor_switchContexts (name) {
+  codeFor_switchContext (name) {
     return `driver.context('${name}');`;
   }
 }

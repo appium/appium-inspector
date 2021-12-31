@@ -285,7 +285,7 @@ driver.quit()`;
 
   // Web
 
-  codeFor_navigateTo (url) {
+  codeFor_navigateTo (varNameIgnore, varIndexIgnore, url) {
     return `driver.get('${url}')`;
   }
 
@@ -311,7 +311,7 @@ driver.quit()`;
     return `driver.contexts()`;
   }
 
-  codeFor_switchContexts (name) {
+  codeFor_switchContext (varNameIgnore, varIndexIgnore, name) {
     return `driver.switch_to.context('${name}')`;
   }
 }
