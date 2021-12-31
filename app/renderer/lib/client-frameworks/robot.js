@@ -326,7 +326,7 @@ ${this.indent(code, 4)}
     return ``;
   }
 
-  codeFor_switchContexts () {
+  codeFor_switchContext () {
     return ``;
   }
 }

@@ -323,8 +323,8 @@ driver.quit`;
     return `driver.available_contexts`;
   }
 
-  codeFor_switchContexts (name) {
-    return `set_context '${name}'`;
+  codeFor_switchContext (name) {
+    return `driver.context = '${name}'`;
   }
 }
 

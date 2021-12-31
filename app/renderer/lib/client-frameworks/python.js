@@ -310,7 +310,7 @@ driver.quit()`;
     return `driver.contexts()`;
   }
 
-  codeFor_switchContexts (name) {
+  codeFor_switchContext (name) {
     return `driver.switch_to.context('${name}')`;
   }
 }

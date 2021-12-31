@@ -364,7 +364,7 @@ ${this.indent(code, 4)}
     return `driver.getContextHandles();`;
   }
 
-  codeFor_switchContexts (name) {
+  codeFor_switchContext (name) {
     return `driver.context("${name}");`;
   }
 }

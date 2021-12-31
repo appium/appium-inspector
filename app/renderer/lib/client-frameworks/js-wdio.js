@@ -323,7 +323,7 @@ ${this.indent(this.chainifyCode(code), 2)}
     return `driver.getContexts();`;
   }
 
-  codeFor_switchContexts (name) {
+  codeFor_switchContext (name) {
     return `driver.switchContext('${name}');`;
   }
 }
