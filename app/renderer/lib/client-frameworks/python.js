@@ -15,11 +15,12 @@ class PythonFramework extends Framework {
 
   wrapWithBoilerplate (code) {
     let capStr = Object.keys(this.caps).map((k) => `caps[${JSON.stringify(k)}] = ${this.getPythonVal(this.caps[k])}`).join('\n');
-    return `# This sample code uses the Appium python client
+    return `# This sample code uses the Appium python client v2
 # pip install Appium-Python-Client
 # Then you can paste this into a file and simply run with Python
 
 from appium import webdriver
+from appium.webdriver.common.appiumby import AppiumBy
 
 caps = {}
 ${capStr}
@@ -36,24 +37,24 @@ driver.quit()`;
 
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
     let suffixMap = {
-      xpath: 'xpath',
-      'accessibility id': 'accessibility_id',
-      'id': 'id',
-      'name': 'name', // TODO: How does Python use name selector
-      'class name': 'class_name',
-      '-android uiautomator': 'android_uiautomator',
-      '-android datamatcher': 'android_datamatcher',
-      '-android viewtag': 'android_viewtag',
-      '-ios predicate string': 'ios_predicate',
-      '-ios class chain': 'ios_uiautomation', // TODO: Could not find iOS UIAutomation
+      xpath: 'AppiumBy.CLASS_NAME',
+      'accessibility id': 'AppiumBy.ACCESSIBILITY_ID',
+      'id': 'AppiumBy.ID',
+      'name': 'AppiumBy.NAME',
+      'class name': 'AppiumBy.CLASS_NAME',
+      '-android uiautomator': 'AppiumBy.ANDROID_UIAUTOMATOR',
+      '-android datamatcher': 'AppiumBy.ANDROID_DATA_MATCHER',
+      '-android viewtag': 'AppiumBy.ANDROID_VIEWTAG',
+      '-ios predicate string': 'AppiumBy.IOS_PREDICATE',
+      '-ios class chain': 'AppiumBy.IOS_CLASS_CHAI',
     };
     if (!suffixMap[strategy]) {
       throw new Error(`Strategy ${strategy} can't be code-gened`);
     }
     if (isArray) {
-      return `${localVar} = driver.find_elements_by_${suffixMap[strategy]}(${JSON.stringify(locator)})`;
+      return `${localVar} = driver.find_elements(by=${suffixMap[strategy]}, value=${JSON.stringify(locator)})`;
     } else {
-      return `${localVar} = driver.find_element_by_${suffixMap[strategy]}(${JSON.stringify(locator)})`;
+      return `${localVar} = driver.find_element(by=${suffixMap[strategy]}, value=${JSON.stringify(locator)})`;
     }
   }
 
