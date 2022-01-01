@@ -32,7 +32,7 @@ driver.quit()`;
   }
 
   codeFor_executeScript (varNameIgnore, varIndexIgnore, args) {
-    return `driver.execute_script(${args})`;
+    return `driver.execute_script('${args}')`;
   }
 
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
