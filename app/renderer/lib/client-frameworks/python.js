@@ -31,8 +31,8 @@ ${code}
 driver.quit()`;
   }
 
-  codeFor_executeScript (/*varNameIgnore, varIndexIgnore, args*/) {
-    return `# TODO implement executeScript`;
+  codeFor_executeScript (varNameIgnore, varIndexIgnore, args) {
+    return `driver.execute_script(${args})`;
   }
 
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
@@ -100,7 +100,7 @@ driver.quit()`;
   }
 
   codeFor_isAppInstalled (varNameIgnore, varIndexIgnore, app) {
-    return `is_app_installed = driver.isAppInstalled("${app}");`;
+    return `is_app_installed = driver.is_app_installed('${app}');`;
   }
 
   codeFor_launchApp () {
@@ -148,7 +148,7 @@ driver.quit()`;
   }
 
   codeFor_isKeyboardShown () {
-    return `# isKeyboardShown not supported`;
+    return `driver.is_keyboard_shown()`;
   }
 
   codeFor_pushFile (varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
@@ -172,7 +172,7 @@ driver.quit()`;
   }
 
   codeFor_toggleWiFi () {
-    return `# Not supported: toggleWifi`;
+    return `driver.toggle_wifi()`;
   }
 
   codeFor_toggleLocationServices () {
@@ -183,16 +183,16 @@ driver.quit()`;
     return `# Not supported: sendSMS`;
   }
 
-  codeFor_gsmCall () {
-    return `# Not supported: gsmCall`;
+  codeFor_gsmCall (varNameIgnore, varIndexIgnore, phoneNumber, action) {
+    return `driver.make_gsm_call(${phoneNumber}, ${action})`;
   }
 
-  codeFor_gsmSignal () {
-    return `# Not supported: gsmSignal`;
+  codeFor_gsmSignal (varNameIgnore, varIndexIgnore, signalStrength) {
+    return `driver.set_gsm_signal(${signalStrength})`;
   }
 
-  codeFor_gsmVoice () {
-    return `# Not supported: gsmVoice`;
+  codeFor_gsmVoice (varNameIgnore, varIndexIgnore, state) {
+    return `driver.set_gsm_voice(${state})`;
   }
 
   codeFor_shake () {
@@ -208,19 +208,19 @@ driver.quit()`;
   }
 
   codeFor_isLocked () {
-    return `# Not supported: is device locked`;
+    return `driver.is_locked()`;
   }
 
   codeFor_rotateDevice () {
     return `# Not supported: rotate device`;
   }
 
-  codeFor_getPerformanceData () {
-    return `# Not supported: getPerformanceData`;
+  codeFor_getPerformanceData (varNameIgnore, varIndexIgnore, packageName, dataType, dataReadTimeout) {
+    return `driver.get_performance_data('${packageName}', '${dataType}', ${dataReadTimeout})`;
   }
 
   codeFor_getPerformanceDataTypes () {
-    return `# Not supported: getPerformanceDataTypes`;
+    return `driver.get_performance_data_types()`;
   }
 
   codeFor_touchId (varNameIgnore, varIndexIgnore, match) {
