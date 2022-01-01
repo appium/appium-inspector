@@ -15,11 +15,12 @@ class PythonFramework extends Framework {
 
   wrapWithBoilerplate (code) {
     let capStr = Object.keys(this.caps).map((k) => `caps[${JSON.stringify(k)}] = ${this.getPythonVal(this.caps[k])}`).join('\n');
-    return `# This sample code uses the Appium python client
+    return `# This sample code uses the Appium python client v2
 # pip install Appium-Python-Client
 # Then you can paste this into a file and simply run with Python
 
 from appium import webdriver
+from appium.webdriver.common.appiumby import AppiumBy
 
 caps = {}
 ${capStr}
@@ -30,30 +31,30 @@ ${code}
 driver.quit()`;
   }
 
-  codeFor_executeScript (/*varNameIgnore, varIndexIgnore, args*/) {
-    return `# TODO implement executeScript`;
+  codeFor_executeScript (varNameIgnore, varIndexIgnore, args) {
+    return `driver.execute_script('${args}')`;
   }
 
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
     let suffixMap = {
-      xpath: 'xpath',
-      'accessibility id': 'accessibility_id',
-      'id': 'id',
-      'name': 'name', // TODO: How does Python use name selector
-      'class name': 'class_name',
-      '-android uiautomator': 'android_uiautomator',
-      '-android datamatcher': 'android_datamatcher',
-      '-android viewtag': 'android_viewtag',
-      '-ios predicate string': 'ios_predicate',
-      '-ios class chain': 'ios_uiautomation', // TODO: Could not find iOS UIAutomation
+      xpath: 'AppiumBy.CLASS_NAME',
+      'accessibility id': 'AppiumBy.ACCESSIBILITY_ID',
+      'id': 'AppiumBy.ID',
+      'name': 'AppiumBy.NAME',
+      'class name': 'AppiumBy.CLASS_NAME',
+      '-android uiautomator': 'AppiumBy.ANDROID_UIAUTOMATOR',
+      '-android datamatcher': 'AppiumBy.ANDROID_DATA_MATCHER',
+      '-android viewtag': 'AppiumBy.ANDROID_VIEWTAG',
+      '-ios predicate string': 'AppiumBy.IOS_PREDICATE',
+      '-ios class chain': 'AppiumBy.IOS_CLASS_CHAI',
     };
     if (!suffixMap[strategy]) {
       throw new Error(`Strategy ${strategy} can't be code-gened`);
     }
     if (isArray) {
-      return `${localVar} = driver.find_elements_by_${suffixMap[strategy]}(${JSON.stringify(locator)})`;
+      return `${localVar} = driver.find_elements(by=${suffixMap[strategy]}, value=${JSON.stringify(locator)})`;
     } else {
-      return `${localVar} = driver.find_element_by_${suffixMap[strategy]}(${JSON.stringify(locator)})`;
+      return `${localVar} = driver.find_element(by=${suffixMap[strategy]}, value=${JSON.stringify(locator)})`;
     }
   }
 
@@ -99,7 +100,7 @@ driver.quit()`;
   }
 
   codeFor_isAppInstalled (varNameIgnore, varIndexIgnore, app) {
-    return `is_app_installed = driver.isAppInstalled("${app}");`;
+    return `is_app_installed = driver.is_app_installed('${app}');`;
   }
 
   codeFor_launchApp () {
@@ -147,7 +148,7 @@ driver.quit()`;
   }
 
   codeFor_isKeyboardShown () {
-    return `# isKeyboardShown not supported`;
+    return `driver.is_keyboard_shown()`;
   }
 
   codeFor_pushFile (varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
@@ -171,7 +172,7 @@ driver.quit()`;
   }
 
   codeFor_toggleWiFi () {
-    return `# Not supported: toggleWifi`;
+    return `driver.toggle_wifi()`;
   }
 
   codeFor_toggleLocationServices () {
@@ -182,16 +183,16 @@ driver.quit()`;
     return `# Not supported: sendSMS`;
   }
 
-  codeFor_gsmCall () {
-    return `# Not supported: gsmCall`;
+  codeFor_gsmCall (varNameIgnore, varIndexIgnore, phoneNumber, action) {
+    return `driver.make_gsm_call(${phoneNumber}, ${action})`;
   }
 
-  codeFor_gsmSignal () {
-    return `# Not supported: gsmSignal`;
+  codeFor_gsmSignal (varNameIgnore, varIndexIgnore, signalStrength) {
+    return `driver.set_gsm_signal(${signalStrength})`;
   }
 
-  codeFor_gsmVoice () {
-    return `# Not supported: gsmVoice`;
+  codeFor_gsmVoice (varNameIgnore, varIndexIgnore, state) {
+    return `driver.set_gsm_voice(${state})`;
   }
 
   codeFor_shake () {
@@ -207,19 +208,19 @@ driver.quit()`;
   }
 
   codeFor_isLocked () {
-    return `# Not supported: is device locked`;
+    return `driver.is_locked()`;
   }
 
   codeFor_rotateDevice () {
     return `# Not supported: rotate device`;
   }
 
-  codeFor_getPerformanceData () {
-    return `# Not supported: getPerformanceData`;
+  codeFor_getPerformanceData (varNameIgnore, varIndexIgnore, packageName, dataType, dataReadTimeout) {
+    return `driver.get_performance_data('${packageName}', '${dataType}', ${dataReadTimeout})`;
   }
 
   codeFor_getPerformanceDataTypes () {
-    return `# Not supported: getPerformanceDataTypes`;
+    return `driver.get_performance_data_types()`;
   }
 
   codeFor_touchId (varNameIgnore, varIndexIgnore, match) {
