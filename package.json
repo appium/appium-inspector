@@ -186,7 +186,7 @@
     "eslint-config-appium": "^4.5.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-mocha": "^9.0.0",
+    "eslint-plugin-mocha": "^10.0.3",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-native": "^3.6.0",
