@@ -27,7 +27,7 @@ driver.quit`;
   }
 
   codeFor_executeScript (varNameIgnore, varIndexIgnore, args) {
-    return `driver.execute_script ${args}`;
+    return `driver.execute_script '${args}'`;
   }
 
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
@@ -297,7 +297,7 @@ driver.quit`;
 
   // Web
 
-  codeFor_navigateTo (url) {
+  codeFor_navigateTo (varNameIgnore, varIndexIgnore, url) {
     return `driver.get '${url}'`;
   }
 
@@ -323,8 +323,8 @@ driver.quit`;
     return `driver.available_contexts`;
   }
 
-  codeFor_switchContexts (name) {
-    return `set_context '${name}'`;
+  codeFor_switchContext (varNameIgnore, varIndexIgnore, name) {
+    return `driver.context = '${name}'`;
   }
 }
 

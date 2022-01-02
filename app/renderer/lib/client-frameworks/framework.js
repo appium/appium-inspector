@@ -48,9 +48,9 @@ export default class Framework {
   getCodeString (includeBoilerplate = false) {
     let str = '';
     for (let {action, params} of this.actions) {
-      let genCodeFn = `codeFor_${action}`;
+      const genCodeFn = `codeFor_${action}`;
       if (!this[genCodeFn]) {
-        throw new Error(`Need to implement 'codeFor_${action}()'`);
+        throw new Error(`Need to implement '${genCodeFn}()': ${this[genCodeFn]}`);
       }
       let code = this[genCodeFn](...params);
       if (code) {
