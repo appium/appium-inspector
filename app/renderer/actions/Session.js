@@ -10,6 +10,7 @@ import CloudProviders from '../components/Session/CloudProviders';
 import { Web2Driver } from 'web2driver';
 import { addVendorPrefixes } from '../util';
 import ky from 'ky/umd';
+import moment from 'moment';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_BEGAN = 'NEW_SESSION_BEGAN';
@@ -250,6 +251,13 @@ export function newSession (caps, attachSessId = null) {
           return;
         }
         https = false;
+        if (!desiredCapabilities['sauce:options']) {
+          desiredCapabilities['sauce:options'] = {};
+        }
+        if (!desiredCapabilities['sauce:options'].name) {
+          const dateTime = moment().format('MMM DD -- h:mma');
+          desiredCapabilities['sauce:options'].name = `Appium Desktop Session -- ${dateTime}`;
+        }
         break;
       case ServerTypes.headspin: {
         let headspinUrl;
