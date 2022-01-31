@@ -92,6 +92,8 @@ export const DEFAULT_SERVER_PATH = '/';
 export const DEFAULT_SERVER_HOST = '127.0.0.1';
 export const DEFAULT_SERVER_PORT = 4723;
 
+const SAUCE_OPTIONS_CAP = 'sauce:options';
+
 const JSON_TYPES = ['object', 'number', 'boolean'];
 
 export function getCapsObject (caps) {
@@ -251,13 +253,12 @@ export function newSession (caps, attachSessId = null) {
           return;
         }
         https = false;
-        const sauceOptionsCap = 'sauce:options';
-        if (!isPlainObject(desiredCapabilities[sauceOptionsCap])) {
-          desiredCapabilities[sauceOptionsCap] = {};
+        if (!isPlainObject(desiredCapabilities[SAUCE_OPTIONS_CAP])) {
+          desiredCapabilities[SAUCE_OPTIONS_CAP] = {};
         }
-        if (!desiredCapabilities[sauceOptionsCap].name) {
+        if (!desiredCapabilities[SAUCE_OPTIONS_CAP].name) {
           const dateTime = moment().format('MMM DD -- h:mma');
-          desiredCapabilities[sauceOptionsCap].name = `Appium Desktop Session -- ${dateTime}`;
+          desiredCapabilities[SAUCE_OPTIONS_CAP].name = `Appium Desktop Session -- ${dateTime}`;
         }
         break;
       case ServerTypes.headspin: {
