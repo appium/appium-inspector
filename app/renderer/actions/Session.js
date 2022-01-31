@@ -3,7 +3,7 @@ import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYP
 import { v4 as UUID } from 'uuid';
 import { push } from 'connected-react-router';
 import { notification } from 'antd';
-import { includes, debounce, toPairs, union, without, keys, isUndefined } from 'lodash';
+import { includes, debounce, toPairs, union, without, keys, isUndefined, isPlainObject } from 'lodash';
 import { setSessionDetails, quitSession } from './Inspector';
 import i18n from '../../configs/i18next.config.renderer';
 import CloudProviders from '../components/Session/CloudProviders';
@@ -11,7 +11,6 @@ import { Web2Driver } from 'web2driver';
 import { addVendorPrefixes } from '../util';
 import ky from 'ky/umd';
 import moment from 'moment';
-import _ from 'lodash';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_BEGAN = 'NEW_SESSION_BEGAN';
@@ -253,7 +252,7 @@ export function newSession (caps, attachSessId = null) {
         }
         https = false;
         const sauceOptionsCap = 'sauce:options';
-        if (!_.isPlainObject(desiredCapabilities[sauceOptionsCap])) {
+        if (!isPlainObject(desiredCapabilities[sauceOptionsCap])) {
           desiredCapabilities[sauceOptionsCap] = {};
         }
         if (!desiredCapabilities[sauceOptionsCap].name) {
