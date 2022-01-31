@@ -257,7 +257,7 @@ export function newSession (caps, attachSessId = null) {
           desiredCapabilities[SAUCE_OPTIONS_CAP] = {};
         }
         if (!desiredCapabilities[SAUCE_OPTIONS_CAP].name) {
-          const dateTime = moment().format('MMM DD -- h:mma');
+          const dateTime = moment().format('lll');
           desiredCapabilities[SAUCE_OPTIONS_CAP].name = `Appium Desktop Session -- ${dateTime}`;
         }
         break;
