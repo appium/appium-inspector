@@ -3,13 +3,14 @@ import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYP
 import { v4 as UUID } from 'uuid';
 import { push } from 'connected-react-router';
 import { notification } from 'antd';
-import { includes, debounce, toPairs, union, without, keys, isUndefined } from 'lodash';
+import { includes, debounce, toPairs, union, without, keys, isUndefined, isPlainObject } from 'lodash';
 import { setSessionDetails, quitSession } from './Inspector';
 import i18n from '../../configs/i18next.config.renderer';
 import CloudProviders from '../components/Session/CloudProviders';
 import { Web2Driver } from 'web2driver';
 import { addVendorPrefixes } from '../util';
 import ky from 'ky/umd';
+import moment from 'moment';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_BEGAN = 'NEW_SESSION_BEGAN';
@@ -90,6 +91,8 @@ export const ServerTypes = serverTypes;
 export const DEFAULT_SERVER_PATH = '/';
 export const DEFAULT_SERVER_HOST = '127.0.0.1';
 export const DEFAULT_SERVER_PORT = 4723;
+
+const SAUCE_OPTIONS_CAP = 'sauce:options';
 
 const JSON_TYPES = ['object', 'number', 'boolean'];
 
@@ -250,6 +253,13 @@ export function newSession (caps, attachSessId = null) {
           return;
         }
         https = false;
+        if (!isPlainObject(desiredCapabilities[SAUCE_OPTIONS_CAP])) {
+          desiredCapabilities[SAUCE_OPTIONS_CAP] = {};
+        }
+        if (!desiredCapabilities[SAUCE_OPTIONS_CAP].name) {
+          const dateTime = moment().format('lll');
+          desiredCapabilities[SAUCE_OPTIONS_CAP].name = `Appium Desktop Session -- ${dateTime}`;
+        }
         break;
       case ServerTypes.headspin: {
         let headspinUrl;
