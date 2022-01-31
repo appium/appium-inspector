@@ -11,6 +11,7 @@ import { Web2Driver } from 'web2driver';
 import { addVendorPrefixes } from '../util';
 import ky from 'ky/umd';
 import moment from 'moment';
+import _ from 'lodash';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_BEGAN = 'NEW_SESSION_BEGAN';
@@ -251,12 +252,13 @@ export function newSession (caps, attachSessId = null) {
           return;
         }
         https = false;
-        if (!desiredCapabilities['sauce:options']) {
-          desiredCapabilities['sauce:options'] = {};
+        const sauceOptionsCap = 'sauce:options';
+        if (!_.isPlainObject(desiredCapabilities[sauceOptionsCap])) {
+          desiredCapabilities[sauceOptionsCap] = {};
         }
-        if (!desiredCapabilities['sauce:options'].name) {
+        if (!desiredCapabilities[sauceOptionsCap].name) {
           const dateTime = moment().format('MMM DD -- h:mma');
-          desiredCapabilities['sauce:options'].name = `Appium Desktop Session -- ${dateTime}`;
+          desiredCapabilities[sauceOptionsCap].name = `Appium Desktop Session -- ${dateTime}`;
         }
         break;
       case ServerTypes.headspin: {
