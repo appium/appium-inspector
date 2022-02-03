@@ -73,6 +73,8 @@ const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to 
 // so let's set zero so far.
 // TODO: increase this retry when we get issues
 export const CONN_RETRIES = 0;
+// As same as webdriverio's default timeout
+export const CONN_TIMEOUT = 120000;
 
 // 1 hour default newCommandTimeout
 const NEW_COMMAND_TIMEOUT_SEC = 3600;
@@ -441,6 +443,8 @@ export function newSession (caps, attachSessId = null) {
       protocol: https ? 'https' : 'http',
       path,
       connectionRetryCount: CONN_RETRIES,
+      connectionRetryTimeout: CONN_TIMEOUT,
+      headers: {'content-type': 'application/json; charset=utf-8'}
     };
 
     if (username && accessKey) {
@@ -469,9 +473,6 @@ export function newSession (caps, attachSessId = null) {
         // assume the device is mobile so that Appium protocols are included
         // in the userPrototype.
         serverOpts.isMobile = true;
-        // Need to set connectionRetryTimeout as same as the new session request.
-        // TODO: make configurable?
-        serverOpts.connectionRetryTimeout = 120000;
         driver = await Web2Driver.attachToSession(attachSessId, serverOpts);
         driver._isAttachedSession = true;
       } else {
