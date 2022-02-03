@@ -469,6 +469,9 @@ export function newSession (caps, attachSessId = null) {
         // assume the device is mobile so that Appium protocols are included
         // in the userPrototype.
         serverOpts.isMobile = true;
+        // Need to set connectionRetryTimeout as same as the new session request.
+        // TODO: make configurable?
+        serverOpts.connectionRetryTimeout = 120000;
         driver = await Web2Driver.attachToSession(attachSessId, serverOpts);
         driver._isAttachedSession = true;
       } else {
