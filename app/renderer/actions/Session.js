@@ -700,6 +700,8 @@ export function getRunningSessions () {
     const state = getState().session;
     const {server, serverType} = state;
     const serverInfo = server[serverType];
+
+    // TODO: apply hostname/port in proper cloud vendor tabs
     let {hostname, port, path, ssl, username, accessKey} = serverInfo;
 
     // if we have a standard remote server, fill out connection info based on placeholder defaults
@@ -725,9 +727,13 @@ export function getRunningSessions () {
       const adjPath = path.endsWith('/') ? path : `${path}/`;
       const res = username && accessKey
         ? await ky(`http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`, {
-          headers: {'Authorization': `Basic ${btoa(`${username}:${accessKey}`)}`}
+          headers: {
+            'Authorization': `Basic ${btoa(`${username}:${accessKey}`)}`,
+            'Content-Type': 'application/json; charset=utf-8'}
         }).json()
-        : await ky(`http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`).json();
+        : await ky(`http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`, {
+          headers: {'Content-Type': 'application/json; charset=utf-8'}
+        }).json();
       dispatch({type: GET_SESSIONS_DONE, sessions: res.value});
     } catch (err) {
       console.warn(`Ignoring error in getting list of active sessions: ${err}`); // eslint-disable-line no-console
