@@ -472,9 +472,13 @@ export function newSession (caps, attachSessId = null) {
         // Need to set connectionRetryTimeout as same as the new session request.
         // TODO: make configurable?
         serverOpts.connectionRetryTimeout = 120000;
+        // To reduce logs
+        serverOpts.logLevel = process.env.NODE_ENV === 'development' ? 'info' : 'warn';
         driver = await Web2Driver.attachToSession(attachSessId, serverOpts);
         driver._isAttachedSession = true;
       } else {
+        // To reduce logs
+        serverOpts.logLevel = process.env.NODE_ENV === 'development' ? 'info' : 'warn';
         driver = await Web2Driver.remote(serverOpts, desiredCapabilities);
       }
     } catch (err) {
