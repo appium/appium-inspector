@@ -130,7 +130,7 @@ export default class AppiumClient {
       if (appMode === APP_MODE.WEB_HYBRID) {
         contextUpdate = await this.getContextUpdate();
       }
-      sourceUpdate = await this.getSourceUpdate();
+      sourceUpdate = await this.getSourceUpdate(appMode);
     }
     return {
       ...cachedEl,
@@ -309,14 +309,31 @@ export default class AppiumClient {
     return {contexts, contextsError, currentContext, currentContextError};
   }
 
-  async getSourceUpdate () {
-    try {
-      const source = parseSource(await this.driver.getPageSource());
-      return {source};
-    } catch (err) {
-      return {sourceError: err};
+  /**
+   *
+   * @param {string} appMode Current app mode
+   * @returns {object} Current page source result or error message
+   */
+  async getSourceUpdate (appMode) {
+    let pageSource;
+    const {client: {capabilities: {platformName}}} = this.driver;
+    if (['ios', 'tvos'].includes(_.toLower(platformName)) && appMode === APP_MODE.NATIVE) {
+      try {
+        pageSource = await this.driver.executeScript('mobile:source', [{excludedAttributes: ['visible']}]);
+        return {source: parseSource(pageSource)}
+      } catch (ign) {
+        // fallback to normal getPageSource()
+        console.log(`Error: ` + ign)
+       }
     }
-  }
+
+    try {
+      pageSource = await this.driver.getPageSource()
+      return {source: parseSource(pageSource)}
+    } catch (err) {
+      return {sourceError: err}
+    }
+  };
 
   async getScreenshotUpdate () {
     try {
