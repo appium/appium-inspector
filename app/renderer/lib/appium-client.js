@@ -2,6 +2,7 @@ import _ from 'lodash';
 import Bluebird from 'bluebird';
 import {getWebviewStatusAddressBarHeight, parseSource, setHtmlElementAttributes} from './webview-helpers';
 import {SCREENSHOT_INTERACTION_MODE, APP_MODE} from '../components/Inspector/shared';
+import { log } from '../polyfills';
 
 const NATIVE_APP = 'NATIVE_APP';
 let _instance = null;
@@ -320,20 +321,19 @@ export default class AppiumClient {
     if (['ios', 'tvos'].includes(_.toLower(platformName)) && appMode === APP_MODE.NATIVE) {
       try {
         pageSource = await this.driver.executeScript('mobile:source', [{excludedAttributes: ['visible']}]);
-        return {source: parseSource(pageSource)}
-      } catch (ign) {
-        // fallback to normal getPageSource()
-        console.log(`Error: ` + ign)
-       }
+        return {source: parseSource(pageSource)};
+      } catch (err) {
+        log.info(`The appium does not support mobile:source command: ${err.stderr || err.message}`);
+      }
     }
 
     try {
-      pageSource = await this.driver.getPageSource()
-      return {source: parseSource(pageSource)}
+      pageSource = await this.driver.getPageSource();
+      return {source: parseSource(pageSource)};
     } catch (err) {
-      return {sourceError: err}
+      return {sourceError: err};
     }
-  };
+  }
 
   async getScreenshotUpdate () {
     try {
