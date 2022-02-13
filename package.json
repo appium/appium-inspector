@@ -128,7 +128,7 @@
     "electron-debug": "^3.0.0",
     "electron-log": "^4.4.6",
     "electron-settings": "^4.0.2",
-    "electron-updater": "^4.2.0",
+    "electron-updater": "^4.6.5",
     "font-awesome": "4.x",
     "format-json": "1.x",
     "highlight.js": "11.x",
@@ -168,7 +168,7 @@
     "@babel/core": "^7.17.2",
     "@babel/eslint-parser": "^7.17.0",
     "@babel/eslint-plugin": "^7.14.5",
-    "@babel/plugin-transform-runtime": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.12.13",
     "@babel/register": "^7.17.0",
@@ -203,7 +203,7 @@
     "postcss-modules": "^3.2.2",
     "release": "^6.0.1",
     "rimraf": "^3.0.0",
-    "sinon": "^12.0.1",
+    "sinon": "^13.0.1",
     "spectron": "^15.0.0"
   },
   "devEngines": {
