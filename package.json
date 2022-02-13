@@ -1,6 +1,6 @@
 {
   "name": "appium-inspector",
-  "version": "2022.1.2",
+  "version": "2022.2.1",
   "description": "An app inspector for use with an Appium server",
   "repository": {
     "type": "git",
@@ -207,11 +207,11 @@
     "spectron": "^15.0.0"
   },
   "devEngines": {
-    "node": ">=6.x",
-    "npm": ">=3.x"
+    "node": ">=12.x",
+    "npm": ">=6.x"
   },
   "engines": {
-    "node": ">=10.x",
-    "npm": ">=5.x"
+    "node": ">=12.x",
+    "npm": ">=6.x"
   }
 }
