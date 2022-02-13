@@ -165,7 +165,7 @@
   },
   "devDependencies": {
     "@appium/fake-driver": "^2.2.0",
-    "@babel/core": "^7.14.5",
+    "@babel/core": "^7.17.2",
     "@babel/eslint-parser": "^7.14.4",
     "@babel/eslint-plugin": "^7.14.5",
     "@babel/plugin-transform-runtime": "^7.16.7",
