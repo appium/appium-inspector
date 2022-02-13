@@ -461,6 +461,8 @@ export function newSession (caps, attachSessId = null) {
       desiredCapabilities[CAPS_CONNECT_HARDWARE_KEYBOARD] = true;
     }
 
+    serverOpts.logLevel = process.env.NODE_ENV === 'development' ? 'info' : 'warn';
+
     let driver = null;
     try {
       if (attachSessId) {
