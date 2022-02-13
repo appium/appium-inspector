@@ -126,7 +126,7 @@
     "cheerio": "^1.0.0-rc.3",
     "connected-react-router": "^6.0.0",
     "electron-debug": "^3.0.0",
-    "electron-log": "^4.0.0",
+    "electron-log": "^4.4.6",
     "electron-settings": "^4.0.2",
     "electron-updater": "^4.2.0",
     "font-awesome": "4.x",
