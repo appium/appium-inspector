@@ -1,5 +1,7 @@
-import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE,
-         SESSION_SERVER_PARAMS } from '../../shared/settings';
+import {
+  getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE,
+  SESSION_SERVER_PARAMS
+} from '../../shared/settings';
 import { v4 as UUID } from 'uuid';
 import { push } from 'connected-react-router';
 import { notification } from 'antd';
@@ -96,19 +98,19 @@ const SAUCE_OPTIONS_CAP = 'sauce:options';
 
 const JSON_TYPES = ['object', 'number', 'boolean'];
 
-export function getCapsObject (caps) {
+export function getCapsObject(caps) {
   return Object.assign({}, ...(caps.map((cap) => {
     if (JSON_TYPES.indexOf(cap.type) !== -1) {
       try {
         let obj = JSON.parse(cap.value);
-        return {[cap.name]: obj};
-      } catch (ign) {}
+        return { [cap.name]: obj };
+      } catch (ign) { }
     }
-    return {[cap.name]: cap.value};
+    return { [cap.name]: cap.value };
   })));
 }
 
-export function showError (e, methodName, secs = 5) {
+export function showError(e, methodName, secs = 5) {
   let errMessage;
   if (e['jsonwire-error'] && e['jsonwire-error'].status === 7) {
     // FIXME: we probably should set 'findElement' as the method name
@@ -116,14 +118,14 @@ export function showError (e, methodName, secs = 5) {
     if (methodName === 10) {
       methodName = 'findElements';
     }
-    errMessage = i18n.t('findElementFailure', {methodName});
+    errMessage = i18n.t('findElementFailure', { methodName });
     if (e.message) {
       errMessage += ` Original error: '${e.message}'`;
     }
   } else if (e.data) {
     try {
       e.data = JSON.parse(e.data);
-    } catch (ign) {}
+    } catch (ign) { }
     if (e.data.value && e.data.value.message) {
       errMessage = e.data.value.message;
     } else {
@@ -141,7 +143,7 @@ export function showError (e, methodName, secs = 5) {
   }
 
   notification.error({
-    message: methodName ? i18n.t('callToMethodFailed', {methodName}) : i18n.t('Error'),
+    message: methodName ? i18n.t('callToMethodFailed', { methodName }) : i18n.t('Error'),
     description: errMessage,
     duration: secs
   });
@@ -151,49 +153,49 @@ export function showError (e, methodName, secs = 5) {
 /**
  * Change the caps object and then go back to the new session tab
  */
-export function setCaps (caps, uuid) {
+export function setCaps(caps, uuid) {
   return (dispatch) => {
-    dispatch({type: SET_CAPS, caps, uuid});
+    dispatch({ type: SET_CAPS, caps, uuid });
   };
 }
 
 /**
  * Change a single desired capability
  */
-export function changeCapability (key, value) {
+export function changeCapability(key, value) {
   return (dispatch) => {
-    dispatch({type: CHANGE_CAPABILITY, key, value});
+    dispatch({ type: CHANGE_CAPABILITY, key, value });
   };
 }
 
 /**
  * Push a capability to the list
  */
-export function addCapability () {
+export function addCapability() {
   return (dispatch) => {
-    dispatch({type: ADD_CAPABILITY});
+    dispatch({ type: ADD_CAPABILITY });
   };
 }
 
 /**
  * Update value of a capability parameter
  */
-export function setCapabilityParam (index, name, value) {
+export function setCapabilityParam(index, name, value) {
   return (dispatch) => {
-    dispatch({type: SET_CAPABILITY_PARAM, index, name, value});
+    dispatch({ type: SET_CAPABILITY_PARAM, index, name, value });
   };
 }
 
 /**
  * Delete a capability from the list
  */
-export function removeCapability (index) {
+export function removeCapability(index) {
   return (dispatch) => {
-    dispatch({type: REMOVE_CAPABILITY, index});
+    dispatch({ type: REMOVE_CAPABILITY, index });
   };
 }
 
-function _addVendorPrefixes (caps, dispatch, getState) {
+function _addVendorPrefixes(caps, dispatch, getState) {
   const prefixedCaps = addVendorPrefixes(caps);
   setCaps(prefixedCaps, getState().session.capsUUID)(dispatch);
   return prefixedCaps;
@@ -202,7 +204,7 @@ function _addVendorPrefixes (caps, dispatch, getState) {
 /**
  * Start a new appium session with the given caps
  */
-export function newSession (caps, attachSessId = null) {
+export function newSession(caps, attachSessId = null) {
   return async (dispatch, getState) => {
     let session = getState().session;
 
@@ -211,7 +213,7 @@ export function newSession (caps, attachSessId = null) {
       caps = _addVendorPrefixes(caps, dispatch, getState);
     }
 
-    dispatch({type: NEW_SESSION_REQUESTED, caps});
+    dispatch({ type: NEW_SESSION_REQUESTED, caps });
 
     let desiredCapabilities = caps ? getCapsObject(caps) : {};
     let host, port, username, accessKey, https, path, token;
@@ -289,7 +291,7 @@ export function newSession (caps, attachSessId = null) {
           });
           return;
         }
-        desiredCapabilities['perfecto:options'] = {securityToken: token};
+        desiredCapabilities['perfecto:options'] = { securityToken: token };
         https = session.server.perfecto.ssl;
         break;
       case ServerTypes.browserstack:
@@ -309,6 +311,24 @@ export function newSession (caps, attachSessId = null) {
           return;
         }
         https = session.server.browserstack.ssl = (parseInt(port, 10) === 443);
+        break;
+      case ServerTypes.lambdatest:
+        host = session.server.lambdatest.hostname = process.env.LAMBDATEST_HOST || 'hub.lambdatest.com';
+        port = session.server.lambdatest.port = process.env.LAMBDATEST_PORT || 443;
+        path = session.server.lambdatest.path = '/wd/hub';
+        username = session.server.lambdatest.username || process.env.LAMBDATEST_USERNAME;
+        desiredCapabilities['LT:Options'] = {};
+        desiredCapabilities['LT:Options'].source = 'appiumdesktop';
+        accessKey = session.server.lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
+        if (!username || !accessKey) {
+          notification.error({
+            message: i18n.t('Error'),
+            description: i18n.t('lambdatestCredentialsRequired'),
+            duration: 4
+          });
+          return;
+        }
+        https = session.server.lambdatest.ssl = (parseInt(port, 10) === 443);
         break;
       case ServerTypes.bitbar:
         host = process.env.BITBAR_HOST || 'appium.bitbar.com';
@@ -352,7 +372,7 @@ export function newSession (caps, attachSessId = null) {
         desiredCapabilities.pCloudy_Username = session.server.pcloudy.username || process.env.PCLOUDY_USERNAME;
         desiredCapabilities.pCloudy_ApiKey = session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
         if (!(session.server.pcloudy.username || process.env.PCLOUDY_USERNAME) ||
-              !(session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY)) {
+          !(session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY)) {
           notification.error({
             message: 'Error',
             description: 'PCLOUDY username and api key are required!',
@@ -370,7 +390,7 @@ export function newSession (caps, attachSessId = null) {
         desiredCapabilities['tb:options'].key = session.server.testingbot.key || process.env.TB_KEY;
         desiredCapabilities['tb:options'].secret = session.server.testingbot.secret || process.env.TB_SECRET;
         if (!(session.server.testingbot.key || process.env.TB_KEY) ||
-              !(session.server.testingbot.secret || process.env.TB_SECRET)) {
+          !(session.server.testingbot.secret || process.env.TB_SECRET)) {
           notification.error({
             message: 'Error',
             description: i18n.t('testingbotCredentialsRequired'),
@@ -432,7 +452,7 @@ export function newSession (caps, attachSessId = null) {
     //  proxy = session.server.advanced.proxy;
     //}
 
-    dispatch({type: SESSION_LOADING});
+    dispatch({ type: SESSION_LOADING });
 
 
     const serverOpts = {
@@ -483,7 +503,7 @@ export function newSession (caps, attachSessId = null) {
       showError(err, null, 0);
       return;
     } finally {
-      dispatch({type: SESSION_LOADING_DONE});
+      dispatch({ type: SESSION_LOADING_DONE });
       // Save the current server settings
       await setSetting(SESSION_SERVER_PARAMS, session.server);
     }
@@ -491,12 +511,12 @@ export function newSession (caps, attachSessId = null) {
     // The homepage arg in ChromeDriver is not working with Appium. iOS can have a default url, but
     // we want to keep the process equal to prevent complexity so we launch a default url here to make
     // sure we don't start with an empty page which will not show proper HTML in the inspector
-    const {browserName = ''} = desiredCapabilities;
+    const { browserName = '' } = desiredCapabilities;
 
     if (browserName.trim() !== '') {
       try {
         await driver.navigateTo('http://appium.io/docs/en/about-appium/intro/');
-      } catch (ign) {}
+      } catch (ign) { }
     }
 
     // pass some state to the inspector that it needs to build recorder
@@ -519,10 +539,10 @@ export function newSession (caps, attachSessId = null) {
 /**
  * Saves the caps
  */
-export function saveSession (caps, params) {
+export function saveSession(caps, params) {
   return async (dispatch) => {
-    let {name, uuid} = params;
-    dispatch({type: SAVE_SESSION_REQUESTED});
+    let { name, uuid } = params;
+    dispatch({ type: SAVE_SESSION_REQUESTED });
     let savedSessions = await getSetting(SAVED_SESSIONS);
     if (!uuid) {
 
@@ -547,88 +567,88 @@ export function saveSession (caps, params) {
     await setSetting(SAVED_SESSIONS, savedSessions);
     const action = getSavedSessions();
     await action(dispatch);
-    dispatch({type: SET_CAPS, caps, uuid});
-    dispatch({type: SAVE_SESSION_DONE});
+    dispatch({ type: SET_CAPS, caps, uuid });
+    dispatch({ type: SAVE_SESSION_DONE });
   };
 }
 
 /**
  * Get the sessions saved by the user
  */
-export function getSavedSessions () {
+export function getSavedSessions() {
   return async (dispatch) => {
-    dispatch({type: GET_SAVED_SESSIONS_REQUESTED});
+    dispatch({ type: GET_SAVED_SESSIONS_REQUESTED });
     let savedSessions = await getSetting(SAVED_SESSIONS);
-    dispatch({type: GET_SAVED_SESSIONS_DONE, savedSessions});
+    dispatch({ type: GET_SAVED_SESSIONS_DONE, savedSessions });
   };
 }
 
 /**
  * Switch to a different tab
  */
-export function switchTabs (key) {
+export function switchTabs(key) {
   return (dispatch) => {
-    dispatch({type: SWITCHED_TABS, key});
+    dispatch({ type: SWITCHED_TABS, key });
   };
 }
 
 /**
  * Open a 'Save As' modal
  */
-export function requestSaveAsModal () {
+export function requestSaveAsModal() {
   return (dispatch) => {
-    dispatch({type: SAVE_AS_MODAL_REQUESTED});
+    dispatch({ type: SAVE_AS_MODAL_REQUESTED });
   };
 }
 
 /**
  * Hide the 'Save As' modal
  */
-export function hideSaveAsModal () {
+export function hideSaveAsModal() {
   return (dispatch) => {
-    dispatch({type: HIDE_SAVE_AS_MODAL_REQUESTED});
+    dispatch({ type: HIDE_SAVE_AS_MODAL_REQUESTED });
   };
 }
 
 /**
  * Set the text to save capabilities as
  */
-export function setSaveAsText (saveAsText) {
+export function setSaveAsText(saveAsText) {
   return (dispatch) => {
-    dispatch({type: SET_SAVE_AS_TEXT, saveAsText});
+    dispatch({ type: SET_SAVE_AS_TEXT, saveAsText });
   };
 }
 
 /**
  * Delete a saved session
  */
-export function deleteSavedSession (uuid) {
+export function deleteSavedSession(uuid) {
   return async (dispatch) => {
-    dispatch({type: DELETE_SAVED_SESSION_REQUESTED, uuid});
+    dispatch({ type: DELETE_SAVED_SESSION_REQUESTED, uuid });
     let savedSessions = await getSetting(SAVED_SESSIONS);
     let newSessions = savedSessions.filter((session) => session.uuid !== uuid);
     await setSetting(SAVED_SESSIONS, newSessions);
-    dispatch({type: DELETE_SAVED_SESSION_DONE});
-    dispatch({type: GET_SAVED_SESSIONS_DONE, savedSessions: newSessions});
+    dispatch({ type: DELETE_SAVED_SESSION_DONE });
+    dispatch({ type: GET_SAVED_SESSIONS_DONE, savedSessions: newSessions });
   };
 }
 
 /**
  * Set the session id to attach to
  */
-export function setAttachSessId (attachSessId) {
+export function setAttachSessId(attachSessId) {
   return (dispatch) => {
-    dispatch({type: SET_ATTACH_SESS_ID, attachSessId});
+    dispatch({ type: SET_ATTACH_SESS_ID, attachSessId });
   };
 }
 
 /**
  * Change the server type
  */
-export function changeServerType (serverType) {
+export function changeServerType(serverType) {
   return async (dispatch, getState) => {
     await setSetting(SESSION_SERVER_TYPE, serverType);
-    dispatch({type: CHANGE_SERVER_TYPE, serverType});
+    dispatch({ type: CHANGE_SERVER_TYPE, serverType });
     const action = getRunningSessions();
     action(dispatch, getState);
   };
@@ -637,12 +657,12 @@ export function changeServerType (serverType) {
 /**
  * Set a server parameter (host, port, etc...)
  */
-export function setServerParam (name, value, serverType) {
+export function setServerParam(name, value, serverType) {
   const debounceGetRunningSessions = debounce(getRunningSessions(), 5000);
   return async (dispatch, getState) => {
     serverType = serverType || getState().session.serverType;
     await setSetting(SESSION_SERVER_TYPE, serverType);
-    dispatch({type: SET_SERVER_PARAM, serverType, name, value});
+    dispatch({ type: SET_SERVER_PARAM, serverType, name, value });
     debounceGetRunningSessions(dispatch, getState);
   };
 }
@@ -651,17 +671,17 @@ export function setServerParam (name, value, serverType) {
  * Set the local server hostname and port to whatever was saved in 'actions/StartServer.js' so that it
  * defaults to what the currently running appium server is
  */
-export function setLocalServerParams () {
+export function setLocalServerParams() {
   return async (dispatch, getState) => {
     let serverArgs = await getSetting(SERVER_ARGS);
     // Get saved server args from settings and set local server settings to it. If there are no saved args, set local
     // host and port to undefined
     if (serverArgs) {
-      dispatch({type: SET_SERVER_PARAM, serverType: ServerTypes.local, name: 'port', value: serverArgs.port});
-      dispatch({type: SET_SERVER_PARAM, serverType: ServerTypes.local, name: 'hostname', value: 'localhost'});
+      dispatch({ type: SET_SERVER_PARAM, serverType: ServerTypes.local, name: 'port', value: serverArgs.port });
+      dispatch({ type: SET_SERVER_PARAM, serverType: ServerTypes.local, name: 'hostname', value: 'localhost' });
     } else {
-      dispatch({type: SET_SERVER_PARAM, serverType: ServerTypes.local, name: 'port', value: undefined});
-      dispatch({type: SET_SERVER_PARAM, serverType: ServerTypes.local, name: 'hostname', value: undefined});
+      dispatch({ type: SET_SERVER_PARAM, serverType: ServerTypes.local, name: 'port', value: undefined });
+      dispatch({ type: SET_SERVER_PARAM, serverType: ServerTypes.local, name: 'hostname', value: undefined });
       if (getState().session.serverType === 'local') {
         const action = changeServerType('remote');
         await action(dispatch, getState);
@@ -674,7 +694,7 @@ export function setLocalServerParams () {
  * Set the server parameters to whatever they were last saved as.
  * Params are saved whenever there's a new session
  */
-export function setSavedServerParams () {
+export function setSavedServerParams() {
   return async (dispatch, getState) => {
     let server = await getSetting(SESSION_SERVER_PARAMS);
     let serverType = await getSetting(SESSION_SERVER_TYPE);
@@ -684,24 +704,24 @@ export function setSavedServerParams () {
       // if we have a cloud provider as a saved server, but for some reason the
       // cloud provider is no longer in the list, revert server type to remote
       if (keys(CloudProviders).includes(serverType) &&
-          !currentProviders.includes(serverType)) {
+        !currentProviders.includes(serverType)) {
         serverType = ServerTypes.remote;
       }
-      dispatch({type: SET_SERVER, server, serverType});
+      dispatch({ type: SET_SERVER, server, serverType });
     }
   };
 }
 
-export function getRunningSessions () {
+export function getRunningSessions() {
   return async (dispatch, getState) => {
     const avoidServerTypes = [
       'sauce'
     ];
     // Get currently running sessions for this server
     const state = getState().session;
-    const {server, serverType} = state;
+    const { server, serverType } = state;
     const serverInfo = server[serverType];
-    let {hostname, port, path, ssl, username, accessKey} = serverInfo;
+    let { hostname, port, path, ssl, username, accessKey } = serverInfo;
 
     // if we have a standard remote server, fill out connection info based on placeholder defaults
     // in case the user hasn't adjusted those fields
@@ -716,9 +736,9 @@ export function getRunningSessions () {
       return;
     }
 
-    dispatch({type: GET_SESSIONS_REQUESTED});
+    dispatch({ type: GET_SESSIONS_REQUESTED });
     if (avoidServerTypes.includes(serverType)) {
-      dispatch({type: GET_SESSIONS_DONE});
+      dispatch({ type: GET_SESSIONS_DONE });
       return;
     }
 
@@ -726,40 +746,40 @@ export function getRunningSessions () {
       const adjPath = path.endsWith('/') ? path : `${path}/`;
       const res = username && accessKey
         ? await ky(`http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`, {
-          headers: {'Authorization': `Basic ${btoa(`${username}:${accessKey}`)}`}
+          headers: { 'Authorization': `Basic ${btoa(`${username}:${accessKey}`)}` }
         }).json()
         : await ky(`http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`).json();
-      dispatch({type: GET_SESSIONS_DONE, sessions: res.value});
+      dispatch({ type: GET_SESSIONS_DONE, sessions: res.value });
     } catch (err) {
       console.warn(`Ignoring error in getting list of active sessions: ${err}`); // eslint-disable-line no-console
-      dispatch({type: GET_SESSIONS_DONE});
+      dispatch({ type: GET_SESSIONS_DONE });
     }
   };
 }
 
-export function startDesiredCapsEditor () {
+export function startDesiredCapsEditor() {
   return (dispatch) => {
-    dispatch({type: ENABLE_DESIRED_CAPS_EDITOR});
+    dispatch({ type: ENABLE_DESIRED_CAPS_EDITOR });
   };
 }
 
-export function abortDesiredCapsEditor () {
+export function abortDesiredCapsEditor() {
   return (dispatch) => {
-    dispatch({type: ABORT_DESIRED_CAPS_EDITOR});
+    dispatch({ type: ABORT_DESIRED_CAPS_EDITOR });
   };
 }
 
-export function saveRawDesiredCaps () {
+export function saveRawDesiredCaps() {
   return (dispatch, getState) => {
     const state = getState().session;
-    const {rawDesiredCaps, caps: capsArray} = state;
+    const { rawDesiredCaps, caps: capsArray } = state;
     try {
       const newCaps = JSON.parse(rawDesiredCaps);
 
       // Transform the current caps array to an object
       let caps = {};
-      for (let {type, name, value} of capsArray) {
-        caps[name] = {type, value};
+      for (let { type, name, value } of capsArray) {
+        caps[name] = { type, value };
       }
 
       // Translate the caps JSON to array format
@@ -779,14 +799,14 @@ export function saveRawDesiredCaps () {
         name,
         value,
       }));
-      dispatch({type: SAVE_RAW_DESIRED_CAPS, caps: newCapsArray});
+      dispatch({ type: SAVE_RAW_DESIRED_CAPS, caps: newCapsArray });
     } catch (e) {
-      dispatch({type: SHOW_DESIRED_CAPS_JSON_ERROR, message: e.message});
+      dispatch({ type: SHOW_DESIRED_CAPS_JSON_ERROR, message: e.message });
     }
   };
 }
 
-export function setRawDesiredCaps (rawDesiredCaps) {
+export function setRawDesiredCaps(rawDesiredCaps) {
   return (dispatch, getState) => {
     const state = getState().session;
     let isValidCapsJson = true;
@@ -799,44 +819,44 @@ export function setRawDesiredCaps (rawDesiredCaps) {
         invalidCapsJsonReason = e.message;
       }
     }
-    dispatch({type: SET_RAW_DESIRED_CAPS, rawDesiredCaps, isValidCapsJson, invalidCapsJsonReason});
+    dispatch({ type: SET_RAW_DESIRED_CAPS, rawDesiredCaps, isValidCapsJson, invalidCapsJsonReason });
   };
 }
 
-export function addCloudProvider () {
+export function addCloudProvider() {
   return (dispatch) => {
-    dispatch({type: IS_ADDING_CLOUD_PROVIDER, isAddingProvider: true});
+    dispatch({ type: IS_ADDING_CLOUD_PROVIDER, isAddingProvider: true });
   };
 }
 
-export function stopAddCloudProvider () {
+export function stopAddCloudProvider() {
   return (dispatch) => {
-    dispatch({type: IS_ADDING_CLOUD_PROVIDER, isAddingProvider: false});
+    dispatch({ type: IS_ADDING_CLOUD_PROVIDER, isAddingProvider: false });
   };
 }
 
-export function addVisibleProvider (provider) {
+export function addVisibleProvider(provider) {
   return async (dispatch, getState) => {
     let currentProviders = getState().session.visibleProviders;
     const providers = union(currentProviders, [provider]);
     await setSetting(VISIBLE_PROVIDERS, providers);
-    dispatch({type: SET_PROVIDERS, providers});
+    dispatch({ type: SET_PROVIDERS, providers });
   };
 }
 
-export function removeVisibleProvider (provider) {
+export function removeVisibleProvider(provider) {
   return async (dispatch, getState) => {
     let currentProviders = getState().session.visibleProviders;
     const providers = without(currentProviders, provider);
     await setSetting(VISIBLE_PROVIDERS, providers);
-    dispatch({type: SET_PROVIDERS, providers});
+    dispatch({ type: SET_PROVIDERS, providers });
   };
 }
 
-export function setVisibleProviders () {
+export function setVisibleProviders() {
   return async (dispatch) => {
     const providers = await getSetting(VISIBLE_PROVIDERS);
-    dispatch({type: SET_PROVIDERS, providers});
+    dispatch({ type: SET_PROVIDERS, providers });
   };
 }
 
@@ -845,8 +865,8 @@ export function setVisibleProviders () {
  *
  * @param {object} caps
  */
-function addCustomCaps (caps) {
-  const {platformName = ''} = caps;
+function addCustomCaps(caps) {
+  const { platformName = '' } = caps;
   const androidCustomCaps = {};
   // @TODO: remove when this is defaulted in the newest Appium 1.8.x release
   androidCustomCaps[CAPS_ENSURE_WEBVIEW_HAVE_PAGES] = true;
@@ -866,10 +886,10 @@ function addCustomCaps (caps) {
   };
 }
 
-export function bindWindowClose () {
+export function bindWindowClose() {
   return (dispatch, getState) => {
     window.addEventListener('beforeunload', async (evt) => {
-      let {driver} = getState().inspector;
+      let { driver } = getState().inspector;
       if (driver) {
         try {
           const action = quitSession('Window closed');
@@ -886,13 +906,13 @@ export function bindWindowClose () {
   };
 }
 
-export function setAddVendorPrefixes (addVendorPrefixes) {
+export function setAddVendorPrefixes(addVendorPrefixes) {
   return (dispatch) => {
-    dispatch({type: SET_ADD_VENDOR_PREFIXES, addVendorPrefixes});
+    dispatch({ type: SET_ADD_VENDOR_PREFIXES, addVendorPrefixes });
   };
 }
 
-export function initFromQueryString () {
+export function initFromQueryString() {
   return async (dispatch, getState) => {
     if (!isFirstRun) {
       return;
@@ -907,14 +927,14 @@ export function initFromQueryString () {
     if (initialState) {
       try {
         const state = JSON.parse(initialState);
-        dispatch({type: SET_STATE_FROM_URL, state});
+        dispatch({ type: SET_STATE_FROM_URL, state });
       } catch (e) {
         showError(new Error('Could not parse initial state from URL'), null, 0);
       }
     }
 
     if (autoStartSession === AUTO_START_URL_PARAM) {
-      const {attachSessId, caps} = getState().session;
+      const { attachSessId, caps } = getState().session;
       if (attachSessId) {
         return await newSession(null, attachSessId)(dispatch, getState);
       }

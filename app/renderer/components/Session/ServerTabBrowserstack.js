@@ -6,15 +6,15 @@ const FormItem = Form.Item;
 
 export default class ServerTabBrowserstack extends Component {
 
-  render () {
+  render() {
 
-    const {server, setServerParam, t} = this.props;
+    const { server, setServerParam, t } = this.props;
 
     const browserstackUsernamePlaceholder = process.env.BROWSERSTACK_USERNAME ?
-      t('usingDataFoundIn', {environmentVariable: 'BROWSERSTACK_USERNAME'}) : t('yourUsername');
+      t('usingDataFoundIn', { environmentVariable: 'BROWSERSTACK_USERNAME' }) : t('yourUsername');
 
     const browserstackAccessKeyPlaceholder = process.env.BROWSERSTACK_ACCESS_KEY ?
-      t('usingDataFoundIn', {environmentVariable: 'BROWSERSTACK_ACCESS_KEY'}) : t('yourAccessKey');
+      t('usingDataFoundIn', { environmentVariable: 'BROWSERSTACK_ACCESS_KEY' }) : t('yourAccessKey');
 
     return <Form>
       <Row gutter={8}>
