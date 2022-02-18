@@ -147,7 +147,7 @@ export function showError(e, methodName, secs = 5) {
     description: errMessage,
     duration: secs
   });
-
+  f
 }
 
 /**
@@ -317,8 +317,8 @@ export function newSession(caps, attachSessId = null) {
         port = session.server.lambdatest.port = process.env.LAMBDATEST_PORT || 443;
         path = session.server.lambdatest.path = '/wd/hub';
         username = session.server.lambdatest.username || process.env.LAMBDATEST_USERNAME;
-        desiredCapabilities['LT:Options'] = {};
-        desiredCapabilities['LT:Options'].source = 'appiumdesktop';
+        desiredCapabilities['lt:options'] = {};
+        desiredCapabilities['lt:options'].source = 'appiumdesktop';
         accessKey = session.server.lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
         if (!username || !accessKey) {
           notification.error({
