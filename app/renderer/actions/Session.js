@@ -147,7 +147,6 @@ export function showError(e, methodName, secs = 5) {
     description: errMessage,
     duration: secs
   });
-  f
 }
 
 /**
@@ -313,7 +312,7 @@ export function newSession(caps, attachSessId = null) {
         https = session.server.browserstack.ssl = (parseInt(port, 10) === 443);
         break;
       case ServerTypes.lambdatest:
-        host = session.server.lambdatest.hostname = process.env.LAMBDATEST_HOST || 'hub.lambdatest.com';
+        host = session.server.lambdatest.hostname = process.env.LAMBDATEST_HOST || 'beta-hub.lambdatest.com';
         port = session.server.lambdatest.port = process.env.LAMBDATEST_PORT || 443;
         path = session.server.lambdatest.path = '/wd/hub';
         username = session.server.lambdatest.username || process.env.LAMBDATEST_USERNAME;
