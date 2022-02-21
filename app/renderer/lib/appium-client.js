@@ -13,6 +13,7 @@ export default class AppiumClient {
     this.elementCache = {};
     this.elVarCount = 0;
     this.elArrayVarCount = 0;
+    this.enableMobileSauceCmd = false;
   }
 
   async run (params) {
@@ -25,7 +26,10 @@ export default class AppiumClient {
       args = [], // Optional. Arguments passed to method
       skipRefresh = false, // Optional. Do we want the updated source and screenshot?
       appMode = APP_MODE.NATIVE, // Optional. Whether we're in a native or hybrid mode
+      enableMobileSauceCmd = true,
     } = params;
+
+    this.enableMobileSauceCmd = enableMobileSauceCmd;
 
     if (methodName === 'quit') {
       try {
@@ -318,7 +322,7 @@ export default class AppiumClient {
   async getSourceUpdate (appMode) {
     let pageSource;
     const {client: {capabilities: {platformName}}} = this.driver;
-    if (['ios', 'tvos'].includes(_.toLower(platformName)) && appMode === APP_MODE.NATIVE) {
+    if (this.enableMobileSauceCmd === true && ['ios', 'tvos'].includes(_.toLower(platformName)) && appMode === APP_MODE.NATIVE) {
       try {
         pageSource = await this.driver.executeScript('mobile:source', [{excludedAttributes: ['visible']}]);
         return {source: parseSource(pageSource)};

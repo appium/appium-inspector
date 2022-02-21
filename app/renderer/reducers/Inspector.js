@@ -47,6 +47,9 @@ const INITIAL_STATE = {
   isFindingElementsTimes: false,
   visibleCommandResult: null,
   visibleCommandMethod: null,
+  // TODO: add input or checkbox for now.
+  // TODO: change this value as false by default
+  enableMobileSauceCmd: true,
 };
 
 /**

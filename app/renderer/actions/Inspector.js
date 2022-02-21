@@ -587,13 +587,14 @@ export function callClientMethod (params) {
   return async (dispatch, getState) => {
     console.log(`Calling client method with params:`); // eslint-disable-line no-console
     console.log(params); // eslint-disable-line no-console
-    const {driver, appMode} = getState().inspector;
+    const {driver, appMode, enableMobileSauceCmd} = getState().inspector;
+
     const {methodName, ignoreResult = true} = params;
     params.appMode = appMode;
 
     const action = keepSessionAlive();
     action(dispatch, getState);
-    const client = AppiumClient.instance(driver);
+    const client = AppiumClient.instance(driver, enableMobileSauceCmd);
     const res = await client.run(params);
     let {commandRes} = res;
 
