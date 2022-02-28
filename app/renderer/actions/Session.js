@@ -360,6 +360,7 @@ export function newSession(caps, attachSessId = null) {
           desiredCapabilities["lt:options"] = {};
         }
         desiredCapabilities["lt:options"].source = "appiumdesktop";
+        desiredCapabilities["lt:options"].isRealMobile = true;
         accessKey =
           session.server.lambdatest.accessKey ||
           process.env.LAMBDATEST_ACCESS_KEY;
