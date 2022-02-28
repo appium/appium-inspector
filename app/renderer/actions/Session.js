@@ -356,11 +356,13 @@ export function newSession(caps, attachSessId = null) {
         path = session.server.lambdatest.path = "/wd/hub";
         username =
           session.server.lambdatest.username || process.env.LAMBDATEST_USERNAME;
-        if (!desiredCapabilities.hasOwnProperty("lt:options")) {
-          desiredCapabilities["lt:options"] = {};
+        if (desiredCapabilities.hasOwnProperty("lt:options")) {
+          desiredCapabilities["lt:options"].source = "appiumdesktop";
+          desiredCapabilities["lt:options"].isRealMobile = true;
+        } else {
+          desiredCapabilities["lambdatest:source"] = "appiumdesktop";
+          desiredCapabilities["lambdatest:isRealMobile"] = true;
         }
-        desiredCapabilities["lt:options"].source = "appiumdesktop";
-        desiredCapabilities["lt:options"].isRealMobile = true;
         accessKey =
           session.server.lambdatest.accessKey ||
           process.env.LAMBDATEST_ACCESS_KEY;
