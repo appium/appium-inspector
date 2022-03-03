@@ -1,10 +1,12 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import electron from 'electron';
 
 import { Spin } from 'antd';
 import { SCREENSHOT_INTERACTION_MODE } from '../../../renderer/components/Inspector/shared';
 import webSocketHandler from './SauceLabs/WebSocketHandler';
 import StreamScreen from './SauceLabs/StreamScreen';
+import Explanation from './SauceLabs/Explanation';
+import styles from './SauceStreamScreen.css';
 
 const SauceStreamScreen = ({
   applyAppiumMethod,
@@ -14,7 +16,7 @@ const SauceStreamScreen = ({
       capabilities: { testobject_device_session_id = '' },
     },
   },
-  serverData: { accessKey, dataCenter, password, username },
+  serverData: { dataCenter, password, username },
   windowSize,
 }) => {
   //=======
@@ -126,7 +128,6 @@ const SauceStreamScreen = ({
   useEffect(() => {
     (async () => {
       if (password) {
-        console.log('log in and get cookie');
         const authenticationUrl =
           'https://accounts.saucelabs.com/am/json/realms/root/realms/authtree/authenticate';
         try {
@@ -157,7 +158,6 @@ const SauceStreamScreen = ({
           setIsCookieRetrieved(true);
         } catch (e) {
           // @TODO: Handle error getting the cookie
-          console.log('e = ', e);
         }
       }
     })();
@@ -180,21 +180,29 @@ const SauceStreamScreen = ({
   });
 
   return (
-    <Spin size="large" spinning={!isCookieRetrieved}>
-      <StreamScreen
-        applyAppiumMethod={applyAppiumMethod}
-        canvasContainerRef={canvasContainer}
-        canvasElementRef={canvasElement}
-        handleSwipeEnd={handleSwipeEnd}
-        handleSwipeMove={handleSwipeMove}
-        handleSwipeStart={handleSwipeStart}
-        isMouseUsed={isMouseUsed}
-        mouseCoordinates={{ xCo, yCo }}
-        onPointerEnter={onPointerEnter}
-        onPointerLeave={onPointerLeave}
-        wsRunning={wsRunning}
-      />
-    </Spin>
+    <>
+      {isCookieRetrieved && wsRunning ? (
+        <div className={styles.streamScreenContainer}>
+          <StreamScreen
+            applyAppiumMethod={applyAppiumMethod}
+            canvasContainerRef={canvasContainer}
+            canvasElementRef={canvasElement}
+            handleSwipeEnd={handleSwipeEnd}
+            handleSwipeMove={handleSwipeMove}
+            handleSwipeStart={handleSwipeStart}
+            isMouseUsed={isMouseUsed}
+            mouseCoordinates={{ xCo, yCo }}
+            onPointerEnter={onPointerEnter}
+            onPointerLeave={onPointerLeave}
+          />
+          <Explanation />
+        </div>
+      ) : (
+        <div className={styles.sauceSpinner}>
+          <Spin size="large" />
+        </div>
+      )}
+    </>
   );
 };
 

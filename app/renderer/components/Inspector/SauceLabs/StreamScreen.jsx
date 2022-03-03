@@ -1,6 +1,4 @@
 import React, { useCallback, useEffect } from 'react';
-import { Spin } from 'antd';
-import { SCREENSHOT_INTERACTION_MODE } from '../../../../renderer/components/Inspector/shared';
 import TouchDot from './TouchDot';
 import styles from './StreamScreen.css';
 
@@ -20,7 +18,6 @@ import styles from './StreamScreen.css';
  * @param {object} param0.mouseCoordinates.yCo
  * @param {function} param0.onPointerEnter
  * @param {function} param0.onPointerLeave
- * @param {object} param0.wsRunning
  * @returns
  */
 const StreamScreen = ({
@@ -34,7 +31,6 @@ const StreamScreen = ({
   mouseCoordinates: { xCo, yCo },
   onPointerEnter,
   onPointerLeave,
-  wsRunning,
 }) => {
   /**
    * Handle the keyDown event
@@ -81,7 +77,7 @@ const StreamScreen = ({
   }, [onKeyDown]);
 
   return (
-    <Spin size="large" spinning={!wsRunning}>
+    <>
       <div className={styles.innerVideoStreamContainer}>
         <div
           ref={canvasContainerRef}
@@ -92,14 +88,11 @@ const StreamScreen = ({
           onPointerEnter={onPointerEnter}
           onPointerLeave={onPointerLeave}
         >
-          <span className={styles.recordingText}>
-            You are watching the live video recording
-          </span>
           {isMouseUsed && <TouchDot xPosition={xCo} yPosition={yCo} />}
           <canvas ref={canvasElementRef} />
         </div>
       </div>
-    </Spin>
+    </>
   );
 };
 

@@ -372,8 +372,6 @@
 
 .video-stream-main {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex: 1;
   margin-bottom: 12px;
 }

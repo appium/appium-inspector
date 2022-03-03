@@ -1,8 +1,7 @@
 .innerVideoStreamContainer {
   display: flex;
-  flex-direction: column;
   height: 100%;
-  justify-content: center;
+  margin-left: 20px;
 }
 
 .videoStreamBox {
@@ -13,17 +12,6 @@
   position: relative;
   overflow: hidden;
   cursor: none;
-}
-
-.recordingText {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  text-align: center;
-  color: gray;
-  font-size: 12;
-  width: 100%;
 }
 
 .coordinatesContainer {

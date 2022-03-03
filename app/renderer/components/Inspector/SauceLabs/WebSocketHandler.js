@@ -42,9 +42,7 @@ const webSocketHandler = ({
    */
   const renderCanvas = (image) => {
     const { left, ratio, top } = getCanvasData();
-    if (scaleRatio !== ratio) {
-      setScaleRatio(ratio);
-    }
+    setScaleRatio(ratio);
     if (!clientOffsets) {
       setClientOffsets({ left, top });
     }
