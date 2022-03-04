@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { debounce } from 'lodash';
+import { debounce, has, isEqual } from 'lodash';
 import {
   SCREENSHOT_INTERACTION_MODE,
   INTERACTION_MODE,
@@ -54,7 +54,7 @@ export default class Inspector extends Component {
       this.updateSourceTreeWidth.bind(this),
       50
     );
-    this.state = { showSauceStream: false };
+    this.state = { showSauceStream: false, deviceScreenSize: null };
   }
 
   updateSourceTreeWidth() {
@@ -132,6 +132,7 @@ export default class Inspector extends Component {
   }
 
   render() {
+    // console.log(JSON.stringify(this.props, null, 2));
     const {
       driver,
       screenshot,
@@ -157,14 +158,22 @@ export default class Inspector extends Component {
       sourceXML,
       t,
       visibleCommandResult,
-      // Needed for determining if Sauce
       server: { sauce },
-      sessionDetails: { host = '' },
       windowSize,
     } = this.props;
     const { path } = selectedElement;
-    const isSauceLabs = host.includes('saucelabs');
-    const { showSauceStream } = this.state;
+    const isSauceRDC =
+      has(driver, 'client') &&
+      has(driver.client, 'capabilities') &&
+      has(driver.client.capabilities, 'testobject_device');
+    const { deviceScreenSize, showSauceStream } = this.state;
+    // In some cases when switching screens the new collected windowSize is null
+    // We "cache" it to the state to make sure it won't break
+    if (!isEqual(windowSize, deviceScreenSize)) {
+      this.setState({
+        deviceScreenSize: windowSize,
+      });
+    }
 
     let main = (
       <>
@@ -174,7 +183,7 @@ export default class Inspector extends Component {
               applyAppiumMethod={applyClientMethod}
               driverData={driver}
               serverData={sauce}
-              windowSize={windowSize}
+              deviceScreenSize={deviceScreenSize}
             />
           </div>
         ) : (
@@ -284,8 +293,8 @@ export default class Inspector extends Component {
               }
             />
           </Tooltip>
-          {isSauceLabs && (
-            <Tooltip title={t('Sauce Labs Video')}>
+          {isSauceRDC && (
+            <Tooltip title={t('Sauce Labs Real Device Video')}>
               <Button
                 icon={<VideoCameraOutlined />}
                 onClick={() => {

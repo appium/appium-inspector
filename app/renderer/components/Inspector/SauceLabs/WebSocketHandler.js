@@ -9,6 +9,9 @@ import React, { useEffect, useRef } from 'react';
  * @param {number} param0.clientOffsets.left
  * @param {number} param0.clientOffsets.top
  * @param {string} param0.dataCenter
+ * @param {object} param0.deviceScreenSize
+ * @param {number} param0.deviceScreenSize.height
+ * @param {number} param0.deviceScreenSize.width
  * @param {function} param0.getCanvasData
  * @param {boolean} param0.isCookieRetrieved
  * @param {function} param0.setClientOffsets
@@ -16,9 +19,6 @@ import React, { useEffect, useRef } from 'react';
  * @param {function} param0.setScaleRatio
  * @param {boolean} param0.setWsRunning
  * @param {string} param0.sessionId
- * @param {object} param0.windowSize
- * @param {number} param0.windowSize.height
- * @param {number} param0.windowSize.width
  */
 const webSocketHandler = ({
   canvasElement,
@@ -27,11 +27,10 @@ const webSocketHandler = ({
   getCanvasData,
   isCookieRetrieved,
   setClientOffsets,
-  scaleRatio,
   setScaleRatio,
   setWsRunning,
   sessionId,
-  windowSize,
+  deviceScreenSize,
 }) => {
   const wsUrl = `wss://api.${dataCenter}.saucelabs.com/v1/rdc/socket/alternativeIo/${sessionId}`;
   const ws = useRef(null);
@@ -49,8 +48,8 @@ const webSocketHandler = ({
     const canvas = canvasElement.current;
     const context = canvas.getContext('2d');
     const isImageLandspace = image.width > image.height;
-    const canvasWidth = windowSize.width * ratio;
-    const canvasHeight = windowSize.height * ratio;
+    const canvasWidth = deviceScreenSize.width * ratio;
+    const canvasHeight = deviceScreenSize.height * ratio;
     canvas.height = canvasHeight;
     canvas.width = canvasWidth;
     const centerX = canvasWidth / 2;

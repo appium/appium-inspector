@@ -17,8 +17,9 @@ const SauceStreamScreen = ({
     },
   },
   serverData: { dataCenter, password, username },
-  windowSize,
+  deviceScreenSize,
 }) => {
+  console.log('SauceStreamScreen deviceScreenSize = ', deviceScreenSize);
   //=======
   // States
   //=======
@@ -112,9 +113,9 @@ const SauceStreamScreen = ({
       // the 12 is for a bottom space
       const canvasHeight = innerHeight - top - 12;
       const ratio =
-        canvasHeight >= windowSize.height
+        canvasHeight >= deviceScreenSize.height
           ? 1
-          : canvasHeight / windowSize.height;
+          : canvasHeight / deviceScreenSize.height;
 
       return { top, left, ratio };
     }
@@ -169,6 +170,7 @@ const SauceStreamScreen = ({
     canvasElement,
     clientOffsets,
     dataCenter,
+    deviceScreenSize,
     getCanvasData,
     isCookieRetrieved,
     setClientOffsets,
@@ -176,7 +178,6 @@ const SauceStreamScreen = ({
     setScaleRatio,
     setWsRunning,
     sessionId: testobject_device_session_id,
-    windowSize,
   });
 
   return (

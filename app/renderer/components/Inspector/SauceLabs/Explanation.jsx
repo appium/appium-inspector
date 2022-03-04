@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, Card } from 'antd';
-import { InfoOutlined } from '@ant-design/icons';
+import { WarningOutlined } from '@ant-design/icons';
 import styles from './Explanation.css';
 
 const Explanation = () => {
@@ -8,7 +8,7 @@ const Explanation = () => {
     <Card
       title={
         <span>
-          <InfoOutlined /> Important information
+          <WarningOutlined /> Important information
         </span>
       }
       className={styles.innerExplanationContainer}
