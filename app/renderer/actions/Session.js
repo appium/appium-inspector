@@ -354,14 +354,25 @@ export function newSession(caps, attachSessId = null) {
         port = session.server.lambdatest.port =
           process.env.LAMBDATEST_PORT || 443;
         path = session.server.lambdatest.path = "/wd/hub";
+        const isProxyChecked = session.server.advanced.useProxy;
         username =
           session.server.lambdatest.username || process.env.LAMBDATEST_USERNAME;
         if (desiredCapabilities.hasOwnProperty("lt:options")) {
           desiredCapabilities["lt:options"].source = "appiumdesktop";
           desiredCapabilities["lt:options"].isRealMobile = true;
+          if (isProxyChecked) {
+            desiredCapabilities[
+              "lt:options"
+            ].proxyUrl = `${session.server.advanced.proxy}`;
+          }
         } else {
           desiredCapabilities["lambdatest:source"] = "appiumdesktop";
           desiredCapabilities["lambdatest:isRealMobile"] = true;
+          if (isProxyChecked) {
+            desiredCapabilities[
+              "lambdatest:proxyUrl"
+            ] = `${session.server.advanced.proxy}`;
+          }
         }
         accessKey =
           session.server.lambdatest.accessKey ||
