@@ -325,19 +325,13 @@ export function newSession(caps, attachSessId = null) {
         https = session.server.perfecto.ssl;
         break;
       case ServerTypes.browserstack:
-        host = session.server.browserstack.hostname =
-          process.env.BROWSERSTACK_HOST || "hub-cloud.browserstack.com";
-        port = session.server.browserstack.port =
-          process.env.BROWSERSTACK_PORT || 443;
+        host = session.server.browserstack.hostname = process.env.BROWSERSTACK_HOST || "hub-cloud.browserstack.com";
+        port = session.server.browserstack.port = process.env.BROWSERSTACK_PORT || 443;
         path = session.server.browserstack.path = "/wd/hub";
-        username =
-          session.server.browserstack.username ||
-          process.env.BROWSERSTACK_USERNAME;
+        username = session.server.browserstack.username || process.env.BROWSERSTACK_USERNAME;
         desiredCapabilities["bstack:options"] = {};
         desiredCapabilities["bstack:options"].source = "appiumdesktop";
-        accessKey =
-          session.server.browserstack.accessKey ||
-          process.env.BROWSERSTACK_ACCESS_KEY;
+        accessKey = session.server.browserstack.accessKey || process.env.BROWSERSTACK_ACCESS_KEY;
         if (!username || !accessKey) {
           notification.error({
             message: i18n.t("Error"),
@@ -349,29 +343,22 @@ export function newSession(caps, attachSessId = null) {
         https = session.server.browserstack.ssl = parseInt(port, 10) === 443;
         break;
       case ServerTypes.lambdatest:
-        host = session.server.lambdatest.hostname =
-          process.env.LAMBDATEST_HOST || "qa-beta-hub.lambdatest.com";
-        port = session.server.lambdatest.port =
-          process.env.LAMBDATEST_PORT || 443;
+        host = session.server.lambdatest.hostname = process.env.LAMBDATEST_HOST || "qa-beta-hub.lambdatest.com";
+        port = session.server.lambdatest.port = process.env.LAMBDATEST_PORT || 443;
         path = session.server.lambdatest.path = "/wd/hub";
         const isProxyChecked = session.server.advanced.useProxy;
-        username =
-          session.server.lambdatest.username || process.env.LAMBDATEST_USERNAME;
+        username = session.server.lambdatest.username || process.env.LAMBDATEST_USERNAME;
         if (desiredCapabilities.hasOwnProperty("lt:options")) {
           desiredCapabilities["lt:options"].source = "appiumdesktop";
           desiredCapabilities["lt:options"].isRealMobile = true;
           if (isProxyChecked) {
-            desiredCapabilities[
-              "lt:options"
-            ].proxyUrl = `${session.server.advanced.proxy}`;
+            desiredCapabilities["lt:options"].proxyUrl = `${session.server.advanced.proxy}`;
           }
         } else {
           desiredCapabilities["lambdatest:source"] = "appiumdesktop";
           desiredCapabilities["lambdatest:isRealMobile"] = true;
           if (isProxyChecked) {
-            desiredCapabilities[
-              "lambdatest:proxyUrl"
-            ] = `${session.server.advanced.proxy}`;
+            desiredCapabilities["lambdatest:proxyUrl"] = `${session.server.advanced.proxy}`;
           }
         }
         accessKey =
