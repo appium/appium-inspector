@@ -1,43 +1,17 @@
-import _, { omit } from "lodash";
-import formatJSON from "format-json";
+import _, {omit} from 'lodash';
+import formatJSON from 'format-json';
 
-import {
-  NEW_SESSION_REQUESTED,
-  NEW_SESSION_BEGAN,
-  NEW_SESSION_DONE,
-  SAVE_SESSION_REQUESTED,
-  SAVE_SESSION_DONE,
-  GET_SAVED_SESSIONS_REQUESTED,
-  GET_SAVED_SESSIONS_DONE,
-  SESSION_LOADING,
-  SESSION_LOADING_DONE,
-  SET_CAPABILITY_PARAM,
-  ADD_CAPABILITY,
-  REMOVE_CAPABILITY,
-  SET_CAPS,
-  SWITCHED_TABS,
-  SAVE_AS_MODAL_REQUESTED,
-  HIDE_SAVE_AS_MODAL_REQUESTED,
-  SET_SAVE_AS_TEXT,
-  DELETE_SAVED_SESSION_REQUESTED,
-  DELETE_SAVED_SESSION_DONE,
-  CHANGE_SERVER_TYPE,
-  SET_SERVER_PARAM,
-  SET_SERVER,
-  SET_ATTACH_SESS_ID,
-  GET_SESSIONS_REQUESTED,
-  GET_SESSIONS_DONE,
-  ENABLE_DESIRED_CAPS_EDITOR,
-  ABORT_DESIRED_CAPS_EDITOR,
-  SAVE_RAW_DESIRED_CAPS,
-  SET_RAW_DESIRED_CAPS,
-  SHOW_DESIRED_CAPS_JSON_ERROR,
-  IS_ADDING_CLOUD_PROVIDER,
-  SET_PROVIDERS,
-  SET_ADD_VENDOR_PREFIXES,
-  SET_STATE_FROM_URL,
-  ServerTypes,
-} from "../actions/Session";
+import { NEW_SESSION_REQUESTED, NEW_SESSION_BEGAN, NEW_SESSION_DONE,
+         SAVE_SESSION_REQUESTED, SAVE_SESSION_DONE, GET_SAVED_SESSIONS_REQUESTED,
+         GET_SAVED_SESSIONS_DONE, SESSION_LOADING, SESSION_LOADING_DONE,
+         SET_CAPABILITY_PARAM, ADD_CAPABILITY, REMOVE_CAPABILITY, SET_CAPS,
+         SWITCHED_TABS, SAVE_AS_MODAL_REQUESTED, HIDE_SAVE_AS_MODAL_REQUESTED, SET_SAVE_AS_TEXT,
+         DELETE_SAVED_SESSION_REQUESTED, DELETE_SAVED_SESSION_DONE,
+         CHANGE_SERVER_TYPE, SET_SERVER_PARAM, SET_SERVER, SET_ATTACH_SESS_ID,
+         GET_SESSIONS_REQUESTED, GET_SESSIONS_DONE,
+         ENABLE_DESIRED_CAPS_EDITOR, ABORT_DESIRED_CAPS_EDITOR, SAVE_RAW_DESIRED_CAPS, SET_RAW_DESIRED_CAPS, SHOW_DESIRED_CAPS_JSON_ERROR,
+         IS_ADDING_CLOUD_PROVIDER, SET_PROVIDERS, SET_ADD_VENDOR_PREFIXES, SET_STATE_FROM_URL,
+         ServerTypes } from '../actions/Session';
 
 const visibleProviders = []; // Pull this from "electron-settings"
 const server = {
@@ -53,14 +27,14 @@ for (const serverName of _.keys(ServerTypes)) {
 // Make sure there's always at least one cap
 const INITIAL_STATE = {
   savedSessions: [],
-  tabKey: "new",
+  tabKey: 'new',
   serverType: ServerTypes.remote,
   visibleProviders,
   server: {
     local: {},
     remote: {},
     sauce: {
-      dataCenter: "us-west-1",
+      dataCenter: 'us-west-1',
     },
     headspin: {},
     browserstack: {},
@@ -77,11 +51,9 @@ const INITIAL_STATE = {
   attachSessId: null,
 
   // Make sure there's always at least one cap
-  caps: [
-    {
-      type: "text",
-    },
-  ],
+  caps: [{
+    type: 'text',
+  }],
 
   isCapsDirty: true,
   gettingSessions: false,
@@ -108,8 +80,7 @@ const isAttachSessIdValid = (runningSessions, attachSessId) => {
   return false;
 };
 
-export default function session(state = INITIAL_STATE, action) {
-
+export default function session (state = INITIAL_STATE, action) {
   switch (action.type) {
     case NEW_SESSION_REQUESTED:
       return {
@@ -122,15 +93,19 @@ export default function session(state = INITIAL_STATE, action) {
         ...state,
         newSessionBegan: true,
       };
-      return omit(nextState, "newSessionRequested");
+      return omit(nextState, 'newSessionRequested');
 
     case NEW_SESSION_DONE:
-      return omit(state, "newSessionBegan");
+      return omit(state, 'newSessionBegan');
+
 
     case ADD_CAPABILITY:
       return {
         ...state,
-        caps: [...state.caps, { type: "text" }],
+        caps: [
+          ...state.caps,
+          {type: 'text'},
+        ],
       };
 
     case REMOVE_CAPABILITY:
@@ -143,14 +118,10 @@ export default function session(state = INITIAL_STATE, action) {
       return {
         ...state,
         isCapsDirty: true,
-        caps: state.caps.map((cap, index) =>
-          index !== action.index
-            ? cap
-            : {
-                ...cap,
-                [action.name]: action.value,
-              }
-        ),
+        caps: state.caps.map((cap, index) => index !== action.index ? cap : {
+          ...cap,
+          [action.name]: action.value
+        }),
       };
 
     case SET_CAPS:
@@ -159,17 +130,17 @@ export default function session(state = INITIAL_STATE, action) {
         caps: action.caps,
         capsUUID: action.uuid,
       };
-      return omit(nextState, "isCapsDirty");
+      return omit(nextState, 'isCapsDirty');
 
     case SAVE_SESSION_REQUESTED:
       nextState = {
         ...state,
         saveSessionRequested: true,
       };
-      return omit(nextState, "showSaveAsModal");
+      return omit(nextState, 'showSaveAsModal');
 
     case SAVE_SESSION_DONE:
-      return omit(state, ["saveSessionRequested", "saveAsText"]);
+      return omit(state, ['saveSessionRequested', 'saveAsText']);
 
     case GET_SAVED_SESSIONS_REQUESTED:
       return {
@@ -182,7 +153,7 @@ export default function session(state = INITIAL_STATE, action) {
         ...state,
         savedSessions: action.savedSessions || [],
       };
-      return omit(nextState, "getSavedSessionsRequested");
+      return omit(nextState, 'getSavedSessionsRequested');
 
     case DELETE_SAVED_SESSION_REQUESTED:
       return {
@@ -206,11 +177,11 @@ export default function session(state = INITIAL_STATE, action) {
     case SAVE_AS_MODAL_REQUESTED:
       return {
         ...state,
-        showSaveAsModal: true,
+        'showSaveAsModal': true,
       };
 
     case HIDE_SAVE_AS_MODAL_REQUESTED:
-      return omit(state, ["saveAsText", "showSaveAsModal"]);
+      return omit(state, ['saveAsText', 'showSaveAsModal']);
 
     case SET_SAVE_AS_TEXT:
       return {
@@ -240,10 +211,7 @@ export default function session(state = INITIAL_STATE, action) {
       return {
         ...state,
         server: {
-          ...(function extendCurrentServerStateWithNewServerState(
-            currentServerState,
-            newServerState
-          ) {
+          ...(function extendCurrentServerStateWithNewServerState (currentServerState, newServerState) {
             // Copy current server state and extend it with new server state
             const nextServerState = _.cloneDeep(currentServerState || {});
 
@@ -263,7 +231,7 @@ export default function session(state = INITIAL_STATE, action) {
     case SET_ATTACH_SESS_ID:
       return {
         ...state,
-        attachSessId: action.attachSessId,
+        attachSessId: action.attachSessId
       };
 
     case SESSION_LOADING:
@@ -273,7 +241,7 @@ export default function session(state = INITIAL_STATE, action) {
       };
 
     case SESSION_LOADING_DONE:
-      return omit(state, "sessionLoading");
+      return omit(state, 'sessionLoading');
 
     case GET_SESSIONS_REQUESTED:
       return {
@@ -282,19 +250,11 @@ export default function session(state = INITIAL_STATE, action) {
       };
 
     case GET_SESSIONS_DONE: {
-      const attachSessId = isAttachSessIdValid(
-        action.sessions,
-        state.attachSessId
-      )
-        ? state.attachSessId
-        : null;
+      const attachSessId = isAttachSessIdValid(action.sessions, state.attachSessId) ? state.attachSessId : null;
       return {
         ...state,
         gettingSessions: false,
-        attachSessId:
-          action.sessions && action.sessions.length > 0 && !attachSessId
-            ? action.sessions[0].id
-            : attachSessId,
+        attachSessId: (action.sessions && action.sessions.length > 0 && !attachSessId) ? action.sessions[0].id : attachSessId,
         runningAppiumSessions: action.sessions || [],
       };
     }
@@ -373,10 +333,10 @@ export default function session(state = INITIAL_STATE, action) {
           ...state.server,
           ...(action.state.server || {})
         },
-        ...omit(action.state, ["server"]),
+        ...omit(action.state, ['server']),
       };
 
     default:
-      return { ...state };
+      return {...state};
   }
 }
