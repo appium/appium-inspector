@@ -828,7 +828,7 @@ export function getRunningSessions() {
 
     try {
       const adjPath = path.endsWith("/") ? path : `${path}/`;
-      let res =
+      const res =
         username && accessKey
           ? await ky(
               `http${ssl ? "s" : ""}://${hostname}:${port}${adjPath}sessions`,
@@ -841,7 +841,6 @@ export function getRunningSessions() {
           : await ky(
               `http${ssl ? "s" : ""}://${hostname}:${port}${adjPath}sessions`
             ).json();
-      res = JSON.parse(res);
       dispatch({ type: GET_SESSIONS_DONE, sessions: res.value });
     } catch (err) {
       console.warn(`Ignoring error in getting list of active sessions: ${err}`); // eslint-disable-line no-console
