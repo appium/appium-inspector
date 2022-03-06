@@ -2,27 +2,28 @@ import React, { useEffect, useRef, useState } from 'react';
 import electron from 'electron';
 
 import { Spin } from 'antd';
-import { SCREENSHOT_INTERACTION_MODE } from '../../../renderer/components/Inspector/shared';
-import webSocketHandler from './SauceLabs/WebSocketHandler';
-import StreamScreen from './SauceLabs/StreamScreen';
-import Explanation from './SauceLabs/Explanation';
-import styles from './SauceStreamScreen.css';
+import { SCREENSHOT_INTERACTION_MODE } from '../shared';
+import webSocketHandler from './WebSocketHandler';
+import StreamScreen from './StreamScreen';
+import Explanation from './Explanation';
+import styles from './StreamScreenContainer.css';
+import Menu from './Menu';
 
-const SauceStreamScreen = ({
+const StreamScreenContainer = ({
   applyAppiumMethod,
   // needed for determining sessionId of Sauce
   driverData: {
     client: {
-      capabilities: { testobject_device_session_id = '' },
+      capabilities: { testobject_device_session_id = '', testobject_device },
     },
   },
-  serverData: { dataCenter, password, username },
+  serverData: { accessKey, dataCenter, password, username },
   deviceScreenSize,
 }) => {
-  console.log('SauceStreamScreen deviceScreenSize = ', deviceScreenSize);
   //=======
   // States
   //=======
+  const [deviceInfo, setDeviceInfo] = useState(null);
   const [clientOffsets, setClientOffsets] = useState(null);
   const [isCookieRetrieved, setIsCookieRetrieved] = useState(false);
   const [isMouseUsed, setIsMouseUsed] = useState(false);
@@ -128,11 +129,25 @@ const SauceStreamScreen = ({
   //========
   useEffect(() => {
     (async () => {
+      try {
+        const getDeviceInfoUrl = `https://api.${dataCenter}.saucelabs.com/v1/rdc/devices/${testobject_device}`;
+        const deviceResp = await fetch(getDeviceInfoUrl, {
+          method: 'get',
+          credentials: 'omit',
+          headers: {
+            Authorization: `Basic ${btoa(`${username}:${accessKey}`)}`,
+          },
+        });
+        setDeviceInfo(await deviceResp.json());
+      } catch (e) {
+        // @TODO: handle the errors
+        console.log('get device info error = ', e);
+      }
       if (password) {
         const authenticationUrl =
           'https://accounts.saucelabs.com/am/json/realms/root/realms/authtree/authenticate';
         try {
-          const response = await fetch(authenticationUrl, {
+          const authResp = await fetch(authenticationUrl, {
             method: 'post',
             credentials: 'omit',
             headers: {
@@ -142,7 +157,7 @@ const SauceStreamScreen = ({
               'Cache-Control': 'no-store',
             },
           });
-          const { tokenId } = await response.json();
+          const { tokenId } = await authResp.json();
           const cookie = {
             // Make this dc dependent
             url: `https://api.${dataCenter}.saucelabs.com`,
@@ -196,6 +211,7 @@ const SauceStreamScreen = ({
             onPointerEnter={onPointerEnter}
             onPointerLeave={onPointerLeave}
           />
+          <Menu applyAppiumMethod={applyAppiumMethod} deviceInfo={deviceInfo} />
           <Explanation />
         </div>
       ) : (
@@ -207,4 +223,4 @@ const SauceStreamScreen = ({
   );
 };
 
-export default SauceStreamScreen;
+export default StreamScreenContainer;

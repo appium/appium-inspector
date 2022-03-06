@@ -47,24 +47,12 @@ const webSocketHandler = ({
     }
     const canvas = canvasElement.current;
     const context = canvas.getContext('2d');
-    const isImageLandspace = image.width > image.height;
     const canvasWidth = deviceScreenSize.width * ratio;
     const canvasHeight = deviceScreenSize.height * ratio;
     canvas.height = canvasHeight;
     canvas.width = canvasWidth;
-    const centerX = canvasWidth / 2;
-    const centerY = canvasHeight / 2;
     context.clearRect(0, 0, canvasWidth, canvasHeight);
-
-    if (isImageLandspace) {
-      context.save();
-      context.translate(centerX, centerY);
-      context.rotate((90 * Math.PI) / 180);
-      context.drawImage(image, -centerY, -centerX, canvasHeight, canvasWidth);
-      context.restore();
-    } else {
-      context.drawImage(image, 0, 0, canvasWidth, canvasHeight);
-    }
+    context.drawImage(image, 0, 0, canvasWidth, canvasHeight);
   };
   /**
    * Create the image

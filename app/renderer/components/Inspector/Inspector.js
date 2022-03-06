@@ -32,7 +32,7 @@ import {
   GlobalOutlined,
 } from '@ant-design/icons';
 import { BUTTON } from '../../../../gui-common/components/AntdTypes';
-import SauceStreamScreen from './SauceStreamScreen';
+import StreamScreenContainer from './SauceLabs/StreamScreenContainer';
 
 const { SELECT, SWIPE, TAP } = SCREENSHOT_INTERACTION_MODE;
 
@@ -44,6 +44,8 @@ const MIN_WIDTH = 1080;
 const MIN_HEIGHT = 570;
 const MAX_SCREENSHOT_WIDTH = 500;
 
+const NATIVE_APP = 'NATIVE_APP';
+
 export default class Inspector extends Component {
   constructor() {
     super();
@@ -54,7 +56,11 @@ export default class Inspector extends Component {
       this.updateSourceTreeWidth.bind(this),
       50
     );
-    this.state = { showSauceStream: false, deviceScreenSize: null };
+    this.state = {
+      currentContext: null,
+      showSauceStream: false,
+      deviceScreenSize: null,
+    };
   }
 
   updateSourceTreeWidth() {
@@ -131,6 +137,67 @@ export default class Inspector extends Component {
     selectScreenshotInteractionMode(mode);
   }
 
+  handleClickVideoStream() {
+    const { applyClientMethod } = this.props;
+    this.setState(
+      {
+        ...this.state,
+        showSauceStream: !this.state.showSauceStream,
+      },
+      async () => {
+        /**
+         * Always check the context, if it it web it need to be set to native
+         * because the video stream uses native Appium commands
+         */
+        const context = await applyClientMethod({
+          methodName: 'getContext',
+          args: [],
+          skipRefresh: true,
+        });
+        /**
+         * Switch to native context if needed
+         */
+        if (context !== NATIVE_APP) {
+          console.log('Switch to native context if needed');
+          console.log('context = ', context);
+          await applyClientMethod({
+            methodName: 'switchContext',
+            args: [NATIVE_APP],
+            skipRefresh: true,
+          });
+        }
+        /**
+         * This is for when we get back from the stream screen to the inspector
+         * itself, we need to go back to the context we were in
+         */
+        if (this.state.currentContext && context === NATIVE_APP) {
+          console.log('This is for when we get back from the stream screen');
+          console.log(
+            'this.state.currentContext = ',
+            this.state.currentContext
+          );
+          console.log(' context =', context);
+          await applyClientMethod({
+            methodName: 'switchContext',
+            args: [this.state.currentContext],
+            skipRefresh: true,
+          });
+        }
+        this.setState({
+          ...this.state,
+          // Reset the context when it has been set previously
+          currentContext: this.state.currentContext ? null : context,
+        });
+        /**
+         * When we disable the video stream we need to refresh the source
+         */
+        if (!this.state.showSauceStream) {
+          await applyClientMethod({ methodName: 'getPageSource' });
+        }
+      }
+    );
+  }
+
   render() {
     // console.log(JSON.stringify(this.props, null, 2));
     const {
@@ -179,7 +246,7 @@ export default class Inspector extends Component {
       <>
         {showSauceStream ? (
           <div className={InspectorStyles['video-stream-main']}>
-            <SauceStreamScreen
+            <StreamScreenContainer
               applyAppiumMethod={applyClientMethod}
               driverData={driver}
               serverData={sauce}
@@ -294,15 +361,10 @@ export default class Inspector extends Component {
             />
           </Tooltip>
           {isSauceRDC && (
-            <Tooltip title={t('Sauce Labs Real Device Video')}>
+            <Tooltip title={t('Sauce Labs Real Device Video Stream')}>
               <Button
                 icon={<VideoCameraOutlined />}
-                onClick={() => {
-                  this.setState({
-                    ...this.state,
-                    showSauceStream: !showSauceStream,
-                  });
-                }}
+                onClick={this.handleClickVideoStream.bind(this)}
                 type={showSauceStream ? BUTTON.PRIMARY : BUTTON.DEFAULT}
                 disabled={!Boolean(screenshot)}
               />
@@ -376,6 +438,7 @@ export default class Inspector extends Component {
             id="btnReload"
             icon={<ReloadOutlined />}
             onClick={() => applyClientMethod({ methodName: 'getPageSource' })}
+            disabled={showSauceStream}
           />
         </Tooltip>
         {!isRecording && (

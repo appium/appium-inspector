@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
+import { SCREENSHOT_INTERACTION_MODE } from '../shared';
 import TouchDot from './TouchDot';
 import styles from './StreamScreen.css';
 
@@ -37,7 +38,6 @@ const StreamScreen = ({
    * @param {*} event
    */
   const onKeyDown = useCallback(async (event) => {
-    event.preventDefault();
     event.stopPropagation();
     const KEY_CODES = {
       backspace: 'Backspace',
@@ -73,7 +73,7 @@ const StreamScreen = ({
   useEffect(() => {
     document.addEventListener('keydown', onKeyDown);
 
-    return () => window.removeEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, [onKeyDown]);
 
   return (

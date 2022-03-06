@@ -15,7 +15,7 @@ const Explanation = () => {
     >
       <div>
         <Alert
-          message="You are watching the live video recording"
+          message="You are watching the live video streaming"
           type="info"
           showIcon
         />
