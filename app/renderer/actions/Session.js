@@ -352,13 +352,15 @@ export function newSession(caps, attachSessId = null) {
           desiredCapabilities["lt:options"].source = "appiumdesktop";
           desiredCapabilities["lt:options"].isRealMobile = true;
           if (isProxyChecked) {
-            desiredCapabilities["lt:options"].proxyUrl = `${session.server.advanced.proxy}`;
+            if(session.server.advanced.proxy == undefined) desiredCapabilities["lt:options"].proxyUrl = "";
+            else desiredCapabilities["lt:options"].proxyUrl = `${session.server.advanced.proxy}`;
           }
         } else {
           desiredCapabilities["lambdatest:source"] = "appiumdesktop";
           desiredCapabilities["lambdatest:isRealMobile"] = true;
           if (isProxyChecked) {
-            desiredCapabilities["lambdatest:proxyUrl"] = `${session.server.advanced.proxy}`;
+            if(session.server.advanced.proxy == undefined) desiredCapabilities["lambdatest:proxyUrl"] = "";
+            else desiredCapabilities["lambdatest:proxyUrl"] = `${session.server.advanced.proxy}`;
           }
         }
         accessKey =
