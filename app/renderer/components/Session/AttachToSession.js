@@ -30,6 +30,8 @@ function formatCapsLambdaTest(session) {
     caps = session.capabilities;
   } else if (session.desired) {
     caps = session.desired;
+  } else {
+    caps = session;
   }
   let importantCaps = [caps.deviceName, caps.platformName, caps.platformVersion];
   return importantCaps.join(', ').trim();
