@@ -40,21 +40,29 @@ const StreamScreen = ({
   const onKeyDown = useCallback(async (event) => {
     event.stopPropagation();
     const KEY_CODES = {
+      arrowLeft: 'ArrowLeft',
+      arrowRight: 'ArrowRight',
       backspace: 'Backspace',
       enter: 'Enter',
     };
-    // Backspace is not being picked up, see below code to check it
+    // Some special events need special codes
     if (
       event.key.length === 1 ||
       Object.values(KEY_CODES).includes(event.key)
     ) {
       let key;
       switch (event.key) {
+        case KEY_CODES.arrowLeft:
+          key = '\uE012';
+          break;
+        case KEY_CODES.arrowRight:
+          key = '\uE014';
+          break;
         case KEY_CODES.backspace:
-          key = '\b';
+          key = '\uE003';
           break;
         case KEY_CODES.enter:
-          key = '\n';
+          key = '\uE007';
           break;
         default:
           key = event.key;

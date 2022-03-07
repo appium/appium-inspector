@@ -58,8 +58,12 @@ export default class Inspector extends Component {
     );
     this.state = {
       currentContext: null,
-      showSauceStream: false,
       deviceScreenSize: null,
+      showSauceStream: false,
+      // @TODO:Temporary (?)
+      isSignedIn: false,
+      isSignInError: false,
+      password: '',
     };
   }
 
@@ -80,7 +84,6 @@ export default class Inspector extends Component {
     );
 
     if (!img) {
-      console.log('NO UPDATES');
       return;
     }
 
@@ -138,56 +141,49 @@ export default class Inspector extends Component {
   }
 
   handleClickVideoStream() {
-    const { applyClientMethod } = this.props;
+    const { applyClientMethod, appMode } = this.props;
     this.setState(
       {
         ...this.state,
         showSauceStream: !this.state.showSauceStream,
       },
       async () => {
-        /**
-         * Always check the context, if it it web it need to be set to native
-         * because the video stream uses native Appium commands
-         */
-        const context = await applyClientMethod({
-          methodName: 'getContext',
-          args: [],
-          skipRefresh: true,
-        });
-        /**
-         * Switch to native context if needed
-         */
-        if (context !== NATIVE_APP) {
-          console.log('Switch to native context if needed');
-          console.log('context = ', context);
+        let context = NATIVE_APP;
+        if (this.state.showSauceStream && appMode !== APP_MODE.NATIVE) {
+          // Store the current context in the state
+          context = await applyClientMethod({
+            methodName: 'getContext',
+            skipRefresh: true,
+          });
+          // Switch to the native context,
+          // the video stream screen can't do without it
           await applyClientMethod({
             methodName: 'switchContext',
             args: [NATIVE_APP],
             skipRefresh: true,
           });
-        }
-        /**
-         * This is for when we get back from the stream screen to the inspector
-         * itself, we need to go back to the context we were in
-         */
-        if (this.state.currentContext && context === NATIVE_APP) {
-          console.log('This is for when we get back from the stream screen');
-          console.log(
-            'this.state.currentContext = ',
-            this.state.currentContext
-          );
-          console.log(' context =', context);
+        } else if (
+          /**
+           * This is for when we get back from the stream screen to the inspector
+           * itself, we need to go back to the context we were in
+           */
+          !this.state.showSauceStream &&
+          this.state.currentContext &&
+          this.state.currentContext !== NATIVE_APP
+        ) {
           await applyClientMethod({
             methodName: 'switchContext',
             args: [this.state.currentContext],
             skipRefresh: true,
           });
         }
+
         this.setState({
           ...this.state,
           // Reset the context when it has been set previously
-          currentContext: this.state.currentContext ? null : context,
+          currentContext: context,
         });
+
         /**
          * When we disable the video stream we need to refresh the source
          */
@@ -198,8 +194,27 @@ export default class Inspector extends Component {
     );
   }
 
+  // @TODO:Temporary (?)
+  handlePasswordChange(e) {
+    this.setState({
+      ...this.state,
+      password: e.target.value,
+    });
+  }
+  setSignedIn(isSignedIn) {
+    this.setState({
+      ...this.state,
+      isSignedIn,
+    });
+  }
+  setSignInError(isSignInError) {
+    this.setState({
+      ...this.state,
+      isSignInError,
+    });
+  }
+
   render() {
-    // console.log(JSON.stringify(this.props, null, 2));
     const {
       driver,
       screenshot,
@@ -234,9 +249,10 @@ export default class Inspector extends Component {
       has(driver.client, 'capabilities') &&
       has(driver.client.capabilities, 'testobject_device');
     const { deviceScreenSize, showSauceStream } = this.state;
-    // In some cases when switching screens the new collected windowSize is null
+    // In some cases when switching screens the new collected
+    // windowSize was known and then it's null.
     // We "cache" it to the state to make sure it won't break
-    if (!isEqual(windowSize, deviceScreenSize)) {
+    if (windowSize && !isEqual(windowSize, deviceScreenSize)) {
       this.setState({
         deviceScreenSize: windowSize,
       });
@@ -249,8 +265,17 @@ export default class Inspector extends Component {
             <StreamScreenContainer
               applyAppiumMethod={applyClientMethod}
               driverData={driver}
-              serverData={sauce}
               deviceScreenSize={deviceScreenSize}
+              serverData={sauce}
+              // @TODO:Temporary (?)
+              signInData={{
+                handlePasswordChange: this.handlePasswordChange.bind(this),
+                password: this.state.password,
+                setSignedIn: this.setSignedIn.bind(this),
+                setSignInError: this.setSignInError.bind(this),
+                isSignedIn: this.state.isSignedIn,
+                isSignInError: this.state.isSignInError,
+              }}
             />
           </div>
         ) : (

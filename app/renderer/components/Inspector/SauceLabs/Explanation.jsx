@@ -19,6 +19,19 @@ const Explanation = () => {
           type="info"
           showIcon
         />
+        <span className={styles.text}>
+          Any issues related to the usage of this this screen need to be
+          submitted to the Appium Inspector project. Please provide all
+          necessary information like:
+          <ul>
+            <li>Device Name</li>
+            <li>OS version</li>
+            <li>Mobile app or browser</li>
+            <li>Data Center (US/EU)</li>
+          </ul>
+          Also mention clearly in the title and description that you are facing
+          an issue on this screen.
+        </span>
       </div>
     </Card>
   );

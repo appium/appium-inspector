@@ -31,22 +31,6 @@ export default class ServerTabSauce extends Component {
             </FormItem>
           </Col>
           <Col span={12}>
-            {
-              // This should be temporary
-            }
-            <FormItem>
-              <Input
-                id="saucePassword"
-                type={INPUT.PASSWORD}
-                addonBefore="Sauce Login Password"
-                value={server.sauce.password}
-                onChange={(e) => setServerParam('password', e.target.value)}
-              />
-            </FormItem>
-          </Col>
-        </Row>
-        <Row gutter={8}>
-          <Col span={12}>
             <FormItem>
               <Input
                 id="saucePassword"

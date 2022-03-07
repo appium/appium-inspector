@@ -12,11 +12,11 @@ import styles from './Menu.css';
  * The Sauce Real Device interaction Menu
  * @param {object} param0
  * @param {function} param0.applyAppiumMethod
- * @param {object} param0.deviceInfo
+ * @param {string} param0.platformName
  * @returns
  */
-const Menu = ({ applyAppiumMethod, deviceInfo }) => {
-  const isIOS = deviceInfo.os.toLowerCase() == 'ios';
+const Menu = ({ applyAppiumMethod, platformName }) => {
+  const isIOS = platformName.toLowerCase() == 'ios';
   const isAndroid = !isIOS;
   const ANDROID_KEYCODE = {
     HOME: 3,

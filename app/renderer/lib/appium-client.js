@@ -127,7 +127,7 @@ export default class AppiumClient {
             actions: [
               { type: 'pointerMove', duration: 0, x, y },
               { type: 'pointerDown', button: 0 },
-              { type: 'pause', duration: 150 },
+              { type: 'pause', duration: 100 },
               { type: 'pointerUp', button: 0 },
             ],
           },

@@ -2,3 +2,7 @@
   margin: 0 20px 20px 20px;
   max-width: 400px;
 }
+
+.innerExplanationContainer .text {
+  margin: 10px 0;
+}
