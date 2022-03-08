@@ -38,6 +38,7 @@ const INITIAL_STATE = {
     },
     headspin: {},
     browserstack: {},
+    lambdatest: {},
     advanced: {},
     bitbar: {},
     kobiton: {},
