@@ -118,19 +118,29 @@ const StreamScreenContainer = ({
   const getCanvasData = () => {
     // For some reason the deviceScreenSize is not always set
     if (canvasContainer.current && deviceScreenSize) {
-      const { innerHeight } = window;
+      const { innerHeight, innerWidth } = window;
       const { top, left } = canvasContainer.current.getBoundingClientRect();
       // the 12 is for a bottom space
       const canvasHeight = innerHeight - top - 12;
-      const ratio =
-        canvasHeight >= deviceScreenSize.height
-          ? 1
-          : canvasHeight / deviceScreenSize.height;
-
+      // 120 is for the menu and 440 for the explanation container
+      const canvasWidth = innerWidth - left - 120 - 440;
+      const isLandscape = deviceScreenSize.width > deviceScreenSize.height;
+      let ratio = 0.8;
+      if (isLandscape) {
+        ratio =
+          canvasWidth >= deviceScreenSize.width
+            ? 1
+            : canvasWidth / deviceScreenSize.width;
+      } else {
+        ratio =
+          canvasHeight >= deviceScreenSize.height
+            ? 1
+            : canvasHeight / deviceScreenSize.height;
+      }
       return { top, left, ratio };
     }
 
-    return { top: 0, left: 0, ratio: 0.8 };
+    return { top: 0, left: 0, ratio };
   };
   /**
    * Get and set the `sl-auth` cookie by authenticating
@@ -161,7 +171,6 @@ const StreamScreenContainer = ({
         },
       });
       const { code, tokenId } = await authResp.json();
-      console.log('status = ', status);
       if (code === 401) {
         setSignInError(true);
         setIsAuthenticating(false);
