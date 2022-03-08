@@ -386,7 +386,9 @@ export default class Inspector extends Component {
             />
           </Tooltip>
           {isSauceRDC && (
-            <Tooltip title={t('Sauce Labs Real Device Video Stream')}>
+            <Tooltip
+              title={t('Sauce Labs Real Device Interaction / Video Stream')}
+            >
               <Button
                 icon={<VideoCameraOutlined />}
                 onClick={this.handleClickVideoStream.bind(this)}

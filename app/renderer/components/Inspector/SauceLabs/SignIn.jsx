@@ -30,7 +30,10 @@ const SignIn = ({ serverData, signInData }) => {
           <input
             type="submit"
             className={styles.button}
-            onClick={() => authenticate({ username, password })}
+            onClick={(e) => {
+              e.preventDefault();
+              authenticate({ username, password });
+            }}
             value="Start Session"
           />
         </form>
