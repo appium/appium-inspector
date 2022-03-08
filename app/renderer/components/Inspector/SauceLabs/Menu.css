@@ -21,11 +21,11 @@
   background-color: #fff;
   flex-direction: column;
   justify-content: flex-start;
-  overflow: hidden;
   position: relative;
 }
 
 .row {
+  position: relative;
 }
 
 .footer {
@@ -47,4 +47,72 @@
 
 .menuButton:hover {
   color: #40a9ff;
+}
+
+.modalContainer {
+  background-color: #fff;
+  height: 170px;
+  padding: 16px;
+  width: 230px;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
+  position: absolute;
+  top: 0;
+  left: -240px;
+  z-index: 1030;
+}
+.modalHeader {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.modalDescription {
+  display: block;
+  font-size: 12px;
+  margin-top: 8px;
+}
+.uploadWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.inputFile {
+  display: none;
+}
+
+.uploadButton {
+  background-color: #1395f0;
+  color: #fff;
+  border: transparent;
+  padding: 7px 14px;
+  border-radius: 2px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+  text-align: center;
+
+  display: block;
+}
+
+.biometricsButtonsWrapper {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 16px;
+  padding-top: 16px;
+}
+
+.biometricsStatusButton {
+  align-items: center;
+  background-color: transparent;
+  border: 0;
+  outline: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  width: 64px;
 }

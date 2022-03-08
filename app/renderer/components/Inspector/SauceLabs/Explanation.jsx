@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Alert, Card } from 'antd';
 import { WarningOutlined } from '@ant-design/icons';
 import styles from './Explanation.css';
 
-const Explanation = () => {
+const Explanation = memo(() => {
   return (
     <Card
       title={
@@ -35,6 +35,6 @@ const Explanation = () => {
       </div>
     </Card>
   );
-};
+});
 
 export default Explanation;
