@@ -7,6 +7,24 @@ import Explanation from './Explanation';
 import styles from './StreamScreenContainer.css';
 import Menu from './Menu';
 
+/**
+ * The Streaming container
+ *
+ * @param {object} streamScreenContainerData
+ * @param {function} streamScreenContainerData.applyAppiumMethod
+ * @param {number} streamScreenContainerData.deviceScreenSize.height
+ * @param {number} streamScreenContainerData.deviceScreenSize.width
+ * @param {object} streamScreenContainerData.driverData
+ * @param {object} streamScreenContainerData.driverData.client
+ * @param {object} streamScreenContainerData.driverData.client.capabilities
+ * @param {string} streamScreenContainerData.driverData.client.capabilities.platformName
+ * @param {string} streamScreenContainerData.driverData.client.capabilities.testobject_device_session_id
+ * @param {object} streamScreenContainerData.serverData
+ * @param {string} streamScreenContainerData.serverData.accessKey
+ * @param {string} streamScreenContainerData.serverData.dataCenter
+ * @param {string} streamScreenContainerData.serverData.username
+ * @returns
+ */
 const StreamScreenContainer = ({
   applyAppiumMethod,
   deviceScreenSize,
@@ -99,10 +117,7 @@ const StreamScreenContainer = ({
    * Reset data when mouse is out of the canvas
    */
   const onPointerLeave = () => setIsMouseUsed(false);
-  /**
-   * Get the ratio
-   * @returns {number}
-   */
+
 
   //========
   // Effects

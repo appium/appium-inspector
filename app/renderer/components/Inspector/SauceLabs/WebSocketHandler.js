@@ -5,25 +5,25 @@ import { SAUCE_IPC_TYPES } from '../../../../main/sauce';
 /**
  * Handle the websocket connection with Sauce Labs
  *
- * @param {object} param0
- * @param {object} param0.canvasContainer
- * @param {object} param0.canvasElement
- * @param {boolean} param0.canvasLoaded
- * @param {object} param0.clientOffsets
- * @param {number} param0.clientOffsets.left
- * @param {number} param0.clientOffsets.top
- * @param {object} param0.connectionData
- * @param {string} param0.connectionData.accessKey
- * @param {string} param0.connectionData.dataCenter
- * @param {string} param0.connectionData.sessionId
- * @param {string} param0.connectionData.username
- * @param {object} param0.deviceScreenSize
- * @param {number} param0.deviceScreenSize.height
- * @param {number} param0.deviceScreenSize.width
- * @param {function} param0.setCanvasLoaded
- * @param {function} param0.setClientOffsets
- * @param {function} param0.setScaleRatio
- * @param {boolean} param0.setWsRunning
+ * @param {object} websocketHandlerData
+ * @param {object} websocketHandlerData.canvasContainer
+ * @param {object} websocketHandlerData.canvasElement
+ * @param {boolean} websocketHandlerData.canvasLoaded
+ * @param {object} websocketHandlerData.clientOffsets
+ * @param {number} websocketHandlerData.clientOffsets.left
+ * @param {number} websocketHandlerData.clientOffsets.top
+ * @param {object} websocketHandlerData.connectionData
+ * @param {string} websocketHandlerData.connectionData.accessKey
+ * @param {string} websocketHandlerData.connectionData.dataCenter
+ * @param {string} websocketHandlerData.connectionData.sessionId
+ * @param {string} websocketHandlerData.connectionData.username
+ * @param {object} websocketHandlerData.deviceScreenSize
+ * @param {number} websocketHandlerData.deviceScreenSize.height
+ * @param {number} websocketHandlerData.deviceScreenSize.width
+ * @param {function} websocketHandlerData.setCanvasLoaded
+ * @param {function} websocketHandlerData.setClientOffsets
+ * @param {function} websocketHandlerData.setScaleRatio
+ * @param {boolean} websocketHandlerData.setWsRunning
  */
 const webSocketHandler = ({
   canvasContainer,
@@ -37,8 +37,19 @@ const webSocketHandler = ({
   setScaleRatio,
   setWsRunning,
 }) => {
+  //========
+  // Methods
+  //========
+  /**
+   * Get the current canvas container data
+   *
+   * @returns {{
+   *    top: {number},
+   *    left: {number},
+   *    ratio: {number}
+   * }}
+   */
   const getCanvasData = () => {
-    // For some reason the deviceScreenSize is not always set
     if (canvasContainer.current && deviceScreenSize) {
       const { innerHeight, innerWidth } = window;
       const { top, left } = canvasContainer.current.getBoundingClientRect();
@@ -98,13 +109,11 @@ const webSocketHandler = ({
       window.URL.revokeObjectURL(image.src);
       image = null;
     };
-
     image.onerror = function (error) {
       image.onload = null;
       image.onerror = null;
       console.error('Could not load image', error);
     };
-
     image.src = window.URL.createObjectURL(blob);
   };
   /**
@@ -124,6 +133,9 @@ const webSocketHandler = ({
       console.log('handleMessage gave an error, see  = ', e);
     }
   };
+  /**
+   * Start the websocket connection in the main thread
+   */
   const runWebSocket = useCallback(() => {
     setWsRunning(false);
     ipcRenderer.send(SAUCE_IPC_TYPES.RUN_WS, {
@@ -133,6 +145,9 @@ const webSocketHandler = ({
       username,
     });
   }, []);
+  /**
+   * Parse the websocket data that comes back from the main thread
+   */
   const parseWebsocketData = useCallback(() => {
     ipcRenderer.on(SAUCE_IPC_TYPES.WS_STARTED, () => {
       console.log(`${SAUCE_IPC_TYPES.WS_STARTED} = started`);
@@ -151,6 +166,9 @@ const webSocketHandler = ({
       }
     });
   }, []);
+  /**
+   * Close the websocket in the mean thread when we leave the screen
+   */
   const closeWebsocket = useCallback(() => {
     console.log('close websocket');
     ipcRenderer.send(SAUCE_IPC_TYPES.CLOSE_WS);

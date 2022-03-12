@@ -1,5 +1,5 @@
 import React, { memo, useRef, useState } from 'react';
-import { Spin, Tooltip } from 'antd';
+import { Tooltip } from 'antd';
 import {
   AppstoreOutlined,
   ArrowLeftOutlined,
@@ -15,9 +15,10 @@ import { file } from 'electron-settings';
 
 /**
  * The Sauce Real Device interaction Menu
- * @param {object} param0
- * @param {function} param0.applyAppiumMethod
- * @param {string} param0.platformName
+ *
+ * @param {object} menuData
+ * @param {function} menuData.applyAppiumMethod
+ * @param {string} menuData.platformName
  * @returns
  */
 const Menu = memo(({ applyAppiumMethod, platformName }) => {

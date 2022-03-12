@@ -12,6 +12,16 @@ const SAUCE_IPC_TYPES = {
 
 let wss = null;
 
+/**
+ * Start the websocket and process the data
+ *
+ * @param {object} event
+ * @param {object} websocketData
+ * @param {string} websocketData.accessKey
+ * @param {string} websocketData.dataCenter
+ * @param {string} websocketData.sessionId
+ * @param {string} websocketData.username
+ */
 function runWebSocket(event, { accessKey, dataCenter, sessionId, username }) {
   const wsUrl = `wss://api.${dataCenter}.saucelabs.com/v1/rdc/socket/alternativeIo/${sessionId}`;
   wss = new WebSocket(wsUrl, {
@@ -35,6 +45,9 @@ function runWebSocket(event, { accessKey, dataCenter, sessionId, username }) {
     wss.send('n/');
   };
 }
+/**
+ * Close the websocket
+ */
 function closeWebsocket() {
   if (wss) {
     wss.close();

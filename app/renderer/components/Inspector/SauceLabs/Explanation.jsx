@@ -15,7 +15,7 @@ const Explanation = memo(() => {
     >
       <div>
         <Alert
-          message="You are watching the live video streaming"
+          message="You are watching the live video streaming of the device that you've selected. You can interact with it as if you would do in Sauce Labs Live/Manual testing."
           type="info"
           showIcon
         />
