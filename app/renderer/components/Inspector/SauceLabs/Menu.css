@@ -1,5 +1,5 @@
 .menuContainer {
-  /*NOTE: if you change these values then also change StreamScreenContainer > getCanvasData*/
+  /*NOTE: if you change these values then also change WebsocketHandler.js > getCanvasData*/
   display: flex;
   flex-direction: column;
   max-height: 30vh;

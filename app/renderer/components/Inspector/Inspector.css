@@ -373,5 +373,6 @@
 .video-stream-main {
   display: flex;
   flex: 1;
+  /*NOTE: if you change these values then also change WebsocketHandler.js > getCanvasData*/
   margin-bottom: 12px;
 }

@@ -1,40 +1,70 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect } from 'react';
+import { ipcRenderer } from 'electron';
+import { SAUCE_IPC_TYPES } from '../../../../main/sauce';
 
 /**
  * Handle the websocket connection with Sauce Labs
  *
  * @param {object} param0
+ * @param {object} param0.canvasContainer
  * @param {object} param0.canvasElement
+ * @param {boolean} param0.canvasLoaded
  * @param {object} param0.clientOffsets
  * @param {number} param0.clientOffsets.left
  * @param {number} param0.clientOffsets.top
- * @param {string} param0.dataCenter
+ * @param {object} param0.connectionData
+ * @param {string} param0.connectionData.accessKey
+ * @param {string} param0.connectionData.dataCenter
+ * @param {string} param0.connectionData.sessionId
+ * @param {string} param0.connectionData.username
  * @param {object} param0.deviceScreenSize
  * @param {number} param0.deviceScreenSize.height
  * @param {number} param0.deviceScreenSize.width
- * @param {function} param0.getCanvasData
- * @param {boolean} param0.isCookieRetrieved
+ * @param {function} param0.setCanvasLoaded
  * @param {function} param0.setClientOffsets
- * @param {number} param0.scaleRatio
  * @param {function} param0.setScaleRatio
  * @param {boolean} param0.setWsRunning
- * @param {string} param0.sessionId
  */
 const webSocketHandler = ({
+  canvasContainer,
   canvasElement,
+  connectionData: { accessKey, dataCenter, sessionId, username },
+  canvasLoaded,
   clientOffsets,
-  dataCenter,
-  getCanvasData,
-  isCookieRetrieved,
+  deviceScreenSize,
+  setCanvasLoaded,
   setClientOffsets,
   setScaleRatio,
   setWsRunning,
-  sessionId,
-  deviceScreenSize,
 }) => {
-  const wsUrl = `wss://api.${dataCenter}.saucelabs.com/v1/rdc/socket/alternativeIo/${sessionId}`;
-  const ws = useRef(null);
+  const getCanvasData = () => {
+    // For some reason the deviceScreenSize is not always set
+    if (canvasContainer.current && deviceScreenSize) {
+      const { innerHeight, innerWidth } = window;
+      const { top, left } = canvasContainer.current.getBoundingClientRect();
+      // the 12 is for a bottom space, see Inspector.css
+      const canvasHeight = innerHeight - top - 12;
+      // 120 is for the menu and 440 for the explanation container,
+      // see Explanation.css and Menu.css
+      const canvasWidth = innerWidth - left - 120 - 440;
+      const isLandscape = deviceScreenSize.width > deviceScreenSize.height;
+      let ratio = 0.8;
+      if (isLandscape) {
+        ratio =
+          canvasWidth >= deviceScreenSize.width
+            ? 1
+            : canvasWidth / deviceScreenSize.width;
+      } else {
+        ratio =
+          canvasHeight >= deviceScreenSize.height
+            ? 1
+            : canvasHeight / deviceScreenSize.height;
+      }
+      return { top, left, ratio };
+    }
 
+    return { top: 0, left: 0, ratio };
+  };
   /**
    * Render the canvas
    * @param {*} image
@@ -56,18 +86,15 @@ const webSocketHandler = ({
   };
   /**
    * Create the image
-   * @param {*} data
+   * @param {*} blob
    */
-  const renderImage = (data) => {
-    const blob = new Blob([data], { type: 'image/jpeg' });
+  const renderImage = (blob) => {
     let image = new Image();
 
     image.onload = function () {
       image.onload = null;
       image.onerror = null;
       renderCanvas(image);
-      // @TODO: check what this one does
-      // framebufferStats.update();
       window.URL.revokeObjectURL(image.src);
       image = null;
     };
@@ -79,63 +106,61 @@ const webSocketHandler = ({
     };
 
     image.src = window.URL.createObjectURL(blob);
-    ws.current.send('n/');
   };
   /**
    * Handle the WS message
    * @param {*} event
    */
-  const handleMessage = (event) => {
-    const message = event.data;
-
-    if (message instanceof Blob) {
-      renderImage(message);
+  const handleMessage = (message) => {
+    try {
+      const blob = new Blob([new Uint8Array(message).buffer], {
+        type: 'image/jpeg',
+      });
+      if (blob instanceof Blob) {
+        renderImage(blob);
+      }
+    } catch (e) {
+      // do nothing
+      console.log('handleMessage gave an error, see  = ', e);
     }
   };
-
-  /**
-   * Handle starting the WS
-   */
-  useEffect(() => {
-    if (isCookieRetrieved) {
-      ws.current = new WebSocket(wsUrl);
-      ws.current.binaryType = 'blob';
-      ws.current.onopen = () => {
-        console.log('Connected to the server');
-        setWsRunning(true);
-      };
-
-      ws.current.onclose = (e) => {
-        console.log('ws.onclose e = ', e);
-        console.log('Disconnected. Check internet or server.');
-        setWsRunning(false);
-      };
-      ws.current.onerror = (e) => {
-        // @TODO: handle error for WS
-        console.log('onerror error = ', e);
-        setWsRunning(false);
-      };
-
-      const wsCurrent = ws.current;
-
-      return () => {
-        wsCurrent.close();
-      };
-    }
-  }, [isCookieRetrieved]);
-
-  /**
-   * Handle the WS messages
-   */
-  useEffect(() => {
-    if (isCookieRetrieved) {
-      if (!ws.current) {
-        return;
+  const runWebSocket = useCallback(() => {
+    setWsRunning(false);
+    ipcRenderer.send(SAUCE_IPC_TYPES.RUN_WS, {
+      accessKey,
+      dataCenter,
+      sessionId,
+      username,
+    });
+  }, []);
+  const parseWebsocketData = useCallback(() => {
+    ipcRenderer.on(SAUCE_IPC_TYPES.WS_STARTED, () => {
+      console.log(`${SAUCE_IPC_TYPES.WS_STARTED} = started`);
+      setWsRunning(true);
+    });
+    ipcRenderer.on(SAUCE_IPC_TYPES.WS_CLOSED, () => {
+      console.log(`${SAUCE_IPC_TYPES.WS_CLOSED} = closed`);
+    });
+    ipcRenderer.on(SAUCE_IPC_TYPES.WS_ERROR, (event, wsResponse) => {
+      console.log(`${SAUCE_IPC_TYPES.WS_ERROR} = `, wsResponse);
+    });
+    ipcRenderer.on(SAUCE_IPC_TYPES.WS_MESSAGE, (event, wsResponse) => {
+      handleMessage(wsResponse);
+      if (!canvasLoaded) {
+        setCanvasLoaded(true);
       }
-      // Ran when teh app receives a message from the server
-      ws.current.onmessage = (e) => handleMessage(e);
-    }
-  }, [isCookieRetrieved]);
+    });
+  }, []);
+  const closeWebsocket = useCallback(() => {
+    console.log('close websocket');
+    ipcRenderer.send(SAUCE_IPC_TYPES.CLOSE_WS);
+  }, []);
+
+  useEffect(() => {
+    runWebSocket();
+    parseWebsocketData();
+    return () => closeWebsocket();
+  }, [runWebSocket, parseWebsocketData, closeWebsocket]);
 };
 
 export default webSocketHandler;

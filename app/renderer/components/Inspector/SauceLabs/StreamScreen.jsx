@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
+import { Spin } from 'antd';
 import { SCREENSHOT_INTERACTION_MODE } from '../shared';
 import TouchDot from './TouchDot';
 import styles from './StreamScreen.css';
@@ -25,6 +26,7 @@ const StreamScreen = ({
   applyAppiumMethod,
   canvasContainerRef,
   canvasElementRef,
+  canvasLoaded,
   handleSwipeEnd,
   handleSwipeMove,
   handleSwipeStart,
@@ -85,7 +87,7 @@ const StreamScreen = ({
   }, [onKeyDown]);
 
   return (
-    <>
+    <Spin size="large" spinning={!canvasLoaded}>
       <div className={styles.innerVideoStreamContainer}>
         <div
           ref={canvasContainerRef}
@@ -100,7 +102,7 @@ const StreamScreen = ({
           <canvas ref={canvasElementRef} />
         </div>
       </div>
-    </>
+    </Spin>
   );
 };
 

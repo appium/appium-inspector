@@ -60,10 +60,6 @@ export default class Inspector extends Component {
       currentContext: null,
       deviceScreenSize: null,
       showSauceStream: false,
-      // @TODO:Temporary (?)
-      isSignedIn: false,
-      isSignInError: false,
-      password: '',
     };
   }
 
@@ -194,26 +190,6 @@ export default class Inspector extends Component {
     );
   }
 
-  // @TODO:Temporary (?)
-  handlePasswordChange(e) {
-    this.setState({
-      ...this.state,
-      password: e.target.value,
-    });
-  }
-  setSignedIn(isSignedIn) {
-    this.setState({
-      ...this.state,
-      isSignedIn,
-    });
-  }
-  setSignInError(isSignInError) {
-    this.setState({
-      ...this.state,
-      isSignInError,
-    });
-  }
-
   render() {
     const {
       driver,
@@ -267,15 +243,6 @@ export default class Inspector extends Component {
               driverData={driver}
               deviceScreenSize={deviceScreenSize}
               serverData={sauce}
-              // @TODO:Temporary (?)
-              signInData={{
-                handlePasswordChange: this.handlePasswordChange.bind(this),
-                password: this.state.password,
-                setSignedIn: this.setSignedIn.bind(this),
-                setSignInError: this.setSignInError.bind(this),
-                isSignedIn: this.state.isSignedIn,
-                isSignInError: this.state.isSignInError,
-              }}
             />
           </div>
         ) : (
