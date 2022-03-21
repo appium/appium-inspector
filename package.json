@@ -1,6 +1,6 @@
 {
   "name": "appium-inspector",
-  "version": "2022.3.1-beta-2",
+  "version": "2022.2.1",
   "description": "An app inspector for use with an Appium server",
   "repository": {
     "type": "git",
@@ -59,8 +59,14 @@
     "mac": {
       "category": "public.app-category.developer-tools",
       "target": [
-        "dmg",
-        "zip"
+        {
+          "target": "dmg",
+          "arch": "universal"
+        },
+        {
+          "target": "zip",
+          "arch": "universal"
+        }
       ]
     },
     "dmg": {
@@ -121,7 +127,7 @@
     "ky": "Can't upgrade because newer versions are ESM and parcel tries to bundle them with require"
   },
   "dependencies": {
-    "antd": "^4.16.7",
+    "antd": "^4.18.7",
     "bluebird": "^3.5.5",
     "cheerio": "^1.0.0-rc.3",
     "connected-react-router": "^6.0.0",
