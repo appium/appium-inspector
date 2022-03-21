@@ -13,7 +13,7 @@ const { TAP, SELECT, SWIPE } = SCREENSHOT_INTERACTION_MODE;
  * Shows screenshot of running application and divs that highlight the elements' bounding boxes
  */
 class Screenshot extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.containerEl = null;
     this.state = {
@@ -27,7 +27,7 @@ class Screenshot extends Component {
   /**
    * Calculates the ratio that the image is being scaled by
    */
-  updateScaleRatio() {
+  updateScaleRatio () {
     if (this.containerEl) {
       const screenshotEl = this.containerEl.querySelector('img');
 
@@ -38,7 +38,7 @@ class Screenshot extends Component {
     }
   }
 
-  async handleScreenshotClick() {
+  async handleScreenshotClick () {
     const {
       screenshotInteractionMode,
       applyClientMethod,
@@ -65,7 +65,7 @@ class Screenshot extends Component {
     }
   }
 
-  handleMouseMove(e) {
+  handleMouseMove (e) {
     const { screenshotInteractionMode } = this.props;
     const { scaleRatio } = this.state;
 
@@ -82,7 +82,7 @@ class Screenshot extends Component {
     }
   }
 
-  handleMouseOut() {
+  handleMouseOut () {
     this.setState({
       ...this.state,
       x: null,
@@ -90,7 +90,7 @@ class Screenshot extends Component {
     });
   }
 
-  async handleDoSwipe() {
+  async handleDoSwipe () {
     const { swipeStart, swipeEnd, clearSwipeAction, applyClientMethod } =
       this.props;
     await applyClientMethod({
@@ -100,17 +100,17 @@ class Screenshot extends Component {
     clearSwipeAction();
   }
 
-  componentDidMount() {
+  componentDidMount () {
     // When DOM is ready, calculate the image scale ratio and re-calculate it whenever the window is resized
     this.updateScaleRatio();
     window.addEventListener('resize', this.updateScaleRatio);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     window.removeEventListener('resize', this.updateScaleRatio);
   }
 
-  render() {
+  render () {
     const {
       screenshot,
       methodCallInProgress,

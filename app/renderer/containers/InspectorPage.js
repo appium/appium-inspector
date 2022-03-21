@@ -4,14 +4,14 @@ import { withTranslation } from '../util';
 import * as InspectorActions from '../actions/Inspector';
 import InspectorPage from '../components/Inspector/Inspector';
 
-function mapStateToProps(state) {
+function mapStateToProps (state) {
   return {
     ...state.inspector,
     server: state.session.server,
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps (dispatch) {
   return bindActionCreators(InspectorActions, dispatch);
 }
 

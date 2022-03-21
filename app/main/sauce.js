@@ -22,7 +22,7 @@ let wss = null;
  * @param {string} websocketData.sessionId
  * @param {string} websocketData.username
  */
-function runWebSocket(event, { accessKey, dataCenter, sessionId, username }) {
+function runWebSocket (event, { accessKey, dataCenter, sessionId, username }) {
   const wsUrl = `wss://api.${dataCenter}.saucelabs.com/v1/rdc/socket/alternativeIo/${sessionId}`;
   wss = new WebSocket(wsUrl, {
     headers: {
@@ -34,7 +34,7 @@ function runWebSocket(event, { accessKey, dataCenter, sessionId, username }) {
   wss.onopen = () => {
     event.sender.send(SAUCE_IPC_TYPES.WS_STARTED);
   };
-  wss.onclose = (e) => {
+  wss.onclose = () => {
     event.sender.send(SAUCE_IPC_TYPES.WS_CLOSED);
   };
   wss.onerror = (e) => {
@@ -48,7 +48,7 @@ function runWebSocket(event, { accessKey, dataCenter, sessionId, username }) {
 /**
  * Close the websocket
  */
-function closeWebsocket() {
+function closeWebsocket () {
   if (wss) {
     wss.close();
   }

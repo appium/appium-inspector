@@ -5,7 +5,7 @@ import { INPUT } from '../../../../gui-common/components/AntdTypes';
 const FormItem = Form.Item;
 
 export default class ServerTabSauce extends Component {
-  render() {
+  render () {
     const { server, setServerParam, t } = this.props;
 
     const sauceUsernamePlaceholder = process.env.SAUCE_USERNAME

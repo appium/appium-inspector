@@ -111,10 +111,9 @@ const webSocketHandler = ({
       window.URL.revokeObjectURL(image.src);
       image = null;
     };
-    image.onerror = function (error) {
+    image.onerror = function () {
       image.onload = null;
       image.onerror = null;
-      console.error('Could not load image', error);
     };
     image.src = window.URL.createObjectURL(blob);
   };
@@ -132,6 +131,7 @@ const webSocketHandler = ({
       }
     } catch (e) {
       // do nothing
+      // eslint-disable-next-line no-console
       console.log('handleMessage gave an error, see  = ', e);
     }
   };
@@ -139,6 +139,7 @@ const webSocketHandler = ({
    * Start the websocket connection in the main thread
    */
   const runWebSocket = useCallback(() => {
+    // eslint-disable-next-line no-console
     console.log('Client websocket request = start');
     ipcRenderer.send(SAUCE_IPC_TYPES.RUN_WS, {
       accessKey,
@@ -152,14 +153,17 @@ const webSocketHandler = ({
    */
   const parseWebsocketData = useCallback(() => {
     ipcRenderer.on(SAUCE_IPC_TYPES.WS_STARTED, () => {
+      // eslint-disable-next-line no-console
       console.log('Client websocket response = started');
       setWsRunning(true);
     });
     ipcRenderer.on(SAUCE_IPC_TYPES.WS_CLOSED, () => {
+      // eslint-disable-next-line no-console
       console.log('Client websocket response = closed');
       setWsRunning(false);
     });
     ipcRenderer.on(SAUCE_IPC_TYPES.WS_ERROR, (event, wsResponse) => {
+      // eslint-disable-next-line no-console
       console.log('Client websocket response = ', wsResponse);
       setWsRunning(false);
     });
@@ -174,6 +178,7 @@ const webSocketHandler = ({
    * Close the websocket in the mean thread when we leave the screen
    */
   const closeWebsocket = useCallback(() => {
+    // eslint-disable-next-line no-console
     console.log('Client websocket request = stop');
     ipcRenderer.send(SAUCE_IPC_TYPES.CLOSE_WS);
   }, []);

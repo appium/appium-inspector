@@ -32,7 +32,7 @@ import {
   GlobalOutlined,
 } from '@ant-design/icons';
 import { BUTTON } from '../../../../gui-common/components/AntdTypes';
-import StreamScreenContainer from './SauceLabs/StreamScreenContainer';
+import StreamScreenContainer from './SauceLabs/StreamScreenContainer.jsx';
 
 const { SELECT, SWIPE, TAP } = SCREENSHOT_INTERACTION_MODE;
 
@@ -47,7 +47,7 @@ const MAX_SCREENSHOT_WIDTH = 500;
 const NATIVE_APP = 'NATIVE_APP';
 
 export default class Inspector extends Component {
-  constructor() {
+  constructor () {
     super();
     this.didInitialResize = false;
     this.screenAndSourceEl = null;
@@ -63,7 +63,7 @@ export default class Inspector extends Component {
     };
   }
 
-  updateSourceTreeWidth() {
+  updateSourceTreeWidth () {
     // the idea here is to keep track of the screenshot image width. if it has
     // too much space to the right or bottom, adjust the max-width of the
     // screenshot container so the source tree flex adjusts to always fill the
@@ -100,7 +100,7 @@ export default class Inspector extends Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     const curHeight = window.innerHeight;
     const curWidth = window.innerWidth;
     const needsResize = curHeight < MIN_HEIGHT || curWidth < MIN_WIDTH;
@@ -120,7 +120,7 @@ export default class Inspector extends Component {
     window.addEventListener('resize', this.updateSourceTreeWidth);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate () {
     const { screenshot } = this.props;
     // only update when the screenshot changed, not for any other kind of
     // update
@@ -130,7 +130,7 @@ export default class Inspector extends Component {
     }
   }
 
-  screenshotInteractionChange(mode) {
+  screenshotInteractionChange (mode) {
     const { selectScreenshotInteractionMode, clearSwipeAction } = this.props;
     clearSwipeAction(); // When the action changes, reset the swipe action
     selectScreenshotInteractionMode(mode);
@@ -138,12 +138,12 @@ export default class Inspector extends Component {
 
   /**
    * Open or close the video stream. The video stream handles "live testing"
-   * and needs to execute commands, like clicking/swiping and so on in the 
+   * and needs to execute commands, like clicking/swiping and so on in the
    * native context.
    * After opening the stream window we need to determine the context and
    * if not NATIVE_APP switch to it. Then switch back when we leave the screen
    */
-  handleClickVideoStream() {
+  handleClickVideoStream () {
     const { applyClientMethod, appMode } = this.props;
     this.setState(
       {
@@ -197,7 +197,7 @@ export default class Inspector extends Component {
     );
   }
 
-  render() {
+  render () {
     const {
       driver,
       screenshot,
@@ -361,14 +361,12 @@ export default class Inspector extends Component {
             />
           </Tooltip>
           {isSauceRDC && (
-            <Tooltip
-              title={t('sauceManualInteraction')}
-            >
+            <Tooltip title={t('sauceManualInteraction')}>
               <Button
                 icon={<VideoCameraOutlined />}
                 onClick={this.handleClickVideoStream.bind(this)}
                 type={showSauceStream ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-                disabled={!Boolean(screenshot)}
+                disabled={!screenshot}
               />
             </Tooltip>
           )}

@@ -118,7 +118,7 @@ const findElement = _.debounce(async function (
 },
 1000);
 
-export function selectElement(path) {
+export function selectElement (path) {
   return async (dispatch, getState) => {
     // Set the selected element in the source tree
     dispatch({ type: SELECT_ELEMENT, path });
@@ -152,19 +152,19 @@ export function selectElement(path) {
   };
 }
 
-export function unselectElement() {
+export function unselectElement () {
   return (dispatch) => {
     dispatch({ type: UNSELECT_ELEMENT });
   };
 }
 
-export function selectHoveredElement(path) {
+export function selectHoveredElement (path) {
   return (dispatch) => {
     dispatch({ type: SELECT_HOVERED_ELEMENT, path });
   };
 }
 
-export function unselectHoveredElement(path) {
+export function unselectHoveredElement (path) {
   return (dispatch) => {
     dispatch({ type: UNSELECT_HOVERED_ELEMENT, path });
   };
@@ -173,7 +173,7 @@ export function unselectHoveredElement(path) {
 /**
  * Requests a method call on appium
  */
-export function applyClientMethod(params) {
+export function applyClientMethod (params) {
   return async (dispatch, getState) => {
     const isRecording =
       params.methodName !== 'quit' &&
@@ -250,19 +250,19 @@ export function applyClientMethod(params) {
   };
 }
 
-export function addAssignedVarCache(varName) {
+export function addAssignedVarCache (varName) {
   return (dispatch) => {
     dispatch({ type: ADD_ASSIGNED_VAR_CACHE, varName });
   };
 }
 
-export function showSendKeysModal() {
+export function showSendKeysModal () {
   return (dispatch) => {
     dispatch({ type: SHOW_SEND_KEYS_MODAL });
   };
 }
 
-export function hideSendKeysModal() {
+export function hideSendKeysModal () {
   return (dispatch) => {
     dispatch({ type: HIDE_SEND_KEYS_MODAL });
   };
@@ -271,13 +271,13 @@ export function hideSendKeysModal() {
 /**
  * Set a value of an arbitrarily named field
  */
-export function setFieldValue(name, value) {
+export function setFieldValue (name, value) {
   return (dispatch) => {
     dispatch({ type: SET_FIELD_VALUE, name, value });
   };
 }
 
-export function setExpandedPaths(paths) {
+export function setExpandedPaths (paths) {
   return (dispatch) => {
     dispatch({ type: SET_EXPANDED_PATHS, paths });
   };
@@ -286,7 +286,7 @@ export function setExpandedPaths(paths) {
 /**
  * Quit the session and go back to the new session window
  */
-export function quitSession(reason, killedByUser = true) {
+export function quitSession (reason, killedByUser = true) {
   return async (dispatch, getState) => {
     const killAction = killKeepAliveLoop();
     killAction(dispatch, getState);
@@ -304,33 +304,33 @@ export function quitSession(reason, killedByUser = true) {
   };
 }
 
-export function startRecording() {
+export function startRecording () {
   return (dispatch) => {
     dispatch({ type: START_RECORDING });
   };
 }
 
-export function pauseRecording() {
+export function pauseRecording () {
   return (dispatch) => {
     dispatch({ type: PAUSE_RECORDING });
   };
 }
 
-export function clearRecording() {
+export function clearRecording () {
   return (dispatch) => {
     dispatch({ type: CLEAR_RECORDING });
     dispatch({ type: CLEAR_ASSIGNED_VAR_CACHE }); // Get rid of the variable cache
   };
 }
 
-export function getSavedActionFramework() {
+export function getSavedActionFramework () {
   return async (dispatch) => {
     let framework = await getSetting(SAVED_FRAMEWORK);
     dispatch({ type: SET_ACTION_FRAMEWORK, framework });
   };
 }
 
-export function setActionFramework(framework) {
+export function setActionFramework (framework) {
   return async (dispatch) => {
     if (!frameworks[framework]) {
       throw new Error(i18n.t('frameworkNotSupported', { framework }));
@@ -340,63 +340,63 @@ export function setActionFramework(framework) {
   };
 }
 
-export function recordAction(action, params) {
+export function recordAction (action, params) {
   return (dispatch) => {
     dispatch({ type: RECORD_ACTION, action, params });
   };
 }
 
-export function closeRecorder() {
+export function closeRecorder () {
   return (dispatch) => {
     dispatch({ type: CLOSE_RECORDER });
   };
 }
 
-export function toggleShowBoilerplate() {
+export function toggleShowBoilerplate () {
   return (dispatch, getState) => {
     const show = !getState().inspector.showBoilerplate;
     dispatch({ type: SET_SHOW_BOILERPLATE, show });
   };
 }
 
-export function setSessionDetails(driver, sessionDetails, mode) {
+export function setSessionDetails (driver, sessionDetails, mode) {
   return (dispatch) => {
     dispatch({ type: SET_SESSION_DETAILS, driver, sessionDetails, mode });
   };
 }
 
-export function showLocatorTestModal() {
+export function showLocatorTestModal () {
   return (dispatch) => {
     dispatch({ type: SHOW_LOCATOR_TEST_MODAL });
   };
 }
 
-export function hideLocatorTestModal() {
+export function hideLocatorTestModal () {
   return (dispatch) => {
     dispatch({ type: HIDE_LOCATOR_TEST_MODAL });
     dispatch({ type: CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS });
   };
 }
 
-export function setLocatorTestValue(locatorTestValue) {
+export function setLocatorTestValue (locatorTestValue) {
   return (dispatch) => {
     dispatch({ type: SET_LOCATOR_TEST_VALUE, locatorTestValue });
   };
 }
 
-export function setLocatorTestStrategy(locatorTestStrategy) {
+export function setLocatorTestStrategy (locatorTestStrategy) {
   return (dispatch) => {
     dispatch({ type: SET_LOCATOR_TEST_STRATEGY, locatorTestStrategy });
   };
 }
 
-export function setContext(context) {
+export function setContext (context) {
   return (dispatch) => {
     dispatch({ type: SET_CONTEXT, context });
   };
 }
 
-export function searchForElement(strategy, selector) {
+export function searchForElement (strategy, selector) {
   return async (dispatch, getState) => {
     dispatch({ type: SEARCHING_FOR_ELEMENTS });
     try {
@@ -420,7 +420,7 @@ export function searchForElement(strategy, selector) {
 /**
  * Get all the find element times based on the find data source
  */
-export function getFindElementsTimes(findDataSource) {
+export function getFindElementsTimes (findDataSource) {
   return async (dispatch, getState) => {
     dispatch({ type: GET_FIND_ELEMENTS_TIMES });
     try {
@@ -450,7 +450,7 @@ export function getFindElementsTimes(findDataSource) {
   };
 }
 
-export function findAndAssign(strategy, selector, variableName, isArray) {
+export function findAndAssign (strategy, selector, variableName, isArray) {
   return (dispatch, getState) => {
     const { assignedVarCache } = getState().inspector;
 
@@ -466,7 +466,7 @@ export function findAndAssign(strategy, selector, variableName, isArray) {
   };
 }
 
-export function setLocatorTestElement(elementId) {
+export function setLocatorTestElement (elementId) {
   return async (dispatch, getState) => {
     dispatch({ type: SET_LOCATOR_TEST_ELEMENT, elementId });
     dispatch({ type: CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS });
@@ -490,13 +490,13 @@ export function setLocatorTestElement(elementId) {
   };
 }
 
-export function clearSearchResults() {
+export function clearSearchResults () {
   return (dispatch) => {
     dispatch({ type: CLEAR_SEARCH_RESULTS });
   };
 }
 
-export function selectScreenshotInteractionMode(screenshotInteractionMode) {
+export function selectScreenshotInteractionMode (screenshotInteractionMode) {
   return (dispatch) => {
     dispatch({
       type: SET_SCREENSHOT_INTERACTION_MODE,
@@ -505,7 +505,7 @@ export function selectScreenshotInteractionMode(screenshotInteractionMode) {
   };
 }
 
-export function selectAppMode(mode) {
+export function selectAppMode (mode) {
   return async (dispatch, getState) => {
     const { appMode } = getState().inspector;
     dispatch({ type: SET_APP_MODE, mode });
@@ -517,67 +517,67 @@ export function selectAppMode(mode) {
   };
 }
 
-export function setSwipeStart(swipeStartX, swipeStartY) {
+export function setSwipeStart (swipeStartX, swipeStartY) {
   return (dispatch) => {
     dispatch({ type: SET_SWIPE_START, swipeStartX, swipeStartY });
   };
 }
 
-export function setSwipeEnd(swipeEndX, swipeEndY) {
+export function setSwipeEnd (swipeEndX, swipeEndY) {
   return (dispatch) => {
     dispatch({ type: SET_SWIPE_END, swipeEndX, swipeEndY });
   };
 }
 
-export function clearSwipeAction() {
+export function clearSwipeAction () {
   return (dispatch) => {
     dispatch({ type: CLEAR_SWIPE_ACTION });
   };
 }
 
-export function promptKeepAlive() {
+export function promptKeepAlive () {
   return (dispatch) => {
     dispatch({ type: PROMPT_KEEP_ALIVE });
   };
 }
 
-export function hideKeepAlivePrompt() {
+export function hideKeepAlivePrompt () {
   return (dispatch) => {
     dispatch({ type: HIDE_PROMPT_KEEP_ALIVE });
   };
 }
 
-export function selectActionGroup(group) {
+export function selectActionGroup (group) {
   return (dispatch) => {
     dispatch({ type: SELECT_ACTION_GROUP, group });
   };
 }
 
-export function selectSubActionGroup(group) {
+export function selectSubActionGroup (group) {
   return (dispatch) => {
     dispatch({ type: SELECT_SUB_ACTION_GROUP, group });
   };
 }
 
-export function selectInteractionMode(interaction) {
+export function selectInteractionMode (interaction) {
   return (dispatch) => {
     dispatch({ type: SELECT_INTERACTION_MODE, interaction });
   };
 }
 
-export function startEnteringActionArgs(actionName, action) {
+export function startEnteringActionArgs (actionName, action) {
   return (dispatch) => {
     dispatch({ type: ENTERING_ACTION_ARGS, actionName, action });
   };
 }
 
-export function cancelPendingAction() {
+export function cancelPendingAction () {
   return (dispatch) => {
     dispatch({ type: REMOVE_ACTION });
   };
 }
 
-export function setActionArg(index, value) {
+export function setActionArg (index, value) {
   return (dispatch) => {
     dispatch({ type: SET_ACTION_ARG, index, value });
   };
@@ -586,7 +586,7 @@ export function setActionArg(index, value) {
 /**
  * Ping server every 30 seconds to prevent `newCommandTimeout` from killing session
  */
-export function runKeepAliveLoop() {
+export function runKeepAliveLoop () {
   return (dispatch, getState) => {
     dispatch({ type: SET_LAST_ACTIVE_MOMENT, lastActiveMoment: Date.now() });
     const { driver } = getState().inspector;
@@ -620,7 +620,7 @@ export function runKeepAliveLoop() {
 /**
  * Get rid of the intervals to keep the session alive
  */
-export function killKeepAliveLoop() {
+export function killKeepAliveLoop () {
   return (dispatch, getState) => {
     const { keepAliveInterval, userWaitTimeout } = getState().inspector;
     clearInterval(keepAliveInterval);
@@ -635,7 +635,7 @@ export function killKeepAliveLoop() {
 /**
  * Reset the new command clock and kill the wait for user timeout
  */
-export function keepSessionAlive() {
+export function keepSessionAlive () {
   return (dispatch, getState) => {
     const { userWaitTimeout } = getState().inspector;
     const action = hideKeepAlivePrompt();
@@ -648,7 +648,7 @@ export function keepSessionAlive() {
   };
 }
 
-export function callClientMethod(params) {
+export function callClientMethod (params) {
   return async (dispatch, getState) => {
     console.log(`Calling client method with params:`); // eslint-disable-line no-console
     console.log(params); // eslint-disable-line no-console
@@ -681,7 +681,7 @@ export function callClientMethod(params) {
   };
 }
 
-export function setVisibleCommandResult(result, methodName) {
+export function setVisibleCommandResult (result, methodName) {
   return (dispatch) => {
     dispatch({ type: SET_VISIBLE_COMMAND_RESULT, result, methodName });
   };
