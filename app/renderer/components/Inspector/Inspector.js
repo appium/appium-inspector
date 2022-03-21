@@ -60,10 +60,6 @@ export default class Inspector extends Component {
       currentContext: null,
       deviceScreenSize: null,
       showSauceStream: false,
-      // @TODO:Temporary (?)
-      isSignedIn: false,
-      isSignInError: false,
-      password: '',
     };
   }
 
@@ -140,6 +136,13 @@ export default class Inspector extends Component {
     selectScreenshotInteractionMode(mode);
   }
 
+  /**
+   * Open or close the video stream. The video stream handles "live testing"
+   * and needs to execute commands, like clicking/swiping and so on in the 
+   * native context.
+   * After opening the stream window we need to determine the context and
+   * if not NATIVE_APP switch to it. Then switch back when we leave the screen
+   */
   handleClickVideoStream() {
     const { applyClientMethod, appMode } = this.props;
     this.setState(
@@ -192,26 +195,6 @@ export default class Inspector extends Component {
         }
       }
     );
-  }
-
-  // @TODO:Temporary (?)
-  handlePasswordChange(e) {
-    this.setState({
-      ...this.state,
-      password: e.target.value,
-    });
-  }
-  setSignedIn(isSignedIn) {
-    this.setState({
-      ...this.state,
-      isSignedIn,
-    });
-  }
-  setSignInError(isSignInError) {
-    this.setState({
-      ...this.state,
-      isSignInError,
-    });
   }
 
   render() {
@@ -267,15 +250,6 @@ export default class Inspector extends Component {
               driverData={driver}
               deviceScreenSize={deviceScreenSize}
               serverData={sauce}
-              // @TODO:Temporary (?)
-              signInData={{
-                handlePasswordChange: this.handlePasswordChange.bind(this),
-                password: this.state.password,
-                setSignedIn: this.setSignedIn.bind(this),
-                setSignInError: this.setSignInError.bind(this),
-                isSignedIn: this.state.isSignedIn,
-                isSignInError: this.state.isSignInError,
-              }}
             />
           </div>
         ) : (

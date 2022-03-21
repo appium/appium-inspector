@@ -1,9 +1,10 @@
 import i18n from './configs/i18next.config';
-import { app, BrowserWindow, Menu, webContents } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, webContents } from 'electron';
 import { installExtensions } from '../gui-common/debug';
 import { setupMainWindow } from '../gui-common/windows';
 import { rebuildMenus } from './main/menus';
 import settings from './shared/settings';
+import { closeWebsocket, runWebSocket, SAUCE_IPC_TYPES } from './main/sauce';
 
 let mainWindow = null;
 const isDev = process.env.NODE_ENV === 'development';
@@ -16,6 +17,11 @@ app.on('window-all-closed', () => {
   app.quit();
 });
 
+/**
+ * Sauce Labs Websocket for live testing
+ */
+ipcMain.on(SAUCE_IPC_TYPES.RUN_WS, runWebSocket);
+ipcMain.on(SAUCE_IPC_TYPES.CLOSE_WS, closeWebsocket);
 
 app.on('ready', async () => {
   await installExtensions();
@@ -31,7 +37,7 @@ app.on('ready', async () => {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-    }
+    },
   });
 
   const splashWindow = new BrowserWindow({
@@ -52,6 +58,6 @@ app.on('ready', async () => {
     i18n,
     rebuildMenus,
     settings,
-    webContents
+    webContents,
   });
 });

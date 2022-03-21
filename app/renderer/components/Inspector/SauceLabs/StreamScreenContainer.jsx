@@ -1,6 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import electron from 'electron';
-
+import React, { useRef, useState } from 'react';
 import { Spin } from 'antd';
 import { SCREENSHOT_INTERACTION_MODE } from '../shared';
 import webSocketHandler from './WebSocketHandler';
@@ -8,32 +6,40 @@ import StreamScreen from './StreamScreen';
 import Explanation from './Explanation';
 import styles from './StreamScreenContainer.css';
 import Menu from './Menu';
-import SignIn from './SignIn';
 
+/**
+ * The Streaming container
+ *
+ * @param {object} streamScreenContainerData
+ * @param {function} streamScreenContainerData.applyAppiumMethod
+ * @param {number} streamScreenContainerData.deviceScreenSize.height
+ * @param {number} streamScreenContainerData.deviceScreenSize.width
+ * @param {object} streamScreenContainerData.driverData
+ * @param {object} streamScreenContainerData.driverData.client
+ * @param {object} streamScreenContainerData.driverData.client.capabilities
+ * @param {string} streamScreenContainerData.driverData.client.capabilities.platformName
+ * @param {string} streamScreenContainerData.driverData.client.capabilities.testobject_device_session_id
+ * @param {object} streamScreenContainerData.serverData
+ * @param {string} streamScreenContainerData.serverData.accessKey
+ * @param {string} streamScreenContainerData.serverData.dataCenter
+ * @param {string} streamScreenContainerData.serverData.username
+ * @returns
+ */
 const StreamScreenContainer = ({
   applyAppiumMethod,
-  // needed for determining sessionId of Sauce
   deviceScreenSize,
   driverData: {
     client: {
-      capabilities: {
-        platformName,
-        testobject_device_session_id = '',
-        testobject_device,
-      },
+      capabilities: { platformName, testobject_device_session_id = '' },
     },
   },
-  serverData: { dataCenter, username },
-  // @TODO:Temporary (?)
-  signInData,
+  serverData: { accessKey, dataCenter, username },
 }) => {
-  const { isSignedIn } = signInData;
   //=======
   // States
   //=======
+  const [canvasLoaded, setCanvasLoaded] = useState(false);
   const [clientOffsets, setClientOffsets] = useState(null);
-  const [isCookieRetrieved, setIsCookieRetrieved] = useState(false);
-  const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [isMouseUsed, setIsMouseUsed] = useState(false);
   const [isTouchStarted, setIsTouchStarted] = useState(false);
   const [scaleRatio, setScaleRatio] = useState(1);
@@ -111,165 +117,60 @@ const StreamScreenContainer = ({
    * Reset data when mouse is out of the canvas
    */
   const onPointerLeave = () => setIsMouseUsed(false);
-  /**
-   * Get the ratio
-   * @returns {number}
-   */
-  const getCanvasData = () => {
-    // For some reason the deviceScreenSize is not always set
-    if (canvasContainer.current && deviceScreenSize) {
-      const { innerHeight, innerWidth } = window;
-      const { top, left } = canvasContainer.current.getBoundingClientRect();
-      // the 12 is for a bottom space
-      const canvasHeight = innerHeight - top - 12;
-      // 120 is for the menu and 440 for the explanation container
-      const canvasWidth = innerWidth - left - 120 - 440;
-      const isLandscape = deviceScreenSize.width > deviceScreenSize.height;
-      let ratio = 0.8;
-      if (isLandscape) {
-        ratio =
-          canvasWidth >= deviceScreenSize.width
-            ? 1
-            : canvasWidth / deviceScreenSize.width;
-      } else {
-        ratio =
-          canvasHeight >= deviceScreenSize.height
-            ? 1
-            : canvasHeight / deviceScreenSize.height;
-      }
-      return { top, left, ratio };
-    }
 
-    return { top: 0, left: 0, ratio };
-  };
-  /**
-   * Get and set the `sl-auth` cookie by authenticating
-   *
-   * @param {object} param0
-   * @param {string} param0.password
-   * @param {string} param0.username
-   */
-  const authenticate = async ({ password, username }) => {
-    const { setSignedIn, setSignInError } = signInData;
-    setSignInError(false);
-    if (!password || !username) {
-      return 'no-data';
-    }
-
-    setIsAuthenticating(true);
-    const authenticationUrl =
-      'https://accounts.saucelabs.com/am/json/realms/root/realms/authtree/authenticate';
-    try {
-      const authResp = await fetch(authenticationUrl, {
-        method: 'post',
-        credentials: 'omit',
-        headers: {
-          'X-OpenAM-Username': username,
-          'X-OpenAM-Password': password,
-          'x-requested-with': 'XMLHttpRequest',
-          'Cache-Control': 'no-store',
-        },
-      });
-      const { code, tokenId } = await authResp.json();
-      if (code === 401) {
-        setSignInError(true);
-        setIsAuthenticating(false);
-        return;
-      }
-      const cookie = {
-        // Make this dc dependent
-        url: `https://api.${dataCenter}.saucelabs.com`,
-        name: 'sl-auth',
-        value: tokenId,
-        domain: '.saucelabs.com',
-        path: '/',
-        expires: 'session',
-        httpOnly: true,
-        secure: true,
-        sameSite: 'no_restriction',
-      };
-      await electron.remote.session.defaultSession.cookies.set(cookie);
-      setSignedIn(true);
-      setIsAuthenticating(false);
-      setIsCookieRetrieved(true);
-    } catch (e) {
-      setSignInError(true);
-      setSignedIn(false);
-      console.log(
-        'Sauce Labs Video Stream Authentication and or cookie error = ',
-        e
-      );
-    }
-  };
 
   //========
   // Effects
   //========
-  // @TODO: Temporary disabled in favor of the authenticate method
-  // useEffect(() => {
-  //   (async () => {
-  //     if (password) {
-  //       await authenticate({ username, password });
-  //     }
-  //   })();
-  // }, []);
   /**
    * Start and handle the websocket connection and create the video stream
    */
   webSocketHandler({
+    canvasContainer,
     canvasElement,
+    canvasLoaded,
+    connectionData: {
+      accessKey,
+      dataCenter,
+      sessionId: testobject_device_session_id,
+      username,
+    },
     clientOffsets,
-    dataCenter,
     deviceScreenSize,
-    getCanvasData,
-    // @TODO: Temporary (?)
-    isCookieRetrieved: isCookieRetrieved || isSignedIn,
+    setCanvasLoaded,
     setClientOffsets,
-    scaleRatio,
     setScaleRatio,
     setWsRunning,
-    sessionId: testobject_device_session_id,
   });
 
   return (
     <>
-      {
-        // @TODO: Temporary (?)
-        !isSignedIn ? (
-          <div className={styles.sauceSpinner}>
-            <Spin size="large" spinning={isAuthenticating}>
-              <SignIn
-                serverData={{ username, password: signInData.password }}
-                signInData={{ authenticate, ...signInData }}
-              />
-            </Spin>
-          </div>
-        ) : (isSignedIn && wsRunning) || (isCookieRetrieved && wsRunning) ? (
-          <div className={styles.streamScreenContainer}>
-            <StreamScreen
-              applyAppiumMethod={applyAppiumMethod}
-              canvasContainerRef={canvasContainer}
-              canvasElementRef={canvasElement}
-              handleSwipeEnd={handleSwipeEnd}
-              handleSwipeMove={handleSwipeMove}
-              handleSwipeStart={handleSwipeStart}
-              isMouseUsed={isMouseUsed}
-              mouseCoordinates={{ xCo, yCo }}
-              onPointerEnter={onPointerEnter}
-              onPointerLeave={onPointerLeave}
-            />
-            <Menu
-              applyAppiumMethod={applyAppiumMethod}
-              platformName={platformName}
-            />
-            <Explanation />
-          </div>
-        ) : (
-          <div className={styles.sauceSpinner}>
-            <Spin size="large" />
-          </div>
-        )
-      }
+      {wsRunning ? (
+        <div className={styles.streamScreenContainer}>
+          <StreamScreen
+            applyAppiumMethod={applyAppiumMethod}
+            canvasContainerRef={canvasContainer}
+            canvasElementRef={canvasElement}
+            canvasLoaded={canvasLoaded}
+            handleSwipeEnd={handleSwipeEnd}
+            handleSwipeMove={handleSwipeMove}
+            handleSwipeStart={handleSwipeStart}
+            isMouseUsed={isMouseUsed}
+            mouseCoordinates={{ xCo, yCo }}
+            onPointerEnter={onPointerEnter}
+            onPointerLeave={onPointerLeave}
+          />
+          <Menu
+            applyAppiumMethod={applyAppiumMethod}
+            platformName={platformName}
+          />
+          <Explanation />
+        </div>
+      ) : (
+        <div className={styles.sauceSpinner}>
+          <Spin size="large" />
+        </div>
+      )}
     </>
   );
 };

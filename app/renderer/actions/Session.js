@@ -564,16 +564,19 @@ export function newSession(caps, attachSessId = null) {
 
     // pass some state to the inspector that it needs to build recorder
     // code boilerplate
-    const action = setSessionDetails(driver, {
-      desiredCapabilities,
-      host,
-      port,
-      path,
-      username,
-      accessKey,
-      https,
-    },
-      mode);
+    const action = setSessionDetails(
+      driver,
+      {
+        desiredCapabilities,
+        host,
+        port,
+        path,
+        username,
+        accessKey,
+        https,
+      },
+      mode
+    );
     action(dispatch);
     dispatch(push('/inspector'));
   };

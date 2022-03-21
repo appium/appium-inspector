@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
+import { Spin } from 'antd';
 import { SCREENSHOT_INTERACTION_MODE } from '../shared';
 import TouchDot from './TouchDot';
 import styles from './StreamScreen.css';
@@ -6,25 +7,26 @@ import styles from './StreamScreen.css';
 /**
  * The video streaming screen
  *
- * @param {object} param0
- * @param {function} param0.applyAppiumMethod
- * @param {object} param0.canvasContainerRef
- * @param {object} param0.canvasElementRef
- * @param {function} param0.handleSwipeEnd
- * @param {function} param0.handleSwipeMove
- * @param {function} param0.handleSwipeStart
- * @param {object} param0.isMouseUsed
- * @param {object} param0.mouseCoordinates
- * @param {object} param0.mouseCoordinates.xCo
- * @param {object} param0.mouseCoordinates.yCo
- * @param {function} param0.onPointerEnter
- * @param {function} param0.onPointerLeave
+ * @param {object} streamScreenData
+ * @param {function} streamScreenData.applyAppiumMethod
+ * @param {object} streamScreenData.canvasContainerRef
+ * @param {object} streamScreenData.canvasElementRef
+ * @param {function} streamScreenData.handleSwipeEnd
+ * @param {function} streamScreenData.handleSwipeMove
+ * @param {function} streamScreenData.handleSwipeStart
+ * @param {object} streamScreenData.isMouseUsed
+ * @param {object} streamScreenData.mouseCoordinates
+ * @param {object} streamScreenData.mouseCoordinates.xCo
+ * @param {object} streamScreenData.mouseCoordinates.yCo
+ * @param {function} streamScreenData.onPointerEnter
+ * @param {function} streamScreenData.onPointerLeave
  * @returns
  */
 const StreamScreen = ({
   applyAppiumMethod,
   canvasContainerRef,
   canvasElementRef,
+  canvasLoaded,
   handleSwipeEnd,
   handleSwipeMove,
   handleSwipeStart,
@@ -85,7 +87,7 @@ const StreamScreen = ({
   }, [onKeyDown]);
 
   return (
-    <>
+    <Spin size="large" spinning={!canvasLoaded}>
       <div className={styles.innerVideoStreamContainer}>
         <div
           ref={canvasContainerRef}
@@ -100,7 +102,7 @@ const StreamScreen = ({
           <canvas ref={canvasElementRef} />
         </div>
       </div>
-    </>
+    </Spin>
   );
 };
 
