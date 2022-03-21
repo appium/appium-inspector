@@ -23,6 +23,7 @@ import Menu from './Menu';
  * @param {string} streamScreenContainerData.serverData.accessKey
  * @param {string} streamScreenContainerData.serverData.dataCenter
  * @param {string} streamScreenContainerData.serverData.username
+ * @param {object} translation
  * @returns
  */
 const StreamScreenContainer = ({
@@ -34,6 +35,7 @@ const StreamScreenContainer = ({
     },
   },
   serverData: { accessKey, dataCenter, username },
+  translation,
 }) => {
   //=======
   // States
@@ -118,7 +120,6 @@ const StreamScreenContainer = ({
    */
   const onPointerLeave = () => setIsMouseUsed(false);
 
-
   //========
   // Effects
   //========
@@ -163,8 +164,9 @@ const StreamScreenContainer = ({
           <Menu
             applyAppiumMethod={applyAppiumMethod}
             platformName={platformName}
+            translation={translation}
           />
-          <Explanation />
+          <Explanation translation={translation} />
         </div>
       ) : (
         <div className={styles.sauceSpinner}>

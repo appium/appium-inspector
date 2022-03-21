@@ -11,7 +11,6 @@ import {
   MenuOutlined,
 } from '@ant-design/icons';
 import styles from './Menu.css';
-import { file } from 'electron-settings';
 
 /**
  * The Sauce Real Device interaction Menu
@@ -19,9 +18,10 @@ import { file } from 'electron-settings';
  * @param {object} menuData
  * @param {function} menuData.applyAppiumMethod
  * @param {string} menuData.platformName
+ * @param {object} translation
  * @returns
  */
-const Menu = memo(({ applyAppiumMethod, platformName }) => {
+const Menu = memo(({ applyAppiumMethod, platformName, translation }) => {
   const isIOS = platformName.toLowerCase() == 'ios';
   const isAndroid = !isIOS;
   const ANDROID_KEYCODE = {
@@ -91,9 +91,11 @@ const Menu = memo(({ applyAppiumMethod, platformName }) => {
   const CameraInjectionModal = () => {
     return (
       <div className={styles.modalContainer}>
-        <span className={styles.modalHeader}>Camera Injection</span>
+        <span className={styles.modalHeader}>
+          {translation('sauceMenuCameraInjectionLabel')}
+        </span>
         <span className={styles.modalDescription}>
-          Choose an image to upload (png or jpg, maximum file size 5MB).
+          {translation('sauceMenuCameraInjectionDescription')}
         </span>
 
         <div className={styles.uploadWrapper}>
@@ -110,7 +112,7 @@ const Menu = memo(({ applyAppiumMethod, platformName }) => {
             onClick={handleUploadImageButton}
             disabled={imageProcessing}
           >
-            Choose Image
+            {translation('sauceMenuCameraInjectionButton')}
           </button>
         </div>
       </div>
@@ -141,9 +143,11 @@ const Menu = memo(({ applyAppiumMethod, platformName }) => {
   const BiometricsModal = () => {
     return (
       <div className={styles.modalContainer}>
-        <span className={styles.modalHeader}>Biometric Authentication</span>
+        <span className={styles.modalHeader}>
+          {translation('sauceMenuBiometricsLabel')}
+        </span>
         <span className={styles.modalDescription}>
-          Choose a response for fingerprint or face recognition.
+          {translation('sauceMenuBiometricsDescription')}
         </span>
 
         <div className={styles.biometricsButtonsWrapper}>
@@ -154,7 +158,7 @@ const Menu = memo(({ applyAppiumMethod, platformName }) => {
             disabled={imageProcessing}
           >
             <CheckOutlined style={{ color: '#008000', fontSize: 22 }} />
-            Pass
+            {translation('sauceMenuCameraInjectionButtonPass')}
           </button>
           <button
             className={styles.biometricsStatusButton}
@@ -163,7 +167,7 @@ const Menu = memo(({ applyAppiumMethod, platformName }) => {
             disabled={imageProcessing}
           >
             <CloseOutlined style={{ color: '#FF0000', fontSize: 22 }} />
-            Fail
+            {translation('sauceMenuCameraInjectionButtonFail')}
           </button>
         </div>
       </div>
@@ -174,20 +178,20 @@ const Menu = memo(({ applyAppiumMethod, platformName }) => {
     <>
       <div className={styles.menuContainer}>
         <div className={styles.header}>
-          <Tooltip title="Device Menu">
+          <Tooltip title={translation('sauceMenuDescription')}>
             <MenuOutlined />
           </Tooltip>
         </div>
         <div className={styles.content}>
           <div className={styles.row}>
-            <Tooltip title="Device Home Button">
+            <Tooltip title={translation('sauceMenuHomeButton')}>
               <button className={styles.menuButton} onClick={pressHomeButton}>
                 <HomeOutlined />
               </button>
             </Tooltip>
             {isAndroid && (
               <>
-                <Tooltip title="Device Back Button">
+                <Tooltip title={translation('sauceMenuBackButton')}>
                   <button
                     className={styles.menuButton}
                     onClick={pressBackButton}
@@ -195,7 +199,7 @@ const Menu = memo(({ applyAppiumMethod, platformName }) => {
                     <ArrowLeftOutlined />
                   </button>
                 </Tooltip>
-                <Tooltip title="Device Recent App Button">
+                <Tooltip title={translation('sauceMenuRecentAppButton')}>
                   <button
                     className={styles.menuButton}
                     onClick={pressRecentAppsButton}
@@ -207,7 +211,7 @@ const Menu = memo(({ applyAppiumMethod, platformName }) => {
             )}
           </div>
           <div className={styles.row}>
-            <Tooltip title="Camera Injection">
+            <Tooltip title={translation('sauceMenuCameraInjectionLabel')}>
               <button
                 className={styles.menuButton}
                 onClick={openCameraInjectionModal}
@@ -215,7 +219,7 @@ const Menu = memo(({ applyAppiumMethod, platformName }) => {
                 <CameraOutlined />
               </button>
             </Tooltip>
-            <Tooltip title="Biometrics Authentication">
+            <Tooltip title={translation('sauceMenuBiometricsLabel')}>
               <button
                 className={styles.menuButton}
                 onClick={handleBiometricsButton}

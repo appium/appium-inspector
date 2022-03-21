@@ -81,19 +81,21 @@ const webSocketHandler = ({
    * @param {*} image
    */
   const renderCanvas = (image) => {
-    const { left, ratio, top } = getCanvasData();
-    setScaleRatio(ratio);
-    if (!clientOffsets) {
-      setClientOffsets({ left, top });
-    }
     const canvas = canvasElement.current;
-    const context = canvas.getContext('2d');
-    const canvasWidth = deviceScreenSize.width * ratio;
-    const canvasHeight = deviceScreenSize.height * ratio;
-    canvas.height = canvasHeight;
-    canvas.width = canvasWidth;
-    context.clearRect(0, 0, canvasWidth, canvasHeight);
-    context.drawImage(image, 0, 0, canvasWidth, canvasHeight);
+    if (canvas) {
+      const { left, ratio, top } = getCanvasData();
+      setScaleRatio(ratio);
+      if (!clientOffsets) {
+        setClientOffsets({ left, top });
+      }
+      const context = canvas.getContext('2d');
+      const canvasWidth = deviceScreenSize.width * ratio;
+      const canvasHeight = deviceScreenSize.height * ratio;
+      canvas.height = canvasHeight;
+      canvas.width = canvasWidth;
+      context.clearRect(0, 0, canvasWidth, canvasHeight);
+      context.drawImage(image, 0, 0, canvasWidth, canvasHeight);
+    }
   };
   /**
    * Create the image
@@ -137,7 +139,7 @@ const webSocketHandler = ({
    * Start the websocket connection in the main thread
    */
   const runWebSocket = useCallback(() => {
-    setWsRunning(false);
+    console.log('Client websocket request = start');
     ipcRenderer.send(SAUCE_IPC_TYPES.RUN_WS, {
       accessKey,
       dataCenter,
@@ -150,14 +152,16 @@ const webSocketHandler = ({
    */
   const parseWebsocketData = useCallback(() => {
     ipcRenderer.on(SAUCE_IPC_TYPES.WS_STARTED, () => {
-      console.log(`${SAUCE_IPC_TYPES.WS_STARTED} = started`);
+      console.log('Client websocket response = started');
       setWsRunning(true);
     });
     ipcRenderer.on(SAUCE_IPC_TYPES.WS_CLOSED, () => {
-      console.log(`${SAUCE_IPC_TYPES.WS_CLOSED} = closed`);
+      console.log('Client websocket response = closed');
+      setWsRunning(false);
     });
     ipcRenderer.on(SAUCE_IPC_TYPES.WS_ERROR, (event, wsResponse) => {
-      console.log(`${SAUCE_IPC_TYPES.WS_ERROR} = `, wsResponse);
+      console.log('Client websocket response = ', wsResponse);
+      setWsRunning(false);
     });
     ipcRenderer.on(SAUCE_IPC_TYPES.WS_MESSAGE, (event, wsResponse) => {
       handleMessage(wsResponse);
@@ -170,7 +174,7 @@ const webSocketHandler = ({
    * Close the websocket in the mean thread when we leave the screen
    */
   const closeWebsocket = useCallback(() => {
-    console.log('close websocket');
+    console.log('Client websocket request = stop');
     ipcRenderer.send(SAUCE_IPC_TYPES.CLOSE_WS);
   }, []);
 

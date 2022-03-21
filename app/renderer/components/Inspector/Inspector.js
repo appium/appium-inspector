@@ -250,6 +250,7 @@ export default class Inspector extends Component {
               driverData={driver}
               deviceScreenSize={deviceScreenSize}
               serverData={sauce}
+              translation={t}
             />
           </div>
         ) : (
@@ -361,7 +362,7 @@ export default class Inspector extends Component {
           </Tooltip>
           {isSauceRDC && (
             <Tooltip
-              title={t('Sauce Labs Real Device Interaction / Video Stream')}
+              title={t('sauceManualInteraction')}
             >
               <Button
                 icon={<VideoCameraOutlined />}
