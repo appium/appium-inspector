@@ -10,7 +10,7 @@ Appium Inspector now allows you switch between getting the source code with Appi
 
   ![Appium Inspector screenshot](./inspector-window-sauce.png)
 
-- A new screen will be shown as seen below. In this screen you can interact with the device to get to the screen/state you want to go without manually interacting with your app as you would normally do with Appium Inspector. This will save you a lot of time.
+- A new screen will be shown as seen below. In this screen you can interact with the device (with gestures or even with the keyboard by just start typing when an input field has focus) to get to the screen/state you want to go without manually interacting with your app as you would normally do with Appium Inspector. This will save you a lot of time.
 
   When you hover over the screen of the device you will see that you mouse will change into an orange dot, which mimics your finger.
 
