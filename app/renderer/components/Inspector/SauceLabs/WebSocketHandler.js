@@ -50,6 +50,7 @@ const webSocketHandler = ({
    * }}
    */
   const getCanvasData = () => {
+    let ratio = 0.8;
     if (canvasContainer.current && deviceScreenSize) {
       const { innerHeight, innerWidth } = window;
       const { top, left } = canvasContainer.current.getBoundingClientRect();
@@ -59,7 +60,6 @@ const webSocketHandler = ({
       // see Explanation.css and Menu.css
       const canvasWidth = innerWidth - left - 120 - 440;
       const isLandscape = deviceScreenSize.width > deviceScreenSize.height;
-      let ratio = 0.8;
       if (isLandscape) {
         ratio =
           canvasWidth >= deviceScreenSize.width
