@@ -20,6 +20,7 @@ import styles from './StreamScreen.css';
  * @param {object} streamScreenData.mouseCoordinates.yCo
  * @param {function} streamScreenData.onPointerEnter
  * @param {function} streamScreenData.onPointerLeave
+ * @param {string} streamScreenData.platformName
  * @returns
  */
 const StreamScreen = ({
@@ -34,7 +35,9 @@ const StreamScreen = ({
   mouseCoordinates: { xCo, yCo },
   onPointerEnter,
   onPointerLeave,
+  platformName,
 }) => {
+  const isIOS = platformName.toLowerCase() == 'ios';
   /**
    * Handle the keyDown event
    * @param {*} event
@@ -61,10 +64,10 @@ const StreamScreen = ({
           key = '\uE014';
           break;
         case KEY_CODES.backspace:
-          key = '\uE003';
+          key = isIOS ? '\b' : '\uE003';
           break;
         case KEY_CODES.enter:
-          key = '\uE007';
+          key = isIOS ? '\n' : '\uE007';
           break;
         default:
           key = event.key;

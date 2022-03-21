@@ -160,6 +160,7 @@ const StreamScreenContainer = ({
             mouseCoordinates={{ xCo, yCo }}
             onPointerEnter={onPointerEnter}
             onPointerLeave={onPointerLeave}
+            platformName={platformName}
           />
           <Menu
             applyAppiumMethod={applyAppiumMethod}
