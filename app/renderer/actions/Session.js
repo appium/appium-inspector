@@ -342,7 +342,7 @@ export function newSession(caps, attachSessId = null) {
         https = session.server.browserstack.ssl = parseInt(port, 10) === 443;
         break;
       case ServerTypes.lambdatest:
-        host = session.server.lambdatest.hostname = process.env.LAMBDATEST_HOST || "beta-hub.lambdatest.com";
+        host = session.server.lambdatest.hostname = process.env.LAMBDATEST_HOST || "mobile-hub.lambdatest.com";
         port = session.server.lambdatest.port = process.env.LAMBDATEST_PORT || 443;
         path = session.server.lambdatest.path = "/wd/hub";
         const isProxyChecked = session.server.advanced.useProxy;
@@ -362,9 +362,7 @@ export function newSession(caps, attachSessId = null) {
             else desiredCapabilities["lambdatest:proxyUrl"] = `${session.server.advanced.proxy}`;
           }
         }
-        accessKey =
-          session.server.lambdatest.accessKey ||
-          process.env.LAMBDATEST_ACCESS_KEY;
+        accessKey = session.server.lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
         if (!username || !accessKey) {
           notification.error({
             message: i18n.t("Error"),
