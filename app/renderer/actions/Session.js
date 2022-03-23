@@ -362,9 +362,7 @@ export function newSession(caps, attachSessId = null) {
             else desiredCapabilities["lambdatest:proxyUrl"] = `${session.server.advanced.proxy}`;
           }
         }
-        accessKey =
-          session.server.lambdatest.accessKey ||
-          process.env.LAMBDATEST_ACCESS_KEY;
+        accessKey = session.server.lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
         if (!username || !accessKey) {
           notification.error({
             message: i18n.t("Error"),
