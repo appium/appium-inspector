@@ -12,7 +12,7 @@ Appium Inspector is basically just an Appium client (like WebdriverIO, Appium's 
 
 This version of Appium Inspector is designed to work with Appium 2.0 as a default. So if you are migrating from Appium Desktop (which is designed to work with Appium 1.x as a default), you need to be aware of some changes:
 
-- The default remote server path has changed from `/wd/hub` to `/` to reflect Appium 2.0's default server path. If you're using Appium Inspector with an Appium 1.x server, you'll likely need to update the path information in the New Session form back to `/wd/hub`.
+* The default remote server path has changed from `/wd/hub` to `/` to reflect Appium 2.0's default server path. If you're using Appium Inspector with an Appium 1.x server, you'll likely need to update the path information in the New Session form back to `/wd/hub`.
 
 ## Installation
 
@@ -25,43 +25,43 @@ Both apps have the exact same set of features, so you might find that simply ope
 
 ### Installing on macOS
 
-If you're using the desktop app on macOS, when you run it you will likely be greeted with some error about the app not being able to be opened, or not verified by Apple, or something similar. The easiest way to get around this is to run `xattr -cr` on the file you downloaded. So let's say you downloaded `appium-inspector.dmg`. Then you would run `xattr -cr appium-inspector.dmg` before opening the disk image. The same goes for the zip version (or the .app itself).
+If you're using the desktop app on macOS, when you run it you will likely be greeted with some error about the app not being able to be opened, or not verified by Apple, or something similar. The easiest way to get around this is to run `xattr -cr` on the file you downloaded. So let's say you downloaded `appium-inspector.dmg` and copy `Appium Inspector.app` in `/Applications` inside the disk image. Then you would run `xattr -cr "/Applications/Appium Inspector.app"` before opening it. The same goes for the zip version (or the .app itself).
 
 The reason for this is that the Appium team does not have a paid Apple developer account and so our app isn't signed by a certificate they recognize, so the OS attempts to prevent it from running. Running the command above gets around this security limitation.
 
 ## Features
 
-- Easily define Appium server connection details and set up capabilities
-- Save server details and capability sets for future sessions
-- Connect to a variety of cloud Appium platforms
-- Attach to an existing Appium session via its ID
-- Inspect the screenshot and source of a mobile app. (This inspector is designed to work with iOS and Android. Other Appium platforms might also work, but they probably won't without some updates to the code here. PRs welcome!)
-- Select elements via clicking on them in the screenshot
-- Interact with elements (click, send keys, clear)
-- Get a list of suggested element locator strategies and selectors to be used in your scripts
-- Compare the speed of different element finding strategies
-- Start and stop "recording" mode, which translates your actions in the Inspector to code samples you can use in your scripts
-- Tap on the screen at an arbitrary location
-- Perform a swipe gesture
-- Switch into web context modes and interact with web elements
-- Test out your own locator strategies
-- Access a huge library of Appium actions to run with a simple click, including providing your own parameters
+* Easily define Appium server connection details and set up capabilities
+* Save server details and capability sets for future sessions
+* Connect to a variety of cloud Appium platforms
+* Attach to an existing Appium session via its ID
+* Inspect the screenshot and source of a mobile app. (This inspector is designed to work with iOS and Android. Other Appium platforms might also work, but they probably won't without some updates to the code here. PRs welcome!)
+* Select elements via clicking on them in the screenshot
+* Interact with elements (click, send keys, clear)
+* Get a list of suggested element locator strategies and selectors to be used in your scripts
+* Compare the speed of different element finding strategies
+* Start and stop "recording" mode, which translates your actions in the Inspector to code samples you can use in your scripts
+* Tap on the screen at an arbitrary location
+* Perform a swipe gesture
+* Switch into web context modes and interact with web elements
+* Test out your own locator strategies
+* Access a huge library of Appium actions to run with a simple click, including providing your own parameters
 
 ### Supported cloud platforms
 
-| Platform                                  | Docs                                                                                   |
-| ----------------------------------------- | -------------------------------------------------------------------------------------- |
-| [Sauce Labs](https://saucelabs.com)       | [Documentation](https://wiki.saucelabs.com/)                                           |
-| [HeadSpin](https://headspin.io)           | [Documentation](https://headspin.io/)                                                  |
-| [Browserstack](https://browserstack.com)  | [Documentation](https://www.browserstack.com/docs)                                     |
-| [Lambdatest](https://www.lambdatest.com/) | [Documentation](https://www.lambdatest.com/support/docs/appium-inspector-integration/) |
-| [Bitbar](https://bitbar.com)              | [Documentation](http://docs.bitbar.com/)                                               |
-| [Kobiton](https://kobiton.com)            | [Documentation](https://docs.kobiton.com/)                                             |
-| [Perfecto](https://www.perfecto.io)       | [Documentation](https://developers.perfectomobile.com/display/PD/Appium)               |
-| [Pcloudy](https://www.pcloudy.com)        | [Documentation](https://www.pcloudy.com/mobile-application-testing-documentation)      |
-| [TestingBot](https://testingbot.com)      | [Documentation](https://testingbot.com/support)                                        |
-| [Experitest](http://www.experitest.com)   | [Documentation](https://docs.experitest.com/display/TE/Appium)                         |
-| [Robotic.mobi](https://www.robotic.mobi)  | [Documentation](https://robotic.mobi/appium-remote)                                    |
+|     Platform     | Docs
+| ---------------- | ------|
+| [Sauce Labs](https://saucelabs.com) | [Documentation](https://wiki.saucelabs.com/)            |
+| [HeadSpin](https://headspin.io) | [Documentation](https://headspin.io/)                 |
+| [Browserstack](https://browserstack.com) | [Documentation](https://www.browserstack.com/docs) |
+| [Lambdatest](https://lambdatest.com) | [Documentation](https://www.lambdatest.com/support/docs/appium-inspector-integration) |
+| [Bitbar](https://bitbar.com) | [Documentation](http://docs.bitbar.com/)                       |
+| [Kobiton](https://kobiton.com) | [Documentation](https://docs.kobiton.com/)                       |
+| [Perfecto](https://www.perfecto.io) | [Documentation](https://developers.perfectomobile.com/display/PD/Appium) |
+| [Pcloudy](https://www.pcloudy.com) | [Documentation](https://www.pcloudy.com/mobile-application-testing-documentation) |
+| [TestingBot](https://testingbot.com) | [Documentation](https://testingbot.com/support) |
+| [Experitest](http://www.experitest.com) | [Documentation](https://docs.experitest.com/display/TE/Appium) |
+| [Robotic.mobi](https://www.robotic.mobi) | [Documentation](https://robotic.mobi/appium-remote) |
 
 ## Requirements
 
@@ -96,14 +96,14 @@ Want to help us develop this app? We'd love it! Getting set up to do development
 
 From here, have a look at the `scripts` field of our package.json to see what kind of dev scripts you might want to run. Some of the most useful are:
 
-- `npm test`: run basic lint and unit tests
-- `npm e2e`: run E2E tests
-- `npm run dev`: run the app in dev mode (will refresh when you make code changes)
-- `npm run build`: build the production version of the app into `dist/`
-- `npm run build:browser`: build a version of the app for web browsers into `dist-browser/`
-- `npm run start`: start the production version of the app
-- `npm run clean`: remove all caches and node modules and reinstall everything
-- `npx electron-builder build --publish never`: package the app for your platform (into `release/`). Note that for macOS this requires code signing environment variables to be set.
+* `npm test`: run basic lint and unit tests
+* `npm e2e`: run E2E tests
+* `npm run dev`: run the app in dev mode (will refresh when you make code changes)
+* `npm run build`: build the production version of the app into `dist/`
+* `npm run build:browser`: build a version of the app for web browsers  into `dist-browser/`
+* `npm run start`: start the production version of the app
+* `npm run clean`: remove all caches and node modules and reinstall everything
+* `npx electron-builder build --publish never`: package the app for your platform (into `release/`). Note that for macOS this requires code signing environment variables to be set.
 
 ### Shared components and utilities
 
