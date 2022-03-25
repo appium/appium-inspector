@@ -17,13 +17,12 @@ export default class AdvancedServerParams extends Component {
           <Collapse bordered={true}>
             <Panel header={t('Advanced Settings')}>
               <Row>
-                {
-                  serverType !== "lambdatest" && 
+                {serverType !== "lambdatest" && 
                 <Col span={6}>
                   <FormItem>
                     <Checkbox checked={!!server.advanced.allowUnauthorized} onChange={(e) => setServerParam('allowUnauthorized', e.target.checked, 'advanced')}>{t('allowUnauthorizedCerts')}</Checkbox>
                   </FormItem>
-                </Col> }
+                </Col>}
                 <Col span={4}>
                   <FormItem>
                     <Checkbox checked={!!server.advanced.useProxy} onChange={(e) => setServerParam('useProxy', e.target.checked, 'advanced')}>{t('Use Proxy')}</Checkbox>
