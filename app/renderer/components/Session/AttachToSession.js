@@ -25,7 +25,7 @@ function formatCapsBrowserstack (caps) {
 }
 
 function formatCapsLambdaTest (session) {
-  let caps; 
+  let caps;
   if (session.capabilities) {
     caps = session.capabilities;
   } else if (session.desired) {
