@@ -215,7 +215,6 @@ export function newSession (caps, attachSessId = null) {
 
     let desiredCapabilities = caps ? getCapsObject(caps) : {};
     let host, port, username, accessKey, https, path, token;
-    let isProxyChecked;
     desiredCapabilities = addCustomCaps(desiredCapabilities);
 
     switch (session.serverType) {
@@ -315,27 +314,18 @@ export function newSession (caps, attachSessId = null) {
         host = session.server.lambdatest.hostname = process.env.LAMBDATEST_HOST || 'mobile-hub.lambdatest.com';
         port = session.server.lambdatest.port = process.env.LAMBDATEST_PORT || 443;
         path = session.server.lambdatest.path = '/wd/hub';
-        isProxyChecked = session.server.advanced.useProxy;
         username = session.server.lambdatest.username || process.env.LAMBDATEST_USERNAME;
         if (desiredCapabilities.hasOwnProperty.call(desiredCapabilities, 'lt:options')) {
           desiredCapabilities['lt:options'].source = 'appiumdesktop';
           desiredCapabilities['lt:options'].isRealMobile = true;
-          if (isProxyChecked) {
-            if (session.server.advanced.proxy === undefined) {
-              desiredCapabilities['lt:options'].proxyUrl = '';
-            } else {
-              desiredCapabilities['lt:options'].proxyUrl = `${session.server.advanced.proxy}`;
-            }
+          if (session.server.advanced.useProxy) {
+            desiredCapabilities['lt:options'].proxyUrl = isUndefined(session.server.advanced.proxy) ? '' : session.server.advanced.proxy;
           }
         } else {
           desiredCapabilities['lambdatest:source'] = 'appiumdesktop';
           desiredCapabilities['lambdatest:isRealMobile'] = true;
-          if (isProxyChecked) {
-            if (session.server.advanced.proxy === undefined) {
-              desiredCapabilities['lambdatest:proxyUrl'] = '';
-            } else {
-              desiredCapabilities['lambdatest:proxyUrl'] = `${session.server.advanced.proxy}`;
-            }
+          if (session.server.advanced.useProxy) {
+            desiredCapabilities['lambdatest:proxyUrl'] = isUndefined(session.server.advanced.proxy) ? '' : session.server.advanced.proxy;
           }
         }
         accessKey = session.server.lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
