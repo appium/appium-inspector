@@ -310,6 +310,35 @@ export function newSession (caps, attachSessId = null) {
         }
         https = session.server.browserstack.ssl = (parseInt(port, 10) === 443);
         break;
+      case ServerTypes.lambdatest:
+        host = session.server.lambdatest.hostname = process.env.LAMBDATEST_HOST || 'mobile-hub.lambdatest.com';
+        port = session.server.lambdatest.port = process.env.LAMBDATEST_PORT || 443;
+        path = session.server.lambdatest.path = '/wd/hub';
+        username = session.server.lambdatest.username || process.env.LAMBDATEST_USERNAME;
+        if (desiredCapabilities.hasOwnProperty.call(desiredCapabilities, 'lt:options')) {
+          desiredCapabilities['lt:options'].source = 'appiumdesktop';
+          desiredCapabilities['lt:options'].isRealMobile = true;
+          if (session.server.advanced.useProxy) {
+            desiredCapabilities['lt:options'].proxyUrl = isUndefined(session.server.advanced.proxy) ? '' : session.server.advanced.proxy;
+          }
+        } else {
+          desiredCapabilities['lambdatest:source'] = 'appiumdesktop';
+          desiredCapabilities['lambdatest:isRealMobile'] = true;
+          if (session.server.advanced.useProxy) {
+            desiredCapabilities['lambdatest:proxyUrl'] = isUndefined(session.server.advanced.proxy) ? '' : session.server.advanced.proxy;
+          }
+        }
+        accessKey = session.server.lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
+        if (!username || !accessKey) {
+          notification.error({
+            message: i18n.t('Error'),
+            description: i18n.t('lambdatestCredentialsRequired'),
+            duration: 4,
+          });
+          return;
+        }
+        https = session.server.lambdatest.ssl = parseInt(port, 10) === 443;
+        break;
       case ServerTypes.bitbar:
         host = process.env.BITBAR_HOST || 'appium.bitbar.com';
         port = session.server.bitbar.port = 443;
