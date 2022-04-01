@@ -1,6 +1,7 @@
 import React from 'react';
 import ServerTabHeadspin from './ServerTabHeadspin';
 import ServerTabBrowserstack from './ServerTabBrowserstack';
+import ServerTabLambdatest from './ServerTabLambdatest';
 import ServerTabBitbar from './ServerTabBitbar';
 import ServerTabKobiton from './ServerTabKobiton';
 import ServerTabPerfecto from './ServerTabPerfecto';
@@ -16,6 +17,7 @@ import SessionStyles from './Session.css';
 import SauceLogo from '../../images/sauce_logo.svg';
 import HeadSpinLogo from '../../images/headspin_logo.svg';
 import BrowserStackLogo from '../../images/browserstack_logo.svg';
+import LambdaTestLogo from '../../images/lambdatest_logo.svg';
 import BitBarLogo from '../../images/bitbar_logo.svg';
 import KobitonLogo from '../../images/kobiton_logo.svg';
 import PerfectoLogo from '../../images/perfecto_logo.png';
@@ -39,6 +41,11 @@ const CloudProviders = {
     tabhead: () => <span className={SessionStyles.tabText}><img src={BrowserStackLogo} /></span>,
     tab: (props) => <ServerTabBrowserstack {...props} />,
     logo: BrowserStackLogo,
+  },
+  lambdatest: {
+    tabhead: () => <span className={SessionStyles.tabText}><img src={LambdaTestLogo} /></span>,
+    tab: (props) => <ServerTabLambdatest {...props} />,
+    logo: LambdaTestLogo,
   },
   bitbar: {
     tabhead: () => <span className={SessionStyles.tabText}><img src={BitBarLogo} /></span>,

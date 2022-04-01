@@ -56,6 +56,7 @@ Please try to call `codesign --deep --sign - /Applications/Appium\ Inspector.app
 | [Sauce Labs](https://saucelabs.com) | [Documentation](https://wiki.saucelabs.com/)            |
 | [HeadSpin](https://headspin.io) | [Documentation](https://headspin.io/)                 |
 | [Browserstack](https://browserstack.com) | [Documentation](https://www.browserstack.com/docs) |
+| [Lambdatest](https://lambdatest.com) | [Documentation](https://www.lambdatest.com/support/docs/appium-inspector-integration) |
 | [Bitbar](https://bitbar.com) | [Documentation](http://docs.bitbar.com/)                       |
 | [Kobiton](https://kobiton.com) | [Documentation](https://docs.kobiton.com/)                       |
 | [Perfecto](https://www.perfecto.io) | [Documentation](https://developers.perfectomobile.com/display/PD/Appium) |
