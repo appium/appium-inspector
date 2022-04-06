@@ -194,7 +194,7 @@
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-mocha": "^10.0.3",
     "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-native": "^4.0.0",
     "less": "^4.1.1",
     "mkdirp": "^1.0.4",
