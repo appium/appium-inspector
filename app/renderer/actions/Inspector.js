@@ -312,9 +312,9 @@ export function toggleShowBoilerplate () {
   };
 }
 
-export function setSessionDetails (driver, sessionDetails) {
+export function setSessionDetails (driver, sessionDetails, mode) {
   return (dispatch) => {
-    dispatch({type: SET_SESSION_DETAILS, driver, sessionDetails});
+    dispatch({type: SET_SESSION_DETAILS, driver, sessionDetails, mode});
   };
 }
 
