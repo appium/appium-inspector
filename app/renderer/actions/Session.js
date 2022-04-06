@@ -11,6 +11,7 @@ import { Web2Driver } from 'web2driver';
 import { addVendorPrefixes } from '../util';
 import ky from 'ky/umd';
 import moment from 'moment';
+import { APP_MODE } from '../components/Inspector/shared';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_BEGAN = 'NEW_SESSION_BEGAN';
@@ -521,9 +522,11 @@ export function newSession (caps, attachSessId = null) {
     // we want to keep the process equal to prevent complexity so we launch a default url here to make
     // sure we don't start with an empty page which will not show proper HTML in the inspector
     const {browserName = ''} = desiredCapabilities;
+    let mode = APP_MODE.NATIVE;
 
     if (browserName.trim() !== '') {
       try {
+        mode = APP_MODE.WEB_HYBRID;
         await driver.navigateTo('http://appium.io/docs/en/about-appium/intro/');
       } catch (ign) {}
     }
@@ -538,7 +541,7 @@ export function newSession (caps, attachSessId = null) {
       username,
       accessKey,
       https,
-    });
+    }, mode);
     action(dispatch);
     dispatch(push('/inspector'));
   };
