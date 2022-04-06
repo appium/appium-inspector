@@ -6,7 +6,7 @@ import { xmlToJSON } from '../util';
 import frameworks from '../lib/client-frameworks';
 import { getSetting, setSetting, SAVED_FRAMEWORK } from '../../shared/settings';
 import i18n from '../../configs/i18next.config.renderer';
-import AppiumClient from '../lib/appium-client';
+import AppiumClient, { NATIVE_APP } from '../lib/appium-client';
 import { notification } from 'antd';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
@@ -449,6 +449,10 @@ export function selectAppMode (mode) {
       const action = applyClientMethod({methodName: 'getPageSource'});
       await action(dispatch, getState);
     }
+    if (appMode !== mode && mode === APP_MODE.NATIVE) {
+      const action = applyClientMethod({ methodName: 'switchContext', args: [NATIVE_APP] });
+      await action(dispatch, getState);
+    }
   };
 }
 
@@ -612,7 +616,6 @@ export function callClientMethod (params) {
       setVisibleCommandResult(result, methodName)(dispatch);
     }
     res.elementId = res.id;
-    console.log('res = ', JSON.stringify(res, null, '  ')); // eslint-disable-line no-console
     return res;
   };
 }
