@@ -198,7 +198,7 @@
     "eslint-plugin-react-native": "^4.0.0",
     "less": "^4.1.1",
     "mkdirp": "^1.0.4",
-    "mocha": "^9.2.0",
+    "mocha": "^9.2.2",
     "mocha-junit-reporter": "^2.0.0",
     "mocha-multi-reporters": "^1.1.7",
     "ncp": "^2.0.0",
