@@ -158,8 +158,8 @@ export function applyClientMethod (params) {
     try {
       dispatch({type: METHOD_CALL_REQUESTED});
       const callAction = callClientMethod(params);
-      const {contexts, contextsError, currentContext, currentContextError,
-             source, screenshot, windowSize, result, sourceError,
+      const {contexts, contextsError, commandRes, currentContext, currentContextError,
+             source, screenshot, windowSize, sourceError,
              screenshotError, windowSizeError, variableName,
              variableIndex, strategy, selector} = await callAction(dispatch, getState);
 
@@ -193,7 +193,7 @@ export function applyClientMethod (params) {
           windowSizeError,
         });
       }
-      return result;
+      return commandRes;
     } catch (error) {
       console.log(error); // eslint-disable-line no-console
       let methodName = params.methodName === 'click' ? 'tap' : params.methodName;
@@ -612,6 +612,7 @@ export function callClientMethod (params) {
       setVisibleCommandResult(result, methodName)(dispatch);
     }
     res.elementId = res.id;
+    console.log('res = ', JSON.stringify(res, null, '  ')); // eslint-disable-line no-console
     return res;
   };
 }
