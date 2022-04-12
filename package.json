@@ -56,6 +56,14 @@
     "directories": {
       "output": "release"
     },
+    "fileAssociations": [
+      {
+        "ext": "appium",
+        "name": "Appium",
+        "role": "Editor",
+        "icon": "./build/icon.ico"
+      }
+    ],
     "mac": {
       "category": "public.app-category.developer-tools",
       "target": [

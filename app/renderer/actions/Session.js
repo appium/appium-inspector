@@ -11,6 +11,7 @@ import { Web2Driver } from 'web2driver';
 import { addVendorPrefixes } from '../util';
 import ky from 'ky/umd';
 import moment from 'moment';
+import { ipcRenderer } from '../polyfills';
 import { APP_MODE } from '../components/Inspector/shared';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
@@ -58,6 +59,7 @@ export const SET_PROVIDERS = 'SET_PROVIDERS';
 export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
 
 export const SET_STATE_FROM_URL = 'SET_STATE_FROM_URL';
+export const SET_STATE_FROM_SAVED = 'SET_STATE_FROM_SAVED';
 
 
 const CAPS_NEW_COMMAND = 'appium:newCommandTimeout';
@@ -720,6 +722,32 @@ export function setSavedServerParams () {
         serverType = ServerTypes.remote;
       }
       dispatch({type: SET_SERVER, server, serverType});
+    }
+  };
+}
+
+export function setStateFromAppiumJson (appiumJson) {
+  return async (dispatch) => {
+    try {
+      const state = JSON.parse(appiumJson);
+      dispatch({type: SET_STATE_FROM_SAVED, state})
+    } catch (e) {
+      // TODO: Notify user that the file is corrupted!
+    }
+  };
+}
+
+export function setStateFromAppiumFile () {
+  return async (dispatch) => {
+    const url = new URL(window.location.href);
+    const initialState = url.searchParams.get('appiumJson');
+    if (initialState) {
+      try {
+        const appiumJson = decodeURIComponent(initialState);
+        dispatch({type: SET_STATE_FROM_SAVED, state: JSON.parse(appiumJson)});
+      } catch (e) {
+
+      }
     }
   };
 }

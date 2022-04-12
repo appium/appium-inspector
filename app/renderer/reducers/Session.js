@@ -10,7 +10,7 @@ import { NEW_SESSION_REQUESTED, NEW_SESSION_BEGAN, NEW_SESSION_DONE,
          CHANGE_SERVER_TYPE, SET_SERVER_PARAM, SET_SERVER, SET_ATTACH_SESS_ID,
          GET_SESSIONS_REQUESTED, GET_SESSIONS_DONE,
          ENABLE_DESIRED_CAPS_EDITOR, ABORT_DESIRED_CAPS_EDITOR, SAVE_RAW_DESIRED_CAPS, SET_RAW_DESIRED_CAPS, SHOW_DESIRED_CAPS_JSON_ERROR,
-         IS_ADDING_CLOUD_PROVIDER, SET_PROVIDERS, SET_ADD_VENDOR_PREFIXES, SET_STATE_FROM_URL,
+         IS_ADDING_CLOUD_PROVIDER, SET_PROVIDERS, SET_ADD_VENDOR_PREFIXES, SET_STATE_FROM_URL, SET_STATE_FROM_SAVED,
          ServerTypes } from '../actions/Session';
 
 const visibleProviders = []; // Pull this from "electron-settings"
@@ -334,6 +334,19 @@ export default function session (state = INITIAL_STATE, action) {
           ...(action.state.server || {})
         },
         ...omit(action.state, ['server']),
+      };
+
+    case SET_STATE_FROM_SAVED:
+      let visibleProviders = state.visibleProviders;
+      if (!visibleProviders.includes(action.state.serverType) &&
+        action.state.serverType !== ServerTypes.local &&
+        action.state.serverType !== ServerTypes.remote
+      ) {
+        visibleProviders.push(action.state.serverType);
+      }
+      return {
+        ...state,
+        ...action.state,
       };
 
     default:

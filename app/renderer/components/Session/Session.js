@@ -11,6 +11,7 @@ import SessionStyles from './Session.css';
 import CloudProviders from './CloudProviders';
 import CloudProviderSelector from './CloudProviderSelector';
 import { LinkOutlined } from '@ant-design/icons';
+import { ipcRenderer } from '../../polyfills';
 import { BUTTON } from '../../../../gui-common/components/AntdTypes';
 
 const {TabPane} = Tabs;
@@ -20,10 +21,13 @@ const ADD_CLOUD_PROVIDER = 'addCloudProvider';
 export default class Session extends Component {
 
   componentDidMount () {
-    const {setLocalServerParams, getSavedSessions, setSavedServerParams, setVisibleProviders,
-           getRunningSessions, bindWindowClose, initFromQueryString} = this.props;
+    const {setLocalServerParams, getSavedSessions, setSavedServerParams, setStateFromAppiumFile, setStateFromAppiumJson,
+           setVisibleProviders, getRunningSessions, bindWindowClose, initFromQueryString} = this.props;
     (async () => {
       try {
+        ipcRenderer.on('set-state', (evt, appiumJson) => {
+          setStateFromAppiumJson(appiumJson);
+        });
         bindWindowClose();
         await getSavedSessions();
         await setSavedServerParams();
@@ -31,6 +35,7 @@ export default class Session extends Component {
         await setVisibleProviders();
         getRunningSessions();
         await initFromQueryString();
+        await setStateFromAppiumFile();
       } catch (e) {
         console.error(e); // eslint-disable-line no-console
       }

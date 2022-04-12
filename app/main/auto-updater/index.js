@@ -21,18 +21,20 @@ const runningLocally = isDev || process.env.RUNNING_LOCALLY;
 let checkNewUpdates = _.noop;
 
 if (!runningLocally && !process.env.RUNNING_IN_SPECTRON) {
-  checkNewUpdates = setUpAutoUpdater({
-    request,
-    getFeedUrl,
-    semver,
-    autoUpdater,
-    app,
-    moment,
-    i18n,
-    env,
-    dialog,
-    B
-  });
+  try {
+    checkNewUpdates = setUpAutoUpdater({
+      request,
+      getFeedUrl,
+      semver,
+      autoUpdater,
+      app,
+      moment,
+      i18n,
+      env,
+      dialog,
+      B
+    });
+  } catch (e) {}
 }
 
 export { checkNewUpdates };

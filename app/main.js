@@ -4,6 +4,8 @@ import { installExtensions } from '../gui-common/debug';
 import { setupMainWindow } from '../gui-common/windows';
 import { rebuildMenus } from './main/menus';
 import settings from './shared/settings';
+import { readAppiumFile } from './main/helpers';
+import fs from 'fs';
 
 let mainWindow = null;
 const isDev = process.env.NODE_ENV === 'development';
@@ -12,10 +14,41 @@ if (isDev) {
   require('electron-debug')(); // eslint-disable-line global-require
 }
 
+let {
+  success: fileOpenSuccess,
+  appiumFileJson,
+  message: fileOpenMessage,
+} = readAppiumFile(process.argv, app.isPackaged, isDev);
+
+if (!fileOpenSuccess) {
+  app.on('open-file', (event, filePath) => {
+    try {
+      appiumFileJson = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      fileOpenSuccess = true;
+    } catch (e) {
+      console.error(e);
+      console.error(`Error parsing ${filePath}`);
+      fileOpenSuccess = false;
+      fileOpenMessage = `Could not open file ${filePath} ${e}`;
+    }
+  });
+}
+
+// TODO: Do not merge this to master, for testing only
+/*const filePath = '/Users/danielgraham/appium-inspector/test/fixtures/sample.appium';
+try {
+  appiumFileJson = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  fileOpenSuccess = true;
+} catch (e) {
+  console.error(e);
+  console.error(`Error parsing ${filePath}`);
+  fileOpenSuccess = false;
+  fileOpenMessage = `Could not open file ${filePath} ${e}`;
+}*/
+
 app.on('window-all-closed', () => {
   app.quit();
 });
-
 
 app.on('ready', async () => {
   await installExtensions();
@@ -45,7 +78,9 @@ app.on('ready', async () => {
   setupMainWindow({
     mainWindow,
     splashWindow,
-    mainUrl: `file://${__dirname}/index.html`,
+    mainUrl: `file://${__dirname}/index.html?` +
+      `appiumJson=${encodeURIComponent(JSON.stringify(appiumFileJson))}&` +
+      `fileOpenMessage=${encodeURIComponent(fileOpenMessage)}`,
     splashUrl: `file://${__dirname}/splash.html`,
     isDev,
     Menu,
