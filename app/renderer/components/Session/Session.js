@@ -1,4 +1,4 @@
-import { shell } from '../../polyfills';
+import { shell, ipcRenderer } from '../../polyfills';
 import React, { Component } from 'react';
 import _ from 'lodash';
 import CapabilityEditor from './CapabilityEditor';
@@ -11,7 +11,6 @@ import SessionStyles from './Session.css';
 import CloudProviders from './CloudProviders';
 import CloudProviderSelector from './CloudProviderSelector';
 import { LinkOutlined } from '@ant-design/icons';
-import { ipcRenderer } from '../../polyfills';
 import { BUTTON } from '../../../../gui-common/components/AntdTypes';
 
 const {TabPane} = Tabs;

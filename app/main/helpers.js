@@ -14,18 +14,6 @@ export function setSavedEnv () {
   return set();
 }
 
-export function handleOpenAppiumFile (filePath) {
-  try {
-    appiumFileJson = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    fileOpenSuccess = true;
-  } catch (e) {
-    console.error(e);
-    console.error(`Error parsing ${filePath}`);
-    fileOpenSuccess = false;
-    fileOpenMessage = `Could not open file ${filePath} ${e}`;
-  }
-}
-
 export function readAppiumFile (argv, isPackaged, isDev) {
   if (process.platform === 'darwin') {
     return {success: false};
@@ -40,10 +28,7 @@ export function readAppiumFile (argv, isPackaged, isDev) {
       const appiumFile = fs.readFileSync(appiumFilePath, 'utf8');
       const appiumFileJson = JSON.parse(appiumFile); // TODO: Use JSONC?
       return {success: true, appiumFileJson};
-    } catch (e) {
-      console.error(e);
-      console.error(`Error parsing ${appiumFilePath}`);
-    }
+    } catch (e) { }
     return {success: false, appiumFilePath};
   }
   return {success: false};

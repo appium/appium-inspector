@@ -26,8 +26,6 @@ if (!fileOpenSuccess) {
       appiumFileJson = JSON.parse(fs.readFileSync(filePath, 'utf8'));
       fileOpenSuccess = true;
     } catch (e) {
-      console.error(e);
-      console.error(`Error parsing ${filePath}`);
       fileOpenSuccess = false;
       fileOpenMessage = `Could not open file ${filePath} ${e}`;
     }

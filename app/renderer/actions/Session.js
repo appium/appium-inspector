@@ -11,7 +11,6 @@ import { Web2Driver } from 'web2driver';
 import { addVendorPrefixes } from '../util';
 import ky from 'ky/umd';
 import moment from 'moment';
-import { ipcRenderer } from '../polyfills';
 import { APP_MODE } from '../components/Inspector/shared';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
@@ -727,10 +726,10 @@ export function setSavedServerParams () {
 }
 
 export function setStateFromAppiumJson (appiumJson) {
-  return async (dispatch) => {
+  return (dispatch) => {
     try {
       const state = JSON.parse(appiumJson);
-      dispatch({type: SET_STATE_FROM_SAVED, state})
+      dispatch({type: SET_STATE_FROM_SAVED, state});
     } catch (e) {
       // TODO: Notify user that the file is corrupted!
     }
@@ -738,7 +737,7 @@ export function setStateFromAppiumJson (appiumJson) {
 }
 
 export function setStateFromAppiumFile () {
-  return async (dispatch) => {
+  return (dispatch) => {
     const url = new URL(window.location.href);
     const initialState = url.searchParams.get('appiumJson');
     if (initialState) {

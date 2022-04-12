@@ -337,12 +337,11 @@ export default function session (state = INITIAL_STATE, action) {
       };
 
     case SET_STATE_FROM_SAVED:
-      let visibleProviders = state.visibleProviders;
-      if (!visibleProviders.includes(action.state.serverType) &&
+      if (!state.visibleProviders.includes(action.state.serverType) &&
         action.state.serverType !== ServerTypes.local &&
         action.state.serverType !== ServerTypes.remote
       ) {
-        visibleProviders.push(action.state.serverType);
+        state.visibleProviders.push(action.state.serverType);
       }
       return {
         ...state,
