@@ -12,6 +12,7 @@ import { addVendorPrefixes } from '../util';
 import ky from 'ky/umd';
 import moment from 'moment';
 import { APP_MODE } from '../components/Inspector/shared';
+import fs from 'fs'; // TODO: Make this a polyfill
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_BEGAN = 'NEW_SESSION_BEGAN';
@@ -738,15 +739,23 @@ export function setStateFromAppiumJson (appiumJson) {
 
 export function setStateFromAppiumFile () {
   return (dispatch) => {
-    const url = new URL(window.location.href);
-    const initialState = url.searchParams.get('appiumJson');
-    if (initialState) {
-      try {
-        const appiumJson = decodeURIComponent(initialState);
-        dispatch({type: SET_STATE_FROM_SAVED, state: JSON.parse(appiumJson)});
-      } catch (e) {
-
+    try {
+      // TODO: Make it `filename=/file/path`
+      const lastArg = process.argv[process.argv.length - 1];
+      if (!lastArg.startsWith('filename=')) {
+        return;
       }
+      const filePath = lastArg.split('=')[1];
+      const filePathStorageKey = 'last_opened_file';
+      if (sessionStorage.getItem(filePathStorageKey) === filePath) {
+        // file was opened already, do nothing
+        return;
+      }
+      const appiumJson = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      sessionStorage.setItem(filePathStorageKey, filePath);
+      dispatch({type: SET_STATE_FROM_SAVED, state: appiumJson}); // TODO: Record filePath too!
+    } catch (e) {
+      // TODO: Notify user that the file is corrupted!
     }
   };
 }

@@ -4,8 +4,7 @@ import { installExtensions } from '../gui-common/debug';
 import { setupMainWindow } from '../gui-common/windows';
 import { rebuildMenus } from './main/menus';
 import settings from './shared/settings';
-import { readAppiumFile } from './main/helpers';
-import fs from 'fs';
+import { getAppiumFilePath } from './main/helpers';
 
 let mainWindow = null;
 const isDev = process.env.NODE_ENV === 'development';
@@ -14,21 +13,10 @@ if (isDev) {
   require('electron-debug')(); // eslint-disable-line global-require
 }
 
-let {
-  success: fileOpenSuccess,
-  appiumFileJson,
-  message: fileOpenMessage,
-} = readAppiumFile(process.argv, app.isPackaged, isDev);
-
-if (!fileOpenSuccess) {
+let openFilePath = getAppiumFilePath(process.argv, app.isPackaged, isDev);
+if (!openFilePath) {
   app.on('open-file', (event, filePath) => {
-    try {
-      appiumFileJson = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-      fileOpenSuccess = true;
-    } catch (e) {
-      fileOpenSuccess = false;
-      fileOpenMessage = `Could not open file ${filePath} ${e}`;
-    }
+    openFilePath = filePath;
   });
 }
 
@@ -62,7 +50,8 @@ app.on('ready', async () => {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-    }
+      additionalArguments: openFilePath ? [`filename=${openFilePath}`] : [],
+    },
   });
 
   const splashWindow = new BrowserWindow({
@@ -76,9 +65,7 @@ app.on('ready', async () => {
   setupMainWindow({
     mainWindow,
     splashWindow,
-    mainUrl: `file://${__dirname}/index.html?` +
-      `appiumJson=${encodeURIComponent(JSON.stringify(appiumFileJson))}&` +
-      `fileOpenMessage=${encodeURIComponent(fileOpenMessage)}`,
+    mainUrl: `file://${__dirname}/index.html`,
     splashUrl: `file://${__dirname}/splash.html`,
     isDev,
     Menu,

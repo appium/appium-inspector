@@ -14,23 +14,11 @@ export function setSavedEnv () {
   return set();
 }
 
-export function readAppiumFile (argv, isPackaged, isDev) {
-  if (process.platform === 'darwin') {
-    return {success: false};
+export function getAppiumFilePath (argv, isPackaged, isDev) {
+  if (process.platform === 'darwin' && !isDev) {
+    return false;
   }
-  let argvIndex = isPackaged ? 1 : (isDev ? 3 : 2);
-  const appiumFilePath = argv[argvIndex];
-  if (!fs.existsSync(appiumFilePath)) {
-    return {success: false, message: `Appium file not found at ${appiumFilePath}`};
-  }
-  if (appiumFilePath) {
-    try {
-      const appiumFile = fs.readFileSync(appiumFilePath, 'utf8');
-      const appiumFileJson = JSON.parse(appiumFile); // TODO: Use JSONC?
-      return {success: true, appiumFileJson};
-    } catch (e) { }
-    return {success: false, appiumFilePath};
-  }
-  return {success: false};
+  let argvIndex = isPackaged ? 1 : 2;
+  return argv[argvIndex];
 }
 
