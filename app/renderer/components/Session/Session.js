@@ -20,13 +20,10 @@ const ADD_CLOUD_PROVIDER = 'addCloudProvider';
 export default class Session extends Component {
 
   componentDidMount () {
-    const {setLocalServerParams, getSavedSessions, setSavedServerParams, setStateFromAppiumFile, setStateFromAppiumJson,
+    const {setLocalServerParams, getSavedSessions, setSavedServerParams, setStateFromAppiumFile,
            setVisibleProviders, getRunningSessions, bindWindowClose, initFromQueryString} = this.props;
     (async () => {
       try {
-        ipcRenderer.on('set-state', (evt, appiumJson) => {
-          setStateFromAppiumJson(appiumJson);
-        });
         bindWindowClose();
         await getSavedSessions();
         await setSavedServerParams();
@@ -35,6 +32,9 @@ export default class Session extends Component {
         getRunningSessions();
         await initFromQueryString();
         await setStateFromAppiumFile();
+        ipcRenderer.on('set-filepath', (evt, filePath) => {
+          setStateFromAppiumFile(filePath);
+        });
       } catch (e) {
         console.error(e); // eslint-disable-line no-console
       }

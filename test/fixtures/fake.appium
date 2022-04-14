@@ -1,0 +1,43 @@
+{
+    "serverType": "remote",
+    "visibleProviders": ["remote"],
+    "server": {
+        "local": {},
+        "remote": {},
+        "sauce": {
+            "dataCenter": "us-west-1"
+        },
+        "headspin": {},
+        "browserstack": {},
+        "lambdatest": {},
+        "advanced": {},
+        "bitbar": {},
+        "kobiton": {},
+        "perfecto": {},
+        "pcloudy": {},
+        "testingbot": {},
+        "experitest": {},
+        "roboticmobi": {}
+    },
+    "caps": [{
+        "type": "text",
+        "name": "appium:deviceName",
+        "value": "fake"
+    }, {
+        "type": "text",
+        "name": "appium:platformVersion",
+        "value": "1.2"
+    }, {
+        "type": "text",
+        "name": "appium:automationName",
+        "value": "fake"
+    }, {
+        "type": "text",
+        "name": "appium:app",
+        "value": "<home>/appium-inspector/test/fixtures/fake-app.xml"
+    }, {
+        "type": "text",
+        "name": "platformName",
+        "value": "fake"
+    }]
+}

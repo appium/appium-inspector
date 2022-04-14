@@ -726,26 +726,17 @@ export function setSavedServerParams () {
   };
 }
 
-export function setStateFromAppiumJson (appiumJson) {
+export function setStateFromAppiumFile (newFilepath) {
   return (dispatch) => {
     try {
-      const state = JSON.parse(appiumJson);
-      dispatch({type: SET_STATE_FROM_SAVED, state});
-    } catch (e) {
-      // TODO: Notify user that the file is corrupted!
-    }
-  };
-}
-
-export function setStateFromAppiumFile () {
-  return (dispatch) => {
-    try {
-      // TODO: Make it `filename=/file/path`
-      const lastArg = process.argv[process.argv.length - 1];
-      if (!lastArg.startsWith('filename=')) {
-        return;
+      let filePath = newFilepath;
+      if (!newFilepath) {
+        const lastArg = process.argv[process.argv.length - 1];
+        if (!lastArg.startsWith('filename=')) {
+          return;
+        }
+        filePath = lastArg.split('=')[1];
       }
-      const filePath = lastArg.split('=')[1];
       const filePathStorageKey = 'last_opened_file';
       if (sessionStorage.getItem(filePathStorageKey) === filePath) {
         // file was opened already, do nothing
