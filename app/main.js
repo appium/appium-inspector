@@ -1,5 +1,5 @@
 import i18n from './configs/i18next.config';
-import { app, BrowserWindow, Menu, webContents } from 'electron';
+import { app, BrowserWindow, Menu, webContents, ipcMain, dialog } from 'electron';
 import { installExtensions } from '../gui-common/debug';
 import { setupMainWindow } from '../gui-common/windows';
 import { rebuildMenus } from './main/menus';
@@ -52,6 +52,19 @@ app.on('ready', async () => {
       enableRemoteModule: true,
       additionalArguments: openFilePath ? [`filename=${openFilePath}`] : [],
     },
+  });
+
+  ipcMain.on('save-file-as', () => {
+    dialog.showSaveDialog(mainWindow, {
+      title: 'Save Appium File',
+      filters: [
+        {name: 'Appium Session Files', extensions: ['appium']},
+      ]
+    }).then(({canceled, filePath}) => {
+      if (!canceled) {
+        mainWindow.webContents.send('save-file', filePath);
+      }
+    })
   });
 
   const splashWindow = new BrowserWindow({

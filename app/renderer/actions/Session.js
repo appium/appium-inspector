@@ -13,6 +13,7 @@ import ky from 'ky/umd';
 import moment from 'moment';
 import { APP_MODE } from '../components/Inspector/shared';
 import fs from 'fs'; // TODO: Make this a polyfill
+import { ipcRenderer } from '../polyfills';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_BEGAN = 'NEW_SESSION_BEGAN';
@@ -766,6 +767,10 @@ export function saveFile (filepath) {
       }
       fs.writeFileSync(filePath, JSON.stringify(appiumFileInfo, null, 2), 'utf8');
       sessionStorage.setItem(filePathStorageKey, filePath);
+    } else {
+      // no filepath provided, tell the main renderer to open the save file dialog and
+      // ask the user to save file to a provided path
+      ipcRenderer.send('save-file-as');
     }
   };
 }

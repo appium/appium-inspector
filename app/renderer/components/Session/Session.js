@@ -35,8 +35,8 @@ export default class Session extends Component {
         ipcRenderer.on('set-filepath', (evt, filePath) => {
           setStateFromAppiumFile(filePath);
         });
-        ipcRenderer.on('save-file', (evt) => {
-          saveFile();
+        ipcRenderer.on('save-file', (evt, filePath) => {
+          saveFile(filePath);
         });
       } catch (e) {
         console.error(e); // eslint-disable-line no-console
