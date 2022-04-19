@@ -20,18 +20,6 @@ if (!openFilePath) {
   });
 }
 
-// TODO: Do not merge this to master, for testing only
-/*const filePath = '/Users/danielgraham/appium-inspector/test/fixtures/sample.appium';
-try {
-  appiumFileJson = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  fileOpenSuccess = true;
-} catch (e) {
-  console.error(e);
-  console.error(`Error parsing ${filePath}`);
-  fileOpenSuccess = false;
-  fileOpenMessage = `Could not open file ${filePath} ${e}`;
-}*/
-
 app.on('window-all-closed', () => {
   app.quit();
 });
