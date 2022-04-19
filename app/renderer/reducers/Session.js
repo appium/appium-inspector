@@ -346,6 +346,7 @@ export default function session (state = INITIAL_STATE, action) {
       return {
         ...state,
         ...action.state,
+        filePath: action.filePath,
       };
 
     default:

@@ -744,9 +744,28 @@ export function setStateFromAppiumFile (newFilepath) {
       }
       const appiumJson = JSON.parse(fs.readFileSync(filePath, 'utf8'));
       sessionStorage.setItem(filePathStorageKey, filePath);
-      dispatch({type: SET_STATE_FROM_SAVED, state: appiumJson}); // TODO: Record filePath too!
+      dispatch({type: SET_STATE_FROM_SAVED, state: appiumJson, filePath});
     } catch (e) {
       // TODO: Notify user that the file is corrupted!
+    }
+  };
+}
+
+export function saveFile (filepath) {
+  return (dispatch, getState) => {
+    const state = getState().session;
+    const filePath = filepath || state.filePath;
+    const filePathStorageKey = 'last_opened_file';
+    if (filePath) {
+      // TODO: This should be parsed via a helper function
+      const appiumFileInfo = {
+        caps: state.caps,
+        server: state.server,
+        serverType: state.serverType,
+        visibleProviders: state.visibleProviders,
+      }
+      fs.writeFileSync(filePath, JSON.stringify(appiumFileInfo, null, 2), 'utf8');
+      sessionStorage.setItem(filePathStorageKey, filePath);
     }
   };
 }

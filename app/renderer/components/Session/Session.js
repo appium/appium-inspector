@@ -21,7 +21,7 @@ export default class Session extends Component {
 
   componentDidMount () {
     const {setLocalServerParams, getSavedSessions, setSavedServerParams, setStateFromAppiumFile,
-           setVisibleProviders, getRunningSessions, bindWindowClose, initFromQueryString} = this.props;
+           setVisibleProviders, getRunningSessions, bindWindowClose, initFromQueryString, saveFile} = this.props;
     (async () => {
       try {
         bindWindowClose();
@@ -34,6 +34,9 @@ export default class Session extends Component {
         await setStateFromAppiumFile();
         ipcRenderer.on('set-filepath', (evt, filePath) => {
           setStateFromAppiumFile(filePath);
+        });
+        ipcRenderer.on('save-file', (evt) => {
+          saveFile();
         });
       } catch (e) {
         console.error(e); // eslint-disable-line no-console

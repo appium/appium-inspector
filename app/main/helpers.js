@@ -16,6 +16,8 @@ export function setSavedEnv () {
 
 export function getAppiumFilePath (argv, isPackaged, isDev) {
   if (process.platform === 'darwin' && !isDev) {
+    // packaged macOS apps do not receive args from process.argv, they
+    // receive the filepath argument from the `electron.app.on('open-file', cb)` event
     return false;
   }
   let argvIndex = isPackaged ? 1 : 2;

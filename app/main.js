@@ -45,7 +45,7 @@ app.on('ready', async () => {
     height: 800,
     minWidth: 1000,
     minHeight: 800,
-    titleBarStyle: 'hiddenInset',
+    titleBarStyle: 'hiddenInset', // TODO: Is there a way to make this hidden and then not? Or is it launch time only?
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
