@@ -45,7 +45,7 @@ app.on('ready', async () => {
     dialog.showSaveDialog(mainWindow, {
       title: 'Save Appium File',
       filters: [
-        {name: 'Appium Session Files', extensions: ['appium']},
+        {name: 'Appium Session Files', extensions: ['appiumsession']},
       ]
     }).then(({canceled, filePath}) => {
       if (!canceled) {

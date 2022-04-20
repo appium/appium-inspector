@@ -58,7 +58,7 @@
     },
     "fileAssociations": [
       {
-        "ext": "appium",
+        "ext": "appiumsession",
         "name": "Appium",
         "role": "Editor",
         "icon": "./build/icon.ico"
