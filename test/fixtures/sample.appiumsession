@@ -1,0 +1,44 @@
+{
+    "serverType": "sauce",
+    "visibleProviders": ["sauce"],
+    "server": {
+        "local": {},
+        "remote": {},
+        "sauce": {
+            "dataCenter": "us-west-1"
+        },
+        "headspin": {},
+        "browserstack": {},
+        "lambdatest": {},
+        "advanced": {},
+        "bitbar": {},
+        "kobiton": {},
+        "perfecto": {},
+        "pcloudy": {},
+        "testingbot": {},
+        "experitest": {},
+        "roboticmobi": {}
+    },
+    "caps": [{
+        "type": "text",
+        "name": "fake-capability",
+        "value": "Fake capability to prove that loading extension worked"
+    },
+    {
+        "type": "text",
+        "name": "appium:app",
+        "value": "storage:filename=SauceLabs-Demo-App.ipa"
+    }, {
+        "type": "text",
+        "name": "platformName",
+        "value": "iOS"
+    }, {
+        "type": "text",
+        "name": "appium:deviceName",
+        "value": "iPhone.*"
+    }, {
+        "type": "text",
+        "name": "appium:platformVersion",
+        "value": "15.1"
+    }]
+}
