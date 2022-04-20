@@ -12,8 +12,7 @@ import { addVendorPrefixes } from '../util';
 import ky from 'ky/umd';
 import moment from 'moment';
 import { APP_MODE } from '../components/Inspector/shared';
-import fs from 'fs'; // TODO: Make this a polyfill
-import { ipcRenderer } from '../polyfills';
+import { ipcRenderer, fs } from '../polyfills';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_BEGAN = 'NEW_SESSION_BEGAN';
@@ -729,6 +728,10 @@ export function setSavedServerParams () {
 
 export function setStateFromAppiumFile (newFilepath) {
   return (dispatch) => {
+    // no "fs" means not a browser. do nothing
+    if (!fs) {
+      return;
+    }
     try {
       let filePath = newFilepath;
       if (!newFilepath) {

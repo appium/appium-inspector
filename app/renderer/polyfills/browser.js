@@ -14,7 +14,8 @@ const browser = {
     on: (evt) => {
       console.warn(`Cannot listen for IPC event ${evt} in browser context`); // eslint-disable-line no-console
     }
-  }
+  },
+  fs: null,
 };
 
 class BrowserSettings {
