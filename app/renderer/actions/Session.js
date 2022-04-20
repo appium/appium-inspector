@@ -13,6 +13,7 @@ import ky from 'ky/umd';
 import moment from 'moment';
 import { APP_MODE } from '../components/Inspector/shared';
 import { ipcRenderer, fs } from '../polyfills';
+import { getSaveableState } from '../../main/helpers';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_BEGAN = 'NEW_SESSION_BEGAN';
@@ -763,13 +764,7 @@ export function saveFile (filepath) {
     const filePath = filepath || state.filePath;
     const filePathStorageKey = 'last_opened_file';
     if (filePath) {
-      // TODO: This should be parsed via a helper function
-      const appiumFileInfo = {
-        caps: state.caps,
-        server: state.server,
-        serverType: state.serverType,
-        visibleProviders: state.visibleProviders,
-      };
+      const appiumFileInfo = getSaveableState(state);
       fs.writeFileSync(filePath, JSON.stringify(appiumFileInfo, null, 2), 'utf8');
       sessionStorage.setItem(filePathStorageKey, filePath);
     } else {

@@ -23,3 +23,11 @@ export function getAppiumFilePath (argv, isPackaged, isDev) {
   return argv[argvIndex];
 }
 
+export function getSaveableState (reduxState) {
+  return {
+    caps: reduxState.caps,
+    server: reduxState.server,
+    serverType: reduxState.serverType,
+    visibleProviders: reduxState.visibleProviders,
+  }
+}
