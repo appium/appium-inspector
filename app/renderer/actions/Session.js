@@ -726,7 +726,7 @@ export function setSavedServerParams () {
   };
 }
 
-export function setStateFromAppiumFile (newFilepath) {
+export function setStateFromAppiumFile (newFilepath=null) {
   return (dispatch) => {
     // no "fs" means not a browser. do nothing
     if (!fs) {
@@ -750,7 +750,9 @@ export function setStateFromAppiumFile (newFilepath) {
       sessionStorage.setItem(filePathStorageKey, filePath);
       dispatch({type: SET_STATE_FROM_SAVED, state: appiumJson, filePath});
     } catch (e) {
-      // TODO: Notify user that the file is corrupted!
+      notification.error({
+        message: `Cannot open Appium JSON file. Maybe it's corrupted?`,
+      });
     }
   };
 }
