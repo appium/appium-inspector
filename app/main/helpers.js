@@ -1,5 +1,4 @@
 import {BrowserWindow, Menu} from 'electron';
-import fs from 'fs';
 import settings from '../shared/settings';
 import i18n from '../configs/i18next.config';
 import { makeOpenBrowserWindow, makeSetSavedEnv } from '../../gui-common/util';

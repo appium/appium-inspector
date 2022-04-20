@@ -14,11 +14,10 @@ if (isDev) {
 }
 
 let openFilePath = getAppiumFilePath(process.argv, app.isPackaged, isDev);
-if (!openFilePath) {
-  app.on('open-file', (event, filePath) => {
-    openFilePath = filePath;
-  });
-}
+
+app.on('open-file', (event, filePath) => {
+  openFilePath = filePath;
+});
 
 app.on('window-all-closed', () => {
   app.quit();
@@ -73,6 +72,7 @@ app.on('ready', async () => {
     i18n,
     rebuildMenus,
     settings,
-    webContents
+    webContents,
+    isInspector: true,
   });
 });
