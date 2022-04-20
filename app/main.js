@@ -51,7 +51,7 @@ app.on('ready', async () => {
       if (!canceled) {
         mainWindow.webContents.send('save-file', filePath);
       }
-    })
+    });
   });
 
   const splashWindow = new BrowserWindow({

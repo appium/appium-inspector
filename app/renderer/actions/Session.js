@@ -726,7 +726,7 @@ export function setSavedServerParams () {
   };
 }
 
-export function setStateFromAppiumFile (newFilepath=null) {
+export function setStateFromAppiumFile (newFilepath = null) {
   return (dispatch) => {
     // no "fs" means not a browser. do nothing
     if (!fs) {
@@ -769,7 +769,7 @@ export function saveFile (filepath) {
         server: state.server,
         serverType: state.serverType,
         visibleProviders: state.visibleProviders,
-      }
+      };
       fs.writeFileSync(filePath, JSON.stringify(appiumFileInfo, null, 2), 'utf8');
       sessionStorage.setItem(filePathStorageKey, filePath);
     } else {
