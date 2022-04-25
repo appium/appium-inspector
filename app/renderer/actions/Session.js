@@ -506,7 +506,7 @@ export function newSession (caps, attachSessId = null) {
         serverOpts.isMobile = true;
         // Need to set connectionRetryTimeout as same as the new session request.
         // TODO: make configurable?
-        serverOpts.connectionRetryTimeout = 120000;
+        serverOpts.connectionRetryTimeout = 5 * 60 * 1000;
         driver = await Web2Driver.attachToSession(attachSessId, serverOpts);
         driver._isAttachedSession = true;
       } else {
