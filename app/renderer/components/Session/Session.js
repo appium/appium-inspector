@@ -32,7 +32,7 @@ export default class Session extends Component {
         getRunningSessions();
         await initFromQueryString();
         await setStateFromAppiumFile();
-        ipcRenderer.on('set-filepath', (evt, filePath) => {
+        ipcRenderer.on('open-file', (evt, filePath) => {
           setStateFromAppiumFile(filePath);
         });
         ipcRenderer.on('save-file', (evt, filePath) => {
