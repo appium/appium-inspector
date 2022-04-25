@@ -73,6 +73,6 @@ app.on('ready', async () => {
     rebuildMenus,
     settings,
     webContents,
-    isInspector: true,
+    shouldShowFileMenu: true,
   });
 });
