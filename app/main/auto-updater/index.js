@@ -21,6 +21,7 @@ const runningLocally = isDev || process.env.RUNNING_LOCALLY;
 let checkNewUpdates = _.noop;
 
 if (!runningLocally && !process.env.RUNNING_IN_SPECTRON) {
+  // put autoupdater in try block so that it doesn't break if autoupdater doesn't work
   try {
     checkNewUpdates = setUpAutoUpdater({
       request,

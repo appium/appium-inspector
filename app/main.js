@@ -4,7 +4,7 @@ import { installExtensions } from '../gui-common/debug';
 import { setupMainWindow } from '../gui-common/windows';
 import { rebuildMenus } from './main/menus';
 import settings from './shared/settings';
-import { getAppiumFilePath } from './main/helpers';
+import { getAppiumSessionFilePath } from './main/helpers';
 
 let mainWindow = null;
 const isDev = process.env.NODE_ENV === 'development';
@@ -13,7 +13,7 @@ if (isDev) {
   require('electron-debug')(); // eslint-disable-line global-require
 }
 
-let openFilePath = getAppiumFilePath(process.argv, app.isPackaged, isDev);
+let openFilePath = getAppiumSessionFilePath(process.argv, app.isPackaged, isDev);
 
 app.on('open-file', (event, filePath) => {
   openFilePath = filePath;
@@ -32,7 +32,7 @@ app.on('ready', async () => {
     height: 800,
     minWidth: 1000,
     minHeight: 800,
-    titleBarStyle: 'hiddenInset', // TODO: Is there a way to make this hidden and then not? Or is it launch time only?
+    titleBarStyle: 'hiddenInset',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
