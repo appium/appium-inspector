@@ -23,11 +23,12 @@ export function getAppiumFilePath (argv, isPackaged, isDev) {
   return argv[argvIndex];
 }
 
+// get the slice of the redux state that's needed for the .appiumsession files
 export function getSaveableState (reduxState) {
   return {
     caps: reduxState.caps,
     server: reduxState.server,
     serverType: reduxState.serverType,
     visibleProviders: reduxState.visibleProviders,
-  }
+  };
 }
