@@ -18,7 +18,7 @@
     {
       "type": "text",
       "name": "appium:app",
-      "value": "<home>/appium-inspector/test/fixtures/fake-app.xml"
+      "value": "<home>/appium-inspector/test/sample-session-files/fake-app.xml"
     },
     {
       "type": "text",

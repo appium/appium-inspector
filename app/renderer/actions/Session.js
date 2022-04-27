@@ -729,7 +729,7 @@ export function setSavedServerParams () {
 
 export function setStateFromAppiumFile (newFilepath = null) {
   return (dispatch) => {
-    // no "fs" means not a browser. do nothing
+    // no "fs" means we're not in an Electron renderer so do nothing
     if (!fs) {
       return;
     }
