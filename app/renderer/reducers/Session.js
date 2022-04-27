@@ -12,6 +12,7 @@ import { NEW_SESSION_REQUESTED, NEW_SESSION_BEGAN, NEW_SESSION_DONE,
          ENABLE_DESIRED_CAPS_EDITOR, ABORT_DESIRED_CAPS_EDITOR, SAVE_RAW_DESIRED_CAPS, SET_RAW_DESIRED_CAPS, SHOW_DESIRED_CAPS_JSON_ERROR,
          IS_ADDING_CLOUD_PROVIDER, SET_PROVIDERS, SET_ADD_VENDOR_PREFIXES, SET_STATE_FROM_URL, SET_STATE_FROM_SAVED,
          ServerTypes } from '../actions/Session';
+import { notification } from 'antd';
 
 const visibleProviders = []; // Pull this from "electron-settings"
 const server = {
@@ -337,6 +338,12 @@ export default function session (state = INITIAL_STATE, action) {
       };
 
     case SET_STATE_FROM_SAVED:
+      if (!Object.keys(ServerTypes).includes(action.state.serverType)) {
+        notification.error({
+          message: `Failed to load session: ${action.state.serverType} is not a valid server type`,
+        });
+        return state;
+      }
       if (!state.visibleProviders.includes(action.state.serverType) &&
         action.state.serverType !== ServerTypes.local &&
         action.state.serverType !== ServerTypes.remote
