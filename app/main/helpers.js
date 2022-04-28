@@ -35,3 +35,5 @@ export function getSaveableState (reduxState) {
     visibleProviders: reduxState.visibleProviders,
   };
 }
+
+export const APPIUM_SESSION_EXTENSION = 'appiumsession';

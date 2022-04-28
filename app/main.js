@@ -4,7 +4,7 @@ import { installExtensions } from '../gui-common/debug';
 import { setupMainWindow } from '../gui-common/windows';
 import { rebuildMenus } from './main/menus';
 import settings from './shared/settings';
-import { getAppiumSessionFilePath } from './main/helpers';
+import { APPIUM_SESSION_EXTENSION, getAppiumSessionFilePath } from './main/helpers';
 
 let mainWindow = null;
 const isDev = process.env.NODE_ENV === 'development';
@@ -45,7 +45,7 @@ app.on('ready', async () => {
     const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
       title: 'Save Appium File',
       filters: [
-        {name: 'Appium Session Files', extensions: ['appiumsession']},
+        {name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]},
       ]
     });
     if (!canceled) {
