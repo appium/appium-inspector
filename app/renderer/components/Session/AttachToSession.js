@@ -29,7 +29,7 @@ function formatCapsLambdaTest (session) {
   if (session.capabilities) {
     caps = session.capabilities;
     sessionId = session.sessionId;
-    deviceName = session.capabilities.desired.deviceName
+    deviceName = session.capabilities.desired ? session.capabilities.desired.deviceName : session.capabilities.deviceName;
   } else if (session.desired) {
     caps = session.desired;
     deviceName = session.desired.deviceName;
