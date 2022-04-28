@@ -4,6 +4,7 @@ import log from 'electron-log';
 import settings from 'electron-settings';
 import i18NextBackend from 'i18next-node-fs-backend';
 import fs from 'fs';
+import util from 'util';
 const i18NextBackendOptions = {
   loadPath: path.join(__dirname, 'locales/{{lng}}/{{ns}}.json'),
   addPath: path.join(__dirname, 'locales/{{lng}}/{{ns}}.json'),
@@ -20,4 +21,5 @@ export {
   i18NextBackend,
   i18NextBackendOptions,
   fs,
+  util,
 };

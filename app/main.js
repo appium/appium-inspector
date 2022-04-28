@@ -41,17 +41,16 @@ app.on('ready', async () => {
     },
   });
 
-  ipcMain.on('save-file-as', () => {
-    dialog.showSaveDialog(mainWindow, {
+  ipcMain.on('save-file-as', async () => {
+    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
       title: 'Save Appium File',
       filters: [
         {name: 'Appium Session Files', extensions: ['appiumsession']},
       ]
-    }).then(({canceled, filePath}) => {
-      if (!canceled) {
-        mainWindow.webContents.send('save-file', filePath);
-      }
-    });
+    })
+    if (!canceled) {
+      mainWindow.webContents.send('save-file', filePath);
+    }
   });
 
   const splashWindow = new BrowserWindow({

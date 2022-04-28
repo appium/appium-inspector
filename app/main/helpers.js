@@ -3,6 +3,8 @@ import settings from '../shared/settings';
 import i18n from '../configs/i18next.config';
 import { makeOpenBrowserWindow, makeSetSavedEnv } from '../../gui-common/util';
 
+const APPIUM_SESSION_FILE_VERSION = 'v1.0';
+
 export function openBrowserWindow (route, opts) {
   const open = makeOpenBrowserWindow({BrowserWindow, Menu, i18n});
   return open(route, opts);
@@ -19,13 +21,14 @@ export function getAppiumSessionFilePath (argv, isPackaged, isDev) {
     // receive the filepath argument from the `electron.app.on('open-file', cb)` event
     return false;
   }
-  let argvIndex = isPackaged ? 1 : 2;
+  const argvIndex = isPackaged ? 1 : 2;
   return argv[argvIndex];
 }
 
 // get the slice of the redux state that's needed for the .appiumsession files
 export function getSaveableState (reduxState) {
   return {
+    version: APPIUM_SESSION_FILE_VERSION,
     caps: reduxState.caps,
     server: reduxState.server,
     serverType: reduxState.serverType,

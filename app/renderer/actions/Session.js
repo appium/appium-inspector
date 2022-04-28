@@ -12,7 +12,7 @@ import { addVendorPrefixes } from '../util';
 import ky from 'ky/umd';
 import moment from 'moment';
 import { APP_MODE } from '../components/Inspector/shared';
-import { ipcRenderer, fs } from '../polyfills';
+import { ipcRenderer, fs, util } from '../polyfills';
 import { getSaveableState } from '../../main/helpers';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
@@ -68,6 +68,8 @@ const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
 const CAPS_NATIVE_WEB_SCREENSHOT = 'appium:nativeWebScreenshot';
 const CAPS_ENSURE_WEBVIEW_HAVE_PAGES = 'appium:ensureWebviewsHavePages';
 const CAPS_INCLUDE_SAFARI_IN_WEBVIEWS = 'appium:includeSafariInWebviews';
+
+const FILE_PATH_STORAGE_KEY = 'last_opened_file';
 
 const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to turn it on
 
@@ -728,7 +730,7 @@ export function setSavedServerParams () {
 }
 
 export function setStateFromAppiumFile (newFilepath = null) {
-  return (dispatch) => {
+  return async (dispatch) => {
     // no "fs" means we're not in an Electron renderer so do nothing
     if (!fs) {
       return;
@@ -742,31 +744,29 @@ export function setStateFromAppiumFile (newFilepath = null) {
         }
         filePath = lastArg.split('=')[1];
       }
-      const filePathStorageKey = 'last_opened_file';
-      if (sessionStorage.getItem(filePathStorageKey) === filePath) {
+      if (sessionStorage.getItem(FILE_PATH_STORAGE_KEY) === filePath) {
         // file was opened already, do nothing
         return;
       }
-      const appiumJson = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-      sessionStorage.setItem(filePathStorageKey, filePath);
+      const appiumJson = JSON.parse(await util.promisify(fs.readFile)(filePath, 'utf8'));
+      sessionStorage.setItem(FILE_PATH_STORAGE_KEY, filePath);
       dispatch({type: SET_STATE_FROM_SAVED, state: appiumJson, filePath});
     } catch (e) {
       notification.error({
-        message: `Cannot open Appium JSON file. Maybe it's corrupted?`,
+        message: `Cannot open file '${filePath}'.\n ${e.message}\n ${e.stack}`,
       });
     }
   };
 }
 
 export function saveFile (filepath) {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState().session;
     const filePath = filepath || state.filePath;
-    const filePathStorageKey = 'last_opened_file';
     if (filePath) {
       const appiumFileInfo = getSaveableState(state);
-      fs.writeFileSync(filePath, JSON.stringify(appiumFileInfo, null, 2), 'utf8');
-      sessionStorage.setItem(filePathStorageKey, filePath);
+      await util.promisify(fs.writeFile)(filePath, JSON.stringify(appiumFileInfo, null, 2), 'utf8');
+      sessionStorage.setItem(FILE_PATH_STORAGE_KEY, filePath);
     } else {
       // no filepath provided, tell the main renderer to open the save file dialog and
       // ask the user to save file to a provided path

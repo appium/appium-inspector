@@ -16,6 +16,7 @@ const browser = {
     }
   },
   fs: null,
+  util: null,
 };
 
 class BrowserSettings {

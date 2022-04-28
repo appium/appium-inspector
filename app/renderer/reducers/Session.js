@@ -344,10 +344,7 @@ export default function session (state = INITIAL_STATE, action) {
         });
         return state;
       }
-      if (!state.visibleProviders.includes(action.state.serverType) &&
-        action.state.serverType !== ServerTypes.local &&
-        action.state.serverType !== ServerTypes.remote
-      ) {
+      if (![...state.visibleProviders, ServerTypes.local, ServerTypes.remote].includes(action.state.serverType)) {
         state.visibleProviders.push(action.state.serverType);
       }
       return {
