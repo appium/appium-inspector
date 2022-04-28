@@ -753,7 +753,7 @@ export function setStateFromAppiumFile (newFilepath = null) {
       dispatch({type: SET_STATE_FROM_SAVED, state: appiumJson, filePath});
     } catch (e) {
       notification.error({
-        message: `Cannot open file '${filePath}'.\n ${e.message}\n ${e.stack}`,
+        message: `Cannot open file '${newFilepath}'.\n ${e.message}\n ${e.stack}`,
       });
     }
   };
