@@ -33,4 +33,5 @@ export {
   i18NextBackend,
   i18NextBackendOptions,
   fs,
+  util,
 };

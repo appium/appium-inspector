@@ -47,7 +47,7 @@ app.on('ready', async () => {
       filters: [
         {name: 'Appium Session Files', extensions: ['appiumsession']},
       ]
-    })
+    });
     if (!canceled) {
       mainWindow.webContents.send('save-file', filePath);
     }
