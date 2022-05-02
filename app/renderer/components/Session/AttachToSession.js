@@ -25,10 +25,9 @@ function formatCapsBrowserstack (caps) {
 }
 
 function formatCapsLambdaTest (session) {
-  let caps, sessionId = session.id, deviceName = session.deviceName;
+  let caps, sessionId = (session.id || session.sessionId), deviceName = session.deviceName;
   if (session.capabilities) {
     caps = session.capabilities;
-    sessionId = session.sessionId;
     deviceName = session.capabilities.desired ? session.capabilities.desired.deviceName : session.capabilities.deviceName;
   } else if (session.desired) {
     caps = session.desired;
@@ -41,6 +40,10 @@ function formatCapsLambdaTest (session) {
 }
 
 export default class AttachToSession extends Component {
+
+  getSessionId(session) {
+    return session.id || session.sessionId;
+  }
 
   getSessionInfo (session, serverType) {
     switch (serverType) {
@@ -71,7 +74,7 @@ export default class AttachToSession extends Component {
               placeholder={t('enterYourSessionId')}
               value={attachSessId}
               onChange={(value) => setAttachSessId(value)}>
-              {runningAppiumSessions.map((session) => <Select.Option key={session.id} value={session.id}>
+              {runningAppiumSessions.map((session) => <Select.Option key={this.getSessionId(session)} value={this.getSessionId(session)}>
                 <div>{this.getSessionInfo(session, serverType)}</div>
               </Select.Option>)}
             </Select>
