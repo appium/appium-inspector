@@ -1,4 +1,5 @@
 {
+  "version": "v1.0",
   "caps": [
     {
       "type": "text",
@@ -28,7 +29,7 @@
     {
       "type": "text",
       "name": "fakeCapability",
-      "value": "Fake 7:16"
+      "value": "Fake 1:21"
     }
   ],
   "server": {

@@ -38,7 +38,6 @@ export function getSaveableState (reduxState) {
     server: reduxState.server,
     serverType: reduxState.serverType,
     visibleProviders: reduxState.visibleProviders,
-    attachSessId: reduxState.attachSessId,
   };
 }
 
