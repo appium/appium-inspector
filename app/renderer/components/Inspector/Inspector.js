@@ -163,7 +163,6 @@ export default class Inspector extends Component {
             </Card>
           </TabPane>
         </Tabs>
-        <div>FUDGE!</div>
       </div>
     </div>;
 
