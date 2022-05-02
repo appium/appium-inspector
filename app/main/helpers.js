@@ -26,7 +26,7 @@ export function getAppiumSessionFilePath (argv, isPackaged, isDev) {
     // receive the filepath argument from the `electron.app.on('open-file', cb)` event
     return false;
   }
-  let argvIndex = isPackaged ? 1 : 2;
+  const argvIndex = isPackaged ? 1 : 2;
   return argv[argvIndex];
 }
 
