@@ -147,7 +147,7 @@
     "format-json": "1.x",
     "highlight.js": "11.x",
     "history": "^4.7.2",
-    "htmlparser2": "^7.1.2",
+    "htmlparser2": "^8.0.1",
     "i18next": "^21.6.11",
     "i18next-chained-backend": "^3.0.2",
     "i18next-http-backend": "^1.3.2",
