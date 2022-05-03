@@ -142,7 +142,7 @@
     "electron-debug": "^3.0.0",
     "electron-log": "^4.4.6",
     "electron-settings": "^4.0.2",
-    "electron-updater": "^4.6.5",
+    "electron-updater": "^5.0.1",
     "font-awesome": "4.x",
     "format-json": "1.x",
     "highlight.js": "11.x",
