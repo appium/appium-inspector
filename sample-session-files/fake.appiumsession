@@ -1,0 +1,57 @@
+{
+  "version": "1.0",
+  "caps": [
+    {
+      "type": "text",
+      "name": "appium:deviceName",
+      "value": "fake"
+    },
+    {
+      "type": "text",
+      "name": "appium:platformVersion",
+      "value": "1.2"
+    },
+    {
+      "type": "text",
+      "name": "appium:automationName",
+      "value": "fake"
+    },
+    {
+      "type": "text",
+      "name": "appium:app",
+      "value": "<home>/appium-inspector/test/sample-session-files/fake-app.xml"
+    },
+    {
+      "type": "text",
+      "name": "platformName",
+      "value": "fake"
+    },
+    {
+      "type": "text",
+      "name": "fakeCapability",
+      "value": "Fake 1:21"
+    }
+  ],
+  "server": {
+    "local": {},
+    "remote": {},
+    "sauce": {
+      "dataCenter": "us-west-1"
+    },
+    "headspin": {},
+    "browserstack": {},
+    "lambdatest": {},
+    "advanced": {},
+    "bitbar": {},
+    "kobiton": {},
+    "perfecto": {},
+    "pcloudy": {},
+    "testingbot": {},
+    "experitest": {},
+    "roboticmobi": {}
+  },
+  "serverType": "remote",
+  "visibleProviders": [
+    "remote"
+  ]
+}

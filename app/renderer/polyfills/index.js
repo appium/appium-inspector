@@ -1,5 +1,5 @@
 let log, settings, clipboard, shell, remote, ipcRenderer,
-    i18NextBackend, i18NextBackendOptions;
+    i18NextBackend, i18NextBackendOptions, fs, util;
 
 function buildForBrowser () {
   if (process.env.BUILD_BROWSER) {
@@ -16,11 +16,11 @@ function buildForBrowser () {
 if (buildForBrowser()) {
   ({log, settings, clipboard, shell, remote,
     ipcRenderer, i18NextBackend,
-    i18NextBackendOptions} = require('./browser'));
+    i18NextBackendOptions, fs, util} = require('./browser'));
 } else {
   ({log, settings, clipboard, shell, remote,
     ipcRenderer, i18NextBackend,
-    i18NextBackendOptions} = require('./electron'));
+    i18NextBackendOptions, fs, util} = require('./electron'));
 }
 
 export {
@@ -32,4 +32,6 @@ export {
   settings,
   i18NextBackend,
   i18NextBackendOptions,
+  fs,
+  util,
 };
