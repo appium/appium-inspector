@@ -56,6 +56,14 @@
     "directories": {
       "output": "release"
     },
+    "fileAssociations": [
+      {
+        "ext": "appiumsession",
+        "name": "Appium",
+        "role": "Editor",
+        "icon": "./build/icon.ico"
+      }
+    ],
     "mac": {
       "category": "public.app-category.developer-tools",
       "target": [
@@ -189,6 +197,7 @@
     "electron": "^13.1.8",
     "electron-builder": "^23.0.2",
     "electron-devtools-installer": "^3.0.0",
+    "eslint": "^8.14.0",
     "eslint-config-appium": "^4.5.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jsx-a11y": "^6.1.2",

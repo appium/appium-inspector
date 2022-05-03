@@ -12,6 +12,8 @@ import { addVendorPrefixes } from '../util';
 import ky from 'ky/umd';
 import moment from 'moment';
 import { APP_MODE } from '../components/Inspector/shared';
+import { ipcRenderer, fs, util } from '../polyfills';
+import { getSaveableState } from '../../main/helpers';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_BEGAN = 'NEW_SESSION_BEGAN';
@@ -58,6 +60,7 @@ export const SET_PROVIDERS = 'SET_PROVIDERS';
 export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
 
 export const SET_STATE_FROM_URL = 'SET_STATE_FROM_URL';
+export const SET_STATE_FROM_SAVED = 'SET_STATE_FROM_SAVED';
 
 
 const CAPS_NEW_COMMAND = 'appium:newCommandTimeout';
@@ -65,6 +68,8 @@ const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
 const CAPS_NATIVE_WEB_SCREENSHOT = 'appium:nativeWebScreenshot';
 const CAPS_ENSURE_WEBVIEW_HAVE_PAGES = 'appium:ensureWebviewsHavePages';
 const CAPS_INCLUDE_SAFARI_IN_WEBVIEWS = 'appium:includeSafariInWebviews';
+
+const FILE_PATH_STORAGE_KEY = 'last_opened_file';
 
 const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to turn it on
 
@@ -720,6 +725,52 @@ export function setSavedServerParams () {
         serverType = ServerTypes.remote;
       }
       dispatch({type: SET_SERVER, server, serverType});
+    }
+  };
+}
+
+export function setStateFromAppiumFile (newFilepath = null) {
+  return async (dispatch) => {
+    // no "fs" means we're not in an Electron renderer so do nothing
+    if (!fs) {
+      return;
+    }
+    try {
+      let filePath = newFilepath;
+      if (!newFilepath) {
+        const lastArg = process.argv[process.argv.length - 1];
+        if (!lastArg.startsWith('filename=')) {
+          return;
+        }
+        filePath = lastArg.split('=')[1];
+      }
+      if (sessionStorage.getItem(FILE_PATH_STORAGE_KEY) === filePath) {
+        // file was opened already, do nothing
+        return;
+      }
+      const appiumJson = JSON.parse(await util.promisify(fs.readFile)(filePath, 'utf8'));
+      sessionStorage.setItem(FILE_PATH_STORAGE_KEY, filePath);
+      dispatch({type: SET_STATE_FROM_SAVED, state: appiumJson, filePath});
+    } catch (e) {
+      notification.error({
+        message: `Cannot open file '${newFilepath}'.\n ${e.message}\n ${e.stack}`,
+      });
+    }
+  };
+}
+
+export function saveFile (filepath) {
+  return async (dispatch, getState) => {
+    const state = getState().session;
+    const filePath = filepath || state.filePath;
+    if (filePath) {
+      const appiumFileInfo = getSaveableState(state);
+      await util.promisify(fs.writeFile)(filePath, JSON.stringify(appiumFileInfo, null, 2), 'utf8');
+      sessionStorage.setItem(FILE_PATH_STORAGE_KEY, filePath);
+    } else {
+      // no filepath provided, tell the main renderer to open the save file dialog and
+      // ask the user to save file to a provided path
+      ipcRenderer.send('save-file-as');
     }
   };
 }
