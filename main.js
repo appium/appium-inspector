@@ -4,7 +4,7 @@ const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers')
 const { fs } = require('appium-support');
 
-export async function openAppiumInspector ({
+module.exports.openAppiumInspector = async function openAppiumInspector ({
   sessionFile, stateJson, autoStart = false,
 }) {
   let state = {};
@@ -13,7 +13,7 @@ export async function openAppiumInspector ({
       throw new Error(`Session file ${sessionFile} does not exist`);
     }
     try {
-      const sessionFileContents = JSON.parse(await fs.readFile(sessionfile, 'utf8'));
+      const sessionFileContents = JSON.parse(await fs.readFile(sessionFile, 'utf8'));
       state = {...state, ...sessionFileContents};
     } catch (e) {
       throw new Error(`Session file ${sessionFile} is not valid JSON`);
@@ -28,18 +28,21 @@ export async function openAppiumInspector ({
     }
   }
 
-  return await open(
-    path.join(
-      __dirname, 
-      `./dist-browser/index.html?state=${encodeURIComponent(JSON.stringify(state))}&autoStart=${autoStart}`
-    )
+  const htmlFilePath = path.join(
+    __dirname, 
+    `./dist-browser/index.html?state=${encodeURIComponent(JSON.stringify(state))}&autoStart=${autoStart}`
   );
+  try {
+  return await open(`file://${htmlFilePath}`);
+  } catch (e) {
+    console.log('!!!!!', e);
+  }
 }
 
 if (require.main === module) {
   yargs(hideBin(process.argv))
-    .command('$0', 'opens an Appium Inspector', async (argv) => {
-      await openAppiumInspector(argv);
+    .command('$0', 'opens an Appium Inspector', async ({argv}) => {
+      await module.exports.openAppiumInspector(argv);
     })
     .option('session-file', {
       alias: 's',
