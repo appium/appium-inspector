@@ -27,3 +27,5 @@ if (module.hot) {
     );
   });
 }
+
+export default Root;

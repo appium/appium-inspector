@@ -13,7 +13,7 @@ import ky from 'ky/umd';
 import moment from 'moment';
 import { APP_MODE } from '../components/Inspector/shared';
 import { ipcRenderer, fs, util } from '../polyfills';
-import { getSaveableState } from '../../main/helpers';
+import { getSaveableState } from '../helpers';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_BEGAN = 'NEW_SESSION_BEGAN';

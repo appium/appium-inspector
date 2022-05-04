@@ -19,7 +19,7 @@
   ],
   "assetsPath": "assets",
   "homepage": "https://github.com/appium/appium-inspector",
-  "main": "dist/main.js",
+  "main": "main.js",
   "scripts": {
     "test": "run-s test:*",
     "test:lint": "eslint app test",
@@ -95,9 +95,11 @@
     },
     "files": [
       "dist/",
+      "dist-browser/",
       "node_modules/**/*",
+      "app/main.js",
+      "app/main.js.map",
       "main.js",
-      "main.js.map",
       "package.json"
     ],
     "win": {
@@ -136,6 +138,7 @@
   },
   "dependencies": {
     "antd": "^4.18.7",
+    "appium-support": "^2.55.0",
     "bluebird": "^3.5.5",
     "cheerio": "^1.0.0-rc.3",
     "connected-react-router": "^6.0.0",
@@ -143,6 +146,7 @@
     "electron-log": "^4.4.6",
     "electron-settings": "^4.0.2",
     "electron-updater": "^4.6.5",
+    "finalhandler": "^1.2.0",
     "font-awesome": "4.x",
     "format-json": "1.x",
     "highlight.js": "11.x",
@@ -156,6 +160,8 @@
     "ky": "^0.25.1",
     "lodash": "4.x",
     "moment": "^2.20.1",
+    "open": "^8.4.0",
+    "portfinder": "^1.0.28",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -168,11 +174,13 @@
     "request": "^2.88.2",
     "request-promise": "^4.2.2",
     "semver": "^7.3.5",
+    "serve-static": "^1.15.0",
     "source-map-support": "^0.5.0",
     "uuid": "^8.2.0",
     "web2driver": "^3.0.3",
     "xmldom": "^0.6.0",
-    "xpath": "0.0.32"
+    "xpath": "0.0.32",
+    "yargs": "^17.4.1"
   },
   "//devDependencies": {
     "postcss-modules": "Can't upgrade any further until we upgrade to Parcel v2"

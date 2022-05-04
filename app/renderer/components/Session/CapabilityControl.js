@@ -5,7 +5,7 @@ import { remote, log } from '../../polyfills';
 import { FileOutlined } from '@ant-design/icons';
 import { INPUT } from '../../../../gui-common/components/AntdTypes';
 import _ from 'lodash';
-import { APPIUM_SESSION_EXTENSION } from '../../../main/helpers';
+import { APPIUM_SESSION_EXTENSION } from '../../helpers';
 
 const {dialog} = remote;
 

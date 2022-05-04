@@ -1,3 +1,4 @@
+
 import i18n from './configs/i18next.config';
 import { app, BrowserWindow, Menu, webContents, ipcMain, dialog } from 'electron';
 import { installExtensions } from '../gui-common/debug';
