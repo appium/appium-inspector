@@ -156,7 +156,7 @@ export const actionDefinitions = {
     },
     'Geolocation': {
       'Get Geolocation': {methodName: 'getGeoLocation'},
-      'Set Geolocation': {methodName: 'setGeoLocation', args: [['locationJSONObject', STRING]]},
+      'Set Geolocation': {methodName: 'setGeoLocation', args: [['latitude', NUMBER], ['longitude', NUMBER], ['altitude', NUMBER]]},
     },
     'Logs': {
       'Get Log Types': {methodName: 'getLogTypes'},
