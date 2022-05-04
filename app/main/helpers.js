@@ -3,8 +3,6 @@ import settings from '../shared/settings';
 import i18n from '../configs/i18next.config';
 import { makeOpenBrowserWindow, makeSetSavedEnv } from '../../gui-common/util';
 
-const APPIUM_SESSION_FILE_VERSION = '1.0';
-
 export function openBrowserWindow (route, opts) {
   const open = makeOpenBrowserWindow({BrowserWindow, Menu, i18n});
   return open(route, opts);
