@@ -1,12 +1,29 @@
-const path = require('path');
 const open = require('open');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers')
 const { fs } = require('appium-support');
+const serveStatic = require('serve-static');
+const http = require('http');
+const path = require('path');
+const finalhandler = require('finalhandler');
+const portfinder = require('portfinder');
+const {logger} = require('appium-support');
+
+const log = logger.getLogger('appium-inspector');
 
 module.exports.openAppiumInspector = async function openAppiumInspector ({
   sessionFile, stateJson, autoStart = false,
 }) {
+  // start a static server to serve the dist-browser files
+  const distBrowser = path.join(__dirname, 'dist-browser');
+  const serve = serveStatic(distBrowser, {index: ['index.html']});
+  const server = http.createServer(function onRequest (req, res) {
+    serve(req, res, finalhandler)
+  });
+  const port = await portfinder.getPortPromise({port: 8888});
+  log.info(`Starting static server on port ${port} serving ${distBrowser}`);
+  server.listen(port);
+
   let state = {};
   if (sessionFile) {
     if (!await fs.exists(sessionFile)) {
@@ -28,14 +45,14 @@ module.exports.openAppiumInspector = async function openAppiumInspector ({
     }
   }
 
-  const htmlFilePath = path.join(
-    __dirname, 
-    `./dist-browser/index.html?state=${encodeURIComponent(JSON.stringify(state))}&autoStart=${autoStart}`
-  );
+  const url = new URL(`http://127.0.0.1:${port}/index.html`);
+  url.searchParams.append('state', JSON.stringify(state));
+  url.searchParams.append('autoStart', autoStart);
   try {
-  return await open(`file://${htmlFilePath}`);
+    log.info(`Opening inspector at ${url.href}`);
+    return await open(url.href);
   } catch (e) {
-    console.log('!!!!!', e);
+    throw new Error(`Could not open inspector: ${e.message} ${e.stack}`);
   }
 }
 
@@ -45,17 +62,17 @@ if (require.main === module) {
       await module.exports.openAppiumInspector(argv);
     })
     .option('session-file', {
-      alias: 's',
+      alias: 'f',
       type: 'string',
       description: '.appiumsession file to use for initial state',
     })
     .option('state-json', {
-      alias: 'j',
+      alias: 's',
       type: 'string',
       description: 'JSON string to use for initial state',
     })
     .option('auto-start', {
-      alias: 'a',
+      alias: 'auto',
       type: 'boolean',
       description: 'starts the inspector session automatically',
     })

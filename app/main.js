@@ -1,6 +1,4 @@
 
-import open from 'open';
-import path from 'path';
 import i18n from './configs/i18next.config';
 import { app, BrowserWindow, Menu, webContents, ipcMain, dialog } from 'electron';
 import { installExtensions } from '../gui-common/debug';
@@ -78,9 +76,3 @@ app.on('ready', async () => {
     shouldShowFileMenu: true,
   });
 });
-
-if (require.main === module) {
-  console.log('@@@@YIP'); process.exit();
-  const distPath = path.join('file://', __dirname, '../dist-browser/index.html');
-  open(distPath);
-}
