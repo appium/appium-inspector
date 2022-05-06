@@ -77,6 +77,7 @@ class Source extends Component {
     const treeData = source && recursive(source);
 
     return <div id='sourceContainer' className={InspectorStyles['tree-container']}>
+      {/* Must switch to a new antd Tree component when there's changes to treeData  */}
       {treeData ?
         <Tree
           defaultExpandAll={true}
