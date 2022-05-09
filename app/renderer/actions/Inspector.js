@@ -411,17 +411,17 @@ export function setLocatorTestElement (elementId) {
     if (elementId) {
       try {
         const action = callClientMethod({
+          elementId,
           methodName: 'getRect',
-          args: [elementId],
           skipRefresh: true,
           skipRecord: true,
           ignoreResult: true
         });
-        const rect = await action(dispatch, getState);
+        const { commandRes } = await action(dispatch, getState);
         dispatch({
           type: SET_SEARCHED_FOR_ELEMENT_BOUNDS,
-          location: {x: rect.x, y: rect.y},
-          size: {width: rect.width, height: rect.height},
+          location: {x: commandRes.x, y: commandRes.y},
+          size: {width: commandRes.width, height: commandRes.height},
         });
       } catch (ign) { }
     }
