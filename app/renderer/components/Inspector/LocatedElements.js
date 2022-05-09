@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { clipboard } from '../../polyfills';
-import { Input, Row, Col, Button } from 'antd';
+import { Input, Row, Col, Button, Modal } from 'antd';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
 
@@ -28,26 +28,24 @@ class LocatedElements extends Component {
       applyClientMethod,
       setLocatorTestElement,
       locatorTestElement,
-      clearSearchResults,
       t,
     } = this.props;
 
     return <Row>
-      <p className={InspectorStyles['back-link-container']}>
-        <a onClick={(e) => e.preventDefault() || clearSearchResults()}>{t('back')}</a>
-      </p>
-      {t('elementsCount', {elementCount: locatedElements.length})}
+      <h3 className={InspectorStyles['element-count-container']}>
+        {t('elementsCount', {elementCount: locatedElements.length})} {locatedElements.length === 0 && t('couldNotFindAnyElements')}
+      </h3>
       <Col>
-        <select className={InspectorStyles['locator-search-results']}
-          multiple='true'
-          onChange={(e) => setLocatorTestElement(e.target.value)}
-          value={[locatorTestElement]}>
-          {locatedElements.map((elementId) => (
-            <option key={elementId} value={elementId}>{elementId}</option>
-          ))}
-          {locatedElements.length === 0 && <option disabled>{t('couldNotFindAnyElements')}</option>}
-        </select>
-        {locatedElements.length > 0 && <div className={InspectorStyles['locator-test-interactions-container']}>
+        {locatedElements.length > 0 && 
+        <div className={InspectorStyles['locator-test-interactions-container']}>
+          <select className={InspectorStyles['locator-search-results']}
+            multiple='true'
+            onChange={(e) => setLocatorTestElement(e.target.value)}
+            value={[locatorTestElement]}>
+            {locatedElements.map((elementId) => (
+              <option key={elementId} value={elementId}>{elementId}</option>
+            ))} 
+          </select>
           <div>
             <Button size='small'
               disabled={!locatorTestElement}

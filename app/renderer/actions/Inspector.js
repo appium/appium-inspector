@@ -411,8 +411,8 @@ export function setLocatorTestElement (elementId) {
     if (elementId) {
       try {
         const action = callClientMethod({
+          elementId,
           methodName: 'getRect',
-          args: [elementId],
           skipRefresh: true,
           skipRecord: true,
           ignoreResult: true
@@ -420,8 +420,8 @@ export function setLocatorTestElement (elementId) {
         const rect = await action(dispatch, getState);
         dispatch({
           type: SET_SEARCHED_FOR_ELEMENT_BOUNDS,
-          location: {x: rect.x, y: rect.y},
-          size: {width: rect.width, height: rect.height},
+          location: {x: rect.commandRes.x, y: rect.commandRes.y},
+          size: {width: rect.commandRes.width, height: rect.commandRes.height},
         });
       } catch (ign) { }
     }

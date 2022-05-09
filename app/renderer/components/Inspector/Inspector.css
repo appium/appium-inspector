@@ -278,8 +278,9 @@
     width: 100%;
 }
 
-.back-link-container {
-    margin-bottom: 0.5em;
+.element-count-container {
+    margin-top: 0.5em;
+    margin-left: 0.5em;
 }
 
 .locator-search-results {
