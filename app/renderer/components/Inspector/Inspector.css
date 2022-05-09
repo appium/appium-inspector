@@ -74,11 +74,12 @@
 
 .inspector-main :global(.ant-card-head) {
     max-height: 48px;
+    padding: 0px 12px;
 }
 
 .inspector-main :global(.ant-card-body) {
     height: calc(100% - 48px);
-    padding-bottom: 48px;
+    padding: 12px;
 }
 
 .inspector-main .interaction-tab-container :global(.ant-tabs) {
@@ -103,20 +104,7 @@
     height: 100%;
 }
 
-.inspector-main .interaction-tab-container :global(.ant-tree) {
-    overflow: auto;
-}
-
 .inspector-main .tree-container {
-    height: 100%;
-    overflow-y: auto;
-}
-
-.inspector-main .tree-container::-webkit-scrollbar {
-    display: none;
-}
-
-.inspector-main .tree-container :global(ul.ant-tree) {
     height: 100%;
     overflow: auto;
 }
@@ -204,6 +192,10 @@
 
 .elementActions {
     margin-bottom: 20px;
+}
+
+.inspector-main #selectedElementContainer {
+    padding-bottom: 0px;
 }
 
 .selected-element-table-cells {
