@@ -562,7 +562,7 @@ export function saveSession (caps, params) {
   return async (dispatch) => {
     let {name, uuid} = params;
     dispatch({type: SAVE_SESSION_REQUESTED});
-    let savedSessions = await getSetting(SAVED_SESSIONS);
+    let savedSessions = await getSetting(SAVED_SESSIONS) || [];
     if (!uuid) {
 
       // If it's a new session, add it to the list
