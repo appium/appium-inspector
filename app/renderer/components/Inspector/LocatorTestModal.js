@@ -51,9 +51,6 @@ class LocatorTestModal extends Component {
           <Button onClick={(e) => e.preventDefault() || clearSearchResults()}>
             Back
           </Button>,
-          <Button onClick={this.onCancel.bind(this)}>
-          Cancel
-          </Button>,
           <Button onClick={this.onSubmit.bind(this)} type="primary">
             {locatedElements ?
               t('Done')

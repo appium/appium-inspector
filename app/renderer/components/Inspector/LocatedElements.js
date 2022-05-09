@@ -33,7 +33,10 @@ class LocatedElements extends Component {
 
     return <Row>
       <p className={InspectorStyles['element-count-container']}>
-        {locatedElements.length === 0 ? t('couldNotFindAnyElements') : t('elementsCount', {elementCount: locatedElements.length})}
+        {locatedElements.length === 0 &&
+          <i>{t('couldNotFindAnyElements')}</i>}
+        {locatedElements.length > 0 &&
+          t('elementsCount', {elementCount: locatedElements.length})}
       </p>
       <Col>
         {locatedElements.length > 0 &&
