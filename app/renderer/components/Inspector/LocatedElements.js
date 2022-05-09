@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { clipboard } from '../../polyfills';
-import { Input, Row, Col, Button, Modal } from 'antd';
+import { Input, Row, Col, Button } from 'antd';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
 
@@ -32,11 +32,11 @@ class LocatedElements extends Component {
     } = this.props;
 
     return <Row>
-      <h3 className={InspectorStyles['element-count-container']}>
-        {t('elementsCount', {elementCount: locatedElements.length})} {locatedElements.length === 0 && t('couldNotFindAnyElements')}
-      </h3>
+      <p className={InspectorStyles['element-count-container']}>
+        {locatedElements.length === 0 ? t('couldNotFindAnyElements') : t('elementsCount', {elementCount: locatedElements.length})}
+      </p>
       <Col>
-        {locatedElements.length > 0 && 
+        {locatedElements.length > 0 &&
         <div className={InspectorStyles['locator-test-interactions-container']}>
           <select className={InspectorStyles['locator-search-results']}
             multiple='true'
@@ -44,7 +44,7 @@ class LocatedElements extends Component {
             value={[locatorTestElement]}>
             {locatedElements.map((elementId) => (
               <option key={elementId} value={elementId}>{elementId}</option>
-            ))} 
+            ))}
           </select>
           <div>
             <Button size='small'

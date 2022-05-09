@@ -417,11 +417,11 @@ export function setLocatorTestElement (elementId) {
           skipRecord: true,
           ignoreResult: true
         });
-        const rect = await action(dispatch, getState);
+        const { commandRes } = await action(dispatch, getState);
         dispatch({
           type: SET_SEARCHED_FOR_ELEMENT_BOUNDS,
-          location: {x: rect.commandRes.x, y: rect.commandRes.y},
-          size: {width: rect.commandRes.width, height: rect.commandRes.height},
+          location: {x: commandRes.x, y: commandRes.y},
+          size: {width: commandRes.width, height: commandRes.height},
         });
       } catch (ign) { }
     }

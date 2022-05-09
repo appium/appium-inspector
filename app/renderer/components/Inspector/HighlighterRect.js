@@ -42,7 +42,6 @@ export default class HighlighterRect extends Component {
       key = `searchedForElement{x: ${elLocation.x}, y: ${elLocation.y}}`;
       highlighterClasses.push(InspectorCSS['inspected-element-box']);
     }
-    
     return <div className={highlighterClasses.join(' ').trim()}
       onMouseOver={() => selectHoveredElement(key)}
       onMouseOut={unselectHoveredElement}
