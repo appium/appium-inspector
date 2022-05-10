@@ -203,6 +203,10 @@
     word-break: break-all;
 }
 
+.element-cell-copy {
+    cursor: pointer;
+}
+
 .selected-element-card {
     display: flex;
     flex-direction: column;
