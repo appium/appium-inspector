@@ -1,0 +1,25 @@
+{
+  "extends": [
+    "config:base",
+    ":semanticCommitTypeAll(chore)",
+    ":pinAllExceptPeerDependencies"
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "matchDepTypes": ["dependencies", "devDependencies"],
+      "automerge": true
+    },
+    {
+      "matchPackageNames": [],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    }
+  ],
+  "baseBranches": ["main"],
+  "ignorePaths": ["gui-common", "assets", "build", "release", "sample-session-files"],
+  "semanticCommits": "enabled",
+  "schedule": ["after 10pm and before 5:00am"],
+  "timezone": "America/Vancouver",
+  "transitiveRemediation": true
+}
