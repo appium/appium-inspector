@@ -218,7 +218,7 @@
     "postcss-modules": "^3.2.2",
     "release": "^6.0.1",
     "rimraf": "^3.0.0",
-    "sinon": "^13.0.1",
+    "sinon": "^14.0.0",
     "spectron": "^15.0.0"
   },
   "devEngines": {
