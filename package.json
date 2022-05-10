@@ -219,7 +219,7 @@
     "release": "^6.0.1",
     "rimraf": "^3.0.0",
     "sinon": "^13.0.1",
-    "spectron": "^15.0.0"
+    "spectron": "^19.0.0"
   },
   "devEngines": {
     "node": ">=12.x",
