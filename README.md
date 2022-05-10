@@ -25,9 +25,13 @@ Both apps have the exact same set of features, so you might find that simply ope
 
 ### Installing on macOS
 
-If you're using the desktop app on macOS, when you run it you will likely be greeted with some error about the app not being able to be opened, or not verified by Apple, or something similar. The easiest way to get around this is to run `xattr -cr` on the file you downloaded. So let's say you downloaded `appium-inspector.dmg` and copy `Appium Inspector.app` in `/Applications` inside the disk image. Then you would run `xattr -cr "/Applications/Appium Inspector.app"` before opening it. The same goes for the zip version (or the .app itself).
+If you're using the desktop app on macOS, when you run it you may be greeted with some error about the app not being able to be opened, or not verified by Apple, or something similar. The easiest way to get around this is to run `xattr -cr` on the file you downloaded. So let's say you downloaded `appium-inspector.dmg` and copy `Appium Inspector.app` in `/Applications` inside the disk image. Then you would run `xattr -cr "/Applications/Appium Inspector.app"` before opening it. The same goes for the zip version (or the .app itself). Alternatively, you can allow the Inspector to be opened by adjusting your Security settings in System Preferences to allow apps by third parties to run.
 
-The reason for this is that the Appium team does not have a paid Apple developer account and so our app isn't signed by a certificate they recognize, so the OS attempts to prevent it from running. Running the command above gets around this security limitation.
+### Installing on Linux
+
+To run the `.AppImage` file on Linux, you will need to make sure that it is executable (e.g.,
+`chmod a+x Appium-Inspector-linux.AppImage`. Then you can run it from the command line simply as
+any other command: `./Appium-Inspector-linux.AppImage`.
 
 ## Features
 
@@ -54,6 +58,7 @@ The reason for this is that the Appium team does not have a paid Apple developer
 | [Sauce Labs](https://saucelabs.com) | [Documentation](https://wiki.saucelabs.com/)            |
 | [HeadSpin](https://headspin.io) | [Documentation](https://headspin.io/)                 |
 | [Browserstack](https://browserstack.com) | [Documentation](https://www.browserstack.com/docs) |
+| [Lambdatest](https://lambdatest.com) | [Documentation](https://www.lambdatest.com/support/docs/appium-inspector-integration) |
 | [Bitbar](https://bitbar.com) | [Documentation](http://docs.bitbar.com/)                       |
 | [Kobiton](https://kobiton.com) | [Documentation](https://docs.kobiton.com/)                       |
 | [Perfecto](https://www.perfecto.io) | [Documentation](https://developers.perfectomobile.com/display/PD/Appium) |

@@ -38,10 +38,10 @@
 }
 
 .inspector-main .screenshot-container {
-  max-width: 500px;
-  flex-grow: 1;
-  flex-shrink: 2;
-  flex-basis: 400px;
+    max-width: 500px;
+    flex-grow: 1;
+    flex-shrink: 2;
+    flex-basis: 400px;
 }
 
 .inspector-main .screenshot-container img {
@@ -74,11 +74,12 @@
 
 .inspector-main :global(.ant-card-head) {
     max-height: 48px;
+    padding: 0px 12px;
 }
 
 .inspector-main :global(.ant-card-body) {
     height: calc(100% - 48px);
-    padding-bottom: 48px;
+    padding: 12px;
 }
 
 .inspector-main .interaction-tab-container :global(.ant-tabs) {
@@ -93,6 +94,7 @@
     display: flex;
     height: 100%;
 }
+
 .inspector-main .interaction-tab-container :global(.action-col) {
     min-width: 50%;
     max-width: 50%;
@@ -102,20 +104,7 @@
     height: 100%;
 }
 
-.inspector-main .interaction-tab-container :global(.ant-tree) {
-    overflow: auto;
-}
-
 .inspector-main .tree-container {
-    height: 100%;
-    overflow-y: auto;
-}
-
-.inspector-main .tree-container::-webkit-scrollbar {
-    display: none;
-}
-
-.inspector-main .tree-container :global(ul.ant-tree) {
     height: 100%;
     overflow: auto;
 }
@@ -193,7 +182,8 @@
     background-color: green;
 }
 
-.highlighter-box.hovered-element-box div, .highlighter-box.inspected-element-box div {
+.highlighter-box.hovered-element-box div,
+.highlighter-box.inspected-element-box div {
     position: relative;
     height: 100%;
     width: 100%;
@@ -204,10 +194,14 @@
     margin-bottom: 20px;
 }
 
+.inspector-main #selectedElementContainer {
+    padding-bottom: 0px;
+}
+
 .selected-element-table-cells {
     word-wrap: break-all;
     word-break: break-all;
- }
+}
 
 .selected-element-card {
     display: flex;
@@ -274,12 +268,14 @@
     border-bottom-left-radius: 0;
 }
 
-.locator-test-interactions-container div button, .locator-test-interactions-container div input {
+.locator-test-interactions-container div button,
+.locator-test-interactions-container div input {
     width: 100%;
 }
 
-.back-link-container {
-    margin-bottom: 0.5em;
+.element-count-container {
+    margin-top: 0.5em;
+    margin-left: 0.5em;
 }
 
 .locator-search-results {
@@ -290,12 +286,14 @@
     width: 100%;
     margin-bottom: 1em;
 }
+
 .coordinatesContainer {
     position: absolute;
-    background:rgba(255,250,205,0.8);
+    background: rgba(255, 250, 205, 0.8);
     z-index: 10000000;
     padding: 2px;
 }
+
 .swipeInstructions {
     position: absolute;
     top: 0;
@@ -305,6 +303,7 @@
     padding: 4px;
     width: 10em;
 }
+
 .swipeSvg {
     position: absolute;
     z-index: 100000000;
@@ -316,46 +315,46 @@
 
 .swipeSvg line {
     stroke-width: 15;
-    stroke: rgba(255,153,153,0.8);
+    stroke: rgba(255, 153, 153, 0.8);
     stroke-linecap: round;
 }
 
 .swipeSvg circle {
     r: 10;
-    fill: rgba(255,153,153,0.8);
+    fill: rgba(255, 153, 153, 0.8);
 }
 
- .innerScreenshotContainer {
+.innerScreenshotContainer {
     display: flex;
     flex-direction: column;
     height: 100%;
- }
+}
 
- .innerScreenshotContainer .screenshotActionsPanel {
+.innerScreenshotContainer .screenshotActionsPanel {
     margin-bottom: 2px;
     margin: 0 auto 2px auto;
- }
+}
 
- .action-controls {
+.action-controls {
     margin-right: 20px;
- }
+}
 
- .actions-container .btn-container {
+.actions-container .btn-container {
     padding: 16px;
- }
+}
 
- .actions-container .arg-row {
-     margin-bottom: 8px;
- }
+.actions-container .arg-row {
+    margin-bottom: 8px;
+}
 
 .arg-container {
     padding: 4px 4px 0 0
- }
+}
 
- .actions-container :global(.ant-select) {
+.actions-container :global(.ant-select) {
     width: 100%;
- }
+}
 
- .actions-container :global(.ant-btn) {
+.actions-container :global(.ant-btn) {
     width: 100%;
- }
+}

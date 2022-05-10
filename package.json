@@ -1,6 +1,6 @@
 {
   "name": "appium-inspector",
-  "version": "2022.2.1",
+  "version": "2022.5.2",
   "description": "An app inspector for use with an Appium server",
   "repository": {
     "type": "git",
@@ -56,11 +56,25 @@
     "directories": {
       "output": "release"
     },
+    "fileAssociations": [
+      {
+        "ext": "appiumsession",
+        "name": "Appium",
+        "role": "Editor",
+        "icon": "./build/icon.ico"
+      }
+    ],
     "mac": {
       "category": "public.app-category.developer-tools",
       "target": [
-        "dmg",
-        "zip"
+        {
+          "target": "dmg",
+          "arch": "universal"
+        },
+        {
+          "target": "zip",
+          "arch": "universal"
+        }
       ]
     },
     "dmg": {
@@ -181,8 +195,9 @@
     "cross-env": "^7.0.0",
     "devtron": "^1.4.0",
     "electron": "^13.1.8",
-    "electron-builder": "^22.14.13",
+    "electron-builder": "^23.0.2",
     "electron-devtools-installer": "^3.0.0",
+    "eslint": "^8.14.0",
     "eslint-config-appium": "^4.5.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jsx-a11y": "^6.1.2",

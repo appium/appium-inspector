@@ -242,7 +242,7 @@ export default function inspector (state = INITIAL_STATE, action) {
       return {...state, showBoilerplate: action.show};
 
     case SET_SESSION_DETAILS:
-      return {...state, sessionDetails: action.sessionDetails, driver: action.driver};
+      return {...state, sessionDetails: action.sessionDetails, driver: action.driver, appMode: action.mode};
 
     case SHOW_LOCATOR_TEST_MODAL:
       return {

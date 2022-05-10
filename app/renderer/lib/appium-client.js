@@ -3,7 +3,7 @@ import Bluebird from 'bluebird';
 import {getWebviewStatusAddressBarHeight, parseSource, setHtmlElementAttributes} from './webview-helpers';
 import {SCREENSHOT_INTERACTION_MODE, APP_MODE} from '../components/Inspector/shared';
 
-const NATIVE_APP = 'NATIVE_APP';
+export const NATIVE_APP = 'NATIVE_APP';
 let _instance = null;
 
 export default class AppiumClient {
@@ -97,7 +97,7 @@ export default class AppiumClient {
           actions: [
             {type: 'pointerMove', duration: 0, x, y},
             {type: 'pointerDown', button: 0},
-            {type: 'pause', duration: 500},
+            {type: 'pause', duration: 100},
             {type: 'pointerUp', button: 0}
           ]
         }]);

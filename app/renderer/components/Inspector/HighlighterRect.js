@@ -38,10 +38,10 @@ export default class HighlighterRect extends Component {
       height = elSize.height / scaleRatio;
       top = elLocation.y / scaleRatio;
       left = elLocation.x / scaleRatio + xOffset;
-      key = 'searchedForElement';
+      // Unique keys are assigned to elements by their x & y coordinates
+      key = `searchedForElement{x: ${elLocation.x}, y: ${elLocation.y}}`;
       highlighterClasses.push(InspectorCSS['inspected-element-box']);
     }
-
     return <div className={highlighterClasses.join(' ').trim()}
       onMouseOver={() => selectHoveredElement(key)}
       onMouseOut={unselectHoveredElement}
