@@ -17,8 +17,20 @@ import { ROW, ALERT } from '../../../../gui-common/components/AntdTypes';
 
 const ButtonGroup = Button.Group;
 const NATIVE_APP = 'NATIVE_APP';
-const selectedElementTableCell = (text) => (
-  <div className={styles['selected-element-table-cells']}>{text}</div>);
+
+function selectedElementTableCell (text, copyToClipBoard) {
+  if (copyToClipBoard) {
+    return <div className={styles['selected-element-table-cells']}>
+      <Tooltip title='Copied!' trigger="click">
+        <span className={styles['element-cell-copy']} onClick = {() => clipboard.writeText(text)}>
+          {text}
+        </span>
+      </Tooltip>
+    </div>;
+  } else {
+    return <div className={styles['selected-element-table-cells']}>{text}</div>;
+  }
+}
 
 /**
  * Shows details of the currently selected element and shows methods that can
@@ -88,13 +100,13 @@ class SelectedElement extends Component {
       dataIndex: 'name',
       key: 'name',
       width: 100,
-      render: selectedElementTableCell
+      render: (text) => selectedElementTableCell(text, false),
 
     }, {
       title: t('Value'),
       dataIndex: 'value',
       key: 'value',
-      render: selectedElementTableCell
+      render: (text) => selectedElementTableCell(text, true),
     }];
 
     // Get the data for the attributes table
@@ -112,12 +124,12 @@ class SelectedElement extends Component {
       dataIndex: 'find',
       key: 'find',
       width: 100,
-      render: selectedElementTableCell
+      render: (text) => selectedElementTableCell(text, false),
     }, {
       title: t('Selector'),
       dataIndex: 'selector',
       key: 'selector',
-      render: selectedElementTableCell
+      render: (text) => selectedElementTableCell(text, true),
     }];
 
     if (findElementsExecutionTimes.length > 0) {
@@ -127,7 +139,7 @@ class SelectedElement extends Component {
         key: 'time',
         align: 'right',
         width: 100,
-        render: selectedElementTableCell
+        render: (text) => selectedElementTableCell(text, false),
       });
     }
 
