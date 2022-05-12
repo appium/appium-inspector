@@ -19,6 +19,7 @@ import {
   PauseOutlined,
   SearchOutlined,
   CopyOutlined,
+  DownloadOutlined,
   CloseOutlined,
   FileTextOutlined,
   TagOutlined,
@@ -37,6 +38,19 @@ const ButtonGroup = Button.Group;
 const MIN_WIDTH = 1080;
 const MIN_HEIGHT = 570;
 const MAX_SCREENSHOT_WIDTH = 500;
+
+function downloadXML (sourceXML) {
+  let element = document.createElement('a');
+  element.setAttribute('href', 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML));
+  element.setAttribute('download', 'source.xml');
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
 
 export default class Inspector extends Component {
 
@@ -141,7 +155,17 @@ export default class Inspector extends Component {
           <TabPane tab={t('Source')} key={INTERACTION_MODE.SOURCE}>
             <div className='action-row'>
               <div className='action-col'>
-                <Card title={<span><FileTextOutlined /> {t('App Source')}</span>}>
+                <Card title={<span><FileTextOutlined /> {t('App Source')} </span>}
+                  extra={
+                    <span>
+                      <Tooltip title={t('Copy XML Source to Clipboard')}>
+                        <Button type='text' id='btnSourceXML' icon={<CopyOutlined/>} onClick={() => clipboard.writeText(sourceXML)} />
+                      </Tooltip>
+                      <Tooltip title={t('Download Source as .XML File')}>
+                        <Button type='text' id='btnDownloadSourceXML' icon={<DownloadOutlined/>} onClick={() => downloadXML(sourceXML)}/>
+                      </Tooltip>
+                    </span>
+                  }>
                   <Source {...this.props} />
                 </Card>
               </div>
@@ -220,9 +244,6 @@ export default class Inspector extends Component {
       }
       <Tooltip title={t('Search for element')}>
         <Button id='searchForElement' icon={<SearchOutlined/>} onClick={showLocatorTestModal}/>
-      </Tooltip>
-      <Tooltip title={t('Copy XML Source to Clipboard')}>
-        <Button id='btnSourceXML' icon={<CopyOutlined/>} onClick={() => clipboard.writeText(sourceXML)}/>
       </Tooltip>
       <Tooltip title={t('quitSessionAndClose')}>
         <Button id='btnClose' icon={<CloseOutlined/>} onClick={() => quitSession()}/>
