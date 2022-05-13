@@ -4,7 +4,7 @@ import formatJSON from 'format-json';
 import { NEW_SESSION_REQUESTED, NEW_SESSION_BEGAN, NEW_SESSION_DONE,
          SAVE_SESSION_REQUESTED, SAVE_SESSION_DONE, GET_SAVED_SESSIONS_REQUESTED,
          GET_SAVED_SESSIONS_DONE, SESSION_LOADING, SESSION_LOADING_DONE,
-         SET_CAPABILITY_PARAM, ADD_CAPABILITY, REMOVE_CAPABILITY, SET_CAPS,
+         SET_CAPABILITY_PARAM, ADD_CAPABILITY, REMOVE_CAPABILITY, SET_CAPS_AND_SERVER,
          SWITCHED_TABS, SAVE_AS_MODAL_REQUESTED, HIDE_SAVE_AS_MODAL_REQUESTED, SET_SAVE_AS_TEXT,
          DELETE_SAVED_SESSION_REQUESTED, DELETE_SAVED_SESSION_DONE,
          CHANGE_SERVER_TYPE, SET_SERVER_PARAM, SET_SERVER, SET_ATTACH_SESS_ID,
@@ -125,9 +125,11 @@ export default function session (state = INITIAL_STATE, action) {
         }),
       };
 
-    case SET_CAPS:
+    case SET_CAPS_AND_SERVER:
       nextState = {
         ...state,
+        server: action.server,
+        serverType: action.serverType,
         caps: action.caps,
         capsUUID: action.uuid,
       };
