@@ -23,6 +23,7 @@ export default class AppiumClient {
       elementId, // Optional. Element being operated on
       args = [], // Optional. Arguments passed to method
       skipRefresh = false, // Optional. Do we want the updated source and screenshot?
+      skipScreenshot = false, // Optional. Do we want to skip getting screenshot alone?
       appMode = APP_MODE.NATIVE, // Optional. Whether we're in a native or hybrid mode
     } = params;
 
@@ -48,10 +49,10 @@ export default class AppiumClient {
     if (methodName) {
       if (elementId) {
         console.log(`Handling client method request with method '${methodName}', args ${JSON.stringify(args)} and elementId ${elementId}`); // eslint-disable-line no-console
-        res = await this.executeMethod({elementId, methodName, args, skipRefresh, appMode});
+        res = await this.executeMethod({elementId, methodName, args, skipRefresh, skipScreenshot, appMode});
       } else {
         console.log(`Handling client method request with method '${methodName}' and args ${JSON.stringify(args)}`); // eslint-disable-line no-console
-        res = await this.executeMethod({methodName, args, skipRefresh, appMode});
+        res = await this.executeMethod({methodName, args, skipRefresh, skipScreenshot, appMode});
       }
     } else if (strategy && selector) {
       if (fetchArray) {
@@ -66,7 +67,7 @@ export default class AppiumClient {
     return res;
   }
 
-  async executeMethod ({elementId, methodName, args, skipRefresh, appMode}) {
+  async executeMethod ({elementId, methodName, args, skipRefresh, skipScreenshot, appMode}) {
     let cachedEl;
     let res = {};
     if (!_.isArray(args) && !_.isUndefined(args)) {
@@ -124,7 +125,9 @@ export default class AppiumClient {
 
     let contextUpdate = {}, sourceUpdate = {}, screenshotUpdate = {}, windowSizeUpdate = {};
     if (!skipRefresh) {
-      screenshotUpdate = await this.getScreenshotUpdate();
+      if (!skipScreenshot) {
+        screenshotUpdate = await this.getScreenshotUpdate();
+      }
       windowSizeUpdate = await this.getWindowUpdate();
       // only do context updates if user has selected web/hybrid mode (takes forever)
       if (appMode === APP_MODE.WEB_HYBRID) {

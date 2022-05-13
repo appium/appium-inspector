@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { debounce } from 'lodash';
 import HighlighterRect from './HighlighterRect';
 import B from 'bluebird';
 import { SCREENSHOT_INTERACTION_MODE } from './shared';
@@ -10,27 +9,6 @@ const {TAP, SWIPE, SELECT} = SCREENSHOT_INTERACTION_MODE;
  * Shows screenshot of running application and divs that highlight the elements' bounding boxes
  */
 export default class HighlighterRects extends Component {
-
-  constructor (props) {
-    super(props);
-    this.state = {
-      scaleRatio: 1,
-    };
-    this.updateScaleRatio = debounce(this.updateScaleRatio.bind(this), 1000);
-  }
-
-  /**
-   * Calculates the ratio that the image is being scaled by
-   */
-  updateScaleRatio () {
-    const screenshotEl = this.props.containerEl.querySelector('img');
-
-    // now update scale ratio
-    this.setState({
-      scaleRatio: (this.props.windowSize.width / screenshotEl.offsetWidth)
-    });
-
-  }
 
   async handleScreenshotClick () {
     const {screenshotInteractionMode, applyClientMethod,
@@ -54,8 +32,7 @@ export default class HighlighterRects extends Component {
   }
 
   handleMouseMove (e) {
-    const {screenshotInteractionMode} = this.props;
-    const {scaleRatio} = this.state;
+    const {screenshotInteractionMode, scaleRatio} = this.props;
 
     if (screenshotInteractionMode !== SELECT) {
       const offsetX = e.nativeEvent.offsetX;
@@ -87,19 +64,9 @@ export default class HighlighterRects extends Component {
     clearSwipeAction();
   }
 
-  componentDidMount () {
-    // When DOM is ready, calculate the image scale ratio and re-calculate it whenever the window is resized
-    this.updateScaleRatio();
-    window.addEventListener('resize', this.updateScaleRatio);
-  }
-
-  componentWillUnmount () {
-    window.removeEventListener('resize', this.updateScaleRatio);
-  }
-
   render () {
-    const {source, screenshotInteractionMode, containerEl, searchedForElementBounds, isLocatorTestModalVisible} = this.props;
-    const {scaleRatio} = this.state;
+    const {source, screenshotInteractionMode, containerEl, searchedForElementBounds,
+           isLocatorTestModalVisible, scaleRatio} = this.props;
 
     // Recurse through the 'source' JSON and render a highlighter rect for each element
     const highlighterRects = [];

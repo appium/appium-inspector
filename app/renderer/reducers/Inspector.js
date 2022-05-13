@@ -13,6 +13,7 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          SELECT_ACTION_GROUP, SELECT_SUB_ACTION_GROUP, SET_APP_MODE,
          SELECT_INTERACTION_MODE, ENTERING_ACTION_ARGS, SET_ACTION_ARG, REMOVE_ACTION, SET_CONTEXT,
          SET_KEEP_ALIVE_INTERVAL, SET_USER_WAIT_TIMEOUT, SET_LAST_ACTIVE_MOMENT, SET_VISIBLE_COMMAND_RESULT,
+         SET_AWAITING_MJPEG_STREAM,
 } from '../actions/Inspector';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from '../components/Inspector/shared';
 
@@ -42,11 +43,13 @@ const INITIAL_STATE = {
   selectedSubActionGroup: null,
   selectedInteractionMode: INTERACTION_MODE.SOURCE,
   appMode: APP_MODE.NATIVE,
+  mjpegScreenshotUrl: null,
   pendingAction: null,
   findElementsExecutionTimes: [],
   isFindingElementsTimes: false,
   visibleCommandResult: null,
   visibleCommandMethod: null,
+  isAwaitingMjpegStream: true,
 };
 
 /**
@@ -242,7 +245,13 @@ export default function inspector (state = INITIAL_STATE, action) {
       return {...state, showBoilerplate: action.show};
 
     case SET_SESSION_DETAILS:
-      return {...state, sessionDetails: action.sessionDetails, driver: action.driver, appMode: action.mode};
+      return {
+        ...state,
+        sessionDetails: action.sessionDetails,
+        driver: action.driver,
+        appMode: action.mode,
+        mjpegScreenshotUrl: action.mjpegScreenshotUrl
+      };
 
     case SHOW_LOCATOR_TEST_MODAL:
       return {
@@ -445,6 +454,9 @@ export default function inspector (state = INITIAL_STATE, action) {
         visibleCommandResult: action.result,
         visibleCommandMethod: action.methodName,
       };
+
+    case SET_AWAITING_MJPEG_STREAM:
+      return {...state, isAwaitingMjpegStream: action.isAwaiting};
 
     default:
       return {...state};
