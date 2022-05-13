@@ -75,6 +75,8 @@ export const SET_LAST_ACTIVE_MOMENT = 'SET_LAST_ACTIVE_MOMENT';
 
 export const SET_VISIBLE_COMMAND_RESULT = 'SET_VISIBLE_COMMAND_RESULT';
 
+export const SET_AWAITING_MJPEG_STREAM = 'SET_AWAITING_MJPEG_STREAM';
+
 const KEEP_ALIVE_PING_INTERVAL = 5 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
 const WAIT_FOR_USER_KEEP_ALIVE = 60 * 60 * 1000; // Give user 1 hour to reply
@@ -177,7 +179,7 @@ export function applyClientMethod (params) {
       }
       dispatch({type: METHOD_CALL_DONE});
 
-      if (source && screenshot) {
+      if (source) {
         dispatch({
           type: SET_SOURCE_AND_SCREENSHOT,
           contexts,
@@ -193,6 +195,7 @@ export function applyClientMethod (params) {
           windowSizeError,
         });
       }
+      window.dispatchEvent(new Event('resize'));
       return commandRes;
     } catch (error) {
       console.log(error); // eslint-disable-line no-console
@@ -312,9 +315,9 @@ export function toggleShowBoilerplate () {
   };
 }
 
-export function setSessionDetails (driver, sessionDetails, mode) {
+export function setSessionDetails ({driver, sessionDetails, mode, mjpegScreenshotUrl}) {
   return (dispatch) => {
-    dispatch({type: SET_SESSION_DETAILS, driver, sessionDetails, mode});
+    dispatch({type: SET_SESSION_DETAILS, driver, sessionDetails, mode, mjpegScreenshotUrl});
   };
 }
 
@@ -589,12 +592,17 @@ export function keepSessionAlive () {
 
 export function callClientMethod (params) {
   return async (dispatch, getState) => {
-    console.log(`Calling client method with params:`); // eslint-disable-line no-console
-    console.log(params); // eslint-disable-line no-console
-    const {driver, appMode} = getState().inspector;
+    const {driver, appMode, mjpegScreenshotUrl} = getState().inspector;
     const {methodName, ignoreResult = true} = params;
     params.appMode = appMode;
 
+    // don't retrieve screenshot if we're already using the mjpeg stream
+    if (mjpegScreenshotUrl) {
+      params.skipScreenshot = true;
+    }
+
+    console.log(`Calling client method with params:`); // eslint-disable-line no-console
+    console.log(params); // eslint-disable-line no-console
     const action = keepSessionAlive();
     action(dispatch, getState);
     const client = AppiumClient.instance(driver);
@@ -623,5 +631,11 @@ export function callClientMethod (params) {
 export function setVisibleCommandResult (result, methodName) {
   return (dispatch) => {
     dispatch({type: SET_VISIBLE_COMMAND_RESULT, result, methodName});
+  };
+}
+
+export function setAwaitingMjpegStream (isAwaiting) {
+  return (dispatch) => {
+    dispatch({type: SET_AWAITING_MJPEG_STREAM, isAwaiting});
   };
 }
