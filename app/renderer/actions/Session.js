@@ -27,7 +27,7 @@ export const SET_CAPABILITY_PARAM = 'SET_CAPABILITY_PARAM';
 export const ADD_CAPABILITY = 'ADD_CAPABILITY';
 export const REMOVE_CAPABILITY = 'REMOVE_CAPABILITY';
 export const SWITCHED_TABS = 'SWITCHED_TABS';
-export const SET_CAPS = 'SET_CAPS';
+export const SET_CAPS_AND_SERVER = 'SET_CAPS_AND_SERVER';
 export const SAVE_AS_MODAL_REQUESTED = 'SAVE_AS_MODAL_REQUESTED';
 export const HIDE_SAVE_AS_MODAL_REQUESTED = 'HIDE_SAVE_AS_MODAL_REQUESTED';
 export const SET_SAVE_AS_TEXT = 'SET_SAVE_AS_TEXT';
@@ -157,11 +157,11 @@ export function showError (e, methodName, secs = 5) {
 }
 
 /**
- * Change the caps object and then go back to the new session tab
+ * Change the caps object, along with the server details and then go back to the new session tab
  */
-export function setCaps (caps, uuid) {
+export function setCapsAndServer (server, serverType, caps, uuid) {
   return (dispatch) => {
-    dispatch({type: SET_CAPS, caps, uuid});
+    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid});
   };
 }
 
@@ -202,8 +202,9 @@ export function removeCapability (index) {
 }
 
 function _addVendorPrefixes (caps, dispatch, getState) {
+  const {server, serverType, capsUUID} = getState().session;
   const prefixedCaps = addVendorPrefixes(caps);
-  setCaps(prefixedCaps, getState().session.capsUUID)(dispatch);
+  setCapsAndServer(server, serverType, prefixedCaps, capsUUID)(dispatch);
   return prefixedCaps;
 }
 
@@ -569,9 +570,9 @@ export function newSession (caps, attachSessId = null) {
 
 
 /**
- * Saves the caps
+ * Saves the caps and server details
  */
-export function saveSession (caps, params) {
+export function saveSession (server, serverType, caps, params) {
   return async (dispatch) => {
     let {name, uuid} = params;
     dispatch({type: SAVE_SESSION_REQUESTED});
@@ -585,6 +586,8 @@ export function saveSession (caps, params) {
         name,
         uuid,
         caps,
+        server,
+        serverType,
       };
       savedSessions.push(newSavedSession);
     } else {
@@ -593,13 +596,15 @@ export function saveSession (caps, params) {
       for (let session of savedSessions) {
         if (session.uuid === uuid) {
           session.caps = caps;
+          session.server = server;
+          session.serverType = serverType;
         }
       }
     }
     await setSetting(SAVED_SESSIONS, savedSessions);
     const action = getSavedSessions();
     await action(dispatch);
-    dispatch({type: SET_CAPS, caps, uuid});
+    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid});
     dispatch({type: SAVE_SESSION_DONE});
   };
 }

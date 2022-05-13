@@ -85,9 +85,9 @@ export default class CapabilityEditor extends Component {
   render () {
     const {setCapabilityParam, caps, addCapability, removeCapability, saveSession, hideSaveAsModal,
            saveAsText, showSaveAsModal, setSaveAsText, isEditingDesiredCaps, t,
-           setAddVendorPrefixes, addVendorPrefixes} = this.props;
+           setAddVendorPrefixes, addVendorPrefixes, server, serverType} = this.props;
     const numCaps = caps.length;
-    const onSaveAsOk = () => saveSession(caps, {name: saveAsText});
+    const onSaveAsOk = () => saveSession(server, serverType, caps, {name: saveAsText});
 
     return <>
       <Row type={ROW.FLEX} align="top" justify="start" className={SessionStyles.capsFormRow}>

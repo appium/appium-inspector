@@ -19,9 +19,8 @@ export default class SavedSessions extends Component {
   onRow (record) {
     return {
       onClick: () => {
-        const {setCaps} = this.props;
         let session = this.sessionFromUUID(record.key);
-        setCaps(session.caps, session.uuid);
+        this.handleCapsAndServer(session);
       }
     };
   }
@@ -29,6 +28,14 @@ export default class SavedSessions extends Component {
   getRowClassName (record) {
     const {capsUUID} = this.props;
     return capsUUID === record.key ? SessionCSS.selected : '';
+  }
+
+  handleCapsAndServer (session) {
+    const {setCapsAndServer, server, serverType } = this.props;
+
+    // Incase user has CAPS saved from older version of Inspector which
+    // doesn't contain server and serverType within the session object
+    setCapsAndServer(session.server || server, session.serverType || serverType, session.caps, session.uuid);
   }
 
   handleDelete (uuid) {
@@ -50,7 +57,7 @@ export default class SavedSessions extends Component {
   }
 
   render () {
-    const {savedSessions, setCaps, capsUUID, switchTabs} = this.props;
+    const {savedSessions, capsUUID, switchTabs} = this.props;
 
     const columns = [{
       title: 'Capability Set',
@@ -69,7 +76,7 @@ export default class SavedSessions extends Component {
           <div>
             <Button
               icon={<EditOutlined/>}
-              onClick={() => {setCaps(session.caps, session.uuid); switchTabs('new');}}
+              onClick={() => {this.handleCapsAndServer(session); switchTabs('new');}}
               className={SessionCSS['edit-session']}
             />
             <Button
