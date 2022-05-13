@@ -73,6 +73,8 @@ const FILE_PATH_STORAGE_KEY = 'last_opened_file';
 
 const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to turn it on
 
+const MJPEG_CAP = 'mjpegScreenshotUrl';
+
 // Multiple requests sometimes send a new session request
 // after establishing a session.
 // This situation could happen easier on cloud vendors,
@@ -538,17 +540,28 @@ export function newSession (caps, attachSessId = null) {
       } catch (ign) {}
     }
 
+
+    const mjpegScreenshotUrl = desiredCapabilities[`appium:${MJPEG_CAP}`] ||
+      desiredCapabilities[MJPEG_CAP] ||
+      null;
+
+
     // pass some state to the inspector that it needs to build recorder
     // code boilerplate
-    const action = setSessionDetails(driver, {
-      desiredCapabilities,
-      host,
-      port,
-      path,
-      username,
-      accessKey,
-      https,
-    }, mode);
+    const action = setSessionDetails({
+      driver,
+      sessionDetails: {
+        desiredCapabilities,
+        host,
+        port,
+        path,
+        username,
+        accessKey,
+        https,
+      },
+      mode,
+      mjpegScreenshotUrl,
+    });
     action(dispatch);
     dispatch(push('/inspector'));
   };
