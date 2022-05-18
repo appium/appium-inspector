@@ -35,17 +35,18 @@ export default class CapabilityControl extends Component {
       onClick={async () => {onSetCapabilityParam(await this.getLocalFilePath() || currentFilePath);}} />;
 
     switch (cap.type) {
-      case 'text': return <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value} onChange={(e) => onSetCapabilityParam(e.target.value)} onPressEnter={onPressEnter}/>;
+      case 'text': return <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value} onChange={(e) => onSetCapabilityParam(e.target.value)} onPressEnter={onPressEnter}
+        className={SessionStyles.capsBoxFont} />;
       case 'boolean': return <Switch disabled={isEditingDesiredCaps} id={id} checkedChildren={'true'} unCheckedChildren={'false'}
         placeholder={t('Value')} checked={cap.value} onChange={(value) => onSetCapabilityParam(value)} />;
       case 'number': return <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value}
-        onChange={(e) => !isNaN(parseInt(e.target.value, 10)) ? onSetCapabilityParam(parseInt(e.target.value, 10)) : onSetCapabilityParam(undefined)} onPressEnter={onPressEnter} />;
+        onChange={(e) => !isNaN(parseInt(e.target.value, 10)) ? onSetCapabilityParam(parseInt(e.target.value, 10)) : onSetCapabilityParam(undefined)} onPressEnter={onPressEnter} className={SessionStyles.capsBoxFont} />;
       case 'object':
       case 'json_object':
         return <Input disabled={isEditingDesiredCaps} id={id} type={INPUT.TEXTAREA} rows={4} placeholder={t('Value')} value={cap.value}
-          onChange={(e) => onSetCapabilityParam(e.target.value)} />;
+          onChange={(e) => onSetCapabilityParam(e.target.value)} className={SessionStyles.capsBoxFont} />;
       case 'file': return <div className={SessionStyles.fileControlWrapper}>
-        <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value} addonAfter={buttonAfter(cap.value)} onPressEnter={onPressEnter}/>
+        <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value} addonAfter={buttonAfter(cap.value)} onPressEnter={onPressEnter} className={SessionStyles.capsBoxFont} />
       </div>;
 
       default:
