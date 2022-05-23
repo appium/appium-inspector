@@ -25,7 +25,7 @@ function formatCapsBrowserstack (caps) {
 }
 
 function formatCapsLambdaTest (session) {
-  let caps, sessionId = (session.id || session.sessionId), deviceName = session.deviceName;
+  let caps, deviceName = session.deviceName;
   if (session.capabilities) {
     caps = session.capabilities;
     deviceName = session.capabilities.desired ? session.capabilities.desired.deviceName : session.capabilities.deviceName;
@@ -36,7 +36,7 @@ function formatCapsLambdaTest (session) {
     caps = session;
   }
   let importantCaps = [deviceName, caps.platformName, caps.platformVersion];
-  return sessionId + " - " + importantCaps.join(', ').trim();
+  return importantCaps.join(', ').trim();
 }
 
 export default class AttachToSession extends Component {
@@ -50,10 +50,14 @@ export default class AttachToSession extends Component {
       case ServerTypes.browserstack:
         return `${session.id} — ${formatCapsBrowserstack(session.capabilities)}`;
       case ServerTypes.lambdatest:
-        return `${formatCapsLambdaTest(session)}`;
+        return `${session.id !== null ? session.id : session.sessionId} - ${formatCapsLambdaTest(session)}`;
       default:
         return `${session.id} — ${formatCaps(session.capabilities)}`;
     }
+  }
+
+  getSessionId (session){
+    return session.id || session.sessionId;
   }
 
   render () {
