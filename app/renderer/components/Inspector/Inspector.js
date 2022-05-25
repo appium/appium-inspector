@@ -8,6 +8,7 @@ import Source from './Source';
 import InspectorStyles from './Inspector.css';
 import RecordedActions from './RecordedActions';
 import Actions from './Actions';
+import SessionInfo from './SessionInfo';
 import { clipboard } from '../../polyfills';
 import {
   SelectOutlined,
@@ -23,6 +24,7 @@ import {
   CloseOutlined,
   FileTextOutlined,
   TagOutlined,
+  InfoCircleOutlined,
   ThunderboltOutlined,
   AppstoreOutlined,
   GlobalOutlined,
@@ -129,6 +131,7 @@ export default class Inspector extends Component {
     this.props.getSavedActionFramework();
     this.props.runKeepAliveLoop();
     window.addEventListener('resize', this.updateSourceTreeWidth);
+    this.props.setSessionTime(Date.now());
 
     if (this.props.mjpegScreenshotUrl) {
       this.mjpegStreamCheckInterval = setInterval(this.checkMjpegStream.bind(this),
@@ -238,6 +241,13 @@ export default class Inspector extends Component {
               title={<span><ThunderboltOutlined /> {t('Actions')}</span>}
               className={InspectorStyles['interaction-tab-card']}>
               <Actions {...this.props} />
+            </Card>
+          </TabPane>
+          <TabPane tab={t('Session Information')} key={INTERACTION_MODE.SESSION_INFO}>
+            <Card
+              title={<span><InfoCircleOutlined /> {t('Session Information')}</span>}
+              className={InspectorStyles['interaction-tab-card']}>
+              <SessionInfo {...this.props} />
             </Card>
           </TabPane>
         </Tabs>

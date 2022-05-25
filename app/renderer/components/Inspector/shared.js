@@ -195,4 +195,5 @@ export const actionDefinitions = {
 export const INTERACTION_MODE = {
   SOURCE: 'source',
   ACTIONS: 'actions',
+  SESSION_INFO: 'sessionInfo',
 };
