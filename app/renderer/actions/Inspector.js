@@ -26,6 +26,7 @@ export const SHOW_SEND_KEYS_MODAL = 'SHOW_SEND_KEYS_MODAL';
 export const HIDE_SEND_KEYS_MODAL = 'HIDE_SEND_KEYS_MODAL';
 export const QUIT_SESSION_REQUESTED = 'QUIT_SESSION_REQUESTED';
 export const QUIT_SESSION_DONE = 'QUIT_SESSION_DONE';
+export const SET_SESSION_TIME = 'SET_SESSION_TIME';
 
 export const START_RECORDING = 'START_RECORDING';
 export const PAUSE_RECORDING = 'PAUSE_RECORDING';
@@ -68,6 +69,9 @@ export const REMOVE_ACTION = 'REMOVE_ACTION';
 export const SET_ACTION_ARG = 'SET_ACTION_ARG';
 
 export const SET_CONTEXT = 'SET_CONTEXT';
+
+export const SET_APP_ID = 'SET_APP_ID';
+export const SET_SERVER_STATUS = 'SET_SERVER_STATUS';
 
 export const SET_KEEP_ALIVE_INTERVAL = 'SET_KEEP_ALIVE_INTERVAL';
 export const SET_USER_WAIT_TIMEOUT = 'SET_USER_WAIT_TIMEOUT';
@@ -456,6 +460,41 @@ export function selectAppMode (mode) {
       const action = applyClientMethod({ methodName: 'switchContext', args: [NATIVE_APP] });
       await action(dispatch, getState);
     }
+  };
+}
+
+export function getActiveAppId (isIOS, isAndroid) {
+  return async (dispatch, getState) => {
+    try {
+      if (isIOS) {
+        const action = applyClientMethod({methodName: 'executeScript', args: ['mobile:activeAppInfo', []]});
+        const { bundleId } = await action(dispatch, getState);
+        dispatch({type: SET_APP_ID, appId: bundleId});
+      }
+      if (isAndroid) {
+        const action = applyClientMethod({methodName: 'getCurrentPackage'});
+        const appPackage = await action(dispatch, getState);
+        dispatch({type: SET_APP_ID, appId: appPackage});
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(`Could not Retrieve Active App ID: ${err}`);
+    }
+  };
+}
+
+export function getServerStatus () {
+  return async (dispatch, getState) => {
+    const status = applyClientMethod({methodName: 'status'});
+    const { build } = await status(dispatch, getState);
+    dispatch({type: SET_SERVER_STATUS, status: build});
+  };
+}
+
+// Start the session timer once session starts
+export function setSessionTime (time) {
+  return (dispatch) => {
+    dispatch({type: SET_SESSION_TIME, sessionStartTime: time});
   };
 }
 

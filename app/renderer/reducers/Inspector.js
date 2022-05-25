@@ -13,7 +13,7 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          SELECT_ACTION_GROUP, SELECT_SUB_ACTION_GROUP, SET_APP_MODE,
          SELECT_INTERACTION_MODE, ENTERING_ACTION_ARGS, SET_ACTION_ARG, REMOVE_ACTION, SET_CONTEXT,
          SET_KEEP_ALIVE_INTERVAL, SET_USER_WAIT_TIMEOUT, SET_LAST_ACTIVE_MOMENT, SET_VISIBLE_COMMAND_RESULT,
-         SET_AWAITING_MJPEG_STREAM,
+         SET_AWAITING_MJPEG_STREAM, SET_APP_ID, SET_SERVER_STATUS, SET_SESSION_TIME,
 } from '../actions/Inspector';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from '../components/Inspector/shared';
 
@@ -453,6 +453,24 @@ export default function inspector (state = INITIAL_STATE, action) {
         ...state,
         visibleCommandResult: action.result,
         visibleCommandMethod: action.methodName,
+      };
+
+    case SET_SESSION_TIME:
+      return {
+        ...state,
+        sessionStartTime: action.sessionStartTime,
+      };
+
+    case SET_APP_ID:
+      return {
+        ...state,
+        appId: action.appId,
+      };
+
+    case SET_SERVER_STATUS:
+      return {
+        ...state,
+        status: action.status,
       };
 
     case SET_AWAITING_MJPEG_STREAM:
