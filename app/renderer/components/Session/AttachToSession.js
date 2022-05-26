@@ -9,6 +9,9 @@ import {ServerTypes} from '../../actions/Session';
 const FormItem = Form.Item;
 
 function formatCaps (caps) {
+  if(caps == undefined || caps == 'undefined') {
+    return 
+  }
   let importantCaps = [caps.app, caps.platformName, caps.deviceName];
   if (caps.automationName) {
     importantCaps.push(caps.automationName);
@@ -17,6 +20,9 @@ function formatCaps (caps) {
 }
 
 function formatCapsBrowserstack (caps) {
+  if(caps == undefined || caps == 'undefined') {
+    return 
+  }
   let importantCaps = formatCaps(caps).split(', ');
   if (caps.sessionName) {
     importantCaps.push(caps.sessionName);
@@ -42,7 +48,7 @@ function formatCapsLambdaTest (session) {
 export default class AttachToSession extends Component {
 
   getSessionId(session) {
-    return session.id || session.sessionId;
+    return session.sessionId == undefined || session.sessionId == "undefined" ? session.id : session.sessionId;
   }
 
   getSessionInfo (session, serverType) {
@@ -50,14 +56,10 @@ export default class AttachToSession extends Component {
       case ServerTypes.browserstack:
         return `${session.id} — ${formatCapsBrowserstack(session.capabilities)}`;
       case ServerTypes.lambdatest:
-        return `${session.id !== null ? session.id : session.sessionId} - ${formatCapsLambdaTest(session)}`;
+        return `${this.getSessionId(session)} - ${formatCapsLambdaTest(session)}`;
       default:
         return `${session.id} — ${formatCaps(session.capabilities)}`;
     }
-  }
-
-  getSessionId (session){
-    return session.id || session.sessionId;
   }
 
   render () {
