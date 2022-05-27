@@ -481,6 +481,7 @@ export function newSession (caps, attachSessId = null) {
       protocol: https ? 'https' : 'http',
       path,
       connectionRetryCount: CONN_RETRIES,
+      connectionRetryTimeout: 10 * 60 * 1000,
     };
 
     if (username && accessKey) {
