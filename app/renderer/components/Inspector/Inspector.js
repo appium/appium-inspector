@@ -25,6 +25,8 @@ import {
   ThunderboltOutlined,
   AppstoreOutlined,
   GlobalOutlined,
+  VerticalLeftOutlined,
+  VerticalRightOutlined,
 } from '@ant-design/icons';
 import { BUTTON } from '../../../../gui-common/components/AntdTypes';
 
@@ -135,6 +137,7 @@ export default class Inspector extends Component {
         {showRecord &&
           <RecordedActions {...this.props} />
         }
+        <VerticalLeftOutlined />
         <Tabs activeKey={selectedInteractionMode}
           size="small"
           onChange={(tab) => selectInteractionMode(tab)}>

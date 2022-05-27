@@ -16,3 +16,4 @@ Certificates.p12
 junit-test-results.xml
 junit-testresults.xml
 appium-desktop
+*.storybook/
