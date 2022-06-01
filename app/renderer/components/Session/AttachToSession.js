@@ -48,7 +48,7 @@ function formatCapsLambdaTest (session) {
 export default class AttachToSession extends Component {
 
   getSessionId(session) {
-    return session.sessionId == undefined || session.sessionId == "undefined" ? session.id : session.sessionId;
+    return session.sessionId == undefined || session.sessionId == 'undefined' ? session.id : session.sessionId;
   }
 
   getSessionInfo (session, serverType) {
