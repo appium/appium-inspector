@@ -43,7 +43,7 @@ driver.quit()`;
 
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
     let suffixMap = {
-      xpath: 'AppiumBy.CLASS_NAME',
+      xpath: 'AppiumBy.XPATH',
       'accessibility id': 'AppiumBy.ACCESSIBILITY_ID',
       'id': 'AppiumBy.ID',
       'name': 'AppiumBy.NAME',
