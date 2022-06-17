@@ -26,6 +26,11 @@ export default class Actions extends Component {
       args = {x: args[0], y: args[1], duration: args[2], radius: args[3], rotation: args[4], touchCount: args[5]};
     }
 
+    // Special case for 'setGeoLocation'
+    if (action.methodName === 'setGeoLocation') {
+      args = {latitude: args[0], longitude: args[1], altitude: args[2]};
+    }
+
     // Special case for 'execute'
     if (action.methodName === 'executeScript') {
       if (!_.isEmpty(args[1])) {
