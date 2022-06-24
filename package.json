@@ -135,7 +135,7 @@
     "ky": "Can't upgrade because newer versions are ESM and parcel tries to bundle them with require"
   },
   "dependencies": {
-    "antd": "4.21.2",
+    "antd": "4.21.3",
     "bluebird": "3.7.2",
     "cheerio": "1.0.0-rc.10",
     "connected-react-router": "6.9.2",
