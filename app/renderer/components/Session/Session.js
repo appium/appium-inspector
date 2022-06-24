@@ -21,10 +21,11 @@ export default class Session extends Component {
 
   componentDidMount () {
     const {setLocalServerParams, getSavedSessions, setSavedServerParams, setStateFromAppiumFile,
-           setVisibleProviders, getRunningSessions, bindWindowClose, initFromQueryString, saveFile} = this.props;
+           setVisibleProviders, getRunningSessions, bindWindowClose, initFromQueryString, saveFile, switchTabs} = this.props;
     (async () => {
       try {
         bindWindowClose();
+        switchTabs('new');
         await getSavedSessions();
         await setSavedServerParams();
         await setLocalServerParams();
