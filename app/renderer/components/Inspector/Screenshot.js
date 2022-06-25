@@ -116,7 +116,7 @@ class Screenshot extends Component {
           onMouseMove={this.handleMouseMove.bind(this)}
           onMouseOut={this.handleMouseOut.bind(this)}
           className={styles.screenshotBox}>
-          {x !== null && <div className={styles.coordinatesContainer}>
+          {screenshotInteractionMode !== SELECT && <div className={styles.coordinatesContainer}>
             <p>{t('xCoordinate', {x})}</p>
             <p>{t('yCoordinate', {y})}</p>
           </div>}
