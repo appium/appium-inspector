@@ -9,8 +9,8 @@ import {ServerTypes} from '../../actions/Session';
 const FormItem = Form.Item;
 
 function formatCaps (caps) {
-  if(caps == undefined || caps == 'undefined') {
-    return 
+  if (caps === undefined || caps === 'undefined') {
+    return ;
   }
   let importantCaps = [caps.app, caps.platformName, caps.deviceName];
   if (caps.automationName) {
@@ -20,8 +20,8 @@ function formatCaps (caps) {
 }
 
 function formatCapsBrowserstack (caps) {
-  if(caps == undefined || caps == 'undefined') {
-    return 
+  if (caps === undefined || caps === 'undefined') {
+    return ;
   }
   let importantCaps = formatCaps(caps).split(', ');
   if (caps.sessionName) {
@@ -47,8 +47,8 @@ function formatCapsLambdaTest (session) {
 
 export default class AttachToSession extends Component {
 
-  getSessionId(session) {
-    return session.sessionId == undefined || session.sessionId == 'undefined' ? session.id : session.sessionId;
+  getSessionId (session) {
+    return session.sessionId === undefined || session.sessionId === 'undefined' ? session.id : session.sessionId;
   }
 
   getSessionInfo (session, serverType) {
