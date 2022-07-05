@@ -47,7 +47,7 @@ const INITIAL_STATE = {
     pcloudy: {},
     testingbot: {},
     experitest: {},
-    roboticmobi: {},
+    robotqa: {},
   },
   attachSessId: null,
 

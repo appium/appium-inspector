@@ -43,7 +43,7 @@
     "pcloudy": {},
     "testingbot": {},
     "experitest": {},
-    "roboticmobi": {}
+    "robotqa": {}
   },
   "serverType": "sauce",
   "visibleProviders": [
