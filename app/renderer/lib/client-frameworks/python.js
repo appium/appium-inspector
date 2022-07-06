@@ -52,7 +52,7 @@ driver.quit()`;
       '-android datamatcher': 'AppiumBy.ANDROID_DATA_MATCHER',
       '-android viewtag': 'AppiumBy.ANDROID_VIEWTAG',
       '-ios predicate string': 'AppiumBy.IOS_PREDICATE',
-      '-ios class chain': 'AppiumBy.IOS_CLASS_CHAI',
+      '-ios class chain': 'AppiumBy.IOS_CLASS_CHAIN',
     };
     if (!suffixMap[strategy]) {
       throw new Error(`Strategy ${strategy} can't be code-gened`);
