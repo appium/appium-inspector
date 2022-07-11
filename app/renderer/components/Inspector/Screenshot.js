@@ -120,7 +120,7 @@ class Screenshot extends Component {
             <p>{t('xCoordinate', {x})}</p>
             <p>{t('yCoordinate', {y})}</p>
           </div>}
-          {swipeInstructions && <Tooltip visible={true} placement="top" title={swipeInstructions}>{screenImg}</Tooltip>}
+          {swipeInstructions && <Tooltip visible={true} title={swipeInstructions} placement="topLeft">{screenImg}</Tooltip>}
           {!swipeInstructions && screenImg}
           {screenshotInteractionMode === SELECT && this.containerEl && <HighlighterRects
             {...this.props}

@@ -22,6 +22,13 @@ export const SET_FIELD_VALUE = 'SET_FIELD_VALUE';
 export const SET_EXPANDED_PATHS = 'SET_EXPANDED_PATHS';
 export const SELECT_HOVERED_ELEMENT = 'SELECT_HOVERED_ELEMENT';
 export const UNSELECT_HOVERED_ELEMENT = 'UNSELECT_HOVERED_ELEMENT';
+
+export const SELECT_HOVERED_CENTROID = 'SELECT_HOVERED_CENTROID';
+export const UNSELECT_HOVERED_CENTROID = 'UNSELECT_HOVERED_CENTROID';
+export const SELECT_CENTROID = 'SELECT_CENTROID';
+export const UNSELECT_CENTROID = 'UNSELECT_CENTROID';
+export const SET_SHOW_CENTROIDS = 'SET_SHOW_CENTROIDS';
+
 export const SHOW_SEND_KEYS_MODAL = 'SHOW_SEND_KEYS_MODAL';
 export const HIDE_SEND_KEYS_MODAL = 'HIDE_SEND_KEYS_MODAL';
 export const QUIT_SESSION_REQUESTED = 'QUIT_SESSION_REQUESTED';
@@ -138,6 +145,31 @@ export function selectElement (path) {
 export function unselectElement () {
   return (dispatch) => {
     dispatch({type: UNSELECT_ELEMENT});
+  };
+}
+
+
+export function selectCentroid (path) {
+  return (dispatch) => {
+    dispatch({type: SELECT_CENTROID, path});
+  };
+}
+
+export function unselectCentroid () {
+  return (dispatch) => {
+    dispatch({type: UNSELECT_CENTROID});
+  };
+}
+
+export function selectHoveredCentroid (path) {
+  return (dispatch) => {
+    dispatch({type: SELECT_HOVERED_CENTROID, path});
+  };
+}
+
+export function unselectHoveredCentroid () {
+  return (dispatch) => {
+    dispatch({type: UNSELECT_HOVERED_CENTROID});
   };
 }
 
@@ -460,6 +492,14 @@ export function selectAppMode (mode) {
       const action = applyClientMethod({ methodName: 'switchContext', args: [NATIVE_APP] });
       await action(dispatch, getState);
     }
+  };
+}
+
+export function toggleShowCentroids () {
+  return (dispatch, getState) => {
+    const {showCentroids} = getState().inspector;
+    const show = !showCentroids;
+    dispatch({type: SET_SHOW_CENTROIDS, show});
   };
 }
 
