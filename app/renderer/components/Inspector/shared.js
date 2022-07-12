@@ -51,6 +51,7 @@ export const SCREENSHOT_INTERACTION_MODE = {
   SELECT: 'select',
   SWIPE: 'swipe',
   TAP: 'tap',
+  GESTURE: 'gesture',
 };
 
 export const APP_MODE = {
@@ -195,5 +196,6 @@ export const actionDefinitions = {
 export const INTERACTION_MODE = {
   SOURCE: 'source',
   ACTIONS: 'actions',
+  SAVED_GESTURES: 'savedGestures',
   SESSION_INFO: 'sessionInfo',
 };

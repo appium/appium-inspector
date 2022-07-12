@@ -13,13 +13,46 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          SELECT_ACTION_GROUP, SELECT_SUB_ACTION_GROUP, SET_APP_MODE,
          SELECT_INTERACTION_MODE, ENTERING_ACTION_ARGS, SET_ACTION_ARG, REMOVE_ACTION, SET_CONTEXT,
          SET_KEEP_ALIVE_INTERVAL, SET_USER_WAIT_TIMEOUT, SET_LAST_ACTIVE_MOMENT, SET_VISIBLE_COMMAND_RESULT,
-         SET_AWAITING_MJPEG_STREAM, SET_APP_ID, SET_SERVER_STATUS, SET_SESSION_TIME,
+         SET_AWAITING_MJPEG_STREAM, SET_APP_ID, SET_SERVER_STATUS, SET_SESSION_TIME, SHOW_GESTURE_EDITOR, HIDE_GESTURE_EDITOR,
+         SAVE_GESTURE_ACTION
 } from '../actions/Inspector';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from '../components/Inspector/shared';
 
 const DEFAULT_FRAMEWORK = 'java';
 
 const INITIAL_STATE = {
+  savedGestures: {
+    'Zoom In': {
+      description: 'Zooming in gesture.',
+      pointer1: [
+        {type: 'pointerMove', duration: 0, x: 150, y: 200},
+        {type: 'pointerDown', button: 0},
+        {type: 'pause', duration: 100},
+        {type: 'pointerUp', button: 0}
+      ],
+      pointer2: [
+        {type: 'pointerMove', duration: 0, x: 150, y: 100},
+        {type: 'pointerDown', button: 0},
+        {type: 'pause', duration: 100},
+        {type: 'pointerUp', button: 0}
+      ],
+    },
+    'Zoom Out': {
+      description: 'Zooming out gesture.',
+      pointer1: [
+        {type: 'pointerMove', duration: 0, x: 150, y: 200},
+        {type: 'pointerDown', button: 0},
+        {type: 'pause', duration: 100},
+        {type: 'pointerUp', button: 0}
+      ],
+      pointer2: [
+        {type: 'pointerMove', duration: 0, x: 150, y: 100},
+        {type: 'pointerDown', button: 0},
+        {type: 'pause', duration: 100},
+        {type: 'pointerUp', button: 0}
+      ],
+    },
+  },
   driver: null,
   keepAliveInterval: null,
   showKeepAlivePrompt: false,
@@ -32,6 +65,7 @@ const INITIAL_STATE = {
   recordedActions: [],
   actionFramework: DEFAULT_FRAMEWORK,
   sessionDetails: {},
+  isGestureEditorVisible: false,
   isLocatorTestModalVisible: false,
   locatorTestStrategy: 'id',
   locatorTestValue: '',
@@ -253,6 +287,14 @@ export default function inspector (state = INITIAL_STATE, action) {
         mjpegScreenshotUrl: action.mjpegScreenshotUrl
       };
 
+    case SAVE_GESTURE_ACTION:
+      return {
+        ...state,
+        savedGestures: [
+          ...state.savedGestures,
+          action.gesture]
+      };
+
     case SHOW_LOCATOR_TEST_MODAL:
       return {
         ...state,
@@ -263,6 +305,20 @@ export default function inspector (state = INITIAL_STATE, action) {
       return {
         ...state,
         isLocatorTestModalVisible: false,
+      };
+
+    case SHOW_GESTURE_EDITOR:
+      return {
+        ...state,
+        loadedGesture: action.loadedGesture,
+        isGestureEditorVisible: true,
+      };
+
+    case HIDE_GESTURE_EDITOR:
+      return {
+        ...state,
+        loadedGesture: undefined,
+        isGestureEditorVisible: false,
       };
 
     case SET_LOCATOR_TEST_STRATEGY:

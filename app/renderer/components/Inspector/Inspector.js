@@ -8,6 +8,8 @@ import Source from './Source';
 import InspectorStyles from './Inspector.css';
 import RecordedActions from './RecordedActions';
 import Actions from './Actions';
+import SavedGestures from './SavedGestures';
+import GestureEditor from './GestureEditor';
 import SessionInfo from './SessionInfo';
 import { clipboard } from '../../polyfills';
 import {
@@ -24,14 +26,15 @@ import {
   CloseOutlined,
   FileTextOutlined,
   TagOutlined,
-  InfoCircleOutlined,
   ThunderboltOutlined,
+  HighlightOutlined,
+  InfoCircleOutlined,
   AppstoreOutlined,
   GlobalOutlined,
 } from '@ant-design/icons';
 import { BUTTON } from '../../../../gui-common/components/AntdTypes';
 
-const {SELECT, SWIPE, TAP} = SCREENSHOT_INTERACTION_MODE;
+const {SELECT, SWIPE, TAP, GESTURE} = SCREENSHOT_INTERACTION_MODE;
 
 const { TabPane } = Tabs;
 
@@ -186,7 +189,7 @@ export default class Inspector extends Component {
            screenshotInteractionMode, isFindingElementsTimes, visibleCommandMethod,
            selectedInteractionMode, selectInteractionMode, selectAppMode, setVisibleCommandResult,
            showKeepAlivePrompt, keepSessionAlive, sourceXML, t, visibleCommandResult,
-           mjpegScreenshotUrl, isAwaitingMjpegStream} = this.props;
+           mjpegScreenshotUrl, isAwaitingMjpegStream, isGestureEditorVisible} = this.props;
     const {path} = selectedElement;
 
     const showScreenshot = ((screenshot && !screenshotError) ||
@@ -243,6 +246,21 @@ export default class Inspector extends Component {
               <Actions {...this.props} />
             </Card>
           </TabPane>
+          <TabPane tab={t('Gestures')} key={INTERACTION_MODE.SAVED_GESTURES}>
+            {isGestureEditorVisible ?
+              <Card
+                title={<span><HighlightOutlined /> {t('Gesture Editor')}</span>}
+                className={InspectorStyles['interaction-tab-card']}>
+                <GestureEditor {...this.props} />
+              </Card>
+              :
+              <Card
+                title={<span><HighlightOutlined /> {t('Saved Gestures')}</span>}
+                className={InspectorStyles['interaction-tab-card']}>
+                <SavedGestures {...this.props} />
+              </Card>
+            }
+          </TabPane>
           <TabPane tab={t('Session Information')} key={INTERACTION_MODE.SESSION_INFO}>
             <Card
               title={<span><InfoCircleOutlined /> {t('Session Information')}</span>}
@@ -274,16 +292,19 @@ export default class Inspector extends Component {
         <Tooltip title={t('Select Elements')}>
           <Button icon={<SelectOutlined/>} onClick={() => {this.screenshotInteractionChange(SELECT);}}
             type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+            disabled={screenshotInteractionMode === GESTURE}
           />
         </Tooltip>
         <Tooltip title={t('Swipe By Coordinates')}>
           <Button icon={<SwapRightOutlined/>} onClick={() => {this.screenshotInteractionChange(SWIPE);}}
             type={screenshotInteractionMode === SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+            disabled={screenshotInteractionMode === GESTURE}
           />
         </Tooltip>
         <Tooltip title={t('Tap By Coordinates')}>
           <Button icon={<ScanOutlined/>} onClick={() => {this.screenshotInteractionChange(TAP);}}
             type={screenshotInteractionMode === TAP ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+            disabled={screenshotInteractionMode === GESTURE}
           />
         </Tooltip>
       </ButtonGroup>
@@ -307,7 +328,7 @@ export default class Inspector extends Component {
         </Tooltip>
       }
       <Tooltip title={t('Search for element')}>
-        <Button id='searchForElement' icon={<SearchOutlined/>} onClick={showLocatorTestModal}/>
+        <Button id='searchForElement' icon={<SearchOutlined/>} onClick={showLocatorTestModal} />
       </Tooltip>
       <Tooltip title={t('quitSessionAndClose')}>
         <Button id='btnClose' icon={<CloseOutlined/>} onClick={() => quitSession()}/>

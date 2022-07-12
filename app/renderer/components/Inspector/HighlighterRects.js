@@ -18,7 +18,12 @@ export default class HighlighterRects extends Component {
     if (screenshotInteractionMode === TAP) {
       applyClientMethod({
         methodName: TAP,
-        args: [x, y],
+        args: ['finger1', [
+          {type: 'pointerMove', duration: 0, x, y},
+          {type: 'pointerDown', button: 0},
+          {type: 'pause', duration: 100},
+          {type: 'pointerUp', button: 0}
+        ]],
       });
     } else if (screenshotInteractionMode === SWIPE) {
       if (!swipeStart) {
@@ -59,7 +64,12 @@ export default class HighlighterRects extends Component {
     const {swipeStart, swipeEnd, clearSwipeAction, applyClientMethod} = this.props;
     await applyClientMethod({
       methodName: SWIPE,
-      args: [swipeStart.x, swipeStart.y, swipeEnd.x, swipeEnd.y],
+      args: ['finger1', [
+        {type: 'pointerMove', duration: 0, x: swipeStart.x, y: swipeStart.y},
+        {type: 'pointerDown', button: 0},
+        {type: 'pointerMove', duration: 750, origin: 'viewport', x: swipeEnd.x, y: swipeEnd.y},
+        {type: 'pointerUp', button: 0}
+      ]],
     });
     clearSwipeAction();
   }

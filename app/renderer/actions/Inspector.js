@@ -81,6 +81,10 @@ export const SET_VISIBLE_COMMAND_RESULT = 'SET_VISIBLE_COMMAND_RESULT';
 
 export const SET_AWAITING_MJPEG_STREAM = 'SET_AWAITING_MJPEG_STREAM';
 
+export const SHOW_GESTURE_EDITOR = 'SHOW_GESTURE_EDITOR';
+export const HIDE_GESTURE_EDITOR = 'HIDE_GESTURE_EDITOR';
+export const SAVE_GESTURE_ACTION = 'SAVE_GESTURE_ACTION';
+
 const KEEP_ALIVE_PING_INTERVAL = 5 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
 const WAIT_FOR_USER_KEEP_ALIVE = 60 * 60 * 1000; // Give user 1 hour to reply
@@ -264,6 +268,12 @@ export function quitSession (reason, killedByUser = true) {
   };
 }
 
+export function saveGesture (gesture) {
+  return (dispatch) => {
+    dispatch({type: SAVE_GESTURE_ACTION, gesture});
+  };
+}
+
 export function startRecording () {
   return (dispatch) => {
     dispatch({type: START_RECORDING});
@@ -322,6 +332,18 @@ export function toggleShowBoilerplate () {
 export function setSessionDetails ({driver, sessionDetails, mode, mjpegScreenshotUrl}) {
   return (dispatch) => {
     dispatch({type: SET_SESSION_DETAILS, driver, sessionDetails, mode, mjpegScreenshotUrl});
+  };
+}
+
+export function showGestureEditor (loadedGesture) {
+  return (dispatch) => {
+    dispatch({type: SHOW_GESTURE_EDITOR, loadedGesture});
+  };
+}
+
+export function hideGestureEditor () {
+  return (dispatch) => {
+    dispatch({type: HIDE_GESTURE_EDITOR});
   };
 }
 
