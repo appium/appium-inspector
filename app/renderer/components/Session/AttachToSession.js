@@ -49,7 +49,6 @@ export default class AttachToSession extends Component {
     if (session.capabilities === undefined) {
       session.capabilities = {};
     }
-    console.log(session)
     switch (serverType) {
       case ServerTypes.browserstack:
         return `${session.id} — ${formatCapsBrowserstack(session.capabilities)}`;
