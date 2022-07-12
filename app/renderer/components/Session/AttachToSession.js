@@ -9,9 +9,6 @@ import {ServerTypes} from '../../actions/Session';
 const FormItem = Form.Item;
 
 function formatCaps (caps) {
-  if (caps === undefined || caps === 'undefined') {
-    return ;
-  }
   let importantCaps = [caps.app, caps.platformName, caps.deviceName];
   if (caps.automationName) {
     importantCaps.push(caps.automationName);
@@ -20,9 +17,6 @@ function formatCaps (caps) {
 }
 
 function formatCapsBrowserstack (caps) {
-  if (caps === undefined || caps === 'undefined') {
-    return ;
-  }
   let importantCaps = formatCaps(caps).split(', ');
   if (caps.sessionName) {
     importantCaps.push(caps.sessionName);
@@ -32,7 +26,7 @@ function formatCapsBrowserstack (caps) {
 
 function formatCapsLambdaTest (session) {
   let caps, deviceName = session.deviceName;
-  if (session.capabilities) {
+  if (Object.keys(session.capabilities).length !== 0) {
     caps = session.capabilities;
     deviceName = session.capabilities.desired ? session.capabilities.desired.deviceName : session.capabilities.deviceName;
   } else if (session.desired) {
@@ -52,6 +46,10 @@ export default class AttachToSession extends Component {
   }
 
   getSessionInfo (session, serverType) {
+    if (session.capabilities === undefined) {
+      session.capabilities = {};
+    }
+    console.log(session)
     switch (serverType) {
       case ServerTypes.browserstack:
         return `${session.id} — ${formatCapsBrowserstack(session.capabilities)}`;
