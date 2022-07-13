@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import InspectorCSS from './Inspector.css';
-import { parseCoordinates } from './shared';
 
 /**
  * Absolute positioned divs that overlay the app screenshot and highlight the bounding
@@ -10,7 +9,7 @@ export default class HighlighterRect extends Component {
 
   render () {
     const {selectedElement = {}, selectHoveredElement, unselectHoveredElement, hoveredElement = {}, selectElement, unselectElement, element,
-           zIndex, scaleRatio, xOffset, elLocation, elSize} = this.props;
+           scaleRatio, xOffset, elLocation, elSize, dimensions} = this.props;
     const {path: hoveredPath} = hoveredElement;
     const {path: selectedPath} = selectedElement;
 
@@ -18,12 +17,7 @@ export default class HighlighterRect extends Component {
     highlighterClasses = [InspectorCSS['highlighter-box']];
 
     if (element) {
-      // Calculate left, top, width and height coordinates
-      const {x1, y1, x2, y2} = parseCoordinates(element);
-      left = x1 / scaleRatio + xOffset;
-      top = y1 / scaleRatio;
-      width = (x2 - x1) / scaleRatio;
-      height = (y2 - y1) / scaleRatio;
+      ({width, height, left, top} = dimensions);
 
       // Add class + special classes to hovered and selected elements
       if (hoveredPath === element.path) {
@@ -47,7 +41,7 @@ export default class HighlighterRect extends Component {
       onMouseOut={unselectHoveredElement}
       onClick={() => key === selectedPath ? unselectElement() : selectElement(key)}
       key={key}
-      style={{zIndex, left: (left || 0), top: (top || 0), width: (width || 0), height: (height || 0)}}>
+      style={{left: (left || 0), top: (top || 0), width: (width || 0), height: (height || 0)}}>
       <div></div>
     </div>;
   }
