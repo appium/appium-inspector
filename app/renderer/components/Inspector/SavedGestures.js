@@ -1,52 +1,85 @@
 import React, { Component } from 'react';
 import { Table, Button } from 'antd';
 import { withTranslation } from '../../util';
+import moment from 'moment';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 
 class SavedGestures extends Component {
 
+
+  loadSavedGesture (gesture) {
+    const {setSavedGesture, showGestureEditor} = this.props;
+    setSavedGesture(gesture);
+    showGestureEditor();
+  }
+
+  handleDelete (id) {
+    return () => {
+      if (window.confirm('Are you sure?')) {
+        this.props.deleteSavedGesture(id);
+      }
+    };
+  }
+
+  gestureFromId (id) {
+    const {savedGestures} = this.props;
+    for (let gesture of savedGestures) {
+      if (gesture.id === id) {
+        return gesture;
+      }
+    }
+    throw new Error(`Couldn't find session with uuid ${id}`);
+  }
+
   render () {
 
-    const {showGestureEditor, savedGestures} = this.props;
+    const {savedGestures, showGestureEditor} = this.props;
 
-    const dataSource = Object.keys(savedGestures).map(
-        (key) => ({key, name: key, description: savedGestures[key].description}));
-
-    const columns = [
-      {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-      },
-      {
-        title: 'Description',
-        dataIndex: 'description',
-        key: 'description',
-      },
-      {
-        title: 'Action',
-        dataIndex: 'action',
-        key: 'action',
-        render: (text) => (
+    const columns = [{
+      title: 'Gestures',
+      dataIndex: 'name',
+      key: 'name'
+    }, {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description'
+    }, {
+      title: 'Created',
+      dataIndex: 'date',
+      key: 'date'
+    }, {
+      title: 'Actions',
+      key: 'action',
+      render: (text, record) => {
+        let gesture = this.gestureFromId(record.key);
+        return (
           <div>
             <Button
-              onClick={showGestureEditor(savedGestures[text])}
               icon={<EditOutlined/>}
-              type='text'
+              onClick={() => this.loadSavedGesture(gesture)}
             />
             <Button
               icon={<DeleteOutlined/>}
-              type='text'
-            />
+              onClick={this.handleDelete(gesture.id)}/>
           </div>
-        )
-      },
-    ];
+        );
+      }
+    }];
+
+    let dataSource = [];
+    if (savedGestures) {
+      dataSource = savedGestures.map((gesture) => ({
+        key: gesture.id,
+        name: (gesture.name || '(Unnamed)'),
+        date: moment(gesture.date).format('YYYY-MM-DD'),
+        description: gesture.description || 'No Description',
+      }));
+    }
 
     return <Table
+      pagination={false}
       dataSource={dataSource}
       columns={columns}
-      pagination={false}
       footer={() => <Button
         onClick={showGestureEditor}
         icon={<PlusOutlined/>}

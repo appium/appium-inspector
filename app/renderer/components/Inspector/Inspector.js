@@ -34,7 +34,7 @@ import {
 } from '@ant-design/icons';
 import { BUTTON } from '../../../../gui-common/components/AntdTypes';
 
-const {SELECT, SWIPE, TAP, GESTURE} = SCREENSHOT_INTERACTION_MODE;
+const {SELECT, SWIPE, TAP} = SCREENSHOT_INTERACTION_MODE;
 
 const { TabPane } = Tabs;
 
@@ -292,19 +292,19 @@ export default class Inspector extends Component {
         <Tooltip title={t('Select Elements')}>
           <Button icon={<SelectOutlined/>} onClick={() => {this.screenshotInteractionChange(SELECT);}}
             type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-            disabled={screenshotInteractionMode === GESTURE}
+            disabled={isGestureEditorVisible}
           />
         </Tooltip>
         <Tooltip title={t('Swipe By Coordinates')}>
           <Button icon={<SwapRightOutlined/>} onClick={() => {this.screenshotInteractionChange(SWIPE);}}
             type={screenshotInteractionMode === SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-            disabled={screenshotInteractionMode === GESTURE}
+            disabled={isGestureEditorVisible}
           />
         </Tooltip>
         <Tooltip title={t('Tap By Coordinates')}>
           <Button icon={<ScanOutlined/>} onClick={() => {this.screenshotInteractionChange(TAP);}}
             type={screenshotInteractionMode === TAP ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-            disabled={screenshotInteractionMode === GESTURE}
+            disabled={isGestureEditorVisible}
           />
         </Tooltip>
       </ButtonGroup>

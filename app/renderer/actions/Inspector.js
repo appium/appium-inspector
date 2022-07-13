@@ -3,6 +3,7 @@ import { push } from 'connected-react-router';
 import { getLocators, APP_MODE } from '../components/Inspector/shared';
 import { showError } from './Session';
 import { xmlToJSON } from '../util';
+import { v4 as UUID } from 'uuid';
 import frameworks from '../lib/client-frameworks';
 import { getSetting, setSetting, SAVED_FRAMEWORK } from '../../shared/settings';
 import i18n from '../../configs/i18next.config.renderer';
@@ -84,6 +85,8 @@ export const SET_AWAITING_MJPEG_STREAM = 'SET_AWAITING_MJPEG_STREAM';
 export const SHOW_GESTURE_EDITOR = 'SHOW_GESTURE_EDITOR';
 export const HIDE_GESTURE_EDITOR = 'HIDE_GESTURE_EDITOR';
 export const SAVE_GESTURE_ACTION = 'SAVE_GESTURE_ACTION';
+export const SET_LOADED_GESTURE = 'SET_LOADED_GESTURE';
+export const REMOVE_LOADED_GESTURE = 'REMOVE_LOADED_GESTURE';
 
 const KEEP_ALIVE_PING_INTERVAL = 5 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -268,12 +271,6 @@ export function quitSession (reason, killedByUser = true) {
   };
 }
 
-export function saveGesture (gesture) {
-  return (dispatch) => {
-    dispatch({type: SAVE_GESTURE_ACTION, gesture});
-  };
-}
-
 export function startRecording () {
   return (dispatch) => {
     dispatch({type: START_RECORDING});
@@ -332,18 +329,6 @@ export function toggleShowBoilerplate () {
 export function setSessionDetails ({driver, sessionDetails, mode, mjpegScreenshotUrl}) {
   return (dispatch) => {
     dispatch({type: SET_SESSION_DETAILS, driver, sessionDetails, mode, mjpegScreenshotUrl});
-  };
-}
-
-export function showGestureEditor (loadedGesture) {
-  return (dispatch) => {
-    dispatch({type: SHOW_GESTURE_EDITOR, loadedGesture});
-  };
-}
-
-export function hideGestureEditor () {
-  return (dispatch) => {
-    dispatch({type: HIDE_GESTURE_EDITOR});
   };
 }
 
@@ -698,5 +683,52 @@ export function setVisibleCommandResult (result, methodName) {
 export function setAwaitingMjpegStream (isAwaiting) {
   return (dispatch) => {
     dispatch({type: SET_AWAITING_MJPEG_STREAM, isAwaiting});
+  };
+}
+
+export function saveGesture (params) {
+  return (dispatch, getState) => {
+    const savedGestures = getState().inspector.savedGestures;
+    let newGesture;
+    if (!params.id) {
+      params.id = UUID();
+      params.date = Date.now();
+      newGesture = true;
+    } else {
+      newGesture = false;
+    }
+    savedGestures.push(params);
+    dispatch({type: SAVE_GESTURE_ACTION, savedGestures});
+
+    if (!newGesture) {
+      dispatch({type: REMOVE_LOADED_GESTURE});
+    }
+  };
+}
+
+
+export function showGestureEditor () {
+  return (dispatch) => {
+    dispatch({type: SHOW_GESTURE_EDITOR});
+  };
+}
+
+export function hideGestureEditor () {
+  return (dispatch) => {
+    dispatch({type: HIDE_GESTURE_EDITOR});
+  };
+}
+
+export function setSavedGesture (loadedGesture) {
+  return (dispatch) => {
+    dispatch({type: SET_LOADED_GESTURE, loadedGesture});
+  };
+}
+
+export function deleteSavedGesture (id) {
+  return (dispatch, getState) => {
+    const {savedGestures} = getState().inspector;
+    const newSavedGestures = savedGestures.filter((gesture) => gesture.id !== id);
+    dispatch({type: SAVE_GESTURE_ACTION, savedGestures: newSavedGestures});
   };
 }
