@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { debounce } from 'lodash';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from './shared';
-import { Card, Button, Spin, Tooltip, Modal, Tabs } from 'antd';
+import { Card, Button, Spin, Tooltip, Modal, Tabs, Switch } from 'antd';
 import Screenshot from './Screenshot';
 import SelectedElement from './SelectedElement';
 import Source from './Source';
@@ -15,6 +15,8 @@ import {
   ScanOutlined,
   SwapRightOutlined,
   ArrowLeftOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
   ReloadOutlined,
   EyeOutlined,
   PauseOutlined,
@@ -186,14 +188,47 @@ export default class Inspector extends Component {
            screenshotInteractionMode, isFindingElementsTimes, visibleCommandMethod,
            selectedInteractionMode, selectInteractionMode, selectAppMode, setVisibleCommandResult,
            showKeepAlivePrompt, keepSessionAlive, sourceXML, t, visibleCommandResult,
-           mjpegScreenshotUrl, isAwaitingMjpegStream} = this.props;
+           mjpegScreenshotUrl, isAwaitingMjpegStream, toggleShowCentroids, showCentroids} = this.props;
     const {path} = selectedElement;
 
     const showScreenshot = ((screenshot && !screenshotError) ||
                             (mjpegScreenshotUrl && !isAwaitingMjpegStream));
 
+    let screenShotControls = <div className={InspectorStyles['screenshot-controls']}>
+      <div className={InspectorStyles['action-controls']}>
+        <Tooltip title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')} placement="topRight">
+          <Switch
+            checkedChildren={<CheckCircleOutlined />}
+            unCheckedChildren={<CloseCircleOutlined />}
+            defaultChecked={false}
+            onChange={() => toggleShowCentroids()}
+          />
+        </Tooltip>
+      </div>
+      <div className={InspectorStyles['action-controls']}>
+        <ButtonGroup value={screenshotInteractionMode}>
+          <Tooltip title={t('Select Elements')}>
+            <Button icon={<SelectOutlined/>} onClick={() => {this.screenshotInteractionChange(SELECT);}}
+              type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+            />
+          </Tooltip>
+          <Tooltip title={t('Swipe By Coordinates')}>
+            <Button icon={<SwapRightOutlined/>} onClick={() => {this.screenshotInteractionChange(SWIPE);}}
+              type={screenshotInteractionMode === SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+            />
+          </Tooltip>
+          <Tooltip title={t('Tap By Coordinates')}>
+            <Button icon={<ScanOutlined/>} onClick={() => {this.screenshotInteractionChange(TAP);}}
+              type={screenshotInteractionMode === TAP ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+            />
+          </Tooltip>
+        </ButtonGroup>
+      </div>
+    </div>;
+
     let main = <div className={InspectorStyles['inspector-main']} ref={(el) => {this.screenAndSourceEl = el;}}>
       <div id='screenshotContainer' className={InspectorStyles['screenshot-container']} ref={(el) => {this.screenshotEl = el;}}>
+        {screenShotControls}
         {showScreenshot && <Screenshot {...this.props} scaleRatio={this.state.scaleRatio}/>}
         {screenshotError && t('couldNotObtainScreenshot', {screenshotError})}
         {!showScreenshot &&
@@ -269,26 +304,6 @@ export default class Inspector extends Component {
       </ButtonGroup>
     </div>;
 
-    let actionControls = <div className={InspectorStyles['action-controls']}>
-      <ButtonGroup value={screenshotInteractionMode}>
-        <Tooltip title={t('Select Elements')}>
-          <Button icon={<SelectOutlined/>} onClick={() => {this.screenshotInteractionChange(SELECT);}}
-            type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          />
-        </Tooltip>
-        <Tooltip title={t('Swipe By Coordinates')}>
-          <Button icon={<SwapRightOutlined/>} onClick={() => {this.screenshotInteractionChange(SWIPE);}}
-            type={screenshotInteractionMode === SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          />
-        </Tooltip>
-        <Tooltip title={t('Tap By Coordinates')}>
-          <Button icon={<ScanOutlined/>} onClick={() => {this.screenshotInteractionChange(TAP);}}
-            type={screenshotInteractionMode === TAP ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          />
-        </Tooltip>
-      </ButtonGroup>
-    </div>;
-
     const generalControls = <ButtonGroup>
       <Tooltip title={t('Back')}>
         <Button id='btnGoBack' icon={<ArrowLeftOutlined/>} onClick={() => applyClientMethod({methodName: 'back'})}/>
@@ -316,7 +331,6 @@ export default class Inspector extends Component {
 
     let controls = <div className={InspectorStyles['inspector-toolbar']}>
       {appModeControls}
-      {actionControls}
       {generalControls}
     </div>;
 
