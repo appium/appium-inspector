@@ -26,7 +26,7 @@ const INITIAL_STATE = {
       {
         name: 'Zoom In',
         description: 'Zooming in gesture.',
-        date: '1652454412116',
+        date: 1657896413176,
         id: 'b1efb924-f230-4c1d-926d-a17ddfa583b1',
         actions: {
           pointer1: [
@@ -41,12 +41,30 @@ const INITIAL_STATE = {
             {type: 'pause', duration: 100},
             {type: 'pointerUp', button: 0}
           ],
+          pointer3: [
+            {type: 'pointerMove', duration: 0, x: 150, y: 100},
+            {type: 'pointerDown', button: 0},
+            {type: 'pause', duration: 100},
+            {type: 'pointerUp', button: 0}
+          ],
+          pointer4: [
+            {type: 'pointerMove', duration: 0, x: 150, y: 100},
+            {type: 'pointerDown', button: 0},
+            {type: 'pause', duration: 100},
+            {type: 'pointerUp', button: 0}
+          ],
+          pointer5: [
+            {type: 'pointerMove', duration: 0, x: 150, y: 100},
+            {type: 'pointerDown', button: 0},
+            {type: 'pause', duration: 100},
+            {type: 'pointerUp', button: 0}
+          ],
         },
       },
       {
         name: 'Zoom Out',
         description: 'Zooming out gesture.',
-        date: '1652454413119',
+        date: 1657896413176,
         id: 'b1efb924-f230-4c1d-926d-a17ddfa583b3',
         actions: {
           pointer1: [
@@ -56,6 +74,24 @@ const INITIAL_STATE = {
             {type: 'pointerUp', button: 0}
           ],
           pointer2: [
+            {type: 'pointerMove', duration: 0, x: 150, y: 100},
+            {type: 'pointerDown', button: 0},
+            {type: 'pause', duration: 100},
+            {type: 'pointerUp', button: 0}
+          ],
+          pointer3: [
+            {type: 'pointerMove', duration: 0, x: 150, y: 100},
+            {type: 'pointerDown', button: 0},
+            {type: 'pause', duration: 100},
+            {type: 'pointerUp', button: 0}
+          ],
+          pointer4: [
+            {type: 'pointerMove', duration: 0, x: 150, y: 100},
+            {type: 'pointerDown', button: 0},
+            {type: 'pause', duration: 100},
+            {type: 'pointerUp', button: 0}
+          ],
+          pointer5: [
             {type: 'pointerMove', duration: 0, x: 150, y: 100},
             {type: 'pointerDown', button: 0},
             {type: 'pause', duration: 100},
