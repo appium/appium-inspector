@@ -25,26 +25,33 @@ function formatCapsBrowserstack (caps) {
 }
 
 function formatCapsLambdaTest (session) {
-  let caps;
-  if (session.capabilities) {
+  let caps = session, deviceName = session.deviceName;
+  if (Object.keys(session.capabilities).length !== 0) {
     caps = session.capabilities;
+    deviceName = session.capabilities.desired ? session.capabilities.desired.deviceName : session.capabilities.deviceName;
   } else if (session.desired) {
     caps = session.desired;
-  } else {
-    caps = session;
+    deviceName = session.desired.deviceName;
   }
-  let importantCaps = [caps.deviceName, caps.platformName, caps.platformVersion];
+  let importantCaps = [deviceName, caps.platformName, caps.platformVersion];
   return importantCaps.join(', ').trim();
 }
 
 export default class AttachToSession extends Component {
 
+  getSessionId (session) {
+    return session.sessionId === undefined || session.sessionId === 'undefined' ? session.id : session.sessionId;
+  }
+
   getSessionInfo (session, serverType) {
+    if (session.capabilities === undefined) {
+      session.capabilities = {};
+    }
     switch (serverType) {
       case ServerTypes.browserstack:
         return `${session.id} — ${formatCapsBrowserstack(session.capabilities)}`;
       case ServerTypes.lambdatest:
-        return `${session.id} - ${formatCapsLambdaTest(session)}`;
+        return `${this.getSessionId(session)} - ${formatCapsLambdaTest(session)}`;
       default:
         return `${session.id} — ${formatCaps(session.capabilities)}`;
     }
@@ -68,7 +75,7 @@ export default class AttachToSession extends Component {
               placeholder={t('enterYourSessionId')}
               value={attachSessId}
               onChange={(value) => setAttachSessId(value)}>
-              {runningAppiumSessions.map((session) => <Select.Option key={session.id} value={session.id}>
+              {runningAppiumSessions.map((session) => <Select.Option key={this.getSessionId(session)} value={this.getSessionId(session)}>
                 <div>{this.getSessionInfo(session, serverType)}</div>
               </Select.Option>)}
             </Select>
