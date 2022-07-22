@@ -23,10 +23,8 @@ app.on('window-all-closed', () => {
   app.quit();
 });
 
-app.on('ready', async () => {
-  await installExtensions();
-
-  mainWindow = new BrowserWindow({
+function buildSessionWindow () {
+  const window = new BrowserWindow({
     show: false,
     width: 1280,
     height: 800,
@@ -52,6 +50,21 @@ app.on('ready', async () => {
       mainWindow.webContents.send('save-file', filePath);
     }
   });
+
+  return window;
+}
+
+export function launchNewSessionWindow () {
+  const url = `file://${__dirname}/index.html`;
+  const win = buildSessionWindow();
+  win.loadURL(url);
+  win.show();
+}
+
+app.on('ready', async () => {
+  await installExtensions();
+
+  mainWindow = buildSessionWindow();
 
   const splashWindow = new BrowserWindow({
     width: 300,
