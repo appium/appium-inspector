@@ -494,6 +494,15 @@
     fill: rgba(255, 153, 153, 0.8);
 }
 
+.tapDiv {
+    position: absolute;
+    z-index: 100000000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%; 
+}
+
 .innerScreenshotContainer {
     display: flex;
     flex-direction: column;

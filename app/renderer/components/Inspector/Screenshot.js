@@ -140,6 +140,9 @@ class Screenshot extends Component {
               />}
             </svg>
           }
+          {screenshotInteractionMode === TAP &&
+            <div className={styles.tapDiv}></div>
+          }
         </div>
       </div>
     </Spin>;
