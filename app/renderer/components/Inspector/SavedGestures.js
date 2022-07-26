@@ -8,8 +8,8 @@ class SavedGestures extends Component {
 
 
   loadSavedGesture (gesture) {
-    const {setSavedGesture, showGestureEditor} = this.props;
-    setSavedGesture(gesture);
+    const {setLoadedGesture, showGestureEditor} = this.props;
+    setLoadedGesture(gesture);
     showGestureEditor();
   }
 
@@ -21,7 +21,7 @@ class SavedGestures extends Component {
     };
   }
 
-  gestureFromId (id) {
+  getGestureByID (id) {
     const {savedGestures} = this.props;
     for (let gesture of savedGestures) {
       if (gesture.id === id) {
@@ -52,8 +52,8 @@ class SavedGestures extends Component {
     }, {
       title: 'Actions',
       key: 'action',
-      render: (text, record) => {
-        let gesture = this.gestureFromId(record.key);
+      render: (_, record) => {
+        let gesture = this.getGestureByID(record.key);
         return (
           <div>
             <Button

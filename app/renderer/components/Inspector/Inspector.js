@@ -26,9 +26,9 @@ import {
   CloseOutlined,
   FileTextOutlined,
   TagOutlined,
+  InfoCircleOutlined,
   ThunderboltOutlined,
   HighlightOutlined,
-  InfoCircleOutlined,
   AppstoreOutlined,
   GlobalOutlined,
 } from '@ant-design/icons';

@@ -151,6 +151,23 @@
     float: right;
 }
 
+.gesture-header {
+    padding: 0 0 0 0;
+    margin-right: -12px;
+}
+
+.gesture-header :global(.ant-typography) {
+    margin-bottom: 0px;
+}
+
+.gesture-header :global(.ant-typography-edit-content) {
+}
+
+.gesture-header :global(.ant-input) {
+    box-shadow: none;
+    border-width: 0px;
+}
+
 .inspector-main .element-detail-container {
     flex-grow: 2;
     flex-basis: 360px;
@@ -344,13 +361,15 @@
 
 .swipeSvg line {
     stroke-width: 15;
-    stroke: rgba(255, 153, 153, 0.8);
+    /* stroke: rgba(255, 153, 153, 0.8); */
+    opacity: 0.35;
     stroke-linecap: round;
 }
 
 .swipeSvg circle {
-    r: 10;
-    fill: rgba(255, 153, 153, 0.8);
+    r: 8;
+    fill: none;
+    stroke-width: 0.4%;
 }
 
 .innerScreenshotContainer {

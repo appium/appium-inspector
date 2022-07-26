@@ -6,7 +6,7 @@ import styles from './Inspector.css';
 import { SCREENSHOT_INTERACTION_MODE } from './shared';
 import { withTranslation } from '../../util';
 
-const {TAP, SELECT, SWIPE} = SCREENSHOT_INTERACTION_MODE;
+const {TAP, SELECT, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
 
 /**
  * Shows screenshot of running application and divs that highlight the elements' bounding boxes
@@ -90,6 +90,42 @@ class Screenshot extends Component {
     clearSwipeAction();
   }
 
+  generateGestureCoordinates () {
+    const { gestureToDraw } = this.props;
+
+    if (!gestureToDraw) {
+      return null;
+    }
+
+    const { actions } = gestureToDraw;
+
+    const pointers = [];
+
+    const colors = ['#FF3333', '#FF8F00', '#FFFF00', '#6CFF00', '#00FFDC'];
+
+    for (const key of Object.keys(actions)) {
+      const temp = {start: [], interim: [], end: [], color: colors.pop()};
+      for (const action of actions[key]) {
+        if (action.type === 'pointerMove') {
+          const coordinate = [parseInt(action.x, 10), parseInt(action.y, 10)];
+          if (temp.interim.length === 0) {
+            temp.start = coordinate;
+            temp.interim.push(coordinate);
+          } else {
+            temp.interim.push(coordinate);
+          }
+        }
+      }
+      if (temp.interim.length === 0) {
+        return null;
+      }
+      const len = temp.interim.length - 1;
+      temp.end = temp.interim[len];
+      pointers.push(temp);
+    }
+    return pointers;
+  }
+
   render () {
     const {
       screenshot,
@@ -105,7 +141,7 @@ class Screenshot extends Component {
 
     // If we're tapping or swiping, show the 'crosshair' cursor style
     const screenshotStyle = {};
-    if ([TAP, SWIPE].includes(screenshotInteractionMode)) {
+    if ([TAP, SWIPE, GESTURE].includes(screenshotInteractionMode)) {
       screenshotStyle.cursor = 'crosshair';
     }
 
@@ -120,6 +156,8 @@ class Screenshot extends Component {
 
     const screenSrc = mjpegScreenshotUrl || `data:image/gif;base64,${screenshot}`;
     const screenImg = <img src={screenSrc} id="screenshot" />;
+
+    const points = this.generateGestureCoordinates();
 
     // Show the screenshot and highlighter rects. Show loading indicator if a method call is in progress.
     return <Spin size='large' spinning={!!methodCallInProgress}>
@@ -152,6 +190,28 @@ class Screenshot extends Component {
                 x2={swipeEnd.x / scaleRatio}
                 y2={swipeEnd.y / scaleRatio}
               />}
+            </svg>
+          }
+          {screenshotInteractionMode === GESTURE && points &&
+            <svg className={styles.swipeSvg}>
+              {
+                points.map((pointer) =>
+                  <>
+                    {pointer.interim.map((_, index) => index > 0 ?
+                      <><line
+                        x1={pointer.interim[index - 1][0] / scaleRatio}
+                        y1={pointer.interim[index - 1][1] / scaleRatio}
+                        x2={pointer.interim[index][0] / scaleRatio}
+                        y2={pointer.interim[index][1] / scaleRatio}
+                        style={{ stroke: pointer.color }} />
+                      {pointer.interim[index - 1] !== pointer.start ? <circle cx={pointer.interim[index - 1][0] / scaleRatio} cy={pointer.interim[index - 1][1] / scaleRatio} style={{ fill: pointer.color }} /> : <></>}
+                      </>
+                      :
+                      <></>)}
+                    <circle cx={pointer.start[0] / scaleRatio} cy={pointer.start[1] / scaleRatio} style={{stroke: pointer.color}}/>
+                    <circle cx={pointer.end[0] / scaleRatio} cy={pointer.end[1] / scaleRatio} style={{stroke: pointer.color, strokeDasharray: '0.9%', borderStyle: 'dashed'}}/>
+                  </>)
+              }
             </svg>
           }
         </div>
