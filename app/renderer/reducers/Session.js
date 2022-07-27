@@ -4,14 +4,15 @@ import formatJSON from 'format-json';
 import { NEW_SESSION_REQUESTED, NEW_SESSION_BEGAN, NEW_SESSION_DONE,
          SAVE_SESSION_REQUESTED, SAVE_SESSION_DONE, GET_SAVED_SESSIONS_REQUESTED,
          GET_SAVED_SESSIONS_DONE, SESSION_LOADING, SESSION_LOADING_DONE,
-         SET_CAPABILITY_PARAM, ADD_CAPABILITY, REMOVE_CAPABILITY, SET_CAPS,
+         SET_CAPABILITY_PARAM, ADD_CAPABILITY, REMOVE_CAPABILITY, SET_CAPS_AND_SERVER,
          SWITCHED_TABS, SAVE_AS_MODAL_REQUESTED, HIDE_SAVE_AS_MODAL_REQUESTED, SET_SAVE_AS_TEXT,
          DELETE_SAVED_SESSION_REQUESTED, DELETE_SAVED_SESSION_DONE,
          CHANGE_SERVER_TYPE, SET_SERVER_PARAM, SET_SERVER, SET_ATTACH_SESS_ID,
          GET_SESSIONS_REQUESTED, GET_SESSIONS_DONE,
          ENABLE_DESIRED_CAPS_EDITOR, ABORT_DESIRED_CAPS_EDITOR, SAVE_RAW_DESIRED_CAPS, SET_RAW_DESIRED_CAPS, SHOW_DESIRED_CAPS_JSON_ERROR,
-         IS_ADDING_CLOUD_PROVIDER, SET_PROVIDERS, SET_ADD_VENDOR_PREFIXES, SET_STATE_FROM_URL,
+         IS_ADDING_CLOUD_PROVIDER, SET_PROVIDERS, SET_ADD_VENDOR_PREFIXES, SET_STATE_FROM_URL, SET_STATE_FROM_SAVED,
          ServerTypes } from '../actions/Session';
+import { notification } from 'antd';
 
 const visibleProviders = []; // Pull this from "electron-settings"
 const server = {
@@ -124,9 +125,11 @@ export default function session (state = INITIAL_STATE, action) {
         }),
       };
 
-    case SET_CAPS:
+    case SET_CAPS_AND_SERVER:
       nextState = {
         ...state,
+        server: action.server,
+        serverType: action.serverType,
         caps: action.caps,
         capsUUID: action.uuid,
       };
@@ -334,6 +337,22 @@ export default function session (state = INITIAL_STATE, action) {
           ...(action.state.server || {})
         },
         ...omit(action.state, ['server']),
+      };
+
+    case SET_STATE_FROM_SAVED:
+      if (!Object.keys(ServerTypes).includes(action.state.serverType)) {
+        notification.error({
+          message: `Failed to load session: ${action.state.serverType} is not a valid server type`,
+        });
+        return state;
+      }
+      if (![...state.visibleProviders, ServerTypes.local, ServerTypes.remote].includes(action.state.serverType)) {
+        state.visibleProviders.push(action.state.serverType);
+      }
+      return {
+        ...state,
+        ...action.state,
+        filePath: action.filePath,
       };
 
     default:

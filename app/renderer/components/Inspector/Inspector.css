@@ -38,11 +38,24 @@
 }
 
 .inspector-main .screenshot-container {
-  max-width: 500px;
-  flex-grow: 1;
-  flex-shrink: 2;
-  flex-basis: 400px;
+    max-width: 500px;
+    max-height: 90%;
+    flex-grow: 1;
+    flex-shrink: 2;
+    flex-basis: 400px;
 }
+
+.screenshot-container .screenshot-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 38px;
+    margin-bottom: 12px;
+    -webkit-app-region: drag;
+}
+
 
 .inspector-main .screenshot-container img {
     max-width: 100%;
@@ -55,8 +68,7 @@
     width: 100%;
     height: 100%;
     text-align: left;
-    padding-bottom: 13px;
-    position: relative;
+    position: absolute;
     overflow: hidden;
 }
 
@@ -74,11 +86,12 @@
 
 .inspector-main :global(.ant-card-head) {
     max-height: 48px;
+    padding: 0px 12px;
 }
 
 .inspector-main :global(.ant-card-body) {
     height: calc(100% - 48px);
-    padding-bottom: 48px;
+    padding: 12px;
 }
 
 .inspector-main .interaction-tab-container :global(.ant-tabs) {
@@ -93,6 +106,7 @@
     display: flex;
     height: 100%;
 }
+
 .inspector-main .interaction-tab-container :global(.action-col) {
     min-width: 50%;
     max-width: 50%;
@@ -102,22 +116,34 @@
     height: 100%;
 }
 
-.inspector-main .interaction-tab-container :global(.ant-tree) {
-    overflow: auto;
-}
-
 .inspector-main .tree-container {
     height: 100%;
-    overflow-y: auto;
-}
-
-.inspector-main .tree-container::-webkit-scrollbar {
-    display: none;
-}
-
-.inspector-main .tree-container :global(ul.ant-tree) {
-    height: 100%;
     overflow: auto;
+}
+
+.session-info-table {
+    margin-right: -1em;
+}
+
+.session-code-box {
+    margin-top: 1em;
+}
+
+.session-inner-table,
+.session-inner-table :global(.ant-table) {
+    width: 102%;
+    margin-left: -32px;
+} 
+
+.session-inner-table :global(.ant-table-body)::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+
+.session-inner-table :global(.ant-table-body)::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .5);
+    box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
 
 .inspector-main .interaction-tab-container .scroll-buttons {
@@ -180,22 +206,152 @@
 }
 
 .highlighter-box.inspected-element-box div {
-    background-color: blue;
+    background-color: rgb(90, 90, 178);
     visibility: hidden;
+    transition: background-color 0.2s ease-in-out;
 }
 
 .highlighter-box.hovered-element-box div {
     background-color: yellow;
     visibility: hidden;
+    transition: background-color 0.2s ease-in-out;
 }
 
 .highlighter-box.inspected-element-box.hovered-element-box div {
-    background-color: green;
+    background-color: rgb(100, 255, 100);
+    transition: background-color 0.2s ease-in-out;
 }
 
-.highlighter-box.hovered-element-box div, .highlighter-box.inspected-element-box div {
+.highlighter-box.hovered-element-box div,
+.highlighter-box.inspected-element-box div {
     position: relative;
     height: 100%;
+    width: 100%;
+    visibility: visible;
+}
+
+.centroid-box {
+    width: 2.2vh;
+    height: 2.2vh;
+    border-style: solid;
+    border-color: #ff4141;
+    border-width: 2px;
+    position: absolute;
+    overflow: hidden;
+    cursor: pointer;
+    visibility: visible;
+    transform: translate(-50%, -50%); 
+}
+
+.centroid-box.centroid {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.centroid-box.centroid.inspected-element-box div {
+    background-color: blue;
+    opacity: 0.5;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.centroid-box.centroid.hovered-element-box div {
+    background-color: #ff0000;
+    opacity: 0.5;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.centroid-box.centroid.inspected-element-box.hovered-element-box div {
+    background-color: green;
+    opacity: 0.5;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.centroid-box.centroid.hovered-element-box div,
+.centroid-box.centroid.inspected-element-box div {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    visibility: visible;
+}
+
+.centroid-box.overlap {
+    border-style: dashed;
+    border-color: #178b00;
+    z-index: 4;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.centroid-box.overlap.inspected-element-box div {
+    background-color: blue;
+    opacity: 0.5;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.centroid-box.overlap.hovered-element-box div {
+    background-color: #178b00;
+    opacity: 0.5;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.centroid-box.overlap.inspected-element-box.hovered-element-box div {
+    background-color: rgb(113, 253, 113);
+    opacity: 0.5;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.centroid-box.overlap.hovered-element-box div,
+.centroid-box.overlap.inspected-element-box div {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    visibility: visible;
+}
+
+.centroid-box.expand {
+    z-index: 3;
+    background-color: #ffffff;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.plus-minus {
+    position: relative;
+    top: -0.8vh;
+    text-align: center;
+    font-size: 2vh;
+    font-weight: 800;
+    color: #ff4141;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.centroid-box.expand.inspected-element-box div {
+    background-color: rgb(62, 57, 57);
+    transition: background-color 0.2s ease-in-out;
+    visibility: hidden;
+}
+
+.centroid-box.expand.hovered-element-box div {
+    background-color: #2f2f2f;
+    transition: background-color 0.2s ease-in-out;
+    visibility: hidden;
+}
+
+.centroid-box.expand.inspected-element-box.hovered-element-box div {
+    background-color: rgb(255, 133, 133);
+    transition: background-color 0.2s ease-in-out;
+    
+}
+
+.centroid-box.expand.hovered-element-box div,
+.centroid-box.expand.inspected-element-box div {
+    position: relative;
+    height: 150%;
     width: 100%;
     visibility: visible;
 }
@@ -204,10 +360,18 @@
     margin-bottom: 20px;
 }
 
+.inspector-main #selectedElementContainer {
+    padding-bottom: 0px;
+}
+
 .selected-element-table-cells {
     word-wrap: break-all;
     word-break: break-all;
- }
+}
+
+.element-cell-copy {
+    cursor: pointer;
+}
 
 .selected-element-card {
     display: flex;
@@ -274,12 +438,14 @@
     border-bottom-left-radius: 0;
 }
 
-.locator-test-interactions-container div button, .locator-test-interactions-container div input {
+.locator-test-interactions-container div button,
+.locator-test-interactions-container div input {
     width: 100%;
 }
 
-.back-link-container {
-    margin-bottom: 0.5em;
+.element-count-container {
+    margin-top: 0.5em;
+    margin-left: 0.5em;
 }
 
 .locator-search-results {
@@ -290,12 +456,14 @@
     width: 100%;
     margin-bottom: 1em;
 }
+
 .coordinatesContainer {
     position: absolute;
-    background:rgba(255,250,205,0.8);
+    background: rgba(255, 250, 205, 0.8);
     z-index: 10000000;
     padding: 2px;
 }
+
 .swipeInstructions {
     position: absolute;
     top: 0;
@@ -305,6 +473,7 @@
     padding: 4px;
     width: 10em;
 }
+
 .swipeSvg {
     position: absolute;
     z-index: 100000000;
@@ -316,46 +485,46 @@
 
 .swipeSvg line {
     stroke-width: 15;
-    stroke: rgba(255,153,153,0.8);
+    stroke: rgba(255, 153, 153, 0.8);
     stroke-linecap: round;
 }
 
 .swipeSvg circle {
     r: 10;
-    fill: rgba(255,153,153,0.8);
+    fill: rgba(255, 153, 153, 0.8);
 }
 
- .innerScreenshotContainer {
+.innerScreenshotContainer {
     display: flex;
     flex-direction: column;
     height: 100%;
- }
+}
 
- .innerScreenshotContainer .screenshotActionsPanel {
+.innerScreenshotContainer .screenshotActionsPanel {
     margin-bottom: 2px;
     margin: 0 auto 2px auto;
- }
+}
 
- .action-controls {
+.action-controls {
     margin-right: 20px;
- }
+}
 
- .actions-container .btn-container {
+.actions-container .btn-container {
     padding: 16px;
- }
+}
 
- .actions-container .arg-row {
-     margin-bottom: 8px;
- }
+.actions-container .arg-row {
+    margin-bottom: 8px;
+}
 
 .arg-container {
     padding: 4px 4px 0 0
- }
+}
 
- .actions-container :global(.ant-select) {
+.actions-container :global(.ant-select) {
     width: 100%;
- }
+}
 
- .actions-container :global(.ant-btn) {
+.actions-container :global(.ant-btn) {
     width: 100%;
- }
+}

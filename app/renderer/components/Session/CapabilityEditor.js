@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Checkbox, Input, Modal, Form, Row, Col, Select } from 'antd';
+import { Button, Checkbox, Input, Modal, Form, Row, Col, Select, Tooltip } from 'antd';
 import FormattedCaps from './FormattedCaps';
 import CapabilityControl from './CapabilityControl';
 import SessionStyles from './Session.css';
@@ -11,6 +11,16 @@ import { ROW } from '../../../../gui-common/components/AntdTypes';
 
 const {Item: FormItem} = Form;
 const {Option} = Select;
+const whitespaces = /^\s|\s$/;
+
+function whitespaceMsg (value) {
+  const leadingSpace = /^\s/.test(value);
+  const trailingSpace = /\s$/.test(value);
+
+  if (leadingSpace && trailingSpace) {return 'Contains Leading & Trailing Whitespace';}
+  if (leadingSpace) {return 'Contains Leading Whitespace';}
+  if (trailingSpace) {return 'Contains Trailing Whitespace';}
+}
 
 export default class CapabilityEditor extends Component {
 
@@ -75,9 +85,9 @@ export default class CapabilityEditor extends Component {
   render () {
     const {setCapabilityParam, caps, addCapability, removeCapability, saveSession, hideSaveAsModal,
            saveAsText, showSaveAsModal, setSaveAsText, isEditingDesiredCaps, t,
-           setAddVendorPrefixes, addVendorPrefixes} = this.props;
+           setAddVendorPrefixes, addVendorPrefixes, server, serverType} = this.props;
     const numCaps = caps.length;
-    const onSaveAsOk = () => saveSession(caps, {name: saveAsText});
+    const onSaveAsOk = () => saveSession(server, serverType, caps, {name: saveAsText});
 
     return <>
       <Row type={ROW.FLEX} align="top" justify="start" className={SessionStyles.capsFormRow}>
@@ -89,10 +99,13 @@ export default class CapabilityEditor extends Component {
             {caps.map((cap, index) => <Row gutter={8} key={index}>
               <Col span={7}>
                 <FormItem>
-                  <Input disabled={isEditingDesiredCaps} id={`desiredCapabilityName_${index}`} placeholder={t('Name')}
-                    value={cap.name} onChange={(e) => setCapabilityParam(index, 'name', e.target.value)}
-                    ref={index === numCaps - 1 ? this.latestCapField : ''}
-                  />
+                  <Tooltip title={whitespaceMsg(cap.name)} visible={whitespaces.test(cap.name)}>
+                    <Input disabled={isEditingDesiredCaps} id={`desiredCapabilityName_${index}`} placeholder={t('Name')}
+                      value={cap.name} onChange={(e) => setCapabilityParam(index, 'name', e.target.value)}
+                      ref={index === numCaps - 1 ? this.latestCapField : ''}
+                      className={SessionStyles.capsBoxFont}
+                    />
+                  </Tooltip>
                 </FormItem>
               </Col>
               <Col span={8}>
@@ -108,10 +121,12 @@ export default class CapabilityEditor extends Component {
               </Col>
               <Col span={7}>
                 <FormItem>
-                  <CapabilityControl {...this.props} cap={cap} id={`desiredCapabilityValue_${index}`}
-                    onSetCapabilityParam={(value) => setCapabilityParam(index, 'value', value)}
-                    onPressEnter={(index === numCaps - 1) ? addCapability : () => {}}
-                  />
+                  <Tooltip title={whitespaceMsg(cap.value)} visible={whitespaces.test(cap.value)}>
+                    <CapabilityControl {...this.props} cap={cap} id={`desiredCapabilityValue_${index}`}
+                      onSetCapabilityParam={(value) => setCapabilityParam(index, 'value', value)}
+                      onPressEnter={(index === numCaps - 1) ? addCapability : () => {}}
+                    />
+                  </Tooltip>
                 </FormItem>
               </Col>
               <Col span={2}>
