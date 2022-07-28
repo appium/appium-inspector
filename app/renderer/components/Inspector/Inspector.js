@@ -251,7 +251,7 @@ export default class Inspector extends Component {
               <Card
                 title={<span><HighlightOutlined /> {t('Gesture Editor')}</span>}
                 className={InspectorStyles['interaction-tab-card']}>
-                <GestureEditor {...this.props} />
+                <GestureEditor {...this.props}/>
               </Card>
               :
               <Card

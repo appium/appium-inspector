@@ -156,6 +156,10 @@
     margin-right: -12px;
 }
 
+.gesture-header :global(.ant-page-header-footer) {
+    margin-top: 0px;
+}
+
 .gesture-header :global(.ant-typography) {
     margin-bottom: 0px;
 }
@@ -168,17 +172,18 @@
     border-width: 0px;
 }
 
-.inspector-main .element-detail-container {
-    flex-grow: 2;
-    flex-basis: 360px;
-    min-width: 300px;
-}
+
 
 .inspector-main .recorded-actions {
     margin-bottom: 12px;
     max-height: 40%;
     min-height: 30%;
     flex: 1;
+}
+
+._inspector-main_0387c .ant-card-body {
+    height: 100%;
+    padding: 12px;
 }
 
 .inspector-main .recorded-actions :global(.ant-btn-group) {

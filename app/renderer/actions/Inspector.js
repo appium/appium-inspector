@@ -690,22 +690,16 @@ export function setAwaitingMjpegStream (isAwaiting) {
 
 export function saveGesture (params) {
   return (dispatch, getState) => {
-    let newGesture;
-    if (!params.id) {
+    let savedGestures = getState().inspector.savedGestures;
+    const newGesture = !params.id;
+    if (newGesture) {
       params.id = UUID();
       params.date = Date.now();
-      newGesture = true;
     } else {
-      newGesture = false;
-      deleteSavedGesture(params.id);
+      savedGestures = savedGestures.filter((gesture) => gesture.id !== params.id);
     }
-    const savedGestures = getState().inspector.savedGestures;
     savedGestures.push(params);
     dispatch({type: SAVE_GESTURE_ACTION, savedGestures});
-
-    if (!newGesture) {
-      dispatch({type: REMOVE_LOADED_GESTURE});
-    }
   };
 }
 

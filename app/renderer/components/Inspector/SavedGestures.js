@@ -35,8 +35,6 @@ class SavedGestures extends Component {
 
     const {savedGestures, showGestureEditor} = this.props;
 
-    console.log(savedGestures);
-
     const columns = [{
       title: 'Gestures',
       dataIndex: 'name',
