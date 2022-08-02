@@ -365,10 +365,7 @@
 }
 
 .swipeSvg line {
-    stroke-width: 15;
-    /* stroke: rgba(255, 153, 153, 0.8); */
     opacity: 0.35;
-    stroke-linecap: round;
 }
 
 .swipeSvg circle {

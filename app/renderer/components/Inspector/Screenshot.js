@@ -99,30 +99,39 @@ class Screenshot extends Component {
 
     const { actions } = gestureToDraw;
 
-    const pointers = [];
-
+    // {position: [x,y], type: down/up}
+    // pointer down always fills in the last pointermove
     const colors = ['#FF3333', '#FF8F00', '#FFFF00', '#6CFF00', '#00FFDC'];
-
+    const pointers = [];
     for (const key of Object.keys(actions)) {
-      const temp = {start: [], interim: [], end: [], color: colors.pop()};
-      for (const action of actions[key]) {
-        if (action.type === 'pointerMove') {
-          const coordinate = [parseInt(action.x, 10), parseInt(action.y, 10)];
-          if (temp.interim.length === 0) {
-            temp.start = coordinate;
-            temp.interim.push(coordinate);
-          } else {
-            temp.interim.push(coordinate);
-          }
+      let type = 'pointerUp';
+      const temp = [];
+      const color = colors.pop();
+
+      for (const tick of actions[key]) {
+        type = tick.type === 'pointerDown' || tick.type === 'pointerUp' ? tick.type : type;
+        if (tick.type === 'pointerMove') {
+          temp.push({ type, position: [tick.x, tick.y], color});
+        }
+
+        const lastIndexOfPointerMove = temp.length - 1;
+
+        if (tick.type === 'pointerDown' && temp[lastIndexOfPointerMove].type === 'pointerUp') {
+          temp[lastIndexOfPointerMove].type = 'fill';
+        }
+
+        if (tick.type === 'pointerUp' && temp[lastIndexOfPointerMove].type === 'pointerDown') {
+          temp[lastIndexOfPointerMove].type = 'unfill';
+        }
+
+        if (tick.type === 'pointerDown' && temp.length === 0) {
+          temp.push({ type: 'pointerDown', position: [0, 0], color});
         }
       }
-      if (temp.interim.length === 0) {
-        return null;
-      }
-      const len = temp.interim.length - 1;
-      temp.end = temp.interim[len];
+
       pointers.push(temp);
     }
+
     return pointers;
   }
 
@@ -158,6 +167,17 @@ class Screenshot extends Component {
     const screenImg = <img src={screenSrc} id="screenshot" />;
 
     const points = this.generateGestureCoordinates();
+    const divStyle = (color, type) => {
+      if (type === 'pointerDown') {
+        return { stroke: color };
+      } else if (type === 'pointerUp') {
+        return { stroke: color, strokeDasharray: '0.9%', borderStyle: 'dashed' };
+      } else if (type === 'unfill') {
+        return { stroke: color, strokeDasharray: '0.9%', borderStyle: 'dashed' };
+      } else {
+        return { fill: color };
+      }
+    };
 
     // Show the screenshot and highlighter rects. Show loading indicator if a method call is in progress.
     return <Spin size='large' spinning={!!methodCallInProgress}>
@@ -196,21 +216,22 @@ class Screenshot extends Component {
             <svg className={styles.swipeSvg}>
               {
                 points.map((pointer) =>
-                  <>
-                    {pointer.interim.map((_, index) => index > 0 ?
-                      <><line
-                        x1={pointer.interim[index - 1][0] / scaleRatio}
-                        y1={pointer.interim[index - 1][1] / scaleRatio}
-                        x2={pointer.interim[index][0] / scaleRatio}
-                        y2={pointer.interim[index][1] / scaleRatio}
-                        style={{ stroke: pointer.color }} />
-                      {pointer.interim[index - 1] !== pointer.start ? <circle cx={pointer.interim[index - 1][0] / scaleRatio} cy={pointer.interim[index - 1][1] / scaleRatio} style={{ fill: pointer.color }} /> : <></>}
-                      </>
-                      :
-                      <></>)}
-                    <circle cx={pointer.start[0] / scaleRatio} cy={pointer.start[1] / scaleRatio} style={{stroke: pointer.color}}/>
-                    <circle cx={pointer.end[0] / scaleRatio} cy={pointer.end[1] / scaleRatio} style={{stroke: pointer.color, strokeDasharray: '0.9%', borderStyle: 'dashed'}}/>
-                  </>)
+                  pointer.map((tick, index) =>
+                    <>
+                      {
+                        index > 0 &&
+                        <line
+                          x1={pointer[index - 1].position[0] / scaleRatio}
+                          y1={pointer[index - 1].position[1] / scaleRatio}
+                          x2={tick.position[0] / scaleRatio}
+                          y2={tick.position[1] / scaleRatio}
+                          style={tick.type === 'pointerUp' || tick.type === 'fill' ? { strokeDasharray: '10', strokeWidth: '5', stroke: tick.color } : { strokeLinecap: 'round', strokeWidth: '15', stroke: tick.color }}
+                        />
+                      }
+                      <circle cx={tick.position[0] / scaleRatio} cy={tick.position[1] / scaleRatio} style={divStyle(tick.color, tick.type)}/>
+                    </>
+                  )
+                )
               }
             </svg>
           }
