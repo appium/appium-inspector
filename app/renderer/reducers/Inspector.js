@@ -14,7 +14,7 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          SELECT_INTERACTION_MODE, ENTERING_ACTION_ARGS, SET_ACTION_ARG, REMOVE_ACTION, SET_CONTEXT,
          SET_KEEP_ALIVE_INTERVAL, SET_USER_WAIT_TIMEOUT, SET_LAST_ACTIVE_MOMENT, SET_VISIBLE_COMMAND_RESULT,
          SET_AWAITING_MJPEG_STREAM, SET_APP_ID, SET_SERVER_STATUS, SET_SESSION_TIME, SHOW_GESTURE_EDITOR, HIDE_GESTURE_EDITOR, SAVE_GESTURE_ACTION,
-         SET_LOADED_GESTURE, REMOVE_LOADED_GESTURE, DRAW_GESTURE, REMOVE_DRAWN_GESTURE,
+         SET_LOADED_GESTURE, REMOVE_LOADED_GESTURE, DRAW_GESTURE, REMOVE_DRAWN_GESTURE, SELECT_TICK_ELEMENT, UNSELECT_TICK_ELEMENT, TAP_TICK_COORDINATES, CLOSE_TICK_COORDINATES
 } from '../actions/Inspector';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from '../components/Inspector/shared';
 
@@ -592,6 +592,27 @@ export default function inspector (state = INITIAL_STATE, action) {
 
     case REMOVE_DRAWN_GESTURE:
       return omit(state, 'gestureToDraw');
+
+    case SELECT_TICK_ELEMENT:
+      return {
+        ...state,
+        selectedTick: action.selectedTick,
+      };
+
+    case UNSELECT_TICK_ELEMENT:
+      return omit(state, 'selectedTick');
+
+    case TAP_TICK_COORDINATES:
+      return {
+        ...state,
+        tickCoordinates: {
+          x: action.x,
+          y: action.y,
+        },
+      };
+
+    case CLOSE_TICK_COORDINATES:
+      return omit(state, 'tickCoordinates');
 
     default:
       return {...state};

@@ -89,6 +89,10 @@ export const SET_LOADED_GESTURE = 'SET_LOADED_GESTURE';
 export const REMOVE_LOADED_GESTURE = 'REMOVE_LOADED_GESTURE';
 export const DRAW_GESTURE = 'DRAW_GESTURE';
 export const REMOVE_DRAWN_GESTURE = 'REMOVE_DRAWN_GESTURE';
+export const SELECT_TICK_ELEMENT = 'SELECT_TICK_ELEMENT';
+export const UNSELECT_TICK_ELEMENT = 'UNSELECT_TICK_ELEMENT';
+export const TAP_TICK_COORDINATES = 'TAP_TICK_COORDINATES';
+export const CLOSE_TICK_COORDINATES = 'CLOSE_TICK_COORDINATES';
 
 const KEEP_ALIVE_PING_INTERVAL = 5 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -745,5 +749,30 @@ export function drawGesture (gestureToDraw) {
 export function undrawGesture () {
   return (dispatch) => {
     dispatch({type: REMOVE_DRAWN_GESTURE});
+  };
+}
+
+export function selectTick (tick) {
+  return (dispatch, getState) => {
+    const {tickCoordinates} = getState().inspector;
+
+    if (tickCoordinates) {
+      dispatch({type: TAP_TICK_COORDINATES, x: undefined, y: undefined});
+    }
+
+    dispatch({type: SELECT_TICK_ELEMENT, selectedTick: tick});
+  };
+}
+
+export function unselectTick () {
+  return (dispatch) => {
+    dispatch({type: CLOSE_TICK_COORDINATES});
+    dispatch({type: UNSELECT_TICK_ELEMENT});
+  };
+}
+
+export function tapTickCoordinates (x, y) {
+  return (dispatch) => {
+    dispatch({type: TAP_TICK_COORDINATES, x, y});
   };
 }

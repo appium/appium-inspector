@@ -24,7 +24,7 @@ class Screenshot extends Component {
 
   async handleScreenshotClick () {
     const {screenshotInteractionMode, applyClientMethod,
-           swipeStart, swipeEnd, setSwipeStart, setSwipeEnd} = this.props;
+           swipeStart, swipeEnd, setSwipeStart, setSwipeEnd, selectedTick, tapTickCoordinates} = this.props;
     const {x, y} = this.state;
 
     if (screenshotInteractionMode === TAP) {
@@ -41,6 +41,8 @@ class Screenshot extends Component {
           }
         ],
       });
+    } else if (selectedTick) {
+      tapTickCoordinates(x, y);
     } else if (screenshotInteractionMode === SWIPE) {
       if (!swipeStart) {
         setSwipeStart(x, y);
@@ -103,6 +105,7 @@ class Screenshot extends Component {
     // pointer down always fills in the last pointermove
     const colors = ['#FF3333', '#FF8F00', '#FFFF00', '#6CFF00', '#00FFDC'];
     const pointers = [];
+
     for (const key of Object.keys(actions)) {
       let type = 'pointerUp';
       const temp = [];
@@ -116,11 +119,11 @@ class Screenshot extends Component {
 
         const lastIndexOfPointerMove = temp.length - 1;
 
-        if (tick.type === 'pointerDown' && temp[lastIndexOfPointerMove].type === 'pointerUp') {
+        if (tick.type === 'pointerDown' && temp.length !== 0 && temp[lastIndexOfPointerMove].type === 'pointerUp') {
           temp[lastIndexOfPointerMove].type = 'fill';
         }
 
-        if (tick.type === 'pointerUp' && temp[lastIndexOfPointerMove].type === 'pointerDown') {
+        if (tick.type === 'pointerUp' && temp.length !== 0 && temp[lastIndexOfPointerMove].type === 'pointerDown') {
           temp[lastIndexOfPointerMove].type = 'unfill';
         }
 
