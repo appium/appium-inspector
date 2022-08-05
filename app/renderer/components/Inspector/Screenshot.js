@@ -148,6 +148,7 @@ class Screenshot extends Component {
       swipeEnd,
       t,
       scaleRatio,
+      selectedTick,
     } = this.props;
     const {x, y} = this.state;
 
@@ -196,6 +197,7 @@ class Screenshot extends Component {
             <p>{t('yCoordinate', {y})}</p>
           </div>}
           {swipeInstructions && <Tooltip visible={true} placement="top" title={swipeInstructions}>{screenImg}</Tooltip>}
+          {selectedTick && <Tooltip visible={true} placement="top" title='Click to get Coordinates'>{screenImg}</Tooltip>}
           {!swipeInstructions && screenImg}
           {screenshotInteractionMode === SELECT && this.containerEl && <HighlighterRects
             {...this.props}

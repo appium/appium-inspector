@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Tabs, Input, Button, Card, Select, Row, Col, PageHeader, Space, Steps } from 'antd';
-import { PlayCircleOutlined, PlusCircleOutlined, CloseOutlined, AimOutlined } from '@ant-design/icons';
+import { Tabs, Input, Button, Card, Select, Row, Col, PageHeader, Space, Steps, Divider, Typography, Tooltip, Popover } from 'antd';
+import { PlayCircleOutlined, PlusCircleOutlined, CloseOutlined, AimOutlined, RightCircleOutlined, DownCircleOutlined, UpCircleOutlined, PauseCircleOutlined } from '@ant-design/icons';
 import { withTranslation } from '../../util';
 import InspectorCSS from './Inspector.css';
-
+const { Title } = Typography;
 const { TabPane } = Tabs;
 const { Option } = Select;
 const ButtonGroup = Button.Group;
@@ -26,8 +26,6 @@ class GestureEditor extends Component {
       id: this.props.loadedGesture ? this.props.loadedGesture.id : null,
       pointers: this.props.loadedGesture ? this.loadPointers() : DEFAULT_POINTERS(),
       activeKey: '1',
-      tempTick: undefined,
-      tempCoordinates: {x: undefined, y: undefined},
     };
   }
 
@@ -85,7 +83,7 @@ class GestureEditor extends Component {
     pointers.map((obj) => {
       gesture.actions[obj.title] = Object.keys(obj.content).map((key) => {
         if (obj.content[key].type === 'pointerMove') {
-          return {type: obj.content[key].type, x: obj.content[key].pixelX ? obj.content[key].x : this.percentageToPixels(obj.content[key].x, true), y: obj.content[key].pixelY ? obj.content[key].y : this.percentageToPixels(obj.content[key].y, false)};
+          return {type: obj.content[key].type, duration: Number(obj.content[key].duration), x: obj.content[key].pixelX ? obj.content[key].x : this.percentageToPixels(obj.content[key].x, true), y: obj.content[key].pixelY ? obj.content[key].y : this.percentageToPixels(obj.content[key].y, false)};
         } else {
           return obj.content[key];
         }
@@ -121,6 +119,8 @@ class GestureEditor extends Component {
   onPlayGesture () {
     const {applyClientMethod} = this.props;
     const {actions} = this.formatGesture();
+
+    console.log(actions);
 
     applyClientMethod({methodName: 'gesture', args: [actions]});
   }
@@ -307,20 +307,28 @@ class GestureEditor extends Component {
 
     const checkItem = (pointerKey, tickKey) => this.state.pointers.filter((pointer) => pointer.key === pointerKey)[0].content[tickKey].type;
 
+    const getCurrentPointer = () => {
+      const {activeKey, pointers} = this.state;
+      const currentPointer = pointers.filter((pointer) => pointer.key === activeKey)[0];
+      return currentPointer;
+    };
+
     const editTick = (pointerKey, tickKey, index) =>
       <Card hoverable={true} key={tickKey} extra={
         <>{checkItem(pointerKey, tickKey) === 'pointerMove' &&
-          <Button
-            size='small'
-            type={selectedTick === tickKey ? 'primary' : 'text'}
-            icon={<AimOutlined />}
-            onClick={() =>
-              selectedTick === tickKey ?
-                unselectTick()
-                :
-                selectTick(tickKey)
-            }
-          />
+          <Tooltip title={selectedTick === tickKey ? 'Turn Off Click Coordinates' : 'Turn On Click Coordinates'}>
+            <Button
+              size='small'
+              type={selectedTick === tickKey ? 'primary' : 'text'}
+              icon={<AimOutlined />}
+              onClick={() =>
+                selectedTick === tickKey ?
+                  unselectTick()
+                  :
+                  selectTick(tickKey)
+              }
+            />
+          </Tooltip>
         }
         <Button size='small' type='text' icon={<CloseOutlined />} onClick={() => deleteTick(pointerKey, tickKey)} />
         </>} headStyle={{ marginTop: '-16px', paddingRight: '0px', borderBottom: 'none'}} bodyStyle={{ marginTop: '-12px', minHeight: '220px', marginRight: '-12px'}}>
@@ -351,27 +359,55 @@ class GestureEditor extends Component {
     return <><PageHeader
       className={InspectorCSS['gesture-header']}
       onBack={() => this.onBacktoSaved()}
-      title={<Input defaultValue={this.state.name} style={{ fontSize: '20px', fontWeight: '500'}} onChange={(e) => {this.setState({name: e.target.value});}} size='small'/>}
+      title={<Tooltip placement="topLeft" title='Edit'><Input defaultValue={this.state.name} style={{ fontSize: '20px', fontWeight: '500'}} onChange={(e) => {this.setState({name: e.target.value});}} size='small'/></Tooltip>}
       extra={[
-        <Button key="play" type="primary" icon={<PlayCircleOutlined />} onClick={() => this.onPlayGesture()}></Button>,
+        <Tooltip title='Play'><Button key="play" type="primary" icon={<PlayCircleOutlined />} onClick={() => this.onPlayGesture()}></Button></Tooltip>,
         <Button key="saveAs" onClick={() => this.onSaveAsGesture()}>Save As</Button>,
         <Button key="save" onClick={() => this.onSaveGesture()}>Save</Button>,
       ]}
       footer={
         <>
-          <Input defaultValue={this.state.description} style={{ fontSize: '15px', fontWeight: '400', color: '#636363', marginLeft: '30px' }} onChange={(e) => {this.setState({description: e.target.value});}} size='small'/>
-          <div style={{height: '30px'}}></div>
-          <Steps progressDot current={1}>
-            <Step title="Finished" description="This is a description." />
-            <Step title="In Progress" description="This is a description." />
-            <Step title="Waiting" description="This is a description." />
-          </Steps>
+          <Tooltip placement="topLeft" title='Edit'>
+            <Input defaultValue={this.state.description} style={{ fontSize: '15px', fontWeight: '400', color: '#636363', marginLeft: '30px' }} onChange={(e) => {this.setState({description: e.target.value});}} size='small'/>
+          </Tooltip>
+          <Divider/>
+          <Title style={{ fontSize: '15px', fontWeight: '500', marginLeft: '40px' }}>Timeline for {getCurrentPointer().title}:</Title>
+          <center><Steps style={{width: '90%', marginTop: '20px'}}>{Object.keys(getCurrentPointer().content).map((tickKey) => {
+            if (getCurrentPointer().content[tickKey].type === 'pointerMove') {
+              return <Step status="finish" icon={<Popover placement='bottom' title={<center>{getCurrentPointer().content[tickKey].type}</center>} content={
+                <div style={{textAlign: 'center'}}>
+                  <p>Duration: {getCurrentPointer().content[tickKey].duration}ms</p>
+                  <p>X: {getCurrentPointer().content[tickKey].x}{getCurrentPointer().content[tickKey].pixelX ? 'px' : '%'}</p>
+                  <p>Y: {getCurrentPointer().content[tickKey].y}{getCurrentPointer().content[tickKey].pixelY ? 'px' : '%'}</p>
+                </div>
+              }><RightCircleOutlined /></Popover>} />;
+            } else if (getCurrentPointer().content[tickKey].type === 'pointerDown') {
+              return <Step status="finish" icon={<Popover placement='bottom' title={<center>{getCurrentPointer().content[tickKey].type}</center>} content={
+                <div style={{textAlign: 'center'}}>
+                  <p>Button: {getCurrentPointer().content[tickKey].button === 0 ? 'Left' : 'Right'}</p>
+                </div>
+              }><DownCircleOutlined /></Popover>}/>;
+            } else if (getCurrentPointer().content[tickKey].type === 'pointerUp') {
+              return <Step status="finish" icon={<Popover placement='bottom' title={<center>{getCurrentPointer().content[tickKey].type}</center>} content={
+                <div style={{textAlign: 'center'}}>
+                  <p>Button: {getCurrentPointer().content[tickKey].button === 0 ? 'Left' : 'Right'}</p>
+                </div>
+              }><UpCircleOutlined /></Popover>}/>;
+            } else if (getCurrentPointer().content[tickKey].type === 'pause') {
+              return <Step status="finish" icon={<Popover placement='bottom' title={<center>{getCurrentPointer().content[tickKey].type}</center>} content={
+                <div style={{textAlign: 'center'}}>
+                  <p>Duration: {getCurrentPointer().content[tickKey].duration}ms</p>
+                </div>
+              }><PauseCircleOutlined /></Popover>}/>;
+            }
+          })}
+          </Steps></center>
           <div style={{height: '30px'}}></div>
         </>
       }/>
     <Tabs type="editable-card" onChange={changePointer} activeKey={this.state.activeKey} onEdit={pointerAction} hideAdd={this.state.pointers.length === 5} centered={true} tabBarGutter={10} >
       {this.state.pointers.map((pointer, index) => (
-        <TabPane tab={<Input style={{ cursor: this.state.activeKey === pointer.key ? 'text' : 'pointer', maxWidth: '65px', padding: '0 0 0 0', textAlign: 'center' }} defaultValue={pointer.title} bordered={false} maxLength={10} onChange={(e) => {pointer.title = e.target.value; this.setState({pointers: this.state.pointers});}}/>} key={pointer.key}>
+        <TabPane tab={<Tooltip title='Edit' mouseEnterDelay={1}><Input style={{ cursor: this.state.activeKey === pointer.key ? 'text' : 'pointer', maxWidth: '65px', padding: '0 0 0 0', textAlign: 'center' }} defaultValue={pointer.title} bordered={false} maxLength={10} onChange={(e) => {pointer.title = e.target.value; this.setState({pointers: this.state.pointers});}}/></Tooltip>} key={pointer.key}>
           <Row gutter={[24, 24]}>
             {Object.keys(pointer.content).map((key) => <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}><div>{editTick(pointer.key, key, index)}</div></Col>)}
             <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}><Card bordered={false} bodyStyle={{ minHeight: '220px'}}><center><Button style={{position: 'absolute', top: '40%'}} icon={<PlusCircleOutlined />} onClick={() => addTick(pointer.key)} key="add"></Button></center></Card></Col>
