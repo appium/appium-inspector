@@ -1,6 +1,5 @@
 /* eslint no-useless-escape: 0 */
 
-import { contains } from 'cheerio/lib/static';
 import Framework from './framework';
 
 class RobotFramework extends Framework {
