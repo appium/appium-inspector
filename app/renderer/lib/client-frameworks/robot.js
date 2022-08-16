@@ -64,9 +64,9 @@ ${this.indent(code, 4)}
     }
     //TODO: in the robot case, we need the ID on the codeFor_ for execution
     this.lastID = `${strategy}=${locator}`;
-    
-    if(this.lastID.includes("accessibility id")){
-      this.lastID = this.lastID.replace("accessibility id", 'accessibility_id');
+
+    if (this.lastID.includes('accessibility id')) {
+      this.lastID = this.lastID.replace('accessibility id', 'accessibility_id');
     }
 
     return `# ${this.lastID}`;
