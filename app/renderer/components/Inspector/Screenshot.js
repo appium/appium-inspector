@@ -103,13 +103,14 @@ class Screenshot extends Component {
 
     // {position: [x,y], type: down/up}
     // pointer down always fills in the last pointermove
-    const colors = ['#FF3333', '#FF8F00', '#FFFF00', '#6CFF00', '#00FFDC'];
+    const colors = gestureToDraw.colors;
     const pointers = [];
+    let counter = 0;
 
     for (const key of Object.keys(actions)) {
       let type = 'pointerUp';
       const temp = [];
-      const color = colors.pop();
+      const color = colors[counter];
 
       for (const tick of actions[key]) {
         type = tick.type === 'pointerDown' || tick.type === 'pointerUp' ? tick.type : type;
@@ -133,6 +134,7 @@ class Screenshot extends Component {
       }
 
       pointers.push(temp);
+      counter = counter + 1;
     }
 
     return pointers;
@@ -154,7 +156,7 @@ class Screenshot extends Component {
 
     // If we're tapping or swiping, show the 'crosshair' cursor style
     const screenshotStyle = {};
-    if ([TAP, SWIPE, GESTURE].includes(screenshotInteractionMode)) {
+    if ([TAP, SWIPE].includes(screenshotInteractionMode) || selectedTick) {
       screenshotStyle.cursor = 'crosshair';
     }
 

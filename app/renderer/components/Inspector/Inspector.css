@@ -151,29 +151,6 @@
     float: right;
 }
 
-.gesture-header {
-    padding: 0 0 0 0;
-    margin-right: -12px;
-}
-
-.gesture-header :global(.ant-page-header-footer) {
-    margin-top: 0px;
-}
-
-.gesture-header :global(.ant-typography) {
-    margin-bottom: 0px;
-}
-
-.gesture-header :global(.ant-typography-edit-content) {
-}
-
-.gesture-header :global(.ant-input) {
-    box-shadow: none;
-    border-width: 0px;
-}
-
-
-
 .inspector-main .recorded-actions {
     margin-bottom: 12px;
     max-height: 40%;
@@ -407,4 +384,110 @@
 
 .actions-container :global(.ant-btn) {
     width: 100%;
+}
+
+.gesture-header {
+    padding: 0 0 0 0;
+    margin-right: -12px;
+}
+
+.gesture-header :global(.ant-page-header-footer) {
+    margin-top: 0px;
+}
+
+.gesture-header :global(.ant-typography) {
+    margin-bottom: 0px;
+}
+
+.gesture-header :global(.ant-input) {
+    box-shadow: none;
+    border-width: 0px;
+}
+
+.gesture-header-title {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.gesture-header-description {
+    font-size: 15px;
+    font-weight: 400;
+    color: #636363;
+    margin-left: 30px;
+    margin-top: 5px;
+}
+
+.gesture-header-coord-btn {
+    width: 30px;
+    height: 30px;
+}
+
+.gesture-header-timeline {
+    width: 90%;
+    padding-bottom: 20px;
+    margin-top: 20px;
+    
+}
+
+.timeline-tick-title {
+    text-align: center;
+}
+
+.gesture-header-timeline :global(.ant-steps-item-finish .ant-steps-item-container .ant-steps-item-content .ant-steps-item-title::after) {
+    background-color: var(--timeline);
+}
+
+.pointer-title {
+    max-width: 65px;
+    padding: 0 0 0 0;
+    text-align: center;
+    text-decoration: underline;
+    text-decoration-thickness: 20%;
+}
+
+.tick-card :global(.ant-card-head) {
+    margin-top: -16px;
+    padding-right: 0px;
+    border-bottom: none;
+}
+
+.tick-card :global(.ant-card-body) {
+    margin-top: -12px;
+    min-height: 220px;
+    margin-right: -12px;
+}
+
+.tick-plus-card {
+    min-height: 220px;
+}
+
+.tick-plus-btn {
+    position: absolute;
+    top: 40%;
+}
+
+.space-container {
+    display: flex;
+}
+
+.tick-pointer-input {
+    width: 145px;
+}
+
+.tick-button-group {
+    margin-top: -18px;
+    display: block;
+}
+
+.tick-button-input {
+    width: 73px;
+}
+
+.tick-input-box {
+    width: 145px;
+}
+
+.tick-input-box :global(.ant-input-group-addon) {
+    position: sticky;
+    width: 50px;
 }

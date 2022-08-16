@@ -196,6 +196,6 @@ export const actionDefinitions = {
 export const INTERACTION_MODE = {
   SOURCE: 'source',
   ACTIONS: 'actions',
-  SAVED_GESTURES: 'savedGestures',
+  GESTURES: 'gestures',
   SESSION_INFO: 'sessionInfo',
 };

@@ -90,7 +90,13 @@ export default class AppiumClient {
     } else {
       // Specially handle the tap and swipe method
       if (methodName === SCREENSHOT_INTERACTION_MODE.TAP || methodName === SCREENSHOT_INTERACTION_MODE.SWIPE || methodName === SCREENSHOT_INTERACTION_MODE.GESTURE) {
-        const actions = Object.keys(args[0]).map((key) => ({ type: 'pointer', id: key, parameters: {pointerType: 'touch'}, actions: args[0][key]}));
+        const actions = Object.keys(args[0]).map((key) => (
+          {
+            type: 'pointer',
+            id: key,
+            parameters: {pointerType: 'touch'},
+            actions: args[0][key]
+          }));
         res = await this.driver.performActions(actions);
       } else if (methodName !== 'getPageSource' && methodName !== 'takeScreenshot') {
         res = await this.driver[methodName].apply(this.driver, args);

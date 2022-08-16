@@ -239,23 +239,23 @@ export default class Inspector extends Component {
               </div>
             </div>
           </TabPane>
-          <TabPane tab={t('Actions')} key={INTERACTION_MODE.ACTIONS}>
+          <TabPane tab={t('Commands')} key={INTERACTION_MODE.ACTIONS}>
             <Card
-              title={<span><ThunderboltOutlined /> {t('Actions')}</span>}
+              title={<span><ThunderboltOutlined /> {t('Execute Commands')}</span>}
               className={InspectorStyles['interaction-tab-card']}>
               <Actions {...this.props} />
             </Card>
           </TabPane>
-          <TabPane tab={t('Gestures')} key={INTERACTION_MODE.SAVED_GESTURES}>
+          <TabPane tab={t('Actions')} key={INTERACTION_MODE.GESTURES}>
             {isGestureEditorVisible ?
               <Card
-                title={<span><HighlightOutlined /> {t('Gesture Editor')}</span>}
+                title={<span><HighlightOutlined /> {t('Action Builder')}</span>}
                 className={InspectorStyles['interaction-tab-card']}>
                 <GestureEditor {...this.props}/>
               </Card>
               :
               <Card
-                title={<span><HighlightOutlined /> {t('Saved Gestures')}</span>}
+                title={<span><HighlightOutlined /> {t('Saved Actions')}</span>}
                 className={InspectorStyles['interaction-tab-card']}>
                 <SavedGestures {...this.props} />
               </Card>
