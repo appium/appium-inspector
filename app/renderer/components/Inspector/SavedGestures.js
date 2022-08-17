@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Table, Button } from 'antd';
+import { Table, Button, Tooltip } from 'antd';
 import { withTranslation } from '../../util';
 import moment from 'moment';
-import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, PlusOutlined, PlayCircleOutlined } from '@ant-design/icons';
 
 class SavedGestures extends Component {
 
@@ -31,6 +31,10 @@ class SavedGestures extends Component {
     throw new Error(`Couldn't find session with uuid ${id}`);
   }
 
+  onPlayGesture (gesture) {
+    console.log(gesture);
+  }
+
   render () {
 
     const {savedGestures, showGestureEditor} = this.props;
@@ -54,6 +58,9 @@ class SavedGestures extends Component {
         let gesture = this.getGestureByID(record.key);
         return (
           <div>
+            <Tooltip title='Play'>
+              <Button key="play" type="primary" icon={<PlayCircleOutlined />} onClick={() => this.onPlayGesture(gesture)} />
+            </Tooltip>
             <Button
               icon={<EditOutlined/>}
               onClick={() => this.loadSavedGesture(gesture)}

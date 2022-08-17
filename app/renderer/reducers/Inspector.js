@@ -20,6 +20,17 @@ import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from '../comp
 
 const DEFAULT_FRAMEWORK = 'java';
 
+// [
+//   {
+//     name: ,
+//     ticks: [
+//       {type:, duration, x, y, id}
+//     ],
+//     color: ,
+//     id: ,
+//   }
+// ]
+
 const INITIAL_STATE = {
   savedGestures:
     [

@@ -35,7 +35,6 @@ class GestureEditor extends Component {
       pointers: this.props.loadedGesture ? this.loadPointers() : DEFAULT_POINTERS(),
       coordType: 'percentages',
       activeKey: '1',
-      timelineKey: '1',
     };
   }
 
@@ -140,6 +139,7 @@ class GestureEditor extends Component {
   onPlayGesture () {
     const {applyClientMethod} = this.props;
     const {actions} = this.formatGesture(false, false);
+    console.log(actions);
     applyClientMethod({methodName: 'gesture', args: [actions]});
   }
 
@@ -440,26 +440,12 @@ class GestureEditor extends Component {
         ))}
       </Tabs>;
 
-    const currentPointer = this.state.pointers.filter((pointer) => pointer.key === this.state.timelineKey)[0];
-
     const timeline =
-      <>
-        <Select
-          placeholder='Pointer'
-          defaultValue={this.state.timelineKey}
-          size='middle'
-          dropdownMatchSelectWidth={false}
-          onChange={(e) => this.setState({timelineKey: e})}>
-          {(this.state.pointers).map((pointer) => <Option value={pointer.key} key={pointer.key}><center>{pointer.title}</center></Option>)}
-        </Select>
+      (this.state.pointers).map((pointer) =>
         <center>
-          <Steps className={InspectorCSS['gesture-header-timeline']}>
-            {Object.keys(currentPointer.content).map((tickKey) => {
-              const {type, duration, button, x, y} = currentPointer.content[tickKey];
-              const timelineDash = document.querySelector('._gesture-header-timeline_0387c');
-              if (timelineDash) {
-                timelineDash.style.setProperty('--timeline', currentPointer.color);
-              }
+          <Steps className={InspectorCSS['gesture-header-timeline']} style={{'--timelineColor': pointer.color}}>
+            {Object.keys(pointer.content).map((tickKey) => {
+              const {type, duration, button, x, y} = pointer.content[tickKey];
               return <Step status="finish" icon={
                 <Popover placement='bottom'
                   title={<center>{POINTER_TYPES[type]}</center>}
@@ -471,16 +457,15 @@ class GestureEditor extends Component {
                       {y !== undefined && <p>Y: {y}{this.state.coordType === 'pixels' ? 'px' : '%'}</p>}
                     </div>
                   }>
-                  {type === 'pointerMove' && <RightCircleOutlined style={{ color: currentPointer.color}} />}
-                  {type === 'pointerDown' && <DownCircleOutlined style={{ color: currentPointer.color}} />}
-                  {type === 'pointerUp' && <UpCircleOutlined style={{ color: currentPointer.color}} />}
-                  {type === 'pause' && <PauseCircleOutlined style={{ color: currentPointer.color}} />}
+                  {type === 'pointerMove' && <RightCircleOutlined className={InspectorCSS['gesture-header-icon']} style={{ color: pointer.color}} />}
+                  {type === 'pointerDown' && <DownCircleOutlined className={InspectorCSS['gesture-header-icon']} style={{ color: pointer.color}} />}
+                  {type === 'pointerUp' && <UpCircleOutlined className={InspectorCSS['gesture-header-icon']} style={{ color: pointer.color}} />}
+                  {type === 'pause' && <PauseCircleOutlined className={InspectorCSS['gesture-header-icon']} style={{ color: pointer.color}} />}
                 </Popover>}
               />;
             })}
           </Steps>
-        </center>
-      </>;
+        </center>);
 
     const switchCoords = (type) => {
       const {coordType, pointers} = this.state;
@@ -505,7 +490,17 @@ class GestureEditor extends Component {
       }
     };
 
-    const coordTypeBtns =
+    const headerDescription =
+      <Tooltip placement="topLeft" title='Edit'>
+        <Input
+          defaultValue={this.state.description}
+          className={InspectorCSS['gesture-header-description']}
+          onChange={(e) => {this.setState({description: e.target.value});}}
+          size='small'/>
+      </Tooltip>;
+
+    const headerButtons =
+      [
         <ButtonGroup>
           <Button
             className={InspectorCSS['gesture-header-coord-btn']}
@@ -521,19 +516,7 @@ class GestureEditor extends Component {
             size='small'>
               px
           </Button>
-        </ButtonGroup>;
-
-    const headerDescription =
-      <Tooltip placement="topLeft" title='Edit'>
-        <Input
-          defaultValue={this.state.description}
-          className={InspectorCSS['gesture-header-description']}
-          onChange={(e) => {this.setState({description: e.target.value});}}
-          size='small'/>
-      </Tooltip>;
-
-    const headerButtons =
-      [
+        </ButtonGroup>,
         <Tooltip title='Play'>
           <Button key="play" type="primary" icon={<PlayCircleOutlined />} onClick={() => this.onPlayGesture()} />
         </Tooltip>,
@@ -556,15 +539,7 @@ class GestureEditor extends Component {
         onBack={() => this.onBacktoSaved()}
         title={headerTitle}
         extra={headerButtons}
-        footer={
-          <>
-            <Row justify='space-between'>
-              <Col>{headerDescription}</Col>
-              <Col>{coordTypeBtns}</Col>
-            </Row>
-            <Divider/>
-            {timeline}
-          </>}
+        footer={<>{headerDescription}<Divider/>{timeline}</>}
       />;
 
     return <>{pageHeader}{pageContent}</>;

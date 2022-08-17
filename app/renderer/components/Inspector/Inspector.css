@@ -393,6 +393,7 @@
 
 .gesture-header :global(.ant-page-header-footer) {
     margin-top: 0px;
+    padding-bottom: 5px;
 }
 
 .gesture-header :global(.ant-typography) {
@@ -419,13 +420,12 @@
 
 .gesture-header-coord-btn {
     width: 30px;
-    height: 30px;
+    height: 32px;
 }
 
 .gesture-header-timeline {
     width: 90%;
-    padding-bottom: 20px;
-    margin-top: 20px;
+    margin-top: -15px; 
     
 }
 
@@ -434,7 +434,11 @@
 }
 
 .gesture-header-timeline :global(.ant-steps-item-finish .ant-steps-item-container .ant-steps-item-content .ant-steps-item-title::after) {
-    background-color: var(--timeline);
+    background-color: var(--timelineColor);
+}
+
+.gesture-header-icon {
+    font-size: 20px;
 }
 
 .pointer-title {
@@ -443,6 +447,10 @@
     text-align: center;
     text-decoration: underline;
     text-decoration-thickness: 20%;
+}
+
+.tick-card {
+    overflow: hidden;
 }
 
 .tick-card :global(.ant-card-head) {
