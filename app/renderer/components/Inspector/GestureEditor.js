@@ -286,8 +286,8 @@ class GestureEditor extends Component {
         currentTick.button = 0;
       }
       if (value === pointerMove) {
-        // currentTick.x = 0;
-        // currentTick.y = 0;
+        currentTick.x = 0;
+        currentTick.y = 0;
         selectTick(currentTick.id);
       }
       if (value === pointerMove || value === pause) {

@@ -34,13 +34,6 @@ class SavedGestures extends Component {
     getSavedGestures();
   }
 
-  // componentDidUpdate (prevProps) {
-  //   const {savedGestures, getSavedGestures} = this.props;
-  //   if (savedGestures !== prevProps.savedGestures) {
-  //     getSavedGestures();
-  //   }
-  // }
-
   componentWillUnmount () {
     this.drawnGesture = null;
   }
