@@ -342,13 +342,48 @@
 }
 
 .swipeSvg line {
-    opacity: 0.35;
+    stroke-width: 15;
+    stroke: rgba(255, 153, 153, 0.8);
+    stroke-linecap: round;
 }
 
 .swipeSvg circle {
+    r: 10;
+    fill: rgba(255, 153, 153, 0.8);
+}
+
+.gestureSvg {
+    position: absolute;
+    z-index: 100000000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.gestureSvg line {
+    opacity: 0.35;
+}
+
+.gestureSvg .filled, .dashed {
+    stroke-dasharray: 10;
+    stroke-width: 5;
+}
+
+.gestureSvg .whole, .newDashed {
+    stroke-linecap: round;
+    stroke-width: 15;
+}
+
+.gestureSvg circle {
     r: 8;
     fill: none;
     stroke-width: 0.4%;
+}
+
+.gestureSvg .circle-dashed, .circle-newDashed {
+    stroke-dasharray: 0.9%;
+    border-style: dashed;
 }
 
 .innerScreenshotContainer {
@@ -426,11 +461,15 @@
 .gesture-header-timeline {
     width: 90%;
     margin-top: -15px; 
-    
+    min-height: 36px;
 }
 
 .timeline-tick-title {
     text-align: center;
+}
+
+.gesture-header-timeline :global(.ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after) {
+    background-color: #fffefe;
 }
 
 .gesture-header-timeline :global(.ant-steps-item-finish .ant-steps-item-container .ant-steps-item-content .ant-steps-item-title::after) {
@@ -461,7 +500,7 @@
 
 .tick-card :global(.ant-card-body) {
     margin-top: -12px;
-    min-height: 220px;
+    min-height: 167px;
     margin-right: -12px;
 }
 
@@ -483,7 +522,6 @@
 }
 
 .tick-button-group {
-    margin-top: -18px;
     display: block;
 }
 
@@ -495,7 +533,16 @@
     width: 145px;
 }
 
+.tick-coord-box {
+    width: 72px;
+    text-align: center;
+}
+
 .tick-input-box :global(.ant-input-group-addon) {
     position: sticky;
     width: 50px;
+}
+
+.option-inpt {
+    text-align: center;
 }

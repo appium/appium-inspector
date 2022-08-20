@@ -3,6 +3,8 @@ import Bluebird from 'bluebird';
 import {getWebviewStatusAddressBarHeight, parseSource, setHtmlElementAttributes} from './webview-helpers';
 import {SCREENSHOT_INTERACTION_MODE, APP_MODE} from '../components/Inspector/shared';
 
+const {TAP, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
+
 export const NATIVE_APP = 'NATIVE_APP';
 let _instance = null;
 
@@ -89,7 +91,7 @@ export default class AppiumClient {
       res = await cachedEl.el[methodName].apply(cachedEl.el, args);
     } else {
       // Specially handle the tap and swipe method
-      if (methodName === SCREENSHOT_INTERACTION_MODE.TAP || methodName === SCREENSHOT_INTERACTION_MODE.SWIPE || methodName === SCREENSHOT_INTERACTION_MODE.GESTURE) {
+      if ([TAP, SWIPE, GESTURE].includes(methodName)) {
         const actions = Object.keys(args[0]).map((key) => (
           {
             type: 'pointer',

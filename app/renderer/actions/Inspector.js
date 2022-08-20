@@ -84,15 +84,19 @@ export const SET_AWAITING_MJPEG_STREAM = 'SET_AWAITING_MJPEG_STREAM';
 
 export const SHOW_GESTURE_EDITOR = 'SHOW_GESTURE_EDITOR';
 export const HIDE_GESTURE_EDITOR = 'HIDE_GESTURE_EDITOR';
-export const SAVE_GESTURE_ACTION = 'SAVE_GESTURE_ACTION';
+export const SAVED_GESTURES = 'SAVED_GESTURES';
+export const GET_SAVED_GESTURES_REQUESTED = 'GET_SAVED_GESTURES_REQUESTED';
+export const GET_SAVED_GESTURES_DONE = 'GET_SAVED_GESTURES_DONE';
+export const DELETE_SAVED_GESTURES_REQUESTED = 'DELETE_SAVED_GESTURES_REQUESTED';
+export const DELETE_SAVED_GESTURES_DONE = 'DELETE_SAVED_GESTURES_DONE';
 export const SET_LOADED_GESTURE = 'SET_LOADED_GESTURE';
 export const REMOVE_LOADED_GESTURE = 'REMOVE_LOADED_GESTURE';
-export const DRAW_GESTURE = 'DRAW_GESTURE';
-export const REMOVE_DRAWN_GESTURE = 'REMOVE_DRAWN_GESTURE';
+export const SHOW_GESTURE_ACTION = 'SHOW_GESTURE_ACTION';
+export const HIDE_GESTURE_ACTION = 'HIDE_GESTURE_ACTION';
 export const SELECT_TICK_ELEMENT = 'SELECT_TICK_ELEMENT';
 export const UNSELECT_TICK_ELEMENT = 'UNSELECT_TICK_ELEMENT';
-export const TAP_TICK_COORDINATES = 'TAP_TICK_COORDINATES';
-export const CLOSE_TICK_COORDINATES = 'CLOSE_TICK_COORDINATES';
+export const SET_TAP_COORDINATES = 'SET_TAP_COORDINATES';
+export const CLEAR_TAP_COORDINATES = 'CLEAR_TAP_COORDINATES';
 
 const KEEP_ALIVE_PING_INTERVAL = 5 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -693,25 +697,44 @@ export function setAwaitingMjpegStream (isAwaiting) {
 }
 
 export function saveGesture (params) {
-  return (dispatch, getState) => {
-    let savedGestures = getState().inspector.savedGestures;
-    const newGesture = !params.id;
-    if (newGesture) {
+  return async (dispatch, getState) => {
+    const savedGestures = getState().inspector.savedGestures;
+    if (!params.id) {
       params.id = UUID();
       params.date = Date.now();
+      savedGestures.push(params);
     } else {
-      savedGestures = savedGestures.filter((gesture) => gesture.id !== params.id);
+      for (const gesture of savedGestures) {
+        if (gesture.id === params.id) {
+          gesture.name = params.name;
+          gesture.description = params.description;
+          gesture.actions = params.actions;
+        }
+      }
     }
-    savedGestures.push(params);
-    dispatch({type: SAVE_GESTURE_ACTION, savedGestures});
+    dispatch({type: SAVED_GESTURES, savedGestures});
+    await setSetting(SAVED_GESTURES, savedGestures);
+    const action = getSavedGestures();
+    await action(dispatch);
+  };
+}
+
+export function getSavedGestures () {
+  return async (dispatch) => {
+    dispatch({type: GET_SAVED_GESTURES_REQUESTED});
+    const savedGestures = await getSetting(SAVED_GESTURES);
+    dispatch({type: GET_SAVED_GESTURES_DONE, savedGestures});
   };
 }
 
 export function deleteSavedGesture (id) {
-  return (dispatch, getState) => {
-    const {savedGestures} = getState().inspector;
-    const newSavedGestures = savedGestures.filter((gesture) => gesture.id !== id);
-    dispatch({type: SAVE_GESTURE_ACTION, savedGestures: newSavedGestures});
+  return async (dispatch) => {
+    dispatch({type: DELETE_SAVED_GESTURES_REQUESTED, deleteGesture: id});
+    const gestures = await getSetting(SAVED_GESTURES);
+    const newGestures = gestures.filter((gesture) => gesture.id !== id);
+    await setSetting(SAVED_GESTURES, newGestures);
+    dispatch({type: DELETE_SAVED_GESTURES_DONE});
+    dispatch({type: GET_SAVED_GESTURES_DONE, savedGestures: newGestures});
   };
 }
 
@@ -734,21 +757,21 @@ export function setLoadedGesture (loadedGesture) {
   };
 }
 
-export function unsetLoadedGesture () {
+export function removeLoadedGesture () {
   return (dispatch) => {
     dispatch({type: REMOVE_LOADED_GESTURE});
   };
 }
 
-export function drawGesture (gestureToDraw) {
+export function displayGesture (showGesture) {
   return (dispatch) => {
-    dispatch({type: DRAW_GESTURE, gestureToDraw});
+    dispatch({type: SHOW_GESTURE_ACTION, showGesture});
   };
 }
 
-export function undrawGesture () {
+export function removeGestureDisplay () {
   return (dispatch) => {
-    dispatch({type: REMOVE_DRAWN_GESTURE});
+    dispatch({type: HIDE_GESTURE_ACTION});
   };
 }
 
@@ -757,7 +780,7 @@ export function selectTick (tick) {
     const {tickCoordinates} = getState().inspector;
 
     if (tickCoordinates) {
-      dispatch({type: TAP_TICK_COORDINATES, x: undefined, y: undefined});
+      dispatch({type: SET_TAP_COORDINATES, x: undefined, y: undefined});
     }
 
     dispatch({type: SELECT_TICK_ELEMENT, selectedTick: tick});
@@ -766,13 +789,13 @@ export function selectTick (tick) {
 
 export function unselectTick () {
   return (dispatch) => {
-    dispatch({type: CLOSE_TICK_COORDINATES});
+    dispatch({type: CLEAR_TAP_COORDINATES});
     dispatch({type: UNSELECT_TICK_ELEMENT});
   };
 }
 
 export function tapTickCoordinates (x, y) {
   return (dispatch) => {
-    dispatch({type: TAP_TICK_COORDINATES, x, y});
+    dispatch({type: SET_TAP_COORDINATES, x, y});
   };
 }

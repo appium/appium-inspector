@@ -3,10 +3,13 @@ import HighlighterRects from './HighlighterRects';
 import { Spin, Tooltip } from 'antd';
 import B from 'bluebird';
 import styles from './Inspector.css';
-import { SCREENSHOT_INTERACTION_MODE } from './shared';
+import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE } from './shared';
 import { withTranslation } from '../../util';
 
-const {TAP, SELECT, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
+const {TAP, SELECT, SWIPE} = SCREENSHOT_INTERACTION_MODE;
+const TYPES = {firstPointerDown: 'filled', firstPointerUp: 'newDashed', pointerDown: 'whole', pointerUp: 'dashed'};
+const POINTER_TYPE = {pointerUp: 'pointerUp', pointerDown: 'pointerDown', pause: 'pause',
+                      pointerMove: 'pointerMove'};
 
 /**
  * Shows screenshot of running application and divs that highlight the elements' bounding boxes
@@ -93,51 +96,38 @@ class Screenshot extends Component {
   }
 
   generateGestureCoordinates () {
-    const { gestureToDraw } = this.props;
-
-    if (!gestureToDraw) {
+    const {pointerUp, pointerDown, pause, pointerMove} = POINTER_TYPE;
+    const {showGesture} = this.props;
+    if (showGesture) {
+      return showGesture.map((pointer) => {
+        let type = TYPES.pointerUp;
+        const temp = [];
+        for (const tick of pointer.ticks) {
+          if (tick.type !== pause) {
+            const len = temp.length;
+            type = tick.type !== pointerMove ? TYPES[tick.type] : type;
+            if (tick.type === pointerMove) {
+              temp.push({id: tick.id, type, x: tick.x, y: tick.y, color: pointer.color});
+            }
+            if (len === 0) {
+              if (tick.type === pointerDown) {
+                temp.push({id: tick.id, type: TYPES.firstPointerDown, x: 0, y: 0, color: pointer.color});
+              }
+            } else {
+              if (tick.type === pointerDown && temp[len - 1].type === TYPES.pointerUp) {
+                temp[len - 1].type = TYPES.firstPointerDown;
+              }
+              if (tick.type === pointerUp && temp[len - 1].type === TYPES.pointerDown) {
+                temp[len - 1].type = TYPES.firstPointerUp;
+              }
+            }
+          }
+        }
+        return temp;
+      });
+    } else {
       return null;
     }
-
-    const { actions } = gestureToDraw;
-
-    // {position: [x,y], type: down/up}
-    // pointer down always fills in the last pointermove
-    const colors = gestureToDraw.colors;
-    const pointers = [];
-    let counter = 0;
-
-    for (const key of Object.keys(actions)) {
-      let type = 'pointerUp';
-      const temp = [];
-      const color = colors[counter];
-
-      for (const tick of actions[key]) {
-        type = tick.type === 'pointerDown' || tick.type === 'pointerUp' ? tick.type : type;
-        if (tick.type === 'pointerMove') {
-          temp.push({ type, position: [tick.x, tick.y], color});
-        }
-
-        const lastIndexOfPointerMove = temp.length - 1;
-
-        if (tick.type === 'pointerDown' && temp.length !== 0 && temp[lastIndexOfPointerMove].type === 'pointerUp') {
-          temp[lastIndexOfPointerMove].type = 'fill';
-        }
-
-        if (tick.type === 'pointerUp' && temp.length !== 0 && temp[lastIndexOfPointerMove].type === 'pointerDown') {
-          temp[lastIndexOfPointerMove].type = 'unfill';
-        }
-
-        if (tick.type === 'pointerDown' && temp.length === 0) {
-          temp.push({ type: 'pointerDown', position: [0, 0], color});
-        }
-      }
-
-      pointers.push(temp);
-      counter = counter + 1;
-    }
-
-    return pointers;
   }
 
   render () {
@@ -151,6 +141,7 @@ class Screenshot extends Component {
       t,
       scaleRatio,
       selectedTick,
+      selectedInteractionMode,
     } = this.props;
     const {x, y} = this.state;
 
@@ -173,17 +164,6 @@ class Screenshot extends Component {
     const screenImg = <img src={screenSrc} id="screenshot" />;
 
     const points = this.generateGestureCoordinates();
-    const divStyle = (color, type) => {
-      if (type === 'pointerDown') {
-        return { stroke: color };
-      } else if (type === 'pointerUp') {
-        return { stroke: color, strokeDasharray: '0.9%', borderStyle: 'dashed' };
-      } else if (type === 'unfill') {
-        return { stroke: color, strokeDasharray: '0.9%', borderStyle: 'dashed' };
-      } else {
-        return { fill: color };
-      }
-    };
 
     // Show the screenshot and highlighter rects. Show loading indicator if a method call is in progress.
     return <Spin size='large' spinning={!!methodCallInProgress}>
@@ -209,38 +189,41 @@ class Screenshot extends Component {
               {swipeStart && !swipeEnd && <circle
                 cx={swipeStart.x / scaleRatio}
                 cy={swipeStart.y / scaleRatio}
+                key='swipe'
               />}
               {swipeStart && swipeEnd && <line
                 x1={swipeStart.x / scaleRatio}
                 y1={swipeStart.y / scaleRatio}
                 x2={swipeEnd.x / scaleRatio}
                 y2={swipeEnd.y / scaleRatio}
+                key='swipe'
               />}
             </svg>
           }
-          {screenshotInteractionMode === GESTURE && points &&
-            <svg className={styles.swipeSvg}>
-              {
-                points.map((pointer) =>
-                  pointer.map((tick, index) =>
-                    <>
-                      {
-                        index > 0 &&
+          {selectedInteractionMode === INTERACTION_MODE.GESTURES && points &&
+            <svg key='gestureSVG' className={styles.gestureSvg}>
+              {points.map((pointer) =>
+                pointer.map((tick, index) =>
+                  <>{index > 0 &&
                         <line
-                          x1={pointer[index - 1].position[0] / scaleRatio}
-                          y1={pointer[index - 1].position[1] / scaleRatio}
-                          x2={tick.position[0] / scaleRatio}
-                          y2={tick.position[1] / scaleRatio}
-                          style={tick.type === 'pointerUp' || tick.type === 'fill' ? { strokeDasharray: '10', strokeWidth: '5', stroke: tick.color } : { strokeLinecap: 'round', strokeWidth: '15', stroke: tick.color }}
-                        />
-                      }
-                      <circle cx={tick.position[0] / scaleRatio} cy={tick.position[1] / scaleRatio} style={divStyle(tick.color, tick.type)}/>
-                    </>
-                  )
-                )
-              }
-            </svg>
-          }
+                          className={styles[tick.type]}
+                          key={`${tick.id}.line`}
+                          x1={pointer[index - 1].x / scaleRatio}
+                          y1={pointer[index - 1].y / scaleRatio}
+                          x2={tick.x / scaleRatio}
+                          y2={tick.y / scaleRatio}
+                          style={{stroke: tick.color}}
+                        />}
+                  <circle
+                    className={styles[`circle-${tick.type}`]}
+                    key={`${tick.id}.circle`}
+                    cx={tick.x / scaleRatio}
+                    cy={tick.y / scaleRatio}
+                    style={tick.type === TYPES.firstPointerDown ?
+                      {fill: tick.color}
+                      :
+                      {stroke: tick.color}}/></>))}
+            </svg>}
         </div>
       </div>
     </Spin>;

@@ -13,104 +13,16 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          SELECT_ACTION_GROUP, SELECT_SUB_ACTION_GROUP, SET_APP_MODE,
          SELECT_INTERACTION_MODE, ENTERING_ACTION_ARGS, SET_ACTION_ARG, REMOVE_ACTION, SET_CONTEXT,
          SET_KEEP_ALIVE_INTERVAL, SET_USER_WAIT_TIMEOUT, SET_LAST_ACTIVE_MOMENT, SET_VISIBLE_COMMAND_RESULT,
-         SET_AWAITING_MJPEG_STREAM, SET_APP_ID, SET_SERVER_STATUS, SET_SESSION_TIME, SHOW_GESTURE_EDITOR, HIDE_GESTURE_EDITOR, SAVE_GESTURE_ACTION,
-         SET_LOADED_GESTURE, REMOVE_LOADED_GESTURE, DRAW_GESTURE, REMOVE_DRAWN_GESTURE, SELECT_TICK_ELEMENT, UNSELECT_TICK_ELEMENT, TAP_TICK_COORDINATES, CLOSE_TICK_COORDINATES
+         SET_AWAITING_MJPEG_STREAM, SET_APP_ID, SET_SERVER_STATUS, SET_SESSION_TIME, SHOW_GESTURE_EDITOR, HIDE_GESTURE_EDITOR, SAVED_GESTURES,
+         GET_SAVED_GESTURES_REQUESTED, GET_SAVED_GESTURES_DONE, SET_LOADED_GESTURE, REMOVE_LOADED_GESTURE, SHOW_GESTURE_ACTION, HIDE_GESTURE_ACTION,
+         SELECT_TICK_ELEMENT, UNSELECT_TICK_ELEMENT, SET_TAP_COORDINATES, CLEAR_TAP_COORDINATES, DELETE_SAVED_GESTURES_REQUESTED, DELETE_SAVED_GESTURES_DONE
 } from '../actions/Inspector';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from '../components/Inspector/shared';
 
 const DEFAULT_FRAMEWORK = 'java';
 
-// [
-//   {
-//     name: ,
-//     ticks: [
-//       {type:, duration, x, y, id}
-//     ],
-//     color: ,
-//     id: ,
-//   }
-// ]
-
 const INITIAL_STATE = {
-  savedGestures:
-    [
-      {
-        name: 'Zoom In',
-        description: 'Zooming in gesture.',
-        date: 1657896413176,
-        id: 'b1efb924-f230-4c1d-926d-a17ddfa583b1',
-        actions: {
-          pointer1: [
-            {type: 'pointerMove', duration: 0, x: 50, y: 50},
-            {type: 'pointerDown', button: 0},
-            {type: 'pause', duration: 100},
-            {type: 'pointerUp', button: 0}
-          ],
-          pointer2: [
-            {type: 'pointerMove', duration: 0, x: 50, y: 50},
-            {type: 'pointerDown', button: 0},
-            {type: 'pause', duration: 100},
-            {type: 'pointerUp', button: 0}
-          ],
-          pointer3: [
-            {type: 'pointerMove', duration: 0, x: 50, y: 50},
-            {type: 'pointerDown', button: 0},
-            {type: 'pause', duration: 100},
-            {type: 'pointerUp', button: 0}
-          ],
-          pointer4: [
-            {type: 'pointerMove', duration: 0, x: 50, y: 50},
-            {type: 'pointerDown', button: 0},
-            {type: 'pause', duration: 100},
-            {type: 'pointerUp', button: 0}
-          ],
-          pointer5: [
-            {type: 'pointerMove', duration: 0, x: 50, y: 50},
-            {type: 'pointerDown', button: 0},
-            {type: 'pause', duration: 100},
-            {type: 'pointerUp', button: 0}
-          ],
-        },
-      },
-      {
-        name: 'Zoom Out',
-        description: 'Zooming out gesture.',
-        date: 1657896413176,
-        id: 'b1efb924-f230-4c1d-926d-a17ddfa583b3',
-        actions: {
-          pointer1: [
-            {type: 'pointerMove', duration: 0, x: 50, y: 50},
-            {type: 'pointerDown', button: 0},
-            {type: 'pause', duration: 100},
-            {type: 'pointerUp', button: 0}
-          ],
-          pointer2: [
-            {type: 'pointerMove', duration: 0, x: 50, y: 50},
-            {type: 'pointerDown', button: 0},
-            {type: 'pause', duration: 100},
-            {type: 'pointerUp', button: 0}
-          ],
-          pointer3: [
-            {type: 'pointerMove', duration: 0, x: 50, y: 50},
-            {type: 'pointerDown', button: 0},
-            {type: 'pause', duration: 100},
-            {type: 'pointerUp', button: 0}
-          ],
-          pointer4: [
-            {type: 'pointerMove', duration: 0, x: 50, y: 50},
-            {type: 'pointerDown', button: 0},
-            {type: 'pause', duration: 100},
-            {type: 'pointerUp', button: 0}
-          ],
-          pointer5: [
-            {type: 'pointerMove', duration: 0, x: 50, y: 50},
-            {type: 'pointerDown', button: 0},
-            {type: 'pause', duration: 100},
-            {type: 'pointerUp', button: 0}
-          ],
-        },
-      },
-    ],
+  savedGestures: [],
   driver: null,
   keepAliveInterval: null,
   showKeepAlivePrompt: false,
@@ -143,6 +55,8 @@ const INITIAL_STATE = {
   visibleCommandMethod: null,
   isAwaitingMjpegStream: true,
 };
+
+let nextState;
 
 /**
  * Look up an element in the source with the provided path
@@ -580,11 +494,33 @@ export default function inspector (state = INITIAL_STATE, action) {
         isGestureEditorVisible: false,
       };
 
-    case SAVE_GESTURE_ACTION:
+    case SAVED_GESTURES:
       return {
         ...state,
         savedGestures: action.savedGestures,
       };
+
+    case GET_SAVED_GESTURES_REQUESTED:
+      return {
+        ...state,
+        getSavedGesturesRequested: true,
+      };
+
+    case GET_SAVED_GESTURES_DONE:
+      nextState = {
+        ...state,
+        savedGestures: action.savedGestures || [],
+      };
+      return omit(nextState, 'getSavedGesturesRequested');
+
+    case DELETE_SAVED_GESTURES_REQUESTED:
+      return {
+        ...state,
+        deleteGesture: action.deleteGesture,
+      };
+
+    case DELETE_SAVED_GESTURES_DONE:
+      return omit(state, 'deleteGesture');
 
     case SET_LOADED_GESTURE:
       return {
@@ -595,14 +531,14 @@ export default function inspector (state = INITIAL_STATE, action) {
     case REMOVE_LOADED_GESTURE:
       return omit(state, 'loadedGesture');
 
-    case DRAW_GESTURE:
+    case SHOW_GESTURE_ACTION:
       return {
         ...state,
-        gestureToDraw: action.gestureToDraw,
+        showGesture: action.showGesture,
       };
 
-    case REMOVE_DRAWN_GESTURE:
-      return omit(state, 'gestureToDraw');
+    case HIDE_GESTURE_ACTION:
+      return omit(state, 'showGesture');
 
     case SELECT_TICK_ELEMENT:
       return {
@@ -613,7 +549,7 @@ export default function inspector (state = INITIAL_STATE, action) {
     case UNSELECT_TICK_ELEMENT:
       return omit(state, 'selectedTick');
 
-    case TAP_TICK_COORDINATES:
+    case SET_TAP_COORDINATES:
       return {
         ...state,
         tickCoordinates: {
@@ -622,7 +558,7 @@ export default function inspector (state = INITIAL_STATE, action) {
         },
       };
 
-    case CLOSE_TICK_COORDINATES:
+    case CLEAR_TAP_COORDINATES:
       return omit(state, 'tickCoordinates');
 
     default:
