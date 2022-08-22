@@ -9,7 +9,7 @@ import i18n from '../../configs/i18next.config.renderer';
 import CloudProviders from '../components/Session/CloudProviders';
 import { Web2Driver } from 'web2driver';
 import { addVendorPrefixes } from '../util';
-import ky from 'ky/umd';
+import ky from 'ky';
 import moment from 'moment';
 import { APP_MODE } from '../components/Inspector/shared';
 import { ipcRenderer, fs, util } from '../polyfills';

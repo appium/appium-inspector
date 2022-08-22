@@ -39,10 +39,23 @@
 
 .inspector-main .screenshot-container {
     max-width: 500px;
+    max-height: 90%;
     flex-grow: 1;
     flex-shrink: 2;
     flex-basis: 400px;
 }
+
+.screenshot-container .screenshot-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 38px;
+    margin-bottom: 12px;
+    -webkit-app-region: drag;
+}
+
 
 .inspector-main .screenshot-container img {
     max-width: 100%;
@@ -55,8 +68,7 @@
     width: 100%;
     height: 100%;
     text-align: left;
-    padding-bottom: 13px;
-    position: relative;
+    position: absolute;
     overflow: hidden;
 }
 
@@ -193,23 +205,152 @@
 }
 
 .highlighter-box.inspected-element-box div {
-    background-color: blue;
+    background-color: rgb(90, 90, 178);
     visibility: hidden;
+    transition: background-color 0.2s ease-in-out;
 }
 
 .highlighter-box.hovered-element-box div {
     background-color: yellow;
     visibility: hidden;
+    transition: background-color 0.2s ease-in-out;
 }
 
 .highlighter-box.inspected-element-box.hovered-element-box div {
-    background-color: green;
+    background-color: rgb(100, 255, 100);
+    transition: background-color 0.2s ease-in-out;
 }
 
 .highlighter-box.hovered-element-box div,
 .highlighter-box.inspected-element-box div {
     position: relative;
     height: 100%;
+    width: 100%;
+    visibility: visible;
+}
+
+.centroid-box {
+    width: 2.2vh;
+    height: 2.2vh;
+    border-style: solid;
+    border-color: #ff4141;
+    border-width: 2px;
+    position: absolute;
+    overflow: hidden;
+    cursor: pointer;
+    visibility: visible;
+    transform: translate(-50%, -50%); 
+}
+
+.centroid-box.centroid {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.centroid-box.centroid.inspected-element-box div {
+    background-color: blue;
+    opacity: 0.5;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.centroid-box.centroid.hovered-element-box div {
+    background-color: #ff0000;
+    opacity: 0.5;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.centroid-box.centroid.inspected-element-box.hovered-element-box div {
+    background-color: green;
+    opacity: 0.5;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.centroid-box.centroid.hovered-element-box div,
+.centroid-box.centroid.inspected-element-box div {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    visibility: visible;
+}
+
+.centroid-box.overlap {
+    border-style: dashed;
+    border-color: #178b00;
+    z-index: 4;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.centroid-box.overlap.inspected-element-box div {
+    background-color: blue;
+    opacity: 0.5;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.centroid-box.overlap.hovered-element-box div {
+    background-color: #178b00;
+    opacity: 0.5;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.centroid-box.overlap.inspected-element-box.hovered-element-box div {
+    background-color: rgb(113, 253, 113);
+    opacity: 0.5;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.centroid-box.overlap.hovered-element-box div,
+.centroid-box.overlap.inspected-element-box div {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    visibility: visible;
+}
+
+.centroid-box.expand {
+    z-index: 3;
+    background-color: #ffffff;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.plus-minus {
+    position: relative;
+    top: -0.8vh;
+    text-align: center;
+    font-size: 2vh;
+    font-weight: 800;
+    color: #ff4141;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.centroid-box.expand.inspected-element-box div {
+    background-color: rgb(62, 57, 57);
+    transition: background-color 0.2s ease-in-out;
+    visibility: hidden;
+}
+
+.centroid-box.expand.hovered-element-box div {
+    background-color: #2f2f2f;
+    transition: background-color 0.2s ease-in-out;
+    visibility: hidden;
+}
+
+.centroid-box.expand.inspected-element-box.hovered-element-box div {
+    background-color: rgb(255, 133, 133);
+    transition: background-color 0.2s ease-in-out;
+    
+}
+
+.centroid-box.expand.hovered-element-box div,
+.centroid-box.expand.inspected-element-box div {
+    position: relative;
+    height: 150%;
     width: 100%;
     visibility: visible;
 }
@@ -350,6 +491,15 @@
 .swipeSvg circle {
     r: 10;
     fill: rgba(255, 153, 153, 0.8);
+}
+
+.tapDiv {
+    position: absolute;
+    z-index: 100000000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%; 
 }
 
 .gestureSvg {

@@ -6,7 +6,11 @@ export function parseCoordinates (element) {
 
   if (bounds) {
     let boundsArray = bounds.split(/\[|\]|,/).filter((str) => str !== '');
-    return {x1: boundsArray[0], y1: boundsArray[1], x2: boundsArray[2], y2: boundsArray[3]};
+    const x1 = parseInt(boundsArray[0], 10);
+    const x2 = parseInt(boundsArray[2], 10);
+    const y1 = parseInt(boundsArray[1], 10);
+    const y2 = parseInt(boundsArray[3], 10);
+    return { x1, y1, x2, y2 };
   } else if (x) {
     x = parseInt(x, 10);
     y = parseInt(y, 10);
@@ -67,6 +71,16 @@ export const DEFAULT_TAP = {
   DURATION_1: 0,
   DURATION_2: 100,
   BUTTON: 0
+};
+
+// 3 Types of Centroids:
+// CENTROID is the circle/square displayed on the screen
+// EXPAND is the +/- circle displayed on the screen
+// OVERLAP is the same as CENTROID but is only visible when clicked on +/- circle
+export const RENDER_CENTROID_AS = {
+  CENTROID: 'centroid',
+  EXPAND: 'expand',
+  OVERLAP: 'overlap'
 };
 
 export const SCREENSHOT_INTERACTION_MODE = {

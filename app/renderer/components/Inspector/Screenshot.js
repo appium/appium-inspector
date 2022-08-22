@@ -179,11 +179,11 @@ class Screenshot extends Component {
           onMouseMove={this.handleMouseMove.bind(this)}
           onMouseOut={this.handleMouseOut.bind(this)}
           className={styles.screenshotBox}>
-          {x !== null && <div className={styles.coordinatesContainer}>
+          {screenshotInteractionMode !== SELECT && <div className={styles.coordinatesContainer}>
             <p>{t('xCoordinate', {x})}</p>
             <p>{t('yCoordinate', {y})}</p>
           </div>}
-          {swipeInstructions && <Tooltip visible={true} placement="top" title={swipeInstructions}>{screenImg}</Tooltip>}
+          {swipeInstructions && <Tooltip visible={true} title={swipeInstructions} placement="topLeft">{screenImg}</Tooltip>}
           {!swipeInstructions && screenImg}
           {screenshotInteractionMode === SELECT && this.containerEl && <HighlighterRects
             {...this.props}
@@ -202,6 +202,9 @@ class Screenshot extends Component {
                 y2={swipeEnd.y / scaleRatio}
               />}
             </svg>
+          }
+          {screenshotInteractionMode === TAP &&
+            <div className={styles.tapDiv}></div>
           }
           {selectedInteractionMode === INTERACTION_MODE.GESTURES && points &&
             <svg key='gestureSVG' className={styles.gestureSvg}>

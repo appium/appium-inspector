@@ -29,6 +29,8 @@ class RobotFramework extends Framework {
 
 *** Settings ***
 Library           AppiumLibrary
+Test Teardown     Quit Application
+Suite Teardown    Close Application
 
 *** Variables ***
 $\{REMOTE_URL\}   ${this.serverUrl}
@@ -38,12 +40,7 @@ ${this.getCapsVariables}
 Test case name
 ${this.indent(this.getApplicationInitialization(), 4)}
 ${this.indent(code, 4)}
-
-*** Test Teardown ***
-    Quit Application
-
-*** Suite Teardown ***
-    Close Application`;
+`;
   }
 
   codeFor_findAndAssign (strategy, locator/*, localVar, isArray*/) {
@@ -64,6 +61,11 @@ ${this.indent(code, 4)}
     }
     //TODO: in the robot case, we need the ID on the codeFor_ for execution
     this.lastID = `${strategy}=${locator}`;
+
+    if (this.lastID.includes('accessibility id')) {
+      this.lastID = this.lastID.replace('accessibility id', 'accessibility_id');
+    }
+
     return `# ${this.lastID}`;
   }
 

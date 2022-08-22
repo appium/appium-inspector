@@ -15,7 +15,9 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          SET_KEEP_ALIVE_INTERVAL, SET_USER_WAIT_TIMEOUT, SET_LAST_ACTIVE_MOMENT, SET_VISIBLE_COMMAND_RESULT,
          SET_AWAITING_MJPEG_STREAM, SET_APP_ID, SET_SERVER_STATUS, SET_SESSION_TIME, SHOW_GESTURE_EDITOR, HIDE_GESTURE_EDITOR, SAVED_GESTURES,
          GET_SAVED_GESTURES_REQUESTED, GET_SAVED_GESTURES_DONE, SET_LOADED_GESTURE, REMOVE_LOADED_GESTURE, SHOW_GESTURE_ACTION, HIDE_GESTURE_ACTION,
-         SELECT_TICK_ELEMENT, UNSELECT_TICK_ELEMENT, SET_TAP_COORDINATES, CLEAR_TAP_COORDINATES, DELETE_SAVED_GESTURES_REQUESTED, DELETE_SAVED_GESTURES_DONE
+         SELECT_TICK_ELEMENT, UNSELECT_TICK_ELEMENT, SET_TAP_COORDINATES, CLEAR_TAP_COORDINATES, DELETE_SAVED_GESTURES_REQUESTED, DELETE_SAVED_GESTURES_DONE,
+         SELECT_HOVERED_CENTROID, UNSELECT_HOVERED_CENTROID, SELECT_CENTROID, UNSELECT_CENTROID,
+         SET_SHOW_CENTROIDS,
 } from '../actions/Inspector';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from '../components/Inspector/shared';
 
@@ -37,6 +39,7 @@ const INITIAL_STATE = {
   sessionDetails: {},
   isGestureEditorVisible: false,
   isLocatorTestModalVisible: false,
+  showCentroids: false,
   locatorTestStrategy: 'id',
   locatorTestValue: '',
   isSearchingForElements: false,
@@ -126,6 +129,15 @@ export default function inspector (state = INITIAL_STATE, action) {
         selectedElementVariableType: null,
       };
 
+    case SELECT_CENTROID:
+      return {
+        ...state,
+        selectedCentroid: action.path,
+      };
+
+    case UNSELECT_CENTROID:
+      return omit(state, 'selectedCentroid');
+
     case SET_SELECTED_ELEMENT_ID:
       return {
         ...state,
@@ -149,6 +161,15 @@ export default function inspector (state = INITIAL_STATE, action) {
 
     case UNSELECT_HOVERED_ELEMENT:
       return omit(state, 'hoveredElement');
+
+    case SELECT_HOVERED_CENTROID:
+      return {
+        ...state,
+        hoveredCentroid: action.path,
+      };
+
+    case UNSELECT_HOVERED_CENTROID:
+      return omit(state, 'hoveredCentroid');
 
     case METHOD_CALL_REQUESTED:
       return {
@@ -403,6 +424,12 @@ export default function inspector (state = INITIAL_STATE, action) {
       return {
         ...state,
         appMode: action.mode,
+      };
+
+    case SET_SHOW_CENTROIDS:
+      return {
+        ...state,
+        showCentroids: action.show,
       };
 
     case ENTERING_ACTION_ARGS:
