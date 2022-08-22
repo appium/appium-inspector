@@ -107,7 +107,7 @@ class Screenshot extends Component {
           if (tick.type !== pause) {
             const len = temp.length;
             type = tick.type !== pointerMove ? TYPES[tick.type] : type;
-            if (tick.type === pointerMove && tick.x && tick.y) {
+            if (tick.type === pointerMove && tick.x !== undefined && tick.y !== undefined) {
               temp.push({id: tick.id, type, x: tick.x, y: tick.y, color: pointer.color});
             }
             if (len === 0) {

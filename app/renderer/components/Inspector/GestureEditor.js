@@ -173,7 +173,7 @@ class GestureEditor extends Component {
         return parseFloat(((pixel / height) * 100).toFixed(1), 10);
       }
     } else {
-      return 0;
+      return undefined;
     }
   }
 
@@ -186,7 +186,7 @@ class GestureEditor extends Component {
         return Math.round(height * (percentage / 100));
       }
     } else {
-      return 0;
+      return undefined;
     }
   }
 
@@ -487,8 +487,8 @@ class GestureEditor extends Component {
                     <div className={InspectorCSS['timeline-tick-title']}>
                       {duration !== undefined && <p>Duration: {duration}ms</p>}
                       {button !== undefined && <p>Button: {button === BUTTONS.LEFT ? 'Left' : 'Right'}</p>}
-                      {x && <p>X: {x}{coordType === PIXELS ? 'px' : '%'}</p>}
-                      {y && <p>Y: {y}{coordType === PIXELS ? 'px' : '%'}</p>}
+                      {x !== undefined && <p>X: {x}{coordType === PIXELS ? 'px' : '%'}</p>}
+                      {y !== undefined && <p>Y: {y}{coordType === PIXELS ? 'px' : '%'}</p>}
                     </div>
                   }>
                   {type === pointerMove && <RightCircleOutlined key={tick.id} className={InspectorCSS['gesture-header-icon']} style={iconStyle}/>}
