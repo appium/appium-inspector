@@ -6,20 +6,21 @@ import { PlayCircleOutlined, PlusCircleOutlined,
          DownCircleOutlined, UpCircleOutlined, PauseCircleOutlined } from '@ant-design/icons';
 import { withTranslation } from '../../util';
 import InspectorCSS from './Inspector.css';
+
 const {TabPane} = Tabs;
 const {Option} = Select;
 const {Step} = Steps;
 const ButtonGroup = Button.Group;
 
 const COLORS = ['#FF3333', '#FF8F00', '#B65FF4', '#6CFF00', '#00FFDC'];
-const POINTERS_TYPES = {pointerUp: 'pointerUp', pointerDown: 'pointerDown',
-                        pause: 'pause', pointerMove: 'pointerMove', pointerType: 'pointerType'};
 const BUTTONS = {LEFT: 0, RIGHT: 1};
 const ACTION_TYPES = {ADD: 'add', REMOVE: 'remove'};
 const COORD_TYPE = {PERCENTAGES: 'percentages', PIXELS: 'pixels'};
-const TICK_PROPS = {DURATION: 'Duration', BUTTON: 'Button', X: 'X', Y: 'Y'};
+const TICK_PROPS = {POINTER_TYPE: 'pointerType', DURATION: 'duration', BUTTON: 'button', X: 'x', Y: 'y'};
 const CURSOR = {POINTER: 'pointer', TEXT: 'text'};
 const STATUS = {WAIT: 'wait', FINISH: 'finish', COLOR: '#FFFFFF', FILLER: 'filler'};
+const POINTER_TYPES = {pointerUp: 'pointerUp', pointerDown: 'pointerDown',
+                       pause: 'pause', pointerMove: 'pointerMove'};
 
 const DEFAULT_POINTERS = () => [{
   name: 'pointer1',
@@ -44,12 +45,14 @@ class GestureEditor extends Component {
     };
   }
 
+  // Draw gesture every 1000 ms
   componentDidMount () {
     this.interval = setInterval(() => {
       this.onDraw();
     }, 1000);
   }
 
+  // Retrieve coordinates when user taps screenshot
   componentDidUpdate (prevProps) {
     const {selectedTick, tickCoordinates} = this.props;
     if (selectedTick !== prevProps.selectedTick || tickCoordinates !== prevProps.tickCoordinates) {
@@ -108,13 +111,13 @@ class GestureEditor extends Component {
     hideGestureEditor();
   }
 
+  // Check if pointer names are duplicates before saving/playing
   duplicatesExist (pointers) {
-    const {t} = this.props;
     const duplicates = {};
     for (const pointer of pointers) {
       if (duplicates[pointer.name]) {
         notification.error({
-          message: t('Cannot have duplicate pointer names'),
+          message: 'Cannot have duplicate pointer names',
           duration: 5,
         });
         return true;
@@ -125,6 +128,7 @@ class GestureEditor extends Component {
     return false;
   }
 
+  // Change gesture datastructure to fit Webdriver spec
   formatGesture (pointers) {
     const actions = {};
     for (const pointer of pointers) {
@@ -136,13 +140,14 @@ class GestureEditor extends Component {
     return actions;
   }
 
+  // This converts all the coordinates in the gesture to px/%
   convertCoordinates (type) {
     const {coordType, pointers} = this.state;
     const newPointers = JSON.parse(JSON.stringify(pointers));
     if (type !== coordType) {
       newPointers.map((pointer) => {
         (pointer.ticks).map((tick) => {
-          if (tick.type === POINTERS_TYPES.pointerMove) {
+          if (tick.type === POINTER_TYPES.pointerMove) {
             if (type === COORD_TYPE.PIXELS) {
               tick.x = this.percentageToPixels(tick.x, true);
               tick.y = this.percentageToPixels(tick.y, false);
@@ -163,9 +168,9 @@ class GestureEditor extends Component {
     const {width, height} = this.props.windowSize;
     if (!isNaN(pixel)) {
       if (isX) {
-        return parseInt(((pixel / width) * 100).toFixed(1), 10);
+        return parseFloat(((pixel / width) * 100).toFixed(1), 10);
       } else {
-        return parseInt(((pixel / height) * 100).toFixed(1), 10);
+        return parseFloat(((pixel / height) * 100).toFixed(1), 10);
       }
     } else {
       return 0;
@@ -185,13 +190,14 @@ class GestureEditor extends Component {
     }
   }
 
+  // Update tapped coordinates within local state
   updateCoordinates (tickKey, updateX, updateY) {
     if (updateX && updateY) {
       const {pointers, coordType} = this.state;
       const currentPointer = pointers.find((pointer) => pointer.id === tickKey[0]);
       const currentTick = (currentPointer.ticks).find((tick) => tick.id === tickKey);
-      const x = parseInt(updateX, 10);
-      const y = parseInt(updateY, 10);
+      const x = parseFloat(updateX, 10);
+      const y = parseFloat(updateY, 10);
       if (coordType === COORD_TYPE.PERCENTAGES) {
         currentTick.x = this.pixelsToPercentage(x, true);
         currentTick.y = this.pixelsToPercentage(y, false);
@@ -203,6 +209,7 @@ class GestureEditor extends Component {
     }
   }
 
+  // Actions for adding/deleting pointers
   pointerAction (targetKey, action) {
     const {unselectTick} = this.props;
     const {pointers} = this.state;
@@ -218,6 +225,7 @@ class GestureEditor extends Component {
       });
       this.setState({activeKey: newKey, pointers});
     } else {
+      // newKey variable keeps track of the previous pointer before deleting the current one
       let newKey = '1';
       const filteredPointers = pointers.filter((pointer) => pointer.id !== targetKey);
       const newPointers = filteredPointers.map((pointer, index) => {
@@ -239,6 +247,7 @@ class GestureEditor extends Component {
     }
   }
 
+  // Actions for adding/deleting ticks
   tickAction (pointerKey, tickKey, action) {
     const {unselectTick} = this.props;
     const {pointers} = this.state;
@@ -267,71 +276,56 @@ class GestureEditor extends Component {
     this.setState({pointers});
   }
 
+  // Updates the current tick within local state
   updateTick (tick, msg, value) {
-    const {pointerMove, pointerDown, pointerUp, pause, pointerType} = POINTERS_TYPES;
-    const {DURATION, BUTTON, X, Y} = TICK_PROPS;
+    const {pointerMove, pointerDown, pointerUp, pause} = POINTER_TYPES;
+    const {POINTER_TYPE} = TICK_PROPS;
     const {selectTick} = this.props;
     const {pointers} = this.state;
     const currentPointer = pointers.find((pointer) => pointer.id === tick.id[0]);
-    const currentTick = (currentPointer.ticks).find((sTick) => sTick.id === tick.id);
-
-    if (msg === pointerType) {
-      delete currentTick.duration;
-      delete currentTick.button;
-      delete currentTick.x;
-      delete currentTick.y;
-
-      currentTick.type = value;
-      if (value === pointerDown || value === pointerUp) {
-        currentTick.button = 0;
+    currentPointer.ticks = (currentPointer.ticks).map((prevTick) => {
+      if (prevTick.id === tick.id) {
+        if (msg === POINTER_TYPE) {
+          if (value === pointerMove) {
+            selectTick(tick.id);
+          }
+          return {id: tick.id, type: value,
+                  ...([pointerDown, pointerUp].includes(value) && {button: BUTTONS.LEFT}),
+                  ...([pointerMove, pause].includes(value) && {duration: 0})};
+        } else {
+          tick[msg] = parseFloat(value, 10);
+          return prevTick;
+        }
+      } else {
+        return prevTick;
       }
-      if (value === pointerMove) {
-        currentTick.x = 0;
-        currentTick.y = 0;
-        selectTick(currentTick.id);
-      }
-      if (value === pointerMove || value === pause) {
-        currentTick.duration = 0;
-      }
-    } else if (msg === DURATION) {
-      currentTick.duration = parseInt(value, 10);
-    } else if (msg === BUTTON) {
-      currentTick.button = value;
-    } else if (msg === X) {
-      currentTick.x = parseInt(value, 10);
-    } else if (msg === Y) {
-      currentTick.y = parseInt(value, 10);
-    }
+    });
     this.setState({pointers});
   }
 
-  gestureForTimeline () {
-    const copyPointers = JSON.parse(JSON.stringify(this.state.pointers));
-    const allTickLengths = copyPointers.map((pointer) => pointer.ticks.length);
+  // Reformats the gesture only for the timeline by populating the 'filler' ticks for each pointer
+  // to match same length to keep timeline lengths consistent and accurate
+  updateGestureForTimeline () {
+    const copiedPointers = JSON.parse(JSON.stringify(this.state.pointers));
+    const allTickLengths = copiedPointers.map((pointer) => pointer.ticks.length);
     const maxTickLength = Math.max(...allTickLengths);
-    const newPointers = [];
-    for (const pointer of copyPointers) {
+    return copiedPointers.map((pointer) => {
       const currentLength = pointer.ticks.length;
       if (currentLength > 0) {
         pointer.ticks[currentLength - 1].customStep = STATUS.WAIT;
         if (currentLength < maxTickLength) {
-          const fillers = [];
-          for (let i = 1; i <= (maxTickLength - currentLength); i++) {
-            fillers.push({type: STATUS.FILLER, color: STATUS.COLOR});
-          }
+          const fillers = Array.from({length: maxTickLength - currentLength},
+            () => ({type: STATUS.FILLER, color: STATUS.COLOR}));
           pointer.ticks = [...pointer.ticks, ...fillers];
-          newPointers.push(pointer);
-        } else {
-          newPointers.push(pointer);
         }
       }
-    }
-    return newPointers;
+      return pointer;
+    });
   }
 
   render () {
     const {selectedTick, selectTick, unselectTick, t} = this.props;
-    const {pointerMove, pointerDown, pointerUp, pause, pointerType} = POINTERS_TYPES;
+    const {pointerMove, pointerDown, pointerUp, pause} = POINTER_TYPES;
     const {PERCENTAGES, PIXELS} = COORD_TYPE;
     const {name, description, pointers, coordType, activeKey} = this.state;
 
@@ -361,7 +355,7 @@ class GestureEditor extends Component {
           key={`${tick.id}.duration`}
           className={InspectorCSS['tick-input-box']}
           value={!isNaN(tick.duration) ? tick.duration : ''}
-          placeholder={type}
+          placeholder={'Duration'}
           defaultValue={tick.duration}
           onChange={(e) => this.updateTick(tick, type, e.target.value)}
           addonAfter='ms'/>
@@ -374,14 +368,14 @@ class GestureEditor extends Component {
             key={`${tick.id}.x`}
             className={InspectorCSS['tick-coord-box']}
             value={!isNaN(tick.x) ? tick.x : ''}
-            placeholder={TICK_PROPS.X}
+            placeholder={'X'}
             defaultValue={tick.x}
             onChange={(e) => this.updateTick(tick, TICK_PROPS.X, e.target.value)}/>
           <Input
             key={`${tick.id}.y`}
             className={InspectorCSS['tick-coord-box']}
             value={!isNaN(tick.y) ? tick.y : ''}
-            placeholder={TICK_PROPS.Y}
+            placeholder={'Y'}
             defaultValue={tick.y}
             onChange={(e) => this.updateTick(tick, TICK_PROPS.Y, e.target.value)}/>
         </div>
@@ -397,7 +391,7 @@ class GestureEditor extends Component {
           defaultValue={tick.type}
           size='middle'
           dropdownMatchSelectWidth={false}
-          onChange={(e) => this.updateTick(tick, pointerType, e)}>
+          onChange={(e) => this.updateTick(tick, TICK_PROPS.POINTER_TYPE, e)}>
           <Option className={InspectorCSS['option-inpt']} value={pointerMove} key={`${tick.id}.${pointerMove}`}>Move</Option>
           <Option className={InspectorCSS['option-inpt']} value={pointerDown} key={`${tick.id}.${pointerDown}`}>Pointer Down</Option>
           <Option className={InspectorCSS['option-inpt']} value={pointerUp} key={`${tick.id}.${pointerUp}`}>Pointer Up</Option>
@@ -477,14 +471,14 @@ class GestureEditor extends Component {
       </Tabs>;
 
 
-    const timeline = this.gestureForTimeline().map((pointer) =>
+    const timeline = this.updateGestureForTimeline().map((pointer) =>
       <center key={pointer.id}>
         <Steps key={pointer.id} className={InspectorCSS['gesture-header-timeline']}
           style={{'--timelineColor': pointer.color}}>
           {(pointer.ticks).map((tick) => {
             if (tick.type !== STATUS.FILLER) {
-              const display = {pointerUp: 'Pointer Up', pointerDown: 'Pointer Down', pause: 'Pause', pointerMove: 'Move'};
               const {type, duration, button, x, y} = tick;
+              const display = {pointerUp: 'Pointer Up', pointerDown: 'Pointer Down', pause: 'Pause', pointerMove: 'Move'};
               const iconStyle = {color: pointer.color};
               return <Step key='step1' status={tick.customStep || STATUS.FINISH} icon={
                 <Popover placement='bottom'
@@ -493,8 +487,8 @@ class GestureEditor extends Component {
                     <div className={InspectorCSS['timeline-tick-title']}>
                       {duration !== undefined && <p>Duration: {duration}ms</p>}
                       {button !== undefined && <p>Button: {button === BUTTONS.LEFT ? 'Left' : 'Right'}</p>}
-                      {x !== undefined && <p>X: {x}{coordType === PIXELS ? 'px' : '%'}</p>}
-                      {y !== undefined && <p>Y: {y}{coordType === PIXELS ? 'px' : '%'}</p>}
+                      {x && <p>X: {x}{coordType === PIXELS ? 'px' : '%'}</p>}
+                      {y && <p>Y: {y}{coordType === PIXELS ? 'px' : '%'}</p>}
                     </div>
                   }>
                   {type === pointerMove && <RightCircleOutlined key={tick.id} className={InspectorCSS['gesture-header-icon']} style={iconStyle}/>}

@@ -8,8 +8,7 @@ import { withTranslation } from '../../util';
 
 const {TAP, SELECT, SWIPE} = SCREENSHOT_INTERACTION_MODE;
 const TYPES = {firstPointerDown: 'filled', firstPointerUp: 'newDashed', pointerDown: 'whole', pointerUp: 'dashed'};
-const POINTER_TYPE = {pointerUp: 'pointerUp', pointerDown: 'pointerDown', pause: 'pause',
-                      pointerMove: 'pointerMove'};
+const POINTER_TYPE = {pointerUp: 'pointerUp', pointerDown: 'pointerDown', pause: 'pause', pointerMove: 'pointerMove'};
 
 /**
  * Shows screenshot of running application and divs that highlight the elements' bounding boxes
@@ -95,18 +94,20 @@ class Screenshot extends Component {
     clearSwipeAction();
   }
 
-  generateGestureCoordinates () {
+  // retrieve and format gesture for svg drawings
+  getGestureCoordinates () {
     const {pointerUp, pointerDown, pause, pointerMove} = POINTER_TYPE;
     const {showGesture} = this.props;
     if (showGesture) {
       return showGesture.map((pointer) => {
+        // 'type' is used to keep track of the last pointerup/pointerdown move
         let type = TYPES.pointerUp;
         const temp = [];
         for (const tick of pointer.ticks) {
           if (tick.type !== pause) {
             const len = temp.length;
             type = tick.type !== pointerMove ? TYPES[tick.type] : type;
-            if (tick.type === pointerMove) {
+            if (tick.type === pointerMove && tick.x && tick.y) {
               temp.push({id: tick.id, type, x: tick.x, y: tick.y, color: pointer.color});
             }
             if (len === 0) {
@@ -163,7 +164,7 @@ class Screenshot extends Component {
     const screenSrc = mjpegScreenshotUrl || `data:image/gif;base64,${screenshot}`;
     const screenImg = <img src={screenSrc} id="screenshot" />;
 
-    const points = this.generateGestureCoordinates();
+    const points = this.getGestureCoordinates();
 
     // Show the screenshot and highlighter rects. Show loading indicator if a method call is in progress.
     return <Spin size='large' spinning={!!methodCallInProgress}>
@@ -189,14 +190,12 @@ class Screenshot extends Component {
               {swipeStart && !swipeEnd && <circle
                 cx={swipeStart.x / scaleRatio}
                 cy={swipeStart.y / scaleRatio}
-                key='swipe'
               />}
               {swipeStart && swipeEnd && <line
                 x1={swipeStart.x / scaleRatio}
                 y1={swipeStart.y / scaleRatio}
                 x2={swipeEnd.x / scaleRatio}
                 y2={swipeEnd.y / scaleRatio}
-                key='swipe'
               />}
             </svg>
           }

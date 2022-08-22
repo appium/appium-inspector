@@ -3,6 +3,7 @@ import { Table, Button, Tooltip } from 'antd';
 import { withTranslation } from '../../util';
 import moment from 'moment';
 import { EditOutlined, DeleteOutlined, PlusOutlined, PlayCircleOutlined } from '@ant-design/icons';
+
 const SAVED_ACTIONS_OBJ = {NAME: 'Name', DESCRIPTION: 'Description', CREATED: 'Created', ACTIONS: 'Actions'};
 const POINTER_MOVE = 'pointerMove';
 
@@ -39,7 +40,8 @@ class SavedGestures extends Component {
   }
 
   loadSavedGesture (gesture) {
-    const {setLoadedGesture, showGestureEditor} = this.props;
+    const {removeGestureDisplay, setLoadedGesture, showGestureEditor} = this.props;
+    removeGestureDisplay();
     setLoadedGesture(gesture);
     showGestureEditor();
   }
@@ -59,7 +61,7 @@ class SavedGestures extends Component {
         return gesture;
       }
     }
-    throw new Error(`Couldn't find session with uuid ${id}`);
+    throw new Error(`Couldn't find session with id ${id}`);
   }
 
   onDraw (gesture) {
@@ -116,7 +118,7 @@ class SavedGestures extends Component {
 
   render () {
 
-    const {removeGestureDisplay, savedGestures, showGestureEditor, t} = this.props;
+    const {savedGestures, showGestureEditor, t} = this.props;
 
     const dataSource = () => {
       if (savedGestures) {
@@ -142,7 +144,7 @@ class SavedGestures extends Component {
               </Tooltip>
               <Button
                 icon={<EditOutlined/>}
-                onClick={() => {removeGestureDisplay(); this.loadSavedGesture(gesture);}}
+                onClick={() => this.loadSavedGesture(gesture)}
               />
               <Button
                 icon={<DeleteOutlined/>}
