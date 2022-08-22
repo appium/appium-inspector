@@ -32,6 +32,10 @@ const DEFAULT_POINTERS = () => [{
   id: '1',
 }];
 
+
+/**
+ * Shows the gesture editor interface
+ */
 class GestureEditor extends Component {
 
   constructor (props) {
