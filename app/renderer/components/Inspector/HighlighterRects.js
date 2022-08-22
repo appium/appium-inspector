@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import HighlighterRect from './HighlighterRect';
 import B from 'bluebird';
-import { SCREENSHOT_INTERACTION_MODE } from './shared';
+import { SCREENSHOT_INTERACTION_MODE, POINTER_TYPES, DEFAULT_TAP, DEFAULT_SWIPE } from './shared';
 
+const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
 const {TAP, SWIPE, SELECT} = SCREENSHOT_INTERACTION_MODE;
 
 /**
@@ -14,17 +15,18 @@ export default class HighlighterRects extends Component {
     const {screenshotInteractionMode, applyClientMethod,
            swipeStart, swipeEnd, setSwipeStart, setSwipeEnd} = this.props;
     const {x, y} = this.state;
+    const {POINTER_NAME, DURATION_1, DURATION_2, BUTTON} = DEFAULT_TAP;
 
     if (screenshotInteractionMode === TAP) {
       applyClientMethod({
         methodName: TAP,
         args: [
           {
-            'finger1': [
-              {type: 'pointerMove', duration: 0, x, y},
-              {type: 'pointerDown', button: 0},
-              {type: 'pause', duration: 100},
-              {type: 'pointerUp', button: 0}
+            [POINTER_NAME]: [
+              {type: POINTER_MOVE, duration: DURATION_1, x, y},
+              {type: POINTER_DOWN, button: BUTTON},
+              {type: PAUSE, duration: DURATION_2},
+              {type: POINTER_UP, button: BUTTON}
             ],
           }
         ],
@@ -66,13 +68,14 @@ export default class HighlighterRects extends Component {
 
   async handleDoSwipe () {
     const {swipeStart, swipeEnd, clearSwipeAction, applyClientMethod} = this.props;
+    const {POINTER_NAME, DURATION_1, DURATION_2, BUTTON, ORIGIN} = DEFAULT_SWIPE;
     await applyClientMethod({
       methodName: SWIPE,
-      args: {'finger1': [
-        {type: 'pointerMove', duration: 0, x: swipeStart.x, y: swipeStart.y},
-        {type: 'pointerDown', button: 0},
-        {type: 'pointerMove', duration: 750, origin: 'viewport', x: swipeEnd.x, y: swipeEnd.y},
-        {type: 'pointerUp', button: 0}
+      args: {[POINTER_NAME]: [
+        {type: POINTER_MOVE, duration: DURATION_1, x: swipeStart.x, y: swipeStart.y},
+        {type: POINTER_DOWN, button: BUTTON},
+        {type: POINTER_MOVE, duration: DURATION_2, origin: ORIGIN, x: swipeEnd.x, y: swipeEnd.y},
+        {type: POINTER_UP, button: BUTTON}
       ]},
     });
     clearSwipeAction();

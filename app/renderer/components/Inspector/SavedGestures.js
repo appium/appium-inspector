@@ -3,9 +3,9 @@ import { Table, Button, Tooltip } from 'antd';
 import { withTranslation } from '../../util';
 import moment from 'moment';
 import { EditOutlined, DeleteOutlined, PlusOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import { SCREENSHOT_INTERACTION_MODE, POINTER_TYPES } from './shared';
 
 const SAVED_ACTIONS_OBJ = {NAME: 'Name', DESCRIPTION: 'Description', CREATED: 'Created', ACTIONS: 'Actions'};
-const POINTER_MOVE = 'pointerMove';
 
 class SavedGestures extends Component {
 
@@ -74,7 +74,7 @@ class SavedGestures extends Component {
     const {applyClientMethod} = this.props;
     const pointers = this.convertCoordinates(gesture.actions);
     const actions = this.formatGesture(pointers);
-    applyClientMethod({methodName: 'gesture', args: [actions]});
+    applyClientMethod({methodName: SCREENSHOT_INTERACTION_MODE.GESTURE, args: [actions]});
   }
 
   formatGesture (pointers) {
@@ -92,7 +92,7 @@ class SavedGestures extends Component {
     const newPointers = JSON.parse(JSON.stringify(pointers));
     newPointers.map((pointer) => {
       (pointer.ticks).map((tick) => {
-        if (tick.type === POINTER_MOVE) {
+        if (tick.type === POINTER_TYPES.POINTER_MOVE) {
           tick.x = this.percentageToPixels(tick.x, true);
           tick.y = this.percentageToPixels(tick.y, false);
         }

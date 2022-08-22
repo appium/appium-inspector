@@ -47,6 +47,28 @@ export function getLocators (attributes, sourceXML) {
   return res;
 }
 
+export const POINTER_TYPES = {
+  POINTER_UP: 'pointerUp',
+  POINTER_DOWN: 'pointerDown',
+  PAUSE: 'pause',
+  POINTER_MOVE: 'pointerMove'
+};
+
+export const DEFAULT_SWIPE = {
+  POINTER_NAME: 'finger1',
+  DURATION_1: 0,
+  DURATION_2: 750,
+  BUTTON: 0,
+  ORIGIN: 'viewport'
+};
+
+export const DEFAULT_TAP = {
+  POINTER_NAME: 'finger1',
+  DURATION_1: 0,
+  DURATION_2: 100,
+  BUTTON: 0
+};
+
 export const SCREENSHOT_INTERACTION_MODE = {
   SELECT: 'select',
   SWIPE: 'swipe',
