@@ -5,7 +5,8 @@ import { PlayCircleOutlined, PlusCircleOutlined,
          CloseOutlined, AimOutlined, RightCircleOutlined,
          DownCircleOutlined, UpCircleOutlined, PauseCircleOutlined } from '@ant-design/icons';
 import { withTranslation } from '../../util';
-import { SCREENSHOT_INTERACTION_MODE, POINTER_TYPES } from './shared';
+import { SCREENSHOT_INTERACTION_MODE, POINTER_TYPES,
+         percentageToPixels, pixelsToPercentage } from './shared';
 import InspectorCSS from './Inspector.css';
 
 const {TabPane} = Tabs;
@@ -14,9 +15,11 @@ const {Step} = Steps;
 const ButtonGroup = Button.Group;
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
 
+const DEFAULT_DURATION_TIME = 2500;
 const COLORS = ['#FF3333', '#FF8F00', '#B65FF4', '#6CFF00', '#00FFDC'];
 const BUTTONS = {LEFT: 0, RIGHT: 1};
 const ACTION_TYPES = {ADD: 'add', REMOVE: 'remove'};
+const MSG_TYPES = {ERROR: 'error', SUCCESS: 'success'};
 const COORD_TYPE = {PERCENTAGES: 'percentages', PIXELS: 'pixels'};
 const TICK_PROPS = {POINTER_TYPE: 'pointerType', DURATION: 'duration', BUTTON: 'button', X: 'x', Y: 'y'};
 const CURSOR = {POINTER: 'pointer', TEXT: 'text'};
@@ -28,7 +31,7 @@ const DISPLAY = {[POINTER_UP]: 'Pointer Up', [POINTER_DOWN]: 'Pointer Down',
 const DEFAULT_POINTERS = () => [{
   name: 'pointer1',
   ticks: [{id: '1.1'}],
-  color: '#FF3333',
+  color: COLORS[0],
   id: '1',
 }];
 
@@ -77,12 +80,11 @@ class GestureEditor extends Component {
     const {saveGesture} = this.props;
     const {name, description, id, date} = this.state;
     const gesture = {name, description, id, date, actions: this.convertCoordinates(COORD_TYPE.PERCENTAGES)};
-    if (!this.duplicatesExist(gesture.actions)) {
+    if (!this.validatePointerNames(gesture.actions)) {
       saveGesture(gesture);
-      notification.success({
-        message: 'Successfully Saved Gesture',
-        duration: 5,
-      });
+      this.displayNotificationMsg(MSG_TYPES.SUCCESS, 'Successfully Saved Gesture');
+    } else {
+      this.displayNotificationMsg(MSG_TYPES.ERROR, 'Cannot have duplicate pointer names');
     }
   }
 
@@ -90,21 +92,22 @@ class GestureEditor extends Component {
     const {saveGesture} = this.props;
     const {name, description} = this.state;
     const gesture = {name, description, actions: this.convertCoordinates(COORD_TYPE.PERCENTAGES)};
-    if (!this.duplicatesExist(gesture.actions)) {
+    if (!this.validatePointerNames(gesture.actions)) {
       saveGesture(gesture);
-      notification.success({
-        message: `Successfully Saved Gesture As ${name}`,
-        duration: 5,
-      });
+      this.displayNotificationMsg(MSG_TYPES.SUCCESS, `Successfully Saved Gesture As ${name}`);
+    } else {
+      this.displayNotificationMsg(MSG_TYPES.ERROR, 'Cannot have duplicate pointer names');
     }
   }
 
   onPlay () {
     const {applyClientMethod} = this.props;
     const pointers = this.convertCoordinates(COORD_TYPE.PIXELS);
-    if (!this.duplicatesExist(pointers)) {
+    if (!this.validatePointerNames(pointers)) {
       const actions = this.formatGesture(pointers);
       applyClientMethod({methodName: SCREENSHOT_INTERACTION_MODE.GESTURE, args: [actions]});
+    } else {
+      this.displayNotificationMsg(MSG_TYPES.ERROR, 'Cannot have duplicate pointer names');
     }
   }
 
@@ -123,27 +126,30 @@ class GestureEditor extends Component {
   }
 
   // Check if pointer names are duplicates before saving/playing
-  duplicatesExist (pointers) {
+  validatePointerNames (pointers) {
     const duplicates = {};
     for (const pointer of pointers) {
       if (duplicates[pointer.name]) {
-        notification.error({
-          message: 'Cannot have duplicate pointer names',
-          duration: 5,
-        });
         return true;
       } else {
-        duplicates[pointer.name] = true;
+        duplicates[pointer.name] = pointer;
       }
     }
     return false;
+  }
+
+  displayNotificationMsg (type, msg) {
+    notification[type]({
+      message: msg,
+      duration: 5,
+    });
   }
 
   // Change gesture datastructure to fit Webdriver spec
   formatGesture (pointers) {
     const actions = {};
     for (const pointer of pointers) {
-      actions[pointer.name] = (pointer.ticks).map((tick) => {
+      actions[pointer.name] = pointer.ticks.map((tick) => {
         delete tick.id;
         return tick;
       });
@@ -153,137 +159,142 @@ class GestureEditor extends Component {
 
   // This converts all the coordinates in the gesture to px/%
   convertCoordinates (type) {
+    const {width, height} = this.props.windowSize;
     const {coordType, pointers} = this.state;
     const newPointers = JSON.parse(JSON.stringify(pointers));
     if (type !== coordType) {
-      newPointers.map((pointer) => {
-        (pointer.ticks).map((tick) => {
-          if (tick.type === POINTER_MOVE) {
+      for (const pointer of newPointers) {
+        for (const tick of pointer.ticks) {
+          if (tick.type === POINTER_TYPES.POINTER_MOVE) {
             if (type === COORD_TYPE.PIXELS) {
-              tick.x = this.percentageToPixels(tick.x, true);
-              tick.y = this.percentageToPixels(tick.y, false);
+              tick.x = percentageToPixels(tick.x, true, width, height);
+              tick.y = percentageToPixels(tick.y, false, width, height);
             } else {
-              tick.x = this.pixelsToPercentage(tick.x, true);
-              tick.y = this.pixelsToPercentage(tick.y, false);
+              tick.x = pixelsToPercentage(tick.x, true, width, height);
+              tick.y = pixelsToPercentage(tick.y, false, width, height);
             }
           }
-          return tick;
-        });
-        return pointer;
-      });
+        }
+      }
     }
     return newPointers;
   }
 
-  pixelsToPercentage (pixel, isX) {
+  getDefaultMoveDuration (ticks, tickId, x2, y2) {
     const {width, height} = this.props.windowSize;
-    if (!isNaN(pixel)) {
-      if (isX) {
-        return parseFloat(((pixel / width) * 100).toFixed(1), 10);
-      } else {
-        return parseFloat(((pixel / height) * 100).toFixed(1), 10);
+    const {coordType} = this.state;
+    const {PERCENTAGES} = COORD_TYPE;
+    const ticksExceptCurrent = ticks.filter((tick) => tick.id !== tickId);
+    const prevPointerMoves = [];
+    for (const tick of ticksExceptCurrent) {
+      if (tick.type === POINTER_MOVE && tick.x !== undefined && tick.y !== undefined) {
+        prevPointerMoves.push({x: tick.x, y: tick.y});
       }
-    } else {
-      return undefined;
     }
-  }
-
-  percentageToPixels (percentage, isX) {
-    const {width, height} = this.props.windowSize;
-    if (!isNaN(percentage)) {
-      if (isX) {
-        return Math.round(width * (percentage / 100));
-      } else {
-        return Math.round(height * (percentage / 100));
+    const len = prevPointerMoves.length;
+    if (len !== 0) {
+      const obj = {x1: prevPointerMoves[len - 1].x, y1: prevPointerMoves[len - 1].y, x2, y2};
+      if (coordType === PERCENTAGES) {
+        obj.x1 = percentageToPixels(obj.x1, true, width, height);
+        obj.y1 = percentageToPixels(obj.y1, false, width, height);
+        obj.x2 = percentageToPixels(obj.x2, true, width, height);
+        obj.y2 = percentageToPixels(obj.y2, false, width, height);
       }
+      const eq = (val1, val2) => Math.sqrt((val1 ^ 2) + (val2 ^ 2));
+      const xDiff = obj.x2 - obj.x1;
+      const yDiff = obj.y2 - obj.y1;
+      const maxScreenSize = eq(width, height);
+      const lineLength = eq(xDiff, yDiff);
+      const lineLengthPct = lineLength / maxScreenSize;
+      return Math.round(lineLengthPct * DEFAULT_DURATION_TIME);
     } else {
-      return undefined;
+      return 0;
     }
   }
 
   // Update tapped coordinates within local state
   updateCoordinates (tickKey, updateX, updateY) {
     if (updateX && updateY) {
+      const {width, height} = this.props.windowSize;
       const {pointers, coordType} = this.state;
       const currentPointer = pointers.find((pointer) => pointer.id === tickKey[0]);
-      const currentTick = (currentPointer.ticks).find((tick) => tick.id === tickKey);
+      const currentTick = currentPointer.ticks.find((tick) => tick.id === tickKey);
       const x = parseFloat(updateX, 10);
       const y = parseFloat(updateY, 10);
       if (coordType === COORD_TYPE.PERCENTAGES) {
-        currentTick.x = this.pixelsToPercentage(x, true);
-        currentTick.y = this.pixelsToPercentage(y, false);
+        currentTick.x = pixelsToPercentage(x, true, width, height);
+        currentTick.y = pixelsToPercentage(y, false, width, height);
       } else {
         currentTick.x = x;
         currentTick.y = y;
+      }
+
+      if (!currentTick.duration) {
+        currentTick.duration = this.getDefaultMoveDuration(currentPointer.ticks, currentTick.id, x, y);
       }
       this.setState({pointers});
     }
   }
 
-  // Actions for adding/deleting pointers
-  pointerAction (targetKey, action) {
-    const {unselectTick} = this.props;
+  addPointer () {
     const {pointers} = this.state;
-
-    if (action === ACTION_TYPES.ADD) {
-      const key = this.state.pointers.length + 1;
-      const newKey = String(key);
-      pointers.push({
-        name: `pointer${key}`,
-        ticks: [{id: `${key}.1`}],
-        id: newKey,
-        color: COLORS[key - 1]
-      });
-      this.setState({activeKey: newKey, pointers});
-    } else {
-      // newKey variable keeps track of the previous pointer before deleting the current one
-      let newKey = '1';
-      const filteredPointers = pointers.filter((pointer) => pointer.id !== targetKey);
-      const newPointers = filteredPointers.map((pointer, index) => {
-        const id = String(index + 1);
-        if (id !== pointer.id) {
-          pointer.id = id;
-          pointer.color = COLORS[index];
-          pointer.ticks = (pointer.ticks).map((tick) => {
-            tick.id = `${id}.${tick.id[2]}`;
-            return tick;
-          });
-        } else {
-          newKey = pointer.id;
-        }
-        return pointer;
-      });
-      unselectTick();
-      this.setState({activeKey: newKey, pointers: newPointers});
-    }
+    const key = this.state.pointers.length + 1;
+    const newKey = String(key);
+    pointers.push({
+      name: `pointer${key}`,
+      ticks: [{id: `${key}.1`}],
+      id: newKey,
+      color: COLORS[key - 1]
+    });
+    this.setState({activeKey: newKey, pointers});
   }
 
-  // Actions for adding/deleting ticks
-  tickAction (pointerKey, tickKey, action) {
+  deletePointer (targetKey) {
+    const {unselectTick} = this.props;
+    const {pointers} = this.state;
+    // newKey variable keeps track of the previous pointer before deleting the current one
+    let newKey = '1';
+    const pointersExceptCurrent = pointers.filter((pointer) => pointer.id !== targetKey);
+    const newPointers = pointersExceptCurrent.map((pointer, index) => {
+      const id = String(index + 1);
+      if (id !== pointer.id) {
+        pointer.id = id;
+        pointer.color = COLORS[index];
+        pointer.ticks = pointer.ticks.map((tick) => {
+          tick.id = `${id}.${tick.id[2]}`;
+          return tick;
+        });
+      } else {
+        newKey = pointer.id;
+      }
+      return pointer;
+    });
+    unselectTick();
+    this.setState({activeKey: newKey, pointers: newPointers});
+  }
+
+  addTick (pointerKey) {
+    const {pointers} = this.state;
+    const currentPointer = pointers.find((pointer) => pointer.id === pointerKey);
+    const id = `${pointerKey}.${(currentPointer.ticks).length + 1}`;
+    currentPointer.ticks.push({id});
+    this.setState({pointers});
+  }
+
+  deleteTick (pointerKey, tickKey) {
     const {unselectTick} = this.props;
     const {pointers} = this.state;
     const currentPointer = pointers.find((pointer) => pointer.id === pointerKey);
-
-    if (action === ACTION_TYPES.ADD) {
-      const id = `${pointerKey}.${(currentPointer.ticks).length + 1}`;
-      currentPointer.ticks.push({id});
-    } else {
-      const filteredTicks = currentPointer.ticks.filter((tick) => {
-        if (tick.id === tickKey) {
-          unselectTick();
-        } else {
-          return tick;
-        }
-      });
-      const newTicks = filteredTicks.map((tick, index) => {
-        const id = String(index + 1);
-        if (tick.id !== id) {
-          tick.id = `${tick.id[0]}.${id}`;
-        }
-        return tick;
-      });
-      currentPointer.ticks = newTicks;
-    }
+    const ticksToKeep = currentPointer.ticks.filter((tick) => tick.id !== tickKey);
+    const newTicks = ticksToKeep.map((tick, index) => {
+      const id = String(index + 1);
+      if (tick.id !== id) {
+        tick.id = `${tick.id[0]}.${id}`;
+      }
+      return tick;
+    });
+    currentPointer.ticks = newTicks;
+    unselectTick();
     this.setState({pointers});
   }
 
@@ -292,22 +303,25 @@ class GestureEditor extends Component {
     const {POINTER_TYPE} = TICK_PROPS;
     const {selectTick} = this.props;
     const {pointers} = this.state;
-    const currentPointer = pointers.find((pointer) => pointer.id === tick.id[0]);
-    currentPointer.ticks = (currentPointer.ticks).map((prevTick) => {
-      if (prevTick.id === tick.id) {
+    const currentPointer = pointers.find((p) => p.id === tick.id[0]);
+    currentPointer.ticks = currentPointer.ticks.map((t) => {
+      if (t.id === tick.id) {
         if (msg === POINTER_TYPE) {
           if (value === POINTER_MOVE) {
             selectTick(tick.id);
           }
           return {id: tick.id, type: value,
                   ...([POINTER_DOWN, POINTER_UP].includes(value) && {button: BUTTONS.LEFT}),
-                  ...([POINTER_MOVE, PAUSE].includes(value) && {duration: 0})};
+                  ...(value === PAUSE && {duration: 0})};
         } else {
-          tick[msg] = parseFloat(value, 10);
-          return prevTick;
+          t[msg] = parseFloat(value, 10);
+          if (t.x !== undefined && t.y !== undefined && !t.duration) {
+            t.duration = this.getDefaultMoveDuration(currentPointer.ticks, tick.id, t.x, t.y);
+          }
+          return t;
         }
       } else {
-        return prevTick;
+        return t;
       }
     });
     this.setState({pointers});
@@ -326,7 +340,7 @@ class GestureEditor extends Component {
         if (currentLength < maxTickLength) {
           const fillers = Array.from({length: maxTickLength - currentLength},
             () => ({type: STATUS.FILLER, color: STATUS.COLOR}));
-          pointer.ticks = [...pointer.ticks, ...fillers];
+          pointer.ticks.push(...fillers);
         }
       }
       return pointer;
@@ -409,7 +423,7 @@ class GestureEditor extends Component {
       </center>;
 
     const tapCoordinatesBtn = (tickId) =>
-      <Tooltip title={selectedTick === tickId ? t('Turn Off Click Coordinates') : t('Turn On Click Coordinates')}>
+      <Tooltip title={selectedTick === tickId ? t('Click to Set Coordinates') : t('Set Coordinates Via Field')}>
         <Button
           key={`${tickId}.tap`}
           size='small'
@@ -426,7 +440,7 @@ class GestureEditor extends Component {
       <Card hoverable={true} key={tick.id} className={InspectorCSS['tick-card']}
         extra={<>{tick.type === POINTER_MOVE && tapCoordinatesBtn(tick.id)}
           <Button size='small' type='text' icon={<CloseOutlined />} key={`${tick.id}.remove`}
-            onClick={() => this.tickAction(tick.id[0], tick.id, ACTION_TYPES.REMOVE)}/></>}>
+            onClick={() => this.deleteTick(tick.id[0], tick.id)}/></>}>
         <Space className={InspectorCSS['space-container']} direction='vertical' size='middle'>
           {tickType(tick)}
           {(tick.type === POINTER_MOVE || tick.type === PAUSE) && tickDuration(tick)}
@@ -440,7 +454,7 @@ class GestureEditor extends Component {
         type='editable-card'
         onChange={(newActiveKey) => this.setState({activeKey: newActiveKey})}
         activeKey={activeKey}
-        onEdit={(targetKey, action) => this.pointerAction(targetKey, action)}
+        onEdit={(targetKey, action) => action === ACTION_TYPES.ADD ? this.addPointer() : this.deletePointer(targetKey)}
         hideAdd={pointers.length === 5}
         centered={true}
         tabBarGutter={10}>
@@ -459,7 +473,7 @@ class GestureEditor extends Component {
             </Tooltip>}
             key={pointer.id}>
             <Row gutter={[24, 24]}>
-              {(pointer.ticks).map((tick) =>
+              {pointer.ticks.map((tick) =>
                 <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4} key={`${tick.id}.col1`}>
                   <div>
                     {tickCard(tick)}
@@ -470,7 +484,7 @@ class GestureEditor extends Component {
                 <Card className={InspectorCSS['tick-plus-card']} bordered={false}>
                   <center>
                     <Button className={InspectorCSS['tick-plus-btn']} icon={<PlusCircleOutlined/>}
-                      onClick={() => this.tickAction(pointer.id, null, ACTION_TYPES.ADD)} key={ACTION_TYPES.ADD}/>
+                      onClick={() => this.addTick(pointer.id)} key={ACTION_TYPES.ADD}/>
                   </center>
                 </Card>
               </Col>
@@ -484,11 +498,11 @@ class GestureEditor extends Component {
       <center key={pointer.id}>
         <Steps key={pointer.id} className={InspectorCSS['gesture-header-timeline']}
           style={{'--timelineColor': pointer.color}}>
-          {(pointer.ticks).map((tick) => {
+          {pointer.ticks.map((tick) => {
             if (tick.type !== STATUS.FILLER) {
               const {type, duration, button, x, y} = tick;
               const iconStyle = {color: pointer.color};
-              return <Step key='step1' status={tick.customStep || STATUS.FINISH} icon={
+              return <Step key='timeline-steps' status={tick.customStep || STATUS.FINISH} icon={
                 <Popover placement='bottom'
                   title={<center key={tick.id}>{DISPLAY[type]}</center>}
                   content={
@@ -505,7 +519,7 @@ class GestureEditor extends Component {
                   {type === PAUSE && <PauseCircleOutlined key={tick.id} className={InspectorCSS['gesture-header-icon']} style={iconStyle}/>}
                 </Popover>}/>;
             } else {
-              return <Step key='step2' status={STATUS.WAIT}
+              return <Step key='transparent-steps' status={STATUS.WAIT}
                 icon={<RightCircleOutlined className={InspectorCSS['gesture-header-icon']}
                   style={{color: tick.color}}/>}/>;
             }

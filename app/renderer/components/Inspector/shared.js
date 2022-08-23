@@ -1,6 +1,26 @@
 import { DOMParser } from 'xmldom';
 import xpath from 'xpath';
 
+export function pixelsToPercentage (pixel, isX, width, height) {
+  if (!isNaN(pixel)) {
+    if (isX) {
+      return parseFloat(((pixel / width) * 100).toFixed(1), 10);
+    } else {
+      return parseFloat(((pixel / height) * 100).toFixed(1), 10);
+    }
+  }
+}
+
+export function percentageToPixels (percentage, isX, width, height) {
+  if (!isNaN(percentage)) {
+    if (isX) {
+      return Math.round(width * (percentage / 100));
+    } else {
+      return Math.round(height * (percentage / 100));
+    }
+  }
+}
+
 export function parseCoordinates (element) {
   let {bounds, x, y, width, height} = element.attributes || {};
 

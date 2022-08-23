@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Table, Button, Tooltip } from 'antd';
 import { withTranslation } from '../../util';
-import moment from 'moment';
 import { EditOutlined, DeleteOutlined, PlusOutlined, PlayCircleOutlined } from '@ant-design/icons';
-import { SCREENSHOT_INTERACTION_MODE, POINTER_TYPES } from './shared';
+import { SCREENSHOT_INTERACTION_MODE, POINTER_TYPES, percentageToPixels } from './shared';
+import _ from 'lodash';
+import moment from 'moment';
 
 const SAVED_ACTIONS_OBJ = {NAME: 'Name', DESCRIPTION: 'Description', CREATED: 'Created', ACTIONS: 'Actions'};
 
@@ -56,7 +57,7 @@ class SavedGestures extends Component {
 
   getGestureByID (id) {
     const {savedGestures} = this.props;
-    for (let gesture of savedGestures) {
+    for (const gesture of savedGestures) {
       if (gesture.id === id) {
         return gesture;
       }
@@ -80,40 +81,23 @@ class SavedGestures extends Component {
   formatGesture (pointers) {
     const actions = {};
     for (const pointer of pointers) {
-      actions[pointer.name] = (pointer.ticks).map((tick) => {
-        delete tick.id;
-        return tick;
-      });
+      actions[pointer.name] = pointer.ticks.map((tick) => _.omit(tick, 'id'));
     }
     return actions;
   }
 
   convertCoordinates (pointers) {
-    const newPointers = JSON.parse(JSON.stringify(pointers));
-    newPointers.map((pointer) => {
-      (pointer.ticks).map((tick) => {
-        if (tick.type === POINTER_TYPES.POINTER_MOVE) {
-          tick.x = this.percentageToPixels(tick.x, true);
-          tick.y = this.percentageToPixels(tick.y, false);
-        }
-        return tick;
-      });
-      return pointer;
-    });
-    return newPointers;
-  }
-
-  percentageToPixels (percentage, isX) {
     const {width, height} = this.props.windowSize;
-    if (!isNaN(percentage)) {
-      if (isX) {
-        return Math.round(width * (percentage / 100));
-      } else {
-        return Math.round(height * (percentage / 100));
+    const newPointers = JSON.parse(JSON.stringify(pointers));
+    for (const pointer of newPointers) {
+      for (const tick of pointer.ticks) {
+        if (tick.type === POINTER_TYPES.POINTER_MOVE) {
+          tick.x = percentageToPixels(tick.x, true, width, height);
+          tick.y = percentageToPixels(tick.y, false, width, height);
+        }
       }
-    } else {
-      return 0;
     }
+    return newPointers;
   }
 
   render () {

@@ -91,7 +91,7 @@ export const SET_AWAITING_MJPEG_STREAM = 'SET_AWAITING_MJPEG_STREAM';
 
 export const SHOW_GESTURE_EDITOR = 'SHOW_GESTURE_EDITOR';
 export const HIDE_GESTURE_EDITOR = 'HIDE_GESTURE_EDITOR';
-export const SAVED_GESTURES = 'SAVED_GESTURES';
+export const SET_SAVED_GESTURES = 'SET_SAVED_GESTURES';
 export const GET_SAVED_GESTURES_REQUESTED = 'GET_SAVED_GESTURES_REQUESTED';
 export const GET_SAVED_GESTURES_DONE = 'GET_SAVED_GESTURES_DONE';
 export const DELETE_SAVED_GESTURES_REQUESTED = 'DELETE_SAVED_GESTURES_REQUESTED';
@@ -102,7 +102,7 @@ export const SHOW_GESTURE_ACTION = 'SHOW_GESTURE_ACTION';
 export const HIDE_GESTURE_ACTION = 'HIDE_GESTURE_ACTION';
 export const SELECT_TICK_ELEMENT = 'SELECT_TICK_ELEMENT';
 export const UNSELECT_TICK_ELEMENT = 'UNSELECT_TICK_ELEMENT';
-export const SET_TAP_COORDINATES = 'SET_TAP_COORDINATES';
+export const SET_GESTURE_TAP_COORDS_MODE = 'SET_GESTURE_TAP_COORDS_MODE';
 export const CLEAR_TAP_COORDINATES = 'CLEAR_TAP_COORDINATES';
 
 const KEEP_ALIVE_PING_INTERVAL = 5 * 1000;
@@ -754,8 +754,8 @@ export function saveGesture (params) {
         }
       }
     }
-    dispatch({type: SAVED_GESTURES, savedGestures});
-    await setSetting(SAVED_GESTURES, savedGestures);
+    dispatch({type: SET_SAVED_GESTURES, savedGestures});
+    await setSetting(SET_SAVED_GESTURES, savedGestures);
     const action = getSavedGestures();
     await action(dispatch);
   };
@@ -764,7 +764,7 @@ export function saveGesture (params) {
 export function getSavedGestures () {
   return async (dispatch) => {
     dispatch({type: GET_SAVED_GESTURES_REQUESTED});
-    const savedGestures = await getSetting(SAVED_GESTURES);
+    const savedGestures = await getSetting(SET_SAVED_GESTURES);
     dispatch({type: GET_SAVED_GESTURES_DONE, savedGestures});
   };
 }
@@ -772,9 +772,9 @@ export function getSavedGestures () {
 export function deleteSavedGesture (id) {
   return async (dispatch) => {
     dispatch({type: DELETE_SAVED_GESTURES_REQUESTED, deleteGesture: id});
-    const gestures = await getSetting(SAVED_GESTURES);
+    const gestures = await getSetting(SET_SAVED_GESTURES);
     const newGestures = gestures.filter((gesture) => gesture.id !== id);
-    await setSetting(SAVED_GESTURES, newGestures);
+    await setSetting(SET_SAVED_GESTURES, newGestures);
     dispatch({type: DELETE_SAVED_GESTURES_DONE});
     dispatch({type: GET_SAVED_GESTURES_DONE, savedGestures: newGestures});
   };
@@ -822,7 +822,7 @@ export function selectTick (tick) {
     const {tickCoordinates} = getState().inspector;
 
     if (tickCoordinates) {
-      dispatch({type: SET_TAP_COORDINATES, x: undefined, y: undefined});
+      dispatch({type: SET_GESTURE_TAP_COORDS_MODE, x: undefined, y: undefined});
     }
 
     dispatch({type: SELECT_TICK_ELEMENT, selectedTick: tick});
@@ -838,6 +838,6 @@ export function unselectTick () {
 
 export function tapTickCoordinates (x, y) {
   return (dispatch) => {
-    dispatch({type: SET_TAP_COORDINATES, x, y});
+    dispatch({type: SET_GESTURE_TAP_COORDS_MODE, x, y});
   };
 }

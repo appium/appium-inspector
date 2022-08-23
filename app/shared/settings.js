@@ -2,7 +2,7 @@ import { settings } from '../renderer/polyfills';
 
 export const PRESETS = 'presets';
 export const SAVED_SESSIONS = 'SAVED_SESSIONS';
-export const SAVED_GESTURES = 'SAVED_GESTURES';
+export const SET_SAVED_GESTURES = 'SET_SAVED_GESTURES';
 export const SERVER_ARGS = 'SERVER_ARGS';
 export const SESSION_SERVER_PARAMS = 'SESSION_SERVER_PARAMS';
 export const SESSION_SERVER_TYPE = 'SESSION_SERVER_TYPE';
@@ -11,7 +11,7 @@ export const SAVED_FRAMEWORK = 'SAVED_FRAMEWORK';
 export const DEFAULT_SETTINGS = {
   [PRESETS]: {},
   [SAVED_SESSIONS]: [],
-  [SAVED_GESTURES]: [],
+  [SET_SAVED_GESTURES]: [],
   [SERVER_ARGS]: null,
   [SESSION_SERVER_PARAMS]: null,
   [SESSION_SERVER_TYPE]: null,
