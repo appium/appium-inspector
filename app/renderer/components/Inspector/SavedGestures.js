@@ -92,8 +92,8 @@ class SavedGestures extends Component {
     for (const pointer of newPointers) {
       for (const tick of pointer.ticks) {
         if (tick.type === POINTER_TYPES.POINTER_MOVE) {
-          tick.x = percentageToPixels(tick.x, true, width, height);
-          tick.y = percentageToPixels(tick.y, false, width, height);
+          tick.x = percentageToPixels(tick.x, width);
+          tick.y = percentageToPixels(tick.y, height);
         }
       }
     }

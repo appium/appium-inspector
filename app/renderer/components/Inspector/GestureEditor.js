@@ -43,7 +43,6 @@ class GestureEditor extends Component {
 
   constructor (props) {
     super(props);
-    this.interval = null;
     this.state = {
       name: this.props.loadedGesture ? this.props.loadedGesture.name : 'Untitled',
       description: this.props.loadedGesture ? this.props.loadedGesture.description : 'Add Description',
@@ -55,25 +54,21 @@ class GestureEditor extends Component {
     };
   }
 
-  // Draw gesture every 1000 ms
   componentDidMount () {
-    this.interval = setInterval(() => {
-      this.onDraw();
-    }, 1000);
+    this.onDraw();
   }
 
-  // Retrieve coordinates when user taps screenshot
-  componentDidUpdate (prevProps) {
+  // Retrieve coordinates when user taps screenshot and draw gesture whenever state changes
+  componentDidUpdate (prevProps, prevState) {
     const {selectedTick, tickCoordinates} = this.props;
     if (selectedTick !== prevProps.selectedTick || tickCoordinates !== prevProps.tickCoordinates) {
       if (tickCoordinates) {
         this.updateCoordinates(selectedTick, tickCoordinates.x, tickCoordinates.y);
       }
     }
-  }
-
-  componentWillUnmount () {
-    clearInterval(this.interval);
+    if (this.state !== prevState) {
+      this.onDraw();
+    }
   }
 
   onSave () {
@@ -167,11 +162,11 @@ class GestureEditor extends Component {
         for (const tick of pointer.ticks) {
           if (tick.type === POINTER_TYPES.POINTER_MOVE) {
             if (type === COORD_TYPE.PIXELS) {
-              tick.x = percentageToPixels(tick.x, true, width, height);
-              tick.y = percentageToPixels(tick.y, false, width, height);
+              tick.x = percentageToPixels(tick.x, width);
+              tick.y = percentageToPixels(tick.y, height);
             } else {
-              tick.x = pixelsToPercentage(tick.x, true, width, height);
-              tick.y = pixelsToPercentage(tick.y, false, width, height);
+              tick.x = pixelsToPercentage(tick.x, width);
+              tick.y = pixelsToPercentage(tick.y, height);
             }
           }
         }
@@ -180,10 +175,9 @@ class GestureEditor extends Component {
     return newPointers;
   }
 
-  getDefaultMoveDuration (ticks, tickId, x2, y2) {
+  getDefaultMoveDuration (ticks, tickId, x2, y2, coordFromTap) {
     const {width, height} = this.props.windowSize;
     const {coordType} = this.state;
-    const {PERCENTAGES} = COORD_TYPE;
     const ticksExceptCurrent = ticks.filter((tick) => tick.id !== tickId);
     const prevPointerMoves = [];
     for (const tick of ticksExceptCurrent) {
@@ -192,24 +186,27 @@ class GestureEditor extends Component {
       }
     }
     const len = prevPointerMoves.length;
-    if (len !== 0) {
-      const obj = {x1: prevPointerMoves[len - 1].x, y1: prevPointerMoves[len - 1].y, x2, y2};
-      if (coordType === PERCENTAGES) {
-        obj.x1 = percentageToPixels(obj.x1, true, width, height);
-        obj.y1 = percentageToPixels(obj.y1, false, width, height);
-        obj.x2 = percentageToPixels(obj.x2, true, width, height);
-        obj.y2 = percentageToPixels(obj.y2, false, width, height);
-      }
-      const eq = (val1, val2) => Math.sqrt((val1 ^ 2) + (val2 ^ 2));
-      const xDiff = obj.x2 - obj.x1;
-      const yDiff = obj.y2 - obj.y1;
-      const maxScreenSize = eq(width, height);
-      const lineLength = eq(xDiff, yDiff);
-      const lineLengthPct = lineLength / maxScreenSize;
-      return Math.round(lineLengthPct * DEFAULT_DURATION_TIME);
-    } else {
+    if (len === 0) {
       return 0;
     }
+    const obj = {x1: prevPointerMoves[len - 1].x, y1: prevPointerMoves[len - 1].y, x2, y2};
+    if (coordType === COORD_TYPE.PERCENTAGES) {
+      obj.x1 = percentageToPixels(obj.x1, width);
+      obj.y1 = percentageToPixels(obj.y1, height);
+      // No need to convert coordinates from tap since they are in px
+      if (!coordFromTap) {
+        obj.x2 = percentageToPixels(obj.x2, width);
+        obj.y2 = percentageToPixels(obj.y2, height);
+      }
+    }
+    const calcLength = (v1, v2) => Math.sqrt((v1 ** 2) + (v2 ** 2));
+    const calcDiff = (v1, v2) => Math.abs(v2) - Math.abs(v1);
+    const xDiff = calcDiff(obj.x1, obj.x2);
+    const yDiff = calcDiff(obj.y1, obj.y2);
+    const maxScreenLength = calcLength(width, height);
+    const lineLength = calcLength(xDiff, yDiff);
+    const lineLengthPct = lineLength / maxScreenLength;
+    return Math.round(lineLengthPct * DEFAULT_DURATION_TIME);
   }
 
   // Update tapped coordinates within local state
@@ -222,15 +219,15 @@ class GestureEditor extends Component {
       const x = parseFloat(updateX, 10);
       const y = parseFloat(updateY, 10);
       if (coordType === COORD_TYPE.PERCENTAGES) {
-        currentTick.x = pixelsToPercentage(x, true, width, height);
-        currentTick.y = pixelsToPercentage(y, false, width, height);
+        currentTick.x = pixelsToPercentage(x, width);
+        currentTick.y = pixelsToPercentage(y, height);
       } else {
         currentTick.x = x;
         currentTick.y = y;
       }
 
-      if (!currentTick.duration) {
-        currentTick.duration = this.getDefaultMoveDuration(currentPointer.ticks, currentTick.id, x, y);
+      if (currentTick.duration === undefined) {
+        currentTick.duration = this.getDefaultMoveDuration(currentPointer.ticks, currentTick.id, x, y, true);
       }
       this.setState({pointers});
     }
@@ -252,7 +249,8 @@ class GestureEditor extends Component {
   deletePointer (targetKey) {
     const {unselectTick} = this.props;
     const {pointers} = this.state;
-    // newKey variable keeps track of the previous pointer before deleting the current one
+    // 'newKey' variable keeps track of the previous pointer before deleting the current one
+    // its default is the first pointer
     let newKey = '1';
     const pointersExceptCurrent = pointers.filter((pointer) => pointer.id !== targetKey);
     const newPointers = pointersExceptCurrent.map((pointer, index) => {
@@ -304,26 +302,29 @@ class GestureEditor extends Component {
     const {selectTick} = this.props;
     const {pointers} = this.state;
     const currentPointer = pointers.find((p) => p.id === tick.id[0]);
-    currentPointer.ticks = currentPointer.ticks.map((t) => {
-      if (t.id === tick.id) {
-        if (msg === POINTER_TYPE) {
-          if (value === POINTER_MOVE) {
-            selectTick(tick.id);
-          }
-          return {id: tick.id, type: value,
-                  ...([POINTER_DOWN, POINTER_UP].includes(value) && {button: BUTTONS.LEFT}),
-                  ...(value === PAUSE && {duration: 0})};
-        } else {
-          t[msg] = parseFloat(value, 10);
-          if (t.x !== undefined && t.y !== undefined && !t.duration) {
-            t.duration = this.getDefaultMoveDuration(currentPointer.ticks, tick.id, t.x, t.y);
-          }
-          return t;
-        }
-      } else {
-        return t;
+    const targetTickIdx = currentPointer.ticks.findIndex((t) => t.id === tick.id);
+    // currentTick can be assigned a new tick object if made changes to pointer types
+    let currentTick = currentPointer.ticks[targetTickIdx];
+
+    // We create an entire new tick for changes in pointer types to ensure previous properties are removed
+    if (msg === POINTER_TYPE) {
+      if (value === POINTER_MOVE) {
+        selectTick(tick.id);
       }
-    });
+      currentTick = {id: tick.id, type: value,
+                     ...([POINTER_DOWN, POINTER_UP].includes(value) && {button: BUTTONS.LEFT}),
+                     ...(value === PAUSE && {duration: 0})};
+    } else {
+      // We just modify the existing tick values
+      currentTick[msg] = parseFloat(value, 10);
+
+      // set default duration for if not set already
+      if (currentTick.x !== undefined && currentTick.y !== undefined && currentTick.duration === undefined) {
+        currentTick.duration = this.getDefaultMoveDuration(currentPointer.ticks, tick.id, currentTick.x, currentTick.y, false);
+      }
+    }
+
+    currentPointer.ticks[targetTickIdx] = currentTick;
     this.setState({pointers});
   }
 
