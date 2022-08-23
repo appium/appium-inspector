@@ -74,15 +74,15 @@ class GestureEditor extends Component {
   }
 
   onSave () {
-    const {saveGesture, hideGestureEditor, removeLoadedGesture, removeGestureDisplay, unselectTick} = this.props;
+    const {saveGesture} = this.props;
     const {name, description, id, date} = this.state;
     const gesture = {name, description, id, date, actions: this.convertCoordinates(COORD_TYPE.PERCENTAGES)};
     if (!this.duplicatesExist(gesture.actions)) {
       saveGesture(gesture);
-      hideGestureEditor();
-      removeLoadedGesture();
-      unselectTick();
-      removeGestureDisplay();
+      notification.success({
+        message: 'Successfully Saved Gesture',
+        duration: 5,
+      });
     }
   }
 
@@ -92,6 +92,10 @@ class GestureEditor extends Component {
     const gesture = {name, description, actions: this.convertCoordinates(COORD_TYPE.PERCENTAGES)};
     if (!this.duplicatesExist(gesture.actions)) {
       saveGesture(gesture);
+      notification.success({
+        message: `Successfully Saved Gesture As ${name}`,
+        duration: 5,
+      });
     }
   }
 

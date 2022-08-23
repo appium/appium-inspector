@@ -209,6 +209,7 @@ export function applyClientMethod (params) {
   return async (dispatch, getState) => {
     const isRecording = params.methodName !== 'quit' &&
                       params.methodName !== 'getPageSource' &&
+                      params.methodName !== 'gesture' &&
                       getState().inspector.isRecording;
     try {
       dispatch({type: METHOD_CALL_REQUESTED});
@@ -218,6 +219,7 @@ export function applyClientMethod (params) {
              screenshotError, windowSizeError, variableName,
              variableIndex, strategy, selector} = await callAction(dispatch, getState);
 
+      // TODO: Implement recorder code for gestures
       if (isRecording) {
         // Add 'findAndAssign' line of code. Don't do it for arrays though. Arrays already have 'find' expression
         if (strategy && selector && !variableIndex && variableIndex !== 0) {
