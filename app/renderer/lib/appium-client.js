@@ -3,6 +3,8 @@ import Bluebird from 'bluebird';
 import {getWebviewStatusAddressBarHeight, parseSource, setHtmlElementAttributes} from './webview-helpers';
 import {SCREENSHOT_INTERACTION_MODE, APP_MODE} from '../components/Inspector/shared';
 
+const {TAP, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
+
 export const NATIVE_APP = 'NATIVE_APP';
 let _instance = null;
 
@@ -89,32 +91,15 @@ export default class AppiumClient {
       res = await cachedEl.el[methodName].apply(cachedEl.el, args);
     } else {
       // Specially handle the tap and swipe method
-      if (methodName === SCREENSHOT_INTERACTION_MODE.TAP) {
-        const [x, y] = args;
-        res = await this.driver.performActions([{
-          type: 'pointer',
-          id: 'finger1',
-          parameters: {pointerType: 'touch'},
-          actions: [
-            {type: 'pointerMove', duration: 0, x, y},
-            {type: 'pointerDown', button: 0},
-            {type: 'pause', duration: 100},
-            {type: 'pointerUp', button: 0}
-          ]
-        }]);
-      } else if (methodName === SCREENSHOT_INTERACTION_MODE.SWIPE) {
-        const [startX, startY, endX, endY] = args;
-        res = await this.driver.performActions([{
-          type: 'pointer',
-          id: 'finger1',
-          parameters: {pointerType: 'touch'},
-          actions: [
-            {type: 'pointerMove', duration: 0, x: startX, y: startY},
-            {type: 'pointerDown', button: 0},
-            {type: 'pointerMove', duration: 750, origin: 'viewport', x: endX, y: endY},
-            {type: 'pointerUp', button: 0}
-          ]
-        }]);
+      if ([TAP, SWIPE, GESTURE].includes(methodName)) {
+        const actions = Object.keys(args[0]).map((key) => (
+          {
+            type: 'pointer',
+            id: key,
+            parameters: {pointerType: 'touch'},
+            actions: args[0][key]
+          }));
+        res = await this.driver.performActions(actions);
       } else if (methodName !== 'getPageSource' && methodName !== 'takeScreenshot') {
         res = await this.driver[methodName].apply(this.driver, args);
       }
