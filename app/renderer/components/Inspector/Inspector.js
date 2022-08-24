@@ -8,6 +8,8 @@ import Source from './Source';
 import InspectorStyles from './Inspector.css';
 import RecordedActions from './RecordedActions';
 import Actions from './Actions';
+import SavedGestures from './SavedGestures';
+import GestureEditor from './GestureEditor';
 import SessionInfo from './SessionInfo';
 import { clipboard } from '../../polyfills';
 import {
@@ -28,6 +30,7 @@ import {
   TagOutlined,
   InfoCircleOutlined,
   ThunderboltOutlined,
+  HighlightOutlined,
   AppstoreOutlined,
   GlobalOutlined,
 } from '@ant-design/icons';
@@ -188,7 +191,8 @@ export default class Inspector extends Component {
            screenshotInteractionMode, isFindingElementsTimes, visibleCommandMethod,
            selectedInteractionMode, selectInteractionMode, selectAppMode, setVisibleCommandResult,
            showKeepAlivePrompt, keepSessionAlive, sourceXML, t, visibleCommandResult,
-           mjpegScreenshotUrl, isAwaitingMjpegStream, toggleShowCentroids, showCentroids} = this.props;
+           mjpegScreenshotUrl, isAwaitingMjpegStream, toggleShowCentroids, showCentroids,
+           isGestureEditorVisible} = this.props;
     const {path} = selectedElement;
 
     const showScreenshot = ((screenshot && !screenshotError) ||
@@ -202,6 +206,7 @@ export default class Inspector extends Component {
             unCheckedChildren={<CloseCircleOutlined />}
             defaultChecked={false}
             onChange={() => toggleShowCentroids()}
+            disabled={isGestureEditorVisible}
           />
         </Tooltip>
       </div>
@@ -210,16 +215,19 @@ export default class Inspector extends Component {
           <Tooltip title={t('Select Elements')}>
             <Button icon={<SelectOutlined/>} onClick={() => {this.screenshotInteractionChange(SELECT);}}
               type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+              disabled={isGestureEditorVisible}
             />
           </Tooltip>
           <Tooltip title={t('Swipe By Coordinates')}>
             <Button icon={<SwapRightOutlined/>} onClick={() => {this.screenshotInteractionChange(SWIPE);}}
               type={screenshotInteractionMode === SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+              disabled={isGestureEditorVisible}
             />
           </Tooltip>
           <Tooltip title={t('Tap By Coordinates')}>
             <Button icon={<ScanOutlined/>} onClick={() => {this.screenshotInteractionChange(TAP);}}
               type={screenshotInteractionMode === TAP ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+              disabled={isGestureEditorVisible}
             />
           </Tooltip>
         </ButtonGroup>
@@ -271,12 +279,27 @@ export default class Inspector extends Component {
               </div>
             </div>
           </TabPane>
-          <TabPane tab={t('Actions')} key={INTERACTION_MODE.ACTIONS}>
+          <TabPane tab={t('Commands')} key={INTERACTION_MODE.ACTIONS}>
             <Card
-              title={<span><ThunderboltOutlined /> {t('Actions')}</span>}
+              title={<span><ThunderboltOutlined /> {t('Execute Commands')}</span>}
               className={InspectorStyles['interaction-tab-card']}>
               <Actions {...this.props} />
             </Card>
+          </TabPane>
+          <TabPane tab={t('Actions')} key={INTERACTION_MODE.GESTURES}>
+            {isGestureEditorVisible ?
+              <Card
+                title={<span><HighlightOutlined /> {t('Action Builder')}</span>}
+                className={InspectorStyles['interaction-tab-card']}>
+                <GestureEditor {...this.props}/>
+              </Card>
+              :
+              <Card
+                title={<span><HighlightOutlined /> {t('Saved Actions')}</span>}
+                className={InspectorStyles['interaction-tab-card']}>
+                <SavedGestures {...this.props} />
+              </Card>
+            }
           </TabPane>
           <TabPane tab={t('Session Information')} key={INTERACTION_MODE.SESSION_INFO}>
             <Card
@@ -322,7 +345,7 @@ export default class Inspector extends Component {
         </Tooltip>
       }
       <Tooltip title={t('Search for element')}>
-        <Button id='searchForElement' icon={<SearchOutlined/>} onClick={showLocatorTestModal}/>
+        <Button id='searchForElement' icon={<SearchOutlined/>} onClick={showLocatorTestModal} />
       </Tooltip>
       <Tooltip title={t('quitSessionAndClose')}>
         <Button id='btnClose' icon={<CloseOutlined/>} onClick={() => quitSession()}/>

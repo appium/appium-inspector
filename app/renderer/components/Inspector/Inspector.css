@@ -163,17 +163,16 @@
     float: right;
 }
 
-.inspector-main .element-detail-container {
-    flex-grow: 2;
-    flex-basis: 360px;
-    min-width: 300px;
-}
-
 .inspector-main .recorded-actions {
     margin-bottom: 12px;
     max-height: 40%;
     min-height: 30%;
     flex: 1;
+}
+
+._inspector-main_0387c .ant-card-body {
+    height: 100%;
+    padding: 12px;
 }
 
 .inspector-main .recorded-actions :global(.ant-btn-group) {
@@ -503,6 +502,40 @@
     width: 100%; 
 }
 
+.gestureSvg {
+    position: absolute;
+    z-index: 100000000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.gestureSvg line {
+    opacity: 0.35;
+}
+
+.gestureSvg .filled, .dashed {
+    stroke-dasharray: 10;
+    stroke-width: 5;
+}
+
+.gestureSvg .whole, .newDashed {
+    stroke-linecap: round;
+    stroke-width: 15;
+}
+
+.gestureSvg circle {
+    r: 8;
+    fill: none;
+    stroke-width: 0.4%;
+}
+
+.gestureSvg .circle-dashed, .circle-newDashed {
+    stroke-dasharray: 0.9%;
+    border-style: dashed;
+}
+
 .innerScreenshotContainer {
     display: flex;
     flex-direction: column;
@@ -536,4 +569,130 @@
 
 .actions-container :global(.ant-btn) {
     width: 100%;
+}
+
+.gesture-header {
+    padding: 0 0 0 0;
+    margin-right: -12px;
+}
+
+.gesture-header :global(.ant-page-header-footer) {
+    margin-top: 0px;
+    padding-bottom: 5px;
+}
+
+.gesture-header :global(.ant-typography) {
+    margin-bottom: 0px;
+}
+
+.gesture-header :global(.ant-input) {
+    box-shadow: none;
+    border-width: 0px;
+}
+
+.gesture-header-title {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.gesture-header-description {
+    font-size: 15px;
+    font-weight: 400;
+    color: #636363;
+    margin-left: 30px;
+    margin-top: 5px;
+}
+
+.gesture-header-coord-btn {
+    width: 30px;
+    height: 32px;
+}
+
+.gesture-header-timeline {
+    width: 90%;
+    margin-top: -15px; 
+    min-height: 36px;
+}
+
+.timeline-tick-title {
+    text-align: center;
+}
+
+.gesture-header-timeline :global(.ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after) {
+    background-color: #fffefe;
+}
+
+.gesture-header-timeline :global(.ant-steps-item-finish .ant-steps-item-container .ant-steps-item-content .ant-steps-item-title::after) {
+    background-color: var(--timelineColor);
+}
+
+.gesture-header-icon {
+    font-size: 20px;
+}
+
+.pointer-title {
+    max-width: 65px;
+    padding: 0 0 0 0;
+    text-align: center;
+    text-decoration: underline;
+    text-decoration-thickness: 20%;
+}
+
+.tick-card {
+    overflow: hidden;
+}
+
+.tick-card :global(.ant-card-head) {
+    margin-top: -16px;
+    padding-right: 0px;
+    border-bottom: none;
+}
+
+.tick-card :global(.ant-card-body) {
+    margin-top: -12px;
+    min-height: 167px;
+    margin-right: -12px;
+}
+
+.tick-plus-card {
+    min-height: 220px;
+}
+
+.tick-plus-btn {
+    position: absolute;
+    top: 40%;
+}
+
+.space-container {
+    display: flex;
+}
+
+.tick-pointer-input {
+    width: 145px;
+}
+
+.tick-button-group {
+    display: block;
+}
+
+.tick-button-input {
+    width: 73px;
+}
+
+.tick-input-box {
+    width: 145px;
+}
+
+.tick-coord-box {
+    width: 72px;
+    text-align: center;
+}
+
+.tick-input-box :global(.ant-input-group-addon) {
+    position: sticky;
+    width: 50px;
+}
+
+.option-inpt {
+    text-align: center;
 }

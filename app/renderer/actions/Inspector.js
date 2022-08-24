@@ -3,6 +3,7 @@ import { push } from 'connected-react-router';
 import { getLocators, APP_MODE } from '../components/Inspector/shared';
 import { showError } from './Session';
 import { xmlToJSON } from '../util';
+import { v4 as UUID } from 'uuid';
 import frameworks from '../lib/client-frameworks';
 import { getSetting, setSetting, SAVED_FRAMEWORK } from '../../shared/settings';
 import i18n from '../../configs/i18next.config.renderer';
@@ -87,6 +88,22 @@ export const SET_LAST_ACTIVE_MOMENT = 'SET_LAST_ACTIVE_MOMENT';
 export const SET_VISIBLE_COMMAND_RESULT = 'SET_VISIBLE_COMMAND_RESULT';
 
 export const SET_AWAITING_MJPEG_STREAM = 'SET_AWAITING_MJPEG_STREAM';
+
+export const SHOW_GESTURE_EDITOR = 'SHOW_GESTURE_EDITOR';
+export const HIDE_GESTURE_EDITOR = 'HIDE_GESTURE_EDITOR';
+export const SET_SAVED_GESTURES = 'SET_SAVED_GESTURES';
+export const GET_SAVED_GESTURES_REQUESTED = 'GET_SAVED_GESTURES_REQUESTED';
+export const GET_SAVED_GESTURES_DONE = 'GET_SAVED_GESTURES_DONE';
+export const DELETE_SAVED_GESTURES_REQUESTED = 'DELETE_SAVED_GESTURES_REQUESTED';
+export const DELETE_SAVED_GESTURES_DONE = 'DELETE_SAVED_GESTURES_DONE';
+export const SET_LOADED_GESTURE = 'SET_LOADED_GESTURE';
+export const REMOVE_LOADED_GESTURE = 'REMOVE_LOADED_GESTURE';
+export const SHOW_GESTURE_ACTION = 'SHOW_GESTURE_ACTION';
+export const HIDE_GESTURE_ACTION = 'HIDE_GESTURE_ACTION';
+export const SELECT_TICK_ELEMENT = 'SELECT_TICK_ELEMENT';
+export const UNSELECT_TICK_ELEMENT = 'UNSELECT_TICK_ELEMENT';
+export const SET_GESTURE_TAP_COORDS_MODE = 'SET_GESTURE_TAP_COORDS_MODE';
+export const CLEAR_TAP_COORDINATES = 'CLEAR_TAP_COORDINATES';
 
 const KEEP_ALIVE_PING_INTERVAL = 5 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -192,6 +209,7 @@ export function applyClientMethod (params) {
   return async (dispatch, getState) => {
     const isRecording = params.methodName !== 'quit' &&
                       params.methodName !== 'getPageSource' &&
+                      params.methodName !== 'gesture' &&
                       getState().inspector.isRecording;
     try {
       dispatch({type: METHOD_CALL_REQUESTED});
@@ -201,6 +219,7 @@ export function applyClientMethod (params) {
              screenshotError, windowSizeError, variableName,
              variableIndex, strategy, selector} = await callAction(dispatch, getState);
 
+      // TODO: Implement recorder code for gestures
       if (isRecording) {
         // Add 'findAndAssign' line of code. Don't do it for arrays though. Arrays already have 'find' expression
         if (strategy && selector && !variableIndex && variableIndex !== 0) {
@@ -716,5 +735,109 @@ export function setVisibleCommandResult (result, methodName) {
 export function setAwaitingMjpegStream (isAwaiting) {
   return (dispatch) => {
     dispatch({type: SET_AWAITING_MJPEG_STREAM, isAwaiting});
+  };
+}
+
+export function saveGesture (params) {
+  return async (dispatch, getState) => {
+    const savedGestures = getState().inspector.savedGestures;
+    if (!params.id) {
+      params.id = UUID();
+      params.date = Date.now();
+      savedGestures.push(params);
+    } else {
+      for (const gesture of savedGestures) {
+        if (gesture.id === params.id) {
+          gesture.name = params.name;
+          gesture.description = params.description;
+          gesture.actions = params.actions;
+        }
+      }
+    }
+    dispatch({type: SET_SAVED_GESTURES, savedGestures});
+    await setSetting(SET_SAVED_GESTURES, savedGestures);
+    const action = getSavedGestures();
+    await action(dispatch);
+  };
+}
+
+export function getSavedGestures () {
+  return async (dispatch) => {
+    dispatch({type: GET_SAVED_GESTURES_REQUESTED});
+    const savedGestures = await getSetting(SET_SAVED_GESTURES);
+    dispatch({type: GET_SAVED_GESTURES_DONE, savedGestures});
+  };
+}
+
+export function deleteSavedGesture (id) {
+  return async (dispatch) => {
+    dispatch({type: DELETE_SAVED_GESTURES_REQUESTED, deleteGesture: id});
+    const gestures = await getSetting(SET_SAVED_GESTURES);
+    const newGestures = gestures.filter((gesture) => gesture.id !== id);
+    await setSetting(SET_SAVED_GESTURES, newGestures);
+    dispatch({type: DELETE_SAVED_GESTURES_DONE});
+    dispatch({type: GET_SAVED_GESTURES_DONE, savedGestures: newGestures});
+  };
+}
+
+export function showGestureEditor () {
+  return (dispatch) => {
+    dispatch({type: SHOW_GESTURE_EDITOR});
+    dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode: 'gesture' });
+  };
+}
+
+export function hideGestureEditor () {
+  return (dispatch) => {
+    dispatch({type: HIDE_GESTURE_EDITOR});
+  };
+}
+
+export function setLoadedGesture (loadedGesture) {
+  return (dispatch) => {
+    dispatch({type: SET_LOADED_GESTURE, loadedGesture});
+  };
+}
+
+export function removeLoadedGesture () {
+  return (dispatch) => {
+    dispatch({type: REMOVE_LOADED_GESTURE});
+  };
+}
+
+export function displayGesture (showGesture) {
+  return (dispatch) => {
+    dispatch({type: SHOW_GESTURE_ACTION, showGesture});
+  };
+}
+
+export function removeGestureDisplay () {
+  return (dispatch) => {
+    dispatch({type: HIDE_GESTURE_ACTION});
+  };
+}
+
+export function selectTick (tick) {
+  return (dispatch, getState) => {
+    const {tickCoordinates} = getState().inspector;
+
+    if (tickCoordinates) {
+      dispatch({type: SET_GESTURE_TAP_COORDS_MODE, x: undefined, y: undefined});
+    }
+
+    dispatch({type: SELECT_TICK_ELEMENT, selectedTick: tick});
+  };
+}
+
+export function unselectTick () {
+  return (dispatch) => {
+    dispatch({type: CLEAR_TAP_COORDINATES});
+    dispatch({type: UNSELECT_TICK_ELEMENT});
+  };
+}
+
+export function tapTickCoordinates (x, y) {
+  return (dispatch) => {
+    dispatch({type: SET_GESTURE_TAP_COORDS_MODE, x, y});
   };
 }
