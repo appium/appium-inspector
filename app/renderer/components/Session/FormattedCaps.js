@@ -23,7 +23,7 @@ export default class FormattedCaps extends Component {
            isValidCapsJson, invalidCapsJsonReason, t} = this.props;
     return caps && <div className={SessionCSS.formattedCapsCont}>
       <Card
-        title={title || 'JSON Representation'}
+        title={title || t('JSON Representation')}
         className={SessionCSS.formattedCaps}
         bodyStyle={{maxHeight: remote.getCurrentWindow().getSize()[1] - HEIGHT_OF_SESSION_CONFIG_AREA}}>
 

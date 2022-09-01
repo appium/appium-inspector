@@ -17,7 +17,7 @@ const extraMacFileMenus = [{
 const extraFileMenus = [{
   index: 0,
   menu: {
-    label: i18n.t('&New Session Window…'),
+    label: i18n.t('New Session Window…'),
     click: launchNewSessionWindow,
     accelerator: 'Ctrl+N',
   },
