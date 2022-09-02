@@ -9,7 +9,6 @@
   "kn": "Kannada",
   "ml-IN": "Malayalam",
   "pa-IN": "Punjabi",
-  "it":"Italiano",
   "te": "Telugu",
   "pt-BR": "Português (Brasil)",
   "appiumDesktop": "Appium Desktop",
@@ -77,7 +76,6 @@
   "Chromedriver Binary Path": "Percordo del binario di Chromedriver",
   "Save Server Arguments Preset": "Salva le variabili predefinite del server",
   "Save": "Salva",
-  "Save As":"Salva come",
   "Cancel": "Annulla",
   "Save As Preset…": "Salva come predefinito…",
   "noPresets": "Non hai ancora nessuna variabile predefinita. Creane alcune nella scheda Avanzate.",
@@ -308,7 +306,6 @@
   "Toggle Touch Id Enrollment": "Abilita Touch Id Enrollment",
   "System": "Sistema",
   "Open Notifications": "Apri notifiche",
-  "Open": "Apri",
   "Get System Time": "Ottieni ora di sistema",
   "Fingerprint (Android)": "Impronta Digitale (Android)",
   "Session": "Sessione",
@@ -346,6 +343,5 @@
   "executeScriptCommand": "Script da eseguire",
   "appPathOrUrl": "Percorso o URL per l'app",
   "fileContentString": "Contenuto del file come stringa codificata in Base64",
-  "inspectorMoved": "L'Ispettore è ora rilasciato come app separata. Per favore visita {{url}}",
-  "JSON Representation":"Rappresentazione JSON"
+  "inspectorMoved": "L'Ispettore è ora rilasciato come app separata. Per favore visita {{url}}"
 }
