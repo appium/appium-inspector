@@ -11,6 +11,7 @@
   "pa-IN": "Punjabi",
   "te": "Telugu",
   "pt-BR": "Portuguese (Brazil)",
+  "it":"Italiano",
   "appiumDesktop": "Appium Desktop",
   "Edit": "Edit",
   "Redo": "Redo",
@@ -345,5 +346,7 @@
   "executeScriptCommand": "Script to execute",
   "appPathOrUrl": "Path or URL for app",
   "fileContentString": "File contents as Base64-encoded string",
-  "inspectorMoved": "The Inspector is now released as a separate app. Please visit {{url}}"
+  "inspectorMoved": "The Inspector is now released as a separate app. Please visit {{url}}",
+  "JSON Representation":"JSON Representation",
+  "Open":"Open"
 }
