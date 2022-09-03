@@ -15,7 +15,7 @@ class RobotFramework extends Framework {
 
   getPythonVal (jsonVal) {
     if (typeof jsonVal === 'boolean') {
-      return jsonVal ? 'True' : 'False';
+      return jsonVal ? 'true' : 'false';
     }
     return jsonVal;
   }
@@ -26,6 +26,9 @@ class RobotFramework extends Framework {
 # Then you can paste this into a file and simply run with robot
 #
 #  more keywords on: http://serhatbolsu.github.io/robotframework-appiumlibrary/AppiumLibrary.html
+#
+# if your tests fails saying 'did not match any elements' consider use 'wait activity' or 
+# 'wait until page contains element' before a click command 
 
 *** Settings ***
 Library           AppiumLibrary
