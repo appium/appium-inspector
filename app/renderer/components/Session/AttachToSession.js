@@ -25,7 +25,8 @@ function formatCapsBrowserstack (caps) {
 }
 
 function formatCapsLambdaTest (session) {
-  let caps = session, deviceName = session.deviceName;
+  let caps = session;
+  let deviceName = session.deviceName;
   if (Object.keys(session.capabilities).length !== 0) {
     caps = session.capabilities;
     deviceName = session.capabilities.desired ? session.capabilities.desired.deviceName : session.capabilities.deviceName;
