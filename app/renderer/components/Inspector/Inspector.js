@@ -33,6 +33,7 @@ import {
   HighlightOutlined,
   AppstoreOutlined,
   GlobalOutlined,
+  CodeOutlined,
 } from '@ant-design/icons';
 import { BUTTON } from '../../../../gui-common/components/AntdTypes';
 
@@ -192,7 +193,7 @@ export default class Inspector extends Component {
            selectedInteractionMode, selectInteractionMode, selectAppMode, setVisibleCommandResult,
            showKeepAlivePrompt, keepSessionAlive, sourceXML, t, visibleCommandResult,
            mjpegScreenshotUrl, isAwaitingMjpegStream, toggleShowCentroids, showCentroids,
-           isGestureEditorVisible} = this.props;
+           isGestureEditorVisible, toggleShowAttributes} = this.props;
     const {path} = selectedElement;
 
     const showScreenshot = ((screenshot && !screenshotError) ||
@@ -258,6 +259,9 @@ export default class Inspector extends Component {
                 <Card title={<span><FileTextOutlined /> {t('App Source')} </span>}
                   extra={
                     <span>
+                      <Tooltip title={t('Toggle Attributes')}>
+                        <Button type='text' id='btnToggleAttrs' icon={<CodeOutlined/>} onClick={toggleShowAttributes} />
+                      </Tooltip>
                       <Tooltip title={t('Copy XML Source to Clipboard')}>
                         <Button type='text' id='btnSourceXML' icon={<CopyOutlined/>} onClick={() => clipboard.writeText(sourceXML)} />
                       </Tooltip>

@@ -105,6 +105,8 @@ export const UNSELECT_TICK_ELEMENT = 'UNSELECT_TICK_ELEMENT';
 export const SET_GESTURE_TAP_COORDS_MODE = 'SET_GESTURE_TAP_COORDS_MODE';
 export const CLEAR_TAP_COORDINATES = 'CLEAR_TAP_COORDINATES';
 
+export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
+
 const KEEP_ALIVE_PING_INTERVAL = 5 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
 const WAIT_FOR_USER_KEEP_ALIVE = 60 * 60 * 1000; // Give user 1 hour to reply
@@ -839,5 +841,11 @@ export function unselectTick () {
 export function tapTickCoordinates (x, y) {
   return (dispatch) => {
     dispatch({type: SET_GESTURE_TAP_COORDS_MODE, x, y});
+  };
+}
+
+export function toggleShowAttributes () {
+  return (dispatch) => {
+    dispatch({type: TOGGLE_SHOW_ATTRIBUTES});
   };
 }
