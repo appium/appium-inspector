@@ -25,6 +25,9 @@ function formatCapsBrowserstack (caps) {
 }
 
 function formatCapsLambdaTest (caps) {
+  if(caps.hasOwnProperty.call(caps, 'capabilities')) {
+    caps = caps.capabilities;
+  }
   let deviceName = caps.desired ? caps.desired.deviceName : caps.deviceName;
   let importantCaps = [deviceName, caps.platformName, caps.platformVersion];
   return importantCaps.join(', ').trim();
