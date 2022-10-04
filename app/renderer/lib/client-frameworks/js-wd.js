@@ -18,6 +18,7 @@ const caps = ${caps};
 
 async function main () {
   await driver.init(caps);
+  await driver.setImplicitWaitTimeout(5000);
 ${this.indent(code, 2)}
   await driver.quit();
 }
