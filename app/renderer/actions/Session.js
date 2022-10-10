@@ -445,7 +445,7 @@ export function newSession (caps, attachSessId = null) {
         port = session.server.experitest.port = experitestUrl.port === '' ? (https ? 443 : 80) : experitestUrl.port;
         break;
       } case ServerTypes.robotqa: {
-        host = 'api.robotqa.com';
+        host = 'remote.robotqa.com';
         path = '/wd/hub';
         port = 443;
         https = session.server.robotqa.ssl = true;
