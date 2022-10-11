@@ -293,6 +293,7 @@ export default function session (state = INITIAL_STATE, action) {
         ...state,
         isEditingDesiredCaps: false,
         caps: action.caps,
+        isCapsDirty: true,
       };
 
     case SHOW_DESIRED_CAPS_JSON_ERROR:
