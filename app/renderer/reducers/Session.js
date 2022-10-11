@@ -113,6 +113,7 @@ export default function session (state = INITIAL_STATE, action) {
       return {
         ...state,
         caps: state.caps.filter((cap, index) => index !== action.index),
+        isCapsDirty: true,
       };
 
     case SET_CAPABILITY_PARAM:
