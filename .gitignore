@@ -13,6 +13,7 @@ Certificates.p12
 .idea/
 .settings/
 .project
+.history
 junit-test-results.xml
 junit-testresults.xml
 appium-desktop
