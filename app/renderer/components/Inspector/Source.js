@@ -80,19 +80,19 @@ class Source extends Component {
 
     return <div id='sourceContainer' className={InspectorStyles['tree-container']} tabIndex="0">
       {/* Must switch to a new antd Tree component when there's changes to treeData  */}
-     <Spin size='large' spinning={!!methodCallInProgress && !!mjpegScreenshotUrl}>
-      {treeData ?
-        <Tree
-          defaultExpandAll={true}
-          onExpand={setExpandedPaths}
-          expandedKeys={expandedPaths}
-          onSelect={(selectedPaths) => this.handleSelectElement(selectedPaths[0])}
-          selectedKeys={[path]}
-          treeData={treeData} />
-        :
-        <Tree
-          treeData={[]} />
-      }
+      <Spin size='large' spinning={!!methodCallInProgress && !!mjpegScreenshotUrl}>
+        {treeData ?
+          <Tree
+            defaultExpandAll={true}
+            onExpand={setExpandedPaths}
+            expandedKeys={expandedPaths}
+            onSelect={(selectedPaths) => this.handleSelectElement(selectedPaths[0])}
+            selectedKeys={[path]}
+            treeData={treeData} />
+          :
+          <Tree
+            treeData={[]} />
+        }
       </Spin>
       {!source && !sourceError &&
         <i>{t('Gathering initial app source…')}</i>
