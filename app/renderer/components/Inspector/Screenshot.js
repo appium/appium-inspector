@@ -170,8 +170,8 @@ class Screenshot extends Component {
 
     const points = this.getGestureCoordinates();
 
-    // Show the screenshot and highlighter rects. Show loading indicator if a method call is in progress.
-    return <Spin size='large' spinning={!!methodCallInProgress}>
+    // Show the screenshot and highlighter rects. Show loading indicator if a method call is in progress when in screenshot mode.
+    return <Spin size='large' spinning={!!methodCallInProgress && !mjpegScreenshotUrl}>
       <div className={styles.innerScreenshotContainer}>
         <div ref={(containerEl) => { this.containerEl = containerEl; }}
           style={screenshotStyle}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Tree } from 'antd';
+import { Tree, Spin } from 'antd';
 import LocatorTestModal from './LocatorTestModal';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
@@ -60,6 +60,8 @@ class Source extends Component {
       selectedElement = {},
       showSourceAttrs,
       t,
+      mjpegScreenshotUrl,
+      methodCallInProgress,
     } = this.props;
     const {path} = selectedElement;
 
@@ -78,6 +80,7 @@ class Source extends Component {
 
     return <div id='sourceContainer' className={InspectorStyles['tree-container']} tabIndex="0">
       {/* Must switch to a new antd Tree component when there's changes to treeData  */}
+     <Spin size='large' spinning={!!methodCallInProgress && !!mjpegScreenshotUrl}>
       {treeData ?
         <Tree
           defaultExpandAll={true}
@@ -90,6 +93,7 @@ class Source extends Component {
         <Tree
           treeData={[]} />
       }
+      </Spin>
       {!source && !sourceError &&
         <i>{t('Gathering initial app source…')}</i>
       }
