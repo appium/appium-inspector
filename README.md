@@ -10,7 +10,7 @@ Appium Inspector is basically just an Appium client (like WebdriverIO, Appium's 
 
 ## Important migration notes
 
-This version of Appium Inspector is designed to work with Appium 2.0 as a default. So if you are migrating from Appium Desktop (which is designed to work with Appium 1.x as a default), you need to be aware of some changes:
+This version of Appium Inspector is designed to work with Appium 2.0 (W3C WebDriver protocol) as a default. So if you are migrating from Appium Desktop (which is designed to work with Appium 1.x as a default), you need to be aware of some changes:
 
 * The default remote server path has changed from `/wd/hub` to `/` to reflect Appium 2.0's default server path. If you're using Appium Inspector with an Appium 1.x server, you'll likely need to update the path information in the New Session form back to `/wd/hub`.
 
