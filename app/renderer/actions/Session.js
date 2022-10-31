@@ -306,11 +306,10 @@ export function newSession (caps, attachSessId = null) {
         port = session.server.browserstack.port = process.env.BROWSERSTACK_PORT || 443;
         path = session.server.browserstack.path = '/wd/hub';
         username = session.server.browserstack.username || process.env.BROWSERSTACK_USERNAME;
-        if (desiredCapabilities['bstack:options']) {
-          desiredCapabilities['bstack:options'].source = 'appiumdesktop';
-        } else {
-          desiredCapabilities.source = 'appiumdesktop';
+        if (!desiredCapabilities['bstack:options']) {
+           desiredCapabilities['bstack:options'] = {};
         }
+        desiredCapabilities['bstack:options'].source = 'appiumdesktop';
         accessKey = session.server.browserstack.accessKey || process.env.BROWSERSTACK_ACCESS_KEY;
         if (!username || !accessKey) {
           notification.error({
