@@ -307,7 +307,7 @@ export function newSession (caps, attachSessId = null) {
         path = session.server.browserstack.path = '/wd/hub';
         username = session.server.browserstack.username || process.env.BROWSERSTACK_USERNAME;
         if (!desiredCapabilities['bstack:options']) {
-           desiredCapabilities['bstack:options'] = {};
+          desiredCapabilities['bstack:options'] = {};
         }
         desiredCapabilities['bstack:options'].source = 'appiumdesktop';
         accessKey = session.server.browserstack.accessKey || process.env.BROWSERSTACK_ACCESS_KEY;
