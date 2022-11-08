@@ -164,7 +164,7 @@
     "react-router": "5.3.4",
     "redux": "4.2.0",
     "redux-logger": "3.0.6",
-    "redux-thunk": "2.4.1",
+    "redux-thunk": "2.4.2",
     "request": "2.88.2",
     "request-promise": "4.2.6",
     "semver": "7.3.7",
