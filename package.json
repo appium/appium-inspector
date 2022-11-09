@@ -190,7 +190,7 @@
     "babel-plugin-transform-class-properties": "6.24.1",
     "chai": "4.3.7",
     "chai-as-promised": "7.1.1",
-    "check-engines": "1.5.0",
+    "check-engines": "1.6.0",
     "concurrently": "6.5.1",
     "cross-env": "7.0.3",
     "devtron": "1.4.0",
