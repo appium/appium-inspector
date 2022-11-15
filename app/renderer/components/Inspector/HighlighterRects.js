@@ -83,7 +83,7 @@ export default class HighlighterRects extends Component {
         path: source.path,
         keyCode: null,
         container: false,
-        accessible: source.attributes.accessible
+        accessible: source.attributes ? source.attributes.accessible : null
       }
     };
     const coordinates = `${obj.properties.centerX}.${obj.properties.centerY}`;
