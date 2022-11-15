@@ -456,6 +456,14 @@ export function newSession (caps, attachSessId = null) {
           desiredCapabilities['roboticmobi:options'].robotic_mobi_token = session.server.roboticmobi.token || process.env.ROBOTIC_MOBI_TOKEN;
         }
         break;
+      } case ServerTypes.remotetestkit: {
+        host = 'gwjp.appkitbox.com';
+        path = '/wd/hub';
+        port = 443;
+        https = true;
+        desiredCapabilities['remotetestkit:options'] = {};
+        desiredCapabilities['remotetestkit:options'].accessToken = session.server.remotetestkit.token;
+        break;
       }
 
       default:

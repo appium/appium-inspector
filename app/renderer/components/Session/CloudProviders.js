@@ -10,6 +10,7 @@ import ServerTabSauce from './ServerTabSauce';
 import ServerTabTestingbot from './ServerTabTestingbot';
 import ServerTabExperitest from './ServerTabExperitest';
 import ServerTabRoboticMobi from './ServerTabRoboticMobi';
+import ServerTabRemoteTestKit from './ServerTabRemoteTestKit';
 
 import SessionStyles from './Session.css';
 
@@ -25,6 +26,7 @@ import PcloudyLogo from '../../images/pcloudy_logo.svg';
 import TestingBotLogo from '../../images/testingbot_logo.svg';
 import ExperitestLogo from '../../images/experitest_logo.svg';
 import RoboticMobiLogo from '../../images/roboticmobi_logo.svg';
+import RemoteTestKitLogo from '../../images/remotetestkit_logo.svg';
 
 const CloudProviders = {
   sauce: {
@@ -81,8 +83,12 @@ const CloudProviders = {
     tabhead: () => <span className={SessionStyles.tabText}><img src={RoboticMobiLogo} /></span>,
     tab: (props) => <ServerTabRoboticMobi {...props} />,
     logo: RoboticMobiLogo,
+  },
+  remotetestkit: {
+    tabhead: () => <span className={SessionStyles.tabText}><img src={RemoteTestKitLogo} /></span>,
+    tab: (props) => <ServerTabRemoteTestKit {...props} />,
+    logo: RemoteTestKitLogo,
   }
-
 };
 
 export default CloudProviders;
