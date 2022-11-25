@@ -15,7 +15,7 @@ class RobotFramework extends Framework {
 
   getPythonVal (jsonVal) {
     if (typeof jsonVal === 'boolean') {
-      return jsonVal ? 'True' : 'False';
+      return jsonVal ? 'true' : 'false';
     }
     return jsonVal;
   }
@@ -26,9 +26,14 @@ class RobotFramework extends Framework {
 # Then you can paste this into a file and simply run with robot
 #
 #  more keywords on: http://serhatbolsu.github.io/robotframework-appiumlibrary/AppiumLibrary.html
+#
+# if your tests fails saying 'did not match any elements' consider use 'wait activity' or 
+# 'wait until page contains element' before a click command 
 
 *** Settings ***
 Library           AppiumLibrary
+Test Teardown     Quit Application
+Suite Teardown    Close Application
 
 *** Variables ***
 $\{REMOTE_URL\}   ${this.serverUrl}
@@ -38,12 +43,7 @@ ${this.getCapsVariables}
 Test case name
 ${this.indent(this.getApplicationInitialization(), 4)}
 ${this.indent(code, 4)}
-
-*** Test Teardown ***
-    Quit Application
-
-*** Suite Teardown ***
-    Close Application`;
+`;
   }
 
   codeFor_findAndAssign (strategy, locator/*, localVar, isArray*/) {
@@ -64,6 +64,11 @@ ${this.indent(code, 4)}
     }
     //TODO: in the robot case, we need the ID on the codeFor_ for execution
     this.lastID = `${strategy}=${locator}`;
+
+    if (this.lastID.includes('accessibility id')) {
+      this.lastID = this.lastID.replace('accessibility id', 'accessibility_id');
+    }
+
     return `# ${this.lastID}`;
   }
 

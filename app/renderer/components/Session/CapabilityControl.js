@@ -5,6 +5,7 @@ import { remote, log } from '../../polyfills';
 import { FileOutlined } from '@ant-design/icons';
 import { INPUT } from '../../../../gui-common/components/AntdTypes';
 import _ from 'lodash';
+import { APPIUM_SESSION_EXTENSION } from '../../../main/helpers';
 
 const {dialog} = remote;
 
@@ -12,7 +13,12 @@ export default class CapabilityControl extends Component {
 
   async getLocalFilePath () {
     try {
-      const {canceled, filePaths} = await dialog.showOpenDialog({properties: ['openFile']});
+      const {canceled, filePaths} = await dialog.showOpenDialog({
+        properties: ['openFile'],
+        filters: [
+          {name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}
+        ]
+      });
       if (!canceled && !_.isEmpty(filePaths)) {
         return filePaths[0];
       }
@@ -29,17 +35,18 @@ export default class CapabilityControl extends Component {
       onClick={async () => {onSetCapabilityParam(await this.getLocalFilePath() || currentFilePath);}} />;
 
     switch (cap.type) {
-      case 'text': return <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value} onChange={(e) => onSetCapabilityParam(e.target.value)} onPressEnter={onPressEnter}/>;
+      case 'text': return <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value} onChange={(e) => onSetCapabilityParam(e.target.value)} onPressEnter={onPressEnter}
+        className={SessionStyles.capsBoxFont} />;
       case 'boolean': return <Switch disabled={isEditingDesiredCaps} id={id} checkedChildren={'true'} unCheckedChildren={'false'}
         placeholder={t('Value')} checked={cap.value} onChange={(value) => onSetCapabilityParam(value)} />;
       case 'number': return <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value}
-        onChange={(e) => !isNaN(parseInt(e.target.value, 10)) ? onSetCapabilityParam(parseInt(e.target.value, 10)) : onSetCapabilityParam(undefined)} onPressEnter={onPressEnter} />;
+        onChange={(e) => !isNaN(parseInt(e.target.value, 10)) ? onSetCapabilityParam(parseInt(e.target.value, 10)) : onSetCapabilityParam(undefined)} onPressEnter={onPressEnter} className={SessionStyles.capsBoxFont} />;
       case 'object':
       case 'json_object':
         return <Input disabled={isEditingDesiredCaps} id={id} type={INPUT.TEXTAREA} rows={4} placeholder={t('Value')} value={cap.value}
-          onChange={(e) => onSetCapabilityParam(e.target.value)} />;
+          onChange={(e) => onSetCapabilityParam(e.target.value)} className={SessionStyles.capsBoxFont} />;
       case 'file': return <div className={SessionStyles.fileControlWrapper}>
-        <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value} addonAfter={buttonAfter(cap.value)} onPressEnter={onPressEnter}/>
+        <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value} addonAfter={buttonAfter(cap.value)} onPressEnter={onPressEnter} className={SessionStyles.capsBoxFont} />
       </div>;
 
       default:

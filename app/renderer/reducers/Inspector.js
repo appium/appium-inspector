@@ -13,12 +13,18 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          SELECT_ACTION_GROUP, SELECT_SUB_ACTION_GROUP, SET_APP_MODE,
          SELECT_INTERACTION_MODE, ENTERING_ACTION_ARGS, SET_ACTION_ARG, REMOVE_ACTION, SET_CONTEXT,
          SET_KEEP_ALIVE_INTERVAL, SET_USER_WAIT_TIMEOUT, SET_LAST_ACTIVE_MOMENT, SET_VISIBLE_COMMAND_RESULT,
+         SET_AWAITING_MJPEG_STREAM, SET_APP_ID, SET_SERVER_STATUS, SET_SESSION_TIME, SHOW_GESTURE_EDITOR, HIDE_GESTURE_EDITOR, SET_SAVED_GESTURES,
+         GET_SAVED_GESTURES_REQUESTED, GET_SAVED_GESTURES_DONE, SET_LOADED_GESTURE, REMOVE_LOADED_GESTURE, SHOW_GESTURE_ACTION, HIDE_GESTURE_ACTION,
+         SELECT_TICK_ELEMENT, UNSELECT_TICK_ELEMENT, SET_GESTURE_TAP_COORDS_MODE, CLEAR_TAP_COORDINATES, DELETE_SAVED_GESTURES_REQUESTED, DELETE_SAVED_GESTURES_DONE,
+         SELECT_HOVERED_CENTROID, UNSELECT_HOVERED_CENTROID, SELECT_CENTROID, UNSELECT_CENTROID,
+         SET_SHOW_CENTROIDS, TOGGLE_SHOW_ATTRIBUTES
 } from '../actions/Inspector';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from '../components/Inspector/shared';
 
 const DEFAULT_FRAMEWORK = 'java';
 
 const INITIAL_STATE = {
+  savedGestures: [],
   driver: null,
   keepAliveInterval: null,
   showKeepAlivePrompt: false,
@@ -31,7 +37,9 @@ const INITIAL_STATE = {
   recordedActions: [],
   actionFramework: DEFAULT_FRAMEWORK,
   sessionDetails: {},
+  isGestureEditorVisible: false,
   isLocatorTestModalVisible: false,
+  showCentroids: false,
   locatorTestStrategy: 'id',
   locatorTestValue: '',
   isSearchingForElements: false,
@@ -42,12 +50,17 @@ const INITIAL_STATE = {
   selectedSubActionGroup: null,
   selectedInteractionMode: INTERACTION_MODE.SOURCE,
   appMode: APP_MODE.NATIVE,
+  mjpegScreenshotUrl: null,
   pendingAction: null,
   findElementsExecutionTimes: [],
   isFindingElementsTimes: false,
   visibleCommandResult: null,
   visibleCommandMethod: null,
+  isAwaitingMjpegStream: true,
+  showSourceAttrs: false,
 };
+
+let nextState;
 
 /**
  * Look up an element in the source with the provided path
@@ -117,6 +130,15 @@ export default function inspector (state = INITIAL_STATE, action) {
         selectedElementVariableType: null,
       };
 
+    case SELECT_CENTROID:
+      return {
+        ...state,
+        selectedCentroid: action.path,
+      };
+
+    case UNSELECT_CENTROID:
+      return omit(state, 'selectedCentroid');
+
     case SET_SELECTED_ELEMENT_ID:
       return {
         ...state,
@@ -140,6 +162,15 @@ export default function inspector (state = INITIAL_STATE, action) {
 
     case UNSELECT_HOVERED_ELEMENT:
       return omit(state, 'hoveredElement');
+
+    case SELECT_HOVERED_CENTROID:
+      return {
+        ...state,
+        hoveredCentroid: action.path,
+      };
+
+    case UNSELECT_HOVERED_CENTROID:
+      return omit(state, 'hoveredCentroid');
 
     case METHOD_CALL_REQUESTED:
       return {
@@ -242,7 +273,13 @@ export default function inspector (state = INITIAL_STATE, action) {
       return {...state, showBoilerplate: action.show};
 
     case SET_SESSION_DETAILS:
-      return {...state, sessionDetails: action.sessionDetails, driver: action.driver};
+      return {
+        ...state,
+        sessionDetails: action.sessionDetails,
+        driver: action.driver,
+        appMode: action.mode,
+        mjpegScreenshotUrl: action.mjpegScreenshotUrl
+      };
 
     case SHOW_LOCATOR_TEST_MODAL:
       return {
@@ -390,6 +427,12 @@ export default function inspector (state = INITIAL_STATE, action) {
         appMode: action.mode,
       };
 
+    case SET_SHOW_CENTROIDS:
+      return {
+        ...state,
+        showCentroids: action.show,
+      };
+
     case ENTERING_ACTION_ARGS:
       return {
         ...state,
@@ -445,6 +488,109 @@ export default function inspector (state = INITIAL_STATE, action) {
         visibleCommandResult: action.result,
         visibleCommandMethod: action.methodName,
       };
+
+    case SET_SESSION_TIME:
+      return {
+        ...state,
+        sessionStartTime: action.sessionStartTime,
+      };
+
+    case SET_APP_ID:
+      return {
+        ...state,
+        appId: action.appId,
+      };
+
+    case SET_SERVER_STATUS:
+      return {
+        ...state,
+        status: action.status,
+      };
+
+    case SET_AWAITING_MJPEG_STREAM:
+      return {...state, isAwaitingMjpegStream: action.isAwaiting};
+
+    case SHOW_GESTURE_EDITOR:
+      return {
+        ...state,
+        isGestureEditorVisible: true,
+      };
+
+    case HIDE_GESTURE_EDITOR:
+      return {
+        ...state,
+        isGestureEditorVisible: false,
+      };
+
+    case SET_SAVED_GESTURES:
+      return {
+        ...state,
+        savedGestures: action.savedGestures,
+      };
+
+    case GET_SAVED_GESTURES_REQUESTED:
+      return {
+        ...state,
+        getSavedGesturesRequested: true,
+      };
+
+    case GET_SAVED_GESTURES_DONE:
+      nextState = {
+        ...state,
+        savedGestures: action.savedGestures || [],
+      };
+      return omit(nextState, 'getSavedGesturesRequested');
+
+    case DELETE_SAVED_GESTURES_REQUESTED:
+      return {
+        ...state,
+        deleteGesture: action.deleteGesture,
+      };
+
+    case DELETE_SAVED_GESTURES_DONE:
+      return omit(state, 'deleteGesture');
+
+    case SET_LOADED_GESTURE:
+      return {
+        ...state,
+        loadedGesture: action.loadedGesture,
+      };
+
+    case REMOVE_LOADED_GESTURE:
+      return omit(state, 'loadedGesture');
+
+    case SHOW_GESTURE_ACTION:
+      return {
+        ...state,
+        showGesture: action.showGesture,
+      };
+
+    case HIDE_GESTURE_ACTION:
+      return omit(state, 'showGesture');
+
+    case SELECT_TICK_ELEMENT:
+      return {
+        ...state,
+        selectedTick: action.selectedTick,
+      };
+
+    case UNSELECT_TICK_ELEMENT:
+      return omit(state, 'selectedTick');
+
+    case SET_GESTURE_TAP_COORDS_MODE:
+      return {
+        ...state,
+        tickCoordinates: {
+          x: action.x,
+          y: action.y,
+        },
+      };
+
+    case CLEAR_TAP_COORDINATES:
+      return omit(state, 'tickCoordinates');
+
+    case TOGGLE_SHOW_ATTRIBUTES:
+      return {...state, showSourceAttrs: !state.showSourceAttrs};
 
     default:
       return {...state};

@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: true
     - name: Use Node.js 12.x
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: 12.x
     - run: git clone https://github.com/appium/appium-desktop.git
@@ -31,7 +31,7 @@ jobs:
         CROWDIN_PROJECT_KEY: ${{ secrets.CROWDIN_PROJECT_KEY }}
 
     - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v3.0.0
+      uses: peter-evans/create-pull-request@v3.14.0
       with:
         token: ${{ github.token }}
         commit-message: 'chore: Update translations'

@@ -3,10 +3,11 @@ import { push } from 'connected-react-router';
 import { getLocators, APP_MODE } from '../components/Inspector/shared';
 import { showError } from './Session';
 import { xmlToJSON } from '../util';
+import { v4 as UUID } from 'uuid';
 import frameworks from '../lib/client-frameworks';
 import { getSetting, setSetting, SAVED_FRAMEWORK } from '../../shared/settings';
 import i18n from '../../configs/i18next.config.renderer';
-import AppiumClient from '../lib/appium-client';
+import AppiumClient, { NATIVE_APP } from '../lib/appium-client';
 import { notification } from 'antd';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
@@ -22,10 +23,18 @@ export const SET_FIELD_VALUE = 'SET_FIELD_VALUE';
 export const SET_EXPANDED_PATHS = 'SET_EXPANDED_PATHS';
 export const SELECT_HOVERED_ELEMENT = 'SELECT_HOVERED_ELEMENT';
 export const UNSELECT_HOVERED_ELEMENT = 'UNSELECT_HOVERED_ELEMENT';
+
+export const SELECT_HOVERED_CENTROID = 'SELECT_HOVERED_CENTROID';
+export const UNSELECT_HOVERED_CENTROID = 'UNSELECT_HOVERED_CENTROID';
+export const SELECT_CENTROID = 'SELECT_CENTROID';
+export const UNSELECT_CENTROID = 'UNSELECT_CENTROID';
+export const SET_SHOW_CENTROIDS = 'SET_SHOW_CENTROIDS';
+
 export const SHOW_SEND_KEYS_MODAL = 'SHOW_SEND_KEYS_MODAL';
 export const HIDE_SEND_KEYS_MODAL = 'HIDE_SEND_KEYS_MODAL';
 export const QUIT_SESSION_REQUESTED = 'QUIT_SESSION_REQUESTED';
 export const QUIT_SESSION_DONE = 'QUIT_SESSION_DONE';
+export const SET_SESSION_TIME = 'SET_SESSION_TIME';
 
 export const START_RECORDING = 'START_RECORDING';
 export const PAUSE_RECORDING = 'PAUSE_RECORDING';
@@ -69,11 +78,34 @@ export const SET_ACTION_ARG = 'SET_ACTION_ARG';
 
 export const SET_CONTEXT = 'SET_CONTEXT';
 
+export const SET_APP_ID = 'SET_APP_ID';
+export const SET_SERVER_STATUS = 'SET_SERVER_STATUS';
+
 export const SET_KEEP_ALIVE_INTERVAL = 'SET_KEEP_ALIVE_INTERVAL';
 export const SET_USER_WAIT_TIMEOUT = 'SET_USER_WAIT_TIMEOUT';
 export const SET_LAST_ACTIVE_MOMENT = 'SET_LAST_ACTIVE_MOMENT';
 
 export const SET_VISIBLE_COMMAND_RESULT = 'SET_VISIBLE_COMMAND_RESULT';
+
+export const SET_AWAITING_MJPEG_STREAM = 'SET_AWAITING_MJPEG_STREAM';
+
+export const SHOW_GESTURE_EDITOR = 'SHOW_GESTURE_EDITOR';
+export const HIDE_GESTURE_EDITOR = 'HIDE_GESTURE_EDITOR';
+export const SET_SAVED_GESTURES = 'SET_SAVED_GESTURES';
+export const GET_SAVED_GESTURES_REQUESTED = 'GET_SAVED_GESTURES_REQUESTED';
+export const GET_SAVED_GESTURES_DONE = 'GET_SAVED_GESTURES_DONE';
+export const DELETE_SAVED_GESTURES_REQUESTED = 'DELETE_SAVED_GESTURES_REQUESTED';
+export const DELETE_SAVED_GESTURES_DONE = 'DELETE_SAVED_GESTURES_DONE';
+export const SET_LOADED_GESTURE = 'SET_LOADED_GESTURE';
+export const REMOVE_LOADED_GESTURE = 'REMOVE_LOADED_GESTURE';
+export const SHOW_GESTURE_ACTION = 'SHOW_GESTURE_ACTION';
+export const HIDE_GESTURE_ACTION = 'HIDE_GESTURE_ACTION';
+export const SELECT_TICK_ELEMENT = 'SELECT_TICK_ELEMENT';
+export const UNSELECT_TICK_ELEMENT = 'UNSELECT_TICK_ELEMENT';
+export const SET_GESTURE_TAP_COORDS_MODE = 'SET_GESTURE_TAP_COORDS_MODE';
+export const CLEAR_TAP_COORDINATES = 'CLEAR_TAP_COORDINATES';
+
+export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
 
 const KEEP_ALIVE_PING_INTERVAL = 5 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -135,6 +167,31 @@ export function unselectElement () {
   };
 }
 
+
+export function selectCentroid (path) {
+  return (dispatch) => {
+    dispatch({type: SELECT_CENTROID, path});
+  };
+}
+
+export function unselectCentroid () {
+  return (dispatch) => {
+    dispatch({type: UNSELECT_CENTROID});
+  };
+}
+
+export function selectHoveredCentroid (path) {
+  return (dispatch) => {
+    dispatch({type: SELECT_HOVERED_CENTROID, path});
+  };
+}
+
+export function unselectHoveredCentroid () {
+  return (dispatch) => {
+    dispatch({type: UNSELECT_HOVERED_CENTROID});
+  };
+}
+
 export function selectHoveredElement (path) {
   return (dispatch) => {
     dispatch({type: SELECT_HOVERED_ELEMENT, path});
@@ -154,15 +211,17 @@ export function applyClientMethod (params) {
   return async (dispatch, getState) => {
     const isRecording = params.methodName !== 'quit' &&
                       params.methodName !== 'getPageSource' &&
+                      params.methodName !== 'gesture' &&
                       getState().inspector.isRecording;
     try {
       dispatch({type: METHOD_CALL_REQUESTED});
       const callAction = callClientMethod(params);
-      const {contexts, contextsError, currentContext, currentContextError,
-             source, screenshot, windowSize, result, sourceError,
+      const {contexts, contextsError, commandRes, currentContext, currentContextError,
+             source, screenshot, windowSize, sourceError,
              screenshotError, windowSizeError, variableName,
              variableIndex, strategy, selector} = await callAction(dispatch, getState);
 
+      // TODO: Implement recorder code for gestures
       if (isRecording) {
         // Add 'findAndAssign' line of code. Don't do it for arrays though. Arrays already have 'find' expression
         if (strategy && selector && !variableIndex && variableIndex !== 0) {
@@ -177,7 +236,7 @@ export function applyClientMethod (params) {
       }
       dispatch({type: METHOD_CALL_DONE});
 
-      if (source && screenshot) {
+      if (source) {
         dispatch({
           type: SET_SOURCE_AND_SCREENSHOT,
           contexts,
@@ -193,7 +252,8 @@ export function applyClientMethod (params) {
           windowSizeError,
         });
       }
-      return result;
+      window.dispatchEvent(new Event('resize'));
+      return commandRes;
     } catch (error) {
       console.log(error); // eslint-disable-line no-console
       let methodName = params.methodName === 'click' ? 'tap' : params.methodName;
@@ -312,9 +372,9 @@ export function toggleShowBoilerplate () {
   };
 }
 
-export function setSessionDetails (driver, sessionDetails) {
+export function setSessionDetails ({driver, sessionDetails, mode, mjpegScreenshotUrl}) {
   return (dispatch) => {
-    dispatch({type: SET_SESSION_DETAILS, driver, sessionDetails});
+    dispatch({type: SET_SESSION_DETAILS, driver, sessionDetails, mode, mjpegScreenshotUrl});
   };
 }
 
@@ -411,17 +471,17 @@ export function setLocatorTestElement (elementId) {
     if (elementId) {
       try {
         const action = callClientMethod({
+          elementId,
           methodName: 'getRect',
-          args: [elementId],
           skipRefresh: true,
           skipRecord: true,
           ignoreResult: true
         });
-        const rect = await action(dispatch, getState);
+        const { commandRes } = await action(dispatch, getState);
         dispatch({
           type: SET_SEARCHED_FOR_ELEMENT_BOUNDS,
-          location: {x: rect.x, y: rect.y},
-          size: {width: rect.width, height: rect.height},
+          location: {x: commandRes.x, y: commandRes.y},
+          size: {width: commandRes.width, height: commandRes.height},
         });
       } catch (ign) { }
     }
@@ -449,6 +509,53 @@ export function selectAppMode (mode) {
       const action = applyClientMethod({methodName: 'getPageSource'});
       await action(dispatch, getState);
     }
+    if (appMode !== mode && mode === APP_MODE.NATIVE) {
+      const action = applyClientMethod({ methodName: 'switchContext', args: [NATIVE_APP] });
+      await action(dispatch, getState);
+    }
+  };
+}
+
+export function toggleShowCentroids () {
+  return (dispatch, getState) => {
+    const {showCentroids} = getState().inspector;
+    const show = !showCentroids;
+    dispatch({type: SET_SHOW_CENTROIDS, show});
+  };
+}
+
+export function getActiveAppId (isIOS, isAndroid) {
+  return async (dispatch, getState) => {
+    try {
+      if (isIOS) {
+        const action = applyClientMethod({methodName: 'executeScript', args: ['mobile:activeAppInfo', []]});
+        const { bundleId } = await action(dispatch, getState);
+        dispatch({type: SET_APP_ID, appId: bundleId});
+      }
+      if (isAndroid) {
+        const action = applyClientMethod({methodName: 'getCurrentPackage'});
+        const appPackage = await action(dispatch, getState);
+        dispatch({type: SET_APP_ID, appId: appPackage});
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(`Could not Retrieve Active App ID: ${err}`);
+    }
+  };
+}
+
+export function getServerStatus () {
+  return async (dispatch, getState) => {
+    const status = applyClientMethod({methodName: 'status'});
+    const { build } = await status(dispatch, getState);
+    dispatch({type: SET_SERVER_STATUS, status: build});
+  };
+}
+
+// Start the session timer once session starts
+export function setSessionTime (time) {
+  return (dispatch) => {
+    dispatch({type: SET_SESSION_TIME, sessionStartTime: time});
   };
 }
 
@@ -585,12 +692,17 @@ export function keepSessionAlive () {
 
 export function callClientMethod (params) {
   return async (dispatch, getState) => {
-    console.log(`Calling client method with params:`); // eslint-disable-line no-console
-    console.log(params); // eslint-disable-line no-console
-    const {driver, appMode} = getState().inspector;
+    const {driver, appMode, mjpegScreenshotUrl} = getState().inspector;
     const {methodName, ignoreResult = true} = params;
     params.appMode = appMode;
 
+    // don't retrieve screenshot if we're already using the mjpeg stream
+    if (mjpegScreenshotUrl) {
+      params.skipScreenshot = true;
+    }
+
+    console.log(`Calling client method with params:`); // eslint-disable-line no-console
+    console.log(params); // eslint-disable-line no-console
     const action = keepSessionAlive();
     action(dispatch, getState);
     const client = AppiumClient.instance(driver);
@@ -619,5 +731,121 @@ export function callClientMethod (params) {
 export function setVisibleCommandResult (result, methodName) {
   return (dispatch) => {
     dispatch({type: SET_VISIBLE_COMMAND_RESULT, result, methodName});
+  };
+}
+
+export function setAwaitingMjpegStream (isAwaiting) {
+  return (dispatch) => {
+    dispatch({type: SET_AWAITING_MJPEG_STREAM, isAwaiting});
+  };
+}
+
+export function saveGesture (params) {
+  return async (dispatch, getState) => {
+    const savedGestures = getState().inspector.savedGestures;
+    if (!params.id) {
+      params.id = UUID();
+      params.date = Date.now();
+      savedGestures.push(params);
+    } else {
+      for (const gesture of savedGestures) {
+        if (gesture.id === params.id) {
+          gesture.name = params.name;
+          gesture.description = params.description;
+          gesture.actions = params.actions;
+        }
+      }
+    }
+    dispatch({type: SET_SAVED_GESTURES, savedGestures});
+    await setSetting(SET_SAVED_GESTURES, savedGestures);
+    const action = getSavedGestures();
+    await action(dispatch);
+  };
+}
+
+export function getSavedGestures () {
+  return async (dispatch) => {
+    dispatch({type: GET_SAVED_GESTURES_REQUESTED});
+    const savedGestures = await getSetting(SET_SAVED_GESTURES);
+    dispatch({type: GET_SAVED_GESTURES_DONE, savedGestures});
+  };
+}
+
+export function deleteSavedGesture (id) {
+  return async (dispatch) => {
+    dispatch({type: DELETE_SAVED_GESTURES_REQUESTED, deleteGesture: id});
+    const gestures = await getSetting(SET_SAVED_GESTURES);
+    const newGestures = gestures.filter((gesture) => gesture.id !== id);
+    await setSetting(SET_SAVED_GESTURES, newGestures);
+    dispatch({type: DELETE_SAVED_GESTURES_DONE});
+    dispatch({type: GET_SAVED_GESTURES_DONE, savedGestures: newGestures});
+  };
+}
+
+export function showGestureEditor () {
+  return (dispatch) => {
+    dispatch({type: SHOW_GESTURE_EDITOR});
+    dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode: 'gesture' });
+  };
+}
+
+export function hideGestureEditor () {
+  return (dispatch) => {
+    dispatch({type: HIDE_GESTURE_EDITOR});
+  };
+}
+
+export function setLoadedGesture (loadedGesture) {
+  return (dispatch) => {
+    dispatch({type: SET_LOADED_GESTURE, loadedGesture});
+  };
+}
+
+export function removeLoadedGesture () {
+  return (dispatch) => {
+    dispatch({type: REMOVE_LOADED_GESTURE});
+  };
+}
+
+export function displayGesture (showGesture) {
+  return (dispatch) => {
+    dispatch({type: SHOW_GESTURE_ACTION, showGesture});
+  };
+}
+
+export function removeGestureDisplay () {
+  return (dispatch) => {
+    dispatch({type: HIDE_GESTURE_ACTION});
+  };
+}
+
+export function selectTick (tick) {
+  return (dispatch, getState) => {
+    const {tickCoordinates} = getState().inspector;
+
+    if (tickCoordinates) {
+      dispatch({type: SET_GESTURE_TAP_COORDS_MODE, x: undefined, y: undefined});
+    }
+
+    dispatch({type: SELECT_TICK_ELEMENT, selectedTick: tick});
+  };
+}
+
+export function unselectTick () {
+  return (dispatch) => {
+    dispatch({type: CLEAR_TAP_COORDINATES});
+    dispatch({type: UNSELECT_TICK_ELEMENT});
+  };
+}
+
+export function tapTickCoordinates (x, y) {
+  return (dispatch) => {
+    dispatch({type: SET_GESTURE_TAP_COORDS_MODE, x, y});
+  };
+}
+
+export function toggleShowAttributes () {
+  return (dispatch) => {
+    dispatch({type: TOGGLE_SHOW_ATTRIBUTES});
   };
 }

@@ -3,7 +3,9 @@ import Bluebird from 'bluebird';
 import {getWebviewStatusAddressBarHeight, parseSource, setHtmlElementAttributes} from './webview-helpers';
 import {SCREENSHOT_INTERACTION_MODE, APP_MODE} from '../components/Inspector/shared';
 
-const NATIVE_APP = 'NATIVE_APP';
+const {TAP, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
+
+export const NATIVE_APP = 'NATIVE_APP';
 let _instance = null;
 
 export default class AppiumClient {
@@ -23,6 +25,7 @@ export default class AppiumClient {
       elementId, // Optional. Element being operated on
       args = [], // Optional. Arguments passed to method
       skipRefresh = false, // Optional. Do we want the updated source and screenshot?
+      skipScreenshot = false, // Optional. Do we want to skip getting screenshot alone?
       appMode = APP_MODE.NATIVE, // Optional. Whether we're in a native or hybrid mode
     } = params;
 
@@ -48,10 +51,10 @@ export default class AppiumClient {
     if (methodName) {
       if (elementId) {
         console.log(`Handling client method request with method '${methodName}', args ${JSON.stringify(args)} and elementId ${elementId}`); // eslint-disable-line no-console
-        res = await this.executeMethod({elementId, methodName, args, skipRefresh, appMode});
+        res = await this.executeMethod({elementId, methodName, args, skipRefresh, skipScreenshot, appMode});
       } else {
         console.log(`Handling client method request with method '${methodName}' and args ${JSON.stringify(args)}`); // eslint-disable-line no-console
-        res = await this.executeMethod({methodName, args, skipRefresh, appMode});
+        res = await this.executeMethod({methodName, args, skipRefresh, skipScreenshot, appMode});
       }
     } else if (strategy && selector) {
       if (fetchArray) {
@@ -66,7 +69,7 @@ export default class AppiumClient {
     return res;
   }
 
-  async executeMethod ({elementId, methodName, args, skipRefresh, appMode}) {
+  async executeMethod ({elementId, methodName, args, skipRefresh, skipScreenshot, appMode}) {
     let cachedEl;
     let res = {};
     if (!_.isArray(args) && !_.isUndefined(args)) {
@@ -88,32 +91,15 @@ export default class AppiumClient {
       res = await cachedEl.el[methodName].apply(cachedEl.el, args);
     } else {
       // Specially handle the tap and swipe method
-      if (methodName === SCREENSHOT_INTERACTION_MODE.TAP) {
-        const [x, y] = args;
-        res = await this.driver.performActions([{
-          type: 'pointer',
-          id: 'finger1',
-          parameters: {pointerType: 'touch'},
-          actions: [
-            {type: 'pointerMove', duration: 0, x, y},
-            {type: 'pointerDown', button: 0},
-            {type: 'pause', duration: 500},
-            {type: 'pointerUp', button: 0}
-          ]
-        }]);
-      } else if (methodName === SCREENSHOT_INTERACTION_MODE.SWIPE) {
-        const [startX, startY, endX, endY] = args;
-        res = await this.driver.performActions([{
-          type: 'pointer',
-          id: 'finger1',
-          parameters: {pointerType: 'touch'},
-          actions: [
-            {type: 'pointerMove', duration: 0, x: startX, y: startY},
-            {type: 'pointerDown', button: 0},
-            {type: 'pointerMove', duration: 750, origin: 'viewport', x: endX, y: endY},
-            {type: 'pointerUp', button: 0}
-          ]
-        }]);
+      if ([TAP, SWIPE, GESTURE].includes(methodName)) {
+        const actions = Object.keys(args[0]).map((key) => (
+          {
+            type: 'pointer',
+            id: key,
+            parameters: {pointerType: 'touch'},
+            actions: args[0][key]
+          }));
+        res = await this.driver.performActions(actions);
       } else if (methodName !== 'getPageSource' && methodName !== 'takeScreenshot') {
         res = await this.driver[methodName].apply(this.driver, args);
       }
@@ -124,7 +110,9 @@ export default class AppiumClient {
 
     let contextUpdate = {}, sourceUpdate = {}, screenshotUpdate = {}, windowSizeUpdate = {};
     if (!skipRefresh) {
-      screenshotUpdate = await this.getScreenshotUpdate();
+      if (!skipScreenshot) {
+        screenshotUpdate = await this.getScreenshotUpdate();
+      }
       windowSizeUpdate = await this.getWindowUpdate();
       // only do context updates if user has selected web/hybrid mode (takes forever)
       if (appMode === APP_MODE.WEB_HYBRID) {

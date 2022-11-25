@@ -17,13 +17,12 @@ const IMPORTANT_ATTRS = [
  */
 class Source extends Component {
 
-  getFormattedTag (el) {
+  getFormattedTag (el, showAllAttrs) {
     const {tagName, attributes} = el;
     let attrs = [];
 
-    // Don't do translations on Source XML
-    for (let attr of IMPORTANT_ATTRS) {
-      if (attributes[attr]) {
+    for (let attr of Object.keys(attributes)) {
+      if (IMPORTANT_ATTRS.includes(attr) || showAllAttrs) {
         attrs.push(<span key={attr}>&nbsp;
           <i
             className={InspectorStyles.sourceAttrName}
@@ -59,6 +58,7 @@ class Source extends Component {
       setExpandedPaths,
       expandedPaths,
       selectedElement = {},
+      showSourceAttrs,
       t,
     } = this.props;
     const {path} = selectedElement;
@@ -68,7 +68,7 @@ class Source extends Component {
       if (!((elemObj || {}).children || []).length) {return null;}
 
       return elemObj.children.map((el) => ({
-        title: this.getFormattedTag(el),
+        title: this.getFormattedTag(el, showSourceAttrs),
         key: el.path,
         children: recursive(el),
       }));
@@ -76,15 +76,19 @@ class Source extends Component {
 
     const treeData = source && recursive(source);
 
-    return <div id='sourceContainer' className={InspectorStyles['tree-container']}>
-      {source &&
+    return <div id='sourceContainer' className={InspectorStyles['tree-container']} tabIndex="0">
+      {/* Must switch to a new antd Tree component when there's changes to treeData  */}
+      {treeData ?
         <Tree
+          defaultExpandAll={true}
           onExpand={setExpandedPaths}
-          autoExpandParent={false}
           expandedKeys={expandedPaths}
           onSelect={(selectedPaths) => this.handleSelectElement(selectedPaths[0])}
           selectedKeys={[path]}
           treeData={treeData} />
+        :
+        <Tree
+          treeData={[]} />
       }
       {!source && !sourceError &&
         <i>{t('Gathering initial app source…')}</i>

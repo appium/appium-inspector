@@ -11,6 +11,9 @@ main.map
 Certificates.p12
 .cache/
 .idea/
+.settings/
+.project
+.history
 junit-test-results.xml
 junit-testresults.xml
 appium-desktop
