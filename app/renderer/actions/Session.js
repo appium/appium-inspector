@@ -81,8 +81,8 @@ const MJPEG_CAP = 'mjpegScreenshotUrl';
 // so let's set zero so far.
 // TODO: increase this retry when we get issues
 export const CONN_RETRIES = 0;
-// As same as webdriverio's default timeout
-export const CONN_TIMEOUT = 5 * 60 * 1000;
+const CONN_TIMEOUT = 5 * 60 * 1000;
+const HEADERS_CONTENT = 'application/json; charset=utf-8';
 
 // 1 hour default newCommandTimeout
 const NEW_COMMAND_TIMEOUT_SEC = 3600;
@@ -493,8 +493,7 @@ export function newSession (caps, attachSessId = null) {
       protocol: https ? 'https' : 'http',
       path,
       connectionRetryCount: CONN_RETRIES,
-      connectionRetryTimeout: CONN_TIMEOUT,
-      headers: {'content-type': 'application/json; charset=utf-8'}
+      connectionRetryTimeout: CONN_TIMEOUT
     };
 
     if (username && accessKey) {
@@ -816,7 +815,6 @@ export function getRunningSessions () {
     const {server, serverType} = state;
     const serverInfo = server[serverType];
 
-    // TODO: apply hostname/port in proper cloud vendor tabs
     let {hostname, port, path, ssl, username, accessKey} = serverInfo;
 
     // if we have a standard remote server, fill out connection info based on placeholder defaults
@@ -844,10 +842,11 @@ export function getRunningSessions () {
         ? await ky(`http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`, {
           headers: {
             'Authorization': `Basic ${btoa(`${username}:${accessKey}`)}`,
-            'Content-Type': 'application/json; charset=utf-8'}
+            'content-type': HEADERS_CONTENT
+          }
         }).json()
         : await ky(`http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`, {
-          headers: {'Content-Type': 'application/json; charset=utf-8'}
+          headers: {'content-type': HEADERS_CONTENT}
         }).json();
       dispatch({type: GET_SESSIONS_DONE, sessions: res.value});
     } catch (err) {
