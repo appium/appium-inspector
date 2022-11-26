@@ -81,6 +81,8 @@ const MJPEG_CAP = 'mjpegScreenshotUrl';
 // so let's set zero so far.
 // TODO: increase this retry when we get issues
 export const CONN_RETRIES = 0;
+const CONN_TIMEOUT = 5 * 60 * 1000;
+const HEADERS_CONTENT = 'application/json; charset=utf-8';
 
 // 1 hour default newCommandTimeout
 const NEW_COMMAND_TIMEOUT_SEC = 3600;
@@ -491,6 +493,7 @@ export function newSession (caps, attachSessId = null) {
       protocol: https ? 'https' : 'http',
       path,
       connectionRetryCount: CONN_RETRIES,
+      connectionRetryTimeout: CONN_TIMEOUT
     };
 
     if (username && accessKey) {
@@ -521,9 +524,6 @@ export function newSession (caps, attachSessId = null) {
         // assume the device is mobile so that Appium protocols are included
         // in the userPrototype.
         serverOpts.isMobile = true;
-        // Need to set connectionRetryTimeout as same as the new session request.
-        // TODO: make configurable?
-        serverOpts.connectionRetryTimeout = 5 * 60 * 1000;
         driver = await Web2Driver.attachToSession(attachSessId, serverOpts);
         driver._isAttachedSession = true;
       } else {
@@ -814,6 +814,7 @@ export function getRunningSessions () {
     const state = getState().session;
     const {server, serverType} = state;
     const serverInfo = server[serverType];
+
     let {hostname, port, path, ssl, username, accessKey} = serverInfo;
 
     // if we have a standard remote server, fill out connection info based on placeholder defaults
@@ -839,9 +840,14 @@ export function getRunningSessions () {
       const adjPath = path.endsWith('/') ? path : `${path}/`;
       const res = username && accessKey
         ? await ky(`http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`, {
-          headers: {'Authorization': `Basic ${btoa(`${username}:${accessKey}`)}`}
+          headers: {
+            'Authorization': `Basic ${btoa(`${username}:${accessKey}`)}`,
+            'content-type': HEADERS_CONTENT
+          }
         }).json()
-        : await ky(`http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`).json();
+        : await ky(`http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`, {
+          headers: {'content-type': HEADERS_CONTENT}
+        }).json();
       dispatch({type: GET_SESSIONS_DONE, sessions: res.value});
     } catch (err) {
       console.warn(`Ignoring error in getting list of active sessions: ${err}`); // eslint-disable-line no-console
