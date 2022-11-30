@@ -68,6 +68,7 @@ any other command: `./Appium-Inspector-linux.AppImage`.
 | [TestingBot](https://testingbot.com) | [Documentation](https://testingbot.com/support) |
 | [Experitest](http://www.experitest.com) | [Documentation](https://docs.experitest.com/display/TE/Appium) |
 | [Robotic.mobi](https://www.robotic.mobi) | [Documentation](https://robotic.mobi/appium-remote) |
+| [Remote TestKit](https://appkitbox.com/en/) | [Documentation](https://appkitbox.com/en/support/automation/appium/) |
 
 ## Requirements
 
