@@ -71,14 +71,18 @@ main().catch(console.log);
     return `await driver.back();`;
   }
 
-  codeFor_tap (varNameIgnore, varIndexIgnore, x, y) {
+  codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
+    const {x, y} = Framework.getTapCoordinatesFromPointerActions(pointerActions);
+
     return `await (new wd.TouchAction(driver))
   .tap({x: ${x}, y: ${y}})
   .perform()
     `;
   }
 
-  codeFor_swipe (varNameIgnore, varIndexIgnore, x1, y1, x2, y2) {
+  codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
+    const {x1, y1, x2, y2} = Framework.getSwipeCoordinatesFromPointerActions(pointerActions);
+
     return `await (new wd.TouchAction(driver))
   .press({x: ${x1}, y: ${y1}})
   .moveTo({x: ${x2}, y: ${y2}})

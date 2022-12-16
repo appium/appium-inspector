@@ -107,11 +107,15 @@ ${this.indent(code, 4)}
     return `driver.navigate().back();`;
   }
 
-  codeFor_tap (varNameIgnore, varIndexIgnore, x, y) {
+  codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
+    const {x, y} = Framework.getTapCoordinatesFromPointerActions(pointerActions);
+
     return `(new TouchAction(driver)).tap(${x}, ${y}).perform()`;
   }
 
-  codeFor_swipe (varNameIgnore, varIndexIgnore, x1, y1, x2, y2) {
+  codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
+    const {x1, y1, x2, y2} = Framework.getSwipeCoordinatesFromPointerActions(pointerActions);
+
     return `(new TouchAction(driver))
   .press(PointOption.point(${x1}, ${y1}}))
   .moveTo(PointOption.point(${x2}, ${y2}}))
