@@ -70,7 +70,7 @@ driver.quit`;
   }
 
   codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
-    const {x, y} = Framework.getTapCoordinatesFromPointerActions(pointerActions);
+    const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
 
     return `driver
   .action
@@ -82,7 +82,7 @@ driver.quit`;
   }
 
   codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
-    const {x1, y1, x2, y2} = Framework.getSwipeCoordinatesFromPointerActions(pointerActions);
+    const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
 
     return `driver
   .action

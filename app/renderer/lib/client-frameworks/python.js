@@ -81,7 +81,7 @@ driver.quit()`;
   }
 
   codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
-    const {x, y} = Framework.getTapCoordinatesFromPointerActions(pointerActions);
+    const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
 
     return `actions = ActionChains(driver)
 actions.w3c_actions = ActionBuilder(driver, mouse=PointerInput(interaction.POINTER_TOUCH, "touch"))
@@ -94,7 +94,7 @@ actions.perform()
   }
 
   codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
-    const {x1, y1, x2, y2} = Framework.getSwipeCoordinatesFromPointerActions(pointerActions);
+    const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
 
     return `actions = ActionChains(driver)
 actions.w3c_actions = ActionBuilder(driver, mouse=PointerInput(interaction.POINTER_TOUCH, "touch"))

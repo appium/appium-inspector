@@ -85,13 +85,13 @@ ${code}
   }
 
   codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
-    const {x, y} = Framework.getTapCoordinatesFromPointerActions(pointerActions);
+    const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
 
     return `${this.type}.tap(${x}, ${y});`;
   }
 
   codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
-    const {x1, y1, x2, y2} = Framework.getSwipeCoordinatesFromPointerActions(pointerActions);
+    const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
 
     return `${this.type}.swipeScreen(${x1}, ${y1}, ${x2}, ${y2});`;
   }

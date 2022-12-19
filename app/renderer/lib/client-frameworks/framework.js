@@ -15,12 +15,12 @@ export default class Framework {
     this.lastAssignedVar = null;
   }
 
-  static getTapCoordinatesFromPointerActions (pointerActions) {
+  getTapCoordinatesFromPointerActions (pointerActions) {
     const pointerMoveAction = pointerActions[DEFAULT_TAP.POINTER_NAME][0];
     return {x: pointerMoveAction.x, y: pointerMoveAction.y};
   }
 
-  static getSwipeCoordinatesFromPointerActions (pointerActions) {
+  getSwipeCoordinatesFromPointerActions (pointerActions) {
     const pointerMoveActionStart = pointerActions[DEFAULT_SWIPE.POINTER_NAME][0];
     const pointerMoveActionEnd = pointerActions[DEFAULT_SWIPE.POINTER_NAME][2];
 

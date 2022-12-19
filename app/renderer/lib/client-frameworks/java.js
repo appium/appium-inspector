@@ -108,13 +108,13 @@ ${this.indent(code, 4)}
   }
 
   codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
-    const {x, y} = Framework.getTapCoordinatesFromPointerActions(pointerActions);
+    const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
 
     return `(new TouchAction(driver)).tap(${x}, ${y}).perform()`;
   }
 
   codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
-    const {x1, y1, x2, y2} = Framework.getSwipeCoordinatesFromPointerActions(pointerActions);
+    const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
 
     return `(new TouchAction(driver))
   .press(PointOption.point(${x1}, ${y1}}))
