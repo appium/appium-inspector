@@ -107,6 +107,10 @@ ${this.indent(code, 4)}
     return `driver.navigate().back();`;
   }
 
+  codeFor_Assert(element, text) {
+    return `TestCase.assertEquals(${element}.getText(), ${text});`;
+  }
+
   codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
     const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
 

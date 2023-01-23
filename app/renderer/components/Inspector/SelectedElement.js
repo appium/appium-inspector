@@ -12,6 +12,7 @@ import {
   EditOutlined,
   UndoOutlined,
   HourglassOutlined,
+  ToolOutlined,
 } from '@ant-design/icons';
 import { ROW, ALERT } from '../../../../gui-common/components/AntdTypes';
 
@@ -50,6 +51,13 @@ class SelectedElement extends Component {
     hideSendKeysModal();
   }
 
+  handleAssert () {
+    console.log("In the handle assert")
+    const {assert, applyClientMethod, hideAssertModal, selectedElementId: elementId} = this.props;
+    console.log("The assert is: ", assert)
+    hideAssertModal()
+  }
+
   contextSelect () {
     let {applyClientMethod, contexts, currentContext, setContext, t} = this.props;
 
@@ -82,6 +90,9 @@ class SelectedElement extends Component {
       sendKeysModalVisible,
       showSendKeysModal,
       hideSendKeysModal,
+      assertModalVisible,
+      showAssertModal,
+      hideAssertModal,
       selectedElementId: elementId,
       sourceXML,
       elementInteractionsNotAvailable,
@@ -255,6 +266,14 @@ class SelectedElement extends Component {
                 onClick={() => getFindElementsTimes(findDataSource)}
               />
             </Tooltip>
+            <Tooltip title={t('Assert')}>
+              <Button
+                disabled={isDisabled}
+                id='btnAssert'
+                icon={<ToolOutlined />}
+                onClick={() => showAssertModal()}
+              />
+            </Tooltip>
           </ButtonGroup>
         </Col>
       </Row>
@@ -326,6 +345,17 @@ class SelectedElement extends Component {
           value={sendKeys}
           onChange={(e) => setFieldValue('sendKeys', e.target.value)}
         />
+      </Modal>
+
+      <Modal title={t('Assert')} 
+         visible={assertModalVisible}
+        okText={t('Assert')}
+        cancelText={t('Cancel')}
+        onCancel={hideAssertModal}
+        onOk={this.handleAssert}
+      >
+          Helloe 
+
       </Modal>
     </div>;
   }

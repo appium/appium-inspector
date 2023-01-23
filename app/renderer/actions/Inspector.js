@@ -32,6 +32,8 @@ export const SET_SHOW_CENTROIDS = 'SET_SHOW_CENTROIDS';
 
 export const SHOW_SEND_KEYS_MODAL = 'SHOW_SEND_KEYS_MODAL';
 export const HIDE_SEND_KEYS_MODAL = 'HIDE_SEND_KEYS_MODAL';
+export const SHOW_ASSERT_MODAL = 'SHOW_ASSERT_MODAL';
+export const HIDE_ASSERT_MODAL = 'HIDE_ASSERT_MODAL';
 export const QUIT_SESSION_REQUESTED = 'QUIT_SESSION_REQUESTED';
 export const QUIT_SESSION_DONE = 'QUIT_SESSION_DONE';
 export const SET_SESSION_TIME = 'SET_SESSION_TIME';
@@ -278,6 +280,18 @@ export function showSendKeysModal () {
 export function hideSendKeysModal () {
   return (dispatch) => {
     dispatch({type: HIDE_SEND_KEYS_MODAL});
+  };
+}
+
+export function showAssertModal () {
+  return (dispatch) => {
+    dispatch({type: SHOW_ASSERT_MODAL});
+  };
+}
+
+export function hideAssertModal () {
+  return (dispatch) => {
+    dispatch({type: HIDE_ASSERT_MODAL});
   };
 }
 
