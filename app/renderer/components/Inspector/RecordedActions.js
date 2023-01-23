@@ -70,6 +70,16 @@ class RecordedActions extends Component {
           </Tooltip>
           }
           {!!recordedActions.length &&
+          <Tooltip title={t('Generate Page Object Model')}>
+            <Button
+              icon={<CodeOutlined />}
+              onClick={() => {
+                console.log("This is the Generate Page Object Model button click")
+              }}
+            />
+          </Tooltip>
+          }
+          {!!recordedActions.length &&
           <Tooltip title={t('Copy code to clipboard')}>
             <Button
               icon={<CopyOutlined/>}
