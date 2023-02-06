@@ -162,7 +162,7 @@
     "react-i18next": "11.18.6",
     "react-redux": "7.2.9",
     "react-router": "5.3.4",
-    "redux": "4.2.0",
+    "redux": "4.2.1",
     "redux-logger": "3.0.6",
     "redux-thunk": "2.4.2",
     "request": "2.88.2",
