@@ -190,12 +190,12 @@ export default class AppiumClient {
 
   async getWindowUpdate () {
     let windowSize, windowSizeError;
-    const {client: {capabilities: {deviceScreenSize, platformName}}} = this.driver;
+    const {client: {capabilities: {deviceScreenSize, platformName, automationName}}} = this.driver;
     try {
       // The call doesn't need to be made for Android for two reasons
       // - when appMode is hybrid Chrome driver doesn't know this command
       // - the data is already on the driver
-      if (_.toLower(platformName) === 'android') {
+      if (_.toLower(platformName) === 'android' && _.toLower(automationName) === 'uiautomator2') {
         const [width, height] = deviceScreenSize.split('x');
         windowSize = {width, height, x: 0, y: 0};
       } else {
