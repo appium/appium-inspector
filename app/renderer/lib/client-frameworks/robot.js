@@ -74,36 +74,40 @@ ${this.indent(code, 4)}
 
   getApplicationInitialization () {
     let varString = Object.keys(this.caps).map((k) => `${k}=\$\{${k}\}`).join('  ');
-    return `Open Application    \$\{REMOTE_URL\}   ${varString}`;
+    return `    Open Application    \$\{REMOTE_URL\}   ${varString}`;
   }
 
   codeFor_executeScript (/*varNameIgnore, varIndexIgnore, args*/) {
-    return `TODO implement executeScript`;
+    return `    Execute Script    TODO implement executeScript`;
   }
 
 
   codeFor_click (/*varName, varIndex*/) {
-    return `Click Element    ${this.lastID}`;
+    return `    Click Element    ${this.lastID}`;
   }
 
   codeFor_clear (/*varName, varIndex*/) {
-    return `Clear Text    ${this.lastID}`;
+    return `    Clear Text    ${this.lastID}`;
   }
 
   codeFor_sendKeys (varName, varIndex, text) {
-    return `Input Text    ${this.lastID}    ${text}`;
+    return `    Input Text    ${this.lastID}    ${text}`;
   }
 
   codeFor_back () {
-    return `Go Back`;
+    return `    Go Back`;
   }
 
-  codeFor_tap (varNameIgnore, varIndexIgnore, x, y) {
-    return `Tap    ${this.lastID}    ${x}    ${y}`;
+  codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
+    const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
+
+    return `    Tap With Positions    100    \$\{${x}, ${y}\}`;
   }
 
-  codeFor_swipe (varNameIgnore, varIndexIgnore, x1, y1, x2, y2) {
-    return `Swipe    ${x1}    ${y1}    ${x2}    ${y2}`;
+  codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
+    const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
+
+    return `    Swipe    ${x1}    ${y1}    ${x2}    ${y2}`;
   }
 
   // TODO: Add these robot framework commands

@@ -83,11 +83,15 @@ main().catch(console.log);`;
     return `await driver.back();`;
   }
 
-  codeFor_tap (varNameIgnore, varIndexIgnore, x, y) {
+  codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
+    const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
+
     return `await driver.touchAction({actions: 'tap', x: ${x}, y: ${y}})`;
   }
 
-  codeFor_swipe (varNameIgnore, varIndexIgnore, x1, y1, x2, y2) {
+  codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
+    const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
+
     return `await driver.touchAction([
   {action: 'press', x: ${x1}, y: ${y1}},
   {action: 'moveTo', x: ${x2}, y: ${y2}},
