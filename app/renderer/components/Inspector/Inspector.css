@@ -102,6 +102,10 @@
     height: 100%;
 }
 
+.inspector-main .interaction-tab-container :global(.ant-tabs-tabpane) {
+    height: 100%;
+}
+
 .inspector-main .interaction-tab-container :global(.action-row) {
     display: flex;
     height: 100%;
