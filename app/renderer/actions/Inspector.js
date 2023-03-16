@@ -107,7 +107,7 @@ export const CLEAR_TAP_COORDINATES = 'CLEAR_TAP_COORDINATES';
 
 export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
 
-const KEEP_ALIVE_PING_INTERVAL = 5 * 1000;
+const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
 const WAIT_FOR_USER_KEEP_ALIVE = 60 * 60 * 1000; // Give user 1 hour to reply
 
