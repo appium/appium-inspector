@@ -20,6 +20,8 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   ReloadOutlined,
+  PlayCircleOutlined,
+  PauseCircleOutlined,
   EyeOutlined,
   PauseOutlined,
   SearchOutlined,
@@ -34,6 +36,8 @@ import {
   AppstoreOutlined,
   GlobalOutlined,
   CodeOutlined,
+  HomeOutlined,
+  SoundOutlined
 } from '@ant-design/icons';
 import { BUTTON } from '../../../../gui-common/components/AntdTypes';
 
@@ -188,18 +192,43 @@ export default class Inspector extends Component {
   render () {
     const {screenshot, screenshotError, selectedElement = {},
            applyClientMethod, quitSession, isRecording, showRecord, startRecording,
-           pauseRecording, showLocatorTestModal, appMode,
+           pauseRecording, showLocatorTestModal, showSiriCommandModal, appMode,
            screenshotInteractionMode, isFindingElementsTimes, visibleCommandMethod,
            selectedInteractionMode, selectInteractionMode, selectAppMode, setVisibleCommandResult,
            showKeepAlivePrompt, keepSessionAlive, sourceXML, t, visibleCommandResult,
            mjpegScreenshotUrl, isAwaitingMjpegStream, toggleShowCentroids, showCentroids,
-           isGestureEditorVisible, toggleShowAttributes} = this.props;
+           isGestureEditorVisible, toggleShowAttributes, isRefreshingSource, toggleRefreshingState, driver
+           } = this.props;
     const {path} = selectedElement;
 
     const showScreenshot = ((screenshot && !screenshotError) ||
-                            (mjpegScreenshotUrl && !isAwaitingMjpegStream));
+                            (mjpegScreenshotUrl && (!isRefreshingSource || !isAwaitingMjpegStream)));
 
     let screenShotControls = <div className={InspectorStyles['screenshot-controls']}>
+      {driver.client.isIOS &&
+      <div className={InspectorStyles['action-controls']}>
+        <Tooltip title={t('Press Home button')}>
+          <Button id='btnPressHomeButton' icon={<HomeOutlined/>} onClick={() => applyClientMethod({ methodName: 'executeScript', args: ['mobile:pressButton', [{name: 'home'}]]})}/>
+        </Tooltip>
+        <Tooltip title={t('Siri command')}>
+          <Button id='siriCommand' icon={<SoundOutlined/>} onClick={showSiriCommandModal} />
+        </Tooltip>
+      </div>
+      }
+      {/* {driver.client.isTVOS &&
+      <div className={InspectorStyles['action-controls']}>
+        <Tooltip title={t('Press Home button')}>
+          <Button id='btnPressHomeButton' icon={<HomeOutlined/>} onClick={() => applyClientMethod({ methodName: 'executeScript', args: ['mobile:pressButton', [{name: 'home'}]]})}/>
+        </Tooltip>
+      </div>
+      } */}
+      {driver.client.isAndroid &&
+      <div className={InspectorStyles['action-controls']}>
+        <Tooltip title={t('Press Home button')}>
+          <Button id='btnPressHomeButton' icon={<HomeOutlined/>} onClick={() => applyClientMethod({ methodName: 'pressKeycode', args: [{keycode: 10}]})}/>
+        </Tooltip>
+      </div>
+      }
       <div className={InspectorStyles['action-controls']}>
         <Tooltip title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')} placement="topRight">
           <Switch
@@ -335,6 +364,16 @@ export default class Inspector extends Component {
       <Tooltip title={t('Back')}>
         <Button id='btnGoBack' icon={<ArrowLeftOutlined/>} onClick={() => applyClientMethod({methodName: 'back'})}/>
       </Tooltip>
+      {!isRefreshingSource &&
+        <Tooltip title={t('Start Refreshing Source')}>
+          <Button id='btnStartRefreshing' icon={<PlayCircleOutlined/>} onClick={toggleRefreshingState}/>
+        </Tooltip>
+      }
+      {isRefreshingSource &&
+        <Tooltip title={t('Pause Refreshing Source')}>
+          <Button id='btnPauseRefreshing' icon={<PauseCircleOutlined/>} onClick={toggleRefreshingState}/>
+        </Tooltip>
+      }
       <Tooltip title={t('refreshSource')}>
         <Button id='btnReload' icon={<ReloadOutlined/>} onClick={() => applyClientMethod({methodName: 'getPageSource'})}/>
       </Tooltip>

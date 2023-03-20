@@ -5,7 +5,7 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          SET_FIELD_VALUE, SET_EXPANDED_PATHS, SHOW_SEND_KEYS_MODAL,
          HIDE_SEND_KEYS_MODAL, START_RECORDING, PAUSE_RECORDING, CLEAR_RECORDING,
          SET_ACTION_FRAMEWORK, RECORD_ACTION, CLOSE_RECORDER, SET_SHOW_BOILERPLATE, SET_SESSION_DETAILS,
-         SHOW_LOCATOR_TEST_MODAL, HIDE_LOCATOR_TEST_MODAL, SET_LOCATOR_TEST_STRATEGY, SET_LOCATOR_TEST_VALUE,
+         SHOW_LOCATOR_TEST_MODAL, HIDE_LOCATOR_TEST_MODAL, SHOW_SIRI_COMMAND_MODAL, HIDE_SIRI_COMMAND_MODAL, SET_LOCATOR_TEST_STRATEGY, SET_LOCATOR_TEST_VALUE,
          SEARCHING_FOR_ELEMENTS, SEARCHING_FOR_ELEMENTS_COMPLETED, SET_LOCATOR_TEST_ELEMENT, CLEAR_SEARCH_RESULTS,
          ADD_ASSIGNED_VAR_CACHE, CLEAR_ASSIGNED_VAR_CACHE, SET_SCREENSHOT_INTERACTION_MODE,
          SET_SWIPE_START, SET_SWIPE_END, CLEAR_SWIPE_ACTION, SET_SEARCHED_FOR_ELEMENT_BOUNDS, CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS,
@@ -17,7 +17,7 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          GET_SAVED_GESTURES_REQUESTED, GET_SAVED_GESTURES_DONE, SET_LOADED_GESTURE, REMOVE_LOADED_GESTURE, SHOW_GESTURE_ACTION, HIDE_GESTURE_ACTION,
          SELECT_TICK_ELEMENT, UNSELECT_TICK_ELEMENT, SET_GESTURE_TAP_COORDS_MODE, CLEAR_TAP_COORDINATES, DELETE_SAVED_GESTURES_REQUESTED, DELETE_SAVED_GESTURES_DONE,
          SELECT_HOVERED_CENTROID, UNSELECT_HOVERED_CENTROID, SELECT_CENTROID, UNSELECT_CENTROID,
-         SET_SHOW_CENTROIDS, TOGGLE_SHOW_ATTRIBUTES
+         SET_SHOW_CENTROIDS, TOGGLE_SHOW_ATTRIBUTES, TOGGLE_REFRESHING_STATE, SET_SIRI_COMMAND_VALUE
 } from '../actions/Inspector';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from '../components/Inspector/shared';
 
@@ -32,6 +32,7 @@ const INITIAL_STATE = {
   lastActiveMoment: null,
   expandedPaths: ['0'],
   isRecording: false,
+  isRefreshingSource: true,
   showRecord: false,
   showBoilerplate: false,
   recordedActions: [],
@@ -39,6 +40,8 @@ const INITIAL_STATE = {
   sessionDetails: {},
   isGestureEditorVisible: false,
   isLocatorTestModalVisible: false,
+  isSiriCommandModalVisible: false,
+  siriCommandValue: '',
   showCentroids: false,
   locatorTestStrategy: 'id',
   locatorTestValue: '',
@@ -293,6 +296,24 @@ export default function inspector (state = INITIAL_STATE, action) {
         isLocatorTestModalVisible: false,
       };
 
+    case SHOW_SIRI_COMMAND_MODAL:
+      return {
+        ...state,
+        isSiriCommandModalVisible: true,
+      };
+
+    case HIDE_SIRI_COMMAND_MODAL:
+      return {
+        ...state,
+        isSiriCommandModalVisible: false,
+      };
+    
+    case SET_SIRI_COMMAND_VALUE:
+      return {
+        ...state,
+        siriCommandValue: action.siriCommandValue
+      };
+  
     case SET_LOCATOR_TEST_STRATEGY:
       return {
         ...state,
@@ -591,6 +612,9 @@ export default function inspector (state = INITIAL_STATE, action) {
 
     case TOGGLE_SHOW_ATTRIBUTES:
       return {...state, showSourceAttrs: !state.showSourceAttrs};
+    
+    case TOGGLE_REFRESHING_STATE:
+        return {...state, isRefreshingSource: !state.isRefreshingSource};
 
     default:
       return {...state};

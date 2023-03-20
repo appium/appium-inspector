@@ -74,6 +74,7 @@ const FILE_PATH_STORAGE_KEY = 'last_opened_file';
 const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to turn it on
 
 const MJPEG_CAP = 'mjpegScreenshotUrl';
+const MJPEG_PORT_CAP = 'mjpegServerPort';
 
 // Multiple requests sometimes send a new session request
 // after establishing a session.
@@ -552,10 +553,18 @@ export function newSession (caps, attachSessId = null) {
     }
 
 
-    const mjpegScreenshotUrl = desiredCapabilities[`appium:${MJPEG_CAP}`] ||
-      desiredCapabilities[MJPEG_CAP] ||
+    var mjpegScreenshotUrl = driver.capabilities[`appium:${MJPEG_CAP}`] ||
+      driver.capabilities[MJPEG_CAP] ||
+      null;
+  
+    const mjpegScreenshotPort = driver.capabilities[`appium:${MJPEG_PORT_CAP}`] ||
+      driver.capabilities[MJPEG_PORT_CAP] ||
       null;
 
+    // Build mjpegScreenshotUrl if mjpegServerPort in session capabilities
+    if (!mjpegScreenshotUrl && mjpegScreenshotPort) {
+      mjpegScreenshotUrl = `${https ? 'https' : 'http'}://${host}:${mjpegScreenshotPort}`;
+    }
 
     // pass some state to the inspector that it needs to build recorder
     // code boilerplate
@@ -571,7 +580,7 @@ export function newSession (caps, attachSessId = null) {
         https,
       },
       mode,
-      mjpegScreenshotUrl,
+      mjpegScreenshotUrl
     });
     action(dispatch);
     dispatch(push('/inspector'));

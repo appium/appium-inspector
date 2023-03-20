@@ -46,6 +46,9 @@ export const SET_SHOW_BOILERPLATE = 'SET_SHOW_BOILERPLATE';
 
 export const SHOW_LOCATOR_TEST_MODAL = 'SHOW_LOCATOR_TEST_MODAL';
 export const HIDE_LOCATOR_TEST_MODAL = 'HIDE_LOCATOR_TEST_MODAL';
+export const SHOW_SIRI_COMMAND_MODAL = 'SHOW_SIRI_COMMAND_MODAL';
+export const HIDE_SIRI_COMMAND_MODAL = 'HIDE_SIRI_COMMAND_MODAL';
+export const SET_SIRI_COMMAND_VALUE = 'SET_SIRI_COMMAND_VALUE';
 export const SET_LOCATOR_TEST_STRATEGY = 'SET_LOCATOR_TEST_STRATEGY';
 export const SET_LOCATOR_TEST_VALUE = 'SET_LOCATOR_TEST_VALUE';
 export const SEARCHING_FOR_ELEMENTS = 'SEARCHING_FOR_ELEMENTS';
@@ -106,8 +109,9 @@ export const SET_GESTURE_TAP_COORDS_MODE = 'SET_GESTURE_TAP_COORDS_MODE';
 export const CLEAR_TAP_COORDINATES = 'CLEAR_TAP_COORDINATES';
 
 export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
+export const TOGGLE_REFRESHING_STATE = 'TOGGLE_REFRESHING_STATE';
 
-const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
+const KEEP_ALIVE_PING_INTERVAL = 5 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
 const WAIT_FOR_USER_KEEP_ALIVE = 60 * 60 * 1000; // Give user 1 hour to reply
 
@@ -391,6 +395,25 @@ export function hideLocatorTestModal () {
   };
 }
 
+export function showSiriCommandModal () {
+  return (dispatch) => {
+    dispatch({type: SHOW_SIRI_COMMAND_MODAL});
+  };
+}
+
+export function hideSiriCommandModal () {
+  return (dispatch) => {
+    dispatch({type: HIDE_SIRI_COMMAND_MODAL});
+    dispatch({type: CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS});
+  };
+}
+
+export function setSiriCommandValue (siriCommandValue) {
+  return (dispatch) => {
+    dispatch({type: SET_SIRI_COMMAND_VALUE, siriCommandValue});
+  };
+}
+
 export function setLocatorTestValue (locatorTestValue) {
   return (dispatch) => {
     dispatch({type: SET_LOCATOR_TEST_VALUE, locatorTestValue});
@@ -497,6 +520,12 @@ export function clearSearchResults () {
 export function selectScreenshotInteractionMode (screenshotInteractionMode) {
   return (dispatch) => {
     dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode });
+  };
+}
+
+export function toggleRefreshingState () {
+  return (dispatch) => {
+    dispatch({type: TOGGLE_REFRESHING_STATE});
   };
 }
 
@@ -692,13 +721,17 @@ export function keepSessionAlive () {
 
 export function callClientMethod (params) {
   return async (dispatch, getState) => {
-    const {driver, appMode, mjpegScreenshotUrl} = getState().inspector;
+    const {driver, appMode, mjpegScreenshotUrl, isRefreshingSource} = getState().inspector;
     const {methodName, ignoreResult = true} = params;
     params.appMode = appMode;
 
     // don't retrieve screenshot if we're already using the mjpeg stream
     if (mjpegScreenshotUrl) {
       params.skipScreenshot = true;
+    }
+
+    if (!isRefreshingSource) {
+      params.skipRefresh = true;
     }
 
     console.log(`Calling client method with params:`); // eslint-disable-line no-console

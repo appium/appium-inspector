@@ -47,7 +47,9 @@ any other command: `./Appium-Inspector-linux.AppImage`.
 * Get a list of suggested element locator strategies and selectors to be used in your scripts
 * Compare the speed of different element finding strategies
 * Start and stop "recording" mode, which translates your actions in the Inspector to code samples you can use in your scripts
+* Start and stop "source refreshing", which allows you to interact with screen without reloading page source after every request
 * Tap on the screen at an arbitrary location
+* Press home button for iOS and Android
 * Perform a swipe gesture
 * Switch into web context modes and interact with web elements
 * Test out your own locator strategies
