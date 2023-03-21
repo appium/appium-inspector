@@ -72,6 +72,10 @@
     overflow: hidden;
 }
 
+.inspector-main .interaction-tab-container :global(.ant-tabs-tabpane) {
+    height: 100%;
+}
+
 .inspector-main .interaction-tab-container {
     position: relative;
     flex-grow: 3;
@@ -133,7 +137,7 @@
 .session-inner-table :global(.ant-table) {
     width: 102%;
     margin-left: -32px;
-} 
+}
 
 .session-inner-table :global(.ant-table-body)::-webkit-scrollbar {
     -webkit-appearance: none;
@@ -239,7 +243,7 @@
     overflow: hidden;
     cursor: pointer;
     visibility: visible;
-    transform: translate(-50%, -50%); 
+    transform: translate(-50%, -50%);
 }
 
 .centroid-box.centroid {
@@ -344,7 +348,7 @@
 .centroid-box.expand.inspected-element-box.hovered-element-box div {
     background-color: rgb(255, 133, 133);
     transition: background-color 0.2s ease-in-out;
-    
+
 }
 
 .centroid-box.expand.hovered-element-box div,
@@ -499,7 +503,7 @@
     top: 0;
     left: 0;
     height: 100%;
-    width: 100%; 
+    width: 100%;
 }
 
 .gestureSvg {
@@ -610,7 +614,7 @@
 
 .gesture-header-timeline {
     width: 90%;
-    margin-top: -15px; 
+    margin-top: -15px;
     min-height: 36px;
 }
 
