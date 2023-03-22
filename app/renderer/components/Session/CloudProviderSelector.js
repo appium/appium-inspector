@@ -38,7 +38,7 @@ export default class CloudProviderSelector extends Component {
 
     return <Modal key="modal"
       className={SessionStyles.cloudProviderModal}
-      visible={isAddingCloudProvider}
+      open={isAddingCloudProvider}
       onCancel={stopAddCloudProvider}
       footer={footer}
       title={t('Select Cloud Providers')}>

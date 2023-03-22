@@ -164,7 +164,7 @@ export default class CapabilityEditor extends Component {
         </Col>
         <Col order={2} span={12} className={SessionStyles.capsFormattedCol}>
           <FormattedCaps {...this.props} />
-          <Modal visible={showSaveAsModal}
+          <Modal open={showSaveAsModal}
             title={t('Save Capability Set As')}
             okText='Save'
             cancelText='Cancel'

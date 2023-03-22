@@ -365,7 +365,7 @@ export default class Inspector extends Component {
         {main}
         <Modal
           title={t('Session Inactive')}
-          visible={showKeepAlivePrompt}
+          open={showKeepAlivePrompt}
           onOk={() => keepSessionAlive()}
           onCancel={() => quitSession()}
           okText={t('Keep Session Running')}
@@ -375,7 +375,7 @@ export default class Inspector extends Component {
         </Modal>
         <Modal
           title={t('methodCallResult', {methodName: visibleCommandMethod})}
-          visible={!!visibleCommandResult}
+          open={!!visibleCommandResult}
           onOk={() => setVisibleCommandResult(null)}
           onCancel={() => setVisibleCommandResult(null)}
         >
