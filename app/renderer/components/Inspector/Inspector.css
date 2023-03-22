@@ -93,6 +93,10 @@
     padding: 0px 12px;
 }
 
+.inspector-main :global(.ant-card-head-wrapper) {
+    max-height: 48px;
+}
+
 .inspector-main :global(.ant-card-body) {
     height: calc(100% - 48px);
     padding: 12px;
