@@ -38,7 +38,7 @@
 
 .inspector-main .screenshot-container {
     max-width: 500px;
-    max-height: 90%;
+    max-height: calc(100% - 50px);
     flex-grow: 1;
     flex-shrink: 2;
     flex-basis: 400px;
