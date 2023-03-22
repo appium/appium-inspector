@@ -99,7 +99,7 @@ export default class CapabilityEditor extends Component {
             {caps.map((cap, index) => <Row gutter={8} key={index}>
               <Col span={7}>
                 <FormItem>
-                  <Tooltip title={whitespaceMsg(cap.name)} visible={whitespaces.test(cap.name)}>
+                  <Tooltip title={whitespaceMsg(cap.name)} open={whitespaces.test(cap.name)}>
                     <Input disabled={isEditingDesiredCaps} id={`desiredCapabilityName_${index}`} placeholder={t('Name')}
                       value={cap.name} onChange={(e) => setCapabilityParam(index, 'name', e.target.value)}
                       ref={index === numCaps - 1 ? this.latestCapField : ''}
@@ -121,7 +121,7 @@ export default class CapabilityEditor extends Component {
               </Col>
               <Col span={7}>
                 <FormItem>
-                  <Tooltip title={whitespaceMsg(cap.value)} visible={whitespaces.test(cap.value)}>
+                  <Tooltip title={whitespaceMsg(cap.value)} open={whitespaces.test(cap.value)}>
                     <CapabilityControl {...this.props} cap={cap} id={`desiredCapabilityValue_${index}`}
                       onSetCapabilityParam={(value) => setCapabilityParam(index, 'value', value)}
                       onPressEnter={(index === numCaps - 1) ? addCapability : () => {}}
