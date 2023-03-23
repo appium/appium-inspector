@@ -35,11 +35,10 @@ import {
   HighlightOutlined,
   AppstoreOutlined,
   GlobalOutlined,
-  CodeOutlined,
-  HomeOutlined,
-  SoundOutlined
+  CodeOutlined
 } from '@ant-design/icons';
 import { BUTTON } from '../../../../gui-common/components/AntdTypes';
+import DeviceActions from './DeviceActions';
 
 const {SELECT, SWIPE, TAP} = SCREENSHOT_INTERACTION_MODE;
 
@@ -192,7 +191,7 @@ export default class Inspector extends Component {
   render () {
     const {screenshot, screenshotError, selectedElement = {},
            applyClientMethod, quitSession, isRecording, showRecord, startRecording,
-           pauseRecording, showLocatorTestModal, showSiriCommandModal, appMode,
+           pauseRecording, showLocatorTestModal, appMode,
            screenshotInteractionMode, isFindingElementsTimes, visibleCommandMethod,
            selectedInteractionMode, selectInteractionMode, selectAppMode, setVisibleCommandResult,
            showKeepAlivePrompt, keepSessionAlive, sourceXML, t, visibleCommandResult,
@@ -205,30 +204,7 @@ export default class Inspector extends Component {
                             (mjpegScreenshotUrl && (!isRefreshingSource || !isAwaitingMjpegStream)));
 
     let screenShotControls = <div className={InspectorStyles['screenshot-controls']}>
-      {driver.client.isIOS &&
-      <div className={InspectorStyles['action-controls']}>
-        <Tooltip title={t('Press Home button')}>
-          <Button id='btnPressHomeButton' icon={<HomeOutlined/>} onClick={() => applyClientMethod({ methodName: 'executeScript', args: ['mobile:pressButton', [{name: 'home'}]]})}/>
-        </Tooltip>
-        <Tooltip title={t('Siri command')}>
-          <Button id='siriCommand' icon={<SoundOutlined/>} onClick={showSiriCommandModal} />
-        </Tooltip>
-      </div>
-      }
-      {/* {driver.client.isTVOS &&
-      <div className={InspectorStyles['action-controls']}>
-        <Tooltip title={t('Press Home button')}>
-          <Button id='btnPressHomeButton' icon={<HomeOutlined/>} onClick={() => applyClientMethod({ methodName: 'executeScript', args: ['mobile:pressButton', [{name: 'home'}]]})}/>
-        </Tooltip>
-      </div>
-      } */}
-      {driver.client.isAndroid &&
-      <div className={InspectorStyles['action-controls']}>
-        <Tooltip title={t('Press Home button')}>
-          <Button id='btnPressHomeButton' icon={<HomeOutlined/>} onClick={() => applyClientMethod({ methodName: 'pressKeycode', args: [{keycode: 10}]})}/>
-        </Tooltip>
-      </div>
-      }
+      {(driver) && <DeviceActions {...this.props} />}
       <div className={InspectorStyles['action-controls']}>
         <Tooltip title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')} placement="topRight">
           <Switch
