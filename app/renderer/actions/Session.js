@@ -8,7 +8,7 @@ import { setSessionDetails, quitSession } from './Inspector';
 import i18n from '../../configs/i18next.config.renderer';
 import CloudProviders from '../components/Session/CloudProviders';
 import { Web2Driver } from 'web2driver';
-import { addVendorPrefixes } from '../util';
+import { addVendorPrefixes, isAndroid, isIOS } from '../util';
 import ky from 'ky/umd';
 import moment from 'moment';
 import { APP_MODE } from '../components/Inspector/shared';
@@ -520,12 +520,16 @@ export function newSession (caps, attachSessId = null) {
     let driver = null;
     try {
       if (attachSessId) {
-        // When attaching to a session id, webdriver does not check if the device
-        // is mobile or not. Since we're attaching in appium-inspector, we can
-        // assume the device is mobile so that Appium protocols are included
-        // in the userPrototype.
+        // When attaching to a session id, webdriver does not fully populdate
+        // client information, so we should supplement by attaching session
+        // capabilities that we are attaching to.
+        const attachedSessionCaps = session.runningAppiumSessions.find((session) => {
+          return session.id == attachSessId
+        }).capabilities;
         serverOpts.isMobile = true;
-        driver = await Web2Driver.attachToSession(attachSessId, serverOpts);
+        serverOpts.isIOS = isIOS(attachedSessionCaps);
+        serverOpts.isAndroid = isAndroid(attachedSessionCaps);
+        driver = await Web2Driver.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
         driver._isAttachedSession = true;
       } else {
         driver = await Web2Driver.remote(serverOpts, desiredCapabilities);
