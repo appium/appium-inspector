@@ -71,18 +71,18 @@ export default class Session extends Component {
         <div className={SessionStyles.sessionContainer}>
           <div id='serverTypeTabs' className={SessionStyles.serverTab}>
             <Tabs activeKey={serverType} onChange={(tab) => this.handleSelectServerTab(tab)} className={SessionStyles.serverTabs} items={[{
-              label: t('Appium Server'), key: "remote", children:
+              label: t('Appium Server'), key: 'remote', children:
                 <ServerTabCustom {...this.props} />
-              },
-              ..._(visibleProviders).map((providerName) => {
-                const provider = CloudProviders[providerName];
-                if (!provider) {
-                  return true;
-                }
+            },
+            ..._(visibleProviders).map((providerName) => {
+              const provider = CloudProviders[providerName];
+              if (!provider) {
+                return true;
+              }
 
-                return {label: <div>{provider.tabhead()}</div>, key: providerName, children: provider.tab(this.props)};
-              }),
-              {label: <span className='addCloudProviderTab'>{ t('Select Cloud Providers') }</span>, key: ADD_CLOUD_PROVIDER} 
+              return {label: <div>{provider.tabhead()}</div>, key: providerName, children: provider.tab(this.props)};
+            }),
+            {label: <span className='addCloudProviderTab'>{ t('Select Cloud Providers') }</span>, key: ADD_CLOUD_PROVIDER}
             ]}/>
             <AdvancedServerParams {...this.props} />
           </div>
@@ -95,14 +95,13 @@ export default class Session extends Component {
           {!newSessionBegan && <Tabs activeKey={tabKey} onChange={switchTabs} className={SessionStyles.scrollingTabCont} items={[{
             label: t('Desired Capabilities'), key: 'new', className: SessionStyles.scrollingTab, children:
               <CapabilityEditor {...this.props} />
-            }, {
+          }, {
             label: t('Saved Capability Sets', {savedSessionsCount: savedSessions.length}), key: 'saved', className: SessionStyles.scrollingTab, disabled: savedSessions.length === 0, children:
               <SavedSessions {...this.props} />
-            }, {
+          }, {
             label: t('Attach to Session'), key: 'attach', className: SessionStyles.scrollingTab, children:
               <AttachToSession {...this.props} />
-            }
-          ]}/>}
+          }]}/>}
 
           <div className={SessionStyles.sessionFooter}>
             <div className={SessionStyles.desiredCapsLink}>
