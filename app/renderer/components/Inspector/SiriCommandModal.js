@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button, Input, Row  } from 'antd';
-import { hideSiriCommandModal, setSiriCommandValue } from '../../actions/Inspector';
-import InspectorStyles from './Inspector.css';
+import { Modal, Button, Input, Row } from 'antd';
 import { withTranslation } from '../../util';
 
 class SiriCommandModal extends Component {

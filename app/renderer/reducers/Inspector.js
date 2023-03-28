@@ -307,13 +307,13 @@ export default function inspector (state = INITIAL_STATE, action) {
         ...state,
         isSiriCommandModalVisible: false,
       };
-    
+
     case SET_SIRI_COMMAND_VALUE:
       return {
         ...state,
         siriCommandValue: action.siriCommandValue
       };
-  
+
     case SET_LOCATOR_TEST_STRATEGY:
       return {
         ...state,
@@ -612,9 +612,9 @@ export default function inspector (state = INITIAL_STATE, action) {
 
     case TOGGLE_SHOW_ATTRIBUTES:
       return {...state, showSourceAttrs: !state.showSourceAttrs};
-    
+
     case TOGGLE_REFRESHING_STATE:
-        return {...state, isRefreshingSource: !state.isRefreshingSource};
+      return {...state, isRefreshingSource: !state.isRefreshingSource};
 
     default:
       return {...state};

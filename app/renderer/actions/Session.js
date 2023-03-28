@@ -523,9 +523,7 @@ export function newSession (caps, attachSessId = null) {
         // When attaching to a session id, webdriver does not fully populdate
         // client information, so we should supplement by attaching session
         // capabilities that we are attaching to.
-        const attachedSessionCaps = session.runningAppiumSessions.find((session) => {
-          return session.id == attachSessId
-        }).capabilities;
+        const attachedSessionCaps = session.runningAppiumSessions.find((session) => session.id === attachSessId).capabilities;
         serverOpts.isMobile = true;
         serverOpts.isIOS = isIOS(attachedSessionCaps);
         serverOpts.isAndroid = isAndroid(attachedSessionCaps);
@@ -557,10 +555,10 @@ export function newSession (caps, attachSessId = null) {
     }
 
 
-    var mjpegScreenshotUrl = driver.capabilities[`appium:${MJPEG_CAP}`] ||
+    let mjpegScreenshotUrl = driver.capabilities[`appium:${MJPEG_CAP}`] ||
       driver.capabilities[MJPEG_CAP] ||
       null;
-  
+
     const mjpegScreenshotPort = driver.capabilities[`appium:${MJPEG_PORT_CAP}`] ||
       driver.capabilities[MJPEG_PORT_CAP] ||
       null;

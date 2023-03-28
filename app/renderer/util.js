@@ -290,15 +290,15 @@ export function addVendorPrefixes (caps) {
  * @param  {Object}  caps  caps of session response
  * @return {Boolean}       true if run on iOS device
  */
-export function isIOS(caps) {
+export function isIOS (caps) {
   if (!caps) {
-      return false
+    return false;
   }
 
   return Boolean(
-      (caps['platformName'] && caps['platformName'].match(/iOS/i)) ||
-      (caps['deviceName'] && caps['deviceName'].match(/(iPad|iPhone)/i))
-  )
+      (caps.platformName && caps.platformName.match(/iOS/i)) ||
+      (caps.deviceName && caps.deviceName.match(/(iPad|iPhone)/i))
+  );
 }
 
 /**
@@ -306,13 +306,13 @@ export function isIOS(caps) {
  * @param  {Object}  caps  caps of session response
  * @return {Boolean}       true if run on iOS device
  */
-export function isAndroid(caps) {
+export function isAndroid (caps) {
   if (!caps) {
-      return false
+    return false;
   }
 
   return Boolean(
-      (caps['platformName'] && caps['platformName'].match(/Android/i)) ||
-      (caps['browserName'] && caps['browserName'].match(/Android/i))
-  )
+      (caps.platformName && caps.platformName.match(/Android/i)) ||
+      (caps.browserName && caps.browserName.match(/Android/i))
+  );
 }

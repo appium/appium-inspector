@@ -197,7 +197,7 @@ export default class Inspector extends Component {
            showKeepAlivePrompt, keepSessionAlive, sourceXML, t, visibleCommandResult,
            mjpegScreenshotUrl, isAwaitingMjpegStream, toggleShowCentroids, showCentroids,
            isGestureEditorVisible, toggleShowAttributes, isRefreshingSource, toggleRefreshingState, driver
-           } = this.props;
+    } = this.props;
     const {path} = selectedElement;
 
     const showScreenshot = ((screenshot && !screenshotError) ||
