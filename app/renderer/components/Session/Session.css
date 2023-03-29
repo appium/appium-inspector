@@ -228,7 +228,9 @@
   width: 100%;
 }
 
-.advancedSettingsContainer {}
+.advancedSettingsContainer :global(.ant-form-item) {
+  margin: 0;
+}
 
 .add-desired-capability-button {
   float: right;
