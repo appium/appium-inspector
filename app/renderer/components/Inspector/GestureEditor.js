@@ -9,7 +9,6 @@ import { SCREENSHOT_INTERACTION_MODE, POINTER_TYPES,
          percentageToPixels, pixelsToPercentage } from './shared';
 import InspectorCSS from './Inspector.css';
 
-const {TabPane} = Tabs;
 const {Option} = Select;
 const {Step} = Steps;
 const ButtonGroup = Button.Group;
@@ -458,41 +457,39 @@ class GestureEditor extends Component {
         onEdit={(targetKey, action) => action === ACTION_TYPES.ADD ? this.addPointer() : this.deletePointer(targetKey)}
         hideAdd={pointers.length === 5}
         centered={true}
-        tabBarGutter={10}>
-        {pointers.map((pointer) => (
-          <TabPane
-            tab={<Tooltip title={t('Edit')} mouseEnterDelay={1}>
-              <Input
-                key={pointer.id}
-                className={InspectorCSS['pointer-title']}
-                style={{ cursor: activeKey === pointer.id ? CURSOR.TEXT : CURSOR.POINTER, textDecorationColor: pointer.color}}
-                value={pointer.name}
-                defaultValue={pointer.name}
-                bordered={false}
-                maxLength={10}
-                onChange={(e) => {pointer.name = e.target.value; this.setState({pointers});}}/>
-            </Tooltip>}
-            key={pointer.id}>
-            <Row gutter={[24, 24]}>
-              {pointer.ticks.map((tick) =>
-                <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4} key={`${tick.id}.col1`}>
-                  <div>
-                    {tickCard(tick)}
-                  </div>
-                </Col>
-              )}
-              <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4} key={`${pointer.id}.col1`}>
-                <Card className={InspectorCSS['tick-plus-card']} bordered={false}>
-                  <center>
-                    <Button className={InspectorCSS['tick-plus-btn']} icon={<PlusCircleOutlined/>}
-                      onClick={() => this.addTick(pointer.id)} key={ACTION_TYPES.ADD}/>
-                  </center>
-                </Card>
+        tabBarGutter={10}
+        items={pointers.map((pointer) => ({
+          label: <Tooltip title={t('Edit')} mouseEnterDelay={1}>
+            <Input
+              key={pointer.id}
+              className={InspectorCSS['pointer-title']}
+              style={{ cursor: activeKey === pointer.id ? CURSOR.TEXT : CURSOR.POINTER, textDecorationColor: pointer.color}}
+              value={pointer.name}
+              defaultValue={pointer.name}
+              bordered={false}
+              maxLength={10}
+              onChange={(e) => {pointer.name = e.target.value; this.setState({pointers});}}/>
+          </Tooltip>,
+          key: pointer.id,
+          children: <Row gutter={[24, 24]}>
+            {pointer.ticks.map((tick) =>
+              <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4} key={`${tick.id}.col1`}>
+                <div>
+                  {tickCard(tick)}
+                </div>
               </Col>
-            </Row>
-          </TabPane>
-        ))}
-      </Tabs>;
+            )}
+            <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4} key={`${pointer.id}.col1`}>
+              <Card className={InspectorCSS['tick-plus-card']} bordered={false}>
+                <center>
+                  <Button className={InspectorCSS['tick-plus-btn']} icon={<PlusCircleOutlined/>}
+                    onClick={() => this.addTick(pointer.id)} key={ACTION_TYPES.ADD}/>
+                </center>
+              </Card>
+            </Col>
+          </Row>
+        }))}
+      />;
 
 
     const timeline = this.updateGestureForTimeline().map((pointer) =>
