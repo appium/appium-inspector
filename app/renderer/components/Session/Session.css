@@ -43,11 +43,6 @@
 .cloudProviderModal :global(.ant-modal-body button img) {
   height: 100%;
 }
-
-.serverTabs :global(.ant-row > div) {
-  height: 56px;
-}
-
 .sessionFooter {
   text-align: right;
   height: 30px;
@@ -67,7 +62,7 @@
 }
 
 .serverTabs {
-  min-height: 160px;
+  padding-bottom: 8px;
 }
 
 .serverTabs :global(.ant-tabs-bar) {
@@ -77,6 +72,14 @@
 
 .serverTabs :global(.ant-tabs-nav-wrap) {
   -webkit-app-region: drag;
+}
+
+.serverTabs :global(.ant-form > .ant-row > div) {
+  padding-bottom: 12px;
+}
+
+.serverTabs :global(.ant-form-item) {
+  margin: 0;
 }
 
 .scrollingTabCont {
@@ -197,8 +200,8 @@
 .localDesc {
   font-style: italic;
   color: #666;
-  margin-top: 8px;
-  margin-left: 8px;
+  margin: 0;
+  padding: 6px 8px 0 8px;
 }
 
 .selected {
@@ -254,7 +257,7 @@
 }
 
 .addonDataCenterRadioContainer {
-  line-height: 32px;
   display: table-cell;
+  padding-top: 4px;
   padding-left: 11px;
 }
