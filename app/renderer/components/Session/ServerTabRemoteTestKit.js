@@ -12,7 +12,7 @@ export default class ServerTabRemoteTestkit extends Component {
 
     return <Form>
       <Row gutter={8}>
-        <Col span={18}>
+        <Col span={24}>
           <FormItem>
             <Input id='remoteTestKitAccessToken' type={INPUT.PASSWORD} addonBefore={t('RemoteTestKit AccessToken')} value={server.remotetestkit.token}
               onChange={(e) => setServerParam('token', e.target.value)} />

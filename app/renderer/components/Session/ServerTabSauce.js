@@ -31,7 +31,7 @@ export default class ServerTabSauce extends Component {
         </Col>
       </Row>
       <Row gutter={8}>
-        <Col span={24}>
+        <Col span={8}>
           <FormItem>
             <div className={['ant-input-group-addon', SessionStyles.addonDataCenter].join(' ') }>{t('SauceLabs Data Center')}</div>
             <Radio.Group className={[SessionStyles.inputDataCenter, SessionStyles.addonDataCenterRadioContainer].join(' ')} buttonStyle="solid" defaultValue='us-west-1' id='sauceObjectDataCenter' value={server.sauce.dataCenter} onChange={(e) => setServerParam('dataCenter', e.target.value)}>
@@ -42,19 +42,17 @@ export default class ServerTabSauce extends Component {
             </Radio.Group>
           </FormItem>
         </Col>
-      </Row>
-      <Row gutter={8}>
-        <Col span={10}>
+        <Col span={8} align="right">
           <FormItem>
             <Checkbox checked={!!server.sauce.useSCProxy} onChange={(e) => setServerParam('useSCProxy', e.target.checked)}> {t('proxyThroughSC')}</Checkbox>
           </FormItem>
         </Col>
-        <Col span={6}>
+        <Col span={5}>
           <FormItem>
             <Input addonBefore={t('Host')} placeholder={t('localhost')} disabled={!server.sauce.useSCProxy} value={server.sauce.scHost} onChange={(e) => setServerParam('scHost', e.target.value)}/>
           </FormItem>
         </Col>
-        <Col span={6}>
+        <Col span={3}>
           <FormItem>
             <Input addonBefore={t('Port')} placeholder={4445} disabled={!server.sauce.useSCProxy} value={server.sauce.scPort} onChange={(e) => setServerParam('scPort', e.target.value)} />
           </FormItem>

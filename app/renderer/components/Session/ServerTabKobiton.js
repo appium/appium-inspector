@@ -22,8 +22,6 @@ export default class ServerTabKobiton extends Component {
               onChange={(e) => setServerParam('username', e.target.value)} />
           </FormItem>
         </Col>
-      </Row>
-      <Row gutter={8}>
         <Col span={12}>
           <FormItem>
             <Input id='kobitonAccessKey' type={INPUT.PASSWORD} placeholder={kobitonAccessKeyPlaceholder} addonBefore={t('Kobiton Access Key')} value={server.kobiton.accessKey} onChange={(e) => setServerParam('accessKey', e.target.value)} />
