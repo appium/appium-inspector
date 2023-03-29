@@ -24,8 +24,6 @@ export default class ServerTabBrowserstack extends Component {
               onChange={(e) => setServerParam('username', e.target.value)} />
           </FormItem>
         </Col>
-      </Row>
-      <Row gutter={8}>
         <Col span={12}>
           <FormItem>
             <Input id='browserstackPassword' type={INPUT.PASSWORD} placeholder={browserstackAccessKeyPlaceholder} addonBefore={t('BrowserStack Access Key')}

@@ -17,20 +17,18 @@ export default class ServerTabPcloudy extends Component {
 
     return <Form>
       <Row gutter={8}>
-        <Col span={12}>
+        <Col span={8}>
           <FormItem>
             <Input className={SessionStyles.customServerInputLeft} id='PcloudyServerHost' placeholder={pcloudyHostPlaceholder} addonBefore={t('Pcloudy Host')}
               value={server.pcloudy.hostname} onChange={(e) => setServerParam('hostname', e.target.value)} />
           </FormItem>
         </Col>
-      </Row>
-      <Row gutter={8}>
-        <Col span={12}>
+        <Col span={8}>
           <FormItem>
             <Input id='username' type={INPUT.TEXT} placeholder={pcloudyUsernamePlaceholder} addonBefore={t('Pcloudy User Name')} value={server.pcloudy.username} onChange={(e) => setServerParam('username', e.target.value)} />
           </FormItem>
         </Col>
-        <Col span={12}>
+        <Col span={8}>
           <FormItem>
             <Input id='accessKey' type={INPUT.PASSWORD} placeholder={pcloudyAccessKeyExample} addonBefore={t('Pcloudy API Key')}
               value={server.pcloudy.accessKey} onChange={(e) => setServerParam('accessKey', e.target.value)} />

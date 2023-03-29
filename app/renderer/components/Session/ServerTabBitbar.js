@@ -14,7 +14,7 @@ export default class ServerTabBitbar extends Component {
 
     return <Form>
       <Row gutter={8}>
-        <Col span={12}>
+        <Col span={24}>
           <FormItem>
             <Input id='bitbarApiKey' type={INPUT.PASSWORD} placeholder={bitbarApiKeyPlaceholder} addonBefore={t('Bitbar API Key')}
               value={server.bitbar.apiKey} onChange={(e) => setServerParam('apiKey', e.target.value)} />

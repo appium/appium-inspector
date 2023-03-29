@@ -23,8 +23,6 @@ export default class ServerTabTestingbot extends Component {
             <Input id='testingbotKey' placeholder={testingbotKeyPlaceholder} addonBefore={t('TestingBot Key')} value={server.testingbot.key} onChange={(e) => setServerParam('key', e.target.value)} />
           </FormItem>
         </Col>
-      </Row>
-      <Row gutter={8}>
         <Col span={12}>
           <FormItem>
             <Input id='testingbotSecret' type={INPUT.PASSWORD} placeholder={testingbotSecretPlaceholder} addonBefore={t('TestingBot Secret')} value={server.testingbot.secret} onChange={(e) => setServerParam('secret', e.target.value)} />
