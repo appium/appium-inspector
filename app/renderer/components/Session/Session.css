@@ -85,7 +85,7 @@
 .scrollingTabCont {
   border-bottom: 1px solid #d9d9d9;
   margin-bottom: 15px;
-  margin-top: 15px;
+  margin-top: 5px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -103,7 +103,6 @@
 .scrollingTab {
   overflow-y: scroll;
   height: 100%;
-  padding-top: 16px;
 }
 
 .scrollingTab::-webkit-scrollbar {
