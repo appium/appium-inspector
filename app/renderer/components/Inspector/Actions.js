@@ -92,7 +92,7 @@ export default class Actions extends Component {
       {!!pendingAction && <Modal
         title={pendingAction.actionName}
         okText={t('Execute Action')}
-        visible={!!pendingAction}
+        open={!!pendingAction}
         onOk={() => this.executeCommand()}
         onCancel={() => cancelPendingAction()}>
         {
