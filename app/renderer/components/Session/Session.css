@@ -113,19 +113,19 @@
   background-color: #1890ff;
 }
 
-.saved-sessions,
-.saved-sessions :global(.ant-col),
-.saved-sessions :global(.ant-table),
-.saved-sessions :global(.ant-table-wrapper) {
+.savedSessions,
+.savedSessions :global(.ant-col),
+.savedSessions :global(.ant-table),
+.savedSessions :global(.ant-table-wrapper) {
   height: 100%;
 }
 
-.saved-sessions :global(.ant-table) {
+.savedSessions :global(.ant-table) {
   overflow-y: auto;
   height: calc(100% - 15px);
 }
 
-.saved-sessions :global(.ant-table::-webkit-scrollbar) {
+.savedSessions :global(.ant-table::-webkit-scrollbar) {
   width: 0px;
 }
 
@@ -239,7 +239,7 @@
   float: right;
 }
 
-.edit-session {
+.editSession {
   margin-right: 10px;
 }
 
