@@ -5,7 +5,7 @@ import CapabilityEditor from './CapabilityEditor';
 import SavedSessions from './SavedSessions';
 import AttachToSession from './AttachToSession';
 import ServerTabCustom from './ServerTabCustom';
-import { Tabs, Button, Spin } from 'antd';
+import { Tabs, Button, Spin, Badge } from 'antd';
 import AdvancedServerParams from './AdvancedServerParams';
 import SessionStyles from './Session.css';
 import CloudProviders from './CloudProviders';
@@ -96,7 +96,8 @@ export default class Session extends Component {
             label: t('Desired Capabilities'), key: 'new', className: SessionStyles.scrollingTab, children:
               <CapabilityEditor {...this.props} />
           }, {
-            label: t('Saved Capability Sets', {savedSessionsCount: savedSessions.length}), key: 'saved', className: SessionStyles.scrollingTab, disabled: savedSessions.length === 0, children:
+            label: (<span>{t('Saved Capability Sets')} <Badge count={savedSessions.length} /></span>),
+            key: 'saved', className: SessionStyles.scrollingTab, disabled: savedSessions.length === 0, children:
               <SavedSessions {...this.props} />
           }, {
             label: t('Attach to Session'), key: 'attach', className: SessionStyles.scrollingTab, children:
