@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Card, Select, Button, Row, Col } from 'antd';
-import SessionCSS from './Session.css';
+import SessionStyles from './Session.css';
 import {
   ReloadOutlined
 } from '@ant-design/icons';
@@ -52,7 +52,7 @@ export default class AttachToSession extends Component {
     return (<Form>
       <FormItem>
         <Card>
-          <p className={SessionCSS.localDesc}>{t('connectToExistingSessionInstructions')}<br/>{t('selectSessionIDInDropdown')}</p>
+          <p className={SessionStyles.localDesc}>{t('connectToExistingSessionInstructions')}<br/>{t('selectSessionIDInDropdown')}</p>
         </Card>
       </FormItem>
       <FormItem>
@@ -70,7 +70,7 @@ export default class AttachToSession extends Component {
             </Select>
           </Col>
           <Col span={1}>
-            <div className={SessionCSS.btnReload}>
+            <div className={SessionStyles.btnReload}>
               <Button
                 onClick={getRunningSessions}
                 icon={<ReloadOutlined/>} />
