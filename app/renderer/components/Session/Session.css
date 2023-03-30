@@ -109,6 +109,10 @@
   width: 0px;
 }
 
+:global(.ant-badge-count) {
+  background-color: #1890ff;
+}
+
 .saved-sessions,
 .saved-sessions :global(.ant-col),
 .saved-sessions :global(.ant-table),
