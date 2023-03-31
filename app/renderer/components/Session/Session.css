@@ -114,15 +114,17 @@
 }
 
 .savedSessions,
-.savedSessions :global(.ant-col),
 .savedSessions :global(.ant-table),
 .savedSessions :global(.ant-table-wrapper) {
   height: 100%;
 }
 
+.savedSessions :global(.ant-col) {
+  height: calc(100% - 15px);
+}
+
 .savedSessions :global(.ant-table) {
   overflow-y: auto;
-  height: calc(100% - 15px);
 }
 
 .savedSessions :global(.ant-table::-webkit-scrollbar) {
@@ -132,34 +134,33 @@
 .newSessionForm {
   overflow-y: auto;
   overflow-x: hidden;
-  height: calc(100% - 15px);
+  height: 100%;
+}
+
+.newSessionForm::-webkit-scrollbar {
+  width: 0px;
 }
 
 .capsFormattedCol {
-  height: 100%;
+  padding-left: 12px;
 }
 
-.formattedCapsCont {
+.formattedCaps,
+.formattedCapsBody {
   height: 100%;
-}
-
-.formattedCaps {
-  height: calc(100% - 15px);
-  margin-left: 12px;
-  display: flex;
-  flex-flow: column;
-  align-items: stretch;
 }
 
 .formattedCaps :global(.ant-card-body) {
+  height: calc(100% - 54px);
+  padding: 0 14px 0 24px;
   flex: 1;
   overflow-y: auto;
 }
 
-.formattedCaps :global(.ant-card-body::-webkit-scrollbar) {}
-
-
-.formattedCaps pre {
+.formattedCapsBody pre {
+  height: 100%;
+  margin: 0;
+  padding: 24px 0;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
@@ -181,6 +182,10 @@
 .capsFormRow {
   font-size: 14px;
   height: 100%;
+}
+
+.capsFormRow :global(.ant-col) {
+  height: calc(100% - 15px);
 }
 
 .capsBoxFont {
@@ -214,17 +219,34 @@
 .capsEditorControls {
   position: absolute;
   right: 0;
-  margin: 4px 24px;
+  padding: 28px;
 }
 
 .capsEditorButton {
-  margin: 0 4px 0 0;
+  margin: 0 0 0 4px;
 }
 
 .capsEditor {
   width: 100%;
   height: 100%;
+  padding: 24px 0;
+}
+
+.capsEditorBody {
+  width: 100%;
+  padding: 0;
+  margin: -1px;
+  resize: none;
   border-color: lightgray;
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.capsEditorBodyFull {
+  height: 100%;
+}
+
+.capsEditorBodyResized {
+  height: calc(100% - 40px);
 }
 
 .advancedSettingsContainerCol {
