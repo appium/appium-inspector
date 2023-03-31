@@ -8,6 +8,9 @@ import {
   DeleteOutlined
 } from '@ant-design/icons';
 
+const DATE_COLUMN_WIDTH = '25%';
+const ACTIONS_COLUMN_WIDTH = '106px';
+
 export default class SavedSessions extends Component {
 
   constructor (props) {
@@ -66,10 +69,12 @@ export default class SavedSessions extends Component {
     }, {
       title: 'Created',
       dataIndex: 'date',
-      key: 'date'
+      key: 'date',
+      width: DATE_COLUMN_WIDTH
     }, {
       title: 'Actions',
       key: 'action',
+      width: ACTIONS_COLUMN_WIDTH,
       render: (text, record) => {
         let session = this.sessionFromUUID(record.key);
         return (
@@ -100,6 +105,7 @@ export default class SavedSessions extends Component {
       <Col span={12}>
         <Table
           pagination={false}
+          sticky={true}
           dataSource={dataSource}
           columns={columns}
           onRow={this.onRow}
