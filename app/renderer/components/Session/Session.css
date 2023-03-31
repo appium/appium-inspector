@@ -127,6 +127,10 @@
   overflow-y: auto;
 }
 
+.savedSessions :global(.ant-table-body .ant-table-cell) {
+  padding: 8px 16px;
+}
+
 .savedSessions :global(.ant-table::-webkit-scrollbar) {
   width: 0px;
 }
