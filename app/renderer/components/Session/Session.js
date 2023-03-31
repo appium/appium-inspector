@@ -96,7 +96,7 @@ export default class Session extends Component {
             label: t('Desired Capabilities'), key: 'new', className: SessionStyles.scrollingTab, children:
               <CapabilityEditor {...this.props} />
           }, {
-            label: (<span>{t('Saved Capability Sets')} <Badge count={savedSessions.length} /></span>),
+            label: (<span>{t('Saved Capability Sets')} <Badge count={savedSessions.length} offset={[0, -3]}/></span>),
             key: 'saved', className: SessionStyles.scrollingTab, disabled: savedSessions.length === 0, children:
               <SavedSessions {...this.props} />
           }, {
