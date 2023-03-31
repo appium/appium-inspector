@@ -106,7 +106,7 @@ export default class SavedSessions extends Component {
           rowClassName={this.getRowClassName}
         />
       </Col>
-      <Col span={12}>
+      <Col span={12} className={SessionStyles.capsFormattedCol}>
         <FormattedCaps {...this.props}
           title={capsUUID ? this.sessionFromUUID(capsUUID).name : null}
         />
