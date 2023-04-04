@@ -171,7 +171,7 @@
     "source-map-support": "0.5.21",
     "uuid": "8.3.2",
     "web2driver": "3.0.4",
-    "xmldom": "0.6.0",
+    "@xmldom/xmldom": "0.7.5",
     "xpath": "0.0.32"
   },
   "//devDependencies": {
