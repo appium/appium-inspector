@@ -17,9 +17,36 @@ export default class FormattedCaps extends Component {
   }
 
   render () {
-    const {caps, title, isEditingDesiredCaps, startDesiredCapsEditor, abortDesiredCapsEditor, saveRawDesiredCaps, setRawDesiredCaps, rawDesiredCaps,
+    const {caps, title, isEditingDesiredCapsTitle, startDesiredCapsTitleEditor, abortDesiredCapsTitleEditor, saveRawDesiredCapsTitle, setRawDesiredCapsTitle, rawDesiredCapsTitle,
+           isEditingDesiredCaps, startDesiredCapsEditor, abortDesiredCapsEditor, saveRawDesiredCaps, setRawDesiredCaps, rawDesiredCaps,
            isValidCapsJson, invalidCapsJsonReason, t} = this.props;
-    return caps && <Card title={title || 'JSON Representation'} className={SessionStyles.formattedCaps}>
+    return caps && <Card className={SessionStyles.formattedCaps}
+      title={!title ? 'JSON Representation' : (!isEditingDesiredCapsTitle ? title :
+        <textarea onChange={(e) => setRawDesiredCapsTitle(e.target.value)} value={rawDesiredCapsTitle} className={SessionStyles.capsEditorTitle} />
+      )}
+      extra={title && (
+        (!isEditingDesiredCapsTitle && <Tooltip title={t('Edit')}>
+          <Button
+            size='small'
+            onClick={startDesiredCapsTitleEditor}
+            icon={<EditOutlined/>}
+            className={SessionStyles.capsTitleEditorButton} />
+        </Tooltip>) ||
+        (isEditingDesiredCapsTitle && <div><Tooltip title={t('Cancel')}>
+          <Button
+            size='small'
+            onClick={abortDesiredCapsTitleEditor}
+            icon={<CloseOutlined/>}
+            className={SessionStyles.capsTitleEditorButton} />
+        </Tooltip>
+        <Tooltip title={t('Save')}>
+          <Button
+            size='small'
+            onClick={saveRawDesiredCapsTitle}
+            icon={<SaveOutlined/>}
+            className={SessionStyles.capsTitleEditorButton} />
+        </Tooltip></div>
+        ))}>
       <div className={SessionStyles.capsEditorControls}>
         {isEditingDesiredCaps && <Tooltip title={t('Cancel')}>
           <Button

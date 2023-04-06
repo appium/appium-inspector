@@ -154,11 +154,19 @@
   height: 100%;
 }
 
+.formattedCaps :global(.ant-card-head-title) {
+  height: 54px;
+}
+
 .formattedCaps :global(.ant-card-body) {
   height: calc(100% - 54px);
   padding: 0 14px 0 24px;
   flex: 1;
   overflow-y: auto;
+}
+
+.formattedCaps :global(.ant-card-extra) {
+  padding: 15px 0;
 }
 
 .formattedCapsBody pre {
@@ -220,6 +228,11 @@
   background-color: #d6e8ff;
 }
 
+.capsTitleEditorButton {
+  margin: 0 8px 0 0;
+  padding: 0;
+}
+
 .capsEditorControls {
   position: absolute;
   right: 0;
@@ -234,6 +247,14 @@
   width: 100%;
   height: 100%;
   padding: 24px 0;
+}
+
+.capsEditorTitle {
+  width: 98%;
+  height: 22px;
+  padding: 0;
+  margin: 0;
+  resize: none;
 }
 
 .capsEditorBody {
