@@ -135,6 +135,7 @@
     "ky": "Can't upgrade because newer versions are ESM and parcel tries to bundle them with require"
   },
   "dependencies": {
+    "@xmldom/xmldom": "0.8.7",
     "antd": "4.24.8",
     "bluebird": "3.7.2",
     "cheerio": "1.0.0-rc.10",
@@ -172,7 +173,6 @@
     "source-map-support": "0.5.21",
     "uuid": "8.3.2",
     "web2driver": "3.0.4",
-    "xmldom": "0.6.0",
     "xpath": "0.0.32"
   },
   "//devDependencies": {
@@ -198,7 +198,7 @@
     "electron": "13.6.9",
     "electron-builder": "23.6.0",
     "electron-devtools-installer": "3.2.0",
-    "eslint": "8.34.0",
+    "eslint": "8.37.0",
     "eslint-config-appium": "4.7.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-jsx-a11y": "6.7.1",
