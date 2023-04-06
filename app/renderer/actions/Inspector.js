@@ -721,7 +721,7 @@ export function keepSessionAlive () {
 
 export function callClientMethod (params) {
   return async (dispatch, getState) => {
-    const {driver, appMode, mjpegScreenshotUrl, isRefreshingSource} = getState().inspector;
+    const {driver, appMode, mjpegScreenshotUrl, isSourceRefreshOn} = getState().inspector;
     const {methodName, ignoreResult = true} = params;
     params.appMode = appMode;
 
@@ -730,7 +730,7 @@ export function callClientMethod (params) {
       params.skipScreenshot = true;
     }
 
-    if (!isRefreshingSource) {
+    if (!isSourceRefreshOn) {
       params.skipRefresh = true;
     }
 

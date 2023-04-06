@@ -32,7 +32,7 @@ const INITIAL_STATE = {
   lastActiveMoment: null,
   expandedPaths: ['0'],
   isRecording: false,
-  isRefreshingSource: true,
+  isSourceRefreshOn: true,
   showRecord: false,
   showBoilerplate: false,
   recordedActions: [],
@@ -614,7 +614,7 @@ export default function inspector (state = INITIAL_STATE, action) {
       return {...state, showSourceAttrs: !state.showSourceAttrs};
 
     case TOGGLE_REFRESHING_STATE:
-      return {...state, isRefreshingSource: !state.isRefreshingSource};
+      return {...state, isSourceRefreshOn: !state.isSourceRefreshOn};
 
     default:
       return {...state};

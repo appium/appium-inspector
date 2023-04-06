@@ -194,12 +194,12 @@ export default class Inspector extends Component {
            selectedInteractionMode, selectInteractionMode, selectAppMode, setVisibleCommandResult,
            showKeepAlivePrompt, keepSessionAlive, sourceXML, t, visibleCommandResult,
            mjpegScreenshotUrl, isAwaitingMjpegStream, toggleShowCentroids, showCentroids,
-           isGestureEditorVisible, toggleShowAttributes, isRefreshingSource, toggleRefreshingState, driver
+           isGestureEditorVisible, toggleShowAttributes, isSourceRefreshOn, toggleRefreshingState, driver
     } = this.props;
     const {path} = selectedElement;
 
     const showScreenshot = ((screenshot && !screenshotError) ||
-                            (mjpegScreenshotUrl && (!isRefreshingSource || !isAwaitingMjpegStream)));
+                            (mjpegScreenshotUrl && (!isSourceRefreshOn || !isAwaitingMjpegStream)));
 
     let screenShotControls = <div className={InspectorStyles['screenshot-controls']}>
       {(driver) && <DeviceActions {...this.props} />}
@@ -338,12 +338,12 @@ export default class Inspector extends Component {
       <Tooltip title={t('Back')}>
         <Button id='btnGoBack' icon={<ArrowLeftOutlined/>} onClick={() => applyClientMethod({methodName: 'back'})}/>
       </Tooltip>
-      {!isRefreshingSource &&
+      {!isSourceRefreshOn &&
         <Tooltip title={t('Start Refreshing Source')}>
           <Button id='btnStartRefreshing' icon={<PlayCircleOutlined/>} onClick={toggleRefreshingState}/>
         </Tooltip>
       }
-      {isRefreshingSource &&
+      {isSourceRefreshOn &&
         <Tooltip title={t('Pause Refreshing Source')}>
           <Button id='btnPauseRefreshing' icon={<PauseCircleOutlined/>} onClick={toggleRefreshingState}/>
         </Tooltip>

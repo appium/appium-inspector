@@ -283,36 +283,3 @@ export function addVendorPrefixes (caps) {
     return cap;
   });
 }
-
-
-/**
- * check if session is run on iOS device
- * @param  {Object}  caps  caps of session response
- * @return {Boolean}       true if run on iOS device
- */
-export function isIOS (caps) {
-  if (!caps) {
-    return false;
-  }
-
-  return Boolean(
-      (caps.platformName && caps.platformName.match(/iOS/i)) ||
-      (caps.deviceName && caps.deviceName.match(/(iPad|iPhone)/i))
-  );
-}
-
-/**
- * check if session is run on Android device
- * @param  {Object}  caps  caps of session response
- * @return {Boolean}       true if run on iOS device
- */
-export function isAndroid (caps) {
-  if (!caps) {
-    return false;
-  }
-
-  return Boolean(
-      (caps.platformName && caps.platformName.match(/Android/i)) ||
-      (caps.browserName && caps.browserName.match(/Android/i))
-  );
-}

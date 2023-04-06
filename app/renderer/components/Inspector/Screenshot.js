@@ -147,11 +147,11 @@ class Screenshot extends Component {
       scaleRatio,
       selectedTick,
       selectedInteractionMode,
-      isRefreshingSource
+      isSourceRefreshOn
     } = this.props;
     const {x, y} = this.state;
 
-    const showSpinner = (isRefreshingSource && !!methodCallInProgress);
+    const showSpinner = (isSourceRefreshOn && !!methodCallInProgress);
 
     // If we're tapping or swiping, show the 'crosshair' cursor style
     const screenshotStyle = {};
