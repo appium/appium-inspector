@@ -29,7 +29,7 @@ function buildSessionWindow () {
     width: 1280,
     height: 800,
     minWidth: 1000,
-    minHeight: 800,
+    minHeight: 700,
     titleBarStyle: 'hiddenInset',
     webPreferences: {
       nodeIntegration: true,

@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { Button, Row, Col, Table } from 'antd';
 import FormattedCaps from './FormattedCaps';
-import SessionCSS from './Session.css';
+import SessionStyles from './Session.css';
 import {
   EditOutlined,
   DeleteOutlined
 } from '@ant-design/icons';
+
+const DATE_COLUMN_WIDTH = '25%';
+const ACTIONS_COLUMN_WIDTH = '106px';
 
 export default class SavedSessions extends Component {
 
@@ -27,7 +30,7 @@ export default class SavedSessions extends Component {
 
   getRowClassName (record) {
     const {capsUUID} = this.props;
-    return capsUUID === record.key ? SessionCSS.selected : '';
+    return capsUUID === record.key ? SessionStyles.selected : '';
   }
 
   handleCapsAndServer (session) {
@@ -66,10 +69,12 @@ export default class SavedSessions extends Component {
     }, {
       title: 'Created',
       dataIndex: 'date',
-      key: 'date'
+      key: 'date',
+      width: DATE_COLUMN_WIDTH
     }, {
       title: 'Actions',
       key: 'action',
+      width: ACTIONS_COLUMN_WIDTH,
       render: (text, record) => {
         let session = this.sessionFromUUID(record.key);
         return (
@@ -77,7 +82,7 @@ export default class SavedSessions extends Component {
             <Button
               icon={<EditOutlined/>}
               onClick={() => {this.handleCapsAndServer(session); switchTabs('new');}}
-              className={SessionCSS['edit-session']}
+              className={SessionStyles.editSession}
             />
             <Button
               icon={<DeleteOutlined/>}
@@ -96,17 +101,18 @@ export default class SavedSessions extends Component {
       }));
     }
 
-    return (<Row className={SessionCSS['saved-sessions']}>
+    return (<Row className={SessionStyles.savedSessions}>
       <Col span={12}>
         <Table
           pagination={false}
+          sticky={true}
           dataSource={dataSource}
           columns={columns}
           onRow={this.onRow}
           rowClassName={this.getRowClassName}
         />
       </Col>
-      <Col span={12}>
+      <Col span={12} className={SessionStyles.capsFormattedCol}>
         <FormattedCaps {...this.props}
           title={capsUUID ? this.sessionFromUUID(capsUUID).name : null}
         />

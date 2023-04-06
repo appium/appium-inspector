@@ -24,8 +24,6 @@ export default class ServerTabLambdatest extends Component {
               onChange={(e) => setServerParam('username', e.target.value)} />
           </FormItem>
         </Col>
-      </Row>
-      <Row gutter={8}>
         <Col span={12}>
           <FormItem>
             <Input id='lambdatestPassword' type={INPUT.PASSWORD} placeholder={lambdatestAccessKeyPlaceholder} addonBefore={t('Lambdatest Access Key')}

@@ -315,7 +315,7 @@ class SelectedElement extends Component {
         </Row>
       }
       <Modal title={t('Send Keys')}
-        visible={sendKeysModalVisible}
+        open={sendKeysModalVisible}
         okText={t('Send Keys')}
         cancelText={t('Cancel')}
         onCancel={hideSendKeysModal}

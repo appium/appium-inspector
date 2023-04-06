@@ -5,15 +5,13 @@ import CapabilityEditor from './CapabilityEditor';
 import SavedSessions from './SavedSessions';
 import AttachToSession from './AttachToSession';
 import ServerTabCustom from './ServerTabCustom';
-import { Tabs, Button, Spin } from 'antd';
+import { Tabs, Button, Spin, Badge } from 'antd';
 import AdvancedServerParams from './AdvancedServerParams';
 import SessionStyles from './Session.css';
 import CloudProviders from './CloudProviders';
 import CloudProviderSelector from './CloudProviderSelector';
 import { LinkOutlined } from '@ant-design/icons';
 import { BUTTON } from '../../../../gui-common/components/AntdTypes';
-
-const {TabPane} = Tabs;
 
 const ADD_CLOUD_PROVIDER = 'addCloudProvider';
 
@@ -72,24 +70,20 @@ export default class Session extends Component {
       <Spin spinning={!!sessionLoading} key="main">
         <div className={SessionStyles.sessionContainer}>
           <div id='serverTypeTabs' className={SessionStyles.serverTab}>
-            <Tabs activeKey={serverType} onChange={(tab) => this.handleSelectServerTab(tab)} className={SessionStyles.serverTabs}>
-              {[
-                <TabPane tab={t('Appium Server')} key="remote">
-                  <ServerTabCustom {...this.props} />
-                </TabPane>,
-                ..._(visibleProviders).map((providerName) => {
-                  const provider = CloudProviders[providerName];
-                  if (!provider) {
-                    return true;
-                  }
+            <Tabs activeKey={serverType} onChange={(tab) => this.handleSelectServerTab(tab)} className={SessionStyles.serverTabs} items={[{
+              label: t('Appium Server'), key: 'remote', children:
+                <ServerTabCustom {...this.props} />
+            },
+            ..._(visibleProviders).map((providerName) => {
+              const provider = CloudProviders[providerName];
+              if (!provider) {
+                return true;
+              }
 
-                  return <TabPane key={providerName} tab={<div>{provider.tabhead()}</div>}>
-                    {provider.tab(this.props)}
-                  </TabPane>;
-                }),
-                <TabPane tab={<span className='addCloudProviderTab'>{ t('Select Cloud Providers') }</span>} key={ADD_CLOUD_PROVIDER}></TabPane>
-              ]}
-            </Tabs>
+              return {label: <div>{provider.tabhead()}</div>, key: providerName, children: provider.tab(this.props)};
+            }),
+            {label: <span className='addCloudProviderTab'>{ t('Select Cloud Providers') }</span>, key: ADD_CLOUD_PROVIDER}
+            ]}/>
             <AdvancedServerParams {...this.props} />
           </div>
 
@@ -98,17 +92,17 @@ export default class Session extends Component {
             <p>{t('sessionInProgress')}</p>
           </div>}
 
-          {!newSessionBegan && <Tabs activeKey={tabKey} onChange={switchTabs} className={SessionStyles.scrollingTabCont}>
-            <TabPane tab={t('Desired Capabilities')} key='new' className={SessionStyles.scrollingTab}>
+          {!newSessionBegan && <Tabs activeKey={tabKey} onChange={switchTabs} className={SessionStyles.scrollingTabCont} items={[{
+            label: t('Desired Capabilities'), key: 'new', className: SessionStyles.scrollingTab, children:
               <CapabilityEditor {...this.props} />
-            </TabPane>
-            <TabPane tab={t('Saved Capability Sets', {savedSessionsCount: savedSessions.length})} key='saved' className={SessionStyles.scrollingTab} disabled={savedSessions.length === 0}>
+          }, {
+            label: (<span>{t('Saved Capability Sets')} <Badge count={savedSessions.length} offset={[0, -3]}/></span>),
+            key: 'saved', className: SessionStyles.scrollingTab, disabled: savedSessions.length === 0, children:
               <SavedSessions {...this.props} />
-            </TabPane>
-            <TabPane tab={t('Attach to Session')} key='attach' className={SessionStyles.scrollingTab}>
+          }, {
+            label: t('Attach to Session'), key: 'attach', className: SessionStyles.scrollingTab, children:
               <AttachToSession {...this.props} />
-            </TabPane>
-          </Tabs>}
+          }]}/>}
 
           <div className={SessionStyles.sessionFooter}>
             <div className={SessionStyles.desiredCapsLink}>

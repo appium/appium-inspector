@@ -411,7 +411,9 @@ export function newSession (caps, attachSessId = null) {
         host = session.server.testingbot.hostname = process.env.TB_HOST || 'hub.testingbot.com';
         port = session.server.testingbot.port = 443;
         path = session.server.testingbot.path = '/wd/hub';
-        desiredCapabilities['tb:options'] = {};
+        if (!desiredCapabilities['tb:options']) {
+          desiredCapabilities['tb:options'] = {};
+        }
         desiredCapabilities['tb:options'].key = session.server.testingbot.key || process.env.TB_KEY;
         desiredCapabilities['tb:options'].secret = session.server.testingbot.secret || process.env.TB_SECRET;
         if (!(session.server.testingbot.key || process.env.TB_KEY) ||
