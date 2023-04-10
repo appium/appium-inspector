@@ -3,6 +3,7 @@ import { Tree } from 'antd';
 import LocatorTestModal from './LocatorTestModal';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
+import SiriCommandModal from './SiriCommandModal';
 
 const IMPORTANT_ATTRS = [
   'name',
@@ -97,6 +98,7 @@ class Source extends Component {
         sourceError && t('couldNotObtainSource', {errorMsg: JSON.stringify(sourceError)})
       }
       <LocatorTestModal {...this.props} />
+      <SiriCommandModal {...this.props} />
     </div>;
   }
 }

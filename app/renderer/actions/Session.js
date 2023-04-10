@@ -74,6 +74,7 @@ const FILE_PATH_STORAGE_KEY = 'last_opened_file';
 const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to turn it on
 
 const MJPEG_CAP = 'mjpegScreenshotUrl';
+const MJPEG_PORT_CAP = 'mjpegServerPort';
 
 // Multiple requests sometimes send a new session request
 // after establishing a session.
@@ -521,12 +522,14 @@ export function newSession (caps, attachSessId = null) {
     let driver = null;
     try {
       if (attachSessId) {
-        // When attaching to a session id, webdriver does not check if the device
-        // is mobile or not. Since we're attaching in appium-inspector, we can
-        // assume the device is mobile so that Appium protocols are included
-        // in the userPrototype.
+        // When attaching to a session id, webdriver does not fully populdate
+        // client information, so we should supplement by attaching session
+        // capabilities that we are attaching to.
+        const attachedSessionCaps = session.runningAppiumSessions.find((session) => session.id === attachSessId).capabilities;
         serverOpts.isMobile = true;
-        driver = await Web2Driver.attachToSession(attachSessId, serverOpts);
+        serverOpts.isIOS = Boolean(attachedSessionCaps.platformName.match(/iOS/i));
+        serverOpts.isAndroid = Boolean(attachedSessionCaps.platformName.match(/Android/i));
+        driver = await Web2Driver.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
         driver._isAttachedSession = true;
       } else {
         driver = await Web2Driver.remote(serverOpts, desiredCapabilities);
@@ -554,10 +557,18 @@ export function newSession (caps, attachSessId = null) {
     }
 
 
-    const mjpegScreenshotUrl = desiredCapabilities[`appium:${MJPEG_CAP}`] ||
-      desiredCapabilities[MJPEG_CAP] ||
+    let mjpegScreenshotUrl = driver.capabilities[`appium:${MJPEG_CAP}`] ||
+      driver.capabilities[MJPEG_CAP] ||
       null;
 
+    const mjpegScreenshotPort = driver.capabilities[`appium:${MJPEG_PORT_CAP}`] ||
+      driver.capabilities[MJPEG_PORT_CAP] ||
+      null;
+
+    // Build mjpegScreenshotUrl if mjpegServerPort in session capabilities
+    if (!mjpegScreenshotUrl && mjpegScreenshotPort) {
+      mjpegScreenshotUrl = `${https ? 'https' : 'http'}://${host}:${mjpegScreenshotPort}`;
+    }
 
     // pass some state to the inspector that it needs to build recorder
     // code boilerplate
@@ -573,7 +584,7 @@ export function newSession (caps, attachSessId = null) {
         https,
       },
       mode,
-      mjpegScreenshotUrl,
+      mjpegScreenshotUrl
     });
     action(dispatch);
     dispatch(push('/inspector'));
