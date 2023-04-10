@@ -20,6 +20,8 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   ReloadOutlined,
+  PlayCircleOutlined,
+  PauseCircleOutlined,
   EyeOutlined,
   PauseOutlined,
   SearchOutlined,
@@ -33,9 +35,10 @@ import {
   HighlightOutlined,
   AppstoreOutlined,
   GlobalOutlined,
-  CodeOutlined,
+  CodeOutlined
 } from '@ant-design/icons';
 import { BUTTON } from '../../../../gui-common/components/AntdTypes';
+import DeviceActions from './DeviceActions';
 
 const {SELECT, SWIPE, TAP} = SCREENSHOT_INTERACTION_MODE;
 
@@ -191,13 +194,15 @@ export default class Inspector extends Component {
            selectedInteractionMode, selectInteractionMode, selectAppMode, setVisibleCommandResult,
            showKeepAlivePrompt, keepSessionAlive, sourceXML, t, visibleCommandResult,
            mjpegScreenshotUrl, isAwaitingMjpegStream, toggleShowCentroids, showCentroids,
-           isGestureEditorVisible, toggleShowAttributes} = this.props;
+           isGestureEditorVisible, toggleShowAttributes, isSourceRefreshOn, toggleRefreshingState, driver
+    } = this.props;
     const {path} = selectedElement;
 
     const showScreenshot = ((screenshot && !screenshotError) ||
-                            (mjpegScreenshotUrl && !isAwaitingMjpegStream));
+                            (mjpegScreenshotUrl && (!isSourceRefreshOn || !isAwaitingMjpegStream)));
 
     let screenShotControls = <div className={InspectorStyles['screenshot-controls']}>
+      {(driver) && <DeviceActions {...this.props} />}
       <div className={InspectorStyles['action-controls']}>
         <Tooltip title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')} placement="topRight">
           <Switch
@@ -333,6 +338,16 @@ export default class Inspector extends Component {
       <Tooltip title={t('Back')}>
         <Button id='btnGoBack' icon={<ArrowLeftOutlined/>} onClick={() => applyClientMethod({methodName: 'back'})}/>
       </Tooltip>
+      {!isSourceRefreshOn &&
+        <Tooltip title={t('Start Refreshing Source')}>
+          <Button id='btnStartRefreshing' icon={<PlayCircleOutlined/>} onClick={toggleRefreshingState}/>
+        </Tooltip>
+      }
+      {isSourceRefreshOn &&
+        <Tooltip title={t('Pause Refreshing Source')}>
+          <Button id='btnPauseRefreshing' icon={<PauseCircleOutlined/>} onClick={toggleRefreshingState}/>
+        </Tooltip>
+      }
       <Tooltip title={t('refreshSource')}>
         <Button id='btnReload' icon={<ReloadOutlined/>} onClick={() => applyClientMethod({methodName: 'getPageSource'})}/>
       </Tooltip>

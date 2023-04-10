@@ -105,11 +105,11 @@ export default class AppiumClient {
       }
     }
 
-    // Give the source/screenshot time to change before taking the screenshot
-    await Bluebird.delay(500);
 
     let contextUpdate = {}, sourceUpdate = {}, screenshotUpdate = {}, windowSizeUpdate = {};
     if (!skipRefresh) {
+      // Give the source/screenshot time to change before taking the screenshot
+      await Bluebird.delay(500);
       if (!skipScreenshot) {
         screenshotUpdate = await this.getScreenshotUpdate();
       }

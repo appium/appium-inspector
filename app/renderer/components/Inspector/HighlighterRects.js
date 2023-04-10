@@ -225,7 +225,7 @@ export default class HighlighterRects extends Component {
 
   render () {
     const {source, screenshotInteractionMode, containerEl, searchedForElementBounds,
-           isLocatorTestModalVisible, scaleRatio, showCentroids} = this.props;
+           isLocatorTestModalVisible, isSiriCommandModalVisible, scaleRatio, showCentroids} = this.props;
 
     // Array of all element objects with properties to draw rectangles and/or centroids
     const elements = this.getElements(source);
@@ -279,7 +279,7 @@ export default class HighlighterRects extends Component {
     }
 
     // Don't show highlighter rects when Search Elements modal is open
-    if (!isLocatorTestModalVisible) {
+    if (!isLocatorTestModalVisible && !isSiriCommandModalVisible) {
       renderElements(elements);
       if (showCentroids) {
         renderCentroids(elements);
