@@ -32,7 +32,7 @@ class DeviceActions extends Component {
         <Tooltip title={t('Press Home button')}>
           <Button id='btnPressHomeButton' icon={<BiCircle className={InspectorStyles['custom-button-icon']}/>} onClick={() => applyClientMethod({ methodName: 'pressKeyCode', args: [3]})}/>
         </Tooltip>
-        <Tooltip title={t('Press Overview button')}>
+        <Tooltip title={t('Press App Switch button')}>
           <Button id='btnPressHomeButton' icon={<BiSquare className={InspectorStyles['custom-button-icon']}/>} onClick={() => applyClientMethod({ methodName: 'pressKeyCode', args: [187]})}/>
         </Tooltip>
       </div>}
