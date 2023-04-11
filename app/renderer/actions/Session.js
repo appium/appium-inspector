@@ -522,7 +522,7 @@ export function newSession (caps, attachSessId = null) {
     let driver = null;
     try {
       if (attachSessId) {
-        // When attaching to a session id, webdriver does not fully populdate
+        // When attaching to a session id, webdriver does not fully populate
         // client information, so we should supplement by attaching session
         // capabilities that we are attaching to.
         const attachedSessionCaps = session.runningAppiumSessions.find((session) => session.id === attachSessId).capabilities;
