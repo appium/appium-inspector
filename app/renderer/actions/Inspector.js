@@ -222,7 +222,7 @@ export function applyClientMethod (params) {
              variableIndex, strategy, selector} = await callAction(dispatch, getState);
 
       // TODO: Implement recorder code for gestures
-      if (isRecording) {
+      if (isRecording && !params.skipRecord) {
         // Add 'findAndAssign' line of code. Don't do it for arrays though. Arrays already have 'find' expression
         if (strategy && selector && !variableIndex && variableIndex !== 0) {
           const findAction = findAndAssign(strategy, selector, variableName, false);
@@ -546,7 +546,7 @@ export function getActiveAppId (isIOS, isAndroid) {
 
 export function getServerStatus () {
   return async (dispatch, getState) => {
-    const status = applyClientMethod({methodName: 'status'});
+    const status = applyClientMethod({methodName: 'status', skipRecord: true});
     const { build } = await status(dispatch, getState);
     dispatch({type: SET_SERVER_STATUS, status: build});
   };
