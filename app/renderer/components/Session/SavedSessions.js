@@ -22,8 +22,7 @@ export default class SavedSessions extends Component {
   onRow (record) {
     return {
       onClick: () => {
-        let session = this.sessionFromUUID(record.key);
-        this.handleCapsAndServer(session);
+        this.handleCapsAndServer(record.key);
       }
     };
   }
@@ -33,8 +32,9 @@ export default class SavedSessions extends Component {
     return capsUUID === record.key ? SessionStyles.selected : '';
   }
 
-  handleCapsAndServer (session) {
+  handleCapsAndServer (uuid) {
     const {setCapsAndServer, server, serverType } = this.props;
+    const session = this.sessionFromUUID(uuid);
 
     // Incase user has CAPS saved from older version of Inspector which
     // doesn't contain server and serverType within the session object
@@ -75,21 +75,16 @@ export default class SavedSessions extends Component {
       title: 'Actions',
       key: 'action',
       width: ACTIONS_COLUMN_WIDTH,
-      render: (text, record) => {
-        let session = this.sessionFromUUID(record.key);
-        return (
-          <div>
-            <Button
-              icon={<EditOutlined/>}
-              onClick={() => {this.handleCapsAndServer(session); switchTabs('new');}}
-              className={SessionStyles.editSession}
-            />
-            <Button
-              icon={<DeleteOutlined/>}
-              onClick={this.handleDelete(session.uuid)}/>
-          </div>
-        );
-      }
+      render: (text, record) => <div>
+        <Button
+          icon={<EditOutlined/>}
+          onClick={() => {this.handleCapsAndServer(record.key); switchTabs('new');}}
+          className={SessionStyles.editSession}
+        />
+        <Button
+          icon={<DeleteOutlined/>}
+          onClick={this.handleDelete(record.key)}/>
+      </div>
     }];
 
     let dataSource = [];
