@@ -49,8 +49,9 @@ any other command: `./Appium-Inspector-linux.AppImage`.
 * Start and stop "recording" mode, which translates your actions in the Inspector to code samples you can use in your scripts
 * Start and stop "source refreshing", which allows you to interact with screen without reloading page source after every request
 * Tap on the screen at an arbitrary location
-* Simulate system buttons for iOS (home/Siri) and Android (back/home/app switch)
 * Perform a swipe gesture
+* Simulate system buttons for iOS (home) and Android (back/home/app switch)
+* Simulate Siri commands for iOS
 * Switch into web context modes and interact with web elements
 * Test out your own locator strategies
 * Access a huge library of Appium actions to run with a simple click, including providing your own parameters
