@@ -33,7 +33,7 @@ export default class Framework {
   }
 
   get serverUrl () {
-    return `${this.scheme}://${this.host}:${this.port}${this.path}`;
+    return `${this.scheme}://${this.host}:${this.port}${this.path === '/' ? '' : this.path}`;
   }
 
   get name () {
