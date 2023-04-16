@@ -24,7 +24,7 @@ jobs:
       name: Install dependencies
     - run: npm run copy-en-i18n ./appium-desktop
       name: Copy English resources
-    - run: npm run crowdin-sync
+    - run: node ./ci-jobs/crowdin-update-resources.js
       name: Crowdin Sync
       env:
         CROWDIN_PROJECT_ID: appium-desktop
