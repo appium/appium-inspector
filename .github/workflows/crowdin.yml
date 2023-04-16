@@ -19,7 +19,8 @@ jobs:
         node-version: 16.x
         cache: 'npm'
     - run: npm ci
-    - run: npm run crowdin-update
+    - run: node ./ci-jobs/crowdin-update-resources.js
       env:
+        CROWDIN_PROJECT_ID: appium-desktop
         CROWDIN_PROJECT_KEY: $(CROWDIN_PROJECT_KEY)
       name: Crowdin Update
