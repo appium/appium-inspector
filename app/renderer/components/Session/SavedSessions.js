@@ -38,7 +38,7 @@ export default class SavedSessions extends Component {
 
     // Incase user has CAPS saved from older version of Inspector which
     // doesn't contain server and serverType within the session object
-    setCapsAndServer(session.server || server, session.serverType || serverType, session.caps, session.uuid);
+    setCapsAndServer(session.server || server, session.serverType || serverType, session.caps, session.uuid, session.name);
   }
 
   handleDelete (uuid) {
