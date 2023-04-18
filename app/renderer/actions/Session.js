@@ -552,7 +552,7 @@ export function newSession (caps, attachSessId = null) {
     if (browserName.trim() !== '') {
       try {
         mode = APP_MODE.WEB_HYBRID;
-        await driver.navigateTo('http://appium.io/docs/en/about-appium/intro/');
+        await driver.navigateTo('https://appium.io');
       } catch (ign) {}
     }
 
