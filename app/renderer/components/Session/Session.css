@@ -156,6 +156,7 @@
 
 .formattedCaps :global(.ant-card-head-title) {
   height: 54px;
+  padding-right: 10px;
 }
 
 .formattedCaps :global(.ant-card-body) {
@@ -250,7 +251,7 @@
 }
 
 .capsEditorTitle {
-  width: 98%;
+  width: 100%;
   height: 22px;
   padding: 0;
   margin: 0;

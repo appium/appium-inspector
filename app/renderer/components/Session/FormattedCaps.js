@@ -22,7 +22,7 @@ export default class FormattedCaps extends Component {
            isValidCapsJson, invalidCapsJsonReason, t} = this.props;
     return caps && <Card className={SessionStyles.formattedCaps}
       title={!title ? 'JSON Representation' : (!isEditingDesiredCapsName ? title :
-        <textarea onChange={(e) => setRawDesiredCapsName(e.target.value)} value={rawDesiredCapsName} className={SessionStyles.capsEditorTitle} />
+        <input onChange={(e) => setRawDesiredCapsName(e.target.value)} value={rawDesiredCapsName} className={SessionStyles.capsEditorTitle} />
       )}
       extra={title && (
         (!isEditingDesiredCapsName && <Tooltip title={t('Edit')}>
