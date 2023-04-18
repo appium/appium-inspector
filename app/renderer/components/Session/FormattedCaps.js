@@ -17,34 +17,34 @@ export default class FormattedCaps extends Component {
   }
 
   render () {
-    const {caps, title, isEditingDesiredCapsTitle, startDesiredCapsTitleEditor, abortDesiredCapsTitleEditor, saveRawDesiredCapsTitle, setRawDesiredCapsTitle, rawDesiredCapsTitle,
+    const {caps, title, isEditingDesiredCapsName, startDesiredCapsNameEditor, abortDesiredCapsNameEditor, saveRawDesiredCapsName, setRawDesiredCapsName, rawDesiredCapsName,
            isEditingDesiredCaps, startDesiredCapsEditor, abortDesiredCapsEditor, saveRawDesiredCaps, setRawDesiredCaps, rawDesiredCaps,
            isValidCapsJson, invalidCapsJsonReason, t} = this.props;
     return caps && <Card className={SessionStyles.formattedCaps}
-      title={!title ? 'JSON Representation' : (!isEditingDesiredCapsTitle ? title :
-        <textarea onChange={(e) => setRawDesiredCapsTitle(e.target.value)} value={rawDesiredCapsTitle} className={SessionStyles.capsEditorTitle} />
+      title={!title ? 'JSON Representation' : (!isEditingDesiredCapsName ? title :
+        <textarea onChange={(e) => setRawDesiredCapsName(e.target.value)} value={rawDesiredCapsName} className={SessionStyles.capsEditorTitle} />
       )}
       extra={title && (
-        (!isEditingDesiredCapsTitle && <Tooltip title={t('Edit')}>
+        (!isEditingDesiredCapsName && <Tooltip title={t('Edit')}>
           <Button
             size='small'
-            onClick={startDesiredCapsTitleEditor}
+            onClick={startDesiredCapsNameEditor}
             icon={<EditOutlined/>}
-            className={SessionStyles.capsTitleEditorButton} />
+            className={SessionStyles.capsNameEditorButton} />
         </Tooltip>) ||
-        (isEditingDesiredCapsTitle && <div><Tooltip title={t('Cancel')}>
+        (isEditingDesiredCapsName && <div><Tooltip title={t('Cancel')}>
           <Button
             size='small'
-            onClick={abortDesiredCapsTitleEditor}
+            onClick={abortDesiredCapsNameEditor}
             icon={<CloseOutlined/>}
-            className={SessionStyles.capsTitleEditorButton} />
+            className={SessionStyles.capsNameEditorButton} />
         </Tooltip>
         <Tooltip title={t('Save')}>
           <Button
             size='small'
-            onClick={saveRawDesiredCapsTitle}
+            onClick={saveRawDesiredCapsName}
             icon={<SaveOutlined/>}
-            className={SessionStyles.capsTitleEditorButton} />
+            className={SessionStyles.capsNameEditorButton} />
         </Tooltip></div>
         ))}>
       <div className={SessionStyles.capsEditorControls}>
