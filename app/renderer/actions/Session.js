@@ -46,6 +46,10 @@ export const SET_ATTACH_SESS_ID = 'SET_ATTACH_SESS_ID';
 export const GET_SESSIONS_REQUESTED = 'GET_SESSIONS_REQUESTED';
 export const GET_SESSIONS_DONE = 'GET_SESSIONS_DONE';
 
+export const ENABLE_DESIRED_CAPS_NAME_EDITOR = 'ENABLE_DESIRED_CAPS_NAME_EDITOR';
+export const ABORT_DESIRED_CAPS_NAME_EDITOR = 'ABORT_DESIRED_CAPS_NAME_EDITOR';
+export const SAVE_DESIRED_CAPS_NAME = 'SAVE_DESIRED_CAPS_NAME';
+export const SET_DESIRED_CAPS_NAME = 'SET_DESIRED_CAPS_NAME';
 
 export const ENABLE_DESIRED_CAPS_EDITOR = 'ENABLE_DESIRED_CAPS_EDITOR';
 export const ABORT_DESIRED_CAPS_EDITOR = 'ABORT_DESIRED_CAPS_EDITOR';
@@ -162,9 +166,9 @@ export function showError (e, methodName, secs = 5) {
 /**
  * Change the caps object, along with the server details and then go back to the new session tab
  */
-export function setCapsAndServer (server, serverType, caps, uuid) {
+export function setCapsAndServer (server, serverType, caps, uuid, name) {
   return (dispatch) => {
-    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid});
+    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name});
   };
 }
 
@@ -205,9 +209,9 @@ export function removeCapability (index) {
 }
 
 function _addVendorPrefixes (caps, dispatch, getState) {
-  const {server, serverType, capsUUID} = getState().session;
+  const {server, serverType, capsUUID, capsName} = getState().session;
   const prefixedCaps = addVendorPrefixes(caps);
-  setCapsAndServer(server, serverType, prefixedCaps, capsUUID)(dispatch);
+  setCapsAndServer(server, serverType, prefixedCaps, capsUUID, capsName)(dispatch);
   return prefixedCaps;
 }
 
@@ -618,6 +622,7 @@ export function saveSession (server, serverType, caps, params) {
       // If it's an existing session, overwrite it
       for (let session of savedSessions) {
         if (session.uuid === uuid) {
+          session.name = name;
           session.caps = caps;
           session.server = server;
           session.serverType = serverType;
@@ -627,7 +632,7 @@ export function saveSession (server, serverType, caps, params) {
     await setSetting(SAVED_SESSIONS, savedSessions);
     const action = getSavedSessions();
     await action(dispatch);
-    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid});
+    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name});
     dispatch({type: SAVE_SESSION_DONE});
   };
 }
@@ -866,6 +871,32 @@ export function getRunningSessions () {
       console.warn(`Ignoring error in getting list of active sessions: ${err}`); // eslint-disable-line no-console
       dispatch({type: GET_SESSIONS_DONE});
     }
+  };
+}
+
+export function startDesiredCapsNameEditor () {
+  return (dispatch) => {
+    dispatch({type: ENABLE_DESIRED_CAPS_NAME_EDITOR});
+  };
+}
+
+export function abortDesiredCapsNameEditor () {
+  return (dispatch) => {
+    dispatch({type: ABORT_DESIRED_CAPS_NAME_EDITOR});
+  };
+}
+
+export function saveDesiredCapsName () {
+  return (dispatch, getState) => {
+    const {server, serverType, caps, capsUUID, desiredCapsName} = getState().session;
+    dispatch({type: SAVE_DESIRED_CAPS_NAME, name: desiredCapsName});
+    saveSession(server, serverType, caps, {name: desiredCapsName, uuid: capsUUID})(dispatch);
+  };
+}
+
+export function setDesiredCapsName (desiredCapsName) {
+  return (dispatch) => {
+    dispatch({type: SET_DESIRED_CAPS_NAME, desiredCapsName});
   };
 }
 
