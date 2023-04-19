@@ -37,7 +37,7 @@ import {
   GlobalOutlined,
   CodeOutlined
 } from '@ant-design/icons';
-import { BUTTON } from '../../../../gui-common/components/AntdTypes';
+import { BUTTON } from '../AntdTypes';
 import DeviceActions from './DeviceActions';
 
 const {SELECT, SWIPE, TAP} = SCREENSHOT_INTERACTION_MODE;

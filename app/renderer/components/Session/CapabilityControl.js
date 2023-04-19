@@ -3,7 +3,7 @@ import { Switch, Input } from 'antd';
 import SessionStyles from './Session.css';
 import { remote, log } from '../../polyfills';
 import { FileOutlined } from '@ant-design/icons';
-import { INPUT } from '../../../../gui-common/components/AntdTypes';
+import { INPUT } from '../AntdTypes';
 import _ from 'lodash';
 import { APPIUM_SESSION_EXTENSION } from '../../../main/helpers';
 

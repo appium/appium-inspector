@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { Row, Col, Button, Select, Modal, Input, Switch, notification, } from 'antd';
 import { actionDefinitions, actionArgTypes } from './shared';
 import InspectorStyles from './Inspector.css';
-import { INPUT } from '../../../../gui-common/components/AntdTypes';
+import { INPUT } from '../AntdTypes';
 
 export default class Actions extends Component {
 
