@@ -124,7 +124,9 @@ This app shares components and utilities with [Appium Desktop](https://github.co
 
 ### Localization
 
-We try to use only localized strings (`t('localizationKey')`). If you find yourself needing to add strings, you'll need to do that in the [Appium Desktop repo](https://github.com/appium/appium-desktop)'s English translation file, as the strings for both apps are maintained there for a variety of reasons. Once the string changes have been merged, you can run `npm run copy-en-i18n <path-to-appium-desktop-dir>` to copy them over and commit them as part of your Inspector change.
+We try to use only localized strings (`t('localizationKey')`), which are synchronized with [Crowdin](https://crowdin.com/project/appium-desktop). If you would like to contribute translations, please leave your suggestions on Crowdin.
+
+If you find yourself needing to add completely new strings, you'll need to first add them in the [English translation file](assets/locales/en/translation.json). After your changes are merged, the new strings will be added to Crowdin, and become available for translation into other languages.
 
 ### Publishing new versions
 

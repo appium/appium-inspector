@@ -18,12 +18,8 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 16.x
-    - run: git clone https://github.com/appium/appium-desktop.git
-      name: Clone server repo
     - run: npm ci
       name: Install dependencies
-    - run: npm run copy-en-i18n ./appium-desktop
-      name: Copy English resources
     - run: npm run crowdin-sync
       name: Crowdin Sync
       env:
