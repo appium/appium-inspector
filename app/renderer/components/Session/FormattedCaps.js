@@ -17,12 +17,12 @@ export default class FormattedCaps extends Component {
   }
 
   render () {
-    const {caps, title, isEditingDesiredCapsName, startDesiredCapsNameEditor, abortDesiredCapsNameEditor, saveRawDesiredCapsName, setRawDesiredCapsName, rawDesiredCapsName,
+    const {caps, title, isEditingDesiredCapsName, startDesiredCapsNameEditor, abortDesiredCapsNameEditor, saveDesiredCapsName, setDesiredCapsName, desiredCapsName,
            isEditingDesiredCaps, startDesiredCapsEditor, abortDesiredCapsEditor, saveRawDesiredCaps, setRawDesiredCaps, rawDesiredCaps,
            isValidCapsJson, invalidCapsJsonReason, t} = this.props;
     return caps && <Card className={SessionStyles.formattedCaps}
       title={!title ? 'JSON Representation' : (!isEditingDesiredCapsName ? title :
-        <input onChange={(e) => setRawDesiredCapsName(e.target.value)} value={rawDesiredCapsName} className={SessionStyles.capsEditorTitle} />
+        <input onChange={(e) => setDesiredCapsName(e.target.value)} value={desiredCapsName} className={SessionStyles.capsEditorTitle} />
       )}
       extra={title && (
         (!isEditingDesiredCapsName && <Tooltip title={t('Edit')}>
@@ -42,7 +42,7 @@ export default class FormattedCaps extends Component {
         <Tooltip title={t('Save')}>
           <Button
             size='small'
-            onClick={saveRawDesiredCapsName}
+            onClick={saveDesiredCapsName}
             icon={<SaveOutlined/>}
             className={SessionStyles.capsNameEditorButton} />
         </Tooltip></div>

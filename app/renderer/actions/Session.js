@@ -48,8 +48,8 @@ export const GET_SESSIONS_DONE = 'GET_SESSIONS_DONE';
 
 export const ENABLE_DESIRED_CAPS_NAME_EDITOR = 'ENABLE_DESIRED_CAPS_NAME_EDITOR';
 export const ABORT_DESIRED_CAPS_NAME_EDITOR = 'ABORT_DESIRED_CAPS_NAME_EDITOR';
-export const SAVE_RAW_DESIRED_CAPS_NAME = 'SAVE_RAW_DESIRED_CAPS_NAME';
-export const SET_RAW_DESIRED_CAPS_NAME = 'SET_RAW_DESIRED_CAPS_NAME';
+export const SAVE_DESIRED_CAPS_NAME = 'SAVE_DESIRED_CAPS_NAME';
+export const SET_DESIRED_CAPS_NAME = 'SET_DESIRED_CAPS_NAME';
 
 export const ENABLE_DESIRED_CAPS_EDITOR = 'ENABLE_DESIRED_CAPS_EDITOR';
 export const ABORT_DESIRED_CAPS_EDITOR = 'ABORT_DESIRED_CAPS_EDITOR';
@@ -886,17 +886,17 @@ export function abortDesiredCapsNameEditor () {
   };
 }
 
-export function saveRawDesiredCapsName () {
+export function saveDesiredCapsName () {
   return (dispatch, getState) => {
-    const {server, serverType, caps, capsUUID, rawDesiredCapsName} = getState().session;
-    dispatch({type: SAVE_RAW_DESIRED_CAPS_NAME, name: rawDesiredCapsName});
-    saveSession(server, serverType, caps, {name: rawDesiredCapsName, uuid: capsUUID})(dispatch);
+    const {server, serverType, caps, capsUUID, desiredCapsName} = getState().session;
+    dispatch({type: SAVE_DESIRED_CAPS_NAME, name: desiredCapsName});
+    saveSession(server, serverType, caps, {name: desiredCapsName, uuid: capsUUID})(dispatch);
   };
 }
 
-export function setRawDesiredCapsName (rawDesiredCapsName) {
+export function setDesiredCapsName (desiredCapsName) {
   return (dispatch) => {
-    dispatch({type: SET_RAW_DESIRED_CAPS_NAME, rawDesiredCapsName});
+    dispatch({type: SET_DESIRED_CAPS_NAME, desiredCapsName});
   };
 }
 
