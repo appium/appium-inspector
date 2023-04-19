@@ -20,7 +20,6 @@ jobs:
       USE_HARD_LINKS: 'false'
     steps:
     - checkout: self
-      submodules: true
       persistCredentials: true
     - task: NodeTool@0
       inputs:
