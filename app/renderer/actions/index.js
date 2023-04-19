@@ -1,6 +1,6 @@
 import * as inspectorActions from './Inspector';
 import * as sessionActions from './Session';
-import * as updaterActions from '../../../gui-common/actions/Updater';
+import * as updaterActions from './Updater';
 
 export default {
   ...inspectorActions,
