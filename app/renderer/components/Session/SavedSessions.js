@@ -33,8 +33,17 @@ export default class SavedSessions extends Component {
   }
 
   handleCapsAndServer (uuid) {
-    const {setCapsAndServer, server, serverType } = this.props;
+    const {setCapsAndServer, server, serverType, isEditingDesiredCapsName, abortDesiredCapsNameEditor,
+           isEditingDesiredCaps, abortDesiredCapsEditor} = this.props;
     const session = this.sessionFromUUID(uuid);
+
+    // Disable any editors before changing the selected caps
+    if (isEditingDesiredCapsName) {
+      abortDesiredCapsNameEditor();
+    }
+    if (isEditingDesiredCaps) {
+      abortDesiredCapsEditor();
+    }
 
     // Incase user has CAPS saved from older version of Inspector which
     // doesn't contain server and serverType within the session object
