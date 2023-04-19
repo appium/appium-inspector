@@ -1,11 +1,12 @@
-import { getAutoUpdaterFeedUrl } from '../../../gui-common/util';
-
 const baseFeedUrl = `https://appium-inspector-hazel.vercel.app`;
 
 export function getFeedUrl (version) {
-  return getAutoUpdaterFeedUrl(version, baseFeedUrl);
+  let platform = process.platform;
+  if (platform.toLowerCase() === 'linux') {
+    platform = 'AppImage';
+  }
+  return `${baseFeedUrl}/update/${platform}/${version}`;
 }
 export default {
-  baseFeedUrl,
   getFeedUrl,
 };
