@@ -1,6 +1,6 @@
 import { app, shell, dialog, Menu } from 'electron';
 import { checkNewUpdates } from './auto-updater';
-import { launchNewSessionWindow } from '../main';
+import { launchNewSessionWindow } from './windows';
 import config from '../configs/app.config';
 import i18n from '../configs/i18next.config';
 import { APPIUM_SESSION_EXTENSION } from './helpers';
