@@ -1,13 +1,9 @@
 import { app } from 'electron';
-import { installExtensions } from '../gui-common/debug';
+import { installExtensions } from './main/debug';
 import { setupMainWindow } from './main/windows';
 import { getAppiumSessionFilePath } from './main/helpers';
 
 const isDev = process.env.NODE_ENV === 'development';
-
-if (isDev) {
-  require('electron-debug')(); // eslint-disable-line global-require
-}
 
 export let openFilePath = getAppiumSessionFilePath(process.argv, app.isPackaged, isDev);
 
@@ -20,7 +16,10 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', async () => {
-  await installExtensions();
+  if (isDev) {
+    require('electron-debug')();
+    await installExtensions();
+  }
 
   setupMainWindow({
     mainUrl: `file://${__dirname}/index.html`,
