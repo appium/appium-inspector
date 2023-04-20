@@ -7,7 +7,7 @@ import { APPIUM_SESSION_EXTENSION } from './helpers';
 
 let menuTemplates = {mac: {}, other: {}};
 
-function languageMenu ({config, i18n}) {
+function languageMenu () {
   return config.languages.map((languageCode) => ({
     label: i18n.t(languageCode),
     type: 'radio',
@@ -16,7 +16,7 @@ function languageMenu ({config, i18n}) {
   }));
 }
 
-function getShowAppInfoClickAction ({dialog, i18n, app}) {
+function getShowAppInfoClickAction () {
   return () => {
     dialog.showMessageBox({
       title: i18n.t('appiumDesktop'),
@@ -29,12 +29,12 @@ function getShowAppInfoClickAction ({dialog, i18n, app}) {
   };
 }
 
-function macMenuAppium ({dialog, i18n, app, checkNewUpdates, extraMenus}) {
-  const menu = {
+function macMenuAppium () {
+  return {
     label: 'Appium',
     submenu: [{
       label: i18n.t('About Appium'),
-      click: getShowAppInfoClickAction({dialog, i18n, app})
+      click: getShowAppInfoClickAction()
     }, {
       label: i18n.t('Check for updates'),
       click () {
@@ -63,15 +63,9 @@ function macMenuAppium ({dialog, i18n, app, checkNewUpdates, extraMenus}) {
       }
     }]
   };
-
-  for (const extraMenu of extraMenus) {
-    menu.submenu.splice(extraMenu.index, 0, extraMenu.menu);
-  }
-
-  return menu;
 }
 
-function macMenuEdit ({i18n}) {
+function macMenuEdit () {
   return {
     label: i18n.t('Edit'),
     submenu: [{
@@ -104,7 +98,7 @@ function macMenuEdit ({i18n}) {
   };
 }
 
-function macMenuView ({i18n, mainWindow, config}) {
+function macMenuView ({mainWindow}) {
   const submenu = (process.env.NODE_ENV === 'development') ? [{
     label: i18n.t('Reload'),
     accelerator: 'Command+R',
@@ -129,7 +123,7 @@ function macMenuView ({i18n, mainWindow, config}) {
 
   submenu.push({
     label: i18n.t('Languages'),
-    submenu: languageMenu({config, i18n}),
+    submenu: languageMenu(),
   });
 
   return {
@@ -138,7 +132,7 @@ function macMenuView ({i18n, mainWindow, config}) {
   };
 }
 
-function macMenuWindow ({i18n}) {
+function macMenuWindow () {
   return {
     label: i18n.t('Window'),
     submenu: [{
@@ -158,7 +152,7 @@ function macMenuWindow ({i18n}) {
   };
 }
 
-function macMenuHelp ({i18n, shell}) {
+function macMenuHelp () {
   return {
     label: i18n.t('Help'),
     submenu: [{
@@ -185,29 +179,29 @@ function macMenuHelp ({i18n, shell}) {
   };
 }
 
-menuTemplates.mac = ({dialog, i18n, app, checkNewUpdates, extraMenus, extraFileMenus, mainWindow, config, shell, shouldShowFileMenu}) => [
-  macMenuAppium({dialog, i18n, app, checkNewUpdates, extraMenus}),
-  ...(shouldShowFileMenu ? [macMenuFile({i18n, mainWindow, dialog, shouldShowFileMenu, extraFileMenus})]: []),
-  macMenuEdit({i18n}),
-  macMenuView({i18n, mainWindow, config}),
-  macMenuWindow({i18n}),
-  macMenuHelp({i18n, shell}),
+menuTemplates.mac = ({mainWindow, shouldShowFileMenu}) => [
+  macMenuAppium(),
+  ...(shouldShowFileMenu ? [macMenuFile({mainWindow})] : []),
+  macMenuEdit(),
+  macMenuView({mainWindow}),
+  macMenuWindow(),
+  macMenuHelp(),
 ];
 
-async function openFileCallback (mainWindow, dialog) {
+async function openFileCallback (mainWindow) {
   const { canceled, filePaths } = await dialog.showOpenDialog({
     properties: ['openFile'],
     filters: [
       {name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}
     ],
-  })
+  });
   if (!canceled) {
     const filePath = filePaths[0];
     mainWindow.webContents.send('open-file', filePath);
   }
-};
+}
 
-async function saveAsCallback (mainWindow, dialog, i18n) {
+async function saveAsCallback (mainWindow) {
   const { canceled, filePath } = await dialog.showSaveDialog({
     title: i18n.t('saveAs'),
     filters: [{ name: 'Appium', extensions: [APPIUM_SESSION_EXTENSION] }],
@@ -217,36 +211,38 @@ async function saveAsCallback (mainWindow, dialog, i18n) {
   }
 }
 
-function macMenuFile ({i18n, mainWindow, dialog, extraFileMenus}) {
-  let fileSubmenu = [{
-    label: i18n.t('Open'),
-    accelerator: 'Command+O',
-    click: () => openFileCallback(mainWindow, dialog),
-  }, {
-    label: i18n.t('Save'),
-    accelerator: 'Command+S',
-    click: () => mainWindow.webContents.send('save-file'),
-  }, {
-    label: i18n.t('saveAs'),
-    accelerator: 'Command+Shift+S',
-    click: () => saveAsCallback(mainWindow, dialog, i18n),
-  }];
-
-  for (const extraMenu of extraFileMenus) {
-    fileSubmenu.splice(extraMenu.index, 0, extraMenu.menu);
-  }
-
+function macMenuFile ({mainWindow}) {
   return {
-    label: '&'+i18n.t('File'),
-    submenu: fileSubmenu,
+    label: i18n.t('File'),
+    submenu: [{
+      label: i18n.t('New Session Window…'),
+      accelerator: 'Command+N',
+      click: launchNewSessionWindow,
+    }, {
+      label: i18n.t('Open'),
+      accelerator: 'Command+O',
+      click: () => openFileCallback(mainWindow),
+    }, {
+      label: i18n.t('Save'),
+      accelerator: 'Command+S',
+      click: () => mainWindow.webContents.send('save-file'),
+    }, {
+      label: i18n.t('saveAs'),
+      accelerator: 'Command+Shift+S',
+      click: () => saveAsCallback(mainWindow),
+    }]
   };
 }
 
-function otherMenuFile ({i18n, dialog, app, mainWindow, checkNewUpdates, extraFileMenus, shouldShowFileMenu}) {
+function otherMenuFile ({mainWindow, shouldShowFileMenu}) {
   const fileSavingOperations = [{
+    label: i18n.t('New Session Window…'),
+    accelerator: 'Ctrl+N',
+    click: launchNewSessionWindow,
+  }, {
     label: i18n.t('Open'),
     accelerator: 'Ctrl+O',
-    click: () => openFileCallback(mainWindow, dialog),
+    click: () => openFileCallback(mainWindow),
   }, {
     label: i18n.t('Save'),
     accelerator: 'Ctrl+S',
@@ -254,18 +250,18 @@ function otherMenuFile ({i18n, dialog, app, mainWindow, checkNewUpdates, extraFi
   }, {
     label: i18n.t('saveAs'),
     accelerator: 'Ctrl+Shift+S',
-    click: () => saveAsCallback(mainWindow, dialog, i18n),
+    click: () => saveAsCallback(mainWindow),
   }];
 
   let fileSubmenu = [
     ...(shouldShowFileMenu ? fileSavingOperations : []),
     {
-      label: '&'+i18n.t('About Appium'),
-      click: getShowAppInfoClickAction({dialog, i18n, app}),
+      label: '&' + i18n.t('About Appium'),
+      click: getShowAppInfoClickAction(),
     }, {
       type: 'separator'
     }, {
-      label: '&'+i18n.t('Close'),
+      label: '&' + i18n.t('Close'),
       accelerator: 'Ctrl+W',
       click () {
         mainWindow.close();
@@ -273,16 +269,10 @@ function otherMenuFile ({i18n, dialog, app, mainWindow, checkNewUpdates, extraFi
     }
   ];
 
-  if (shouldShowFileMenu) {
-    for (const extraMenu of extraFileMenus) {
-      fileSubmenu.splice(extraMenu.index, 0, extraMenu.menu);
-    }
-  }
-
   // If it's Windows, add a 'Check for Updates' menu option
   if (process.platform === 'win32') {
     fileSubmenu.splice(1, 0, {
-      label: '&'+i18n.t('Check for updates'),
+      label: '&' + i18n.t('Check for updates'),
       click () {
         checkNewUpdates(true);
       }
@@ -291,12 +281,12 @@ function otherMenuFile ({i18n, dialog, app, mainWindow, checkNewUpdates, extraFi
 
 
   return {
-    label: '&'+i18n.t('File'),
+    label: '&' + i18n.t('File'),
     submenu: fileSubmenu,
   };
 }
 
-function otherMenuView ({i18n, mainWindow, config}) {
+function otherMenuView ({mainWindow}) {
   const submenu = [];
   submenu.push({
     label: i18n.t('Toggle &Full Screen'),
@@ -308,12 +298,12 @@ function otherMenuView ({i18n, mainWindow, config}) {
 
   submenu.push({
     label: i18n.t('Languages'),
-    submenu: languageMenu({config, i18n}),
+    submenu: languageMenu(),
   });
 
   if (process.env.NODE_ENV === 'development') {
     submenu.push({
-      label: '&'+i18n.t('Reload'),
+      label: '&' + i18n.t('Reload'),
       accelerator: 'Ctrl+R',
       click () {
         mainWindow.webContents.reload();
@@ -329,12 +319,12 @@ function otherMenuView ({i18n, mainWindow, config}) {
   }
 
   return {
-    label: '&'+i18n.t('View'),
+    label: '&' + i18n.t('View'),
     submenu,
   };
 }
 
-function otherMenuHelp ({i18n, shell}) {
+function otherMenuHelp () {
   return {
     label: i18n.t('Help'),
     submenu: [{
@@ -361,29 +351,11 @@ function otherMenuHelp ({i18n, shell}) {
   };
 }
 
-menuTemplates.other = ({mainWindow, i18n, dialog, app, checkNewUpdates, config, shell, shouldShowFileMenu, extraFileMenus}) => [
-  otherMenuFile({i18n, dialog, app, mainWindow, checkNewUpdates, shouldShowFileMenu, extraFileMenus}),
-  otherMenuView({i18n, mainWindow, config}),
-  otherMenuHelp({i18n, shell})
+menuTemplates.other = ({mainWindow, shouldShowFileMenu}) => [
+  otherMenuFile({mainWindow, shouldShowFileMenu}),
+  otherMenuView({mainWindow}),
+  otherMenuHelp()
 ];
-
-const extraMacFileMenus = [{
-  index: 0,
-  menu: {
-    label: i18n.t('New Session Window…'),
-    click: launchNewSessionWindow,
-    accelerator: 'Command+N',
-  },
-}];
-
-const extraFileMenus = [{
-  index: 0,
-  menu: {
-    label: i18n.t('&New Session Window…'),
-    click: launchNewSessionWindow,
-    accelerator: 'Ctrl+N',
-  },
-}];
 
 export function rebuildMenus (mainWindow, shouldShowFileMenu) {
   if (!mainWindow) {
@@ -391,11 +363,11 @@ export function rebuildMenus (mainWindow, shouldShowFileMenu) {
   }
 
   if (config.platform === 'darwin') {
-    const template = menuTemplates.mac({dialog, i18n, app, checkNewUpdates, extraMenus: [], extraFileMenus: extraMacFileMenus, mainWindow, config, shell, shouldShowFileMenu});
+    const template = menuTemplates.mac({mainWindow, shouldShowFileMenu});
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
   } else {
-    const template = menuTemplates.other({mainWindow, i18n, dialog, app, extraFileMenus, checkNewUpdates, config, shell, shouldShowFileMenu});
+    const template = menuTemplates.other({mainWindow, shouldShowFileMenu});
     const menu = Menu.buildFromTemplate(template);
     mainWindow.setMenu(menu);
   }
