@@ -46,7 +46,7 @@
     "clean:browser": "rimraf dist-browser/ && rimraf .cache",
     "clean:npm": "rimraf package-lock.json && rimraf node_modules && npm install",
     "postversion": "git pull --tags && git push && git push --tags",
-    "crowdin-sync": "node ./gui-common/crowdin-sync-translations.js"
+    "crowdin-sync": "node ./ci-jobs/crowdin-sync-translations.js"
   },
   "build": {
     "productName": "Appium Inspector",
