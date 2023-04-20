@@ -7,6 +7,3 @@ export function getFeedUrl (version) {
   }
   return `${baseFeedUrl}/update/${platform}/${version}`;
 }
-export default {
-  getFeedUrl,
-};
