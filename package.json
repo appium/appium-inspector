@@ -135,7 +135,7 @@
   },
   "dependencies": {
     "@xmldom/xmldom": "0.8.7",
-    "antd": "4.24.8",
+    "antd": "4.24.9",
     "bluebird": "3.7.2",
     "cheerio": "1.0.0-rc.10",
     "connected-react-router": "6.9.3",
