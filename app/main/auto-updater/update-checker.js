@@ -49,7 +49,7 @@ export function setUpAutoUpdater ({
 
       let detail = i18n.t('updateDetails', {pubDate, notes: notes.replace('*', '\n*')});
       if (env.NO_AUTO_UPDATE) {
-        detail += `\n\nhttps://www.github.com/appium/appium-desktop/releases/latest`;
+        detail += `\n\nhttps://www.github.com/appium/appium-inspector/releases/latest`;
       }
 
 
@@ -99,7 +99,7 @@ export function setUpAutoUpdater ({
       type: 'info',
       buttons: [i18n.t('OK')],
       message: i18n.t('No update available'),
-      detail: i18n.t('Appium Desktop is up-to-date'),
+      detail: i18n.t('Appium Inspector is up-to-date'),
     });
   });
 
