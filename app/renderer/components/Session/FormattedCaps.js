@@ -8,7 +8,7 @@ import {
   SaveOutlined,
   EditOutlined
 } from '@ant-design/icons';
-import { ALERT } from '../../../../gui-common/components/AntdTypes';
+import { ALERT } from '../AntdTypes';
 
 export default class FormattedCaps extends Component {
 
