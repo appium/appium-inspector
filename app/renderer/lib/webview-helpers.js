@@ -54,10 +54,10 @@ export function setHtmlElementAttributes (obj) {
   Array.from(htmlElements).forEach((el) => {
     const rect = el.getBoundingClientRect();
 
-    el.setAttribute('data-appium-desktop-width', Math.round(rect.width * dpr));
-    el.setAttribute('data-appium-desktop-height', Math.round(rect.height * dpr));
-    el.setAttribute('data-appium-desktop-x', Math.round(rect.left * dpr));
-    el.setAttribute('data-appium-desktop-y', Math.round(webviewStatusAddressBarHeight + (rect.top * dpr)));
+    el.setAttribute('data-appium-inspector-width', Math.round(rect.width * dpr));
+    el.setAttribute('data-appium-inspector-height', Math.round(rect.height * dpr));
+    el.setAttribute('data-appium-inspector-x', Math.round(rect.left * dpr));
+    el.setAttribute('data-appium-inspector-y', Math.round(webviewStatusAddressBarHeight + (rect.top * dpr)));
   });
 }
 
@@ -92,16 +92,16 @@ export function parseSource (source) {
     .removeAttr('height')
     .removeAttr('x')
     .removeAttr('y')
-    // remove all `data-appium-desktop-` prefixes so only the width|height|x|y are there
+    // remove all `data-appium-inspector-` prefixes so only the width|height|x|y are there
     .each(function () {
       const $el = $(this);
 
       ['width', 'height', 'x', 'y'].forEach((rectAttr) => {
-        if ($el.attr(`data-appium-desktop-${rectAttr}`)) {
-          $el.attr(rectAttr, $el.attr(`data-appium-desktop-${rectAttr}`));
+        if ($el.attr(`data-appium-inspector-${rectAttr}`)) {
+          $el.attr(rectAttr, $el.attr(`data-appium-inspector-${rectAttr}`));
 
           /* remove the old attribute */
-          $el.removeAttr(`data-appium-desktop-${rectAttr}`);
+          $el.removeAttr(`data-appium-inspector-${rectAttr}`);
         }
       });
     });
