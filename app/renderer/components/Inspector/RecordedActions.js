@@ -12,7 +12,7 @@ import {
   CloseOutlined,
   CodeOutlined
 } from '@ant-design/icons';
-import { BUTTON } from '../../../../gui-common/components/AntdTypes';
+import { BUTTON } from '../AntdTypes';
 
 const Option = Select.Option;
 const ButtonGroup = Button.Group;

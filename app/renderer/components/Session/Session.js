@@ -11,7 +11,7 @@ import SessionStyles from './Session.css';
 import CloudProviders from './CloudProviders';
 import CloudProviderSelector from './CloudProviderSelector';
 import { LinkOutlined } from '@ant-design/icons';
-import { BUTTON } from '../../../../gui-common/components/AntdTypes';
+import { BUTTON } from '../AntdTypes';
 
 const ADD_CLOUD_PROVIDER = 'addCloudProvider';
 

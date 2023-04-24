@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import Root from './containers/Root';
-import ErrorBoundary from '../../gui-common/components/ErrorBoundary/ErrorBoundary';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import Store from './store/configureStore';
 
 const { history, configureStore } = Store;

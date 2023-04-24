@@ -104,8 +104,7 @@ Issues that have to do with the Inspector specifically can be reported here at t
 Want to help us develop this app? We'd love it! Getting set up to do development is pretty easy:
 
 1. Clone the repo
-2. Clone git submodules (`git submodule update --init`)
-3. Install dependencies (`npm install`)
+2. Install dependencies (`npm install`)
 
 From here, have a look at the `scripts` field of our package.json to see what kind of dev scripts you might want to run. Some of the most useful are:
 
@@ -117,10 +116,6 @@ From here, have a look at the `scripts` field of our package.json to see what ki
 * `npm run start`: start the production version of the app
 * `npm run clean`: remove all caches and node modules and reinstall everything
 * `npx electron-builder build --publish never`: package the app for your platform (into `release/`). Note that for macOS this requires code signing environment variables to be set.
-
-### Shared components and utilities
-
-This app shares components and utilities with [Appium Desktop](https://github.com/appium/appium-desktop), via a third repo called [appium-gui-libs](https://github.com/appium/appium-gui-libs). This is cloned as a submodule in `gui-common`. If you need to make changes to any of that code, you'll want to first submit your PR to appium-gui-libs.
 
 ### Localization
 

@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
 import session from './Session';
 import inspector from './Inspector';
-import updater from '../../../gui-common/reducers/Updater';
+import updater from './Updater';
 
 // create our root reducer
 export default function createRootReducer (history) {

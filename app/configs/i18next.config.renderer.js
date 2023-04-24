@@ -1,9 +1,8 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import config from './app.config';
+import config, { getI18NextOptions } from './app.config';
 import settings from '../shared/settings';
 import { i18NextBackend, i18NextBackendOptions } from '../renderer/polyfills';
-import { getI18NextOptions } from '../../gui-common/configs/app.config.default';
 
 const i18nextOptions = getI18NextOptions(settings, config, i18NextBackendOptions);
 
