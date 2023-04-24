@@ -3,7 +3,7 @@ import { Alert } from 'antd';
 import styles from './ErrorBoundary.css';
 import { ALERT } from '../AntdTypes';
 
-const CREATE_ISSUE_URL = 'https://github.com/appium/appium-desktop/issues/new';
+const CREATE_ISSUE_URL = 'https://github.com/appium/appium-inspector/issues/new';
 
 export default class ErrorBoundary extends React.Component {
   constructor (props) {

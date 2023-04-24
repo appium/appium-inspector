@@ -19,7 +19,7 @@ function languageMenu () {
 function getShowAppInfoClickAction () {
   return () => {
     dialog.showMessageBox({
-      title: i18n.t('appiumDesktop'),
+      title: i18n.t('Appium Inspector'),
       message: i18n.t('showAppInfo', {
         appVersion: app.getVersion(),
         electronVersion: process.versions.electron,
@@ -168,7 +168,7 @@ function macMenuHelp () {
     }, {
       label: i18n.t('Search Issues'),
       click () {
-        shell.openExternal('https://github.com/appium/appium-desktop/issues');
+        shell.openExternal('https://github.com/appium/appium-inspector/issues');
       }
     }, {
       label: i18n.t('Add Or Improve Translations'),
@@ -340,7 +340,7 @@ function otherMenuHelp () {
     }, {
       label: i18n.t('Search Issues'),
       click () {
-        shell.openExternal('https://github.com/appium/appium-desktop/issues');
+        shell.openExternal('https://github.com/appium/appium-inspector/issues');
       }
     }, {
       label: i18n.t('Add Or Improve Translations'),
