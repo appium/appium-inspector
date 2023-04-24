@@ -19,7 +19,7 @@ function languageMenu () {
 function getShowAppInfoClickAction () {
   return () => {
     dialog.showMessageBox({
-      title: i18n.t('Appium Inspector'),
+      title: i18n.t('appiumInspector'),
       message: i18n.t('showAppInfo', {
         appVersion: app.getVersion(),
         electronVersion: process.versions.electron,
