@@ -679,7 +679,7 @@ export function runKeepAliveLoop () {
 
         // After the time limit kill the session (this timeout will be killed if they keep it alive)
         const userWaitTimeout = setTimeout(() => {
-          const action = quitSession('Session closed due to inactivity', false);
+          const action = quitSession(i18n.t('Session closed due to inactivity'), false);
           action(dispatch, getState);
         }, WAIT_FOR_USER_KEEP_ALIVE);
         dispatch({type: SET_USER_WAIT_TIMEOUT, userWaitTimeout});
