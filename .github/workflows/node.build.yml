@@ -26,6 +26,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - name: Update to npm > 6 if needed
+      if: ${{ matrix.node-version == '14.x' }}
+      run: sudo npm -i -g npm@8
     - run: npm ci
     - run: npm run build
     - run: npm test
