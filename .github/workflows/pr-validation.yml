@@ -25,10 +25,10 @@ jobs:
         cache: 'npm'
     - name: Update to npm > 6 if needed
       if: ${{ matrix.node-version == '14.x' && matrix.image != 'ubuntu-latest' }}
-      run: npm -i -g npm@8
+      run: npm i -g npm@8
     - name: Update to npm > 6 if needed (Linux)
       if: ${{ matrix.node-version == '14.x' && matrix.image == 'ubuntu-latest' }}
-      run: sudo npm -i -g npm@8
+      run: sudo npm i -g npm@8
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
