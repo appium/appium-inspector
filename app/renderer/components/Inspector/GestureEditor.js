@@ -553,8 +553,8 @@ class GestureEditor extends Component {
       <Tooltip key='playGesture' title={t('Play')}>
         <Button key='play' type='primary' icon={<PlayCircleOutlined/>} onClick={() => this.onPlay()}/>
       </Tooltip>,
-      <Button key='saveAs' onClick={() => this.onSaveAs()}>Save As</Button>,
-      <Button key='save' onClick={() => this.onSave()}>Save</Button>];
+      <Button key='saveAs' onClick={() => this.onSaveAs()}>{t('saveAs')}</Button>,
+      <Button key='save' onClick={() => this.onSave()}>{t('Save')}</Button>];
 
     const headerTitle =
       <Tooltip key='editTitle' placement='topLeft' title={t('Edit')}>

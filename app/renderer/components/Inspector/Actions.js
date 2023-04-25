@@ -90,8 +90,9 @@ export default class Actions extends Component {
         </Col>)}
       </Row>
       {!!pendingAction && <Modal
-        title={pendingAction.actionName}
+        title={t(pendingAction.actionName)}
         okText={t('Execute Action')}
+        cancelText={t('Cancel')}
         open={!!pendingAction}
         onOk={() => this.executeCommand()}
         onCancel={() => cancelPendingAction()}>
