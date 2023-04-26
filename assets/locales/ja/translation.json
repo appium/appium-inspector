@@ -247,7 +247,6 @@
   "LambdaTest Username": "LambdaTest のユーザー名",
   "LambdaTest Access Key": "LambdaTest のアクセスキー",
   "Bitbar API Key": "BitbarのAPIキー",
-  "willUseCurrentlyRunningServer": "現在起動中のAppium Inspectorサーバを利用します",
   "Name": "キー名",
   "enterYourSessionId": "セッションIDを入力してください",
   "Proxy URL": "プロキシURL",
