@@ -247,7 +247,6 @@
   "LambdaTest Username": "LambdaTest 用户名",
   "LambdaTest Access Key": "LambdaTest 访问密钥",
   "Bitbar API Key": "Bitbar API 密钥",
-  "willUseCurrentlyRunningServer": "将使用当前运行的 Appium Inspector 服务器",
   "Name": "名称",
   "enterYourSessionId": "在此输入您的会话ID",
   "Proxy URL": "代理 URL",

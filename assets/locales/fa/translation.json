@@ -247,7 +247,6 @@
   "LambdaTest Username": "نام کاربری LambdaTest",
   "LambdaTest Access Key": "کلید دسترسی LambdaTest",
   "Bitbar API Key": "کلید API برای Bitbar",
-  "willUseCurrentlyRunningServer": "از سرور دسکتاپ Appium در حال اجرا استفاده خواهد کرد",
   "Name": "نام",
   "enterYourSessionId": "شناسه‌ی Session خود را وارد کنید",
   "Proxy URL": "آدرس URL پروکسی",

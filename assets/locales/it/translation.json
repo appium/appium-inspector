@@ -247,7 +247,6 @@
   "LambdaTest Username": "Username di LambdaTest",
   "LambdaTest Access Key": "Access Key di LambdaTest",
   "Bitbar API Key": "API Key di Bitbar",
-  "willUseCurrentlyRunningServer": "Utilizzerà il server Appium Inspector attualmente in esecuzione",
   "Name": "Nome",
   "enterYourSessionId": "Inserisci qui l'ID della sessione",
   "Proxy URL": "Proxy URL",
