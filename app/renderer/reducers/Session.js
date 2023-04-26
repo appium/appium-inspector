@@ -1,9 +1,9 @@
 import _, {omit} from 'lodash';
 import formatJSON from 'format-json';
 
-import { NEW_SESSION_REQUESTED, NEW_SESSION_BEGAN, NEW_SESSION_DONE,
-         SAVE_SESSION_REQUESTED, SAVE_SESSION_DONE, GET_SAVED_SESSIONS_REQUESTED,
-         GET_SAVED_SESSIONS_DONE, SESSION_LOADING, SESSION_LOADING_DONE,
+import { NEW_SESSION_REQUESTED, NEW_SESSION_LOADING, NEW_SESSION_DONE,
+         SAVE_SESSION_REQUESTED, SAVE_SESSION_DONE,
+         GET_SAVED_SESSIONS_REQUESTED, GET_SAVED_SESSIONS_DONE,
          SET_CAPABILITY_PARAM, ADD_CAPABILITY, REMOVE_CAPABILITY, SET_CAPS_AND_SERVER,
          SWITCHED_TABS, SAVE_AS_MODAL_REQUESTED, HIDE_SAVE_AS_MODAL_REQUESTED, SET_SAVE_AS_TEXT,
          DELETE_SAVED_SESSION_REQUESTED, DELETE_SAVED_SESSION_DONE,
@@ -92,15 +92,15 @@ export default function session (state = INITIAL_STATE, action) {
         newSessionRequested: true,
       };
 
-    case NEW_SESSION_BEGAN:
+    case NEW_SESSION_LOADING:
       nextState = {
         ...state,
-        newSessionBegan: true,
+        newSessionLoading: true,
       };
       return omit(nextState, 'newSessionRequested');
 
     case NEW_SESSION_DONE:
-      return omit(state, 'newSessionBegan');
+      return omit(state, 'newSessionLoading');
 
 
     case ADD_CAPABILITY:
@@ -242,15 +242,6 @@ export default function session (state = INITIAL_STATE, action) {
         ...state,
         attachSessId: action.attachSessId
       };
-
-    case SESSION_LOADING:
-      return {
-        ...state,
-        sessionLoading: true,
-      };
-
-    case SESSION_LOADING_DONE:
-      return omit(state, 'sessionLoading');
 
     case GET_SESSIONS_REQUESTED:
       return {

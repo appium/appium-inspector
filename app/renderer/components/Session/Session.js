@@ -58,16 +58,16 @@ export default class Session extends Component {
   }
 
   render () {
-    const {newSessionBegan, savedSessions, tabKey, switchTabs,
+    const {savedSessions, tabKey, switchTabs,
            serverType, server,
            requestSaveAsModal, newSession, caps, capsUUID, capsName, saveSession,
            visibleProviders = [],
-           isCapsDirty, sessionLoading, attachSessId, t} = this.props;
+           isCapsDirty, newSessionLoading, attachSessId, t} = this.props;
 
     const isAttaching = tabKey === 'attach';
 
     return [
-      <Spin spinning={!!sessionLoading} key="main">
+      <Spin spinning={!!newSessionLoading} key="main">
         <div className={SessionStyles.sessionContainer}>
           <div id='serverTypeTabs' className={SessionStyles.serverTab}>
             <Tabs activeKey={serverType} onChange={(tab) => this.handleSelectServerTab(tab)} className={SessionStyles.serverTabs} items={[{
@@ -87,12 +87,7 @@ export default class Session extends Component {
             <AdvancedServerParams {...this.props} />
           </div>
 
-
-          {newSessionBegan && <div>
-            <p>{t('sessionInProgress')}</p>
-          </div>}
-
-          {!newSessionBegan && <Tabs activeKey={tabKey} onChange={switchTabs} className={SessionStyles.scrollingTabCont} items={[{
+          <Tabs activeKey={tabKey} onChange={switchTabs} className={SessionStyles.scrollingTabCont} items={[{
             label: t('Desired Capabilities'), key: 'new', className: SessionStyles.scrollingTab, children:
               <CapabilityEditor {...this.props} />
           }, {
@@ -102,7 +97,7 @@ export default class Session extends Component {
           }, {
             label: t('Attach to Session'), key: 'attach', className: SessionStyles.scrollingTab, children:
               <AttachToSession {...this.props} />
-          }]}/>}
+          }]}/>
 
           <div className={SessionStyles.sessionFooter}>
             <div className={SessionStyles.desiredCapsLink}>

@@ -16,7 +16,7 @@ import { ipcRenderer, fs, util } from '../polyfills';
 import { getSaveableState } from '../../main/helpers';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
-export const NEW_SESSION_BEGAN = 'NEW_SESSION_BEGAN';
+export const NEW_SESSION_LOADING = 'NEW_SESSION_LOADING';
 export const NEW_SESSION_DONE = 'NEW_SESSION_DONE';
 export const CHANGE_CAPABILITY = 'CHANGE_CAPABILITY';
 export const SAVE_SESSION_REQUESTED = 'SAVE_SESSION_REQUESTED';
@@ -36,8 +36,6 @@ export const DELETE_SAVED_SESSION_DONE = 'DELETE_SAVED_SESSION_DONE';
 export const CHANGE_SERVER_TYPE = 'CHANGE_SERVER_TYPE';
 export const SET_SERVER_PARAM = 'SET_SERVER_PARAM';
 export const SET_SERVER = 'SET_SERVER';
-export const SESSION_LOADING = 'SESSION_LOADING';
-export const SESSION_LOADING_DONE = 'SESSION_LOADING_DONE';
 
 export const VISIBLE_PROVIDERS = 'VISIBLE_PROVIDERS';
 
@@ -491,7 +489,7 @@ export function newSession (caps, attachSessId = null) {
     //  proxy = session.server.advanced.proxy;
     //}
 
-    dispatch({type: SESSION_LOADING});
+    dispatch({type: NEW_SESSION_LOADING});
 
 
     const serverOpts = {
@@ -542,7 +540,7 @@ export function newSession (caps, attachSessId = null) {
       showError(err, null, 0);
       return;
     } finally {
-      dispatch({type: SESSION_LOADING_DONE});
+      dispatch({type: NEW_SESSION_DONE});
       // Save the current server settings
       await setSetting(SESSION_SERVER_PARAMS, session.server);
     }
