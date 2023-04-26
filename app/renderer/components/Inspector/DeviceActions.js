@@ -18,21 +18,21 @@ class DeviceActions extends Component {
 
     return <div>
       {driver.client.isIOS && <div className={InspectorStyles['action-controls']}>
-        <Tooltip title={t('Press Home button')}>
+        <Tooltip title={t('Press Home Button')}>
           <Button id='btnPressHomeButton' icon={<HiOutlineHome className={InspectorStyles['custom-button-icon']}/>} onClick={() => applyClientMethod({ methodName: 'executeScript', args: ['mobile:pressButton', [{name: 'home'}]]})}/>
         </Tooltip>
-        <Tooltip title={t('Siri command')}>
+        <Tooltip title={t('Execute Siri Command')}>
           <Button id='siriCommand' icon={<HiOutlineMicrophone className={InspectorStyles['custom-button-icon']}/>} onClick={showSiriCommandModal} />
         </Tooltip>
       </div>}
       {driver.client.isAndroid && <div className={InspectorStyles['action-controls']}>
-        <Tooltip title={t('Press Back button')}>
+        <Tooltip title={t('Press Back Button')}>
           <Button id='btnPressHomeButton' icon={<IoChevronBackOutline className={InspectorStyles['custom-button-icon']}/>} onClick={() => applyClientMethod({ methodName: 'pressKeyCode', args: [4]})}/>
         </Tooltip>
-        <Tooltip title={t('Press Home button')}>
+        <Tooltip title={t('Press Home Button')}>
           <Button id='btnPressHomeButton' icon={<BiCircle className={InspectorStyles['custom-button-icon']}/>} onClick={() => applyClientMethod({ methodName: 'pressKeyCode', args: [3]})}/>
         </Tooltip>
-        <Tooltip title={t('Press App Switch button')}>
+        <Tooltip title={t('Press App Switch Button')}>
           <Button id='btnPressHomeButton' icon={<BiSquare className={InspectorStyles['custom-button-icon']}/>} onClick={() => applyClientMethod({ methodName: 'pressKeyCode', args: [187]})}/>
         </Tooltip>
       </div>}
