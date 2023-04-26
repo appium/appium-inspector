@@ -247,7 +247,6 @@
   "LambdaTest Username": "LambdaTest Username",
   "LambdaTest Access Key": "LambdaTest Access Key",
   "Bitbar API Key": "Bitbar API 키",
-  "willUseCurrentlyRunningServer": "현재 실행중인 Appium Inspector 서버를 사용합니다",
   "Name": "이름",
   "enterYourSessionId": "세션 ID를 입력하세요",
   "Proxy URL": "프록시 URL",
