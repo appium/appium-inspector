@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [16.x, 18.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -26,9 +26,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - name: Update to npm > 6 if needed
-      if: ${{ matrix.node-version == '14.x' }}
-      run: sudo npm i -g npm@8
     - run: npm ci
     - run: npm run build
     - run: npm test
