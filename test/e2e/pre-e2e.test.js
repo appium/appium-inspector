@@ -2,7 +2,7 @@ import path from 'path';
 import os from 'os';
 import { retryInterval } from 'asyncbox';
 import { Application } from 'spectron';
-import { fs, logger } from 'appium-support';
+import { fs, logger } from '@appium/support';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 

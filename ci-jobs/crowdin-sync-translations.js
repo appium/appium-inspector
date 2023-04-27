@@ -1,4 +1,4 @@
-const { logger, tempDir, fs, zip } = require('appium-support');
+const { logger, tempDir, fs, zip } = require('@appium/support');
 const request = require('request');
 const path = require('path');
 const { createWriteStream } = require('fs');
