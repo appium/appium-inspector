@@ -20,13 +20,13 @@ export default class ServerTabLambdatest extends Component {
       <Row gutter={8}>
         <Col span={12}>
           <FormItem>
-            <Input id='lambdatestUsername' placeholder={lambdatestUsernamePlaceholder} addonBefore={t('Lambdatest Username')} value={server.lambdatest.username}
+            <Input id='lambdatestUsername' placeholder={lambdatestUsernamePlaceholder} addonBefore={t('LambdaTest Username')} value={server.lambdatest.username}
               onChange={(e) => setServerParam('username', e.target.value)} />
           </FormItem>
         </Col>
         <Col span={12}>
           <FormItem>
-            <Input id='lambdatestPassword' type={INPUT.PASSWORD} placeholder={lambdatestAccessKeyPlaceholder} addonBefore={t('Lambdatest Access Key')}
+            <Input id='lambdatestPassword' type={INPUT.PASSWORD} placeholder={lambdatestAccessKeyPlaceholder} addonBefore={t('LambdaTest Access Key')}
               value={server.lambdatest.accessKey} onChange={(e) => setServerParam('accessKey', e.target.value)} />
           </FormItem>
         </Col>
