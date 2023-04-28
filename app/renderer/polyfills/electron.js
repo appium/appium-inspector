@@ -12,12 +12,12 @@ const i18NextBackendOptions = {
 };
 
 class ElectronSettings {
-  has (key) {
-    return electronSettings.has(key);
+  async has (key) {
+    return await ipcRenderer.invoke('has-setting', key);
   }
 
-  get (key) {
-    return electronSettings.get(key);
+  async get (key) {
+    return await ipcRenderer.invoke('get-setting', key);
   }
 
   getSync (key) {

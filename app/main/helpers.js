@@ -1,4 +1,12 @@
+import { ipcMain } from 'electron';
+import settings from 'electron-settings';
+
 const APPIUM_SESSION_FILE_VERSION = '1.0';
+
+export function setupIPCListeners () {
+  ipcMain.handle('has-setting', (_evt, key) => settings.has(key));
+  ipcMain.handle('get-setting', (_evt, key) => settings.get(key));
+}
 
 export function getAppiumSessionFilePath (argv, isPackaged, isDev) {
   if (isDev) {
