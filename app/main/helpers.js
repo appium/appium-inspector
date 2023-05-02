@@ -6,6 +6,7 @@ const APPIUM_SESSION_FILE_VERSION = '1.0';
 export function setupIPCListeners () {
   ipcMain.handle('has-setting', (_evt, key) => settings.has(key));
   ipcMain.handle('get-setting', (_evt, key) => settings.get(key));
+  ipcMain.on('set-setting', (_evt, key, value) => settings.set(key, value));
 }
 
 export function getAppiumSessionFilePath (argv, isPackaged, isDev) {

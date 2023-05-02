@@ -25,7 +25,7 @@ class ElectronSettings {
   }
 
   set (key, val) {
-    electronSettings.set(key, val);
+    ipcRenderer.send('set-setting', key, val);
   }
 }
 

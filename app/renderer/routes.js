@@ -6,8 +6,10 @@ import InspectorPage from './containers/InspectorPage';
 import Spinner from './components/Spinner/Spinner';
 import { ipcRenderer } from './polyfills';
 import i18n from '../configs/i18next.config.renderer';
+import { setSetting } from '../shared/settings';
 
-ipcRenderer.on('appium-language-changed', (event, message) => {
+ipcRenderer.on('appium-language-changed', (_evt, message) => {
+  setSetting('PREFERRED_LANGUAGE', message.language);
   if (i18n.language !== message.language) {
     i18n.changeLanguage(message.language);
   }
