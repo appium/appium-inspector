@@ -1,7 +1,6 @@
 import path from 'path';
 import { clipboard, shell, remote, ipcRenderer } from 'electron';
 import log from 'electron-log';
-import {default as electronSettings} from 'electron-settings';
 import i18NextBackend from 'i18next-node-fs-backend';
 import fs from 'fs';
 import util from 'util';
@@ -18,10 +17,6 @@ class ElectronSettings {
 
   async get (key) {
     return await ipcRenderer.invoke('get-setting', key);
-  }
-
-  getSync (key) {
-    return electronSettings.getSync(key);
   }
 
   set (key, val) {

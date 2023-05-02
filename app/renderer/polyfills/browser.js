@@ -31,10 +31,6 @@ class BrowserSettings {
   get (key) {
     return JSON.parse(localStorage.getItem(key));
   }
-
-  getSync (key) {
-    return this.get(key);
-  }
 }
 
 const log = console; // eslint-disable-line no-console

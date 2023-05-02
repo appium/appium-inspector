@@ -9,6 +9,16 @@ export function setupIPCListeners () {
   ipcMain.on('set-setting', (_evt, key, value) => settings.set(key, value));
 }
 
+// cannot reuse renderer polyfills since renderer has not loaded yet
+export function getPreferredLanguage () {
+  const key = 'PREFERRED_LANGUAGE';
+  if ((process.env.BUILD_BROWSER || typeof (process.versions.electron) !== 'string')) {
+    return JSON.parse(localStorage.getItem(key));
+  } else {
+    return settings.getSync(key);
+  }
+}
+
 export function getAppiumSessionFilePath (argv, isPackaged, isDev) {
   if (isDev) {
     // do not use file launcher in dev mode because argv is different

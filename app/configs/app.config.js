@@ -1,4 +1,4 @@
-import settings from '../shared/settings';
+import { getPreferredLanguage } from '../main/helpers';
 
 const config = {
   platform: process.platform,
@@ -18,7 +18,7 @@ function getI18NextOptions (backend) {
     interpolation: {
       escapeValue: false
     },
-    lng: settings.getSync('PREFERRED_LANGUAGE') || 'en',
+    lng: getPreferredLanguage() || 'en',
     fallbackLng: config.fallbackLng,
     whitelist: config.languages,
     react: {
