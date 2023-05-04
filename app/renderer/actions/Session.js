@@ -454,13 +454,13 @@ export function newSession (caps, attachSessId = null) {
         port = session.server.experitest.port = experitestUrl.port === '' ? (https ? 443 : 80) : experitestUrl.port;
         break;
       } case ServerTypes.roboticmobi: {
-        host = 'api.robotic.mobi';
+        host = 'remote.robotqa.com';
         path = '/wd/hub';
         port = 443;
         https = session.server.roboticmobi.ssl = true;
         if (caps) {
-          desiredCapabilities['roboticmobi:options'] = {};
-          desiredCapabilities['roboticmobi:options'].robotic_mobi_token = session.server.roboticmobi.token || process.env.ROBOTIC_MOBI_TOKEN;
+          desiredCapabilities['robotqa:options'] = {};
+          desiredCapabilities['robotqa:options'].robotqa_token = session.server.roboticmobi.token || process.env.ROBOTQA_TOKEN;
         }
         break;
       } case ServerTypes.remotetestkit: {
