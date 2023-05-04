@@ -136,7 +136,6 @@ export const actionDefinitions = {
       'Background App': {methodName: 'background', args: [['timeout', NUMBER]], refresh: true},
       'Activate App': {methodName: 'activateApp', args: [['appId', STRING]], refresh: true},
       'Terminate App': {methodName: 'terminateApp', args: [['appId', STRING]], refresh: true},
-      'Reset App': {methodName: 'resetApp', refresh: true},
       'Remove App': {methodName: 'removeApp', args: [['appId', STRING]]},
       'Get App Strings': {methodName: 'getStrings', args: [['language', STRING], ['stringFile', STRING]], refresh: true},
     },
