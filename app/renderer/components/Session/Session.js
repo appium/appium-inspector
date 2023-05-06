@@ -62,7 +62,7 @@ export default class Session extends Component {
            serverType, server,
            requestSaveAsModal, newSession, caps, capsUUID, capsName, saveSession,
            visibleProviders = [],
-           isCapsDirty, newSessionLoading, attachSessId, t} = this.props;
+           isCapsDirty, isEditingDesiredCaps, newSessionLoading, attachSessId, t} = this.props;
 
     const isAttaching = tabKey === 'attach';
 
@@ -106,8 +106,11 @@ export default class Session extends Component {
                 {t('desiredCapabilitiesDocumentation')}
               </a>
             </div>
-            { (!isAttaching && capsUUID) && <Button onClick={() => saveSession(server, serverType, caps, {name: capsName, uuid: capsUUID})} disabled={!isCapsDirty}>{t('Save')}</Button> }
-            {!isAttaching && <Button onClick={requestSaveAsModal}>{t('saveAs')}</Button>}
+            { (!isAttaching && capsUUID) && <Button
+              onClick={() => saveSession(server, serverType, caps, {name: capsName, uuid: capsUUID})}
+              disabled={!isCapsDirty || isEditingDesiredCaps}>{t('Save')}</Button> }
+            {!isAttaching && <Button
+              onClick={requestSaveAsModal} disabled={isEditingDesiredCaps}>{t('saveAs')}</Button>}
             {!isAttaching && <Button type={BUTTON.PRIMARY} id='btnStartSession'
               onClick={() => newSession(caps)} className={SessionStyles['start-session-button']}>{t('startSession')}</Button>
             }
