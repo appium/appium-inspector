@@ -1,5 +1,5 @@
-import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE,
-         SESSION_SERVER_PARAMS } from '../../shared/settings';
+import { ipcRenderer, fs, util, getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS,
+         SESSION_SERVER_TYPE, SESSION_SERVER_PARAMS } from '../polyfills';
 import { v4 as UUID } from 'uuid';
 import { push } from 'connected-react-router';
 import { notification } from 'antd';
@@ -12,7 +12,6 @@ import { addVendorPrefixes } from '../util';
 import ky from 'ky/umd';
 import moment from 'moment';
 import { APP_MODE } from '../components/Inspector/shared';
-import { ipcRenderer, fs, util } from '../polyfills';
 import { getSaveableState } from '../../main/helpers';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
