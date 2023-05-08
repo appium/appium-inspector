@@ -46,8 +46,8 @@ async function getSetting (setting) {
   return DEFAULT_SETTINGS[setting];
 }
 
-async function setSetting (setting, value) {
-  await settings.set(setting, value);
+function setSetting (setting, value) {
+  settings.set(setting, value);
 }
 
 export {
