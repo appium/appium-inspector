@@ -1,4 +1,3 @@
-export const PRESETS = 'presets';
 export const SAVED_SESSIONS = 'SAVED_SESSIONS';
 export const SET_SAVED_GESTURES = 'SET_SAVED_GESTURES';
 export const SERVER_ARGS = 'SERVER_ARGS';
@@ -6,8 +5,7 @@ export const SESSION_SERVER_PARAMS = 'SESSION_SERVER_PARAMS';
 export const SESSION_SERVER_TYPE = 'SESSION_SERVER_TYPE';
 export const SAVED_FRAMEWORK = 'SAVED_FRAMEWORK';
 
-export const DEFAULT_SETTINGS = {
-  [PRESETS]: {},
+const DEFAULT_SETTINGS = {
   [SAVED_SESSIONS]: [],
   [SET_SAVED_GESTURES]: [],
   [SERVER_ARGS]: null,
@@ -41,14 +39,14 @@ if (buildForBrowser()) {
     i18NextBackendOptions, fs, util} = require('./electron'));
 }
 
-export async function getSetting (setting) {
+async function getSetting (setting) {
   if (await settings.has(setting)) {
     return await settings.get(setting);
   }
   return DEFAULT_SETTINGS[setting];
 }
 
-export async function setSetting (setting, value) {
+async function setSetting (setting, value) {
   await settings.set(setting, value);
 }
 
@@ -58,7 +56,8 @@ export {
   shell,
   remote,
   ipcRenderer,
-  settings,
+  getSetting,
+  setSetting,
   i18NextBackend,
   i18NextBackendOptions,
   fs,
