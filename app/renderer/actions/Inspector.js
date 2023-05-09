@@ -5,7 +5,7 @@ import { showError } from './Session';
 import { xmlToJSON } from '../util';
 import { v4 as UUID } from 'uuid';
 import frameworks from '../lib/client-frameworks';
-import { getSetting, setSetting, SAVED_FRAMEWORK } from '../polyfills';
+import { getSetting, setSetting, SAVED_FRAMEWORK } from '../../shared/settings';
 import i18n from '../../configs/i18next.config.renderer';
 import AppiumClient, { NATIVE_APP } from '../lib/appium-client';
 import { notification } from 'antd';
