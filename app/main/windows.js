@@ -3,6 +3,7 @@ import { APPIUM_SESSION_EXTENSION } from './helpers';
 import { rebuildMenus } from './menus';
 import { openFilePath } from '../main';
 import i18n from '../configs/i18next.config';
+import settings from '../shared/settings';
 
 let mainWindow = null;
 
@@ -82,8 +83,9 @@ export function setupMainWindow ({splashUrl, mainUrl, isDev, shouldShowFileMenu 
     }]).popup(mainWindow);
   });
 
-  i18n.on('languageChanged', (languageCode) => {
+  i18n.on('languageChanged', async (languageCode) => {
     rebuildMenus(null, shouldShowFileMenu);
+    await settings.set('PREFERRED_LANGUAGE', languageCode);
     webContents.getAllWebContents().forEach((wc) => {
       wc.send('appium-language-changed', {
         language: languageCode,
