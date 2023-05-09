@@ -1,23 +1,4 @@
-import { ipcMain } from 'electron';
-import settings from 'electron-settings';
-
 const APPIUM_SESSION_FILE_VERSION = '1.0';
-
-export function setupIPCListeners () {
-  ipcMain.handle('has-setting', (_evt, key) => settings.has(key));
-  ipcMain.handle('get-setting', (_evt, key) => settings.get(key));
-  ipcMain.on('set-setting', (_evt, key, value) => settings.set(key, value));
-}
-
-// cannot reuse renderer polyfills since renderer has not loaded yet
-export function getPreferredLanguage () {
-  const key = 'PREFERRED_LANGUAGE';
-  if ((process.env.BUILD_BROWSER || typeof (process.versions.electron) !== 'string')) {
-    return JSON.parse(localStorage.getItem(key));
-  } else {
-    return settings.getSync(key);
-  }
-}
 
 export function getAppiumSessionFilePath (argv, isPackaged, isDev) {
   if (isDev) {

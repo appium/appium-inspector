@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import { installExtensions } from './main/debug';
 import { setupMainWindow } from './main/windows';
-import { setupIPCListeners, getAppiumSessionFilePath } from './main/helpers';
+import { getAppiumSessionFilePath } from './main/helpers';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -21,7 +21,6 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-  setupIPCListeners();
   setupMainWindow({
     mainUrl: `file://${__dirname}/index.html`,
     splashUrl: `file://${__dirname}/splash.html`,
