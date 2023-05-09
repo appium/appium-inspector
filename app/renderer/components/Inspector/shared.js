@@ -50,6 +50,8 @@ const STRATEGY_MAPPINGS = [
   ['id', 'id'],
   ['rntestid', 'id'],
   ['resource-id', 'id'],
+  ['class', 'class name'],
+  ['type', 'class name'],
 ];
 
 export function getLocators (attributes, sourceXML) {
