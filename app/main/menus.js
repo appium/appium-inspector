@@ -156,14 +156,14 @@ function macMenuHelp () {
   return {
     label: i18n.t('Help'),
     submenu: [{
-      label: i18n.t('Learn More'),
+      label: i18n.t('Inspector Documentation'),
       click () {
-        shell.openExternal('http://appium.io');
+        shell.openExternal('https://github.com/appium/appium-inspector');
       }
     }, {
-      label: i18n.t('Documentation'),
+      label: i18n.t('Appium Documentation'),
       click () {
-        shell.openExternal('https://appium.io/documentation.html');
+        shell.openExternal('https://appium.io');
       }
     }, {
       label: i18n.t('Search Issues'),
@@ -325,30 +325,8 @@ function otherMenuView ({mainWindow}) {
 }
 
 function otherMenuHelp () {
-  return {
-    label: i18n.t('Help'),
-    submenu: [{
-      label: i18n.t('Learn More'),
-      click () {
-        shell.openExternal('http://appium.io');
-      }
-    }, {
-      label: i18n.t('Documentation'),
-      click () {
-        shell.openExternal('https://appium.io/documentation.html');
-      }
-    }, {
-      label: i18n.t('Search Issues'),
-      click () {
-        shell.openExternal('https://github.com/appium/appium-inspector/issues');
-      }
-    }, {
-      label: i18n.t('Add Or Improve Translations'),
-      click () {
-        shell.openExternal('https://crowdin.com/project/appium-desktop');
-      }
-    }]
-  };
+  // just the same as mac menus for now since we don't have any hotkeys for this menu
+  return macMenuHelp();
 }
 
 menuTemplates.other = ({mainWindow, shouldShowFileMenu}) => [
