@@ -18,7 +18,7 @@ function getI18NextOptions (backend) {
     interpolation: {
       escapeValue: false
     },
-    lng: settings.getSync('PREFERRED_LANGUAGE') || 'en',
+    lng: settings && settings.getSync('PREFERRED_LANGUAGE') || 'en',
     fallbackLng: config.fallbackLng,
     whitelist: config.languages,
     react: {
