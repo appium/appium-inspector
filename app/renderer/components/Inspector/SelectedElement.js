@@ -210,7 +210,7 @@ class SelectedElement extends Component {
     return <div>
       {elementInteractionsNotAvailable && <Row type={ROW.FLEX} gutter={10}>
         <Col>
-          <Alert type={ALERT.INFO} message={t('Interactions are not available for this element')} showIcon />
+          <Alert type={ALERT.INFO} message={t('interactionsNotAvailable')} showIcon />
         </Col>
       </Row>}
       <Row justify="center" type={ROW.FLEX} align="middle" gutter={10} className={styles.elementActions}>
