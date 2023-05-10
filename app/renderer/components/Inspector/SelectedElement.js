@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import {getLocators} from './shared';
 import styles from './Inspector.css';
-import { Button, Row, Col, Input, Modal, Table, Alert, Tooltip, Select } from 'antd';
+import { Button, Row, Col, Input, Modal, Table, Alert, Tooltip, Select, Spin } from 'antd';
 import { withTranslation } from '../../util';
 import {clipboard, shell} from '../../polyfills';
 import {
@@ -261,12 +261,14 @@ class SelectedElement extends Component {
       </Row>
       {findDataSource.length > 0 &&
         <Row>
-          <Table
-            columns={findColumns}
-            dataSource={findDataSource}
-            size="small"
-            tableLayout='fixed'
-            pagination={false} />
+          <Spin spinning={isFindingElementsTimes}>
+            <Table
+              columns={findColumns}
+              dataSource={findDataSource}
+              size="small"
+              tableLayout='fixed'
+              pagination={false} />
+          </Spin>
         </Row>
       }
       <br />

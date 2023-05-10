@@ -190,7 +190,7 @@ export default class Inspector extends Component {
     const {screenshot, screenshotError, selectedElement = {},
            applyClientMethod, quitSession, isRecording, showRecord, startRecording,
            pauseRecording, showLocatorTestModal, appMode,
-           screenshotInteractionMode, isFindingElementsTimes, visibleCommandMethod,
+           screenshotInteractionMode, visibleCommandMethod,
            selectedInteractionMode, selectInteractionMode, selectAppMode, setVisibleCommandResult,
            showKeepAlivePrompt, keepSessionAlive, sourceXML, t, visibleCommandResult,
            mjpegScreenshotUrl, isAwaitingMjpegStream, toggleShowCentroids, showCentroids,
@@ -374,29 +374,27 @@ export default class Inspector extends Component {
       {generalControls}
     </div>;
 
-    return (<Spin spinning={isFindingElementsTimes} key="main">
-      <div className={InspectorStyles['inspector-container']}>
-        {controls}
-        {main}
-        <Modal
-          title={t('Session Inactive')}
-          open={showKeepAlivePrompt}
-          onOk={() => keepSessionAlive()}
-          onCancel={() => quitSession()}
-          okText={t('Keep Session Running')}
-          cancelText={t('Quit Session')}
-        >
-          <p>{t('Your session is about to expire')}</p>
-        </Modal>
-        <Modal
-          title={t('methodCallResult', {methodName: visibleCommandMethod})}
-          open={!!visibleCommandResult}
-          onOk={() => setVisibleCommandResult(null)}
-          onCancel={() => setVisibleCommandResult(null)}
-        >
-          <pre><code>{visibleCommandResult}</code></pre>
-        </Modal>
-      </div>
-    </Spin>);
+    return (<div className={InspectorStyles['inspector-container']}>
+      {controls}
+      {main}
+      <Modal
+        title={t('Session Inactive')}
+        open={showKeepAlivePrompt}
+        onOk={() => keepSessionAlive()}
+        onCancel={() => quitSession()}
+        okText={t('Keep Session Running')}
+        cancelText={t('Quit Session')}
+      >
+        <p>{t('Your session is about to expire')}</p>
+      </Modal>
+      <Modal
+        title={t('methodCallResult', {methodName: visibleCommandMethod})}
+        open={!!visibleCommandResult}
+        onOk={() => setVisibleCommandResult(null)}
+        onCancel={() => setVisibleCommandResult(null)}
+      >
+        <pre><code>{visibleCommandResult}</code></pre>
+      </Modal>
+    </div>);
   }
 }
