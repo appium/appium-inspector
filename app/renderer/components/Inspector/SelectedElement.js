@@ -85,10 +85,11 @@ class SelectedElement extends Component {
       selectedElementId: elementId,
       sourceXML,
       elementInteractionsNotAvailable,
+      selectedElementSearchInProgress,
       t,
     } = this.props;
     const {attributes, classChain, predicateString, xpath} = selectedElement;
-    const isDisabled = !elementId || isFindingElementsTimes;
+    const isDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
 
     if (!currentContext) {
       currentContext = NATIVE_APP;
@@ -203,7 +204,7 @@ class SelectedElement extends Component {
     }
 
     let tapIcon = <AimOutlined/>;
-    if (!(elementInteractionsNotAvailable || elementId)) {
+    if (!(elementInteractionsNotAvailable || elementId) || selectedElementSearchInProgress) {
       tapIcon = <LoadingOutlined/>;
     }
 
