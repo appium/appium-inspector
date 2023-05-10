@@ -208,7 +208,7 @@ class SelectedElement extends Component {
     }
 
     return <div>
-      {elementInteractionsNotAvailable && <Row type={ROW.FLEX} gutter={10}>
+      {elementInteractionsNotAvailable && <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemNotInteractableAlertRow}>
         <Col>
           <Alert type={ALERT.INFO} message={t('interactionsNotAvailable')} showIcon />
         </Col>
