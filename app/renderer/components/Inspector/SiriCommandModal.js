@@ -28,7 +28,7 @@ class SiriCommandModal extends Component {
     } = this.props;
 
     // Footer displays all the buttons at the bottom of the Modal
-    return <Modal visible={isSiriCommandModalVisible}
+    return <Modal open={isSiriCommandModalVisible}
       title={t('Execute Siri Command')}
       onCancel={this.onCancel.bind(this)}
       footer=
