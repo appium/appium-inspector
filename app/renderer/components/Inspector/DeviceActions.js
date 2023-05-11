@@ -6,6 +6,8 @@ import { HiOutlineMicrophone, HiOutlineHome } from 'react-icons/hi';
 import { BiSquare, BiCircle } from 'react-icons/bi';
 import { IoChevronBackOutline } from 'react-icons/io5';
 
+const ButtonGroup = Button.Group;
+
 class DeviceActions extends Component {
 
   render () {
@@ -16,7 +18,7 @@ class DeviceActions extends Component {
       driver
     } = this.props;
 
-    return <div>
+    return <ButtonGroup>
       {driver.client.isIOS && <div className={InspectorStyles['action-controls']}>
         <Tooltip title={t('Press Home Button')}>
           <Button id='btnPressHomeButton' icon={<HiOutlineHome className={InspectorStyles['custom-button-icon']}/>} onClick={() => applyClientMethod({ methodName: 'executeScript', args: ['mobile:pressButton', [{name: 'home'}]]})}/>
@@ -36,7 +38,7 @@ class DeviceActions extends Component {
           <Button id='btnPressHomeButton' icon={<BiSquare className={InspectorStyles['custom-button-icon']}/>} onClick={() => applyClientMethod({ methodName: 'pressKeyCode', args: [187]})}/>
         </Tooltip>
       </div>}
-    </div>;
+    </ButtonGroup>;
   }
 }
 
