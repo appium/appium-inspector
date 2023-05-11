@@ -393,6 +393,10 @@
     overflow: auto;
 }
 
+.selectedElemNotInteractableAlertRow {
+    justify-content: center;
+}
+
 .sourceTag {
     color: #7d2020;
     font-weight: normal

@@ -119,6 +119,7 @@ export default function inspector (state = INITIAL_STATE, action) {
         ...state,
         selectedElement: findElementByPath(action.path, state.source),
         selectedElementPath: action.path,
+        selectedElementSearchInProgress: true,
         elementInteractionsNotAvailable: false,
         findElementsExecutionTimes: [],
       };
@@ -131,6 +132,7 @@ export default function inspector (state = INITIAL_STATE, action) {
         selectedElementId: null,
         selectedElementVariableName: null,
         selectedElementVariableType: null,
+        selectedElementSearchInProgress: false,
       };
 
     case SELECT_CENTROID:
@@ -148,6 +150,7 @@ export default function inspector (state = INITIAL_STATE, action) {
         selectedElementId: action.elementId,
         selectedElementVariableName: action.variableName,
         selectedElementVariableType: action.variableType,
+        selectedElementSearchInProgress: false,
         findElementsExecutionTimes: [],
       };
 
@@ -155,6 +158,7 @@ export default function inspector (state = INITIAL_STATE, action) {
       return {
         ...state,
         elementInteractionsNotAvailable: true,
+        selectedElementSearchInProgress: false,
       };
 
     case SELECT_HOVERED_ELEMENT:
