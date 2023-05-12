@@ -20,10 +20,7 @@ function getI18NextOptions (backend) {
     },
     lng: settings && settings.getSync('PREFERRED_LANGUAGE') || 'en',
     fallbackLng: config.fallbackLng,
-    whitelist: config.languages,
-    react: {
-      wait: false
-    }
+    whitelist: config.languages
   };
 }
 
