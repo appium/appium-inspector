@@ -349,11 +349,11 @@ export function getSavedActionFramework () {
 }
 
 export function setActionFramework (framework) {
-  return (dispatch) => {
+  return async (dispatch) => {
     if (!frameworks[framework]) {
       throw new Error(i18n.t('frameworkNotSupported', {framework}));
     }
-    setSetting(SAVED_FRAMEWORK, framework);
+    await setSetting(SAVED_FRAMEWORK, framework);
     dispatch({type: SET_ACTION_FRAMEWORK, framework});
   };
 }
@@ -791,7 +791,7 @@ export function saveGesture (params) {
       }
     }
     dispatch({type: SET_SAVED_GESTURES, savedGestures});
-    setSetting(SET_SAVED_GESTURES, savedGestures);
+    await setSetting(SET_SAVED_GESTURES, savedGestures);
     const action = getSavedGestures();
     await action(dispatch);
   };
@@ -810,7 +810,7 @@ export function deleteSavedGesture (id) {
     dispatch({type: DELETE_SAVED_GESTURES_REQUESTED, deleteGesture: id});
     const gestures = await getSetting(SET_SAVED_GESTURES);
     const newGestures = gestures.filter((gesture) => gesture.id !== id);
-    setSetting(SET_SAVED_GESTURES, newGestures);
+    await setSetting(SET_SAVED_GESTURES, newGestures);
     dispatch({type: DELETE_SAVED_GESTURES_DONE});
     dispatch({type: GET_SAVED_GESTURES_DONE, savedGestures: newGestures});
   };

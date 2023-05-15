@@ -542,7 +542,7 @@ export function newSession (caps, attachSessId = null) {
     } finally {
       dispatch({type: NEW_SESSION_DONE});
       // Save the current server settings
-      setSetting(SESSION_SERVER_PARAMS, session.server);
+      await setSetting(SESSION_SERVER_PARAMS, session.server);
     }
 
     // The homepage arg in ChromeDriver is not working with Appium. iOS can have a default url, but
@@ -627,7 +627,7 @@ export function saveSession (server, serverType, caps, params) {
         }
       }
     }
-    setSetting(SAVED_SESSIONS, savedSessions);
+    await setSetting(SAVED_SESSIONS, savedSessions);
     const action = getSavedSessions();
     await action(dispatch);
     dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name});
@@ -690,7 +690,7 @@ export function deleteSavedSession (uuid) {
     dispatch({type: DELETE_SAVED_SESSION_REQUESTED, uuid});
     let savedSessions = await getSetting(SAVED_SESSIONS);
     let newSessions = savedSessions.filter((session) => session.uuid !== uuid);
-    setSetting(SAVED_SESSIONS, newSessions);
+    await setSetting(SAVED_SESSIONS, newSessions);
     dispatch({type: DELETE_SAVED_SESSION_DONE});
     dispatch({type: GET_SAVED_SESSIONS_DONE, savedSessions: newSessions});
   };
@@ -709,8 +709,8 @@ export function setAttachSessId (attachSessId) {
  * Change the server type
  */
 export function changeServerType (serverType) {
-  return (dispatch, getState) => {
-    setSetting(SESSION_SERVER_TYPE, serverType);
+  return async (dispatch, getState) => {
+    await setSetting(SESSION_SERVER_TYPE, serverType);
     dispatch({type: CHANGE_SERVER_TYPE, serverType});
     const action = getRunningSessions();
     action(dispatch, getState);
@@ -722,9 +722,9 @@ export function changeServerType (serverType) {
  */
 export function setServerParam (name, value, serverType) {
   const debounceGetRunningSessions = debounce(getRunningSessions(), 5000);
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     serverType = serverType || getState().session.serverType;
-    setSetting(SESSION_SERVER_TYPE, serverType);
+    await setSetting(SESSION_SERVER_TYPE, serverType);
     dispatch({type: SET_SERVER_PARAM, serverType, name, value});
     debounceGetRunningSessions(dispatch, getState);
   };
@@ -977,19 +977,19 @@ export function stopAddCloudProvider () {
 }
 
 export function addVisibleProvider (provider) {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     let currentProviders = getState().session.visibleProviders;
     const providers = union(currentProviders, [provider]);
-    setSetting(VISIBLE_PROVIDERS, providers);
+    await setSetting(VISIBLE_PROVIDERS, providers);
     dispatch({type: SET_PROVIDERS, providers});
   };
 }
 
 export function removeVisibleProvider (provider) {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     let currentProviders = getState().session.visibleProviders;
     const providers = without(currentProviders, provider);
-    setSetting(VISIBLE_PROVIDERS, providers);
+    await setSetting(VISIBLE_PROVIDERS, providers);
     dispatch({type: SET_PROVIDERS, providers});
   };
 }
