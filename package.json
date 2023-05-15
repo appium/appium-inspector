@@ -130,8 +130,24 @@
     "electron": "./node_modules/.bin/electron"
   },
   "//dependencies": {
-    "history": "Can't upgrade to v5 yet because it breaks connected-react-router so far",
-    "ky": "Can't upgrade because newer versions are ESM and parcel tries to bundle them with require"
+    "antd": "V5: significant rewrite required",
+    "bluebird": "Deprecated: recommended to replace with native promises",
+    "cheerio": "1.0.0-rc.11: errors with export namespace",
+    "connected-react-router": "Abandoned: replace with alternatives like redux-first-history",
+    "electron-settings": "V5: need to rewrite to IPC while keeping browser version working",
+    "format-json": "Abandoned: replace with alternatives like pretty-print-json",
+    "history": "V5: breaks connected-react-router",
+    "htmlparser2": "8.0.0: errors with export namespace",
+    "i18next-node-fs-backend": "Deprecated: replace with i18next-fs-backend",
+    "ky": "Can't upgrade because newer versions are ESM and parcel tries to bundle them with require",
+    "react": "???",
+    "react-redux": "???",
+    "react-router": "???",
+    "redux-logger": "Appears abandoned",
+    "request": "Deprecated: replace with alternatives like got",
+    "request-promise": "Deprecated: replace with alternatives",
+    "source-map-support": "Obsolete: integrated in Node.js 12.12.0+",
+    "uuid": "V9: race condition?"
   },
   "dependencies": {
     "@xmldom/xmldom": "0.8.7",
@@ -173,7 +189,19 @@
     "xpath": "0.0.32"
   },
   "//devDependencies": {
-    "postcss-modules": "Can't upgrade any further until we upgrade to Parcel v2"
+    "babel-plugin-transform-class-properties": "Renamed: move to @babel/plugin-proposal-class-properties",
+    "chai-as-promised": "Abandoned",
+    "cross-env": "Maintenance mode",
+    "devtron": "Abandoned",
+    "electron": "V14: breaks electron-settings",
+    "electron-devtools-installer": "Abandoned: replace with electron-extension-installer",
+    "mocha-multi-reporters": "Appears abandoned",
+    "node-libs-browser": "Deprecated",
+    "npm-run-all": "Abandoned: replace with normal use of '&&'",
+    "parcel-bundler": "V2: significant rewrite required",
+    "postcss-modules": "Can't upgrade any further until we upgrade to Parcel v2",
+    "rimraf": "???",
+    "spectron": "???"
   },
   "devDependencies": {
     "@appium/fake-driver": "5.2.3",
