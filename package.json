@@ -140,9 +140,9 @@
     "htmlparser2": "8.0.0: errors with export namespace",
     "i18next-node-fs-backend": "Deprecated: replace with i18next-fs-backend",
     "ky": "Can't upgrade because newer versions are ESM and parcel tries to bundle them with require",
-    "react": "???",
-    "react-redux": "???",
-    "react-router": "???",
+    "react": "V18: conflicting peer dependency with connected-react-router",
+    "react-redux": "V8: conflicting peer dependency with connected-react-router",
+    "react-router": "V6: conflicting peer dependency with connected-react-router",
     "redux-logger": "Appears abandoned",
     "request": "Deprecated: replace with alternatives like got",
     "request-promise": "Deprecated: replace with alternatives",
@@ -200,8 +200,7 @@
     "npm-run-all": "Abandoned: replace with normal use of '&&'",
     "parcel-bundler": "V2: significant rewrite required",
     "postcss-modules": "Can't upgrade any further until we upgrade to Parcel v2",
-    "rimraf": "???",
-    "spectron": "???"
+    "spectron": "Deprecated. Newer V16 also requires Electron 14"
   },
   "devDependencies": {
     "@appium/fake-driver": "5.2.3",
