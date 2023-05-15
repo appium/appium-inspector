@@ -215,7 +215,7 @@
     "parcel-plugin-asset-copier": "1.1.1",
     "postcss-modules": "3.2.2",
     "release": "6.3.1",
-    "rimraf": "3.0.2",
+    "rimraf": "5.0.0",
     "sinon": "15.0.4",
     "spectron": "15.0.0"
   },
