@@ -139,15 +139,15 @@
     "history": "V5: breaks connected-react-router",
     "htmlparser2": "8.0.0: errors with export namespace",
     "i18next-node-fs-backend": "Deprecated: replace with i18next-fs-backend",
-    "ky": "Can't upgrade because newer versions are ESM and parcel tries to bundle them with require",
+    "ky": "0.26.0: module is now ESM and parcel tries to bundle it with require",
     "react": "V18: conflicting peer dependency with connected-react-router",
     "react-redux": "V8: conflicting peer dependency with connected-react-router",
     "react-router": "V6: conflicting peer dependency with connected-react-router",
-    "redux-logger": "Appears abandoned",
+    "redux-logger": "Appears to be abandoned",
     "request": "Deprecated: replace with alternatives like got",
     "request-promise": "Deprecated: replace with alternatives",
     "source-map-support": "Obsolete: integrated in Node.js 12.12.0+",
-    "uuid": "V9: race condition?"
+    "uuid": "Obsolete: can be replaced with crypto.randomUUID in Electron 14+"
   },
   "dependencies": {
     "@xmldom/xmldom": "0.8.7",
@@ -195,11 +195,10 @@
     "devtron": "Abandoned",
     "electron": "V14: breaks electron-settings",
     "electron-devtools-installer": "Abandoned: replace with electron-extension-installer",
-    "mocha-multi-reporters": "Appears abandoned",
+    "mocha-multi-reporters": "Appears to be abandoned",
     "node-libs-browser": "Deprecated",
-    "npm-run-all": "Abandoned: replace with normal use of '&&'",
     "parcel-bundler": "V2: significant rewrite required",
-    "postcss-modules": "Can't upgrade any further until we upgrade to Parcel v2",
+    "postcss-modules": "V4: requires updating to Parcel v2",
     "spectron": "Deprecated. Newer V16 also requires Electron 14"
   },
   "devDependencies": {
