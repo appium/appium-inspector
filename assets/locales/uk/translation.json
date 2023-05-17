@@ -136,7 +136,7 @@
   "Selector": "Селектор",
   "Time": "Час (мс)",
   "Get Timing": "Виміряти таймінг",
-  "interactionsNotAvailable": "Interactions for this element may not be available",
+  "interactionsNotAvailable": "Взаємодії для цього елемента не можлива",
   "usingXPathNotRecommended": "Використання локаторів XPath не рекомендується і може призвести до нестабільності тестів. Попросіть свою команду розробників натомість присвоїти елементам унікальні локатори.",
   "usingSwitchContextRecommended": "Виявлені певні веб-контексти; деякі елементи будуть доступні лише після перемикання у веб-контекст, що повинно бути зроблено в скрипті Appium. Див. http://appium.io/docs/en/writing-running-appium/web/hybrid/ для отримання додаткової інформації",
   "usingWebviewContext": "Використання Webview інспектора в Appium інспекторі є менш точним в отриманні та вибору DOM елементів порівняно з використанням DevTools Chrome та Safari.",
