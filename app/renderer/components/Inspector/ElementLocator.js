@@ -7,6 +7,34 @@ const { Option } = Select;
 
 class ElementLocator extends Component {
 
+  getLocatorStrategies (driver) {
+    let baseLocatorStrategies = [
+      ['id', 'Id'],
+      ['xpath', 'XPath'],
+      ['name', 'Name'],
+      ['class name', 'Class Name'],
+      ['accessibility id', 'Accessibility ID']
+    ];
+    if (driver.client.isIOS) {
+      baseLocatorStrategies.push(
+        ['-ios predicate string', 'Predicate String (iOS)'],
+        ['-ios class chain', 'Class Chain (iOS)']
+      );
+    } else if (driver.client.isAndroid) {
+      if (driver.client.capabilities.automationName.toLowerCase() === 'espresso') {
+        baseLocatorStrategies.push(
+          ['-android datamatcher', 'DataMatcher Selector (Android Espresso)'],
+          ['-android viewtag', 'Android View Tag (Android Espresso)']
+        );
+      } else {
+        baseLocatorStrategies.push(
+          ['-android uiautomator', 'UIAutomator Selector (Android UiAutomator2)'],
+        );
+      }
+    }
+    return baseLocatorStrategies;
+  }
+
   onSubmit () {
     const {locatedElements, locatorTestStrategy, locatorTestValue, searchForElement, clearSearchResults, hideLocatorTestModal} = this.props;
     if (locatedElements) {
@@ -29,21 +57,9 @@ class ElementLocator extends Component {
       locatorTestValue,
       setLocatorTestStrategy,
       locatorTestStrategy,
+      driver,
       t,
     } = this.props;
-
-    const locatorStrategies = [
-      ['id', 'Id'],
-      ['xpath', 'XPath'],
-      ['name', 'Name'],
-      ['class name', 'Class Name'],
-      ['accessibility id', 'Accessibility ID'],
-      ['-android uiautomator', 'UIAutomator Selector (Android UiAutomator2)'],
-      ['-android datamatcher', 'DataMatcher Selector (Android Espresso)'],
-      ['-android viewtag', 'Android View Tag (Android Espresso)'],
-      ['-ios predicate string', 'Predicate String (iOS)'],
-      ['-ios class chain', 'Class Chain (iOS)'],
-    ];
 
     return <div>
       <Row>
@@ -51,7 +67,7 @@ class ElementLocator extends Component {
         <Select className={InspectorStyles['locator-strategy-selector']}
           onChange={(value) => setLocatorTestStrategy(value)}
           value={locatorTestStrategy}>
-          {locatorStrategies.map(([strategyValue, strategyName]) => (
+          {this.getLocatorStrategies(driver).map(([strategyValue, strategyName]) => (
             <Option key={strategyValue} value={strategyValue}>{strategyName}</Option>
           ))}
         </Select>
