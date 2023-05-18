@@ -47,18 +47,15 @@ class LocatorTestModal extends Component {
       confirmLoading={isSearchingForElements}
       onCancel={this.onCancel.bind(this)}
       footer=
-        {[
-          locatedElements &&
+        {<>
+          {locatedElements &&
           <Button onClick={(e) => e.preventDefault() || clearSearchResults()}>
             Back
-          </Button>,
+          </Button>}
           <Button onClick={this.onSubmit.bind(this)} type="primary">
-            {locatedElements ?
-              t('Done')
-              :
-              t('Search')}
+            {locatedElements ? t('Done') : t('Search')}
           </Button>
-        ]}>
+        </>}>
       {!locatedElements && <ElementLocator {...this.props} />}
       {locatedElements && <LocatedElements {...this.props} />}
     </Modal>;
