@@ -471,8 +471,7 @@
     width: 100%;
 }
 
-.locator-strategy-selector {
-    width: 100%;
+.locatorStrategySegmentedRow {
     margin-bottom: 1em;
 }
 

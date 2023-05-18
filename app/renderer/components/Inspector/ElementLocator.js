@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Input, Select, Row } from 'antd';
+import { Input, Segmented, Row } from 'antd';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
-
-const { Option } = Select;
 
 class ElementLocator extends Component {
 
@@ -61,16 +59,16 @@ class ElementLocator extends Component {
       t,
     } = this.props;
 
-    return <div>
-      <Row>
-        {t('locatorStrategy')}
-        <Select className={InspectorStyles['locator-strategy-selector']}
+    return <>
+      {t('locatorStrategy')}
+      <Row className={InspectorStyles.locatorStrategySegmentedRow}>
+        <Segmented
           onChange={(value) => setLocatorTestStrategy(value)}
-          value={locatorTestStrategy}>
-          {this.getLocatorStrategies(driver).map(([strategyValue, strategyName]) => (
-            <Option key={strategyValue} value={strategyValue}>{strategyName}</Option>
+          value={locatorTestStrategy}
+          options={this.getLocatorStrategies(driver).map(([strategyValue, strategyName]) => (
+            {label: strategyName, value: strategyValue}
           ))}
-        </Select>
+        />
       </Row>
       {t('selector')}
       <Row>
@@ -82,7 +80,7 @@ class ElementLocator extends Component {
           rows={3}
         />
       </Row>
-    </div>;
+    </>;
   }
 }
 
