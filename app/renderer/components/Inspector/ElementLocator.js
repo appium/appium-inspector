@@ -72,9 +72,14 @@ class ElementLocator extends Component {
           ))}
         </Select>
       </Row>
+      {t('selector')}
       <Row>
-        {t('selector')}
-        <Input.TextArea className={InspectorStyles['locator-strategy-selector']} onChange={(e) => setLocatorTestValue(e.target.value)} value={locatorTestValue} />
+        <Input.TextArea
+          className={InspectorStyles.locatorStrategySelectorTextarea}
+          onChange={(e) => setLocatorTestValue(e.target.value)}
+          value={locatorTestValue}
+          rows={3}
+        />
       </Row>
     </div>;
   }
