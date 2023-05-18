@@ -17,18 +17,18 @@ class ElementLocator extends Component {
     ];
     if (driver.client.isIOS) {
       baseLocatorStrategies.push(
-        ['-ios predicate string', 'Predicate String (iOS)'],
-        ['-ios class chain', 'Class Chain (iOS)']
+        ['-ios predicate string', 'Predicate String'],
+        ['-ios class chain', 'Class Chain']
       );
     } else if (driver.client.isAndroid) {
       if (driver.client.capabilities.automationName.toLowerCase() === 'espresso') {
         baseLocatorStrategies.push(
-          ['-android datamatcher', 'DataMatcher Selector (Android Espresso)'],
-          ['-android viewtag', 'Android View Tag (Android Espresso)']
+          ['-android datamatcher', 'DataMatcher'],
+          ['-android viewtag', 'View Tag']
         );
       } else {
         baseLocatorStrategies.push(
-          ['-android uiautomator', 'UIAutomator Selector (Android UiAutomator2)'],
+          ['-android uiautomator', 'UIAutomator'],
         );
       }
     }
