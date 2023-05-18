@@ -152,7 +152,7 @@
   "attachToSession": "Attach to Session",
   "selectedElement": "Selected Element",
   "couldNotFindAnyElements": "Could not find any elements",
-  "elementsCount": "Elements ({{elementCount}})",
+  "elementsCount": "Elements found:",
   "xCoordinate": "X: {{x}}",
   "yCoordinate": "Y: {{y}}",
   "SauceLabs Data Center": "SauceLabs Data Center",

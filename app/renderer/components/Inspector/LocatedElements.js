@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { clipboard } from '../../polyfills';
-import { Input, Row, Col, Button } from 'antd';
+import { Input, Row, Col, Button, Badge } from 'antd';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
 
@@ -32,12 +32,12 @@ class LocatedElements extends Component {
     } = this.props;
 
     return <Row>
-      <p className={InspectorStyles['element-count-container']}>
+      <div>
         {locatedElements.length === 0 &&
           <i>{t('couldNotFindAnyElements')}</i>}
         {locatedElements.length > 0 &&
-          t('elementsCount', {elementCount: locatedElements.length})}
-      </p>
+          <span>{t('elementsCount')} <Badge count={locatedElements.length} offset={[0, -2]}/></span>}
+      </div>
       <Col>
         {locatedElements.length > 0 &&
         <div className={InspectorStyles['locator-test-interactions-container']}>
