@@ -42,7 +42,7 @@ class LocatedElements extends Component {
         {locatedElements.length > 0 &&
         <div className={InspectorStyles['locator-test-interactions-container']}>
           <select className={InspectorStyles['locator-search-results']}
-            multiple='true'
+            multiple={true}
             onChange={(e) => setLocatorTestElement(e.target.value)}
             value={[locatorTestElement]}>
             {locatedElements.map((elementId) => (
