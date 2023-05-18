@@ -78,6 +78,7 @@ class ElementLocator extends Component {
           className={InspectorStyles.locatorStrategySelectorTextarea}
           onChange={(e) => setLocatorTestValue(e.target.value)}
           value={locatorTestValue}
+          allowClear={true}
           rows={3}
         />
       </Row>
