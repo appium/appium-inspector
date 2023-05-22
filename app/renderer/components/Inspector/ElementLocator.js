@@ -11,7 +11,7 @@ const locatorStrategies = (driver) => {
     ['class name', 'Class Name'],
     ['accessibility id', 'Accessibility ID']
   ];
-  if (driver.client.isIOS) {
+  if (['ios', 'mac'].includes(driver.client.capabilities.platformName.toLowerCase())) {
     baseLocatorStrategies.push(
       ['-ios predicate string', 'Predicate String'],
       ['-ios class chain', 'Class Chain']
