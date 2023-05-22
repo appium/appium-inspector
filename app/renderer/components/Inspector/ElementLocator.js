@@ -3,35 +3,35 @@ import { Input, Radio, Row } from 'antd';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
 
-class ElementLocator extends Component {
-
-  getLocatorStrategies (driver) {
-    let baseLocatorStrategies = [
-      ['id', 'Id'],
-      ['xpath', 'XPath'],
-      ['name', 'Name'],
-      ['class name', 'Class Name'],
-      ['accessibility id', 'Accessibility ID']
-    ];
-    if (driver.client.isIOS) {
+const locatorStrategies = (driver) => {
+  let baseLocatorStrategies = [
+    ['id', 'Id'],
+    ['xpath', 'XPath'],
+    ['name', 'Name'],
+    ['class name', 'Class Name'],
+    ['accessibility id', 'Accessibility ID']
+  ];
+  if (driver.client.isIOS) {
+    baseLocatorStrategies.push(
+      ['-ios predicate string', 'Predicate String'],
+      ['-ios class chain', 'Class Chain']
+    );
+  } else if (driver.client.isAndroid) {
+    if (driver.client.capabilities.automationName.toLowerCase() === 'espresso') {
       baseLocatorStrategies.push(
-        ['-ios predicate string', 'Predicate String'],
-        ['-ios class chain', 'Class Chain']
+        ['-android datamatcher', 'DataMatcher'],
+        ['-android viewtag', 'View Tag']
       );
-    } else if (driver.client.isAndroid) {
-      if (driver.client.capabilities.automationName.toLowerCase() === 'espresso') {
-        baseLocatorStrategies.push(
-          ['-android datamatcher', 'DataMatcher'],
-          ['-android viewtag', 'View Tag']
-        );
-      } else {
-        baseLocatorStrategies.push(
-          ['-android uiautomator', 'UIAutomator'],
-        );
-      }
+    } else {
+      baseLocatorStrategies.push(
+        ['-android uiautomator', 'UIAutomator'],
+      );
     }
-    return baseLocatorStrategies;
   }
+  return baseLocatorStrategies;
+};
+
+class ElementLocator extends Component {
 
   onSubmit () {
     const {locatedElements, locatorTestStrategy, locatorTestValue, searchForElement, clearSearchResults, hideLocatorTestModal} = this.props;
@@ -66,7 +66,7 @@ class ElementLocator extends Component {
         defaultValue={locatorTestStrategy}
       >
         <Row justify="center">
-          {this.getLocatorStrategies(driver).map(([strategyValue, strategyName]) => (
+          {locatorStrategies(driver).map(([strategyValue, strategyName]) => (
             <Radio.Button value={strategyValue} key={strategyValue}>{strategyName}</Radio.Button>
           ))}
         </Row>
