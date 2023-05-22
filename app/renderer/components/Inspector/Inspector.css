@@ -433,7 +433,27 @@
     margin-top: 0.5em;
 }
 
-.locator-test-interactions-container div {
+.searchResultsContainer {
+    width: 100%;
+    flex: 1;
+    min-height: 24px;
+    max-height: 150px;
+    overflow: auto;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.searchResultsContainer :global(.ant-list-item) {
+    padding: 4px 6px !important;
+    height: 25px;
+    text-align: left;
+}
+
+.searchResultsSelectedItem {
+    background-color: #b8ddff;
+}
+
+.locator-test-interactions-container .searchResultsInnerDiv {
     display: inline-block;
     width: 50%;
     padding: 4px;
@@ -465,10 +485,6 @@
 .element-count-container {
     margin-top: 0.5em;
     margin-left: 0.5em;
-}
-
-.locator-search-results {
-    width: 100%;
 }
 
 .locatorStrategyGroup {

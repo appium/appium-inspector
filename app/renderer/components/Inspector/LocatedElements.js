@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { clipboard } from '../../polyfills';
-import { Input, Row, Col, Button, Badge } from 'antd';
+import { Input, Row, Button, Badge, List, Space, Tooltip } from 'antd';
+import { CopyOutlined, AimOutlined, UndoOutlined } from '@ant-design/icons';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
+
+const ButtonGroup = Button.Group;
 
 class LocatedElements extends Component {
 
@@ -31,60 +34,75 @@ class LocatedElements extends Component {
       t,
     } = this.props;
 
-    return <Row>
-      <div>
-        {locatedElements.length === 0 &&
-          <i>{t('couldNotFindAnyElements')}</i>}
-        {locatedElements.length > 0 &&
-          <span>{t('elementsCount')} <Badge count={locatedElements.length} offset={[0, -2]}/></span>}
-      </div>
-      <Col>
-        {locatedElements.length > 0 &&
-        <div className={InspectorStyles['locator-test-interactions-container']}>
-          <select className={InspectorStyles['locator-search-results']}
-            multiple={true}
-            onChange={(e) => setLocatorTestElement(e.target.value)}
-            value={[locatorTestElement]}>
-            {locatedElements.map((elementId) => (
-              <option key={elementId} value={elementId}>{elementId}</option>
-            ))}
-          </select>
-          <div>
-            <Button size='small'
-              disabled={!locatorTestElement}
-              onClick={() => clipboard.writeText(locatorTestElement)}
-            >
-              {t('Copy ID')}
-            </Button>
+    return <>
+      {locatedElements.length === 0 && <Row><i>{t('couldNotFindAnyElements')}</i></Row>}
+      {locatedElements.length > 0 && <Space className={InspectorStyles.spaceContainer} direction='vertical' size='small'>
+        <Row><span>{t('elementsCount')} <Badge count={locatedElements.length} offset={[0, -2]}/></span></Row>
+        <Row>
+          <div className={InspectorStyles.searchResultsContainer}>
+            <List bordered size='small'
+              dataSource={locatedElements}
+              renderItem={(elementId) =>
+                <List.Item type='text'
+                  className={locatorTestElement === elementId ? InspectorStyles.searchResultsSelectedItem : ''}
+                  onClick={() => setLocatorTestElement(elementId)}
+                >
+                  {elementId}
+                </List.Item>
+              }
+            />
           </div>
-          <div>
-            <Button size='small'
+        </Row>
+        <Row justify='center'>
+          <ButtonGroup>
+            <Tooltip title={t('Copy ID')} placement='bottom'>
+              <Button
+                disabled={!locatorTestElement}
+                icon={<CopyOutlined/>}
+                onClick={() => clipboard.writeText(locatorTestElement)}/>
+            </Tooltip>
+            <Tooltip title={t('Tap Element')} placement='bottom'>
+              <Button
+                disabled={!locatorTestElement}
+                icon={<AimOutlined/>}
+                onClick={() => applyClientMethod({methodName: 'click', elementId: locatorTestElement})}
+              />
+            </Tooltip>
+            <Tooltip title={t('Clear')} placement='bottom'>
+              <Button
+                disabled={!locatorTestElement}
+                id='btnClearElement'
+                icon={<UndoOutlined/>}
+                onClick={() => applyClientMethod({methodName: 'clear', elementId: locatorTestElement})}
+              />
+            </Tooltip>
+          </ButtonGroup>
+          <Input.Group compact>
+            <Input
               disabled={!locatorTestElement}
-              onClick={() => applyClientMethod({methodName: 'click', elementId: locatorTestElement})}
-            >
-              {t('Tap Element')}
-            </Button>
-          </div>
-          <div>
-            <Button size='small'
-              disabled={!locatorTestElement}
-              onClick={() => applyClientMethod({methodName: 'clear', elementId: locatorTestElement})}
-            >
-              {t('Clear')}
-            </Button>
-          </div>
-          <div className={InspectorStyles['send-keys-container']}>
-            <Input size='small' placeholder={t('Enter keys')} onChange={(e) => this.setState({...this.state, sendKeys: e.target.value})}/>
-            <Button size='small'
+              placeholder={t('Enter keys')}
+              onChange={(e) => this.setState({...this.state, sendKeys: e.target.value})}/>
+            <Button
               disabled={!locatorTestElement}
               onClick={() => applyClientMethod({methodName: 'sendKeys', elementId: locatorTestElement, args: [this.state.sendKeys || '']})}
             >
               {t('Send Keys')}
             </Button>
+          </Input.Group>
+          <div className={InspectorStyles['locator-test-interactions-container']}>
+            <div className={InspectorStyles['send-keys-container']}>
+              <Input size='small' placeholder={t('Enter keys')} onChange={(e) => this.setState({...this.state, sendKeys: e.target.value})}/>
+              <Button size='small'
+                disabled={!locatorTestElement}
+                onClick={() => applyClientMethod({methodName: 'sendKeys', elementId: locatorTestElement, args: [this.state.sendKeys || '']})}
+              >
+                {t('Send Keys')}
+              </Button>
+            </div>
           </div>
-        </div>}
-      </Col>
-    </Row>;
+        </Row>
+      </Space>}
+    </>;
   }
 }
 
