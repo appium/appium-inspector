@@ -60,7 +60,6 @@ class ElementLocator extends Component {
     } = this.props;
 
     return <>
-      {t('locatorStrategy')}
       <Radio.Group buttonStyle="solid"
         className={InspectorStyles.locatorStrategyGroup}
         onChange={(e) => setLocatorTestStrategy(e.target.value)}
@@ -72,9 +71,9 @@ class ElementLocator extends Component {
           ))}
         </Row>
       </Radio.Group>
-      {t('selector')}
       <Input.TextArea
         className={InspectorStyles.locatorSelectorTextArea}
+        placeholder={t('selector')}
         onChange={(e) => setLocatorTestValue(e.target.value)}
         value={locatorTestValue}
         allowClear={true}
