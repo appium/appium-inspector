@@ -13,6 +13,7 @@ const STRAT_CLASS_CHAIN = ['-ios class chain', 'Class Chain'];
 const STRAT_UIAUTOMATOR = ['-android uiautomator', 'UIAutomator'];
 const STRAT_DATAMATCHER = ['-android datamatcher', 'DataMatcher'];
 const STRAT_VIEWTAG = ['-android viewtag', 'View Tag'];
+const STRAT_TAGNAME = ['tag name', 'Tag Name'];
 
 const locatorStrategies = (driver) => {
   const automationName = driver.client.capabilities.automationName.toLowerCase();
@@ -27,6 +28,9 @@ const locatorStrategies = (driver) => {
       break;
     case 'uiautomator2':
       strategies.push(STRAT_UIAUTOMATOR);
+      break;
+    case 'windows':
+      strategies.push(STRAT_TAGNAME);
       break;
   }
   return strategies;
