@@ -43,7 +43,6 @@ class LocatorTestModal extends Component {
     // Footer displays all the buttons at the bottom of the Modal
     return <Modal open={isLocatorTestModalVisible}
       title={t('Search for element')}
-      width={600}
       confirmLoading={isSearchingForElements}
       onCancel={this.onCancel.bind(this)}
       footer=
