@@ -471,11 +471,11 @@
     width: 100%;
 }
 
-.locatorStrategySegmentedRow {
-    margin-bottom: 1em;
+.locatorStrategyGroup {
+    margin-bottom: 12px;
 }
 
-.locatorStrategySelectorTextarea {
+.locatorSelectorTextArea {
     width: 100%;
 }
 

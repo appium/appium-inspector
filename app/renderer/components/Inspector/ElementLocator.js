@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Segmented, Row } from 'antd';
+import { Input, Radio, Row } from 'antd';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
 
@@ -61,25 +61,25 @@ class ElementLocator extends Component {
 
     return <>
       {t('locatorStrategy')}
-      <Row className={InspectorStyles.locatorStrategySegmentedRow}>
-        <Segmented
-          onChange={(value) => setLocatorTestStrategy(value)}
-          value={locatorTestStrategy}
-          options={this.getLocatorStrategies(driver).map(([strategyValue, strategyName]) => (
-            {label: strategyName, value: strategyValue}
+      <Radio.Group buttonStyle="solid"
+        className={InspectorStyles.locatorStrategyGroup}
+        onChange={(e) => setLocatorTestStrategy(e.target.value)}
+        defaultValue={locatorTestStrategy}
+      >
+        <Row justify="center">
+          {this.getLocatorStrategies(driver).map(([strategyValue, strategyName]) => (
+            <Radio.Button value={strategyValue} key={strategyValue}>{strategyName}</Radio.Button>
           ))}
-        />
-      </Row>
+        </Row>
+      </Radio.Group>
       {t('selector')}
-      <Row>
-        <Input.TextArea
-          className={InspectorStyles.locatorStrategySelectorTextarea}
-          onChange={(e) => setLocatorTestValue(e.target.value)}
-          value={locatorTestValue}
-          allowClear={true}
-          rows={3}
-        />
-      </Row>
+      <Input.TextArea
+        className={InspectorStyles.locatorSelectorTextArea}
+        onChange={(e) => setLocatorTestValue(e.target.value)}
+        value={locatorTestValue}
+        allowClear={true}
+        rows={3}
+      />
     </>;
   }
 }
