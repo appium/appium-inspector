@@ -59,7 +59,7 @@ class ElementLocator extends Component {
       t,
     } = this.props;
 
-    return <>
+    return <Row justify="center">
       <Radio.Group buttonStyle="solid"
         className={InspectorStyles.locatorStrategyGroup}
         onChange={(e) => setLocatorTestStrategy(e.target.value)}
@@ -79,7 +79,7 @@ class ElementLocator extends Component {
         allowClear={true}
         rows={3}
       />
-    </>;
+    </Row>;
   }
 }
 
