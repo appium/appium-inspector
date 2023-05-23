@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { clipboard } from '../../polyfills';
 import { Input, Row, Button, Badge, List, Space, Tooltip } from 'antd';
-import { CopyOutlined, AimOutlined, UndoOutlined } from '@ant-design/icons';
+import { CopyOutlined, AimOutlined, ClearOutlined, SendOutlined } from '@ant-design/icons';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
 
@@ -54,52 +54,45 @@ class LocatedElements extends Component {
           </div>
         </Row>
         <Row justify='center'>
-          <ButtonGroup>
-            <Tooltip title={t('Copy ID')} placement='bottom'>
-              <Button
+          <Space direction='horizontal' size='small'>
+            <ButtonGroup>
+              <Tooltip title={t('Copy ID')} placement='bottom'>
+                <Button
+                  disabled={!locatorTestElement}
+                  icon={<CopyOutlined/>}
+                  onClick={() => clipboard.writeText(locatorTestElement)}/>
+              </Tooltip>
+            </ButtonGroup>
+            <Input.Group compact className={InspectorStyles.searchResultsActions}>
+              <Tooltip title={t('Tap Element')} placement='bottom'>
+                <Button
+                  disabled={!locatorTestElement}
+                  icon={<AimOutlined/>}
+                  onClick={() => applyClientMethod({methodName: 'click', elementId: locatorTestElement})}
+                />
+              </Tooltip>
+              <Input className={InspectorStyles.searchResultsKeyInput}
                 disabled={!locatorTestElement}
-                icon={<CopyOutlined/>}
-                onClick={() => clipboard.writeText(locatorTestElement)}/>
-            </Tooltip>
-            <Tooltip title={t('Tap Element')} placement='bottom'>
-              <Button
-                disabled={!locatorTestElement}
-                icon={<AimOutlined/>}
-                onClick={() => applyClientMethod({methodName: 'click', elementId: locatorTestElement})}
-              />
-            </Tooltip>
-            <Tooltip title={t('Clear')} placement='bottom'>
-              <Button
-                disabled={!locatorTestElement}
-                id='btnClearElement'
-                icon={<UndoOutlined/>}
-                onClick={() => applyClientMethod({methodName: 'clear', elementId: locatorTestElement})}
-              />
-            </Tooltip>
-          </ButtonGroup>
-          <Input.Group compact>
-            <Input
-              disabled={!locatorTestElement}
-              placeholder={t('Enter keys')}
-              onChange={(e) => this.setState({...this.state, sendKeys: e.target.value})}/>
-            <Button
-              disabled={!locatorTestElement}
-              onClick={() => applyClientMethod({methodName: 'sendKeys', elementId: locatorTestElement, args: [this.state.sendKeys || '']})}
-            >
-              {t('Send Keys')}
-            </Button>
-          </Input.Group>
-          <div className={InspectorStyles['locator-test-interactions-container']}>
-            <div className={InspectorStyles['send-keys-container']}>
-              <Input size='small' placeholder={t('Enter keys')} onChange={(e) => this.setState({...this.state, sendKeys: e.target.value})}/>
-              <Button size='small'
-                disabled={!locatorTestElement}
-                onClick={() => applyClientMethod({methodName: 'sendKeys', elementId: locatorTestElement, args: [this.state.sendKeys || '']})}
-              >
-                {t('Send Keys')}
-              </Button>
-            </div>
-          </div>
+                placeholder={t('Enter keys')}
+                allowClear={true}
+                onChange={(e) => this.setState({...this.state, sendKeys: e.target.value})}/>
+              <Tooltip title={t('Send Keys')} placement='bottom'>
+                <Button
+                  disabled={!locatorTestElement}
+                  icon={<SendOutlined/>}
+                  onClick={() => applyClientMethod({methodName: 'sendKeys', elementId: locatorTestElement, args: [this.state.sendKeys || '']})}
+                />
+              </Tooltip>
+              <Tooltip title={t('Clear')} placement='bottom'>
+                <Button
+                  disabled={!locatorTestElement}
+                  id='btnClearElement'
+                  icon={<ClearOutlined/>}
+                  onClick={() => applyClientMethod({methodName: 'clear', elementId: locatorTestElement})}
+                />
+              </Tooltip>
+            </Input.Group>
+          </Space>
         </Row>
       </Space>}
     </>;
