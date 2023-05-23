@@ -61,14 +61,14 @@ class LocatedElements extends Component {
                 icon={<CopyOutlined/>}
                 onClick={() => clipboard.writeText(locatorTestElement)}/>
             </Tooltip>
+            <Tooltip title={t('Tap')} placement='bottom'>
+              <Button
+                disabled={!locatorTestElement}
+                icon={<AimOutlined/>}
+                onClick={() => applyClientMethod({methodName: 'click', elementId: locatorTestElement})}
+              />
+            </Tooltip>
             <ButtonGroup className={InspectorStyles.searchResultsActions}>
-              <Tooltip title={t('Tap')} placement='bottom'>
-                <Button
-                  disabled={!locatorTestElement}
-                  icon={<AimOutlined/>}
-                  onClick={() => applyClientMethod({methodName: 'click', elementId: locatorTestElement})}
-                />
-              </Tooltip>
               <Input className={InspectorStyles.searchResultsKeyInput}
                 disabled={!locatorTestElement}
                 placeholder={t('Enter keys')}

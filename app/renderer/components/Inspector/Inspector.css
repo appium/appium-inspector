@@ -454,7 +454,7 @@
 
 .searchResultsKeyInput {
     height: 32px;
-    width: calc(100% - 96px) !important;
+    width: calc(100% - 64px);
 }
 
 .element-count-container {
