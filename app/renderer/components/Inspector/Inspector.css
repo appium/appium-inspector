@@ -428,7 +428,7 @@
     width: 150px;
 }
 
-.searchResultsContainer {
+.searchResultsList {
     width: 100%;
     flex: 1;
     min-height: 24px;
@@ -438,7 +438,7 @@
     border-width: 1px;
 }
 
-.searchResultsContainer :global(.ant-list-item) {
+.searchResultsList :global(.ant-list-item) {
     padding: 4px 6px !important;
     height: 25px;
     text-align: left;

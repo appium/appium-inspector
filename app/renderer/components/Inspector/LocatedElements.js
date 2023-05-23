@@ -39,19 +39,18 @@ class LocatedElements extends Component {
       {locatedElements.length > 0 && <Space className={InspectorStyles.spaceContainer} direction='vertical' size='small'>
         <Row><span>{t('elementsCount')} <Badge count={locatedElements.length} offset={[0, -2]}/></span></Row>
         <Row>
-          <div className={InspectorStyles.searchResultsContainer}>
-            <List bordered size='small'
-              dataSource={locatedElements}
-              renderItem={(elementId) =>
-                <List.Item type='text'
-                  className={locatorTestElement === elementId ? InspectorStyles.searchResultsSelectedItem : ''}
-                  onClick={() => setLocatorTestElement(elementId)}
-                >
-                  {elementId}
-                </List.Item>
-              }
-            />
-          </div>
+          <List className={InspectorStyles.searchResultsList}
+            size='small'
+            dataSource={locatedElements}
+            renderItem={(elementId) =>
+              <List.Item type='text'
+                className={locatorTestElement === elementId ? InspectorStyles.searchResultsSelectedItem : ''}
+                onClick={() => setLocatorTestElement(elementId)}
+              >
+                {elementId}
+              </List.Item>
+            }
+          />
         </Row>
         <Row justify='center'>
           <Space direction='horizontal' size='small'>
