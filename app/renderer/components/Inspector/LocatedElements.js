@@ -64,7 +64,7 @@ class LocatedElements extends Component {
               </Tooltip>
             </ButtonGroup>
             <ButtonGroup className={InspectorStyles.searchResultsActions}>
-              <Tooltip title={t('Tap Element')} placement='bottom'>
+              <Tooltip title={t('Tap')} placement='bottom'>
                 <Button
                   disabled={!locatorTestElement}
                   icon={<AimOutlined/>}
