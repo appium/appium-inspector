@@ -466,6 +466,11 @@
     margin-bottom: 12px;
 }
 
+.locatorStrategyBtn {
+    min-width: 25%;
+    text-align: center;
+}
+
 .locatorSelectorTextArea {
     width: 100%;
 }

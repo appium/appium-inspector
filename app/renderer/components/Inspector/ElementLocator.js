@@ -72,7 +72,13 @@ class ElementLocator extends Component {
       >
         <Row justify="center">
           {locatorStrategies(driver).map(([strategyValue, strategyName]) => (
-            <Radio.Button value={strategyValue} key={strategyValue}>{strategyName}</Radio.Button>
+            <Radio.Button
+              className={InspectorStyles.locatorStrategyBtn}
+              value={strategyValue}
+              key={strategyValue}
+            >
+              {strategyName}
+            </Radio.Button>
           ))}
         </Row>
       </Radio.Group>
