@@ -63,7 +63,7 @@ class LocatedElements extends Component {
                   onClick={() => clipboard.writeText(locatorTestElement)}/>
               </Tooltip>
             </ButtonGroup>
-            <Input.Group compact className={InspectorStyles.searchResultsActions}>
+            <ButtonGroup className={InspectorStyles.searchResultsActions}>
               <Tooltip title={t('Tap Element')} placement='bottom'>
                 <Button
                   disabled={!locatorTestElement}
@@ -91,7 +91,7 @@ class LocatedElements extends Component {
                   onClick={() => applyClientMethod({methodName: 'clear', elementId: locatorTestElement})}
                 />
               </Tooltip>
-            </Input.Group>
+            </ButtonGroup>
           </Space>
         </Row>
       </Space>}

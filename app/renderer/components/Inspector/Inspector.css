@@ -467,6 +467,7 @@
 }
 
 .locatorStrategyBtn {
+    margin-top: -1px;
     min-width: 25%;
     text-align: center;
 }
