@@ -55,14 +55,12 @@ class LocatedElements extends Component {
         </Row>
         <Row justify='center'>
           <Space direction='horizontal' size='small'>
-            <ButtonGroup>
-              <Tooltip title={t('Copy ID')} placement='bottom'>
-                <Button
-                  disabled={!locatorTestElement}
-                  icon={<CopyOutlined/>}
-                  onClick={() => clipboard.writeText(locatorTestElement)}/>
-              </Tooltip>
-            </ButtonGroup>
+            <Tooltip title={t('Copy ID')} placement='bottom'>
+              <Button
+                disabled={!locatorTestElement}
+                icon={<CopyOutlined/>}
+                onClick={() => clipboard.writeText(locatorTestElement)}/>
+            </Tooltip>
             <ButtonGroup className={InspectorStyles.searchResultsActions}>
               <Tooltip title={t('Tap')} placement='bottom'>
                 <Button
