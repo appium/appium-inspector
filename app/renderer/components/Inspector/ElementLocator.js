@@ -1,9 +1,36 @@
 import React, { Component } from 'react';
-import { Input, Select, Row } from 'antd';
+import { Input, Radio, Row } from 'antd';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
 
-const { Option } = Select;
+const STRAT_ID = ['id', 'Id'];
+const STRAT_XPATH = ['xpath', 'XPath'];
+const STRAT_NAME = ['name', 'Name'];
+const STRAT_CLASS_NAME = ['class name', 'Class Name'];
+const STRAT_ACCESSIBILITY_ID = ['accessibility id', 'Accessibility ID'];
+const STRAT_PREDICATE = ['-ios predicate string', 'Predicate String'];
+const STRAT_CLASS_CHAIN = ['-ios class chain', 'Class Chain'];
+const STRAT_UIAUTOMATOR = ['-android uiautomator', 'UIAutomator'];
+const STRAT_DATAMATCHER = ['-android datamatcher', 'DataMatcher'];
+const STRAT_VIEWTAG = ['-android viewtag', 'View Tag'];
+
+const locatorStrategies = (driver) => {
+  const automationName = driver.client.capabilities.automationName.toLowerCase();
+  let strategies = [STRAT_ID, STRAT_XPATH, STRAT_NAME, STRAT_CLASS_NAME, STRAT_ACCESSIBILITY_ID];
+  switch (automationName) {
+    case 'xcuitest':
+    case 'mac2':
+      strategies.push(STRAT_PREDICATE, STRAT_CLASS_CHAIN);
+      break;
+    case 'espresso':
+      strategies.push(STRAT_DATAMATCHER, STRAT_VIEWTAG);
+      break;
+    case 'uiautomator2':
+      strategies.push(STRAT_UIAUTOMATOR);
+      break;
+  }
+  return strategies;
+};
 
 class ElementLocator extends Component {
 
@@ -29,38 +56,40 @@ class ElementLocator extends Component {
       locatorTestValue,
       setLocatorTestStrategy,
       locatorTestStrategy,
+      driver,
       t,
     } = this.props;
 
-    const locatorStrategies = [
-      ['id', 'Id'],
-      ['xpath', 'XPath'],
-      ['name', 'Name'],
-      ['class name', 'Class Name'],
-      ['accessibility id', 'Accessibility ID'],
-      ['-android uiautomator', 'UIAutomator Selector (Android UiAutomator2)'],
-      ['-android datamatcher', 'DataMatcher Selector (Android Espresso)'],
-      ['-android viewtag', 'Android View Tag (Android Espresso)'],
-      ['-ios predicate string', 'Predicate String (iOS)'],
-      ['-ios class chain', 'Class Chain (iOS)'],
-    ];
-
-    return <div>
-      <Row>
-        {t('locatorStrategy')}
-        <Select className={InspectorStyles['locator-strategy-selector']}
-          onChange={(value) => setLocatorTestStrategy(value)}
-          value={locatorTestStrategy}>
-          {locatorStrategies.map(([strategyValue, strategyName]) => (
-            <Option key={strategyValue} value={strategyValue}>{strategyName}</Option>
-          ))}
-        </Select>
+    return <>
+      {t('locatorStrategy')}
+      <Row justify="center">
+        <Radio.Group buttonStyle="solid"
+          className={InspectorStyles.locatorStrategyGroup}
+          onChange={(e) => setLocatorTestStrategy(e.target.value)}
+          defaultValue={locatorTestStrategy}
+        >
+          <Row justify="center">
+            {locatorStrategies(driver).map(([strategyValue, strategyName]) => (
+              <Radio.Button
+                className={InspectorStyles.locatorStrategyBtn}
+                value={strategyValue}
+                key={strategyValue}
+              >
+                {strategyName}
+              </Radio.Button>
+            ))}
+          </Row>
+        </Radio.Group>
       </Row>
-      <Row>
-        {t('selector')}
-        <Input.TextArea className={InspectorStyles['locator-strategy-selector']} onChange={(e) => setLocatorTestValue(e.target.value)} value={locatorTestValue} />
-      </Row>
-    </div>;
+      {t('selector')}
+      <Input.TextArea
+        className={InspectorStyles.locatorSelectorTextArea}
+        onChange={(e) => setLocatorTestValue(e.target.value)}
+        value={locatorTestValue}
+        allowClear={true}
+        rows={3}
+      />
+    </>;
   }
 }
 

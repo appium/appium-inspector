@@ -441,7 +441,7 @@ class GestureEditor extends Component {
         extra={<>{tick.type === POINTER_MOVE && tapCoordinatesBtn(tick.id)}
           <Button size='small' type='text' icon={<CloseOutlined />} key={`${tick.id}.remove`}
             onClick={() => this.deleteTick(tick.id[0], tick.id)}/></>}>
-        <Space className={InspectorCSS['space-container']} direction='vertical' size='middle'>
+        <Space className={InspectorCSS.spaceContainer} direction='vertical' size='middle'>
           {tickType(tick)}
           {(tick.type === POINTER_MOVE || tick.type === PAUSE) && tickDuration(tick)}
           {(tick.type === POINTER_DOWN || tick.type === POINTER_UP) && tickButton(tick)}
