@@ -43,21 +43,17 @@ class LocatorTestModal extends Component {
     // Footer displays all the buttons at the bottom of the Modal
     return <Modal open={isLocatorTestModalVisible}
       title={t('Search for element')}
-      confirmLoading={isSearchingForElements}
       onCancel={this.onCancel.bind(this)}
       footer=
-        {[
-          locatedElements &&
+        {<>
+          {locatedElements &&
           <Button onClick={(e) => e.preventDefault() || clearSearchResults()}>
-            Back
-          </Button>,
-          <Button onClick={this.onSubmit.bind(this)} type="primary">
-            {locatedElements ?
-              t('Done')
-              :
-              t('Search')}
+            {t('Back')}
+          </Button>}
+          <Button loading={isSearchingForElements} onClick={this.onSubmit.bind(this)} type="primary">
+            {locatedElements ? t('Done') : t('Search')}
           </Button>
-        ]}>
+        </>}>
       {!locatedElements && <ElementLocator {...this.props} />}
       {locatedElements && <LocatedElements {...this.props} />}
     </Modal>;

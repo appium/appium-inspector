@@ -392,7 +392,6 @@ export function showLocatorTestModal () {
 export function hideLocatorTestModal () {
   return (dispatch) => {
     dispatch({type: HIDE_LOCATOR_TEST_MODAL});
-    dispatch({type: CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS});
   };
 }
 
@@ -405,7 +404,6 @@ export function showSiriCommandModal () {
 export function hideSiriCommandModal () {
   return (dispatch) => {
     dispatch({type: HIDE_SIRI_COMMAND_MODAL});
-    dispatch({type: CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS});
   };
 }
 
@@ -515,6 +513,7 @@ export function setLocatorTestElement (elementId) {
 export function clearSearchResults () {
   return (dispatch) => {
     dispatch({type: CLEAR_SEARCH_RESULTS});
+    dispatch({type: CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS});
   };
 }
 

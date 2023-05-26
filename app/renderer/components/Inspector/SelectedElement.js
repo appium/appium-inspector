@@ -59,7 +59,7 @@ class SelectedElement extends Component {
           setContext(value);
           applyClientMethod({methodName: 'switchContext', args: [value]});
         }}
-        className={styles['locator-strategy-selector']}>
+        className={styles['context-selector']}>
           {contexts.map(({id, title}) =>
             <Select.Option key={id} value={id}>{title ? `${title} (${id})` : id}</Select.Option>
           )}
@@ -325,7 +325,7 @@ class SelectedElement extends Component {
         onOk={this.handleSendKeys}
       >
         <Input
-          placeholder={t('Enter keys')}
+          placeholder={t('Enter Keys to Send')}
           value={sendKeys}
           onChange={(e) => setFieldValue('sendKeys', e.target.value)}
         />

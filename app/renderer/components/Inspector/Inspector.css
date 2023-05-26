@@ -397,6 +397,11 @@
     justify-content: center;
 }
 
+.context-selector {
+    width: 100%;
+    margin-bottom: 1em;
+}
+
 .sourceTag {
     color: #7d2020;
     font-weight: normal
@@ -423,38 +428,33 @@
     width: 150px;
 }
 
-.locator-test-interactions-container {
-    float: right;
-    margin-top: 0.5em;
-}
-
-.locator-test-interactions-container div {
-    display: inline-block;
-    width: 50%;
-    padding: 4px;
-}
-
-.locator-test-interactions-container .send-keys-container {
+.searchResultsList {
     width: 100%;
+    flex: 1;
+    min-height: 24px;
+    max-height: 150px;
+    overflow: auto;
+    border-style: solid;
+    border-width: 1px;
 }
 
-.locator-test-interactions-container .send-keys-container input {
-    width: 76%;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+.searchResultsList :global(.ant-list-item) {
+    padding: 4px 6px !important;
+    height: 25px;
+    text-align: left;
 }
 
-.locator-test-interactions-container .send-keys-container button {
-    position: absolute;
-    right: 0;
-    width: 25%;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+.searchResultsSelectedItem {
+    background-color: #bae7ff;
 }
 
-.locator-test-interactions-container div button,
-.locator-test-interactions-container div input {
-    width: 100%;
+.searchResultsActions {
+    width: 350px;
+}
+
+.searchResultsKeyInput {
+    height: 32px;
+    width: calc(100% - 64px);
 }
 
 .element-count-container {
@@ -462,13 +462,18 @@
     margin-left: 0.5em;
 }
 
-.locator-search-results {
-    width: 100%;
+.locatorStrategyGroup {
+    margin-bottom: 12px;
 }
 
-.locator-strategy-selector {
+.locatorStrategyBtn {
+    margin-top: -1px;
+    min-width: 25%;
+    text-align: center;
+}
+
+.locatorSelectorTextArea {
     width: 100%;
-    margin-bottom: 1em;
 }
 
 .coordinatesContainer {
@@ -678,7 +683,7 @@
     top: 40%;
 }
 
-.space-container {
+.spaceContainer {
     display: flex;
 }
 
