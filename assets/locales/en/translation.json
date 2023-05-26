@@ -83,6 +83,7 @@
   "experitestAccessKeyURLRequired": "Experitest AccessKey and URL are required",
   "experitestAccessKey": "Experitest AccessKey",
   "experitestUrl": "Experitest Url",
+  "locatorStrategy": "Locator Strategy:",
   "selector": "Selector:",
   "couldNotObtainScreenshot": "Could not obtain screenshot: {{screenshotError}}",
   "selectElementInSource": "Select an element in the source to begin.",

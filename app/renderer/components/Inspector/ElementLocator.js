@@ -60,33 +60,36 @@ class ElementLocator extends Component {
       t,
     } = this.props;
 
-    return <Row justify="center">
-      <Radio.Group buttonStyle="solid"
-        className={InspectorStyles.locatorStrategyGroup}
-        onChange={(e) => setLocatorTestStrategy(e.target.value)}
-        defaultValue={locatorTestStrategy}
-      >
-        <Row justify="center">
-          {locatorStrategies(driver).map(([strategyValue, strategyName]) => (
-            <Radio.Button
-              className={InspectorStyles.locatorStrategyBtn}
-              value={strategyValue}
-              key={strategyValue}
-            >
-              {strategyName}
-            </Radio.Button>
-          ))}
-        </Row>
-      </Radio.Group>
+    return <>
+      {t('locatorStrategy')}
+      <Row justify="center">
+        <Radio.Group buttonStyle="solid"
+          className={InspectorStyles.locatorStrategyGroup}
+          onChange={(e) => setLocatorTestStrategy(e.target.value)}
+          defaultValue={locatorTestStrategy}
+        >
+          <Row justify="center">
+            {locatorStrategies(driver).map(([strategyValue, strategyName]) => (
+              <Radio.Button
+                className={InspectorStyles.locatorStrategyBtn}
+                value={strategyValue}
+                key={strategyValue}
+              >
+                {strategyName}
+              </Radio.Button>
+            ))}
+          </Row>
+        </Radio.Group>
+      </Row>
+      {t('selector')}
       <Input.TextArea
         className={InspectorStyles.locatorSelectorTextArea}
-        placeholder={t('selector')}
         onChange={(e) => setLocatorTestValue(e.target.value)}
         value={locatorTestValue}
         allowClear={true}
         rows={3}
       />
-    </Row>;
+    </>;
   }
 }
 
