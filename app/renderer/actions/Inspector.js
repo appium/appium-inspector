@@ -56,6 +56,8 @@ export const SEARCHING_FOR_ELEMENTS_COMPLETED = 'SEARCHING_FOR_ELEMENTS_COMPLETE
 export const GET_FIND_ELEMENTS_TIMES = 'GET_FIND_ELEMENTS_TIMES';
 export const GET_FIND_ELEMENTS_TIMES_COMPLETED = 'GET_FIND_ELEMENTS_TIMES_COMPLETED';
 export const SET_LOCATOR_TEST_ELEMENT = 'SET_LOCATOR_TEST_ELEMENT';
+export const FINDING_ELEMENT_IN_SOURCE = 'FINDING_ELEMENT_IN_SOURCE';
+export const FINDING_ELEMENT_IN_SOURCE_COMPLETED = 'FINDING_ELEMENT_IN_SOURCE_COMPLETED';
 export const CLEAR_SEARCH_RESULTS = 'CLEAR_SEARCH_RESULTS';
 export const ADD_ASSIGNED_VAR_CACHE = 'ADD_ASSIGNED_VAR_CACHE';
 export const CLEAR_ASSIGNED_VAR_CACHE = 'CLEAR_ASSIGNED_VAR_CACHE';
@@ -507,6 +509,107 @@ export function setLocatorTestElement (elementId) {
         });
       } catch (ign) { }
     }
+  };
+}
+
+/**
+ * Given an element ID found through search, and its bounds,
+ * attempt to find and select this element in the source tree
+ */
+export function selectLocatedElement (source, bounds, id) {
+  const UPPER_FILTER_LIMIT = 10;
+
+  // Parse the source tree and find all nodes whose bounds match the expected bounds
+  // Return the path + xpath of each node
+  function findPathsMatchingBounds () {
+    if (bounds && source.children && source.children[0].attributes) {
+      if (source.children[0].attributes.bounds) {
+        const [endX, endY] = [bounds.location.x + bounds.size.width, bounds.location.y + bounds.size.height];
+        const coords = `[${bounds.location.x},${bounds.location.y}][${endX},${endY}]`;
+        return findPathsFromCoords(source.children, coords);
+      } else if (source.children[0].attributes.x) {
+        const combinedBounds = {
+          x: String(bounds.location.x),
+          y: String(bounds.location.y),
+          height: String(bounds.size.height),
+          width: String(bounds.size.width),
+        };
+        return findPathsFromBounds(source.children, combinedBounds);
+      }
+    }
+    return null;
+  }
+
+  // Recursive function for parsing source tree when elements have 'bounds' property
+  function findPathsFromCoords (trees, coords) {
+    let collectedPaths = [];
+    for (const tree of trees) {
+      if (tree.attributes.bounds === coords) {
+        collectedPaths.push([tree.path, tree.xpath]);
+      }
+      if (tree.children.length) {
+        collectedPaths.push(...findPathsFromCoords(tree.children, coords));
+      }
+    }
+    return collectedPaths;
+  }
+
+  // Recursive function for parsing source tree when elements have 'x/y/height/width' properties
+  function findPathsFromBounds (trees, bounds) {
+    let collectedPaths = [];
+    for (const tree of trees) {
+      if (tree.attributes.x === bounds.x && tree.attributes.y === bounds.y
+        && tree.attributes.height === bounds.height && tree.attributes.width === bounds.width) {
+        collectedPaths.push([tree.path, tree.xpath]);
+      }
+      if (tree.children.length) {
+        collectedPaths.push(...findPathsFromBounds(tree.children, bounds));
+      }
+    }
+    return collectedPaths;
+  }
+
+  // If findPathsMatchingBounds found multiple items,
+  // use Appium findElement to filter further by element ID
+  async function filterFoundPaths (foundPaths, dispatch, getState) {
+    if (foundPaths) {
+      if (foundPaths.length === 1) {
+        return foundPaths[0][0];
+      } else if (foundPaths.length !== 0 && foundPaths.length <= UPPER_FILTER_LIMIT) {
+        return await findElementWithMatchingId(foundPaths, dispatch, getState);
+      }
+    }
+    return null;
+  }
+
+  // Calls Appium findElement for each provided xpath, and returns the path
+  // of the element whose ID matches the expected ID
+  async function findElementWithMatchingId (foundPaths, dispatch, getState) {
+    for (const path of foundPaths) {
+      const action = callClientMethod({strategy: 'xpath', selector: path[1]});
+      const { el } = await action(dispatch, getState);
+      if (el && el.elementId === id) {
+        return path[0];
+      }
+    }
+    return null;
+  }
+
+  return async (dispatch, getState) => {
+    dispatch({type: FINDING_ELEMENT_IN_SOURCE});
+    const foundPaths = findPathsMatchingBounds();
+    const foundPath = await filterFoundPaths(foundPaths, dispatch, getState);
+    if (foundPath) {
+      const action = selectElement(foundPath);
+      await action(dispatch, getState);
+    } else {
+      notification.error({
+        message: i18n.t('Error'),
+        description: i18n.t('findingElementInSourceFailed'),
+        duration: 8
+      });
+    }
+    dispatch({type: FINDING_ELEMENT_IN_SOURCE_COMPLETED});
   };
 }
 
