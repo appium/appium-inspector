@@ -325,7 +325,7 @@ class SelectedElement extends Component {
         onOk={this.handleSendKeys}
       >
         <Input
-          placeholder={t('Enter keys')}
+          placeholder={t('Enter Keys to Send')}
           value={sendKeys}
           onChange={(e) => setFieldValue('sendKeys', e.target.value)}
         />

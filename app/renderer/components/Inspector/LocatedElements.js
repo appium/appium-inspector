@@ -70,7 +70,7 @@ class LocatedElements extends Component {
             <ButtonGroup className={InspectorStyles.searchResultsActions}>
               <Input className={InspectorStyles.searchResultsKeyInput}
                 disabled={!locatorTestElement}
-                placeholder={t('Enter keys')}
+                placeholder={t('Enter Keys to Send')}
                 allowClear={true}
                 onChange={(e) => this.setState({...this.state, sendKeys: e.target.value})}/>
               <Tooltip title={t('Send Keys')} placement='bottom'>
