@@ -3,10 +3,10 @@ function makeBabelConfig (electronVersion) {
     api.cache(true);
     return {
       plugins: [
+        '@babel/plugin-proposal-class-properties',
         '@babel/plugin-syntax-jsx',
         '@babel/plugin-transform-react-jsx',
         '@babel/plugin-transform-runtime',
-        'transform-class-properties',
       ],
       presets: [
         [
