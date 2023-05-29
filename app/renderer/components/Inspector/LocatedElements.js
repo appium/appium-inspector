@@ -44,8 +44,8 @@ class LocatedElements extends Component {
             dataSource={locatedElements}
             renderItem={(elementId) =>
               <List.Item type='text'
-                {...locatorTestElement === elementId && { className: InspectorStyles.searchResultsSelectedItem }}
-                {...locatorTestElement !== elementId && { onClick: () => {setLocatorTestElement(elementId);} }}
+                {...(locatorTestElement === elementId ? { className: InspectorStyles.searchResultsSelectedItem } : {})}
+                {...(locatorTestElement !== elementId ? { onClick: () => {setLocatorTestElement(elementId);} } : {})}
               >
                 {elementId}
               </List.Item>
