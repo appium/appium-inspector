@@ -28,6 +28,7 @@ class LocatedElements extends Component {
   render () {
     const {
       locatedElements,
+      locatedElementsExecutionTime,
       applyClientMethod,
       setLocatorTestElement,
       locatorTestElement,
@@ -37,7 +38,10 @@ class LocatedElements extends Component {
     return <>
       {locatedElements.length === 0 && <Row><i>{t('couldNotFindAnyElements')}</i></Row>}
       {locatedElements.length > 0 && <Space className={InspectorStyles.spaceContainer} direction='vertical' size='small'>
-        <Row><span>{t('elementsCount')} <Badge count={locatedElements.length} offset={[0, -2]}/></span></Row>
+        <Row justify='space-between'>
+          <span>{t('elementsCount')} <Badge count={locatedElements.length} offset={[0, -2]}/></span>
+          <>{t('Time')}: {locatedElementsExecutionTime}</>
+        </Row>
         <Row>
           <List className={InspectorStyles.searchResultsList}
             size='small'

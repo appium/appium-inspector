@@ -436,11 +436,11 @@ export function searchForElement (strategy, selector) {
     dispatch({type: SEARCHING_FOR_ELEMENTS});
     try {
       const callAction = callClientMethod({strategy, selector, fetchArray: true});
-      let {elements, variableName} = await callAction(dispatch, getState);
+      let { elements, variableName, executionTime } = await callAction(dispatch, getState);
       const findAction = findAndAssign(strategy, selector, variableName, true);
       findAction(dispatch, getState);
       elements = elements.map((el) => el.id);
-      dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED, elements});
+      dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED, elements, executionTime});
     } catch (error) {
       dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED});
       showError(error, 10);

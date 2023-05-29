@@ -334,6 +334,7 @@ export default function inspector (state = INITIAL_STATE, action) {
       return {
         ...state,
         locatedElements: null,
+        locatedElementsExecutionTime: null,
         locatorTestElement: null,
         isSearchingForElements: true,
       };
@@ -342,6 +343,7 @@ export default function inspector (state = INITIAL_STATE, action) {
       return {
         ...state,
         locatedElements: action.elements,
+        locatedElementsExecutionTime: action.executionTime,
         isSearchingForElements: false,
       };
 

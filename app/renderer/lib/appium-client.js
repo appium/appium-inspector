@@ -131,7 +131,9 @@ export default class AppiumClient {
   }
 
   async fetchElements ({strategy, selector}) {
+    const start = Date.now();
     const els = await this.driver.findElements(strategy, selector);
+    const executionTime = Date.now() - start;
 
     this.elArrayVarCount += 1;
     const variableName = `els${this.elArrayVarCount}`;
@@ -155,7 +157,14 @@ export default class AppiumClient {
 
     this.elementCache = {...this.elementCache, ...elements};
 
-    return {variableName, variableType, strategy, selector, elements: elementList};
+    return {
+      variableName,
+      variableType,
+      strategy,
+      selector,
+      elements: elementList,
+      executionTime,
+    };
   }
 
   async fetchElement ({strategy, selector}) {
