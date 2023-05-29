@@ -522,20 +522,19 @@ export function selectLocatedElement (source, bounds, id) {
   // Parse the source tree and find all nodes whose bounds match the expected bounds
   // Return the path + xpath of each node
   function findPathsMatchingBounds () {
-    if (bounds && source.children && source.children[0].attributes) {
-      if (source.children[0].attributes.bounds) {
-        const [endX, endY] = [bounds.location.x + bounds.size.width, bounds.location.y + bounds.size.height];
-        const coords = `[${bounds.location.x},${bounds.location.y}][${endX},${endY}]`;
-        return findPathsFromCoords(source.children, coords);
-      } else if (source.children[0].attributes.x) {
-        const combinedBounds = {
-          x: String(bounds.location.x),
-          y: String(bounds.location.y),
-          height: String(bounds.size.height),
-          width: String(bounds.size.width),
-        };
-        return findPathsFromBounds(source.children, combinedBounds);
-      }
+    if (!bounds || !source.children || !source.children[0].attributes) { return null; }
+    if (source.children[0].attributes.bounds) {
+      const [endX, endY] = [bounds.location.x + bounds.size.width, bounds.location.y + bounds.size.height];
+      const coords = `[${bounds.location.x},${bounds.location.y}][${endX},${endY}]`;
+      return findPathsFromCoords(source.children, coords);
+    } else if (source.children[0].attributes.x) {
+      const combinedBounds = {
+        x: String(bounds.location.x),
+        y: String(bounds.location.y),
+        height: String(bounds.size.height),
+        width: String(bounds.size.width),
+      };
+      return findPathsFromBounds(source.children, combinedBounds);
     }
     return null;
   }
@@ -572,12 +571,11 @@ export function selectLocatedElement (source, bounds, id) {
   // If findPathsMatchingBounds found multiple items,
   // use Appium findElement to filter further by element ID
   async function filterFoundPaths (foundPaths, dispatch, getState) {
-    if (foundPaths) {
-      if (foundPaths.length === 1) {
-        return foundPaths[0][0];
-      } else if (foundPaths.length !== 0 && foundPaths.length <= UPPER_FILTER_LIMIT) {
-        return await findElementWithMatchingId(foundPaths, dispatch, getState);
-      }
+    if (!foundPaths) { return null; }
+    if (foundPaths.length === 1) {
+      return foundPaths[0][0];
+    } else if (foundPaths.length !== 0 && foundPaths.length <= UPPER_FILTER_LIMIT) {
+      return await findElementWithMatchingId(foundPaths, dispatch, getState);
     }
     return null;
   }
