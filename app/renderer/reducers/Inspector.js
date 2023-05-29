@@ -7,7 +7,7 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          SET_ACTION_FRAMEWORK, RECORD_ACTION, CLOSE_RECORDER, SET_SHOW_BOILERPLATE, SET_SESSION_DETAILS,
          SHOW_LOCATOR_TEST_MODAL, HIDE_LOCATOR_TEST_MODAL, SHOW_SIRI_COMMAND_MODAL, HIDE_SIRI_COMMAND_MODAL, SET_LOCATOR_TEST_STRATEGY, SET_LOCATOR_TEST_VALUE,
          SEARCHING_FOR_ELEMENTS, SEARCHING_FOR_ELEMENTS_COMPLETED, SET_LOCATOR_TEST_ELEMENT, CLEAR_SEARCH_RESULTS,
-         ADD_ASSIGNED_VAR_CACHE, CLEAR_ASSIGNED_VAR_CACHE, SET_SCREENSHOT_INTERACTION_MODE,
+         FINDING_ELEMENT_IN_SOURCE, FINDING_ELEMENT_IN_SOURCE_COMPLETED, ADD_ASSIGNED_VAR_CACHE, CLEAR_ASSIGNED_VAR_CACHE, SET_SCREENSHOT_INTERACTION_MODE,
          SET_SWIPE_START, SET_SWIPE_END, CLEAR_SWIPE_ACTION, SET_SEARCHED_FOR_ELEMENT_BOUNDS, CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS,
          PROMPT_KEEP_ALIVE, HIDE_PROMPT_KEEP_ALIVE, GET_FIND_ELEMENTS_TIMES, GET_FIND_ELEMENTS_TIMES_COMPLETED,
          SELECT_ACTION_GROUP, SELECT_SUB_ACTION_GROUP, SET_APP_MODE,
@@ -57,6 +57,7 @@ const INITIAL_STATE = {
   pendingAction: null,
   findElementsExecutionTimes: [],
   isFindingElementsTimes: false,
+  isFindingLocatedElementInSource: false,
   visibleCommandResult: null,
   visibleCommandMethod: null,
   isAwaitingMjpegStream: true,
@@ -366,10 +367,23 @@ export default function inspector (state = INITIAL_STATE, action) {
         locatorTestElement: action.elementId,
       };
 
+    case FINDING_ELEMENT_IN_SOURCE:
+      return {
+        ...state,
+        isFindingLocatedElementInSource: true,
+      };
+
+    case FINDING_ELEMENT_IN_SOURCE_COMPLETED:
+      return {
+        ...state,
+        isFindingLocatedElementInSource: false,
+      };
+
     case CLEAR_SEARCH_RESULTS:
       return {
         ...state,
         locatedElements: null,
+        isFindingLocatedElementInSource: false,
       };
 
     case SET_SCREENSHOT_INTERACTION_MODE:
