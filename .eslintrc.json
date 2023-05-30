@@ -1,5 +1,5 @@
 {
-  "extends": "appium",
+  "extends": "@appium/eslint-config-appium",
   "parser": "@babel/eslint-parser",
   "plugins": [
     "import",
