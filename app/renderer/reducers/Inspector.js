@@ -2,8 +2,7 @@ import { omit } from 'lodash';
 import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          SESSION_DONE, SELECT_ELEMENT, UNSELECT_ELEMENT, SELECT_HOVERED_ELEMENT, SET_SELECTED_ELEMENT_ID, SET_INTERACTIONS_NOT_AVAILABLE,
          UNSELECT_HOVERED_ELEMENT, METHOD_CALL_REQUESTED, METHOD_CALL_DONE,
-         SET_FIELD_VALUE, SET_EXPANDED_PATHS, SHOW_SEND_KEYS_MODAL,
-         HIDE_SEND_KEYS_MODAL, START_RECORDING, PAUSE_RECORDING, CLEAR_RECORDING,
+         SET_EXPANDED_PATHS, START_RECORDING, PAUSE_RECORDING, CLEAR_RECORDING,
          SET_ACTION_FRAMEWORK, RECORD_ACTION, CLOSE_RECORDER, SET_SHOW_BOILERPLATE, SET_SESSION_DETAILS,
          SHOW_LOCATOR_TEST_MODAL, HIDE_LOCATOR_TEST_MODAL, SHOW_SIRI_COMMAND_MODAL, HIDE_SIRI_COMMAND_MODAL, SET_LOCATOR_TEST_STRATEGY, SET_LOCATOR_TEST_VALUE,
          SEARCHING_FOR_ELEMENTS, SEARCHING_FOR_ELEMENTS_COMPLETED, SET_LOCATOR_TEST_ELEMENT, CLEAR_SEARCH_RESULTS,
@@ -192,33 +191,11 @@ export default function inspector (state = INITIAL_STATE, action) {
         methodCallInProgress: false,
       };
 
-    case SET_FIELD_VALUE:
-      return {
-        ...state,
-        [action.name]: action.value,
-      };
-
     case SET_EXPANDED_PATHS:
       return {
         ...state,
         expandedPaths: action.paths,
         findElementsExecutionTimes: [],
-      };
-
-    case SHOW_SEND_KEYS_MODAL:
-      return {
-        ...state,
-        sendKeysModalVisible: true
-      };
-
-    case HIDE_SEND_KEYS_MODAL:
-      return {
-        ...state,
-        sendKeysModalVisible: false,
-        action: {
-          ...state.action,
-          sendKeys: null,
-        }
       };
 
     case START_RECORDING:
