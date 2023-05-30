@@ -368,6 +368,12 @@
 
 .elementActions {
     margin-bottom: 20px;
+    gap: 8px;
+}
+
+.elementKeyInputActions {
+    max-width: 300px;
+    flex: 1;
 }
 
 .inspector-main #selectedElementContainer {
@@ -391,6 +397,7 @@
 .selected-element-card :global(.ant-card-body) {
     flex: 1;
     overflow: auto;
+    margin-right: -12px;
 }
 
 .selectedElemNotInteractableAlertRow {
@@ -452,7 +459,8 @@
     width: 350px;
 }
 
-.searchResultsKeyInput {
+.searchResultsKeyInput,
+.elementKeyInput {
     height: 32px;
     width: calc(100% - 64px);
 }
