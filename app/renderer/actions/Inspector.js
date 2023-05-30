@@ -19,7 +19,6 @@ export const SET_SELECTED_ELEMENT_ID = 'SET_SELECTED_ELEMENT_ID';
 export const SET_INTERACTIONS_NOT_AVAILABLE = 'SET_INTERACTIONS_NOT_AVAILABLE';
 export const METHOD_CALL_REQUESTED = 'METHOD_CALL_REQUESTED';
 export const METHOD_CALL_DONE = 'METHOD_CALL_DONE';
-export const SET_FIELD_VALUE = 'SET_FIELD_VALUE';
 export const SET_EXPANDED_PATHS = 'SET_EXPANDED_PATHS';
 export const SELECT_HOVERED_ELEMENT = 'SELECT_HOVERED_ELEMENT';
 export const UNSELECT_HOVERED_ELEMENT = 'UNSELECT_HOVERED_ELEMENT';
@@ -30,8 +29,6 @@ export const SELECT_CENTROID = 'SELECT_CENTROID';
 export const UNSELECT_CENTROID = 'UNSELECT_CENTROID';
 export const SET_SHOW_CENTROIDS = 'SET_SHOW_CENTROIDS';
 
-export const SHOW_SEND_KEYS_MODAL = 'SHOW_SEND_KEYS_MODAL';
-export const HIDE_SEND_KEYS_MODAL = 'HIDE_SEND_KEYS_MODAL';
 export const QUIT_SESSION_REQUESTED = 'QUIT_SESSION_REQUESTED';
 export const QUIT_SESSION_DONE = 'QUIT_SESSION_DONE';
 export const SET_SESSION_TIME = 'SET_SESSION_TIME';
@@ -273,27 +270,6 @@ export function applyClientMethod (params) {
 export function addAssignedVarCache (varName) {
   return (dispatch) => {
     dispatch({type: ADD_ASSIGNED_VAR_CACHE, varName});
-  };
-}
-
-export function showSendKeysModal () {
-  return (dispatch) => {
-    dispatch({type: SHOW_SEND_KEYS_MODAL});
-  };
-}
-
-export function hideSendKeysModal () {
-  return (dispatch) => {
-    dispatch({type: HIDE_SEND_KEYS_MODAL});
-  };
-}
-
-/**
- * Set a value of an arbitrarily named field
- */
-export function setFieldValue (name, value) {
-  return (dispatch) => {
-    dispatch({type: SET_FIELD_VALUE, name, value});
   };
 }
 

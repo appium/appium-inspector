@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import {getLocators} from './shared';
 import styles from './Inspector.css';
-import { Button, Row, Col, Input, Modal, Table, Alert, Tooltip, Select, Spin } from 'antd';
+import { Button, Row, Col, Input, Table, Alert, Tooltip, Select, Spin } from 'antd';
 import { withTranslation } from '../../util';
 import {clipboard, shell} from '../../polyfills';
 import {
@@ -40,14 +40,7 @@ class SelectedElement extends Component {
 
   constructor (props) {
     super(props);
-    this.handleSendKeys = this.handleSendKeys.bind(this);
     this.contextSelect = this.contextSelect.bind(this);
-  }
-
-  handleSendKeys () {
-    const {sendKeys, applyClientMethod, hideSendKeysModal, selectedElementId: elementId} = this.props;
-    applyClientMethod({methodName: 'sendKeys', elementId, args: [sendKeys]});
-    hideSendKeysModal();
   }
 
   contextSelect () {
@@ -73,14 +66,10 @@ class SelectedElement extends Component {
       applyClientMethod,
       contexts,
       currentContext,
-      setFieldValue,
       getFindElementsTimes,
       findElementsExecutionTimes,
       isFindingElementsTimes,
-      sendKeys,
       selectedElement,
-      sendKeysModalVisible,
-      hideSendKeysModal,
       selectedElementId: elementId,
       sourceXML,
       elementInteractionsNotAvailable,
@@ -322,19 +311,6 @@ class SelectedElement extends Component {
             pagination={false} />
         </Row>
       }
-      <Modal title={t('Send Keys')}
-        open={sendKeysModalVisible}
-        okText={t('Send Keys')}
-        cancelText={t('Cancel')}
-        onCancel={hideSendKeysModal}
-        onOk={this.handleSendKeys}
-      >
-        <Input
-          placeholder={t('Enter Keys to Send')}
-          value={sendKeys}
-          onChange={(e) => setFieldValue('sendKeys', e.target.value)}
-        />
-      </Modal>
     </div>;
   }
 }
