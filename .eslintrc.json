@@ -1,8 +1,6 @@
 {
+  "extends": "appium",
   "parser": "@babel/eslint-parser",
-  "extends": [
-    "appium"
-  ],
   "plugins": [
     "import",
     "react",
@@ -15,8 +13,13 @@
     "node": true
   },
   "rules": {
-    "import/no-unresolved": [2, {"ignore": ["electron"]}],
     "@babel/arrow-parens": 0,
+    "import/no-unresolved": [
+      2,
+      {
+        "ignore": ["electron"]
+      }
+    ],
     "require-await": 2,
     "react-native/no-inline-styles": 2
   }
