@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { clipboard } from '../../polyfills';
 import { Input, Row, Button, Badge, List, Space, Spin, Tooltip } from 'antd';
-import { CopyOutlined, AimOutlined, ClearOutlined, SendOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { AimOutlined, ClearOutlined, SendOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
 
@@ -63,21 +62,13 @@ class LocatedElements extends Component {
           </Row>
           <Row justify='center'>
             <Space direction='horizontal' size='small'>
-              <ButtonGroup>
-                <Tooltip title={t('Copy ID')} placement='bottom'>
-                  <Button
-                    disabled={!locatorTestElement}
-                    icon={<CopyOutlined/>}
-                    onClick={() => clipboard.writeText(locatorTestElement)}/>
-                </Tooltip>
-                <Tooltip title={t('Find and Select in Source')} placement='bottom'>
-                  <Button
-                    disabled={!locatorTestElement}
-                    icon={<MenuUnfoldOutlined/>}
-                    onClick={() => selectLocatedElement(source, searchedForElementBounds, locatorTestElement)}
-                  />
-                </Tooltip>
-              </ButtonGroup>
+              <Tooltip title={t('Find and Select in Source')} placement='bottom'>
+                <Button
+                  disabled={!locatorTestElement}
+                  icon={<MenuUnfoldOutlined/>}
+                  onClick={() => selectLocatedElement(source, searchedForElementBounds, locatorTestElement)}
+                />
+              </Tooltip>
               <Tooltip title={t('Tap')} placement='bottom'>
                 <Button
                   disabled={!locatorTestElement}
