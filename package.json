@@ -201,6 +201,7 @@
     "spectron": "Deprecated. Newer V16 also requires Electron 14"
   },
   "devDependencies": {
+    "@appium/eslint-config-appium": "8.0.3",
     "@appium/fake-driver": "5.2.3",
     "@appium/support": "4.0.1",
     "@babel/core": "7.22.1",
@@ -223,7 +224,6 @@
     "electron-debug": "3.2.0",
     "electron-devtools-installer": "3.2.0",
     "eslint": "8.41.0",
-    "eslint-config-appium": "4.7.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-jsx-a11y": "6.7.1",
     "eslint-plugin-mocha": "10.1.0",
