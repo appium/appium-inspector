@@ -67,7 +67,6 @@ class Screenshot extends Component {
       const x = offsetX * scaleRatio;
       const y = offsetY * scaleRatio;
       this.setState({
-        ...this.state,
         x: Math.round(x),
         y: Math.round(y),
       });
@@ -76,7 +75,6 @@ class Screenshot extends Component {
 
   handleMouseOut () {
     this.setState({
-      ...this.state,
       x: null,
       y: null,
     });

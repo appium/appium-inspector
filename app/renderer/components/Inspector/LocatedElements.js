@@ -81,7 +81,7 @@ class LocatedElements extends Component {
                   disabled={!locatorTestElement}
                   placeholder={t('Enter Keys to Send')}
                   allowClear={true}
-                  onChange={(e) => this.setState({...this.state, sendKeys: e.target.value})}/>
+                  onChange={(e) => this.setState({sendKeys: e.target.value})}/>
                 <Tooltip title={t('Send Keys')} placement='bottom'>
                   <Button
                     disabled={!locatorTestElement}
