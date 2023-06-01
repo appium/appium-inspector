@@ -2,8 +2,8 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { createHashHistory } from 'history';
 import { routerMiddleware, push } from 'connected-react-router';
-import actions from '../actions';
-import createRootReducer from '../reducers';
+import actions from './actions';
+import createRootReducer from './reducers';
 
 const history = createHashHistory();
 
@@ -50,7 +50,7 @@ const configureStore = (initialState) => {
   if (module.hot) {
     module.hot.accept(
       '../reducers',
-      () => store.replaceReducer(require('../reducers').default)
+      () => store.replaceReducer(require('./reducers').default)
     );
   }
 
