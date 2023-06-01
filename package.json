@@ -143,7 +143,6 @@
     "react": "V18: conflicting peer dependency with connected-react-router",
     "react-redux": "V8: conflicting peer dependency with connected-react-router",
     "react-router": "V6: conflicting peer dependency with connected-react-router",
-    "redux-logger": "Appears to be abandoned",
     "request": "Deprecated: replace with alternatives like got",
     "request-promise": "Deprecated: replace with alternatives",
     "source-map-support": "Obsolete: integrated in Node.js 12.12.0+",
@@ -178,7 +177,6 @@
     "react-redux": "7.2.9",
     "react-router": "5.3.4",
     "redux": "4.2.1",
-    "redux-logger": "3.0.6",
     "redux-thunk": "2.4.2",
     "request": "2.88.2",
     "request-promise": "4.2.6",
@@ -198,6 +196,7 @@
     "node-libs-browser": "Deprecated",
     "parcel-bundler": "V2: significant rewrite required",
     "postcss-modules": "V4: requires updating to Parcel v2",
+    "redux-logger": "Appears to be abandoned",
     "spectron": "Deprecated. Newer V16 also requires Electron 14"
   },
   "devDependencies": {
@@ -238,6 +237,7 @@
     "parcel-bundler": "1.12.5",
     "parcel-plugin-asset-copier": "1.1.1",
     "postcss-modules": "3.2.2",
+    "redux-logger": "3.0.6",
     "release": "6.3.1",
     "rimraf": "5.0.1",
     "sinon": "15.1.0",

@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import Root from './containers/Root';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-import Store from './store/configureStore';
+import Store from './store';
 
 const { history, configureStore } = Store;
 
