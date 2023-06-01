@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { createHashHistory } from 'history';
-import { routerMiddleware, routerActions } from 'connected-react-router';
+import { routerMiddleware, push } from 'connected-react-router';
 import { createLogger } from 'redux-logger';
 import actions from '../actions';
 import createRootReducer from '../reducers';
@@ -33,16 +33,11 @@ const configureStore = (initialState) => {
   const router = routerMiddleware(history);
   middleware.push(router);
 
-  // Redux DevTools Configuration
-  const actionCreators = {
-    ...actions,
-    ...routerActions
-  };
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-      // Options: http://extension.remotedev.io/docs/API/Arguments.html
-      actionCreators
+      // Options: https://github.com/zalmoxisus/redux-devtools-extension/blob/master/docs/API/Arguments.md
+      actionCreators: {...actions, push}
     })
     : compose;
 
