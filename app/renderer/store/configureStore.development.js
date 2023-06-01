@@ -11,9 +11,7 @@ const history = createHashHistory();
 const rootReducer = createRootReducer(history);
 
 const configureStore = (initialState) => {
-  // Redux Configuration
   const middleware = [];
-  const enhancers = [];
 
   // Thunk Middleware
   middleware.push(thunk);
@@ -42,8 +40,9 @@ const configureStore = (initialState) => {
     : compose;
 
   // Apply Middleware & Compose Enhancers
-  enhancers.push(applyMiddleware(...middleware));
-  const enhancer = composeEnhancers(...enhancers);
+  const enhancer = composeEnhancers(
+    applyMiddleware(...middleware)
+  );
 
   // Create Store
   const store = createStore(rootReducer, initialState, enhancer);
