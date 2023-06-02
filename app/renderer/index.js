@@ -2,11 +2,9 @@ import React from 'react';
 import { render } from 'react-dom';
 import Root from './containers/Root';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-import Store from './store';
+import configureStore from './store';
 
-const { history, configureStore } = Store;
-
-const store = configureStore();
+const { store, history } = configureStore();
 
 render(
   <ErrorBoundary>

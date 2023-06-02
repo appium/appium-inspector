@@ -1,7 +1,7 @@
 import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE,
          SESSION_SERVER_PARAMS } from '../../shared/settings';
 import { v4 as UUID } from 'uuid';
-import { push } from 'connected-react-router';
+import { push } from 'redux-first-history';
 import { notification } from 'antd';
 import { includes, debounce, toPairs, union, without, keys, isUndefined, isPlainObject } from 'lodash';
 import { setSessionDetails, quitSession } from './Inspector';

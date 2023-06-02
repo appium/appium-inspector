@@ -1,13 +1,15 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { createHashHistory } from 'history';
-import { routerMiddleware, push } from 'connected-react-router';
+import { createReduxHistoryContext, push } from 'redux-first-history';
 import actions from './actions';
 import createRootReducer from './reducers';
 
-const history = createHashHistory();
+const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHistoryContext({
+  history: createHashHistory()
+});
 
-const rootReducer = createRootReducer(history);
+const rootReducer = createRootReducer(routerReducer);
 
 const configureStore = (initialState) => {
   const middleware = [];
@@ -36,8 +38,7 @@ const configureStore = (initialState) => {
   }
 
   // Router Middleware
-  const router = routerMiddleware(history);
-  middleware.push(router);
+  middleware.push(routerMiddleware);
 
   // Apply Middleware & Compose Enhancers
   const enhancer = composeEnhancers(
@@ -54,7 +55,8 @@ const configureStore = (initialState) => {
     );
   }
 
-  return store;
+  const history = createReduxHistory(store);
+  return { store, history };
 };
 
-export default { configureStore, history };
+export default configureStore;
