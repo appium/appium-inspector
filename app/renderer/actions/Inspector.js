@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { push } from 'connected-react-router';
+import { push } from 'redux-first-history';
 import { getLocators, APP_MODE } from '../components/Inspector/shared';
 import { showError } from './Session';
 import { xmlToJSON } from '../util';
