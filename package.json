@@ -142,6 +142,7 @@
     "react": "V18: conflicting peer dependency with connected-react-router",
     "react-redux": "V8: conflicting peer dependency with connected-react-router",
     "react-router": "V6: conflicting peer dependency with connected-react-router",
+    "redux-first-history": "Appears to be abandoned",
     "request": "Deprecated: replace with alternatives like got",
     "request-promise": "Deprecated: replace with alternatives",
     "source-map-support": "Obsolete: integrated in Node.js 12.12.0+",
