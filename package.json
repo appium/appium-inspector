@@ -145,7 +145,6 @@
     "react-router": "V6: conflicting peer dependency with connected-react-router",
     "request": "Deprecated: replace with alternatives like got",
     "request-promise": "Deprecated: replace with alternatives",
-    "source-map-support": "Obsolete: integrated in Node.js 12.12.0+",
     "uuid": "Obsolete: can be replaced with crypto.randomUUID in Electron 14+"
   },
   "dependencies": {
@@ -181,7 +180,6 @@
     "request": "2.88.2",
     "request-promise": "4.2.6",
     "semver": "7.5.1",
-    "source-map-support": "0.5.21",
     "uuid": "9.0.0",
     "web2driver": "3.0.4",
     "xpath": "0.0.32"
