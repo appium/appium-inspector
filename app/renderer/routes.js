@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Switch, Route } from 'react-router';
+import { Switch, Route } from 'react-router-dom';
 import App from './containers/App';
 import SessionPage from './containers/SessionPage';
 import InspectorPage from './containers/InspectorPage';
