@@ -4,6 +4,7 @@
     ":semanticCommitTypeAll(chore)",
     ":pinAllExceptPeerDependencies"
   ],
+  "labels": ["dependencies"],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
