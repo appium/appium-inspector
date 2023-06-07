@@ -2,9 +2,8 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import Root from './containers/Root';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-import configureStore from './store';
+import { store, history } from './store';
 
-const { store, history } = configureStore();
 const container = document.getElementById('root');
 const root = createRoot(container);
 
