@@ -33,7 +33,7 @@ export const store = configureStore({
 
     return middleware;
   },
-  devTools: {
+  devTools: process.env.NODE_ENV !== 'development' ? false : {
     actionCreators: {...actions, push}
   }
 });
