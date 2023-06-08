@@ -144,12 +144,9 @@ class Screenshot extends Component {
       t,
       scaleRatio,
       selectedTick,
-      selectedInteractionMode,
-      isSourceRefreshOn
+      selectedInteractionMode
     } = this.props;
     const {x, y} = this.state;
-
-    const showSpinner = (isSourceRefreshOn && !!methodCallInProgress);
 
     // If we're tapping or swiping, show the 'crosshair' cursor style
     const screenshotStyle = {};
@@ -171,8 +168,9 @@ class Screenshot extends Component {
 
     const points = this.getGestureCoordinates();
 
-    // Show the screenshot and highlighter rects. Show loading indicator if a method call is in progress.
-    return <Spin size='large' spinning={showSpinner}>
+    // Show the screenshot and highlighter rects.
+    // Show loading indicator if a method call is in progress, unless using MJPEG mode.
+    return <Spin size='large' spinning={!!methodCallInProgress && !mjpegScreenshotUrl}>
       <div className={styles.innerScreenshotContainer}>
         <div ref={(containerEl) => { this.containerEl = containerEl; }}
           style={screenshotStyle}
