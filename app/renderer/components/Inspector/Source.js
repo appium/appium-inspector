@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Tree } from 'antd';
+import { Tree, Spin } from 'antd';
 import LocatorTestModal from './LocatorTestModal';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
@@ -60,6 +60,9 @@ class Source extends Component {
       expandedPaths,
       selectedElement = {},
       showSourceAttrs,
+      methodCallInProgress,
+      mjpegScreenshotUrl,
+      isSourceRefreshOn,
       t,
     } = this.props;
     const {path} = selectedElement;
@@ -78,19 +81,22 @@ class Source extends Component {
     const treeData = source && recursive(source);
 
     return <div id='sourceContainer' className={InspectorStyles['tree-container']} tabIndex="0">
-      {/* Must switch to a new antd Tree component when there's changes to treeData  */}
-      {treeData ?
-        <Tree
-          defaultExpandAll={true}
-          onExpand={setExpandedPaths}
-          expandedKeys={expandedPaths}
-          onSelect={(selectedPaths) => this.handleSelectElement(selectedPaths[0])}
-          selectedKeys={[path]}
-          treeData={treeData} />
-        :
-        <Tree
-          treeData={[]} />
-      }
+      {/* Show loading indicator in MJPEG mode if a method call is in progress and source refresh is on */}
+      <Spin size='large' spinning={!!methodCallInProgress && mjpegScreenshotUrl && isSourceRefreshOn}>
+        {/* Must switch to a new antd Tree component when there's changes to treeData  */}
+        {treeData ?
+          <Tree
+            defaultExpandAll={true}
+            onExpand={setExpandedPaths}
+            expandedKeys={expandedPaths}
+            onSelect={(selectedPaths) => this.handleSelectElement(selectedPaths[0])}
+            selectedKeys={[path]}
+            treeData={treeData} />
+          :
+          <Tree
+            treeData={[]} />
+        }
+      </Spin>
       {!source && !sourceError &&
         <i>{t('Gathering initial app source…')}</i>
       }
