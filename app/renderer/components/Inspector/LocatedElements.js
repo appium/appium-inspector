@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
-import { Input, Row, Button, Badge, List, Space, Spin, Tooltip } from 'antd';
+import { Alert, Input, Row, Button, Badge, List, Space, Spin, Tooltip } from 'antd';
 import { AimOutlined, ClearOutlined, SendOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { ALERT } from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
 
 const ButtonGroup = Button.Group;
+
+const showIdAutocompleteInfo = (driver, strategy, value, t) => {
+  const automationName = driver.client.capabilities.automationName;
+  const idLocatorAutocompletionDisabled = driver.client.capabilities.disableIdLocatorAutocompletion;
+  if (automationName && automationName.toLowerCase() === 'uiautomator2' &&
+    strategy === 'id' && !value.includes(':id/') && !idLocatorAutocompletionDisabled) {
+    return <Row><Alert message={t('idAutocompletionCanBeDisabled')} type={ALERT.INFO} showIcon/></Row>;
+  }
+};
 
 class LocatedElements extends Component {
 
@@ -29,17 +39,23 @@ class LocatedElements extends Component {
       locatedElements,
       locatedElementsExecutionTime,
       applyClientMethod,
+      locatorTestStrategy,
+      locatorTestValue,
       setLocatorTestElement,
       locatorTestElement,
       isFindingLocatedElementInSource,
       searchedForElementBounds,
       selectLocatedElement,
       source,
+      driver,
       t,
     } = this.props;
 
     return <>
-      {locatedElements.length === 0 && <Row><i>{t('couldNotFindAnyElements')}</i></Row>}
+      {locatedElements.length === 0 && <Space className={InspectorStyles.spaceContainer} direction='vertical' size='small'>
+        <Row><i>{t('couldNotFindAnyElements')}</i></Row>
+        {showIdAutocompleteInfo(driver, locatorTestStrategy, locatorTestValue, t)}
+      </Space>}
       {locatedElements.length > 0 && <Spin spinning={isFindingLocatedElementInSource}>
         <Space className={InspectorStyles.spaceContainer} direction='vertical' size='small'>
           <Row justify='space-between'>
