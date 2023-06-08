@@ -338,12 +338,12 @@ export default class Inspector extends Component {
       <Tooltip title={t('Back')}>
         <Button id='btnGoBack' icon={<ArrowLeftOutlined/>} onClick={() => applyClientMethod({methodName: 'back'})}/>
       </Tooltip>
-      {!isSourceRefreshOn &&
+      {mjpegScreenshotUrl && !isSourceRefreshOn &&
         <Tooltip title={t('Start Refreshing Source')}>
           <Button id='btnStartRefreshing' icon={<PlayCircleOutlined/>} onClick={toggleRefreshingState}/>
         </Tooltip>
       }
-      {isSourceRefreshOn &&
+      {mjpegScreenshotUrl && isSourceRefreshOn &&
         <Tooltip title={t('Pause Refreshing Source')}>
           <Button id='btnPauseRefreshing' icon={<PauseCircleOutlined/>} onClick={toggleRefreshingState}/>
         </Tooltip>
