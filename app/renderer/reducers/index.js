@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from '@reduxjs/toolkit';
 import session from './Session';
 import inspector from './Inspector';
 import updater from './Updater';
