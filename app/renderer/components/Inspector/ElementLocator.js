@@ -15,9 +15,10 @@ const STRAT_DATAMATCHER = ['-android datamatcher', 'DataMatcher'];
 const STRAT_VIEWTAG = ['-android viewtag', 'View Tag'];
 
 const locatorStrategies = (driver) => {
-  const automationName = driver.client.capabilities.automationName.toLowerCase();
+  const automationName = driver.client.capabilities.automationName;
   let strategies = [STRAT_ID, STRAT_XPATH, STRAT_NAME, STRAT_CLASS_NAME, STRAT_ACCESSIBILITY_ID];
-  switch (automationName) {
+  if (!automationName) { return strategies; }
+  switch (automationName.toLowerCase()) {
     case 'xcuitest':
     case 'mac2':
       strategies.push(STRAT_PREDICATE, STRAT_CLASS_CHAIN);
