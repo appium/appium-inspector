@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Input, Radio, Row } from 'antd';
+import { Alert, Input, Space, Radio, Row } from 'antd';
+import { ALERT } from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
 
@@ -15,9 +16,10 @@ const STRAT_DATAMATCHER = ['-android datamatcher', 'DataMatcher'];
 const STRAT_VIEWTAG = ['-android viewtag', 'View Tag'];
 
 const locatorStrategies = (driver) => {
-  const automationName = driver.client.capabilities.automationName.toLowerCase();
+  const automationName = driver.client.capabilities.automationName;
   let strategies = [STRAT_ID, STRAT_XPATH, STRAT_NAME, STRAT_CLASS_NAME, STRAT_ACCESSIBILITY_ID];
-  switch (automationName) {
+  if (!automationName) { return strategies; }
+  switch (automationName.toLowerCase()) {
     case 'xcuitest':
     case 'mac2':
       strategies.push(STRAT_PREDICATE, STRAT_CLASS_CHAIN);
@@ -30,6 +32,12 @@ const locatorStrategies = (driver) => {
       break;
   }
   return strategies;
+};
+
+const showMissingAutomationNameInfo = (driver, t) => {
+  if (!driver.client.capabilities.automationName) {
+    return <Alert message={t('missingAutomationNameForStrategies')} type={ALERT.INFO} showIcon/>;
+  }
 };
 
 class ElementLocator extends Component {
@@ -61,34 +69,36 @@ class ElementLocator extends Component {
     } = this.props;
 
     return <>
-      {t('locatorStrategy')}
-      <Row justify="center">
-        <Radio.Group buttonStyle="solid"
-          className={InspectorStyles.locatorStrategyGroup}
-          onChange={(e) => setLocatorTestStrategy(e.target.value)}
-          defaultValue={locatorTestStrategy}
-        >
-          <Row justify="center">
-            {locatorStrategies(driver).map(([strategyValue, strategyName]) => (
-              <Radio.Button
-                className={InspectorStyles.locatorStrategyBtn}
-                value={strategyValue}
-                key={strategyValue}
-              >
-                {strategyName}
-              </Radio.Button>
-            ))}
-          </Row>
-        </Radio.Group>
-      </Row>
-      {t('selector')}
-      <Input.TextArea
-        className={InspectorStyles.locatorSelectorTextArea}
-        onChange={(e) => setLocatorTestValue(e.target.value)}
-        value={locatorTestValue}
-        allowClear={true}
-        rows={3}
-      />
+      <Space className={InspectorStyles.spaceContainer} direction='vertical' size='small'>
+        {t('locatorStrategy')}
+        <Row justify="center">
+          <Radio.Group buttonStyle="solid"
+            onChange={(e) => setLocatorTestStrategy(e.target.value)}
+            defaultValue={locatorTestStrategy}
+          >
+            <Row justify="center">
+              {locatorStrategies(driver).map(([strategyValue, strategyName]) => (
+                <Radio.Button
+                  className={InspectorStyles.locatorStrategyBtn}
+                  value={strategyValue}
+                  key={strategyValue}
+                >
+                  {strategyName}
+                </Radio.Button>
+              ))}
+            </Row>
+          </Radio.Group>
+        </Row>
+        {showMissingAutomationNameInfo(driver, t)}
+        {t('selector')}
+        <Input.TextArea
+          className={InspectorStyles.locatorSelectorTextArea}
+          onChange={(e) => setLocatorTestValue(e.target.value)}
+          value={locatorTestValue}
+          allowClear={true}
+          rows={3}
+        />
+      </Space>
     </>;
   }
 }
