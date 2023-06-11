@@ -1,0 +1,23 @@
+name: 💡 Feature Request
+description: Suggest an idea for this project
+title: 'feature request: <title>'
+labels: [enhancement]
+body:
+  - type: textarea
+    attributes:
+      label: Current Behavior
+      description: Describe the problem you are experiencing. Screenshots are welcome.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Suggested Solution
+      description: Describe what you would like to happen instead.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional Information
+      description: Add any other useful context or information.
+    validations:
+      required: false
