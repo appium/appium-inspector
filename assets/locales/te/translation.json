@@ -140,6 +140,8 @@
   "usingSwitchContextRecommended": "వెబ్ వీక్షణ సందర్భం(లు) కనుగొనబడ్డాయి; కొన్ని మూలకాలు వెబ్‌వ్యూ సందర్భానికి మారిన తర్వాత మాత్రమే ప్రాప్యత చేయగలవు, ఇది తప్పనిసరిగా Appium స్క్రిప్ట్‌లో చేయాలి. మరిన్ని వివరములకు http://appium.io/docs/en/writing-running-appium/web/hybrid/ ని చూడండి",
   "usingWebviewContext": "Appium డెస్క్‌టాప్‌లో Webview ఇన్‌స్పెక్టర్‌ని ఉపయోగించడం అనేది Chrome మరియు Safari యొక్క DevToolsని ఉపయోగించడంతో పోలిస్తే DOM మూలకాలను తిరిగి పొందడంలో మరియు ఎంచుకోవడంలో తక్కువ ఖచ్చితమైనది.",
   "contextSwitcher": "మీరు ఇక్కడ వేరే సందర్భానికి మారవచ్చు. మరిన్ని వివరములకు http://appium.io/docs/en/writing-running-appium/web/hybrid/ ని చూడండి.",
+  "idAutocompletionCanBeDisabled": "The requested id selector does not have a package name prefix. This Appium session has package name autocompletion enabled, which may be the reason why no elements were found. To disable this behavior, relaunch this session with the capability 'appium:disableIdLocatorAutocompletion' set to 'true'.",
+  "missingAutomationNameForStrategies": "Additional locator strategies may be available. To view them, add the capability 'appium:automationName' when launching the session. Note that this capability is mandatory in Appium 2.",
   "Tap": "నొక్కండి",
   "Gathering initial app source…": "ప్రారంభ అప్లికేషన్ మూలాన్ని సేకరిస్తోంది…",
   "couldNotObtainSource": "'{{errorMsg}}' కారణంగా మూలాన్ని పొందడం సాధ్యపడలేదు",

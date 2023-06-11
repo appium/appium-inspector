@@ -140,6 +140,8 @@
   "usingSwitchContextRecommended": "Webview context(s) detected; certain elements might only be accessible after switching to a webview context, which must be done in an Appium script. See http://appium.io/docs/en/writing-running-appium/web/hybrid/ for more information",
   "usingWebviewContext": "Using the Webview inspector in Appium Inspector is less accurate in retrieving and selecting DOM elements in comparison to using the DevTools of Chrome and Safari.",
   "contextSwitcher": "You can switch to a different context here. See http://appium.io/docs/en/writing-running-appium/web/hybrid/ for more information",
+  "idAutocompletionCanBeDisabled": "The requested id selector does not have a package name prefix. This Appium session has package name autocompletion enabled, which may be the reason why no elements were found. To disable this behavior, relaunch this session with the capability 'appium:disableIdLocatorAutocompletion' set to 'true'.",
+  "missingAutomationNameForStrategies": "Additional locator strategies may be available. To view them, add the capability 'appium:automationName' when launching the session. Note that this capability is mandatory in Appium 2.",
   "Tap": "टेप करें",
   "Gathering initial app source…": "प्रारंभिक एप्लिकेशन स्रोत प्राप्त कर रहा है...",
   "couldNotObtainSource": "स्रोत प्राप्त नहीं कर सका:{{errorMsg}}",

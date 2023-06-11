@@ -140,6 +140,8 @@
   "usingSwitchContextRecommended": "زمینه(های) نمای وب شناسایی شد. برخی از عناصر ممکن است تنها پس از جابجایی به یک زمینه وب‌نما در دسترس باشند، که باید در یک اسکریپت Appium انجام شود. برای اطلاعات بیشتر http://appium.io/docs/en/writing-running-appium/web/hybrid/ را ببینید",
   "usingWebviewContext": "استفاده از بازرس Webview در Appium Inspector در بازیابی و انتخاب عناصر DOM در مقایسه با استفاده از DevTools Chrome و Safari دقت کمتری دارد.",
   "contextSwitcher": "در اینجا می توانید به یک زمینه متفاوت تغییر دهید. برای اطلاعات بیشتر http://appium.io/docs/en/writing-running-appium/web/hybrid/ را ببینید",
+  "idAutocompletionCanBeDisabled": "The requested id selector does not have a package name prefix. This Appium session has package name autocompletion enabled, which may be the reason why no elements were found. To disable this behavior, relaunch this session with the capability 'appium:disableIdLocatorAutocompletion' set to 'true'.",
+  "missingAutomationNameForStrategies": "Additional locator strategies may be available. To view them, add the capability 'appium:automationName' when launching the session. Note that this capability is mandatory in Appium 2.",
   "Tap": "ضربه",
   "Gathering initial app source…": "در حال جمع‌آوری منبع اولیه برنامه…",
   "couldNotObtainSource": "امکان گرفتن کد منبع وجود ندارد: {{errorMsg}}",
