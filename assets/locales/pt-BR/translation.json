@@ -140,6 +140,8 @@
   "usingSwitchContextRecommended": "Contexto(s) da Webview detectado(s); certos elementos só podem ser acessíveis após mudar para um contexto de webview, o que deve ser feito em um script Appium. Veja http://appium.io/docs/en/writing-running-appium/web/hybrid/ para mais informações",
   "usingWebviewContext": "Usar o inspector da Webview no Inspetor de Appium é menos preciso em recuperar e selecionar elementos DOM em comparação com o uso do DevTools do Chrome e do Safari.",
   "contextSwitcher": "Aqui você pode mudar para um contexto diferente. Veja http://appium.io/docs/en/writing-running-appium/web/hybrid/ para mais informações",
+  "idAutocompletionCanBeDisabled": "O seletor de ID solicitado não tem um prefixo de nome de pacote. Esta sessão Appium tem a auto-completar do nome de pacote habilitada, que pode ser a razão pela qual nenhum elemento foi encontrado. Para desativar esse comportamento, reinicie esta sessão com o recurso 'appium:disableIdLocatorAutocompletion' definido como 'true'.",
+  "missingAutomationNameForStrategies": "Additional locator strategies may be available. To view them, add the capability 'appium:automationName' when launching the session. Note that this capability is mandatory in Appium 2.",
   "Tap": "Toque",
   "Gathering initial app source…": "Coletando a fonte inicial do app…",
   "couldNotObtainSource": "Não foi possível obter a fonte: {{errorMsg}}",

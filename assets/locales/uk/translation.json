@@ -140,6 +140,8 @@
   "usingSwitchContextRecommended": "Виявлені певні веб-контексти; деякі елементи будуть доступні лише після перемикання у веб-контекст, що повинно бути зроблено в скрипті Appium. Див. http://appium.io/docs/en/writing-running-appium/web/hybrid/ для отримання додаткової інформації",
   "usingWebviewContext": "Використання Webview інспектора в Appium інспекторі є менш точним в отриманні та вибору DOM елементів порівняно з використанням DevTools Chrome та Safari.",
   "contextSwitcher": "Ви можете переключитися на інший контекст тут. Перегляньте http://appium.io/docs/en/writing-running-appium/web/hybrid/ для отримання додаткової інформації",
+  "idAutocompletionCanBeDisabled": "Запитаний код селектора не має префіксу назви пакета. Цей сеанс Appium має увімкнену функцію автозавершення назви пакета. Це може бути причиною того, що не знайдено елементів. Для відключення цієї поведінки, перезапустіть цей сеанс з можливістю 'appium:disableIdLocatorAutocompletion' встановлено в 'true'.",
+  "missingAutomationNameForStrategies": "Additional locator strategies may be available. To view them, add the capability 'appium:automationName' when launching the session. Note that this capability is mandatory in Appium 2.",
   "Tap": "Торкніться",
   "Gathering initial app source…": "Збирання початкового коду програми…",
   "couldNotObtainSource": "Не вдалося отримати вихідний код: {{errorMsg}}",
