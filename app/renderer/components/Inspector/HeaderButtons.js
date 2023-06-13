@@ -31,7 +31,7 @@ class HeaderButtons extends Component {
     } = this.props;
 
     const deviceControls = <ButtonGroup>
-      {driver.client.isIOS && <>
+      {driver && driver.client.isIOS && <>
         <Tooltip title={t('Press Home Button')}>
           <Button id='btnPressHomeButton' icon={<HiOutlineHome className={InspectorStyles['custom-button-icon']}/>} onClick={() => applyClientMethod({ methodName: 'executeScript', args: ['mobile:pressButton', [{name: 'home'}]]})}/>
         </Tooltip>
@@ -39,7 +39,7 @@ class HeaderButtons extends Component {
           <Button id='siriCommand' icon={<HiOutlineMicrophone className={InspectorStyles['custom-button-icon']}/>} onClick={showSiriCommandModal} />
         </Tooltip>
       </>}
-      {driver.client.isAndroid && <>
+      {driver && driver.client.isAndroid && <>
         <Tooltip title={t('Press Back Button')}>
           <Button id='btnPressHomeButton' icon={<IoChevronBackOutline className={InspectorStyles['custom-button-icon']}/>} onClick={() => applyClientMethod({ methodName: 'pressKeyCode', args: [4]})}/>
         </Tooltip>
