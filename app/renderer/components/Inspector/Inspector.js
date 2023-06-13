@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { debounce } from 'lodash';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE } from './shared';
-import { Card, Button, Spin, Tooltip, Modal, Tabs, Switch } from 'antd';
+import { Card, Button, Spin, Tooltip, Modal, Tabs, Space, Switch } from 'antd';
 import Screenshot from './Screenshot';
 import HeaderButtons from './HeaderButtons';
 import SelectedElement from './SelectedElement';
@@ -191,7 +191,7 @@ export default class Inspector extends Component {
                             (mjpegScreenshotUrl && (!isSourceRefreshOn || !isAwaitingMjpegStream)));
 
     let screenShotControls = <div className={InspectorStyles['screenshot-controls']}>
-      <div className={InspectorStyles['action-controls']}>
+      <Space size='middle'>
         <Tooltip title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')} placement="topRight">
           <Switch
             checkedChildren={<CheckCircleOutlined />}
@@ -201,8 +201,6 @@ export default class Inspector extends Component {
             disabled={isGestureEditorVisible}
           />
         </Tooltip>
-      </div>
-      <div className={InspectorStyles['action-controls']}>
         <ButtonGroup value={screenshotInteractionMode}>
           <Tooltip title={t('Select Elements')}>
             <Button icon={<SelectOutlined/>} onClick={() => {this.screenshotInteractionChange(SELECT);}}
@@ -223,7 +221,7 @@ export default class Inspector extends Component {
             />
           </Tooltip>
         </ButtonGroup>
-      </div>
+      </Space>
     </div>;
 
     let main = <div className={InspectorStyles['inspector-main']} ref={(el) => {this.screenAndSourceEl = el;}}>

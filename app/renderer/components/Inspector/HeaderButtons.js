@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Tooltip } from 'antd';
+import { Button, Tooltip, Space } from 'antd';
 import InspectorStyles from './Inspector.css';
 import { withTranslation } from '../../util';
 import { HiOutlineMicrophone, HiOutlineHome } from 'react-icons/hi';
@@ -30,7 +30,7 @@ class HeaderButtons extends Component {
       applyClientMethod, quitSession, driver, t
     } = this.props;
 
-    const deviceControls = <ButtonGroup className={InspectorStyles['action-controls']}>
+    const deviceControls = <ButtonGroup>
       {driver.client.isIOS && <>
         <Tooltip title={t('Press Home Button')}>
           <Button id='btnPressHomeButton' icon={<HiOutlineHome className={InspectorStyles['custom-button-icon']}/>} onClick={() => applyClientMethod({ methodName: 'executeScript', args: ['mobile:pressButton', [{name: 'home'}]]})}/>
@@ -52,61 +52,59 @@ class HeaderButtons extends Component {
       </>}
     </ButtonGroup>;
 
-    const appModeControls = <div className={InspectorStyles['action-controls']}>
-      <ButtonGroup value={appMode}>
-        <Tooltip title={t('Native App Mode')}>
-          <Button icon={<AppstoreOutlined/>} onClick={() => {selectAppMode(APP_MODE.NATIVE);}}
-            type={appMode === APP_MODE.NATIVE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          />
-        </Tooltip>
-        <Tooltip title={t('Web/Hybrid App Mode')}>
-          <Button icon={<GlobalOutlined/>} onClick={() => {selectAppMode(APP_MODE.WEB_HYBRID);}}
-            type={appMode === APP_MODE.WEB_HYBRID ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          />
-        </Tooltip>
-      </ButtonGroup>
-    </div>;
+    const appModeControls = <ButtonGroup value={appMode}>
+      <Tooltip title={t('Native App Mode')}>
+        <Button icon={<AppstoreOutlined/>} onClick={() => {selectAppMode(APP_MODE.NATIVE);}}
+          type={appMode === APP_MODE.NATIVE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+        />
+      </Tooltip>
+      <Tooltip title={t('Web/Hybrid App Mode')}>
+        <Button icon={<GlobalOutlined/>} onClick={() => {selectAppMode(APP_MODE.WEB_HYBRID);}}
+          type={appMode === APP_MODE.WEB_HYBRID ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+        />
+      </Tooltip>
+    </ButtonGroup>;
 
-    const generalControls = <div className={InspectorStyles['action-controls']}>
-      <ButtonGroup>
-        {mjpegScreenshotUrl && !isSourceRefreshOn &&
-          <Tooltip title={t('Start Refreshing Source')}>
-            <Button id='btnStartRefreshing' icon={<PlayCircleOutlined/>} onClick={toggleRefreshingState}/>
-          </Tooltip>
-        }
-        {mjpegScreenshotUrl && isSourceRefreshOn &&
-          <Tooltip title={t('Pause Refreshing Source')}>
-            <Button id='btnPauseRefreshing' icon={<PauseCircleOutlined/>} onClick={toggleRefreshingState}/>
-          </Tooltip>
-        }
-        <Tooltip title={t('refreshSource')}>
-          <Button id='btnReload' icon={<ReloadOutlined/>} onClick={() => applyClientMethod({methodName: 'getPageSource'})}/>
+    const generalControls = <ButtonGroup>
+      {mjpegScreenshotUrl && !isSourceRefreshOn &&
+        <Tooltip title={t('Start Refreshing Source')}>
+          <Button id='btnStartRefreshing' icon={<PlayCircleOutlined/>} onClick={toggleRefreshingState}/>
         </Tooltip>
-        <Tooltip title={t('Search for element')}>
-          <Button id='searchForElement' icon={<SearchOutlined/>} onClick={showLocatorTestModal} />
+      }
+      {mjpegScreenshotUrl && isSourceRefreshOn &&
+        <Tooltip title={t('Pause Refreshing Source')}>
+          <Button id='btnPauseRefreshing' icon={<PauseCircleOutlined/>} onClick={toggleRefreshingState}/>
         </Tooltip>
-        {!isRecording &&
-          <Tooltip title={t('Start Recording')}>
-            <Button id='btnStartRecording' icon={<EyeOutlined/>} onClick={startRecording}/>
-          </Tooltip>
-        }
-        {isRecording &&
-          <Tooltip title={t('Pause Recording')}>
-            <Button id='btnPause' icon={<PauseOutlined/>} type={BUTTON.DANGER} onClick={pauseRecording}/>
-          </Tooltip>
-        }
-      </ButtonGroup>
-    </div>;
+      }
+      <Tooltip title={t('refreshSource')}>
+        <Button id='btnReload' icon={<ReloadOutlined/>} onClick={() => applyClientMethod({methodName: 'getPageSource'})}/>
+      </Tooltip>
+      <Tooltip title={t('Search for element')}>
+        <Button id='searchForElement' icon={<SearchOutlined/>} onClick={showLocatorTestModal} />
+      </Tooltip>
+      {!isRecording &&
+        <Tooltip title={t('Start Recording')}>
+          <Button id='btnStartRecording' icon={<EyeOutlined/>} onClick={startRecording}/>
+        </Tooltip>
+      }
+      {isRecording &&
+        <Tooltip title={t('Pause Recording')}>
+          <Button id='btnPause' icon={<PauseOutlined/>} type={BUTTON.DANGER} onClick={pauseRecording}/>
+        </Tooltip>
+      }
+    </ButtonGroup>;
 
     const quitSessionButton = <Tooltip title={t('quitSessionAndClose')}>
       <Button id='btnClose' icon={<CloseOutlined/>} onClick={() => quitSession()}/>
     </Tooltip>;
 
     return <div className={InspectorStyles['inspector-toolbar']}>
-      {deviceControls}
-      {appModeControls}
-      {generalControls}
-      {quitSessionButton}
+      <Space size='middle'>
+        {deviceControls}
+        {appModeControls}
+        {generalControls}
+        {quitSessionButton}
+      </Space>
     </div>;
   }
 }
