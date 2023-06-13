@@ -3,6 +3,7 @@ import { debounce } from 'lodash';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from './shared';
 import { Card, Button, Spin, Tooltip, Modal, Tabs, Switch } from 'antd';
 import Screenshot from './Screenshot';
+import DeviceControls from './DeviceControls';
 import SelectedElement from './SelectedElement';
 import Source from './Source';
 import InspectorStyles from './Inspector.css';
@@ -38,7 +39,6 @@ import {
   CodeOutlined
 } from '@ant-design/icons';
 import { BUTTON } from '../AntdTypes';
-import DeviceActions from './DeviceActions';
 
 const {SELECT, SWIPE, TAP} = SCREENSHOT_INTERACTION_MODE;
 
@@ -202,7 +202,7 @@ export default class Inspector extends Component {
                             (mjpegScreenshotUrl && (!isSourceRefreshOn || !isAwaitingMjpegStream)));
 
     let screenShotControls = <div className={InspectorStyles['screenshot-controls']}>
-      {(driver) && <DeviceActions {...this.props} />}
+      {(driver) && <DeviceControls {...this.props} />}
       <div className={InspectorStyles['action-controls']}>
         <Tooltip title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')} placement="topRight">
           <Switch
