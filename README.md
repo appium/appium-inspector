@@ -57,7 +57,7 @@ any other command: `./Appium-Inspector-linux.AppImage`.
 * Simulate Siri commands for iOS
 * Switch into web context modes and interact with web elements
 * Test out your own locator strategies
-* Access a huge library of Appium actions to run with a simple click, including providing your own parameters
+* Access a huge library of Appium commands to run with a simple click, including providing your own parameters
 
 ### Supported cloud platforms
 

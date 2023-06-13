@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Table, Button, Tooltip } from 'antd';
+import { Table, Button, Space, Tooltip } from 'antd';
 import { withTranslation } from '../../util';
+import InspectorStyles from './Inspector.css';
 import { EditOutlined, DeleteOutlined, PlusOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { SCREENSHOT_INTERACTION_MODE, POINTER_TYPES, percentageToPixels } from './shared';
 import _ from 'lodash';
@@ -141,16 +142,19 @@ class SavedGestures extends Component {
       }
     });
 
-    return <Table
-      onRow={this.onRow}
-      pagination={false}
-      dataSource={dataSource()}
-      columns={columns}
-      footer={() => <Button
-        onClick={showGestureEditor}
-        icon={<PlusOutlined/>}
-      />}
-    />;
+    return <Space className={InspectorStyles.spaceContainer} direction='vertical' size='middle'>
+      {t('gesturesDescription')}
+      <Table
+        onRow={this.onRow}
+        pagination={false}
+        dataSource={dataSource()}
+        columns={columns}
+        footer={() => <Button
+          onClick={showGestureEditor}
+          icon={<PlusOutlined/>}
+        />}
+      />
+    </Space>;
   }
 }
 

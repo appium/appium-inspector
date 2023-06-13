@@ -8,7 +8,7 @@ import { IoChevronBackOutline } from 'react-icons/io5';
 
 const ButtonGroup = Button.Group;
 
-class DeviceActions extends Component {
+class DeviceControls extends Component {
 
   render () {
     const {
@@ -42,4 +42,4 @@ class DeviceActions extends Component {
   }
 }
 
-export default withTranslation(DeviceActions);
+export default withTranslation(DeviceControls);

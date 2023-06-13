@@ -3,11 +3,12 @@ import { debounce } from 'lodash';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from './shared';
 import { Card, Button, Spin, Tooltip, Modal, Tabs, Switch } from 'antd';
 import Screenshot from './Screenshot';
+import DeviceControls from './DeviceControls';
 import SelectedElement from './SelectedElement';
 import Source from './Source';
 import InspectorStyles from './Inspector.css';
 import RecordedActions from './RecordedActions';
-import Actions from './Actions';
+import Commands from './Commands';
 import SavedGestures from './SavedGestures';
 import GestureEditor from './GestureEditor';
 import SessionInfo from './SessionInfo';
@@ -38,7 +39,6 @@ import {
   CodeOutlined
 } from '@ant-design/icons';
 import { BUTTON } from '../AntdTypes';
-import DeviceActions from './DeviceActions';
 
 const {SELECT, SWIPE, TAP} = SCREENSHOT_INTERACTION_MODE;
 
@@ -202,7 +202,7 @@ export default class Inspector extends Component {
                             (mjpegScreenshotUrl && (!isSourceRefreshOn || !isAwaitingMjpegStream)));
 
     let screenShotControls = <div className={InspectorStyles['screenshot-controls']}>
-      {(driver) && <DeviceActions {...this.props} />}
+      {(driver) && <DeviceControls {...this.props} />}
       <div className={InspectorStyles['action-controls']}>
         <Tooltip title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')} placement="topRight">
           <Switch
@@ -287,23 +287,23 @@ export default class Inspector extends Component {
               </div>
             </div>
           }, {
-            label: t('Commands'), key: INTERACTION_MODE.ACTIONS, children:
+            label: t('Commands'), key: INTERACTION_MODE.COMMANDS, children:
             <Card
               title={<span><ThunderboltOutlined /> {t('Execute Commands')}</span>}
               className={InspectorStyles['interaction-tab-card']}>
-              <Actions {...this.props} />
+              <Commands {...this.props} />
             </Card>
           }, {
-            label: t('Actions'), key: INTERACTION_MODE.GESTURES, children:
+            label: t('Gestures'), key: INTERACTION_MODE.GESTURES, children:
             isGestureEditorVisible ?
               <Card
-                title={<span><HighlightOutlined /> {t('Action Builder')}</span>}
+                title={<span><HighlightOutlined /> {t('Gesture Builder')}</span>}
                 className={InspectorStyles['interaction-tab-card']}>
                 <GestureEditor {...this.props}/>
               </Card>
               :
               <Card
-                title={<span><HighlightOutlined /> {t('Saved Actions')}</span>}
+                title={<span><HighlightOutlined /> {t('Saved Gestures')}</span>}
                 className={InspectorStyles['interaction-tab-card']}>
                 <SavedGestures {...this.props} />
               </Card>
