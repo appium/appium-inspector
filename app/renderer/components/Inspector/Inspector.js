@@ -17,7 +17,6 @@ import {
   SelectOutlined,
   ScanOutlined,
   SwapRightOutlined,
-  ArrowLeftOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
   ReloadOutlined,
@@ -335,9 +334,6 @@ export default class Inspector extends Component {
     </div>;
 
     const generalControls = <ButtonGroup>
-      <Tooltip title={t('Back')}>
-        <Button id='btnGoBack' icon={<ArrowLeftOutlined/>} onClick={() => applyClientMethod({methodName: 'back'})}/>
-      </Tooltip>
       {mjpegScreenshotUrl && !isSourceRefreshOn &&
         <Tooltip title={t('Start Refreshing Source')}>
           <Button id='btnStartRefreshing' icon={<PlayCircleOutlined/>} onClick={toggleRefreshingState}/>
