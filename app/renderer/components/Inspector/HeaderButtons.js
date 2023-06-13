@@ -95,16 +95,18 @@ class HeaderButtons extends Component {
         <Tooltip title={t('Search for element')}>
           <Button id='searchForElement' icon={<SearchOutlined/>} onClick={showLocatorTestModal} />
         </Tooltip>
-        <Tooltip title={t('quitSessionAndClose')}>
-          <Button id='btnClose' icon={<CloseOutlined/>} onClick={() => quitSession()}/>
-        </Tooltip>
       </ButtonGroup>
     </div>;
+
+    const quitSessionButton = <Tooltip title={t('quitSessionAndClose')}>
+      <Button id='btnClose' icon={<CloseOutlined/>} onClick={() => quitSession()}/>
+    </Tooltip>;
 
     return <div className={InspectorStyles['inspector-toolbar']}>
       {deviceControls}
       {appModeControls}
       {generalControls}
+      {quitSessionButton}
     </div>;
   }
 }
