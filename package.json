@@ -236,7 +236,7 @@
     "redux-logger": "3.0.6",
     "release": "6.3.1",
     "rimraf": "5.0.1",
-    "sinon": "15.1.0",
+    "sinon": "15.1.2",
     "spectron": "15.0.0"
   },
   "devEngines": {
