@@ -82,6 +82,9 @@ class HeaderButtons extends Component {
         <Tooltip title={t('refreshSource')}>
           <Button id='btnReload' icon={<ReloadOutlined/>} onClick={() => applyClientMethod({methodName: 'getPageSource'})}/>
         </Tooltip>
+        <Tooltip title={t('Search for element')}>
+          <Button id='searchForElement' icon={<SearchOutlined/>} onClick={showLocatorTestModal} />
+        </Tooltip>
         {!isRecording &&
           <Tooltip title={t('Start Recording')}>
             <Button id='btnStartRecording' icon={<EyeOutlined/>} onClick={startRecording}/>
@@ -92,9 +95,6 @@ class HeaderButtons extends Component {
             <Button id='btnPause' icon={<PauseOutlined/>} type={BUTTON.DANGER} onClick={pauseRecording}/>
           </Tooltip>
         }
-        <Tooltip title={t('Search for element')}>
-          <Button id='searchForElement' icon={<SearchOutlined/>} onClick={showLocatorTestModal} />
-        </Tooltip>
       </ButtonGroup>
     </div>;
 
