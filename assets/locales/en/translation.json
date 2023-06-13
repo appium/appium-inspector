@@ -213,6 +213,7 @@
   "Gestures": "Gestures",
   "Gesture Builder": "Gesture Builder",
   "Saved Gestures": "Saved Gestures",
+  "gesturesDescription": "Create, save, and execute custom gestures here. Gestures are identical to action chains in the W3C WebDriver Actions API.",
   "Session Information": "Session Information",
   "Select Command Group": "Select Command Group",
   "Select Sub Group": "Select Sub Group",
