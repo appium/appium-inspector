@@ -7,7 +7,7 @@ import SelectedElement from './SelectedElement';
 import Source from './Source';
 import InspectorStyles from './Inspector.css';
 import RecordedActions from './RecordedActions';
-import Actions from './Actions';
+import Commands from './Commands';
 import SavedGestures from './SavedGestures';
 import GestureEditor from './GestureEditor';
 import SessionInfo from './SessionInfo';
@@ -287,11 +287,11 @@ export default class Inspector extends Component {
               </div>
             </div>
           }, {
-            label: t('Commands'), key: INTERACTION_MODE.ACTIONS, children:
+            label: t('Commands'), key: INTERACTION_MODE.COMMANDS, children:
             <Card
               title={<span><ThunderboltOutlined /> {t('Execute Commands')}</span>}
               className={InspectorStyles['interaction-tab-card']}>
-              <Actions {...this.props} />
+              <Commands {...this.props} />
             </Card>
           }, {
             label: t('Actions'), key: INTERACTION_MODE.GESTURES, children:

@@ -33,7 +33,7 @@ class SiriCommandModal extends Component {
       onCancel={this.onCancel.bind(this)}
       footer=
         {[
-          <Button onClick={this.onSubmit.bind(this)} type="primary">Execute command</Button>
+          <Button onClick={this.onSubmit.bind(this)} type="primary">{t('Execute Command')}</Button>
         ]}>
       <Row>
         {t('Command')}
