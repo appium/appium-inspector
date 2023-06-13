@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { debounce } from 'lodash';
-import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from './shared';
+import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE } from './shared';
 import { Card, Button, Spin, Tooltip, Modal, Tabs, Switch } from 'antd';
 import Screenshot from './Screenshot';
-import DeviceControls from './DeviceControls';
+import HeaderButtons from './HeaderButtons';
 import SelectedElement from './SelectedElement';
 import Source from './Source';
 import InspectorStyles from './Inspector.css';
@@ -19,22 +19,13 @@ import {
   SwapRightOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
-  ReloadOutlined,
-  PlayCircleOutlined,
-  PauseCircleOutlined,
-  EyeOutlined,
-  PauseOutlined,
-  SearchOutlined,
   CopyOutlined,
   DownloadOutlined,
-  CloseOutlined,
   FileTextOutlined,
   TagOutlined,
   InfoCircleOutlined,
   ThunderboltOutlined,
   HighlightOutlined,
-  AppstoreOutlined,
-  GlobalOutlined,
   CodeOutlined
 } from '@ant-design/icons';
 import { BUTTON } from '../AntdTypes';
@@ -187,13 +178,12 @@ export default class Inspector extends Component {
 
   render () {
     const {screenshot, screenshotError, selectedElement = {},
-           applyClientMethod, quitSession, isRecording, showRecord, startRecording,
-           pauseRecording, showLocatorTestModal, appMode,
+           quitSession, showRecord,
            screenshotInteractionMode, visibleCommandMethod,
-           selectedInteractionMode, selectInteractionMode, selectAppMode, setVisibleCommandResult,
+           selectedInteractionMode, selectInteractionMode, setVisibleCommandResult,
            showKeepAlivePrompt, keepSessionAlive, sourceXML, t, visibleCommandResult,
            mjpegScreenshotUrl, isAwaitingMjpegStream, toggleShowCentroids, showCentroids,
-           isGestureEditorVisible, toggleShowAttributes, isSourceRefreshOn, toggleRefreshingState, driver
+           isGestureEditorVisible, toggleShowAttributes, isSourceRefreshOn
     } = this.props;
     const {path} = selectedElement;
 
@@ -201,7 +191,6 @@ export default class Inspector extends Component {
                             (mjpegScreenshotUrl && (!isSourceRefreshOn || !isAwaitingMjpegStream)));
 
     let screenShotControls = <div className={InspectorStyles['screenshot-controls']}>
-      {(driver) && <DeviceControls {...this.props} />}
       <div className={InspectorStyles['action-controls']}>
         <Tooltip title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')} placement="topRight">
           <Switch
@@ -318,60 +307,8 @@ export default class Inspector extends Component {
       </div>
     </div>;
 
-    const appModeControls = <div className={InspectorStyles['action-controls']}>
-      <ButtonGroup value={appMode}>
-        <Tooltip title={t('Native App Mode')}>
-          <Button icon={<AppstoreOutlined/>} onClick={() => {selectAppMode(APP_MODE.NATIVE);}}
-            type={appMode === APP_MODE.NATIVE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          />
-        </Tooltip>
-        <Tooltip title={t('Web/Hybrid App Mode')}>
-          <Button icon={<GlobalOutlined/>} onClick={() => {selectAppMode(APP_MODE.WEB_HYBRID);}}
-            type={appMode === APP_MODE.WEB_HYBRID ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          />
-        </Tooltip>
-      </ButtonGroup>
-    </div>;
-
-    const generalControls = <ButtonGroup>
-      {mjpegScreenshotUrl && !isSourceRefreshOn &&
-        <Tooltip title={t('Start Refreshing Source')}>
-          <Button id='btnStartRefreshing' icon={<PlayCircleOutlined/>} onClick={toggleRefreshingState}/>
-        </Tooltip>
-      }
-      {mjpegScreenshotUrl && isSourceRefreshOn &&
-        <Tooltip title={t('Pause Refreshing Source')}>
-          <Button id='btnPauseRefreshing' icon={<PauseCircleOutlined/>} onClick={toggleRefreshingState}/>
-        </Tooltip>
-      }
-      <Tooltip title={t('refreshSource')}>
-        <Button id='btnReload' icon={<ReloadOutlined/>} onClick={() => applyClientMethod({methodName: 'getPageSource'})}/>
-      </Tooltip>
-      {!isRecording &&
-        <Tooltip title={t('Start Recording')}>
-          <Button id='btnStartRecording' icon={<EyeOutlined/>} onClick={startRecording}/>
-        </Tooltip>
-      }
-      {isRecording &&
-        <Tooltip title={t('Pause Recording')}>
-          <Button id='btnPause' icon={<PauseOutlined/>} type={BUTTON.DANGER} onClick={pauseRecording}/>
-        </Tooltip>
-      }
-      <Tooltip title={t('Search for element')}>
-        <Button id='searchForElement' icon={<SearchOutlined/>} onClick={showLocatorTestModal} />
-      </Tooltip>
-      <Tooltip title={t('quitSessionAndClose')}>
-        <Button id='btnClose' icon={<CloseOutlined/>} onClick={() => quitSession()}/>
-      </Tooltip>
-    </ButtonGroup>;
-
-    let controls = <div className={InspectorStyles['inspector-toolbar']}>
-      {appModeControls}
-      {generalControls}
-    </div>;
-
     return (<div className={InspectorStyles['inspector-container']}>
-      {controls}
+      <HeaderButtons {...this.props}/>
       {main}
       <Modal
         title={t('Session Inactive')}
