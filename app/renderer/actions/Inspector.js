@@ -71,12 +71,11 @@ export const HIDE_PROMPT_KEEP_ALIVE = 'HIDE_PROMPT_KEEP_ALIVE';
 
 export const SELECT_INTERACTION_MODE = 'SELECT_INTERACTION_MODE';
 
-export const SELECT_ACTION_GROUP = 'SELECT_ACTION_GROUP';
-export const SELECT_SUB_ACTION_GROUP = 'SELECT_SUB_ACTION_GROUP';
-
-export const ENTERING_ACTION_ARGS = 'ENTERING_ACTION_ARGS';
-export const REMOVE_ACTION = 'REMOVE_ACTION';
-export const SET_ACTION_ARG = 'SET_ACTION_ARG';
+export const SELECT_COMMAND_GROUP = 'SELECT_COMMAND_GROUP';
+export const SELECT_COMMAND_SUB_GROUP = 'SELECT_COMMAND_SUB_GROUP';
+export const ENTERING_COMMAND_ARGS = 'ENTERING_COMMAND_ARGS';
+export const CANCEL_PENDING_COMMAND = 'CANCEL_PENDING_COMMAND';
+export const SET_COMMAND_ARG = 'SET_COMMAND_ARG';
 
 export const SET_CONTEXT = 'SET_CONTEXT';
 
@@ -695,15 +694,15 @@ export function hideKeepAlivePrompt () {
   };
 }
 
-export function selectActionGroup (group) {
+export function selectCommandGroup (group) {
   return (dispatch) => {
-    dispatch({type: SELECT_ACTION_GROUP, group});
+    dispatch({type: SELECT_COMMAND_GROUP, group});
   };
 }
 
-export function selectSubActionGroup (group) {
+export function selectCommandSubGroup (group) {
   return (dispatch) => {
-    dispatch({type: SELECT_SUB_ACTION_GROUP, group});
+    dispatch({type: SELECT_COMMAND_SUB_GROUP, group});
   };
 }
 
@@ -713,21 +712,21 @@ export function selectInteractionMode (interaction) {
   };
 }
 
-export function startEnteringActionArgs (actionName, action) {
+export function startEnteringCommandArgs (commandName, command) {
   return (dispatch) => {
-    dispatch({type: ENTERING_ACTION_ARGS, actionName, action});
+    dispatch({type: ENTERING_COMMAND_ARGS, commandName, command});
   };
 }
 
-export function cancelPendingAction () {
+export function cancelPendingCommand () {
   return (dispatch) => {
-    dispatch({type: REMOVE_ACTION});
+    dispatch({type: CANCEL_PENDING_COMMAND});
   };
 }
 
-export function setActionArg (index, value) {
+export function setCommandArg (index, value) {
   return (dispatch) => {
-    dispatch({type: SET_ACTION_ARG, index, value});
+    dispatch({type: SET_COMMAND_ARG, index, value});
   };
 }
 
