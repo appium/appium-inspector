@@ -21,9 +21,9 @@ function buildSessionWindow () {
   const window = new BrowserWindow({
     show: false,
     width: 1100,
-    height: 700,
-    minWidth: 870,
-    minHeight: 640,
+    height: 710,
+    minWidth: 890,
+    minHeight: 710,
     titleBarStyle: 'hiddenInset',
     webPreferences: {
       nodeIntegration: true,
