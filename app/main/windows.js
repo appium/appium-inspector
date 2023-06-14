@@ -20,10 +20,10 @@ function buildSplashWindow () {
 function buildSessionWindow () {
   const window = new BrowserWindow({
     show: false,
-    width: 1280,
-    height: 800,
-    minWidth: 1000,
-    minHeight: 700,
+    width: 1100,
+    height: 700,
+    minWidth: 870,
+    minHeight: 640,
     titleBarStyle: 'hiddenInset',
     webPreferences: {
       nodeIntegration: true,
