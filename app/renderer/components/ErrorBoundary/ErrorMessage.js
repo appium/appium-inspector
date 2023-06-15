@@ -4,7 +4,7 @@ import styles from './ErrorMessage.css';
 import { ALERT } from '../AntdTypes';
 import { withTranslation } from '../../util';
 
-const CREATE_ISSUE_URL = 'https://github.com/appium/appium-inspector/issues/new';
+const CREATE_ISSUE_URL = 'https://github.com/appium/appium-inspector/issues/new/choose';
 
 const ErrorMessage = ({ error, t }) => (
   <div className={styles.errorMessage}>
