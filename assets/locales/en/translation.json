@@ -69,6 +69,7 @@
   "Unexpected Error:": "Unexpected Error:",
   "Please report this issue at:": "Please report this issue at:",
   "Full error trace:": "Full error trace:",
+  "Copy Error Trace": "Copy Error Trace",
   "Inspect element": "Inspect element",
   "Session closed due to inactivity": "Session closed due to inactivity",
   "Session has been terminated": "Session has been terminated",
