@@ -9,14 +9,14 @@ const CREATE_ISSUE_URL = 'https://github.com/appium/appium-inspector/issues/new/
 const ErrorMessage = ({ error, t }) => (
   <div className={styles.errorMessage}>
     <Alert
-      message={<>{t('unexpectedError')} <code children={error.message} /></>}
+      message={<>{t('Unexpected Error:')} <code children={error.message} /></>}
       type={ALERT.ERROR}
       showIcon
       description={
         <>
-          {t('pleaseReportThisIssue')} <a href={CREATE_ISSUE_URL} children={CREATE_ISSUE_URL} />
+          {t('Please report this issue at:')} <a href={CREATE_ISSUE_URL} children={CREATE_ISSUE_URL} />
           <br />
-          {t('fullErrorTrace')}
+          {t('Full error trace:')}
           <pre children={error.stack} />
         </>
       }
