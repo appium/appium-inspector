@@ -85,6 +85,10 @@ As mentioned above, the Inspector is basically an Appium client, so for it to fu
 
 Basically, if you can start an Appium session from your typical client library, you should be able to do the same with the Inspector.
 
+### Screen size
+
+The Inspector desktop app has a minimum size of **890 x 710** pixels, whereas the web application works best when using a viewport size of at least **870 x 610** pixels.
+
 ### Connecting to a local server from the browser inspector (CORS)
 
 Web browsers have security features which prevent [cross-origin resource sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) in general. The browser version of the Inspector needs to make requests to the Appium server directly from the browser via JavaScript, but these requests are typically not made to the same host (for example, the Inspector is accessed at `appiumpro.com`, whereas your local Appium Server is `localhost:4723`).

@@ -34,8 +34,8 @@ const {SELECT, SWIPE, TAP} = SCREENSHOT_INTERACTION_MODE;
 
 const ButtonGroup = Button.Group;
 
-const MIN_WIDTH = 1080;
-const MIN_HEIGHT = 570;
+const MIN_WIDTH = 870;
+const MIN_HEIGHT = 610;
 const MAX_SCREENSHOT_WIDTH = 500;
 
 const MJPEG_STREAM_CHECK_INTERVAL = 1000;
