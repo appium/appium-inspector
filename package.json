@@ -196,7 +196,7 @@
   },
   "devDependencies": {
     "@appium/eslint-config-appium": "8.0.3",
-    "@appium/fake-driver": "5.2.3",
+    "@appium/fake-driver": "5.2.4",
     "@appium/support": "4.0.1",
     "@babel/core": "7.22.5",
     "@babel/eslint-parser": "7.22.5",
