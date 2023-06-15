@@ -2,35 +2,32 @@ import React from 'react';
 import { Collapse, Form, Row, Col, Checkbox, Input } from 'antd';
 import styles from './Session.css';
 
-const { Panel } = Collapse;
-const FormItem = Form.Item;
-
 const AdvancedServerParams = ({ server, setServerParam, serverType, t }) => (
   <Row gutter={8}>
     <Col className={styles.advancedSettingsContainerCol}>
       <div className={styles.advancedSettingsContainer}>
         <Collapse bordered={true}>
-          <Panel header={t('Advanced Settings')}>
+          <Collapse.Panel header={t('Advanced Settings')}>
             <Row>
               {serverType !== 'lambdatest' &&
               <Col span={7}>
-                <FormItem>
+                <Form.Item>
                   <Checkbox checked={!!server.advanced.allowUnauthorized} onChange={(e) => setServerParam('allowUnauthorized', e.target.checked, 'advanced')}>{t('allowUnauthorizedCerts')}</Checkbox>
-                </FormItem>
+                </Form.Item>
               </Col>}
               <Col span={5} align='right'>
-                <FormItem>
+                <Form.Item>
                   <Checkbox checked={!!server.advanced.useProxy} onChange={(e) => setServerParam('useProxy', e.target.checked, 'advanced')}>{t('Use Proxy')}</Checkbox>
-                </FormItem>
+                </Form.Item>
               </Col>
               <Col span={8}>
-                <FormItem>
+                <Form.Item>
                   <Input disabled={!server.advanced.useProxy} onChange={(e) => setServerParam('proxy', e.target.value, 'advanced')}
                     placeholder={t('Proxy URL')} value={server.advanced.proxy} />
-                </FormItem>
+                </Form.Item>
               </Col>
             </Row>
-          </Panel>
+          </Collapse.Panel>
         </Collapse>
       </div>
     </Col>
