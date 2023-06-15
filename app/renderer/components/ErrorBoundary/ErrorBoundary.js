@@ -2,9 +2,9 @@ import React from 'react';
 import ErrorMessage from './ErrorMessage';
 import { clipboard } from '../../polyfills';
 
-function copyTrace (trace) {
+const copyTrace = (trace) => {
   clipboard.writeText(trace);
-}
+};
 
 export default class ErrorBoundary extends React.Component {
   constructor (props) {
