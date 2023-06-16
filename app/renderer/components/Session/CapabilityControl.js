@@ -7,7 +7,7 @@ import { INPUT } from '../AntdTypes';
 import _ from 'lodash';
 import { APPIUM_SESSION_EXTENSION } from '../../../main/helpers';
 
-async function getLocalFilePath () {
+const getLocalFilePath = async () => {
   try {
     const {canceled, filePaths} = await remote.dialog.showOpenDialog({
       properties: ['openFile'],
@@ -21,7 +21,7 @@ async function getLocalFilePath () {
   } catch (e) {
     log.error(e);
   }
-}
+};
 
 const CapabilityControl = ({ cap, onSetCapabilityParam, onPressEnter, isEditingDesiredCaps, id, t }) => {
   switch (cap.type) {
