@@ -1,33 +1,37 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Form, Input, Row, Col } from 'antd';
 import { INPUT } from '../AntdTypes';
 
-const FormItem = Form.Item;
-
-export default class ServerTabKobiton extends Component {
-
-  render () {
-    const {server, setServerParam, t} = this.props;
-    const kobitonUsernamePlaceholder = process.env.KOBITON_USERNAME ?
-      t('usingDataFoundIn', {environmentVariable: 'KOBITON_USERNAME'}) : t('yourUsername');
-
-    const kobitonAccessKeyPlaceholder = process.env.KOBITON_ACCESS_KEY ?
-      t('usingDataFoundIn', {environmentVariable: 'KOBITON_ACCESS_KEY'}) : t('yourAccessKey');
-
-    return <Form>
-      <Row gutter={8}>
-        <Col span={12}>
-          <FormItem>
-            <Input id='kobitonUsername' placeholder={kobitonUsernamePlaceholder} addonBefore={t('Your Kobiton Username')} value={server.kobiton.username}
-              onChange={(e) => setServerParam('username', e.target.value)} />
-          </FormItem>
-        </Col>
-        <Col span={12}>
-          <FormItem>
-            <Input id='kobitonAccessKey' type={INPUT.PASSWORD} placeholder={kobitonAccessKeyPlaceholder} addonBefore={t('Kobiton Access Key')} value={server.kobiton.accessKey} onChange={(e) => setServerParam('accessKey', e.target.value)} />
-          </FormItem>
-        </Col>
-      </Row>
-    </Form>;
+const kobitonUsernamePlaceholder = (t) => {
+  if (process.env.KOBITON_USERNAME) {
+    return t('usingDataFoundIn', {environmentVariable: 'KOBITON_USERNAME'});
   }
-}
+  return t('yourUsername');
+};
+
+const kobitonAccessKeyPlaceholder = (t) => {
+  if (process.env.KOBITON_ACCESS_KEY) {
+    return t('usingDataFoundIn', {environmentVariable: 'KOBITON_ACCESS_KEY'});
+  }
+  return t('yourAccessKey');
+};
+
+const ServerTabKobiton = ({ server, setServerParam, t }) => (
+  <Form>
+    <Row gutter={8}>
+      <Col span={12}>
+        <Form.Item>
+          <Input id='kobitonUsername' placeholder={kobitonUsernamePlaceholder(t)} addonBefore={t('Your Kobiton Username')} value={server.kobiton.username}
+            onChange={(e) => setServerParam('username', e.target.value)} />
+        </Form.Item>
+      </Col>
+      <Col span={12}>
+        <Form.Item>
+          <Input id='kobitonAccessKey' type={INPUT.PASSWORD} placeholder={kobitonAccessKeyPlaceholder(t)} addonBefore={t('Kobiton Access Key')} value={server.kobiton.accessKey} onChange={(e) => setServerParam('accessKey', e.target.value)} />
+        </Form.Item>
+      </Col>
+    </Row>
+  </Form>
+);
+
+export default ServerTabKobiton;
