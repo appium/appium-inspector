@@ -1,63 +1,70 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Form, Row, Col, Input, Checkbox, Radio, Tooltip } from 'antd';
 import SessionStyles from './Session.css';
 import { INPUT } from '../AntdTypes';
-const FormItem = Form.Item;
 
-export default class ServerTabSauce extends Component {
-
-  render () {
-
-    const {server, setServerParam, t} = this.props;
-
-    const sauceUsernamePlaceholder = process.env.SAUCE_USERNAME ?
-      t('usingDataFoundIn', {environmentVariable: 'SAUCE_USERNAME'}) : t('yourUsername');
-
-    const sauceAccessKeyPlaceholder = process.env.SAUCE_ACCESS_KEY ?
-      t('usingDataFoundIn', {environmentVariable: 'SAUCE_ACCESS_KEY'}) : t('yourAccessKey');
-
-    return <Form>
-      <Row gutter={8}>
-        <Col span={12}>
-          <FormItem>
-            <Input id='sauceUsername' placeholder={sauceUsernamePlaceholder} addonBefore={t('Sauce Username')} value={server.sauce.username} onChange={(e) => setServerParam('username', e.target.value)} />
-          </FormItem>
-        </Col>
-        <Col span={12}>
-          <FormItem>
-            <Input id='saucePassword' type={INPUT.PASSWORD} placeholder={sauceAccessKeyPlaceholder}
-              addonBefore={t('Sauce Access Key')} value={server.sauce.accessKey} onChange={(e) => setServerParam('accessKey', e.target.value)} />
-          </FormItem>
-        </Col>
-      </Row>
-      <Row gutter={8}>
-        <Col span={8}>
-          <FormItem>
-            <div className={['ant-input-group-addon', SessionStyles.addonDataCenter].join(' ') }>{t('SauceLabs Data Center')}</div>
-            <Radio.Group className={[SessionStyles.inputDataCenter, SessionStyles.addonDataCenterRadioContainer].join(' ')} buttonStyle="solid" defaultValue='us-west-1' id='sauceObjectDataCenter' value={server.sauce.dataCenter} onChange={(e) => setServerParam('dataCenter', e.target.value)}>
-              <Tooltip placement="top" title={t('UP')}>
-                <Radio value='us-west-1'>{t('US')}</Radio>
-              </Tooltip>
-              <Radio value='eu-central-1'>{t('EU')}</Radio>
-            </Radio.Group>
-          </FormItem>
-        </Col>
-        <Col span={8} align="right">
-          <FormItem>
-            <Checkbox checked={!!server.sauce.useSCProxy} onChange={(e) => setServerParam('useSCProxy', e.target.checked)}> {t('proxyThroughSC')}</Checkbox>
-          </FormItem>
-        </Col>
-        <Col span={5}>
-          <FormItem>
-            <Input addonBefore={t('Host')} placeholder={t('localhost')} disabled={!server.sauce.useSCProxy} value={server.sauce.scHost} onChange={(e) => setServerParam('scHost', e.target.value)}/>
-          </FormItem>
-        </Col>
-        <Col span={3}>
-          <FormItem>
-            <Input addonBefore={t('Port')} placeholder={4445} disabled={!server.sauce.useSCProxy} value={server.sauce.scPort} onChange={(e) => setServerParam('scPort', e.target.value)} />
-          </FormItem>
-        </Col>
-      </Row>
-    </Form>;
+const sauceUsernamePlaceholder = (t) => {
+  if (process.env.SAUCE_USERNAME) {
+    return t('usingDataFoundIn', {environmentVariable: 'SAUCE_USERNAME'});
   }
-}
+  return t('yourUsername');
+};
+
+const sauceAccessKeyPlaceholder = (t) => {
+  if (process.env.SAUCE_ACCESS_KEY) {
+    return t('usingDataFoundIn', {environmentVariable: 'SAUCE_ACCESS_KEY'});
+  }
+  return t('yourAccessKey');
+};
+
+const ServerTabSauce = ({ server, setServerParam, t }) => (
+  <Form>
+    <Row gutter={8}>
+      <Col span={12}>
+        <Form.Item>
+          <Input id='sauceUsername' placeholder={sauceUsernamePlaceholder(t)} addonBefore={t('Sauce Username')}
+            value={server.sauce.username} onChange={(e) => setServerParam('username', e.target.value)} />
+        </Form.Item>
+      </Col>
+      <Col span={12}>
+        <Form.Item>
+          <Input id='saucePassword' type={INPUT.PASSWORD} placeholder={sauceAccessKeyPlaceholder(t)} addonBefore={t('Sauce Access Key')}
+            value={server.sauce.accessKey} onChange={(e) => setServerParam('accessKey', e.target.value)} />
+        </Form.Item>
+      </Col>
+    </Row>
+    <Row gutter={8}>
+      <Col span={8}>
+        <Form.Item>
+          <div className={['ant-input-group-addon', SessionStyles.addonDataCenter].join(' ') }>{t('SauceLabs Data Center')}</div>
+          <Radio.Group className={[SessionStyles.inputDataCenter, SessionStyles.addonDataCenterRadioContainer].join(' ')}
+            buttonStyle="solid" defaultValue='us-west-1' id='sauceObjectDataCenter' value={server.sauce.dataCenter} onChange={(e) => setServerParam('dataCenter', e.target.value)}>
+            <Tooltip placement="top" title={t('UP')}>
+              <Radio value='us-west-1'>{t('US')}</Radio>
+            </Tooltip>
+            <Radio value='eu-central-1'>{t('EU')}</Radio>
+          </Radio.Group>
+        </Form.Item>
+      </Col>
+      <Col span={8} align="right">
+        <Form.Item>
+          <Checkbox checked={!!server.sauce.useSCProxy} onChange={(e) => setServerParam('useSCProxy', e.target.checked)}> {t('proxyThroughSC')}</Checkbox>
+        </Form.Item>
+      </Col>
+      <Col span={5}>
+        <Form.Item>
+          <Input addonBefore={t('Host')} placeholder={t('localhost')} disabled={!server.sauce.useSCProxy}
+            value={server.sauce.scHost} onChange={(e) => setServerParam('scHost', e.target.value)}/>
+        </Form.Item>
+      </Col>
+      <Col span={3}>
+        <Form.Item>
+          <Input addonBefore={t('Port')} placeholder={4445} disabled={!server.sauce.useSCProxy}
+            value={server.sauce.scPort} onChange={(e) => setServerParam('scPort', e.target.value)} />
+        </Form.Item>
+      </Col>
+    </Row>
+  </Form>
+);
+
+export default ServerTabSauce;
