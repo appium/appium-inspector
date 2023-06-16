@@ -7,16 +7,6 @@ import { BUTTON } from '../AntdTypes';
 
 export default class CloudProviderSelector extends Component {
 
-  componentDidMount () {
-    const {setLocalServerParams, getSavedSessions, setSavedServerParams, getRunningSessions} = this.props;
-    (async () => {
-      await getSavedSessions();
-      await setSavedServerParams();
-      await setLocalServerParams();
-      getRunningSessions();
-    })();
-  }
-
   toggleVisibleProvider (providerName) {
     const {addVisibleProvider, removeVisibleProvider, visibleProviders = []} = this.props;
     if (visibleProviders.includes(providerName)) {
