@@ -52,11 +52,6 @@ export default class Session extends Component {
     await changeServerType(tab);
   }
 
-  removeCloudProvider (providerName) {
-    const {removeVisibleProvider} = this.props;
-    removeVisibleProvider(providerName);
-  }
-
   render () {
     const {savedSessions, tabKey, switchTabs,
            serverType, server,
