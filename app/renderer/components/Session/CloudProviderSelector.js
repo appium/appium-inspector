@@ -16,11 +16,6 @@ export default class CloudProviderSelector extends Component {
     }
   }
 
-  handleCloseModal () {
-    const {stopAddCloudProvider} = this.props;
-    stopAddCloudProvider();
-  }
-
   render () {
     const {t, isAddingCloudProvider, stopAddCloudProvider, visibleProviders = []} = this.props;
     const providersGrid = _.chunk(_.keys(CloudProviders), 2); // Converts list of providers into list of pairs of providers
