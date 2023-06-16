@@ -6,14 +6,13 @@ import SessionStyles from './Session.css';
 import { BUTTON } from '../AntdTypes';
 
 const CloudProviderSelector = (props) => {
-
-  const { visibleProviders = [], addVisibleProvider, removeVisibleProvider,
-          isAddingCloudProvider, stopAddCloudProvider, t } = props;
+  const { visibleProviders = [], isAddingCloudProvider, stopAddCloudProvider, t } = props;
 
   const footer = <Button key="back" type={BUTTON.PRIMARY} onClick={stopAddCloudProvider}>{t('Done')}</Button>;
   const providersGrid = _.chunk(_.keys(CloudProviders), 2); // Converts list of providers into list of pairs of providers
 
   const toggleVisibleProvider = (providerName) => {
+    const { addVisibleProvider, removeVisibleProvider } = props;
     if (visibleProviders.includes(providerName)) {
       removeVisibleProvider(providerName);
     } else {

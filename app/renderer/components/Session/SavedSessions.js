@@ -29,11 +29,12 @@ const sessionFromUUID = (savedSessions, uuid) => {
 };
 
 const SavedSessions = (props) => {
-
-  const { savedSessions, deleteSavedSession, capsUUID, switchTabs, setCapsAndServer, server, serverType,
-          isEditingDesiredCapsName, abortDesiredCapsNameEditor, isEditingDesiredCaps, abortDesiredCapsEditor } = props;
+  const { savedSessions, capsUUID, switchTabs } = props;
 
   const handleCapsAndServer = (uuid) => {
+    const { setCapsAndServer, server, serverType,
+            isEditingDesiredCapsName, abortDesiredCapsNameEditor,
+            isEditingDesiredCaps, abortDesiredCapsEditor } = props;
     const session = sessionFromUUID(savedSessions, uuid);
 
     // Disable any editors before changing the selected caps
@@ -44,7 +45,7 @@ const SavedSessions = (props) => {
       abortDesiredCapsEditor();
     }
 
-    // Incase user has CAPS saved from older version of Inspector which
+    // In case user has CAPS saved from older version of Inspector which
     // doesn't contain server and serverType within the session object
     setCapsAndServer(
       session.server || server,
@@ -56,6 +57,7 @@ const SavedSessions = (props) => {
   };
 
   const handleDelete = (uuid) => {
+    const { deleteSavedSession } = props;
     if (window.confirm('Are you sure?')) {
       deleteSavedSession(uuid);
     }

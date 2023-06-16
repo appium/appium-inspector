@@ -7,13 +7,13 @@ import { CloseOutlined, SaveOutlined, EditOutlined } from '@ant-design/icons';
 import { ALERT } from '../AntdTypes';
 
 const FormattedCaps = (props) => {
-
-  const {caps, title, desiredCapsName, setDesiredCapsName, isEditingDesiredCapsName,
-         startDesiredCapsNameEditor, abortDesiredCapsNameEditor, saveDesiredCapsName,
-         isEditingDesiredCaps, startDesiredCapsEditor, abortDesiredCapsEditor,
-         saveRawDesiredCaps, setRawDesiredCaps, rawDesiredCaps, isValidCapsJson, invalidCapsJsonReason, t} = props;
+  const { caps, title, desiredCapsName, isEditingDesiredCapsName,
+          isEditingDesiredCaps, startDesiredCapsEditor, abortDesiredCapsEditor,
+          saveRawDesiredCaps, setRawDesiredCaps, rawDesiredCaps,
+          isValidCapsJson, invalidCapsJsonReason, t } = props;
 
   const setCapsTitle = () => {
+    const { setDesiredCapsName } = props;
     if (!title) {
       return 'JSON Representation';
     } else if (!isEditingDesiredCapsName) {
@@ -28,6 +28,7 @@ const FormattedCaps = (props) => {
   };
 
   const setCapsTitleButtons = () => {
+    const { startDesiredCapsNameEditor, abortDesiredCapsNameEditor, saveDesiredCapsName } = props;
     if (!title) {
       return null;
     } else if (!isEditingDesiredCapsName) {

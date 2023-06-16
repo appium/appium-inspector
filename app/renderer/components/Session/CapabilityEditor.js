@@ -51,10 +51,9 @@ const handleSetType = (setCapabilityParam, caps, index, type) => {
 };
 
 const CapabilityEditor = (props) => {
-
-  const {setCapabilityParam, caps, addCapability, removeCapability, saveSession, hideSaveAsModal,
-         saveAsText, showSaveAsModal, setSaveAsText, isEditingDesiredCaps, t,
-         setAddVendorPrefixes, addVendorPrefixes, server, serverType} = props;
+  const { setCapabilityParam, caps, addCapability, removeCapability, saveSession, hideSaveAsModal,
+          saveAsText, showSaveAsModal, setSaveAsText, isEditingDesiredCaps, t,
+          setAddVendorPrefixes, addVendorPrefixes, server, serverType } = props;
 
   const onSaveAsOk = () => saveSession(server, serverType, caps, {name: saveAsText});
   const latestCapField = useRef();
