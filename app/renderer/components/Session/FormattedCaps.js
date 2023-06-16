@@ -6,7 +6,7 @@ import { getCapsObject } from '../../actions/Session.js';
 import { CloseOutlined, SaveOutlined, EditOutlined } from '@ant-design/icons';
 import { ALERT } from '../AntdTypes';
 
-export const FormattedCaps = (props) => {
+const FormattedCaps = (props) => {
 
   const {caps, title, desiredCapsName, setDesiredCapsName, isEditingDesiredCapsName,
          startDesiredCapsNameEditor, abortDesiredCapsNameEditor, saveDesiredCapsName,
