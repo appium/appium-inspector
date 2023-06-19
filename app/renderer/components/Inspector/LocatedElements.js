@@ -18,22 +18,6 @@ const showIdAutocompleteInfo = (driver, strategy, value, t) => {
 
 class LocatedElements extends Component {
 
-  onSubmit () {
-    const {locatedElements, locatorTestStrategy, locatorTestValue, searchForElement, clearSearchResults, hideLocatorTestModal} = this.props;
-    if (locatedElements) {
-      hideLocatorTestModal();
-      clearSearchResults();
-    } else {
-      searchForElement(locatorTestStrategy, locatorTestValue);
-    }
-  }
-
-  onCancel () {
-    const {hideLocatorTestModal, clearSearchResults} = this.props;
-    hideLocatorTestModal();
-    clearSearchResults();
-  }
-
   render () {
     const {
       locatedElements,
