@@ -21,7 +21,7 @@ const ErrorMessage = ({ error, copyTrace, t }) => (
           <br />
           {t('Full error trace:')}
           <Tooltip title={t('Copy Error Trace')}>
-            <Button
+            <Button size='small'
               className={styles.copyTraceBtn}
               onClick={copyTrace(error.stack)}
               icon={<CopyOutlined/>} />
