@@ -4,6 +4,7 @@ import { CopyOutlined } from '@ant-design/icons';
 import styles from './ErrorMessage.css';
 import { ALERT } from '../AntdTypes';
 import { withTranslation } from '../../util';
+import { shell } from '../../polyfills';
 
 const CREATE_ISSUE_URL = 'https://github.com/appium/appium-inspector/issues/new/choose';
 
@@ -15,7 +16,8 @@ const ErrorMessage = ({ error, copyTrace, t }) => (
       showIcon
       description={
         <>
-          {t('Please report this issue at:')} <a href={CREATE_ISSUE_URL} children={CREATE_ISSUE_URL} />
+          {t('Please report this issue at:')}&nbsp;
+          <a onClick={(e) => e.preventDefault() || shell.openExternal(CREATE_ISSUE_URL)} children={CREATE_ISSUE_URL} />
           <br />
           {t('Full error trace:')}
           <Tooltip title={t('Copy Error Trace')}>
