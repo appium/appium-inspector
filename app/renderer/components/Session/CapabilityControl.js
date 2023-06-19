@@ -5,16 +5,10 @@ import { remote, log } from '../../polyfills';
 import { FileOutlined } from '@ant-design/icons';
 import { INPUT } from '../AntdTypes';
 import _ from 'lodash';
-import { APPIUM_SESSION_EXTENSION } from '../../../main/helpers';
 
 const getLocalFilePath = async () => {
   try {
-    const {canceled, filePaths} = await remote.dialog.showOpenDialog({
-      properties: ['openFile'],
-      filters: [
-        {name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}
-      ]
-    });
+    const {canceled, filePaths} = await remote.dialog.showOpenDialog({properties: ['openFile']});
     if (!canceled && !_.isEmpty(filePaths)) {
       return filePaths[0];
     }
