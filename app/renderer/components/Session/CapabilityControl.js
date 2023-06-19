@@ -42,7 +42,7 @@ const CapabilityControl = ({ cap, onSetCapabilityParam, onPressEnter, isEditingD
     case 'file':
       return <div className={SessionStyles.fileControlWrapper}>
         <Input disabled={isEditingDesiredCaps} id={id} placeholder={t('Value')} value={cap.value}
-          onPressEnter={onPressEnter} className={SessionStyles.capsBoxFont}
+          onChange={(e) => onSetCapabilityParam(e.target.value)} onPressEnter={onPressEnter} className={SessionStyles.capsBoxFont}
           addonAfter={
             <FileOutlined className={SessionStyles['filepath-button']}
               onClick={async () => onSetCapabilityParam(await getLocalFilePath() || cap.value)} />
