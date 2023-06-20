@@ -850,8 +850,8 @@ export function setAwaitingMjpegStream (isAwaiting) {
 }
 
 export function saveGesture (params) {
-  return async (dispatch, getState) => {
-    const savedGestures = getState().inspector.savedGestures;
+  return async (dispatch) => {
+    let savedGestures = await getSetting(SET_SAVED_GESTURES) || [];
     if (!params.id) {
       params.id = UUID();
       params.date = Date.now();
