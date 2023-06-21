@@ -237,7 +237,7 @@
     "release": "6.3.1",
     "rimraf": "5.0.1",
     "sinon": "15.2.0",
-    "spectron": "15.0.0"
+    "spectron": "19.0.0"
   },
   "devEngines": {
     "node": ">=12.x",
