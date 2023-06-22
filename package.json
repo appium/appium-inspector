@@ -170,7 +170,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-i18next": "13.0.1",
-    "react-icons": "4.9.0",
+    "react-icons": "4.10.1",
     "react-redux": "8.1.1",
     "react-router-dom": "5.3.4",
     "redux-first-history": "5.1.1",
