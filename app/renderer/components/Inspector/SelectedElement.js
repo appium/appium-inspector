@@ -79,10 +79,6 @@ class SelectedElement extends Component {
     const {attributes, classChain, predicateString, xpath} = selectedElement;
     const isDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
 
-    if (!currentContext) {
-      currentContext = NATIVE_APP;
-    }
-
     // Get the columns for the attributes table
     let attributeColumns = [{
       title: t('Attribute'),
