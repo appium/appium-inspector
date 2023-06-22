@@ -81,6 +81,8 @@ class Source extends Component {
     const treeData = source && recursive(source);
 
     return <div id='sourceContainer' className={InspectorStyles['tree-container']} tabIndex="0">
+      {!source && !sourceError && <i>{t('Gathering initial app source…')}</i>}
+      {sourceError && t('couldNotObtainSource', {errorMsg: JSON.stringify(sourceError)})}
       {/* Show loading indicator in MJPEG mode if a method call is in progress and source refresh is on */}
       <Spin size='large' spinning={!!methodCallInProgress && mjpegScreenshotUrl && isSourceRefreshOn}>
         {/* Must switch to a new antd Tree component when there's changes to treeData  */}
@@ -97,12 +99,6 @@ class Source extends Component {
             treeData={[]} />
         }
       </Spin>
-      {!source && !sourceError &&
-        <i>{t('Gathering initial app source…')}</i>
-      }
-      {
-        sourceError && t('couldNotObtainSource', {errorMsg: JSON.stringify(sourceError)})
-      }
       <LocatorTestModal {...this.props} />
       <SiriCommandModal {...this.props} />
     </div>;
