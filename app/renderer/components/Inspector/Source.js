@@ -96,13 +96,9 @@ class Source extends Component {
           <Tree
             treeData={[]} />
         }
+        {!source && !sourceError && <i>{t('Gathering initial app source…')}</i>}
+        {sourceError && t('couldNotObtainSource', {errorMsg: JSON.stringify(sourceError)})}
       </Spin>
-      {!source && !sourceError &&
-        <i>{t('Gathering initial app source…')}</i>
-      }
-      {
-        sourceError && t('couldNotObtainSource', {errorMsg: JSON.stringify(sourceError)})
-      }
       <LocatorTestModal {...this.props} />
       <SiriCommandModal {...this.props} />
     </div>;
