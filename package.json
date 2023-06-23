@@ -176,7 +176,7 @@
     "redux-first-history": "5.1.1",
     "request": "2.88.2",
     "request-promise": "4.2.6",
-    "semver": "7.5.2",
+    "semver": "7.5.3",
     "uuid": "9.0.0",
     "web2driver": "3.0.4",
     "xpath": "0.0.32"
