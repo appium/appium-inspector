@@ -140,6 +140,7 @@ export function selectElement (path) {
     const { selectedElement, sourceXML, expandedPaths } = getState().inspector;
 
     // Expand all of this element's ancestors so that it's visible in the source tree
+    // Make a copy of the array to avoid state mutation
     const copiedExpandedPaths = [...expandedPaths];
     let pathArr = path.split('.').slice(0, path.length - 1);
     while (pathArr.length > 1) {
