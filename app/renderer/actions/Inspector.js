@@ -137,26 +137,25 @@ export function selectElement (path) {
   return async (dispatch, getState) => {
     // Set the selected element in the source tree
     dispatch({type: SELECT_ELEMENT, path});
-    const state = getState().inspector;
-    const {attributes: selectedElementAttributes, xpath: selectedElementXPath} = state.selectedElement;
-    const {sourceXML} = state;
+    const { selectedElement, sourceXML, expandedPaths } = getState().inspector;
 
     // Expand all of this element's ancestors so that it's visible in the source tree
-    let {expandedPaths} = getState().inspector;
+    // Make a copy of the array to avoid state mutation
+    const copiedExpandedPaths = [...expandedPaths];
     let pathArr = path.split('.').slice(0, path.length - 1);
     while (pathArr.length > 1) {
       pathArr.splice(pathArr.length - 1);
       let path = pathArr.join('.');
-      if (expandedPaths.indexOf(path) < 0) {
-        expandedPaths.push(path);
+      if (!copiedExpandedPaths.includes(path)) {
+        copiedExpandedPaths.push(path);
       }
     }
-    dispatch({type: SET_EXPANDED_PATHS, paths: expandedPaths});
+    dispatch({type: SET_EXPANDED_PATHS, paths: copiedExpandedPaths});
 
 
     // Find the optimal selection strategy. If none found, fall back to XPath.
-    const strategyMap = _.toPairs(getLocators(selectedElementAttributes, sourceXML));
-    strategyMap.push(['xpath', selectedElementXPath]);
+    const strategyMap = _.toPairs(getLocators(selectedElement.attributes, sourceXML));
+    strategyMap.push(['xpath', selectedElement.xpath]);
 
     // Debounce find element so that if another element is selected shortly after, cancel the previous search
     await findElement(strategyMap, dispatch, getState, path);
