@@ -5,7 +5,7 @@ import { showError } from './Session';
 import { xmlToJSON } from '../util';
 import { v4 as UUID } from 'uuid';
 import frameworks from '../lib/client-frameworks';
-import { getSetting, setSetting, SAVED_FRAMEWORK } from '../../shared/settings';
+import { getSetting, setSetting, SAVED_FRAMEWORK, SET_SAVED_GESTURES } from '../../shared/settings';
 import i18n from '../../configs/i18next.config.renderer';
 import AppiumClient, { NATIVE_APP } from '../lib/appium-client';
 import { notification } from 'antd';
@@ -92,7 +92,6 @@ export const SET_AWAITING_MJPEG_STREAM = 'SET_AWAITING_MJPEG_STREAM';
 
 export const SHOW_GESTURE_EDITOR = 'SHOW_GESTURE_EDITOR';
 export const HIDE_GESTURE_EDITOR = 'HIDE_GESTURE_EDITOR';
-export const SET_SAVED_GESTURES = 'SET_SAVED_GESTURES';
 export const GET_SAVED_GESTURES_REQUESTED = 'GET_SAVED_GESTURES_REQUESTED';
 export const GET_SAVED_GESTURES_DONE = 'GET_SAVED_GESTURES_DONE';
 export const DELETE_SAVED_GESTURES_REQUESTED = 'DELETE_SAVED_GESTURES_REQUESTED';
@@ -864,7 +863,6 @@ export function saveGesture (params) {
         }
       }
     }
-    dispatch({type: SET_SAVED_GESTURES, savedGestures});
     await setSetting(SET_SAVED_GESTURES, savedGestures);
     const action = getSavedGestures();
     await action(dispatch);
