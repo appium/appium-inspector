@@ -57,7 +57,7 @@ const GestureEditor = (props) => {
     }
   }, [selectedTick, tickCoordinates]);
 
-  function onSave () {
+  const onSave = () => {
     const { id, date } = loadedGesture;
     const gesture = {name, description, id, date, actions: convertCoordinates(COORD_TYPE.PERCENTAGES)};
     if (!validatePointerNames(gesture.actions)) {
@@ -66,9 +66,9 @@ const GestureEditor = (props) => {
     } else {
       displayNotificationMsg(MSG_TYPES.ERROR, 'Cannot have duplicate pointer names');
     }
-  }
+  };
 
-  function onSaveAs () {
+  const onSaveAs = () => {
     const gesture = {name, description, actions: convertCoordinates(COORD_TYPE.PERCENTAGES)};
     if (!validatePointerNames(gesture.actions)) {
       saveGesture(gesture);
@@ -76,9 +76,9 @@ const GestureEditor = (props) => {
     } else {
       displayNotificationMsg(MSG_TYPES.ERROR, 'Cannot have duplicate pointer names');
     }
-  }
+  };
 
-  function onPlay () {
+  const onPlay = () => {
     const { applyClientMethod } = props;
     const actions = convertCoordinates(COORD_TYPE.PIXELS);
     if (!validatePointerNames(actions)) {
@@ -87,18 +87,18 @@ const GestureEditor = (props) => {
     } else {
       displayNotificationMsg(MSG_TYPES.ERROR, 'Cannot have duplicate pointer names');
     }
-  }
+  };
 
-  function onBack () {
+  const onBack = () => {
     const { hideGestureEditor, removeLoadedGesture, removeGestureDisplay } = props;
     unselectTick();
     removeGestureDisplay();
     removeLoadedGesture();
     hideGestureEditor();
-  }
+  };
 
   // Check if pointer names are duplicates before saving/playing
-  function validatePointerNames (actions) {
+  const validatePointerNames = (actions) => {
     const duplicates = {};
     for (const pointer of actions) {
       if (duplicates[pointer.name]) {
@@ -108,26 +108,26 @@ const GestureEditor = (props) => {
       }
     }
     return false;
-  }
+  };
 
-  function displayNotificationMsg (type, msg) {
+  const displayNotificationMsg = (type, msg) => {
     notification[type]({
       message: msg,
       duration: 5,
     });
-  }
+  };
 
   // Change gesture datastructure to fit Webdriver spec
-  function formatGesture (actions) {
+  const formatGesture = (actions) => {
     const newActions = {};
     for (const pointer of actions) {
       newActions[pointer.name] = pointer.ticks.map((tick) => _.omit(tick, 'id'));
     }
     return newActions;
-  }
+  };
 
   // This converts all the coordinates in the gesture to px/%
-  function convertCoordinates (type) {
+  const convertCoordinates = (type) => {
     const { width, height } = windowSize;
     const newPointers = _.cloneDeep(pointers);
     if (type !== coordType) {
@@ -146,9 +146,9 @@ const GestureEditor = (props) => {
       }
     }
     return newPointers;
-  }
+  };
 
-  function getDefaultMoveDuration (ticks, tickId, x2, y2, coordFromTap) {
+  const getDefaultMoveDuration = (ticks, tickId, x2, y2, coordFromTap) => {
     const { width, height } = windowSize;
     const ticksExceptCurrent = ticks.filter((tick) => tick.id !== tickId);
     const prevPointerMoves = [];
@@ -179,10 +179,10 @@ const GestureEditor = (props) => {
     const lineLength = calcLength(xDiff, yDiff);
     const lineLengthPct = lineLength / maxScreenLength;
     return Math.round(lineLengthPct * DEFAULT_DURATION_TIME);
-  }
+  };
 
   // Update tapped coordinates within local state
-  function updateCoordinates (tickKey, updateX, updateY) {
+  const updateCoordinates = (tickKey, updateX, updateY) => {
     if (updateX && updateY) {
       const { width, height } = windowSize;
       const copiedPointers = _.cloneDeep(pointers);
@@ -203,9 +203,9 @@ const GestureEditor = (props) => {
       }
       setPointers(copiedPointers);
     }
-  }
+  };
 
-  function addPointer () {
+  const addPointer = () => {
     const key = pointers.length + 1;
     const pointerId = String(key);
     const copiedPointers = _.cloneDeep(pointers);
@@ -217,9 +217,9 @@ const GestureEditor = (props) => {
     });
     setPointers(copiedPointers);
     setActivePointerId(pointerId);
-  }
+  };
 
-  function deletePointer (targetKey) {
+  const deletePointer = (targetKey) => {
     // 'newActivePointerId' variable keeps track of the previous pointer before deleting the current one
     // its default is the first pointer
     let newActivePointerId = '1';
@@ -241,17 +241,17 @@ const GestureEditor = (props) => {
     unselectTick();
     setPointers(newPointers);
     setActivePointerId(newActivePointerId);
-  }
+  };
 
-  function addTick (pointerKey) {
+  const addTick = (pointerKey) => {
     const copiedPointers = _.cloneDeep(pointers);
     const currentPointer = copiedPointers.find((pointer) => pointer.id === pointerKey);
     const id = `${pointerKey}.${(currentPointer.ticks).length + 1}`;
     currentPointer.ticks.push({id});
     setPointers(copiedPointers);
-  }
+  };
 
-  function deleteTick (pointerKey, tickKey) {
+  const deleteTick = (pointerKey, tickKey) => {
     const copiedPointers = _.cloneDeep(pointers);
     const currentPointer = copiedPointers.find((pointer) => pointer.id === pointerKey);
     const ticksToKeep = currentPointer.ticks.filter((tick) => tick.id !== tickKey);
@@ -265,10 +265,10 @@ const GestureEditor = (props) => {
     currentPointer.ticks = newTicks;
     unselectTick();
     setPointers(copiedPointers);
-  }
+  };
 
   // Updates the current tick within local state
-  function updateTick (tick, msg, value) {
+  const updateTick = (tick, msg, value) => {
     const copiedPointers = _.cloneDeep(pointers);
     const currentPointer = copiedPointers.find((p) => p.id === tick.id[0]);
     const targetTickIdx = currentPointer.ticks.findIndex((t) => t.id === tick.id);
@@ -295,11 +295,11 @@ const GestureEditor = (props) => {
 
     currentPointer.ticks[targetTickIdx] = currentTick;
     setPointers(copiedPointers);
-  }
+  };
 
   // Reformats the gesture only for the timeline by populating the 'filler' ticks for each pointer
   // to match same length to keep timeline lengths consistent and accurate
-  function updateGestureForTimeline () {
+  const updateGestureForTimeline = () => {
     const copiedPointers = _.cloneDeep(pointers);
     const allTickLengths = copiedPointers.map((pointer) => pointer.ticks.length);
     const maxTickLength = Math.max(...allTickLengths);
@@ -315,13 +315,13 @@ const GestureEditor = (props) => {
       }
       return pointer;
     });
-  }
+  };
 
-  function updatePointerName(pointerName, pointerIndex) {
+  const updatePointerName = (pointerName, pointerIndex) => {
     const copiedPointers = _.cloneDeep(pointers);
     copiedPointers[pointerIndex].name = pointerName;
     setPointers(copiedPointers);
-  }
+  };
 
   const tickButton = (tick) =>
     <center>
