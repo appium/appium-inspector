@@ -536,7 +536,7 @@ const GestureEditor = (props) => {
       <Button key='play' type='primary' icon={<PlayCircleOutlined/>} onClick={() => onPlay()}/>
     </Tooltip>,
     <Button key='saveAs' onClick={() => onSaveAs()}>{t('saveAs')}</Button>,
-    <Button key='save' onClick={() => onSave()}>{t('Save')}</Button>];
+    <Button key='save' onClick={() => onSave()} disabled={!loadedGesture}>{t('Save')}</Button>];
 
   const headerTitle =
     <Tooltip key='editTitle' placement='topLeft' title={t('Edit')}>
