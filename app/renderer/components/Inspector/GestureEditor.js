@@ -41,7 +41,7 @@ const GestureEditor = (props) => {
   const [name, setName] = useState(loadedGesture ? loadedGesture.name : 'Untitled');
   const [description, setDescription] = useState(loadedGesture ? loadedGesture.description : 'Add Description');
   const [coordType, setCoordType] = useState(COORD_TYPE.PERCENTAGES);
-  const [activeKey, setActiveKey] = useState('1');
+  const [activePointerId, setActivePointerId] = useState('1');
 
   // Draw gesture whenever pointers change
   useEffect(() => {
@@ -207,22 +207,22 @@ const GestureEditor = (props) => {
 
   function addPointer () {
     const key = pointers.length + 1;
-    const newKey = String(key);
+    const pointerId = String(key);
     const copiedPointers = _.cloneDeep(pointers);
     copiedPointers.push({
       name: `pointer${key}`,
       ticks: [{id: `${key}.1`}],
-      id: newKey,
+      id: pointerId,
       color: COLORS[key - 1]
     });
     setPointers(copiedPointers);
-    setActiveKey(newKey);
+    setActivePointerId(pointerId);
   }
 
   function deletePointer (targetKey) {
-    // 'newKey' variable keeps track of the previous pointer before deleting the current one
+    // 'newActivePointerId' variable keeps track of the previous pointer before deleting the current one
     // its default is the first pointer
-    let newKey = '1';
+    let newActivePointerId = '1';
     const pointersExceptCurrent = pointers.filter((pointer) => pointer.id !== targetKey);
     const newPointers = pointersExceptCurrent.map((pointer, index) => {
       const id = String(index + 1);
@@ -234,13 +234,13 @@ const GestureEditor = (props) => {
           return tick;
         });
       } else {
-        newKey = pointer.id;
+        newActivePointerId = pointer.id;
       }
       return pointer;
     });
     unselectTick();
     setPointers(newPointers);
-    setActiveKey(newKey);
+    setActivePointerId(newActivePointerId);
   }
 
   function addTick (pointerKey) {
@@ -431,8 +431,8 @@ const GestureEditor = (props) => {
   const pageContent =
     <Tabs
       type='editable-card'
-      onChange={(newActiveKey) => setActiveKey(newActiveKey)}
-      activeKey={activeKey}
+      onChange={(pointerId) => setActivePointerId(pointerId)}
+      activeKey={activePointerId}
       onEdit={(targetKey, action) => action === ACTION_TYPES.ADD ? addPointer() : deletePointer(targetKey)}
       hideAdd={pointers.length === 5}
       centered={true}
@@ -442,7 +442,7 @@ const GestureEditor = (props) => {
           <Input
             key={pointer.id}
             className={InspectorCSS['pointer-title']}
-            style={{ cursor: activeKey === pointer.id ? CURSOR.TEXT : CURSOR.POINTER, textDecorationColor: pointer.color}}
+            style={{ cursor: activePointerId === pointer.id ? CURSOR.TEXT : CURSOR.POINTER, textDecorationColor: pointer.color}}
             value={pointer.name}
             defaultValue={pointer.name}
             bordered={false}
