@@ -129,18 +129,17 @@ const GestureEditor = (props) => {
   // This converts all the coordinates in the gesture to px/%
   const convertCoordinates = (type) => {
     const { width, height } = windowSize;
+    if (type === coordType) { return pointers; }
     const newPointers = _.cloneDeep(pointers);
-    if (type !== coordType) {
-      for (const pointer of newPointers) {
-        for (const tick of pointer.ticks) {
-          if (tick.type === POINTER_TYPES.POINTER_MOVE) {
-            if (type === COORD_TYPE.PIXELS) {
-              tick.x = percentageToPixels(tick.x, width);
-              tick.y = percentageToPixels(tick.y, height);
-            } else {
-              tick.x = pixelsToPercentage(tick.x, width);
-              tick.y = pixelsToPercentage(tick.y, height);
-            }
+    for (const pointer of newPointers) {
+      for (const tick of pointer.ticks) {
+        if (tick.type === POINTER_TYPES.POINTER_MOVE) {
+          if (type === COORD_TYPE.PIXELS) {
+            tick.x = percentageToPixels(tick.x, width);
+            tick.y = percentageToPixels(tick.y, height);
+          } else {
+            tick.x = pixelsToPercentage(tick.x, width);
+            tick.y = pixelsToPercentage(tick.y, height);
           }
         }
       }
@@ -183,26 +182,25 @@ const GestureEditor = (props) => {
 
   // Update tapped coordinates within local state
   const updateCoordinates = (tickKey, updateX, updateY) => {
-    if (updateX && updateY) {
-      const { width, height } = windowSize;
-      const copiedPointers = _.cloneDeep(pointers);
-      const currentPointer = copiedPointers.find((pointer) => pointer.id === tickKey[0]);
-      const currentTick = currentPointer.ticks.find((tick) => tick.id === tickKey);
-      const x = parseFloat(updateX, 10);
-      const y = parseFloat(updateY, 10);
-      if (coordType === COORD_TYPE.PERCENTAGES) {
-        currentTick.x = pixelsToPercentage(x, width);
-        currentTick.y = pixelsToPercentage(y, height);
-      } else {
-        currentTick.x = x;
-        currentTick.y = y;
-      }
-
-      if (currentTick.duration === undefined) {
-        currentTick.duration = getDefaultMoveDuration(currentPointer.ticks, currentTick.id, x, y, true);
-      }
-      setPointers(copiedPointers);
+    if (!updateX || !updateY) { return null; }
+    const { width, height } = windowSize;
+    const copiedPointers = _.cloneDeep(pointers);
+    const currentPointer = copiedPointers.find((pointer) => pointer.id === tickKey[0]);
+    const currentTick = currentPointer.ticks.find((tick) => tick.id === tickKey);
+    const x = parseFloat(updateX, 10);
+    const y = parseFloat(updateY, 10);
+    if (coordType === COORD_TYPE.PERCENTAGES) {
+      currentTick.x = pixelsToPercentage(x, width);
+      currentTick.y = pixelsToPercentage(y, height);
+    } else {
+      currentTick.x = x;
+      currentTick.y = y;
     }
+
+    if (currentTick.duration === undefined) {
+      currentTick.duration = getDefaultMoveDuration(currentPointer.ticks, currentTick.id, x, y, true);
+    }
+    setPointers(copiedPointers);
   };
 
   const addPointer = () => {
