@@ -46,8 +46,8 @@ const GestureEditor = (props) => {
   // Draw gesture whenever pointers change
   useEffect(() => {
     const { displayGesture } = props;
-    const gesture = convertCoordinates(COORD_TYPE.PIXELS);
-    displayGesture(gesture);
+    const convertedPointers = convertCoordinates(COORD_TYPE.PIXELS);
+    displayGesture(convertedPointers);
   }, [pointers]);
 
   // Retrieve coordinates when user taps screenshot
@@ -59,8 +59,8 @@ const GestureEditor = (props) => {
 
   const onSave = () => {
     const { id, date } = loadedGesture;
-    const gesture = {name, description, id, date, actions: convertCoordinates(COORD_TYPE.PERCENTAGES)};
-    if (!validatePointerNames(gesture.actions)) {
+    const gesture = {name, description, id, date, pointers: convertCoordinates(COORD_TYPE.PERCENTAGES)};
+    if (!duplicatePointerNames(gesture.pointers)) {
       saveGesture(gesture);
       displayNotificationMsg(MSG_TYPES.SUCCESS, 'Successfully Saved Gesture');
     } else {
@@ -69,8 +69,8 @@ const GestureEditor = (props) => {
   };
 
   const onSaveAs = () => {
-    const gesture = {name, description, actions: convertCoordinates(COORD_TYPE.PERCENTAGES)};
-    if (!validatePointerNames(gesture.actions)) {
+    const gesture = {name, description, pointers: convertCoordinates(COORD_TYPE.PERCENTAGES)};
+    if (!duplicatePointerNames(gesture.pointers)) {
       saveGesture(gesture);
       displayNotificationMsg(MSG_TYPES.SUCCESS, `Successfully Saved Gesture As ${name}`);
     } else {
@@ -80,10 +80,10 @@ const GestureEditor = (props) => {
 
   const onPlay = () => {
     const { applyClientMethod } = props;
-    const actions = convertCoordinates(COORD_TYPE.PIXELS);
-    if (!validatePointerNames(actions)) {
-      const formattedActions = formatGesture(actions);
-      applyClientMethod({methodName: SCREENSHOT_INTERACTION_MODE.GESTURE, args: [formattedActions]});
+    const localPointers = convertCoordinates(COORD_TYPE.PIXELS);
+    if (!duplicatePointerNames(localPointers)) {
+      const formattedPointers = formatPointerTicks(localPointers);
+      applyClientMethod({methodName: SCREENSHOT_INTERACTION_MODE.GESTURE, args: [formattedPointers]});
     } else {
       displayNotificationMsg(MSG_TYPES.ERROR, 'Cannot have duplicate pointer names');
     }
@@ -98,9 +98,9 @@ const GestureEditor = (props) => {
   };
 
   // Check if pointer names are duplicates before saving/playing
-  const validatePointerNames = (actions) => {
+  const duplicatePointerNames = (localPointers) => {
     const duplicates = {};
-    for (const pointer of actions) {
+    for (const pointer of localPointers) {
       if (duplicates[pointer.name]) {
         return true;
       } else {
@@ -118,12 +118,12 @@ const GestureEditor = (props) => {
   };
 
   // Change gesture datastructure to fit Webdriver spec
-  const formatGesture = (actions) => {
-    const newActions = {};
-    for (const pointer of actions) {
-      newActions[pointer.name] = pointer.ticks.map((tick) => _.omit(tick, 'id'));
+  const formatPointerTicks = (localPointers) => {
+    const newPointers = {};
+    for (const pointer of localPointers) {
+      newPointers[pointer.name] = pointer.ticks.map((tick) => _.omit(tick, 'id'));
     }
-    return newActions;
+    return newPointers;
   };
 
   // This converts all the coordinates in the gesture to px/%
