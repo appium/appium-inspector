@@ -32,7 +32,7 @@
     "build:browser": "parcel build --no-content-hash --no-minify --out-dir ./dist-browser --target browser --public-url . ./app/renderer/index.html",
     "watch:main": "parcel watch --target node --public-url . --out-dir ./dist --out-file main.js ./app/main.js",
     "watch:renderer": "parcel watch --out-dir ./dist --target electron --public-url . ./app/renderer/*.html",
-    "watch:browser": "BUILD_BROWSER=1 NODE_ENV=development parcel serve --target browser ./app/renderer/index.html",
+    "watch:browser": "cross-env BUILD_BROWSER=1 NODE_ENV=development parcel serve --target browser ./app/renderer/index.html",
     "build:prod:main": "cross-env NODE_ENV=production npm run build:main",
     "build:prod:renderer": "cross-env NODE_ENV=production npm run build:renderer",
     "build:prod:browser": "cross-env BUILD_BROWSER=1 NODE_ENV=production npm run build:browser",
