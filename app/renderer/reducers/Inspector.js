@@ -21,6 +21,7 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from '../components/Inspector/shared';
 
 const DEFAULT_FRAMEWORK = 'java';
+const NATIVE_APP = 'NATIVE_APP';
 
 const INITIAL_STATE = {
   savedGestures: [],
@@ -83,7 +84,7 @@ export default function inspector (state = INITIAL_STATE, action) {
         ...state,
         contexts: action.contexts,
         contextsError: action.contextsError,
-        currentContext: action.currentContext,
+        currentContext: action.currentContext || NATIVE_APP,
         currentContextError: action.currentContextError,
         source: action.source,
         sourceXML: action.sourceXML,
