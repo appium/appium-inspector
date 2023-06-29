@@ -60,14 +60,14 @@ const GestureEditor = (props) => {
   const onSave = () => {
     const { id, date } = loadedGesture;
     if (duplicatePointerNames(pointers)) { return null; }
-    const gesture = {name, description, id, date, pointers: getConvertedPointers(COORD_TYPE.PERCENTAGES)};
+    const gesture = {name, description, id, date, actions: getConvertedPointers(COORD_TYPE.PERCENTAGES)};
     saveGesture(gesture);
     displayNotificationMsg(MSG_TYPES.SUCCESS, 'Successfully Saved Gesture');
   };
 
   const onSaveAs = () => {
     if (duplicatePointerNames(pointers)) { return null; }
-    const gesture = {name, description, pointers: getConvertedPointers(COORD_TYPE.PERCENTAGES)};
+    const gesture = {name, description, actions: getConvertedPointers(COORD_TYPE.PERCENTAGES)};
     saveGesture(gesture);
     displayNotificationMsg(MSG_TYPES.SUCCESS, `Successfully Saved Gesture As ${name}`);
   };
