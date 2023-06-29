@@ -313,152 +313,47 @@ const GestureEditor = (props) => {
     setPointers(copiedPointers);
   };
 
-  const tickButton = (tick) =>
-    <center>
-      <Button.Group className={InspectorCSS['tick-button-group']}>
-        <Button
-          key={`${tick.id}.left`}
-          type={tick.button === BUTTONS.LEFT ? 'primary' : 'default'}
-          className={InspectorCSS['tick-button-input']}
-          onClick={() => updateTick(tick, TICK_PROPS.BUTTON, BUTTONS.LEFT)}>
-          {t('Left')}
-        </Button>
-        <Button
-          key={`${tick.id}.right`}
-          type={tick.button === BUTTONS.RIGHT ? 'primary' : 'default'}
-          className={InspectorCSS['tick-button-input']}
-          onClick={() => updateTick(tick, TICK_PROPS.BUTTON, BUTTONS.RIGHT)}>
-          {t('Right')}
-        </Button>
-      </Button.Group>
-    </center>;
-
-  const tickDuration = (tick) =>
-    <center>
+  const headerTitle =
+    <Tooltip key='editTitle' placement='topLeft' title={t('Edit')}>
       <Input
-        key={`${tick.id}.duration`}
-        className={InspectorCSS['tick-input-box']}
-        value={!isNaN(tick.duration) ? tick.duration : null}
-        placeholder={t('Duration')}
-        defaultValue={tick.duration}
-        onChange={(e) => updateTick(tick, TICK_PROPS.DURATION, e.target.value)}
-        addonAfter='ms'/>
-    </center>;
-
-  const tickCoords = (tick) =>
-    <center>
-      <div className={InspectorCSS['tick-input-box']}>
-        <Input
-          key={`${tick.id}.x`}
-          className={InspectorCSS['tick-coord-box']}
-          value={!isNaN(tick.x) ? tick.x : ''}
-          placeholder='X'
-          defaultValue={tick.x}
-          onChange={(e) => updateTick(tick, TICK_PROPS.X, e.target.value)}/>
-        <Input
-          key={`${tick.id}.y`}
-          className={InspectorCSS['tick-coord-box']}
-          value={!isNaN(tick.y) ? tick.y : ''}
-          placeholder='Y'
-          defaultValue={tick.y}
-          onChange={(e) => updateTick(tick, TICK_PROPS.Y, e.target.value)}/>
-      </div>
-    </center>;
-
-  const tickType = (tick) =>
-    <center>
-      <Select
-        key={`${tick.id}.pointerType`}
-        className={InspectorCSS['tick-pointer-input']}
-        placeholder='Pointer Type'
-        value={tick.type}
-        defaultValue={tick.type}
-        size='middle'
-        dropdownMatchSelectWidth={false}
-        onChange={(e) => updateTick(tick, TICK_PROPS.POINTER_TYPE, e)}>
-        <Select.Option className={InspectorCSS['option-inpt']} value={POINTER_MOVE} key={`${tick.id}.${POINTER_MOVE}`}>
-          {t(DISPLAY.pointerMove)}
-        </Select.Option>
-        <Select.Option className={InspectorCSS['option-inpt']} value={POINTER_DOWN} key={`${tick.id}.${POINTER_DOWN}`}>
-          {t(DISPLAY.pointerDown)}
-        </Select.Option>
-        <Select.Option className={InspectorCSS['option-inpt']} value={POINTER_UP} key={`${tick.id}.${POINTER_UP}`}>
-          {t(DISPLAY.pointerUp)}
-        </Select.Option>
-        <Select.Option className={InspectorCSS['option-inpt']} value={PAUSE} key={`${tick.id}.${PAUSE}`}>
-          {t(DISPLAY.pause)}
-        </Select.Option>
-      </Select>
-    </center>;
-
-  const tapCoordinatesBtn = (tickId) =>
-    <Tooltip title={selectedTick === tickId ? t('Click to Set Coordinates') : t('Set Coordinates Via Field')}>
-      <Button
-        key={`${tickId}.tap`}
-        size='small'
-        type={selectedTick === tickId ? 'primary' : 'text'}
-        icon={<AimOutlined/>}
-        onClick={() =>
-          selectedTick === tickId ?
-            unselectTick()
-            :
-            selectTick(tickId)}/>
+        defaultValue={name}
+        className={InspectorCSS['gesture-header-title']}
+        onChange={(e) => setName(e.target.value)}
+        key={name}
+        size='small' />
     </Tooltip>;
 
-  const tickCard = (tick) =>
-    <Card hoverable={true} key={tick.id} className={InspectorCSS['tick-card']}
-      extra={<>{tick.type === POINTER_MOVE && tapCoordinatesBtn(tick.id)}
-        <Button size='small' type='text' icon={<CloseOutlined />} key={`${tick.id}.remove`}
-          onClick={() => deleteTick(tick.id[0], tick.id)}/></>}>
-      <Space className={InspectorCSS.spaceContainer} direction='vertical' size='middle'>
-        {tickType(tick)}
-        {(tick.type === POINTER_MOVE || tick.type === PAUSE) && tickDuration(tick)}
-        {(tick.type === POINTER_DOWN || tick.type === POINTER_UP) && tickButton(tick)}
-        {tick.type === POINTER_MOVE && tickCoords(tick)}
-      </Space>
-    </Card>;
+  const headerButtons = [
+    <Button.Group key='coordTypes'>
+      <Button
+        key={PERCENTAGES}
+        className={InspectorCSS['gesture-header-coord-btn']}
+        type={coordType === PERCENTAGES ? 'primary' : 'default'}
+        onClick={() => { setPointers(getConvertedPointers(PERCENTAGES)); setCoordType(PERCENTAGES); }}
+        size='small'>%</Button>
+      <Button
+        key={PIXELS}
+        className={InspectorCSS['gesture-header-coord-btn']}
+        type={coordType === PIXELS ? 'primary' : 'default'}
+        onClick={() => { setPointers(getConvertedPointers(PIXELS)); setCoordType(PIXELS); }}
+        size='small'>px</Button>
+    </Button.Group>,
+    <Tooltip key='playGesture' title={t('Play')}>
+      <Button key='play' type='primary' icon={<PlayCircleOutlined/>} onClick={() => onPlay()} />
+    </Tooltip>,
+    <Button key='saveAs' onClick={() => onSaveAs()}>{t('saveAs')}</Button>,
+    <Button key='save' onClick={() => onSave()} disabled={!loadedGesture}>{t('Save')}</Button>
+  ];
 
-  const pageContent =
-    <Tabs
-      type='editable-card'
-      onChange={(pointerId) => setActivePointerId(pointerId)}
-      activeKey={activePointerId}
-      onEdit={(targetKey, action) => action === ACTION_TYPES.ADD ? addPointer() : deletePointer(targetKey)}
-      hideAdd={pointers.length === 5}
-      centered={true}
-      tabBarGutter={10}
-      items={pointers.map((pointer, index) => ({
-        label: <Tooltip title={t('Edit')} mouseEnterDelay={1}>
-          <Input
-            key={pointer.id}
-            className={InspectorCSS['pointer-title']}
-            style={{ cursor: activePointerId === pointer.id ? CURSOR.TEXT : CURSOR.POINTER, textDecorationColor: pointer.color}}
-            value={pointer.name}
-            defaultValue={pointer.name}
-            bordered={false}
-            maxLength={10}
-            onChange={(e) => updatePointerName(e.target.value, index)}/>
-        </Tooltip>,
-        key: pointer.id,
-        children: <Row gutter={[24, 24]}>
-          {pointer.ticks.map((tick) =>
-            <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4} key={`${tick.id}.col1`}>
-              <div>
-                {tickCard(tick)}
-              </div>
-            </Col>
-          )}
-          <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4} key={`${pointer.id}.col1`}>
-            <Card className={InspectorCSS['tick-plus-card']} bordered={false}>
-              <center>
-                <Button className={InspectorCSS['tick-plus-btn']} icon={<PlusCircleOutlined/>}
-                  onClick={() => addTick(pointer.id)} key={ACTION_TYPES.ADD}/>
-              </center>
-            </Card>
-          </Col>
-        </Row>
-      }))}
-    />;
+  const headerDescription =
+    <Tooltip key='editDescription' placement='topLeft' title={t('Edit')}>
+      <Input
+        key={description}
+        defaultValue={description}
+        className={InspectorCSS['gesture-header-description']}
+        onChange={(e) => setDescription(e.target.value)}
+        size='small' />
+    </Tooltip>;
 
   const regularTimelineIcon = (pointer, tick) => {
     const { type, duration, button, x, y } = tick;
@@ -497,56 +392,174 @@ const GestureEditor = (props) => {
         })} />
     </center>);
 
-  const headerDescription =
-    <Tooltip key='editDescription' placement='topLeft' title={t('Edit')}>
+  const tickButton = (tick) =>
+    <center>
+      <Button.Group className={InspectorCSS['tick-button-group']}>
+        <Button
+          key={`${tick.id}.left`}
+          type={tick.button === BUTTONS.LEFT ? 'primary' : 'default'}
+          className={InspectorCSS['tick-button-input']}
+          onClick={() => updateTick(tick, TICK_PROPS.BUTTON, BUTTONS.LEFT)}>
+          {t('Left')}
+        </Button>
+        <Button
+          key={`${tick.id}.right`}
+          type={tick.button === BUTTONS.RIGHT ? 'primary' : 'default'}
+          className={InspectorCSS['tick-button-input']}
+          onClick={() => updateTick(tick, TICK_PROPS.BUTTON, BUTTONS.RIGHT)}>
+          {t('Right')}
+        </Button>
+      </Button.Group>
+    </center>;
+
+  const tickDuration = (tick) =>
+    <center>
       <Input
-        key={description}
-        defaultValue={description}
-        className={InspectorCSS['gesture-header-description']}
-        onChange={(e) => setDescription(e.target.value)}
-        size='small'/>
+        key={`${tick.id}.duration`}
+        className={InspectorCSS['tick-input-box']}
+        value={!isNaN(tick.duration) ? tick.duration : null}
+        placeholder={t('Duration')}
+        defaultValue={tick.duration}
+        onChange={(e) => updateTick(tick, TICK_PROPS.DURATION, e.target.value)}
+        addonAfter='ms' />
+    </center>;
+
+  const tickCoords = (tick) =>
+    <center>
+      <div className={InspectorCSS['tick-input-box']}>
+        <Input
+          key={`${tick.id}.x`}
+          className={InspectorCSS['tick-coord-box']}
+          value={!isNaN(tick.x) ? tick.x : ''}
+          placeholder='X'
+          defaultValue={tick.x}
+          onChange={(e) => updateTick(tick, TICK_PROPS.X, e.target.value)} />
+        <Input
+          key={`${tick.id}.y`}
+          className={InspectorCSS['tick-coord-box']}
+          value={!isNaN(tick.y) ? tick.y : ''}
+          placeholder='Y'
+          defaultValue={tick.y}
+          onChange={(e) => updateTick(tick, TICK_PROPS.Y, e.target.value)} />
+      </div>
+    </center>;
+
+  const tickType = (tick) =>
+    <center>
+      <Select
+        key={`${tick.id}.pointerType`}
+        className={InspectorCSS['tick-pointer-input']}
+        placeholder='Pointer Type'
+        value={tick.type}
+        defaultValue={tick.type}
+        size='middle'
+        dropdownMatchSelectWidth={false}
+        onChange={(e) => updateTick(tick, TICK_PROPS.POINTER_TYPE, e)}>
+        <Select.Option className={InspectorCSS['option-inpt']} value={POINTER_MOVE} key={`${tick.id}.${POINTER_MOVE}`}>
+          {t(DISPLAY.pointerMove)}
+        </Select.Option>
+        <Select.Option className={InspectorCSS['option-inpt']} value={POINTER_DOWN} key={`${tick.id}.${POINTER_DOWN}`}>
+          {t(DISPLAY.pointerDown)}
+        </Select.Option>
+        <Select.Option className={InspectorCSS['option-inpt']} value={POINTER_UP} key={`${tick.id}.${POINTER_UP}`}>
+          {t(DISPLAY.pointerUp)}
+        </Select.Option>
+        <Select.Option className={InspectorCSS['option-inpt']} value={PAUSE} key={`${tick.id}.${PAUSE}`}>
+          {t(DISPLAY.pause)}
+        </Select.Option>
+      </Select>
+    </center>;
+
+  const tapCoordinatesBtn = (tickId) =>
+    <Tooltip title={selectedTick === tickId ? t('Click to Set Coordinates') : t('Set Coordinates Via Field')}>
+      <Button
+        key={`${tickId}.tap`}
+        size='small'
+        type={selectedTick === tickId ? 'primary' : 'text'}
+        icon={<AimOutlined/>}
+        onClick={() => selectedTick === tickId ? unselectTick() : selectTick(tickId)} />
     </Tooltip>;
 
-  const headerButtons =
-    [<Button.Group key='coordTypes'>
-      <Button
-        key={PERCENTAGES}
-        className={InspectorCSS['gesture-header-coord-btn']}
-        type={coordType === PERCENTAGES ? 'primary' : 'default'}
-        onClick={() => { setPointers(getConvertedPointers(PERCENTAGES)); setCoordType(PERCENTAGES); }}
-        size='small'>%</Button>
-      <Button
-        key={PIXELS}
-        className={InspectorCSS['gesture-header-coord-btn']}
-        type={coordType === PIXELS ? 'primary' : 'default'}
-        onClick={() => { setPointers(getConvertedPointers(PIXELS)); setCoordType(PIXELS); }}
-        size='small'>px</Button>
-    </Button.Group>,
-    <Tooltip key='playGesture' title={t('Play')}>
-      <Button key='play' type='primary' icon={<PlayCircleOutlined/>} onClick={() => onPlay()}/>
-    </Tooltip>,
-    <Button key='saveAs' onClick={() => onSaveAs()}>{t('saveAs')}</Button>,
-    <Button key='save' onClick={() => onSave()} disabled={!loadedGesture}>{t('Save')}</Button>];
+  const tickCard = (tick) =>
+    <Card
+      hoverable={true}
+      key={tick.id}
+      className={InspectorCSS['tick-card']}
+      extra={
+        <>
+          {tick.type === POINTER_MOVE && tapCoordinatesBtn(tick.id)}
+          <Button size='small' type='text' icon={<CloseOutlined />} key={`${tick.id}.remove`}
+            onClick={() => deleteTick(tick.id[0], tick.id)} />
+        </>
+      }>
+      <Space className={InspectorCSS.spaceContainer} direction='vertical' size='middle'>
+        {tickType(tick)}
+        {(tick.type === POINTER_MOVE || tick.type === PAUSE) && tickDuration(tick)}
+        {(tick.type === POINTER_DOWN || tick.type === POINTER_UP) && tickButton(tick)}
+        {tick.type === POINTER_MOVE && tickCoords(tick)}
+      </Space>
+    </Card>;
 
-  const headerTitle =
-    <Tooltip key='editTitle' placement='topLeft' title={t('Edit')}>
-      <Input
-        defaultValue={name}
-        className={InspectorCSS['gesture-header-title']}
-        onChange={(e) => setName(e.target.value)}
-        key={name}
-        size='small'/>
-    </Tooltip>;
+  const pointerTicksGrid = (pointer) =>
+    <Row gutter={[24, 24]}>
+      {pointer.ticks.map((tick) =>
+        <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4} key={`${tick.id}.col1`}>
+          {tickCard(tick)}
+        </Col>
+      )}
+      <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4} key={`${pointer.id}.col1`}>
+        <Card className={InspectorCSS['tick-plus-card']} bordered={false}>
+          <center>
+            <Button className={InspectorCSS['tick-plus-btn']} icon={<PlusCircleOutlined/>}
+              onClick={() => addTick(pointer.id)} key={ACTION_TYPES.ADD} />
+          </center>
+        </Card>
+      </Col>
+    </Row>;
 
-  const pageHeader =
-    <PageHeader
-      className={InspectorCSS['gesture-header']}
-      onBack={() => onBack()}
-      title={headerTitle}
-      extra={headerButtons}
-      footer={<>{headerDescription}<Divider/>{timeline}</>}/>;
+  const pointerTabs = pointers.map((pointer, index) =>
+    ({
+      label: <Tooltip title={t('Edit')}>
+        <Input
+          key={pointer.id}
+          className={InspectorCSS['pointer-title']}
+          style={{ cursor: activePointerId === pointer.id ? CURSOR.TEXT : CURSOR.POINTER, textDecorationColor: pointer.color}}
+          value={pointer.name}
+          defaultValue={pointer.name}
+          bordered={false}
+          maxLength={10}
+          onChange={(e) => updatePointerName(e.target.value, index)} />
+      </Tooltip>,
+      key: pointer.id,
+      children: pointerTicksGrid(pointer)
+    })
+  );
 
-  return <>{pageHeader}{pageContent}</>;
+  return (
+    <>
+      <PageHeader
+        className={InspectorCSS['gesture-header']}
+        onBack={() => onBack()}
+        title={headerTitle}
+        extra={headerButtons}
+        footer={
+          <>
+            {headerDescription}
+            <Divider/>
+            {timeline}
+          </>
+        } />
+      <Tabs
+        type='editable-card'
+        onChange={(pointerId) => setActivePointerId(pointerId)}
+        activeKey={activePointerId}
+        onEdit={(targetKey, action) => action === ACTION_TYPES.ADD ? addPointer() : deletePointer(targetKey)}
+        hideAdd={pointers.length === 5}
+        centered={true}
+        tabBarGutter={10}
+        items={pointerTabs} />
+    </>
+  );
 };
 
 export default GestureEditor;
