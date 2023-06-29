@@ -101,6 +101,7 @@
 }
 
 .scrollingTab {
+  scrollbar-width: none; /* -webkit-scrollbar for Firefox */
   overflow-y: scroll;
   height: 100%;
 }
