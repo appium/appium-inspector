@@ -46,7 +46,7 @@ const GestureEditor = (props) => {
   // Draw gesture whenever pointers change
   useEffect(() => {
     const { displayGesture } = props;
-    const convertedPointers = convertCoordinates(COORD_TYPE.PIXELS);
+    const convertedPointers = getConvertedPointers(COORD_TYPE.PIXELS);
     displayGesture(convertedPointers);
   }, [pointers]);
 
@@ -59,7 +59,7 @@ const GestureEditor = (props) => {
 
   const onSave = () => {
     const { id, date } = loadedGesture;
-    const gesture = {name, description, id, date, pointers: convertCoordinates(COORD_TYPE.PERCENTAGES)};
+    const gesture = {name, description, id, date, pointers: getConvertedPointers(COORD_TYPE.PERCENTAGES)};
     if (!duplicatePointerNames(gesture.pointers)) {
       saveGesture(gesture);
       displayNotificationMsg(MSG_TYPES.SUCCESS, 'Successfully Saved Gesture');
@@ -69,7 +69,7 @@ const GestureEditor = (props) => {
   };
 
   const onSaveAs = () => {
-    const gesture = {name, description, pointers: convertCoordinates(COORD_TYPE.PERCENTAGES)};
+    const gesture = {name, description, pointers: getConvertedPointers(COORD_TYPE.PERCENTAGES)};
     if (!duplicatePointerNames(gesture.pointers)) {
       saveGesture(gesture);
       displayNotificationMsg(MSG_TYPES.SUCCESS, `Successfully Saved Gesture As ${name}`);
@@ -80,9 +80,9 @@ const GestureEditor = (props) => {
 
   const onPlay = () => {
     const { applyClientMethod } = props;
-    const localPointers = convertCoordinates(COORD_TYPE.PIXELS);
+    const localPointers = getConvertedPointers(COORD_TYPE.PIXELS);
     if (!duplicatePointerNames(localPointers)) {
-      const formattedPointers = formatPointerTicks(localPointers);
+      const formattedPointers = getW3CPointers(localPointers);
       applyClientMethod({methodName: SCREENSHOT_INTERACTION_MODE.GESTURE, args: [formattedPointers]});
     } else {
       displayNotificationMsg(MSG_TYPES.ERROR, 'Cannot have duplicate pointer names');
@@ -118,7 +118,7 @@ const GestureEditor = (props) => {
   };
 
   // Change gesture datastructure to fit Webdriver spec
-  const formatPointerTicks = (localPointers) => {
+  const getW3CPointers = (localPointers) => {
     const newPointers = {};
     for (const pointer of localPointers) {
       newPointers[pointer.name] = pointer.ticks.map((tick) => _.omit(tick, 'id'));
@@ -127,7 +127,7 @@ const GestureEditor = (props) => {
   };
 
   // This converts all the coordinates in the gesture to px/%
-  const convertCoordinates = (type) => {
+  const getConvertedPointers = (type) => {
     const { width, height } = windowSize;
     if (type === coordType) { return pointers; }
     const newPointers = _.cloneDeep(pointers);
@@ -521,13 +521,13 @@ const GestureEditor = (props) => {
         key={PERCENTAGES}
         className={InspectorCSS['gesture-header-coord-btn']}
         type={coordType === PERCENTAGES ? 'primary' : 'default'}
-        onClick={() => { setPointers(convertCoordinates(PERCENTAGES)); setCoordType(PERCENTAGES); }}
+        onClick={() => { setPointers(getConvertedPointers(PERCENTAGES)); setCoordType(PERCENTAGES); }}
         size='small'>%</Button>
       <Button
         key={PIXELS}
         className={InspectorCSS['gesture-header-coord-btn']}
         type={coordType === PIXELS ? 'primary' : 'default'}
-        onClick={() => { setPointers(convertCoordinates(PIXELS)); setCoordType(PIXELS); }}
+        onClick={() => { setPointers(getConvertedPointers(PIXELS)); setCoordType(PIXELS); }}
         size='small'>px</Button>
     </Button.Group>,
     <Tooltip key='playGesture' title={t('Play')}>
