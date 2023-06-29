@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import { Tabs, Input, Button, Card, Select, Row, Col, notification,
          PageHeader, Space, Steps, Divider, Tooltip, Popover } from 'antd';
-import { PlayCircleOutlined, PlusCircleOutlined,
+import { QuestionCircleOutlined, PlayCircleOutlined, PlusCircleOutlined,
          CloseOutlined, AimOutlined, RightCircleOutlined,
          DownCircleOutlined, UpCircleOutlined, PauseCircleOutlined } from '@ant-design/icons';
 import { SCREENSHOT_INTERACTION_MODE, POINTER_TYPES,
@@ -363,12 +363,14 @@ const GestureEditor = (props) => {
             {button !== undefined && <p>{t('Button')}: {button === BUTTONS.LEFT ? t('Left') : t('Right')}</p>}
             {x !== undefined && <p>X: {x}{coordType === PIXELS ? 'px' : '%'}</p>}
             {y !== undefined && <p>Y: {y}{coordType === PIXELS ? 'px' : '%'}</p>}
+            {type === undefined && <p>{t('Action Type Not Defined')}</p>}
           </div>
         }>
         {type === POINTER_MOVE && <RightCircleOutlined className={InspectorCSS['gesture-header-icon']} style={iconStyle}/>}
         {type === POINTER_DOWN && <DownCircleOutlined className={InspectorCSS['gesture-header-icon']} style={iconStyle}/>}
         {type === POINTER_UP && <UpCircleOutlined className={InspectorCSS['gesture-header-icon']} style={iconStyle}/>}
         {type === PAUSE && <PauseCircleOutlined className={InspectorCSS['gesture-header-icon']} style={iconStyle}/>}
+        {type === undefined && <QuestionCircleOutlined className={InspectorCSS['gesture-header-icon']} style={iconStyle}/>}
       </Popover>
     );
   };
