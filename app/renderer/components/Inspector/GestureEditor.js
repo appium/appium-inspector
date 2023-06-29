@@ -439,7 +439,7 @@ const GestureEditor = (props) => {
     <center>
       <Select
         className={InspectorCSS['tick-pointer-input']}
-        placeholder='Pointer Type'
+        placeholder={t('Action Type')}
         value={tick.type}
         defaultValue={tick.type}
         size='middle'
