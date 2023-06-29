@@ -75,7 +75,7 @@ const GestureEditor = (props) => {
   const onPlay = () => {
     const { applyClientMethod } = props;
     if (duplicatePointerNames(pointers)) { return null; }
-    const formattedPointers = getW3CPointers(getConvertedPointers(COORD_TYPE.PIXELS));
+    const formattedPointers = getW3CPointers();
     applyClientMethod({methodName: SCREENSHOT_INTERACTION_MODE.GESTURE, args: [formattedPointers]});
   };
 
@@ -109,9 +109,10 @@ const GestureEditor = (props) => {
   };
 
   // Change gesture datastructure to fit Webdriver spec
-  const getW3CPointers = (localPointers) => {
+  const getW3CPointers = () => {
     const newPointers = {};
-    for (const pointer of localPointers) {
+    const currentPointers = getConvertedPointers(COORD_TYPE.PIXELS);
+    for (const pointer of currentPointers) {
       newPointers[pointer.name] = pointer.ticks.map((tick) => _.omit(tick, 'id'));
     }
     return newPointers;
