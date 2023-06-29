@@ -334,11 +334,11 @@ const GestureEditor = (props) => {
         type={coordType === PIXELS ? 'primary' : 'default'}
         onClick={() => { setPointers(getConvertedPointers(PIXELS)); setCoordType(PIXELS); }}
         size='small'>px</Button>
-    </Button.Group>,
+    </Button.Group>
     <Tooltip title={t('Play')}>
       <Button type='primary' icon={<PlayCircleOutlined/>} onClick={() => onPlay()} />
-    </Tooltip>,
-    <Button onClick={() => onSaveAs()}>{t('saveAs')}</Button>,
+    </Tooltip>
+    <Button onClick={() => onSaveAs()}>{t('saveAs')}</Button>
     <Button onClick={() => onSave()} disabled={!loadedGesture}>{t('Save')}</Button>
   </>;
 
