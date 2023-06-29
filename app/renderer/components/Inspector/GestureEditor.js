@@ -59,34 +59,24 @@ const GestureEditor = (props) => {
 
   const onSave = () => {
     const { id, date } = loadedGesture;
+    if (duplicatePointerNames(pointers)) { return null; }
     const gesture = {name, description, id, date, pointers: getConvertedPointers(COORD_TYPE.PERCENTAGES)};
-    if (!duplicatePointerNames(gesture.pointers)) {
-      saveGesture(gesture);
-      displayNotificationMsg(MSG_TYPES.SUCCESS, 'Successfully Saved Gesture');
-    } else {
-      displayNotificationMsg(MSG_TYPES.ERROR, 'Cannot have duplicate pointer names');
-    }
+    saveGesture(gesture);
+    displayNotificationMsg(MSG_TYPES.SUCCESS, 'Successfully Saved Gesture');
   };
 
   const onSaveAs = () => {
+    if (duplicatePointerNames(pointers)) { return null; }
     const gesture = {name, description, pointers: getConvertedPointers(COORD_TYPE.PERCENTAGES)};
-    if (!duplicatePointerNames(gesture.pointers)) {
-      saveGesture(gesture);
-      displayNotificationMsg(MSG_TYPES.SUCCESS, `Successfully Saved Gesture As ${name}`);
-    } else {
-      displayNotificationMsg(MSG_TYPES.ERROR, 'Cannot have duplicate pointer names');
-    }
+    saveGesture(gesture);
+    displayNotificationMsg(MSG_TYPES.SUCCESS, `Successfully Saved Gesture As ${name}`);
   };
 
   const onPlay = () => {
     const { applyClientMethod } = props;
-    const localPointers = getConvertedPointers(COORD_TYPE.PIXELS);
-    if (!duplicatePointerNames(localPointers)) {
-      const formattedPointers = getW3CPointers(localPointers);
-      applyClientMethod({methodName: SCREENSHOT_INTERACTION_MODE.GESTURE, args: [formattedPointers]});
-    } else {
-      displayNotificationMsg(MSG_TYPES.ERROR, 'Cannot have duplicate pointer names');
-    }
+    if (duplicatePointerNames(pointers)) { return null; }
+    const formattedPointers = getW3CPointers(getConvertedPointers(COORD_TYPE.PIXELS));
+    applyClientMethod({methodName: SCREENSHOT_INTERACTION_MODE.GESTURE, args: [formattedPointers]});
   };
 
   const onBack = () => {
@@ -102,6 +92,7 @@ const GestureEditor = (props) => {
     const duplicates = {};
     for (const pointer of localPointers) {
       if (duplicates[pointer.name]) {
+        displayNotificationMsg(MSG_TYPES.ERROR, 'Duplicate pointer names are not allowed');
         return true;
       } else {
         duplicates[pointer.name] = pointer;
