@@ -38,8 +38,8 @@ const GestureEditor = (props) => {
   const { PERCENTAGES, PIXELS } = COORD_TYPE;
 
   const [pointers, setPointers] = useState(loadedGesture ? loadedGesture.actions : DEFAULT_POINTERS());
-  const [name, setName] = useState(loadedGesture ? loadedGesture.name : 'Untitled');
-  const [description, setDescription] = useState(loadedGesture ? loadedGesture.description : 'Add Description');
+  const [name, setName] = useState(loadedGesture ? loadedGesture.name : t('Untitled Gesture'));
+  const [description, setDescription] = useState(loadedGesture ? loadedGesture.description : t('Add Description'));
   const [coordType, setCoordType] = useState(COORD_TYPE.PERCENTAGES);
   const [activePointerId, setActivePointerId] = useState('1');
 
@@ -62,14 +62,14 @@ const GestureEditor = (props) => {
     if (duplicatePointerNames(pointers)) { return null; }
     const gesture = {name, description, id, date, actions: getConvertedPointers(COORD_TYPE.PERCENTAGES)};
     saveGesture(gesture);
-    displayNotificationMsg(MSG_TYPES.SUCCESS, 'Successfully Saved Gesture');
+    displayNotificationMsg(MSG_TYPES.SUCCESS, t('Gesture saved'));
   };
 
   const onSaveAs = () => {
     if (duplicatePointerNames(pointers)) { return null; }
     const gesture = {name, description, actions: getConvertedPointers(COORD_TYPE.PERCENTAGES)};
     saveGesture(gesture);
-    displayNotificationMsg(MSG_TYPES.SUCCESS, `Successfully Saved Gesture As ${name}`);
+    displayNotificationMsg(MSG_TYPES.SUCCESS, t('Gesture saved as', {gestureName: name}));
   };
 
   const onPlay = () => {
@@ -92,7 +92,7 @@ const GestureEditor = (props) => {
     const duplicates = {};
     for (const pointer of localPointers) {
       if (duplicates[pointer.name]) {
-        displayNotificationMsg(MSG_TYPES.ERROR, 'Duplicate pointer names are not allowed');
+        displayNotificationMsg(MSG_TYPES.ERROR, t('Duplicate pointer names are not allowed'));
         return true;
       } else {
         duplicates[pointer.name] = pointer;
@@ -321,14 +321,14 @@ const GestureEditor = (props) => {
           type={tick.button === BUTTONS.LEFT ? 'primary' : 'default'}
           className={InspectorCSS['tick-button-input']}
           onClick={() => updateTick(tick, TICK_PROPS.BUTTON, BUTTONS.LEFT)}>
-            Left
+          {t('Left')}
         </Button>
         <Button
           key={`${tick.id}.right`}
           type={tick.button === BUTTONS.RIGHT ? 'primary' : 'default'}
           className={InspectorCSS['tick-button-input']}
           onClick={() => updateTick(tick, TICK_PROPS.BUTTON, BUTTONS.RIGHT)}>
-            Right
+          {t('Right')}
         </Button>
       </Button.Group>
     </center>;
@@ -338,8 +338,8 @@ const GestureEditor = (props) => {
       <Input
         key={`${tick.id}.duration`}
         className={InspectorCSS['tick-input-box']}
-        value={!isNaN(tick.duration) ? tick.duration : ''}
-        placeholder='Duration'
+        value={!isNaN(tick.duration) ? tick.duration : null}
+        placeholder={t('Duration')}
         defaultValue={tick.duration}
         onChange={(e) => updateTick(tick, TICK_PROPS.DURATION, e.target.value)}
         addonAfter='ms'/>
@@ -377,16 +377,16 @@ const GestureEditor = (props) => {
         dropdownMatchSelectWidth={false}
         onChange={(e) => updateTick(tick, TICK_PROPS.POINTER_TYPE, e)}>
         <Select.Option className={InspectorCSS['option-inpt']} value={POINTER_MOVE} key={`${tick.id}.${POINTER_MOVE}`}>
-          {DISPLAY.pointerMove}
+          {t(DISPLAY.pointerMove)}
         </Select.Option>
         <Select.Option className={InspectorCSS['option-inpt']} value={POINTER_DOWN} key={`${tick.id}.${POINTER_DOWN}`}>
-          {DISPLAY.pointerDown}
+          {t(DISPLAY.pointerDown)}
         </Select.Option>
         <Select.Option className={InspectorCSS['option-inpt']} value={POINTER_UP} key={`${tick.id}.${POINTER_UP}`}>
-          {DISPLAY.pointerUp}
+          {t(DISPLAY.pointerUp)}
         </Select.Option>
         <Select.Option className={InspectorCSS['option-inpt']} value={PAUSE} key={`${tick.id}.${PAUSE}`}>
-          {DISPLAY.pause}
+          {t(DISPLAY.pause)}
         </Select.Option>
       </Select>
     </center>;
@@ -465,11 +465,11 @@ const GestureEditor = (props) => {
     const iconStyle = {color: pointer.color};
     return (
       <Popover placement='bottom'
-        title={<center key={tick.id}>{DISPLAY[type]}</center>}
+        title={<center key={tick.id}>{t(DISPLAY[type])}</center>}
         content={
           <div className={InspectorCSS['timeline-tick-title']}>
-            {duration !== undefined && <p>Duration: {duration}ms</p>}
-            {button !== undefined && <p>Button: {button === BUTTONS.LEFT ? 'Left' : 'Right'}</p>}
+            {duration !== undefined && <p>{t('Duration')}: {duration}ms</p>}
+            {button !== undefined && <p>{t('Button')}: {button === BUTTONS.LEFT ? t('Left') : t('Right')}</p>}
             {x !== undefined && <p>X: {x}{coordType === PIXELS ? 'px' : '%'}</p>}
             {y !== undefined && <p>Y: {y}{coordType === PIXELS ? 'px' : '%'}</p>}
           </div>
