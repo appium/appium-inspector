@@ -898,6 +898,7 @@ export function showGestureEditor () {
 export function hideGestureEditor () {
   return (dispatch) => {
     dispatch({type: HIDE_GESTURE_EDITOR});
+    dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode: 'select' });
   };
 }
 
