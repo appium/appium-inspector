@@ -35,7 +35,6 @@ const DEFAULT_POINTERS = () => [{
  */
 const GestureEditor = (props) => {
   const { loadedGesture, saveGesture, tickCoordinates, selectedTick, selectTick, unselectTick, windowSize, t } = props;
-  const { PERCENTAGES, PIXELS } = COORD_TYPE;
 
   const [pointers, setPointers] = useState(loadedGesture ? loadedGesture.actions : DEFAULT_POINTERS());
   const [name, setName] = useState(loadedGesture ? loadedGesture.name : t('Untitled Gesture'));
@@ -326,13 +325,13 @@ const GestureEditor = (props) => {
     <Button.Group>
       <Button
         className={InspectorCSS['gesture-header-coord-btn']}
-        type={coordType === PERCENTAGES ? 'primary' : 'default'}
-        onClick={() => { setPointers(getConvertedPointers(PERCENTAGES)); setCoordType(PERCENTAGES); }}
+        type={coordType === COORD_TYPE.PERCENTAGES ? 'primary' : 'default'}
+        onClick={() => { setPointers(getConvertedPointers(COORD_TYPE.PERCENTAGES)); setCoordType(COORD_TYPE.PERCENTAGES); }}
         size='small'>%</Button>
       <Button
         className={InspectorCSS['gesture-header-coord-btn']}
-        type={coordType === PIXELS ? 'primary' : 'default'}
-        onClick={() => { setPointers(getConvertedPointers(PIXELS)); setCoordType(PIXELS); }}
+        type={coordType === COORD_TYPE.PIXELS ? 'primary' : 'default'}
+        onClick={() => { setPointers(getConvertedPointers(COORD_TYPE.PIXELS)); setCoordType(COORD_TYPE.PIXELS); }}
         size='small'>px</Button>
     </Button.Group>
     <Tooltip title={t('Play')}>
@@ -361,8 +360,8 @@ const GestureEditor = (props) => {
           <div className={InspectorCSS['timeline-tick-title']}>
             {duration !== undefined && <p>{t('Duration')}: {duration}ms</p>}
             {button !== undefined && <p>{t('Button')}: {button === BUTTONS.LEFT ? t('Left') : t('Right')}</p>}
-            {x !== undefined && <p>X: {x}{coordType === PIXELS ? 'px' : '%'}</p>}
-            {y !== undefined && <p>Y: {y}{coordType === PIXELS ? 'px' : '%'}</p>}
+            {x !== undefined && <p>X: {x}{coordType === COORD_TYPE.PIXELS ? 'px' : '%'}</p>}
+            {y !== undefined && <p>Y: {y}{coordType === COORD_TYPE.PIXELS ? 'px' : '%'}</p>}
             {type === undefined && <p>{t('Action Type Not Defined')}</p>}
           </div>
         }>
