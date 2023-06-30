@@ -69,6 +69,7 @@ const GestureEditor = (props) => {
     const gesture = {name, description, actions: getConvertedPointers(COORD_TYPE.PERCENTAGES)};
     saveGesture(gesture);
     displayNotificationMsg(MSG_TYPES.SUCCESS, t('Gesture saved as', {gestureName: name}));
+    onBack();
   };
 
   const onPlay = () => {
