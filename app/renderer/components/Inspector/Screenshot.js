@@ -178,7 +178,7 @@ const Screenshot = (props) => {
             <svg key='gestureSVG' className={styles.gestureSvg}>
               {points.map((pointer) =>
                 pointer.map((tick, index) =>
-                  <>
+                  <React.Fragment key={tick.id}>
                     {index > 0 && <line
                       className={styles[tick.type]}
                       key={`${tick.id}.line`}
@@ -194,7 +194,7 @@ const Screenshot = (props) => {
                       cx={tick.x / scaleRatio}
                       cy={tick.y / scaleRatio}
                       style={tick.type === TYPES.FILLED ? {fill: tick.color} : {stroke: tick.color}} />
-                  </>
+                  </React.Fragment>
                 )
               )}
             </svg>
