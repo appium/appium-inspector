@@ -97,18 +97,13 @@ const SavedGestures = (props) => {
       return {title: SAVED_ACTIONS_OBJ[key], key: SAVED_ACTIONS_OBJ[key], render: (_, record) => {
         const gesture = getGestureByID(record.key);
         return (
-          <div>
+          <Button.Group>
             <Tooltip title={t('Play')}>
               <Button key='play' type='primary' icon={<PlayCircleOutlined />} onClick={() => onPlay(gesture)}/>
             </Tooltip>
-            <Button
-              icon={<EditOutlined/>}
-              onClick={() => loadSavedGesture(gesture)}
-            />
-            <Button
-              icon={<DeleteOutlined/>}
-              onClick={() => handleDelete(gesture.id)}/>
-          </div>
+            <Button icon={<EditOutlined/>} onClick={() => loadSavedGesture(gesture)}/>
+            <Button icon={<DeleteOutlined/>} onClick={() => handleDelete(gesture.id)}/>
+          </Button.Group>
         );
       }};
     } else {
