@@ -27,18 +27,17 @@ const MAX_SCREENSHOT_WIDTH = 500;
 
 const MJPEG_STREAM_CHECK_INTERVAL = 1000;
 
-function downloadXML (sourceXML) {
+const downloadXML = (sourceXML) => {
   let element = document.createElement('a');
   element.setAttribute('href', 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML));
   element.setAttribute('download', 'source.xml');
-
   element.style.display = 'none';
-  document.body.appendChild(element);
 
+  document.body.appendChild(element);
   element.click();
 
   document.body.removeChild(element);
-}
+};
 
 const Inspector = (props) => {
   const { screenshot, screenshotError, selectedElement = {}, quitSession, showRecord,
