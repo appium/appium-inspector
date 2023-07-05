@@ -163,7 +163,7 @@ const Inspector = (props) => {
         }
       }
     };
-  }, [windowSize && windowSize.width]);
+  }, [JSON.stringify(windowSize)]);
 
   const screenShotControls = <div className={InspectorStyles['screenshot-controls']}>
     <Space size='middle'>
