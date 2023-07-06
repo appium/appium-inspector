@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { debounce } from 'lodash';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE } from './shared';
 import { Card, Button, Spin, Tooltip, Modal, Tabs, Space, Switch } from 'antd';
@@ -54,6 +55,8 @@ const Inspector = (props) => {
   const mjpegStreamCheckInterval = useRef(null);
 
   const [scaleRatio, setScaleRatio] = useState(1);
+
+  const history = useHistory();
 
   const showScreenshot = ((screenshot && !screenshotError) ||
                           (mjpegScreenshotUrl && (!isSourceRefreshOn || !isAwaitingMjpegStream)));
@@ -123,6 +126,11 @@ const Inspector = (props) => {
     selectScreenshotInteractionMode(mode);
   };
 
+  const quitCurrentSession = async (reason, killedByUser = true) => {
+    await quitSession(reason, killedByUser);
+    history.push('/session');
+  };
+
   useEffect(() => {
     const { applyClientMethod, getSavedActionFramework, runKeepAliveLoop, setSessionTime } = props;
     const curHeight = window.innerHeight;
@@ -171,7 +179,7 @@ const Inspector = (props) => {
   useEffect(() => {
     if (showKeepAlivePrompt) {
       const userWaitTimeout = setTimeout(() => {
-        quitSession(t('Session closed due to inactivity'), false);
+        quitCurrentSession(t('Session closed due to inactivity'), false);
       }, SESSION_EXPIRY_PROMPT_TIMEOUT);
       setUserWaitTimeout(userWaitTimeout);
     }
@@ -286,13 +294,13 @@ const Inspector = (props) => {
 
   return (
     <div className={InspectorStyles['inspector-container']}>
-      <HeaderButtons {...props}/>
+      <HeaderButtons quitCurrentSession={quitCurrentSession} {...props}/>
       {main}
       <Modal
         title={t('Session Inactive')}
         open={showKeepAlivePrompt}
         onOk={() => keepSessionAlive()}
-        onCancel={() => quitSession()}
+        onCancel={() => quitCurrentSession()}
         okText={t('Keep Session Running')}
         cancelText={t('Quit Session')}>
         <p>{t('Your session is about to expire')}</p>

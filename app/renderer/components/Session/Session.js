@@ -1,5 +1,6 @@
 import { shell, ipcRenderer } from '../../polyfills';
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import CapabilityEditor from './CapabilityEditor';
 import SavedSessions from './SavedSessions';
@@ -21,6 +22,8 @@ const Session = (props) => {
           caps, capsUUID, capsName, isCapsDirty, isEditingDesiredCaps, requestSaveAsModal,
           saveSession, newSession, savedSessions, newSessionLoading, attachSessId, t } = props;
 
+  const history = useHistory();
+
   const isAttaching = tabKey === 'attach';
 
   const handleSelectServerTab = async (tab) => {
@@ -30,6 +33,11 @@ const Session = (props) => {
       return;
     }
     await changeServerType(tab);
+  };
+
+  const loadNewSession = async (caps, attachSessId = null) => {
+    await newSession(caps, attachSessId);
+    history.push('/inspector');
   };
 
   useEffect(() => {
@@ -95,10 +103,10 @@ const Session = (props) => {
             onClick={requestSaveAsModal} disabled={isEditingDesiredCaps}>{t('saveAs')}
           </Button>}
           {!isAttaching && <Button type={BUTTON.PRIMARY} id='btnStartSession'
-            onClick={() => newSession(caps)} className={SessionStyles['start-session-button']}>{t('startSession')}
+            onClick={() => loadNewSession(caps)} className={SessionStyles['start-session-button']}>{t('startSession')}
           </Button>}
           {isAttaching && <Button type={BUTTON.PRIMARY} disabled={!attachSessId}
-            onClick={() => newSession(null, attachSessId)}>{t('attachToSession')}
+            onClick={() => loadNewSession(null, attachSessId)}>{t('attachToSession')}
           </Button>}
         </div>
 

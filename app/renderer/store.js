@@ -1,17 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { createHashHistory } from 'history';
-import { createReduxHistoryContext, push } from 'redux-first-history';
 import actions from './actions';
 import createRootReducer from './reducers';
 
-const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHistoryContext({
-  history: createHashHistory()
-});
-
-const rootReducer = createRootReducer(routerReducer);
-
-export const store = configureStore({
-  reducer: rootReducer,
+const store = configureStore({
+  reducer: createRootReducer(),
   middleware: (getDefaultMiddleware) => {
     const middleware = getDefaultMiddleware({
       serializableCheck: false
@@ -28,14 +20,12 @@ export const store = configureStore({
       middleware.push(logger);
     }
 
-    // Router Middleware
-    middleware.push(routerMiddleware);
-
     return middleware;
   },
   devTools: process.env.NODE_ENV !== 'development' ? false : {
-    actionCreators: {...actions, push}
+    actionCreators: {...actions}
   }
 });
 
-export const history = createReduxHistory(store);
+export default store;
+

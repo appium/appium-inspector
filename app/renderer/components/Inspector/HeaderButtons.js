@@ -21,7 +21,7 @@ import {
 const HeaderButtons = (props) => {
   const { selectAppMode, appMode, mjpegScreenshotUrl, isSourceRefreshOn, toggleRefreshingState,
           isRecording, startRecording, pauseRecording, showLocatorTestModal, showSiriCommandModal,
-          applyClientMethod, quitSession, driver, t } = props;
+          applyClientMethod, quitCurrentSession, driver, t } = props;
 
   const deviceControls = <Button.Group>
     {driver && driver.client.isIOS && <>
@@ -100,7 +100,7 @@ const HeaderButtons = (props) => {
   </Button.Group>;
 
   const quitSessionButton = <Tooltip title={t('quitSessionAndClose')}>
-    <Button id='btnClose' icon={<CloseOutlined/>} onClick={() => quitSession()}/>
+    <Button id='btnClose' icon={<CloseOutlined/>} onClick={quitCurrentSession}/>
   </Tooltip>;
 
   return <div className={InspectorStyles['inspector-toolbar']}>
