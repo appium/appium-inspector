@@ -722,10 +722,10 @@ export function setCommandArg (index, value) {
 export function runKeepAliveLoop () {
   return (dispatch, getState) => {
     dispatch({type: SET_LAST_ACTIVE_MOMENT, lastActiveMoment: Date.now()});
-    const {driver} = getState().inspector;
+    const { driver } = getState().inspector;
 
     const keepAliveInterval = setInterval(async () => {
-      const {lastActiveMoment} = getState().inspector;
+      const { lastActiveMoment, showKeepAlivePrompt } = getState().inspector;
       console.log('Pinging Appium server to keep session active'); // eslint-disable-line no-console
       try {
         await driver.getTimeouts(); // Pings the Appium server to keep it alive
@@ -734,7 +734,7 @@ export function runKeepAliveLoop () {
 
       // If the new command limit has been surpassed, prompt user if they want to keep session going
       // Give them WAIT_FOR_USER_KEEP_ALIVE ms to respond
-      if (now - lastActiveMoment > NO_NEW_COMMAND_LIMIT) {
+      if (now - lastActiveMoment > NO_NEW_COMMAND_LIMIT && !showKeepAlivePrompt) {
         dispatch({type: PROMPT_KEEP_ALIVE});
 
         // After the time limit kill the session (this timeout will be killed if they keep it alive)
