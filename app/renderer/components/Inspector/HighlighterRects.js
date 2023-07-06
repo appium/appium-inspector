@@ -194,6 +194,7 @@ const HighlighterRects = (props) => {
         elSize={size}
         elLocation={elLocation}
         scaleRatio={scaleRatio}
+        key={`el.${elLocation.x}.${elLocation.y}.${size.width}.${size.height}`}
         xOffset={highlighterXOffset} />
     );
   }
