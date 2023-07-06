@@ -26,6 +26,7 @@ const MIN_HEIGHT = 610;
 const MAX_SCREENSHOT_WIDTH = 500;
 
 const MJPEG_STREAM_CHECK_INTERVAL = 1000;
+const SESSION_EXPIRY_PROMPT_TIMEOUT = 60 * 60 * 1000; // Give user 1 hour to reply
 
 const downloadXML = (sourceXML) => {
   let element = document.createElement('a');
@@ -41,8 +42,8 @@ const downloadXML = (sourceXML) => {
 
 const Inspector = (props) => {
   const { screenshot, screenshotError, selectedElement = {}, quitSession, showRecord,
-          screenshotInteractionMode, visibleCommandMethod,
-          selectedInteractionMode, selectInteractionMode, setVisibleCommandResult,
+          screenshotInteractionMode, visibleCommandMethod, selectedInteractionMode,
+          selectInteractionMode, setVisibleCommandResult, setUserWaitTimeout,
           showKeepAlivePrompt, keepSessionAlive, sourceXML, visibleCommandResult,
           mjpegScreenshotUrl, isAwaitingMjpegStream, toggleShowCentroids, showCentroids,
           isGestureEditorVisible, toggleShowAttributes, isSourceRefreshOn, windowSize, t } = props;
@@ -164,6 +165,17 @@ const Inspector = (props) => {
       }
     };
   }, [JSON.stringify(windowSize)]);
+
+  // If session expiry prompt is shown, start timeout until session is automatically quit
+  // Timeout is canceled if user selects either action in prompt (keep session alive or quit)
+  useEffect(() => {
+    if (showKeepAlivePrompt) {
+      const userWaitTimeout = setTimeout(() => {
+        quitSession(t('Session closed due to inactivity'), false);
+      }, SESSION_EXPIRY_PROMPT_TIMEOUT);
+      setUserWaitTimeout(userWaitTimeout);
+    }
+  }, [showKeepAlivePrompt]);
 
   const screenShotControls = <div className={InspectorStyles['screenshot-controls']}>
     <Space size='middle'>

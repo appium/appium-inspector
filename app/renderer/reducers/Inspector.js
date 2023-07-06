@@ -492,7 +492,7 @@ export default function inspector (state = INITIAL_STATE, action) {
     case SET_USER_WAIT_TIMEOUT:
       return {
         ...state,
-        userWaitTimeout: null,
+        userWaitTimeout: action.userWaitTimeout,
       };
 
     case SET_LAST_ACTIVE_MOMENT:

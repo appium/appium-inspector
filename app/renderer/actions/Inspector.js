@@ -110,7 +110,6 @@ export const TOGGLE_REFRESHING_STATE = 'TOGGLE_REFRESHING_STATE';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
-const WAIT_FOR_USER_KEEP_ALIVE = 60 * 60 * 1000; // Give user 1 hour to reply
 
 // A debounced function that calls findElement and gets info about the element
 const findElement = _.debounce(async function (strategyMap, dispatch, getState, path) {
@@ -680,18 +679,6 @@ export function clearSwipeAction () {
   };
 }
 
-export function promptKeepAlive () {
-  return (dispatch) => {
-    dispatch({type: PROMPT_KEEP_ALIVE});
-  };
-}
-
-export function hideKeepAlivePrompt () {
-  return (dispatch) => {
-    dispatch({type: HIDE_PROMPT_KEEP_ALIVE});
-  };
-}
-
 export function selectCommandGroup (group) {
   return (dispatch) => {
     dispatch({type: SELECT_COMMAND_GROUP, group});
@@ -728,16 +715,22 @@ export function setCommandArg (index, value) {
   };
 }
 
+export function setUserWaitTimeout (userWaitTimeout) {
+  return (dispatch) => {
+    dispatch({type: SET_USER_WAIT_TIMEOUT, userWaitTimeout});
+  };
+}
+
 /**
  * Ping server every 30 seconds to prevent `newCommandTimeout` from killing session
  */
 export function runKeepAliveLoop () {
   return (dispatch, getState) => {
     dispatch({type: SET_LAST_ACTIVE_MOMENT, lastActiveMoment: Date.now()});
-    const {driver} = getState().inspector;
+    const { driver } = getState().inspector;
 
     const keepAliveInterval = setInterval(async () => {
-      const {lastActiveMoment} = getState().inspector;
+      const { lastActiveMoment, showKeepAlivePrompt } = getState().inspector;
       console.log('Pinging Appium server to keep session active'); // eslint-disable-line no-console
       try {
         await driver.getTimeouts(); // Pings the Appium server to keep it alive
@@ -745,17 +738,8 @@ export function runKeepAliveLoop () {
       const now = Date.now();
 
       // If the new command limit has been surpassed, prompt user if they want to keep session going
-      // Give them WAIT_FOR_USER_KEEP_ALIVE ms to respond
-      if (now - lastActiveMoment > NO_NEW_COMMAND_LIMIT) {
-        const action = promptKeepAlive();
-        action(dispatch);
-
-        // After the time limit kill the session (this timeout will be killed if they keep it alive)
-        const userWaitTimeout = setTimeout(() => {
-          const action = quitSession(i18n.t('Session closed due to inactivity'), false);
-          action(dispatch, getState);
-        }, WAIT_FOR_USER_KEEP_ALIVE);
-        dispatch({type: SET_USER_WAIT_TIMEOUT, userWaitTimeout});
+      if (now - lastActiveMoment > NO_NEW_COMMAND_LIMIT && !showKeepAlivePrompt) {
+        dispatch({type: PROMPT_KEEP_ALIVE});
       }
     }, KEEP_ALIVE_PING_INTERVAL);
     dispatch({type: SET_KEEP_ALIVE_INTERVAL, keepAliveInterval});
@@ -783,8 +767,7 @@ export function killKeepAliveLoop () {
 export function keepSessionAlive () {
   return (dispatch, getState) => {
     const {userWaitTimeout} = getState().inspector;
-    const action = hideKeepAlivePrompt();
-    action(dispatch);
+    dispatch({type: HIDE_PROMPT_KEEP_ALIVE});
     dispatch({type: SET_LAST_ACTIVE_MOMENT, lastActiveMoment: +(new Date())});
     if (userWaitTimeout) {
       clearTimeout(userWaitTimeout);
