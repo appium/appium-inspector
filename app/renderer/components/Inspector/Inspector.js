@@ -167,6 +167,7 @@ const Inspector = (props) => {
   }, [JSON.stringify(windowSize)]);
 
   // If session expiry prompt is shown, start timeout until session is automatically quit
+  // Timeout is canceled if user selects either action in prompt (keep session alive or quit)
   useEffect(() => {
     if (showKeepAlivePrompt) {
       const userWaitTimeout = setTimeout(() => {
