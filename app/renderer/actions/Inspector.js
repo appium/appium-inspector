@@ -680,18 +680,6 @@ export function clearSwipeAction () {
   };
 }
 
-export function promptKeepAlive () {
-  return (dispatch) => {
-    dispatch({type: PROMPT_KEEP_ALIVE});
-  };
-}
-
-export function hideKeepAlivePrompt () {
-  return (dispatch) => {
-    dispatch({type: HIDE_PROMPT_KEEP_ALIVE});
-  };
-}
-
 export function selectCommandGroup (group) {
   return (dispatch) => {
     dispatch({type: SELECT_COMMAND_GROUP, group});
@@ -747,8 +735,7 @@ export function runKeepAliveLoop () {
       // If the new command limit has been surpassed, prompt user if they want to keep session going
       // Give them WAIT_FOR_USER_KEEP_ALIVE ms to respond
       if (now - lastActiveMoment > NO_NEW_COMMAND_LIMIT) {
-        const action = promptKeepAlive();
-        action(dispatch);
+        dispatch({type: PROMPT_KEEP_ALIVE});
 
         // After the time limit kill the session (this timeout will be killed if they keep it alive)
         const userWaitTimeout = setTimeout(() => {
@@ -783,8 +770,7 @@ export function killKeepAliveLoop () {
 export function keepSessionAlive () {
   return (dispatch, getState) => {
     const {userWaitTimeout} = getState().inspector;
-    const action = hideKeepAlivePrompt();
-    action(dispatch);
+    dispatch({type: HIDE_PROMPT_KEEP_ALIVE});
     dispatch({type: SET_LAST_ACTIVE_MOMENT, lastActiveMoment: +(new Date())});
     if (userWaitTimeout) {
       clearTimeout(userWaitTimeout);
