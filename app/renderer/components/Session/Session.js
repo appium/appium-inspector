@@ -42,7 +42,7 @@ const Session = (props) => {
 
   useEffect(() => {
     const { setLocalServerParams, getSavedSessions, setSavedServerParams, setStateFromAppiumFile,
-            setVisibleProviders, getRunningSessions, bindWindowClose, saveFile } = props;
+            setVisibleProviders, getRunningSessions, bindWindowClose, initFromQueryString, saveFile } = props;
     (async () => {
       try {
         bindWindowClose();
@@ -52,6 +52,7 @@ const Session = (props) => {
         await setLocalServerParams();
         await setVisibleProviders();
         getRunningSessions();
+        initFromQueryString(loadNewSession);
         await setStateFromAppiumFile();
         ipcRenderer.on('open-file', (_, filePath) => setStateFromAppiumFile(filePath));
         ipcRenderer.on('save-file', (_, filePath) => saveFile(filePath));

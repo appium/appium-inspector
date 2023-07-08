@@ -72,6 +72,8 @@ const CAPS_INCLUDE_SAFARI_IN_WEBVIEWS = 'appium:includeSafariInWebviews';
 
 const FILE_PATH_STORAGE_KEY = 'last_opened_file';
 
+const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to turn it on
+
 const MJPEG_CAP = 'mjpegScreenshotUrl';
 const MJPEG_PORT_CAP = 'mjpegServerPort';
 
@@ -86,6 +88,8 @@ const HEADERS_CONTENT = 'application/json; charset=utf-8';
 
 // 1 hour default newCommandTimeout
 const NEW_COMMAND_TIMEOUT_SEC = 3600;
+
+let isFirstRun = true; // we only want to auto start a session on a first run
 
 const serverTypes = {};
 for (const key of keys(CloudProviders)) {
@@ -1044,5 +1048,36 @@ export function bindWindowClose () {
 export function setAddVendorPrefixes (addVendorPrefixes) {
   return (dispatch) => {
     dispatch({type: SET_ADD_VENDOR_PREFIXES, addVendorPrefixes});
+  };
+}
+
+export function initFromQueryString (loadNewSession) {
+  return (dispatch, getState) => {
+    if (!isFirstRun) {
+      return;
+    }
+
+    isFirstRun = false;
+
+    const url = new URL(window.location.href);
+    const initialState = url.searchParams.get('state');
+    const autoStartSession = url.searchParams.get('autoStart');
+
+    if (initialState) {
+      try {
+        const state = JSON.parse(initialState);
+        dispatch({type: SET_STATE_FROM_URL, state});
+      } catch (e) {
+        showError(new Error('Could not parse initial state from URL'), null, 0);
+      }
+    }
+
+    if (autoStartSession === AUTO_START_URL_PARAM) {
+      const { attachSessId, caps } = getState().session;
+      if (attachSessId) {
+        return loadNewSession(null, attachSessId);
+      }
+      loadNewSession(caps);
+    }
   };
 }
