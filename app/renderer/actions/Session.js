@@ -1,7 +1,6 @@
 import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE,
          SESSION_SERVER_PARAMS } from '../../shared/settings';
 import { v4 as UUID } from 'uuid';
-import { push } from 'redux-first-history';
 import { notification } from 'antd';
 import { includes, debounce, toPairs, union, without, keys, isUndefined, isPlainObject } from 'lodash';
 import { setSessionDetails, quitSession } from './Inspector';
@@ -589,7 +588,6 @@ export function newSession (caps, attachSessId = null) {
       mjpegScreenshotUrl
     });
     action(dispatch);
-    dispatch(push('/inspector'));
   };
 }
 
@@ -1053,8 +1051,8 @@ export function setAddVendorPrefixes (addVendorPrefixes) {
   };
 }
 
-export function initFromQueryString () {
-  return async (dispatch, getState) => {
+export function initFromQueryString (loadNewSession) {
+  return (dispatch, getState) => {
     if (!isFirstRun) {
       return;
     }
@@ -1075,11 +1073,11 @@ export function initFromQueryString () {
     }
 
     if (autoStartSession === AUTO_START_URL_PARAM) {
-      const {attachSessId, caps} = getState().session;
+      const { attachSessId, caps } = getState().session;
       if (attachSessId) {
-        return await newSession(null, attachSessId)(dispatch, getState);
+        return loadNewSession(null, attachSessId);
       }
-      await newSession(caps)(dispatch, getState);
+      loadNewSession(caps);
     }
   };
 }

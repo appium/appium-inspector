@@ -4,9 +4,8 @@ import inspector from './Inspector';
 import updater from './Updater';
 
 // create our root reducer
-export default function createRootReducer (routerReducer) {
+export default function createRootReducer () {
   return combineReducers({
-    router: routerReducer,
     session,
     inspector,
     updater,
