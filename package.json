@@ -233,7 +233,6 @@
     "parcel-plugin-asset-copier": "1.1.1",
     "postcss-modules": "3.2.2",
     "redux-logger": "3.0.6",
-    "release": "6.3.1",
     "rimraf": "5.0.1",
     "sinon": "15.2.0",
     "spectron": "15.0.0"
