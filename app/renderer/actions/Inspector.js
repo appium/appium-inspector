@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { push } from 'redux-first-history';
 import { getLocators, APP_MODE } from '../components/Inspector/shared';
 import { showError } from './Session';
 import { xmlToJSON } from '../util';
@@ -285,7 +284,6 @@ export function quitSession (reason, killedByUser = true) {
     const applyAction = applyClientMethod({methodName: 'quit'});
     await applyAction(dispatch, getState);
     dispatch({type: QUIT_SESSION_DONE});
-    dispatch(push('/session'));
     if (!killedByUser) {
       notification.error({
         message: 'Error',
