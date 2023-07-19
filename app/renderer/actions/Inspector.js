@@ -196,9 +196,9 @@ export function selectHoveredElement (path) {
   };
 }
 
-export function unselectHoveredElement (path) {
+export function unselectHoveredElement () {
   return (dispatch) => {
-    dispatch({type: UNSELECT_HOVERED_ELEMENT, path});
+    dispatch({type: UNSELECT_HOVERED_ELEMENT});
   };
 }
 
