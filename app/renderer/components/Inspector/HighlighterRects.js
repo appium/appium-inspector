@@ -153,6 +153,8 @@ const HighlighterRects = (props) => {
   // Displays element rectangles only
   const renderElements = (source) => {
     for (const elem of source) {
+      // only render elements with non-zero height and width
+      if (!elem.properties.width || !elem.properties.height) { continue; }
       highlighterRects.push(
         <HighlighterRect {...props}
           dimensions={elem.properties}
