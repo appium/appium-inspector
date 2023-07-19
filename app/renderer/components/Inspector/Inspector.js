@@ -84,7 +84,6 @@ const Inspector = (props) => {
 
     const imgRect = img.getBoundingClientRect();
     const screenshotRect = screenshotBox.getBoundingClientRect();
-    screenshotBox.style.flexBasis = `${imgRect.width}px`;
     if (imgRect.height < screenshotRect.height) {
       // get what the img width would be if it fills screenshot box height
       const attemptedWidth = (screenshotRect.height / imgRect.height) * imgRect.width;
