@@ -1,5 +1,6 @@
 import React from 'react';
-import HighlighterRect from './HighlighterRect';
+import HighlighterRectForElem from './HighlighterRectForElem';
+import HighlighterRectForBounds from './HighlighterRectForBounds';
 import HighlighterCentroid from './HighlighterCentroid';
 import { parseCoordinates, RENDER_CENTROID_AS } from './shared';
 
@@ -153,13 +154,13 @@ const HighlighterRects = (props) => {
   // Displays element rectangles only
   const renderElements = (source) => {
     for (const elem of source) {
+      // only render elements with non-zero height and width
+      if (!elem.properties.width || !elem.properties.height) { continue; }
       highlighterRects.push(
-        <HighlighterRect {...props}
+        <HighlighterRectForElem {...props}
           dimensions={elem.properties}
           element={elem.element}
-          scaleRatio={scaleRatio}
-          key={elem.properties.path}
-          xOffset={highlighterXOffset} />
+          key={elem.properties.path} />
       );
     }
   };
@@ -188,13 +189,13 @@ const HighlighterRects = (props) => {
 
   // If the user selected an element that they searched for, highlight that element
   if (searchedForElementBounds && isLocatorTestModalVisible) {
-    const {location: elLocation, size} = searchedForElementBounds;
+    const { location, size } = searchedForElementBounds;
     highlighterRects.push(
-      <HighlighterRect
+      <HighlighterRectForBounds
         elSize={size}
-        elLocation={elLocation}
+        elLocation={location}
         scaleRatio={scaleRatio}
-        key={`el.${elLocation.x}.${elLocation.y}.${size.width}.${size.height}`}
+        key={`el.${location.x}.${location.y}.${size.width}.${size.height}`}
         xOffset={highlighterXOffset} />
     );
   }
