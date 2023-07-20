@@ -138,7 +138,6 @@
     "format-json": "Abandoned: replace with alternatives like pretty-print-json",
     "htmlparser2": "8.0.0: errors with export namespace",
     "ky": "0.26.0: module is now ESM and parcel tries to bundle it with require",
-    "react-router": "V6: deeper investigation required",
     "request": "Deprecated: replace with alternatives like got",
     "request-promise": "Deprecated: replace with alternatives",
     "uuid": "Obsolete: can be replaced with crypto.randomUUID in Electron 14+"
@@ -168,7 +167,7 @@
     "react-i18next": "13.0.2",
     "react-icons": "4.10.1",
     "react-redux": "8.1.1",
-    "react-router-dom": "5.3.4",
+    "react-router-dom": "6.14.2",
     "request": "2.88.2",
     "request-promise": "4.2.6",
     "semver": "7.5.4",

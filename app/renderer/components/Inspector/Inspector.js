@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { debounce } from 'lodash';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE } from './shared';
 import { Card, Button, Spin, Tooltip, Modal, Tabs, Space, Switch } from 'antd';
@@ -56,7 +56,7 @@ const Inspector = (props) => {
 
   const [scaleRatio, setScaleRatio] = useState(1);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const showScreenshot = ((screenshot && !screenshotError) ||
                           (mjpegScreenshotUrl && (!isSourceRefreshOn || !isAwaitingMjpegStream)));
@@ -127,7 +127,7 @@ const Inspector = (props) => {
 
   const quitCurrentSession = async (reason, killedByUser = true) => {
     await quitSession(reason, killedByUser);
-    history.push('/session');
+    navigate('/session', { replace: true });
   };
 
   useEffect(() => {

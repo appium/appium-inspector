@@ -1,6 +1,6 @@
 import { shell, ipcRenderer } from '../../polyfills';
 import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 import CapabilityEditor from './CapabilityEditor';
 import SavedSessions from './SavedSessions';
@@ -22,7 +22,7 @@ const Session = (props) => {
           caps, capsUUID, capsName, isCapsDirty, isEditingDesiredCaps, requestSaveAsModal,
           saveSession, newSession, savedSessions, newSessionLoading, attachSessId, t } = props;
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const isAttaching = tabKey === 'attach';
 
@@ -37,7 +37,7 @@ const Session = (props) => {
 
   const loadNewSession = async (caps, attachSessId = null) => {
     await newSession(caps, attachSessId);
-    history.push('/inspector');
+    navigate('/inspector', { replace: true });
   };
 
   useEffect(() => {

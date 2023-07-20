@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import SessionPage from './containers/SessionPage';
 import InspectorPage from './containers/InspectorPage';
 import Spinner from './components/Spinner/Spinner';
@@ -14,16 +14,10 @@ ipcRenderer.on('appium-language-changed', (event, message) => {
 
 export default () => (
   <Suspense fallback={<Spinner />}>
-    <Switch>
-      <Route exact path="/">
-        <SessionPage />
-      </Route>
-      <Route path="/session">
-        <SessionPage />
-      </Route>
-      <Route path="/inspector">
-        <InspectorPage />
-      </Route>
-    </Switch>
+    <Routes>
+      <Route path="/" element={<SessionPage />} />
+      <Route path="/session" element={<SessionPage />} />
+      <Route path="/inspector" element={<InspectorPage />} />
+    </Routes>
   </Suspense>
 );
