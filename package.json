@@ -144,7 +144,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "1.9.5",
-    "@xmldom/xmldom": "0.8.9",
+    "@xmldom/xmldom": "0.8.10",
     "antd": "4.24.12",
     "bluebird": "3.7.2",
     "cheerio": "1.0.0-rc.10",
