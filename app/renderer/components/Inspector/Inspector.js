@@ -63,10 +63,7 @@ const Inspector = (props) => {
 
   // Calculate the ratio for scaling items overlaid on the screenshot
   // (highlighter rectangles/circles, gestures, etc.)
-  const updateScaleRatio = () => {
-    const screenshotImg = screenshotEl.current.querySelector('img');
-    setScaleRatio(windowSize.width / screenshotImg.offsetWidth);
-  };
+  const updateScaleRatio = (imgWidth) => setScaleRatio(windowSize.width / imgWidth);
 
   const updateScaleRatioDebounced = debounce(updateScaleRatio, 500);
 
@@ -94,7 +91,7 @@ const Inspector = (props) => {
       screenshotBox.style.maxWidth = `${imgRect.width}px`;
     }
 
-    updateScaleRatioDebounced();
+    updateScaleRatioDebounced(imgRect.width);
   };
 
   const updateSourceTreeWidthDebounced = debounce(updateSourceTreeWidth, 50);
