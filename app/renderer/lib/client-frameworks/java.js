@@ -20,7 +20,8 @@ class JavaFramework extends Framework {
       }
     })();
     let capStr = this.indent(Object.keys(this.caps).map((k) => `desiredCapabilities.setCapability(${JSON.stringify(k)}, ${JSON.stringify(this.caps[k])});`).join('\n'), 4);
-    return `import io.appium.java_client.MobileElement;
+    // Import evry thing from selenium, to use WebElement, Point and other needed classes.
+    return `
 import io.appium.java_client.${pkg}.${cls};
 import junit.framework.TestCase;
 import org.junit.After;
@@ -28,7 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.*;
 
 public class SampleTest {
 
@@ -77,10 +78,11 @@ ${this.indent(code, 4)}
     if (!suffixMap[strategy]) {
       throw new Error(`Strategy ${strategy} can't be code-gened`);
     }
+    // Chance IOSElement and AndroidElement to.
     if (isArray) {
-      return `List<MobileElement> ${localVar} = (MobileElement) driver.findElementsBy${suffixMap[strategy]}(${JSON.stringify(locator)});`;
+      return `List<WebElement> ${localVar} = (WebElement) driver.findElementsBy${suffixMap[strategy]}(${JSON.stringify(locator)});`;
     } else {
-      return `MobileElement ${localVar} = (MobileElement) driver.findElementBy${suffixMap[strategy]}(${JSON.stringify(locator)});`;
+      return `WebElement ${localVar} = (WebElement) driver.findElementBy${suffixMap[strategy]}(${JSON.stringify(locator)});`;
     }
   }
 
@@ -107,20 +109,51 @@ ${this.indent(code, 4)}
     return `driver.navigate().back();`;
   }
 
+  // Change TouchAction to Sequence.
   codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
     const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
 
-    return `(new TouchAction(driver)).tap(${x}, ${y}).perform()`;
+    return `
+    (new TouchAction(driver)).tap(${x}, ${y}).perform()
+    Point tapPoint = new Point(${x}, ${y});
+    Sequence sequence = new Sequence(PointerInput.Kind.TOUCH, 1);
+    sequence.addAction(finger.createPointerMove(Duration.ofMillis(0),
+          PointerInput.Origin.viewport(), tapPoint.x, tapPoint.y));
+    sequence.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+    sequence.addAction(finger.createPointerMove(Duration.ofMillis(50),
+          PointerInput.Origin.viewport(), tapPoint.x, tapPoint.y));
+    sequence.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+    driver.perform(Arrays.asList(swipe))
+    `;
   }
 
+  // Change TouchAction to Sequence.
   codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
     const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
 
-    return `(new TouchAction(driver))
-  .press(PointOption.point(${x1}, ${y1}}))
-  .moveTo(PointOption.point(${x2}, ${y2}}))
-  .release()
-  .perform();
+    return `
+    Point start = new Point(${x1}, ${y1});
+    Point end = new Point (${x2}, ${y2});
+    Sequence swipe = New  Sequence(FINGER, 1)
+      .addAction(
+          FINGER.createPointerMove(
+              ofMillis(0),
+              PointerInput.Origin.viewport(),
+              start.getX(),
+              start.getY()
+          )
+      )
+      .addAction(FINGER.createPointerDown(LEFT.asArg()))
+      .addAction(
+          FINGER.createPointerMove(
+              ofMillis(duration),
+              PointerInput.Origin.viewport(),
+              end.getX(),
+              end.getY()
+          )
+      )
+      .addAction(FINGER.createPointerUp(LEFT.asArg()))
+    driver.perform(Arrays.asList(swipe))
   `;
   }
 
