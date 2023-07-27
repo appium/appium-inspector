@@ -365,6 +365,19 @@
     vertical-align: middle;
 }
 
+.wide-tooltip {
+    max-width: 300px;
+}
+
+.no-contexts-info-icon {
+    height: 30px;
+    width: 30px;
+    background-color: #faad14;
+    color: #ffffff;
+    margin-top: 1px;
+    padding: 3px 0 0 7px;
+}
+
 .elementActions {
     margin-bottom: 20px;
     gap: 8px;

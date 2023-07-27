@@ -15,13 +15,14 @@ import {
   SearchOutlined,
   CloseOutlined,
   AppstoreOutlined,
-  GlobalOutlined
+  GlobalOutlined,
+  ExclamationCircleOutlined
 } from '@ant-design/icons';
 
 const HeaderButtons = (props) => {
   const { selectAppMode, appMode, mjpegScreenshotUrl, isSourceRefreshOn, toggleRefreshingState,
           isRecording, startRecording, pauseRecording, showLocatorTestModal, showSiriCommandModal,
-          applyClientMethod, quitCurrentSession, driver, t } = props;
+          applyClientMethod, quitCurrentSession, driver, contexts, t } = props;
 
   const deviceControls = <Button.Group>
     {driver && driver.client.isIOS && <>
@@ -68,6 +69,13 @@ const HeaderButtons = (props) => {
         type={appMode === APP_MODE.WEB_HYBRID ? BUTTON.PRIMARY : BUTTON.DEFAULT}
       />
     </Tooltip>
+    {contexts && contexts.length === 1 &&
+      <Tooltip title={t('noAdditionalContextsFound')} overlayClassName={InspectorStyles['wide-tooltip']}>
+        <div className={InspectorStyles['no-contexts-info-icon']}>
+          <ExclamationCircleOutlined className={InspectorStyles['custom-button-icon']}/>
+        </div>
+      </Tooltip>
+    }
   </Button.Group>;
 
   const generalControls = <Button.Group>
