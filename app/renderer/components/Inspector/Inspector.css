@@ -427,11 +427,6 @@
     justify-content: center;
 }
 
-.context-selector {
-    width: 100%;
-    margin-bottom: 1em;
-}
-
 .sourceTag {
     color: #7d2020;
     font-weight: normal
