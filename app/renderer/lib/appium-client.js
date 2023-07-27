@@ -201,14 +201,18 @@ export default class AppiumClient {
     let windowSize, windowSizeError;
     const {client: {capabilities: {deviceScreenSize, platformName, automationName}}} = this.driver;
     try {
-      // The call doesn't need to be made for Android for two reasons
-      // - when appMode is hybrid Chrome driver doesn't know this command
-      // - the data is already on the driver
+      windowSize = await this.driver.getWindowRect();
       if (_.toLower(platformName) === 'android' && _.toLower(automationName) === 'uiautomator2') {
+        // returned Android height and width can both be affected by UiAutomator2 calculations
+        // we stick with device dimensions, but swap them depending on detected orientation
         const [width, height] = deviceScreenSize.split('x');
-        windowSize = {width, height, x: 0, y: 0};
-      } else {
-        windowSize = await this.driver.getWindowRect();
+        if (windowSize.height > windowSize.width) { // portrait mode
+          windowSize.height = height;
+          windowSize.width = width;
+        } else { // landscape mode
+          windowSize.height = width;
+          windowSize.width = height;
+        }
       }
     } catch (e) {
       windowSizeError = e;
