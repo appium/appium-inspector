@@ -366,16 +366,27 @@
 }
 
 .wide-tooltip {
-    max-width: 300px;
+    max-width: 400px;
 }
 
-.no-contexts-info-icon {
+.contexts-custom-btn {
     height: 30px;
     width: 30px;
-    background-color: #faad14;
     color: #ffffff;
     margin-top: 1px;
     padding: 3px 0 0 7px;
+}
+
+.no-contexts-info-icon {
+    background-color: #faad14;
+}
+
+.contexts-info-icon {
+    background-color: #1890ff;
+}
+
+.header-context-selector {
+    width: 350px;
 }
 
 .elementActions {
