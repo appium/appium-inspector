@@ -1,9 +1,10 @@
 import React from 'react';
-import { Button, Tooltip, Space } from 'antd';
+import { Button, Tooltip, Select, Space } from 'antd';
 import InspectorStyles from './Inspector.css';
 import { HiOutlineMicrophone, HiOutlineHome } from 'react-icons/hi';
 import { BiSquare, BiCircle } from 'react-icons/bi';
 import { IoChevronBackOutline } from 'react-icons/io5';
+import { shell } from '../../polyfills';
 import { APP_MODE } from './shared';
 import { BUTTON } from '../AntdTypes';
 import {
@@ -15,13 +16,17 @@ import {
   SearchOutlined,
   CloseOutlined,
   AppstoreOutlined,
-  GlobalOutlined
+  GlobalOutlined,
+  InfoCircleOutlined,
+  ExclamationCircleOutlined
 } from '@ant-design/icons';
+
+const HYBRID_MODE_DOCS_URL = 'https://appium.github.io/appium.io/docs/en/writing-running-appium/web/hybrid/';
 
 const HeaderButtons = (props) => {
   const { selectAppMode, appMode, mjpegScreenshotUrl, isSourceRefreshOn, toggleRefreshingState,
           isRecording, startRecording, pauseRecording, showLocatorTestModal, showSiriCommandModal,
-          applyClientMethod, quitCurrentSession, driver, t } = props;
+          applyClientMethod, quitCurrentSession, driver, contexts, currentContext, setContext, t } = props;
 
   const deviceControls = <Button.Group>
     {driver && driver.client.isIOS && <>
@@ -68,6 +73,38 @@ const HeaderButtons = (props) => {
         type={appMode === APP_MODE.WEB_HYBRID ? BUTTON.PRIMARY : BUTTON.DEFAULT}
       />
     </Tooltip>
+    {contexts && contexts.length === 1 &&
+      <Tooltip title={t('noAdditionalContextsFound')} overlayClassName={InspectorStyles['wide-tooltip']}>
+        <div className={`${InspectorStyles['contexts-custom-btn']} ${InspectorStyles['no-contexts-info-icon']}`}>
+          <ExclamationCircleOutlined className={InspectorStyles['custom-button-icon']}/>
+        </div>
+      </Tooltip>
+    }
+    {contexts && contexts.length > 1 && <>
+      <Select
+        className={InspectorStyles['header-context-selector']}
+        value={currentContext}
+        dropdownMatchSelectWidth={false}
+        onChange={(value) => {
+          setContext(value);
+          applyClientMethod({methodName: 'switchContext', args: [value]});
+        }}>
+        {contexts.map(({id, title}) =>
+          <Select.Option key={id} value={id}>
+            {title ? `${title} (${id})` : id}
+          </Select.Option>
+        )}
+      </Select>
+      <Tooltip
+        title={<>
+          {t('contextDropdownInfo')} <a onClick={(e) => e.preventDefault() || shell.openExternal(HYBRID_MODE_DOCS_URL)}>{HYBRID_MODE_DOCS_URL}</a>
+        </>}
+        overlayClassName={InspectorStyles['wide-tooltip']}>
+        <div className={`${InspectorStyles['contexts-custom-btn']} ${InspectorStyles['contexts-info-icon']}`}>
+          <InfoCircleOutlined className={InspectorStyles['custom-button-icon']}/>
+        </div>
+      </Tooltip>
+    </>}
   </Button.Group>;
 
   const generalControls = <Button.Group>
