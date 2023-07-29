@@ -21,7 +21,7 @@ import {
   ExclamationCircleOutlined
 } from '@ant-design/icons';
 
-const HYBRID_MODE_DOCS_URL = 'https://github.com/appium/appium/blob/1.x/docs/en/writing-running-appium/web/hybrid.md';
+const HYBRID_MODE_DOCS_URL = 'https://appium.github.io/appium.io/docs/en/writing-running-appium/web/hybrid/';
 
 const HeaderButtons = (props) => {
   const { selectAppMode, appMode, mjpegScreenshotUrl, isSourceRefreshOn, toggleRefreshingState,
