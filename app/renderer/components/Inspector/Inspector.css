@@ -365,6 +365,30 @@
     vertical-align: middle;
 }
 
+.wide-tooltip {
+    max-width: 400px;
+}
+
+.contexts-custom-btn {
+    height: 30px;
+    width: 30px;
+    color: #ffffff;
+    margin-top: 1px;
+    padding: 3px 0 0 7px;
+}
+
+.no-contexts-info-icon {
+    background-color: #faad14;
+}
+
+.contexts-info-icon {
+    background-color: #1890ff;
+}
+
+.header-context-selector {
+    width: 350px;
+}
+
 .elementActions {
     margin-bottom: 20px;
     gap: 8px;
@@ -401,11 +425,6 @@
 
 .selectedElemNotInteractableAlertRow {
     justify-content: center;
-}
-
-.context-selector {
-    width: 100%;
-    margin-bottom: 1em;
 }
 
 .sourceTag {

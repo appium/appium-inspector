@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import _ from 'lodash';
 import { getLocators } from './shared';
 import styles from './Inspector.css';
-import { Button, Row, Col, Input, Table, Alert, Tooltip, Select, Spin } from 'antd';
+import { Button, Row, Col, Input, Table, Alert, Tooltip, Spin } from 'antd';
 import { clipboard, shell } from '../../polyfills';
 import { LoadingOutlined, CopyOutlined, AimOutlined, SendOutlined,
          ClearOutlined, HourglassOutlined } from '@ant-design/icons';
@@ -31,28 +31,11 @@ const selectedElementTableCell = (text, copyToClipBoard) => {
  * be called on the elements (tap, sendKeys)
  */
 const SelectedElement = (props) => {
-  const { applyClientMethod, contexts, currentContext, getFindElementsTimes, findElementsExecutionTimes,
+  const { applyClientMethod, currentContext, getFindElementsTimes, findElementsExecutionTimes,
           isFindingElementsTimes, selectedElement, selectedElementId, sourceXML,
           elementInteractionsNotAvailable, selectedElementSearchInProgress, t } = props;
 
   const sendKeys = useRef();
-
-  const contextSelect = () => {
-    const { setContext } = props;
-    return (
-      <Tooltip title={t('contextSwitcher')}>
-        <Select value={currentContext} onChange={(value) => {
-          setContext(value);
-          applyClientMethod({methodName: 'switchContext', args: [value]});
-        }}
-        className={styles['context-selector']}>
-          {contexts.map(({id, title}) =>
-            <Select.Option key={id} value={id}>{title ? `${title} (${id})` : id}</Select.Option>
-          )}
-        </Select>
-      </Tooltip>
-    );
-  };
 
   const { attributes, classChain, predicateString, xpath } = selectedElement;
   const isDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
@@ -243,30 +226,6 @@ const SelectedElement = (props) => {
           type={ALERT.WARNING}
           showIcon />
         <br />
-      </div>
-    }
-    {currentContext === NATIVE_APP && contexts && contexts.length > 1 &&
-      <div>
-        <Alert
-          message={t('usingSwitchContextRecommended')}
-          type={ALERT.WARNING}
-          showIcon />
-        <br />
-      </div>
-    }
-    {currentContext !== NATIVE_APP &&
-      <div>
-        <Alert
-          message={t('usingWebviewContext')}
-          type={ALERT.WARNING}
-          showIcon />
-        <br />
-      </div>
-    }
-    {contexts && contexts.length > 1 &&
-      <div>
-        {contextSelect()}
-        <br /><br />
       </div>
     }
     {dataSource.length > 0 &&
