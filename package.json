@@ -166,7 +166,7 @@
     "react-dom": "18.2.0",
     "react-i18next": "13.0.2",
     "react-icons": "4.10.1",
-    "react-redux": "8.1.1",
+    "react-redux": "8.1.2",
     "react-router-dom": "6.14.2",
     "request": "2.88.2",
     "request-promise": "4.2.6",
