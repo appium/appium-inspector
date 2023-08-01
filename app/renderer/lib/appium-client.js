@@ -9,7 +9,7 @@ const { TAP, SWIPE, GESTURE } = SCREENSHOT_INTERACTION_MODE;
 const ANDROID_WEBVIEW_SELECTOR = '//android.webkit.WebView[1]';
 // Selector for the iOS status bar and Safari address bar - not always present
 const IOS_TOP_CONTROLS_SELECTOR = '**/XCUIElementTypeOther[`name CONTAINS "SafariWindow"`]' +
-  '/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther';
+  '/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[1]';
 
 export const NATIVE_APP = 'NATIVE_APP';
 let _instance = null;
