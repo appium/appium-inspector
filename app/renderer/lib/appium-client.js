@@ -266,7 +266,7 @@ export default class AppiumClient {
     // to account for any top and left offsets
     if (currentContext !== NATIVE_APP) {
       if (isAndroid) {
-        // on Android, find the root webview element and use its Y startpoint
+        // on Android, find the root webview element and use its X and Y startpoints
         const webview = await this.fetchElement({strategy: 'xpath', selector: ANDROID_WEBVIEW_SELECTOR});
         if (webview.el) {
           const { x, y } = await webview.el.getRect();
