@@ -85,7 +85,7 @@ const HighlighterRects = (props) => {
         accessible: source.attributes ? source.attributes.accessible : null
       }
     };
-    const coordinates = `${obj.properties.centerX}.${obj.properties.centerY}`;
+    const coordinates = `${obj.properties.centerX},${obj.properties.centerY}`;
     obj.properties.container = isElementContainer(obj, elements);
 
     elements.push(obj);
