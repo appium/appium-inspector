@@ -269,8 +269,9 @@ export default class AppiumClient {
         // on Android, find the root webview element and use its Y startpoint
         const webview = await this.fetchElement({strategy: 'xpath', selector: ANDROID_WEBVIEW_SELECTOR});
         if (webview.el) {
-          const { y } = await webview.el.getRect();
+          const { x, y } = await webview.el.getRect();
           webviewTopOffset = y;
+          webviewLeftOffset = x;
         }
       } else {
         // on iOS, find the top status bar and address bar and use its Y endpoint
