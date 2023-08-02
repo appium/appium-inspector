@@ -274,7 +274,13 @@ export default class AppiumClient {
           webviewLeftOffset = x;
         } else {
           // fallback to default top offset value if element retrieval failed
-          webviewTopOffset = sessionDetails.viewportRect.top;
+          try {
+            const systemBars = await this.driver.executeScript('mobile:getSystemBars', []);
+            webviewTopOffset = systemBars.statusBar.height;
+          } catch (e) {
+            // in case driver does not support mobile:getSystemBars
+            webviewTopOffset = sessionDetails.viewportRect.top;
+          }
         }
       } else if (this.driver.client.isIOS) {
         // on iOS, find the top status bar and address bar and use its Y endpoint
@@ -285,7 +291,13 @@ export default class AppiumClient {
         }
         // in landscape mode, there is empty space on both sides (at default zoom level), so add offset for that too
         if (windowSize.height < windowSize.width) {
-          webviewLeftOffset = sessionDetails.statBarHeight;
+          try {
+            const deviceScreenInfo = await this.driver.executeScript('mobile:deviceScreenInfo', []);
+            webviewLeftOffset = deviceScreenInfo.statusBarSize.height;
+          } catch (e) {
+            // in case driver does not support mobile:deviceScreenInfo
+            webviewLeftOffset = sessionDetails.statBarHeight;
+          }
         }
       }
 
