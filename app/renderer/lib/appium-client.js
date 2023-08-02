@@ -251,7 +251,7 @@ export default class AppiumClient {
       await this.driver.switchContext(NATIVE_APP);
     }
 
-    const { statBarHeight, viewportRect } = await this.driver.getSession();
+    const sessionDetails = await this.driver.getSession();
     const isAndroid = this.driver.client.isAndroid;
 
     // Get all available contexts (or the error, if one appears)
@@ -274,7 +274,7 @@ export default class AppiumClient {
           webviewLeftOffset = x;
         } else {
           // fallback to default top offset value if element retrieval failed
-          webviewTopOffset = viewportRect.top;
+          webviewTopOffset = sessionDetails.viewportRect.top;
         }
       } else if (this.driver.client.isIOS) {
         // on iOS, find the top status bar and address bar and use its Y endpoint
@@ -285,7 +285,7 @@ export default class AppiumClient {
         }
         // in landscape mode, there is empty space on both sides (at default zoom level), so add offset for that too
         if (windowSize.height < windowSize.width) {
-          webviewLeftOffset = statBarHeight;
+          webviewLeftOffset = sessionDetails.statBarHeight;
         }
       }
 
