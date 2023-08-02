@@ -251,8 +251,8 @@ export default class AppiumClient {
       await this.driver.switchContext(NATIVE_APP);
     }
 
-    const { platformName, statBarHeight, viewportRect } = await this.driver.getSession();
-    const isAndroid = _.toLower(platformName) === 'android';
+    const { statBarHeight, viewportRect } = await this.driver.getSession();
+    const isAndroid = this.driver.client.isAndroid;
 
     // Get all available contexts (or the error, if one appears)
     try {
@@ -272,24 +272,27 @@ export default class AppiumClient {
           const { x, y } = await webview.el.getRect();
           webviewTopOffset = y;
           webviewLeftOffset = x;
+        } else {
+          // fallback to default top offset value if element retrieval failed
+          webviewTopOffset = viewportRect.top;
         }
-      } else {
+      } else if (this.driver.client.isIOS) {
         // on iOS, find the top status bar and address bar and use its Y endpoint
         const topBar = await this.fetchElement({strategy: '-ios class chain', selector: IOS_TOP_CONTROLS_SELECTOR});
         if (topBar.el) {
           const { y, height } = await topBar.el.getRect();
           webviewTopOffset = y + height;
         }
-        // on landscape mode, there is empty space on both sides (at default zoom level), so add offset for that too
+        // in landscape mode, there is empty space on both sides (at default zoom level), so add offset for that too
         if (windowSize.height < windowSize.width) {
           webviewLeftOffset = statBarHeight;
         }
       }
 
-      // if element retrieval failed for any reason (e.g. bars can be hidden on iOS),
-      // fallback to default value, depending on platform
+      // if not using iOS or Android, or if iOS element retrieval failed for any reason
+      // (e.g. bars can be hidden), fallback to default value for the top offset
       if (webviewTopOffset === undefined) {
-        webviewTopOffset = isAndroid ? viewportRect.top : 0;
+        webviewTopOffset = 0;
       }
 
       // Native context calculation part is done - switch back to webview context
@@ -298,7 +301,7 @@ export default class AppiumClient {
       // Adjust all elements by the calculated offsets
       await this.driver.executeScript(
         `return (${setHtmlElementAttributes}).apply(null, arguments)`,
-        [{platformName, webviewTopOffset, webviewLeftOffset}],
+        [{isAndroid, webviewTopOffset, webviewLeftOffset}],
       );
     }
 

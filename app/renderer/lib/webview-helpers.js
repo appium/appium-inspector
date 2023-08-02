@@ -13,10 +13,10 @@ import { parseDocument } from 'htmlparser2';
  * That's why the object destructuring is done in the method itself
  */
 export function setHtmlElementAttributes (obj) {
-  const { platformName, webviewTopOffset, webviewLeftOffset } = obj;
+  const { isAndroid, webviewTopOffset, webviewLeftOffset } = obj;
   const htmlElements = document.body.getElementsByTagName('*');
-  const isAndroid = platformName.toLowerCase() === 'android';
   // iOS uses CSS sizes for elements and screenshots, Android sizes times DRP
+  // for other platforms, use default DRP of 1
   const dpr = isAndroid ? window.devicePixelRatio : 1;
 
   Array.from(htmlElements).forEach((el) => {
