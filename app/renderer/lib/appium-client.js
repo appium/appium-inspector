@@ -6,7 +6,7 @@ import { SCREENSHOT_INTERACTION_MODE, APP_MODE } from '../components/Inspector/s
 const { TAP, SWIPE, GESTURE } = SCREENSHOT_INTERACTION_MODE;
 
 // Selector for the Android webview - includes the correct top and bottom boundaries
-const ANDROID_WEBVIEW_SELECTOR = '//android.webkit.WebView[1]';
+const ANDROID_WEBVIEW_SELECTOR = 'android.webkit.WebView';
 // Selector for the iOS status bar and Safari address bar - not always present
 const IOS_TOP_CONTROLS_SELECTOR = '**/XCUIElementTypeOther[`name CONTAINS "SafariWindow"`]' +
   '/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[1]';
@@ -267,7 +267,7 @@ export default class AppiumClient {
     if (currentContext !== NATIVE_APP) {
       if (isAndroid) {
         // on Android, find the root webview element and use its X and Y startpoints
-        const webview = await this.fetchElement({strategy: 'xpath', selector: ANDROID_WEBVIEW_SELECTOR});
+        const webview = await this.fetchElement({strategy: 'class name', selector: ANDROID_WEBVIEW_SELECTOR});
         if (webview.el) {
           const { x, y } = await webview.el.getRect();
           webviewTopOffset = y;
