@@ -8,6 +8,8 @@ class JavaFramework extends Framework {
   }
 
   wrapWithBoilerplate (code) {
+    let host = JSON.stringify(this.host);
+    let port = JSON.stringify(this.port);
     let [pkg, cls] = (() => {
       if (this.caps.platformName) {
         switch (this.caps.platformName.toLowerCase()) {
@@ -34,6 +36,9 @@ import org.openqa.selenium.*;
 public class SampleTest {
 
   private ${cls} driver;
+  private PORT = ${port};
+  private HOST = ${host};
+  
 
   @Before
   public void setUp() throws MalformedURLException {
@@ -42,16 +47,16 @@ ${capStr}
 
     
 
-    private URL remoteUrl() {
-      try {
-          return new URL("http://127.0.0.1:4723");
-      } catch (MalformedURLException e) {
-          e.printStackTrace();
-      }
-      return null;
-  }
+    private URL getUrl(String host, String port) {
+        try {
+            return new URL(host+":"+port);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-    driver = new ${cls}(this.remoteUrl(), desiredCapabilities);
+    driver = new ${cls}(this.remoteUrl(HOST, PORT), desiredCapabilities);
   }
 
   @Test
