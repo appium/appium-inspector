@@ -40,9 +40,18 @@ public class SampleTest {
     DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
 ${capStr}
 
-    URL remoteUrl = new URL("${this.serverUrl}");
+    
 
-    driver = new ${cls}(remoteUrl, desiredCapabilities);
+    private URL remoteUrl() {
+      try {
+          return new URL("http://127.0.0.1:4723");
+      } catch (MalformedURLException e) {
+          e.printStackTrace();
+      }
+      return null;
+  }
+
+    driver = new ${cls}(this.remoteUrl(), desiredCapabilities);
   }
 
   @Test
@@ -114,16 +123,16 @@ ${this.indent(code, 4)}
     const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
 
     return `
-    (new TouchAction(driver)).tap(${x}, ${y}).perform()
+    final PointerInput FINGER = new PointerInput(PointerInput.Kind.TOUCH, "FINGER");
     Point tapPoint = new Point(${x}, ${y});
-    Sequence sequence = new Sequence(PointerInput.Kind.TOUCH, 1);
-    sequence.addAction(finger.createPointerMove(Duration.ofMillis(0),
-          PointerInput.Origin.viewport(), tapPoint.x, tapPoint.y));
-    sequence.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
-    sequence.addAction(finger.createPointerMove(Duration.ofMillis(50),
-          PointerInput.Origin.viewport(), tapPoint.x, tapPoint.y));
-    sequence.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
-    driver.perform(Arrays.asList(swipe))
+    Sequence tap = new Sequence(FINGER, 1);
+        tap.addAction(FINGER.createPointerMove(Duration.ofMillis(0),
+                PointerInput.Origin.viewport(), tapPoint.x, tapPoint.y));
+        tap.addAction(FINGER.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+        tap.addAction(FINGER.createPointerMove(Duration.ofMillis(50),
+                PointerInput.Origin.viewport(), tapPoint.x, tapPoint.y));
+        tap.addAction(FINGER.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+        driver.perform(Arrays.asList(tap));
     `;
   }
 
@@ -132,28 +141,25 @@ ${this.indent(code, 4)}
     const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
 
     return `
+    final PointerInput FINGER = new PointerInput(PointerInput.Kind.TOUCH, "finger");
     Point start = new Point(${x1}, ${y1});
     Point end = new Point (${x2}, ${y2});
-    Sequence swipe = New  Sequence(FINGER, 1)
-      .addAction(
-          FINGER.createPointerMove(
-              ofMillis(0),
-              PointerInput.Origin.viewport(),
-              start.getX(),
-              start.getY()
-          )
-      )
-      .addAction(FINGER.createPointerDown(LEFT.asArg()))
-      .addAction(
-          FINGER.createPointerMove(
-              ofMillis(duration),
-              PointerInput.Origin.viewport(),
-              end.getX(),
-              end.getY()
-          )
-      )
-      .addAction(FINGER.createPointerUp(LEFT.asArg()))
-    driver.perform(Arrays.asList(swipe))
+    Sequence swipe = new Sequence(FINGER, 1)
+                .addAction(
+                        FINGER.createPointerMove(
+                                Duration.ofMillis(0),
+                                PointerInput.Origin.viewport(),
+                                start.getX(),
+                                start.getY()))
+                .addAction(FINGER.createPointerDown(PointerInput.MouseButton.LEFT.asArg()))
+                .addAction(
+                        FINGER.createPointerMove(
+                                Duration.ofMillis(1000),
+                                PointerInput.Origin.viewport(),
+                                end.getX(),
+                                end.getY()))
+                .addAction(FINGER.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+        driver.perform(Arrays.asList(swipe));
   `;
   }
 
