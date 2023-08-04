@@ -19,23 +19,26 @@ const Commands = (props) => {
   };
 
   const executeCommand = () => {
-    let { args, command } = pendingCommand;
+    const { args, command } = pendingCommand;
+
+    // Make a copy of the arguments to avoid state mutation
+    let copiedArgs = _.cloneDeep(args);
 
     // Special case for 'rotateDevice'
     if (command.methodName === 'rotateDevice') {
-      args = {x: args[0], y: args[1], duration: args[2], radius: args[3], rotation: args[4], touchCount: args[5]};
+      copiedArgs = {x: args[0], y: args[1], duration: args[2], radius: args[3], rotation: args[4], touchCount: args[5]};
     }
 
     // Special case for 'setGeoLocation'
     if (command.methodName === 'setGeoLocation') {
-      args = {latitude: args[0], longitude: args[1], altitude: args[2]};
+      copiedArgs = {latitude: args[0], longitude: args[1], altitude: args[2]};
     }
 
     // Special case for 'execute'
     if (command.methodName === 'executeScript') {
       if (!_.isEmpty(args[1])) {
         try {
-          args[1] = JSON.parse(args[1]);
+          copiedArgs[1] = JSON.parse(args[1]);
         } catch (e) {
           notification.error({
             message: t('invalidJson', {json: args[1]}),
@@ -49,7 +52,7 @@ const Commands = (props) => {
     if (command.methodName === 'updateSettings') {
       if (_.isString(args[0])) {
         try {
-          args[0] = JSON.parse(args[0]);
+          copiedArgs[0] = JSON.parse(args[0]);
         } catch (e) {
           notification.error({
             message: t('invalidJson', {json: args[0]}),
@@ -59,7 +62,7 @@ const Commands = (props) => {
       }
     }
 
-    applyClientMethod({methodName: command.methodName, args, skipRefresh: !command.refresh, ignoreResult: false});
+    applyClientMethod({methodName: command.methodName, args: copiedArgs, skipRefresh: !command.refresh, ignoreResult: false});
     cancelPendingCommand();
   };
 
