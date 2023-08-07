@@ -29,16 +29,28 @@ const MAX_SCREENSHOT_WIDTH = 500;
 const MJPEG_STREAM_CHECK_INTERVAL = 1000;
 const SESSION_EXPIRY_PROMPT_TIMEOUT = 60 * 60 * 1000; // Give user 1 hour to reply
 
-const downloadXML = (sourceXML) => {
+const downloadFile = (href, filename) => {
   let element = document.createElement('a');
-  element.setAttribute('href', 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML));
-  element.setAttribute('download', 'source.xml');
+  element.setAttribute('href', href);
+  element.setAttribute('download', filename);
   element.style.display = 'none';
 
   document.body.appendChild(element);
   element.click();
 
   document.body.removeChild(element);
+};
+
+const downloadXML = (sourceXML) => {
+  const href = 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML);
+  const filename = 'source.xml';
+  downloadFile(href, filename);
+};
+
+const downloadScreenshot = (screenshot) => {
+  const href = `data:image/png;base64,${screenshot}`;
+  const filename = 'appium-inspector-screenshot.png';
+  downloadFile(href, filename);
 };
 
 const Inspector = (props) => {
@@ -208,6 +220,9 @@ const Inspector = (props) => {
             disabled={isGestureEditorVisible} />
         </Tooltip>
       </Button.Group>
+      {showScreenshot && !mjpegScreenshotUrl && <Tooltip title={t('Download Screenshot')}>
+        <Button icon={<DownloadOutlined/>} onClick={() => downloadScreenshot(screenshot)}/>
+      </Tooltip>}
     </Space>
   </div>;
 
