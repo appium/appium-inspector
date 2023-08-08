@@ -43,7 +43,7 @@ const downloadFile = (href, filename) => {
 
 const downloadXML = (sourceXML) => {
   const href = 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML);
-  const filename = 'source.xml';
+  const filename = `app-source-${new Date().toJSON()}.xml`;
   downloadFile(href, filename);
 };
 
