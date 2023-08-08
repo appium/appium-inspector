@@ -49,7 +49,7 @@ const downloadXML = (sourceXML) => {
 
 const downloadScreenshot = (screenshot) => {
   const href = `data:image/png;base64,${screenshot}`;
-  const filename = 'appium-inspector-screenshot.png';
+  const filename = `appium-inspector-${new Date().toJSON()}.png`;
   downloadFile(href, filename);
 };
 
