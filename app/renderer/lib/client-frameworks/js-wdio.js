@@ -19,14 +19,14 @@ class JsWdIoFramework extends Framework {
     let proto = JSON.stringify(this.scheme);
     let path = JSON.stringify(this.path);
     return `// Requires the webdriverio client library
-// (npm install webdriverio)
+// (npm i --save webdriverio)
 // Then paste this into a .js file and run with Node:
 // node <file>.js
 
-const wdio = require('webdriverio');
+const {remote} = require('webdriverio');
 async function main () {
   const caps = ${caps}
-  const driver = await wdio.remote({
+  const driver = await remote({
     protocol: ${proto},
     hostname: ${host},
     port: ${this.port},
