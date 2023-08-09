@@ -29,16 +29,28 @@ const MAX_SCREENSHOT_WIDTH = 500;
 const MJPEG_STREAM_CHECK_INTERVAL = 1000;
 const SESSION_EXPIRY_PROMPT_TIMEOUT = 60 * 60 * 1000; // Give user 1 hour to reply
 
-const downloadXML = (sourceXML) => {
+const downloadFile = (href, filename) => {
   let element = document.createElement('a');
-  element.setAttribute('href', 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML));
-  element.setAttribute('download', 'source.xml');
+  element.setAttribute('href', href);
+  element.setAttribute('download', filename);
   element.style.display = 'none';
 
   document.body.appendChild(element);
   element.click();
 
   document.body.removeChild(element);
+};
+
+const downloadXML = (sourceXML) => {
+  const href = 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML);
+  const filename = `app-source-${new Date().toJSON()}.xml`;
+  downloadFile(href, filename);
+};
+
+const downloadScreenshot = (screenshot) => {
+  const href = `data:image/png;base64,${screenshot}`;
+  const filename = `appium-inspector-${new Date().toJSON()}.png`;
+  downloadFile(href, filename);
 };
 
 const Inspector = (props) => {
@@ -63,10 +75,7 @@ const Inspector = (props) => {
 
   // Calculate the ratio for scaling items overlaid on the screenshot
   // (highlighter rectangles/circles, gestures, etc.)
-  const updateScaleRatio = () => {
-    const screenshotImg = screenshotEl.current.querySelector('img');
-    setScaleRatio(windowSize.width / screenshotImg.offsetWidth);
-  };
+  const updateScaleRatio = (imgWidth) => setScaleRatio(windowSize.width / imgWidth);
 
   const updateScaleRatioDebounced = debounce(updateScaleRatio, 500);
 
@@ -94,7 +103,7 @@ const Inspector = (props) => {
       screenshotBox.style.maxWidth = `${imgRect.width}px`;
     }
 
-    updateScaleRatioDebounced();
+    updateScaleRatioDebounced(imgRect.width);
   };
 
   const updateSourceTreeWidthDebounced = debounce(updateSourceTreeWidth, 50);
@@ -211,6 +220,9 @@ const Inspector = (props) => {
             disabled={isGestureEditorVisible} />
         </Tooltip>
       </Button.Group>
+      {showScreenshot && !mjpegScreenshotUrl && <Tooltip title={t('Download Screenshot')}>
+        <Button icon={<DownloadOutlined/>} onClick={() => downloadScreenshot(screenshot)}/>
+      </Tooltip>}
     </Space>
   </div>;
 
