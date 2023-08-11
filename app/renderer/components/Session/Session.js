@@ -36,8 +36,9 @@ const Session = (props) => {
   };
 
   const loadNewSession = async (caps, attachSessId = null) => {
-    await newSession(caps, attachSessId);
-    navigate('/inspector', { replace: true });
+    if (await newSession(caps, attachSessId)) {
+      navigate('/inspector', { replace: true });
+    }
   };
 
   useEffect(() => {
