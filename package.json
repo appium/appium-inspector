@@ -207,7 +207,7 @@
     "concurrently": "8.2.0",
     "cross-env": "7.0.3",
     "devtron": "1.4.0",
-    "electron": "13.6.9",
+    "electron": "26.0.0",
     "electron-builder": "24.6.3",
     "electron-debug": "3.2.0",
     "electron-extension-installer": "1.2.0",
