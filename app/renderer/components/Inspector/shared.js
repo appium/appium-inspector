@@ -186,8 +186,8 @@ export const COMMAND_DEFINITIONS = {
     'getDeviceTime': {},
   },
   'Session': {
-    'getSession': {methodName: 'getSession'},
-    'setTimeouts': {methodName: 'setTimeouts', args: [
+    'getSession': {},
+    'setTimeouts': {args: [
       ['implicitTimeout', NUMBER], ['pageLoadTimeout', NUMBER], ['scriptTimeout', NUMBER]
     ]},
     'getOrientation': {},
