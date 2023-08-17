@@ -66,15 +66,9 @@ const Commands = (props) => {
   };
 
   const generateCommandNotes = (notes) => {
-    let generatedNotes = [];
-    notes.forEach((note) => {
-      if (_.isArray(note)) {
-        generatedNotes.push(`${t(note[0])}: ${note[1]}`);
-      } else {
-        generatedNotes.push(t(note));
-      }
-    });
-    return generatedNotes.join('; ');
+    return notes.map((note) =>
+      _.isArray(note) ? `${t(note[0])}: ${note[1]}` : t(note)
+    ).join('; ');
   };
 
   return <div className={InspectorStyles['commands-container']}>
