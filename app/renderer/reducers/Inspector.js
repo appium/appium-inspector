@@ -25,6 +25,7 @@ const NATIVE_APP = 'NATIVE_APP';
 const INITIAL_STATE = {
   savedGestures: [],
   driver: null,
+  automationName: null,
   keepAliveInterval: null,
   showKeepAlivePrompt: false,
   userWaitTimeout: null,
@@ -260,6 +261,7 @@ export default function inspector (state = INITIAL_STATE, action) {
         ...state,
         sessionDetails: action.sessionDetails,
         driver: action.driver,
+        automationName: action.driver.client.capabilities.automationName,
         appMode: action.mode,
         mjpegScreenshotUrl: action.mjpegScreenshotUrl
       };

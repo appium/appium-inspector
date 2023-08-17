@@ -14,8 +14,7 @@ const STRAT_UIAUTOMATOR = ['-android uiautomator', 'UIAutomator'];
 const STRAT_DATAMATCHER = ['-android datamatcher', 'DataMatcher'];
 const STRAT_VIEWTAG = ['-android viewtag', 'View Tag'];
 
-const locatorStrategies = (driver) => {
-  const automationName = driver.client.capabilities.automationName;
+const locatorStrategies = (automationName) => {
   let strategies = [STRAT_ID, STRAT_XPATH, STRAT_NAME, STRAT_CLASS_NAME, STRAT_ACCESSIBILITY_ID];
   if (!automationName) { return strategies; }
   switch (automationName.toLowerCase()) {
@@ -33,14 +32,8 @@ const locatorStrategies = (driver) => {
   return strategies;
 };
 
-const showMissingAutomationNameInfo = (driver, t) => {
-  if (!driver.client.capabilities.automationName) {
-    return <Alert message={t('missingAutomationNameForStrategies')} type={ALERT.INFO} showIcon/>;
-  }
-};
-
 const ElementLocator = (props) => {
-  const { setLocatorTestValue, locatorTestValue, setLocatorTestStrategy, locatorTestStrategy, driver, t } = props;
+  const { setLocatorTestValue, locatorTestValue, setLocatorTestStrategy, locatorTestStrategy, automationName, t } = props;
 
   return (
     <Space className={InspectorStyles.spaceContainer} direction='vertical' size='small'>
@@ -51,7 +44,7 @@ const ElementLocator = (props) => {
           defaultValue={locatorTestStrategy}
         >
           <Row justify="center">
-            {locatorStrategies(driver).map(([strategyValue, strategyName]) => (
+            {locatorStrategies(automationName).map(([strategyValue, strategyName]) => (
               <Radio.Button
                 className={InspectorStyles.locatorStrategyBtn}
                 value={strategyValue}
@@ -63,7 +56,7 @@ const ElementLocator = (props) => {
           </Row>
         </Radio.Group>
       </Row>
-      {showMissingAutomationNameInfo(driver, t)}
+      {!automationName && <Alert message={t('missingAutomationNameForStrategies')} type={ALERT.INFO} showIcon/>}
       {t('selector')}
       <Input.TextArea
         className={InspectorStyles.locatorSelectorTextArea}
