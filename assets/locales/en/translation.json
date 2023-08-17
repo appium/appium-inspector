@@ -222,7 +222,7 @@
   "gesturesDescription": "Create, save, and execute custom gestures here. Gestures are identical to action chains in the W3C WebDriver Actions API.",
   "Session Information": "Session Information",
   "Execute Command": "Execute Command",
-  "commandsDescription": "Run various commands using the current Appium driver. Note that not all commands are available for all drivers.",
+  "commandsDescription": "Run various commands using the current Appium driver. Note that not all drivers support all commands.",
   "Click to Set Coordinates": "Click to Set Coordinates",
   "Set Coordinates Via Field": "Set Coordinates Via Field",
   "Action Type": "Action Type",
