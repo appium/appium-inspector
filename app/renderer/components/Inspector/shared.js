@@ -131,7 +131,7 @@ export const DRIVERS = {
 
 const { UIAUTOMATOR2, ESPRESSO, XCUITEST } = DRIVERS;
 
-// Note: When adding or removing COMMAND_DEFINITIONS categories, update `en/translation.json`
+// Note: When changing COMMAND_DEFINITIONS categories, or 'notes' for any command, update `en/translation.json`
 export const COMMAND_DEFINITIONS = {
   'Execute Script': {
     'executeScript': {
@@ -217,16 +217,19 @@ export const COMMAND_DEFINITIONS = {
     'fingerPrint': {
       args: [['fingerPrintId', NUMBER]],
       drivers: [UIAUTOMATOR2, ESPRESSO],
+      notes: ['simulatorOnly', ['minAndroidSDK', 23]],
       refresh: true
     },
     'touchId': {
       args: [['shouldMatch', BOOLEAN]],
       drivers: [XCUITEST],
+      notes: ['simulatorOnly'],
       refresh: true
     },
     'toggleEnrollTouchId': {
       args: [['shouldEnroll', BOOLEAN]],
       drivers: [XCUITEST],
+      notes: ['simulatorOnly'],
     },
   },
   'Keyboard': {

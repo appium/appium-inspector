@@ -257,6 +257,8 @@
   "Web": "Web",
   "Context": "Context",
   "Window (W3C)": "Window (W3C)",
+  "simulatorOnly": "Emulator/simulator only",
+  "minAndroidSDK": "Minimum Android SDK level",
   "Error": "Error",
   "findingElementInSourceFailed": "Could not find the specified element. The current application source or element ID may have changed, or there may be too many elements with the same coordinates.",
   "callToMethodFailed": "Call to '{{methodName}}' failed",

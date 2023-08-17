@@ -1,9 +1,9 @@
 import React from 'react';
 import _ from 'lodash';
-import { Row, Col, Button, Collapse, Modal, Input, Switch, Space, notification } from 'antd';
+import { Alert, Row, Col, Button, Collapse, Modal, Input, Switch, Space, notification, Tooltip } from 'antd';
 import { COMMAND_DEFINITIONS, COMMAND_ARG_TYPES } from './shared';
 import InspectorStyles from './Inspector.css';
-import { INPUT } from '../AntdTypes';
+import { ALERT, INPUT } from '../AntdTypes';
 
 const Commands = (props) => {
   const { pendingCommand, cancelPendingCommand, setCommandArg, applyClientMethod, automationName, t } = props;
@@ -65,6 +65,18 @@ const Commands = (props) => {
     cancelPendingCommand();
   };
 
+  const generateCommandNotes = (notes) => {
+    let generatedNotes = [];
+    notes.forEach((note) => {
+      if (_.isArray(note)) {
+        generatedNotes.push(`${t(note[0])}: ${note[1]}`);
+      } else {
+        generatedNotes.push(t(note));
+      }
+    });
+    return generatedNotes.join('; ');
+  };
+
   return <div className={InspectorStyles['commands-container']}>
     <Space className={InspectorStyles.spaceContainer} direction='vertical' size='middle'>
       {t('commandsDescription')}
@@ -76,9 +88,11 @@ const Commands = (props) => {
                 (!automationName || !command.drivers || command.drivers.includes(_.toLower(automationName))) &&
                   <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
                     <div className={InspectorStyles['btn-container']}>
-                      <Button onClick={() => startPerformingCommand(commandName, command)}>
-                        {commandName}
-                      </Button>
+                      <Tooltip title={(command.notes && !command.args) ? generateCommandNotes(command.notes) : null}>
+                        <Button onClick={() => startPerformingCommand(commandName, command)}>
+                          {commandName}
+                        </Button>
+                      </Tooltip>
                     </div>
                   </Col>
               )}
@@ -94,6 +108,11 @@ const Commands = (props) => {
       open={!!pendingCommand}
       onOk={() => executeCommand()}
       onCancel={() => cancelPendingCommand()}>
+      {pendingCommand.command.notes && <Alert
+        message={generateCommandNotes(pendingCommand.command.notes)}
+        type={ALERT.INFO}
+        showIcon/>
+      }
       {
         !_.isEmpty(pendingCommand.command.args) && _.map(pendingCommand.command.args, ([argName, argType], index) => <Row key={index} gutter={16}>
           <Col span={24} className={InspectorStyles['arg-container']}>
