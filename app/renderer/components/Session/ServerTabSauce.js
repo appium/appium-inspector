@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Row, Col, Input, Checkbox, Radio, Tooltip } from 'antd';
+import { Form, Row, Col, Input, Checkbox, Radio } from 'antd';
 import SessionStyles from './Session.css';
 import { INPUT } from '../AntdTypes';
 
@@ -39,10 +39,9 @@ const ServerTabSauce = ({ server, setServerParam, t }) => (
           <div className={['ant-input-group-addon', SessionStyles.addonDataCenter].join(' ') }>{t('SauceLabs Data Center')}</div>
           <Radio.Group className={[SessionStyles.inputDataCenter, SessionStyles.addonDataCenterRadioContainer].join(' ')}
             buttonStyle="solid" defaultValue='us-west-1' id='sauceObjectDataCenter' value={server.sauce.dataCenter} onChange={(e) => setServerParam('dataCenter', e.target.value)}>
-            <Tooltip placement="top" title={t('UP')}>
-              <Radio value='us-west-1'>{t('US')}</Radio>
-            </Tooltip>
-            <Radio value='eu-central-1'>{t('EU')}</Radio>
+            <Radio value='us-west-1'>{t('US-West')}</Radio>
+            <Radio value='us-east-4'>{t('US-East')}</Radio>
+            <Radio value='eu-central-1'>{t('EU-Central')}</Radio>
           </Radio.Group>
         </Form.Item>
       </Col>
