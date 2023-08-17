@@ -190,8 +190,8 @@ export const COMMAND_DEFINITIONS = {
     'isLocked': {},
     'rotateDevice': {
       args: [
-        ['x', NUMBER], ['y', NUMBER], ['radius', NUMBER], ['rotatation', NUMBER],
-        ['touchCount', NUMBER], ['duration', NUMBER]
+        ['x', NUMBER], ['y', NUMBER], ['duration', NUMBER], ['radius', NUMBER],
+        ['rotation', NUMBER], ['touchCount', NUMBER]
       ],
       refresh: true
     },
