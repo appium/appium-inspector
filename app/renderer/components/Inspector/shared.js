@@ -117,6 +117,20 @@ export const COMMAND_ARG_TYPES = {
 
 const { STRING, NUMBER, BOOLEAN } = COMMAND_ARG_TYPES;
 
+export const DRIVERS = {
+  UIAUTOMATOR2: 'uiautomator2',
+  ESPRESSO: 'espresso',
+  XCUITEST: 'xcuitest',
+  FLUTTER: 'flutter',
+  MAC2: 'mac2',
+  WINDOWS: 'windows',
+  CHROMIUM: 'chromium',
+  SAFARI: 'safari',
+  GECKO: 'gecko'
+};
+
+const { UIAUTOMATOR2, ESPRESSO, XCUITEST } = DRIVERS;
+
 // Note: When adding or removing COMMAND_DEFINITIONS categories, update `en/translation.json`
 export const COMMAND_DEFINITIONS = {
   'Execute Script': {
@@ -131,10 +145,15 @@ export const COMMAND_DEFINITIONS = {
         ['intentAction', STRING], ['intentCategory', STRING], ['intentFlags', STRING],
         ['optionalIntentArguments', STRING], ['dontStopAppOnReset', STRING]
       ],
+      drivers: [UIAUTOMATOR2, ESPRESSO],
       refresh: true
     },
-    'getCurrentActivity': {},
-    'getCurrentPackage': {},
+    'getCurrentActivity': {
+      drivers: [UIAUTOMATOR2, ESPRESSO]
+    },
+    'getCurrentPackage': {
+      drivers: [UIAUTOMATOR2, ESPRESSO]
+    },
     'installApp': {
       args: [['appPathOrUrl', STRING]]
     },
@@ -195,16 +214,19 @@ export const COMMAND_DEFINITIONS = {
       ],
       refresh: true
     },
-    'fingerPrint': { // Android only
+    'fingerPrint': {
       args: [['fingerPrintId', NUMBER]],
+      drivers: [UIAUTOMATOR2, ESPRESSO],
       refresh: true
     },
-    'touchId': { // iOS simulator only
+    'touchId': {
       args: [['shouldMatch', BOOLEAN]],
+      drivers: [XCUITEST],
       refresh: true
     },
-    'toggleEnrollTouchId': { // iOS simulator only
-      args: [['shouldEnroll', BOOLEAN]]
+    'toggleEnrollTouchId': {
+      args: [['shouldEnroll', BOOLEAN]],
+      drivers: [XCUITEST],
     },
   },
   'Keyboard': {

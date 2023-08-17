@@ -6,7 +6,7 @@ import InspectorStyles from './Inspector.css';
 import { INPUT } from '../AntdTypes';
 
 const Commands = (props) => {
-  const { pendingCommand, cancelPendingCommand, setCommandArg, applyClientMethod, t } = props;
+  const { pendingCommand, cancelPendingCommand, setCommandArg, applyClientMethod, automationName, t } = props;
 
   const startPerformingCommand = (commandName, command) => {
     const { startEnteringCommandArgs } = props;
@@ -73,13 +73,14 @@ const Commands = (props) => {
           <Collapse.Panel header={t(commandGroup)} key={commandGroup}>
             <Row>
               {_.toPairs(commands).map(([commandName, command], index) =>
-                <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
-                  <div className={InspectorStyles['btn-container']}>
-                    <Button onClick={() => startPerformingCommand(commandName, command)}>
-                      {commandName}
-                    </Button>
-                  </div>
-                </Col>
+                (!automationName || !command.drivers || command.drivers.includes(_.toLower(automationName))) &&
+                  <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
+                    <div className={InspectorStyles['btn-container']}>
+                      <Button onClick={() => startPerformingCommand(commandName, command)}>
+                        {commandName}
+                      </Button>
+                    </div>
+                  </Col>
               )}
             </Row>
           </Collapse.Panel>
