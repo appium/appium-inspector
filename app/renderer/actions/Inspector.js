@@ -69,8 +69,6 @@ export const HIDE_PROMPT_KEEP_ALIVE = 'HIDE_PROMPT_KEEP_ALIVE';
 
 export const SELECT_INTERACTION_MODE = 'SELECT_INTERACTION_MODE';
 
-export const SELECT_COMMAND_GROUP = 'SELECT_COMMAND_GROUP';
-export const SELECT_COMMAND_SUB_GROUP = 'SELECT_COMMAND_SUB_GROUP';
 export const ENTERING_COMMAND_ARGS = 'ENTERING_COMMAND_ARGS';
 export const CANCEL_PENDING_COMMAND = 'CANCEL_PENDING_COMMAND';
 export const SET_COMMAND_ARG = 'SET_COMMAND_ARG';
@@ -665,18 +663,6 @@ export function setSwipeEnd (swipeEndX, swipeEndY) {
 export function clearSwipeAction () {
   return (dispatch) => {
     dispatch({type: CLEAR_SWIPE_ACTION});
-  };
-}
-
-export function selectCommandGroup (group) {
-  return (dispatch) => {
-    dispatch({type: SELECT_COMMAND_GROUP, group});
-  };
-}
-
-export function selectCommandSubGroup (group) {
-  return (dispatch) => {
-    dispatch({type: SELECT_COMMAND_SUB_GROUP, group});
   };
 }
 

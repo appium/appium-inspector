@@ -11,8 +11,7 @@ const LocatedElements = (props) => {
   const sendKeys = useRef(null);
 
   const showIdAutocompleteInfo = () => {
-    const { locatorTestStrategy, locatorTestValue } = props;
-    const automationName = driver.client.capabilities.automationName;
+    const { locatorTestStrategy, locatorTestValue, automationName } = props;
     const idLocatorAutocompletionDisabled = driver.client.capabilities.disableIdLocatorAutocompletion;
     if (automationName && automationName.toLowerCase() === 'uiautomator2' &&
       locatorTestStrategy === 'id' && !locatorTestValue.includes(':id/') && !idLocatorAutocompletionDisabled) {

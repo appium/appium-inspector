@@ -9,8 +9,7 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          FINDING_ELEMENT_IN_SOURCE, FINDING_ELEMENT_IN_SOURCE_COMPLETED, ADD_ASSIGNED_VAR_CACHE, CLEAR_ASSIGNED_VAR_CACHE, SET_SCREENSHOT_INTERACTION_MODE,
          SET_SWIPE_START, SET_SWIPE_END, CLEAR_SWIPE_ACTION, SET_SEARCHED_FOR_ELEMENT_BOUNDS, CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS,
          PROMPT_KEEP_ALIVE, HIDE_PROMPT_KEEP_ALIVE, GET_FIND_ELEMENTS_TIMES, GET_FIND_ELEMENTS_TIMES_COMPLETED,
-         SELECT_COMMAND_GROUP, SELECT_COMMAND_SUB_GROUP, SET_APP_MODE,
-         SELECT_INTERACTION_MODE, ENTERING_COMMAND_ARGS, SET_COMMAND_ARG, CANCEL_PENDING_COMMAND, SET_CONTEXT,
+         SET_APP_MODE, SELECT_INTERACTION_MODE, ENTERING_COMMAND_ARGS, SET_COMMAND_ARG, CANCEL_PENDING_COMMAND, SET_CONTEXT,
          SET_KEEP_ALIVE_INTERVAL, SET_USER_WAIT_TIMEOUT, SET_LAST_ACTIVE_MOMENT, SET_VISIBLE_COMMAND_RESULT,
          SET_AWAITING_MJPEG_STREAM, SET_APP_ID, SET_SERVER_STATUS, SET_SESSION_TIME, SHOW_GESTURE_EDITOR, HIDE_GESTURE_EDITOR,
          GET_SAVED_GESTURES_REQUESTED, GET_SAVED_GESTURES_DONE, SET_LOADED_GESTURE, REMOVE_LOADED_GESTURE, SHOW_GESTURE_ACTION, HIDE_GESTURE_ACTION,
@@ -26,6 +25,7 @@ const NATIVE_APP = 'NATIVE_APP';
 const INITIAL_STATE = {
   savedGestures: [],
   driver: null,
+  automationName: null,
   keepAliveInterval: null,
   showKeepAlivePrompt: false,
   userWaitTimeout: null,
@@ -49,8 +49,6 @@ const INITIAL_STATE = {
   assignedVarCache: {},
   screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
   searchedForElementBounds: null,
-  selectedCommandGroup: null,
-  selectedCommandSubGroup: null,
   selectedInteractionMode: INTERACTION_MODE.SOURCE,
   appMode: APP_MODE.NATIVE,
   mjpegScreenshotUrl: null,
@@ -263,6 +261,7 @@ export default function inspector (state = INITIAL_STATE, action) {
         ...state,
         sessionDetails: action.sessionDetails,
         driver: action.driver,
+        automationName: action.driver.client.capabilities.automationName,
         appMode: action.mode,
         mjpegScreenshotUrl: action.mjpegScreenshotUrl
       };
@@ -420,18 +419,6 @@ export default function inspector (state = INITIAL_STATE, action) {
       return {
         ...state,
         showKeepAlivePrompt: false,
-      };
-
-    case SELECT_COMMAND_GROUP:
-      return {
-        ...state,
-        selectedCommandGroup: action.group
-      };
-
-    case SELECT_COMMAND_SUB_GROUP:
-      return {
-        ...state,
-        selectedCommandSubGroup: action.group,
       };
 
     case SELECT_INTERACTION_MODE:
