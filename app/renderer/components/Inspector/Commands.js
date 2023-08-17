@@ -65,11 +65,10 @@ const Commands = (props) => {
     cancelPendingCommand();
   };
 
-  const generateCommandNotes = (notes) => {
-    return notes.map((note) =>
+  const generateCommandNotes = (notes) =>
+    notes.map((note) =>
       _.isArray(note) ? `${t(note[0])}: ${note[1]}` : t(note)
     ).join('; ');
-  };
 
   return <div className={InspectorStyles['commands-container']}>
     <Space className={InspectorStyles.spaceContainer} direction='vertical' size='middle'>
