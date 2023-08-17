@@ -120,51 +120,105 @@ const { STRING, NUMBER, BOOLEAN } = COMMAND_ARG_TYPES;
 // Note: When adding or removing COMMAND_DEFINITIONS categories, update `en/translation.json`
 export const COMMAND_DEFINITIONS = {
   'Execute Script': {
-    'executeScript': {args: [['executeScriptCommand', STRING], ['jsonArgument', STRING]]}
+    'executeScript': {
+      args: [['executeScriptCommand', STRING], ['jsonArgument', STRING]]
+    }
   },
   'App Management': {
-    'startActivity': {args: [
-      ['appPackage', STRING], ['appActivity', STRING], ['appWaitPackage', STRING],
-      ['intentAction', STRING], ['intentCategory', STRING], ['intentFlags', STRING],
-      ['optionalIntentArguments', STRING], ['dontStopAppOnReset', STRING],
-    ], refresh: true},
+    'startActivity': {
+      args: [
+        ['appPackage', STRING], ['appActivity', STRING], ['appWaitPackage', STRING],
+        ['intentAction', STRING], ['intentCategory', STRING], ['intentFlags', STRING],
+        ['optionalIntentArguments', STRING], ['dontStopAppOnReset', STRING]
+      ],
+      refresh: true
+    },
     'getCurrentActivity': {},
     'getCurrentPackage': {},
-    'installApp': {args: [['appPathOrUrl', STRING]]},
-    'isAppInstalled': {args: [['appId', STRING]]},
-    'background': {args: [['timeout', NUMBER]], refresh: true},
-    'activateApp': {args: [['appId', STRING]], refresh: true},
-    'terminateApp': {args: [['appId', STRING]], refresh: true},
-    'removeApp': {args: [['appId', STRING]]},
-    'getStrings': {args: [['language', STRING], ['stringFile', STRING]], refresh: true},
+    'installApp': {
+      args: [['appPathOrUrl', STRING]]
+    },
+    'isAppInstalled': {
+      args: [['appId', STRING]]
+    },
+    'background': {
+      args: [['timeout', NUMBER]],
+      refresh: true
+    },
+    'activateApp': {
+      args: [['appId', STRING]],
+      refresh: true
+    },
+    'terminateApp': {
+      args: [['appId', STRING]],
+      refresh: true
+    },
+    'removeApp': {
+      args: [['appId', STRING]]
+    },
+    'getStrings': {
+      args: [['language', STRING], ['stringFile', STRING]],
+      refresh: true
+    },
   },
   'Clipboard': {
     'getClipboard': {},
-    'setClipboard': {args: [
-      ['clipboardText', STRING], ['contentType', STRING], ['contentLabel', STRING]
-    ]},
+    'setClipboard': {
+      args: [['clipboardText', STRING], ['contentType', STRING], ['contentLabel', STRING]]
+    },
   },
   'File Transfer': {
-    'pushFile': {args: [['pathToInstallTo', STRING], ['fileContentString', STRING]]},
-    'pullFile': {args: [['pathToPullFrom', STRING]]},
-    'pullFolder': {args: [['folderToPullFrom', STRING]]},
+    'pushFile': {
+      args: [['pathToInstallTo', STRING], ['fileContentString', STRING]]
+    },
+    'pullFile': {
+      args: [['pathToPullFrom', STRING]]
+    },
+    'pullFolder': {
+      args: [['folderToPullFrom', STRING]]
+    },
   },
   'Device Interaction': {
     'shake': {},
-    'lock': {args: [['seconds', NUMBER]], refresh: true},
-    'unlock': {refresh: true},
+    'lock': {
+      args: [['seconds', NUMBER]],
+      refresh: true
+    },
+    'unlock': {
+      refresh: true
+    },
     'isLocked': {},
-    'rotateDevice': {args: [
-      ['x', NUMBER], ['y', NUMBER], ['radius', NUMBER], ['rotatation', NUMBER], ['touchCount', NUMBER], ['duration', NUMBER]
-    ], refresh: true},
-    'fingerPrint': {args: [['fingerPrintId', NUMBER]], refresh: true}, // Android only
-    'touchId': {args: [['shouldMatch', BOOLEAN]], refresh: true}, // iOS simulator only
-    'toggleEnrollTouchId': {args: [['shouldEnroll', BOOLEAN]]}, // iOS simulator only
+    'rotateDevice': {
+      args: [
+        ['x', NUMBER], ['y', NUMBER], ['radius', NUMBER], ['rotatation', NUMBER],
+        ['touchCount', NUMBER], ['duration', NUMBER]
+      ],
+      refresh: true
+    },
+    'fingerPrint': { // Android only
+      args: [['fingerPrintId', NUMBER]],
+      refresh: true
+    },
+    'touchId': { // iOS simulator only
+      args: [['shouldMatch', BOOLEAN]],
+      refresh: true
+    },
+    'toggleEnrollTouchId': { // iOS simulator only
+      args: [['shouldEnroll', BOOLEAN]]
+    },
   },
   'Keyboard': {
-    'pressKeyCode': {args: [['keyCode', NUMBER], ['metaState', NUMBER], ['flags', NUMBER]], refresh: true},
-    'longPressKeyCode': {args: [['keyCode', NUMBER], ['metaState', NUMBER], ['flags', NUMBER]], refresh: true},
-    'hideKeyboard': {refresh: true},
+    'pressKeyCode': {
+      args: [['keyCode', NUMBER], ['metaState', NUMBER], ['flags', NUMBER]],
+      refresh: true
+    },
+    'longPressKeyCode': {
+      args: [['keyCode', NUMBER], ['metaState', NUMBER], ['flags', NUMBER]],
+      refresh: true
+    },
+    'hideKeyboard': {
+      refresh: true
+    },
     'isKeyboardShown': {},
   },
   'Connectivity': {
@@ -172,51 +226,92 @@ export const COMMAND_DEFINITIONS = {
     'toggleData': {},
     'toggleWiFi': {},
     'toggleLocationServices': {},
-    'sendSMS': {args: [['phoneNumber', STRING], ['text', STRING]]},
-    'gsmCall': {args: [['phoneNumber', STRING], ['action', STRING]]},
-    'gsmSignal': {args: [['signalStrengh', NUMBER]]},
-    'gsmVoice': {args: [['state', STRING]]},
+    'sendSMS': {
+      args: [['phoneNumber', STRING], ['text', STRING]]
+    },
+    'gsmCall': {
+      args: [['phoneNumber', STRING], ['action', STRING]]
+    },
+    'gsmSignal': {
+      args: [['signalStrengh', NUMBER]]
+    },
+    'gsmVoice': {
+      args: [['state', STRING]]
+    },
   },
   'Performance Data': {
-    'getPerformanceData': {args: [['packageName', STRING], ['dataType', STRING], ['dataReadTimeout', NUMBER]]},
+    'getPerformanceData': {
+      args: [['packageName', STRING], ['dataType', STRING], ['dataReadTimeout', NUMBER]]
+    },
     'getPerformanceDataTypes': {},
   },
   'System': {
-    'openNotifications': {refresh: true},
+    'openNotifications': {
+      refresh: true
+    },
     'getDeviceTime': {},
   },
   'Session': {
     'getSession': {},
-    'setTimeouts': {args: [
-      ['implicitTimeout', NUMBER], ['pageLoadTimeout', NUMBER], ['scriptTimeout', NUMBER]
-    ]},
+    'setTimeouts': {
+      args: [['implicitTimeout', NUMBER], ['pageLoadTimeout', NUMBER], ['scriptTimeout', NUMBER]]
+    },
     'getOrientation': {},
-    'setOrientation': {args: [['orientation', STRING]], refresh: true},
+    'setOrientation': {
+      args: [['orientation', STRING]],
+      refresh: true
+    },
     'getGeoLocation': {},
-    'setGeoLocation': {args: [['latitude', NUMBER], ['longitude', NUMBER], ['altitude', NUMBER]]},
+    'setGeoLocation': {
+      args: [['latitude', NUMBER], ['longitude', NUMBER], ['altitude', NUMBER]]
+    },
     'getLogTypes': {},
-    'getLogs': {args: [['logType', STRING]]},
-    'updateSettings': {args: [['settingsJson', STRING]]},
+    'getLogs': {
+      args: [['logType', STRING]]
+    },
+    'updateSettings': {
+      args: [['settingsJson', STRING]]
+    },
     'getSettings': {},
   },
   'Web': {
-    'navigateTo': {args: [['url', STRING]], refresh: true},
+    'navigateTo': {
+      args: [['url', STRING]],
+      refresh: true
+    },
     'getUrl': {},
-    'back': {refresh: true},
-    'forward': {refresh: true},
-    'refresh': {refresh: true}
+    'back': {
+      refresh: true
+    },
+    'forward': {
+      refresh: true
+    },
+    'refresh': {
+      refresh: true
+    }
   },
   'Context': {
     'getContext': {},
     'getContexts': {},
-    'switchContext': {args: [['name', STRING]], refresh: true}
+    'switchContext': {
+      args: [['name', STRING]],
+      refresh: true
+    }
   },
   'Window (W3C)': {
     'getWindowHandle': {},
-    'closeWindow': {refresh: true},
-    'switchToWindow': {args: [['handle', STRING]], refresh: true},
+    'closeWindow': {
+      refresh: true
+    },
+    'switchToWindow': {
+      args: [['handle', STRING]],
+      refresh: true
+    },
     'getWindowHandles': {},
-    'createWindow': {args: [['type', STRING]], refresh: true}
+    'createWindow': {
+      args: [['type', STRING]],
+      refresh: true
+    }
   }
 };
 
