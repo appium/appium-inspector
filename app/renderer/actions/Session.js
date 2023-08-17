@@ -120,7 +120,7 @@ export function getCapsObject (caps) {
   })));
 }
 
-export function showError (e, methodName, secs = 5) {
+export function showError (e, methodName = null, secs = 5) {
   let errMessage;
   if (e['jsonwire-error'] && e['jsonwire-error'].status === 7) {
     // FIXME: we probably should set 'findElement' as the method name
@@ -152,6 +152,7 @@ export function showError (e, methodName, secs = 5) {
     errMessage = i18n.t('couldNotConnect');
   }
 
+  console.error(errMessage); // eslint-disable-line no-console
   notification.error({
     message: methodName ? i18n.t('callToMethodFailed', {methodName}) : i18n.t('Error'),
     description: errMessage,
@@ -258,11 +259,7 @@ export function newSession (caps, attachSessId = null) {
         username = session.server.sauce.username || process.env.SAUCE_USERNAME;
         accessKey = session.server.sauce.accessKey || process.env.SAUCE_ACCESS_KEY;
         if (!username || !accessKey) {
-          notification.error({
-            message: i18n.t('Error'),
-            description: i18n.t('sauceCredentialsRequired'),
-            duration: 4
-          });
+          showError(new Error(i18n.t('sauceCredentialsRequired')));
           return false;
         }
         https = false;
@@ -279,7 +276,7 @@ export function newSession (caps, attachSessId = null) {
         try {
           headspinUrl = new URL(session.server.headspin.webDriverUrl);
         } catch (ign) {
-          showError(new Error(`${session.server.headspin.webDriverUrl} is invalid url`), null, 0);
+          showError(new Error(`${i18n.t('Invalid URL:')} ${session.server.headspin.webDriverUrl}`));
           return false;
         }
         host = session.server.headspin.hostname = headspinUrl.hostname;
@@ -295,11 +292,7 @@ export function newSession (caps, attachSessId = null) {
         token = session.server.perfecto.token || process.env.PERFECTO_TOKEN;
         path = session.server.perfecto.path = '/nexperience/perfectomobile/wd/hub';
         if (!token) {
-          notification.error({
-            message: i18n.t('Error'),
-            description: i18n.t('Perfecto SecurityToken is required'),
-            duration: 4
-          });
+          showError(new Error(i18n.t('Perfecto SecurityToken is required')));
           return false;
         }
         desiredCapabilities['perfecto:options'] = {securityToken: token};
@@ -316,11 +309,7 @@ export function newSession (caps, attachSessId = null) {
         desiredCapabilities['bstack:options'].source = 'appiumdesktop';
         accessKey = session.server.browserstack.accessKey || process.env.BROWSERSTACK_ACCESS_KEY;
         if (!username || !accessKey) {
-          notification.error({
-            message: i18n.t('Error'),
-            description: i18n.t('browserstackCredentialsRequired'),
-            duration: 4
-          });
+          showError(new Error(i18n.t('browserstackCredentialsRequired')));
           return false;
         }
         https = session.server.browserstack.ssl = (parseInt(port, 10) === 443);
@@ -345,11 +334,7 @@ export function newSession (caps, attachSessId = null) {
         }
         accessKey = session.server.lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
         if (!username || !accessKey) {
-          notification.error({
-            message: i18n.t('Error'),
-            description: i18n.t('lambdatestCredentialsRequired'),
-            duration: 4,
-          });
+          showError(new Error(i18n.t('lambdatestCredentialsRequired')));
           return false;
         }
         https = session.server.lambdatest.ssl = parseInt(port, 10) === 443;
@@ -360,11 +345,7 @@ export function newSession (caps, attachSessId = null) {
         path = session.server.bitbar.path = '/wd/hub';
         accessKey = session.server.bitbar.apiKey || process.env.BITBAR_API_KEY;
         if (!accessKey) {
-          notification.error({
-            message: i18n.t('Error'),
-            description: i18n.t('bitbarCredentialsRequired'),
-            duration: 4
-          });
+          showError(new Error(i18n.t('bitbarCredentialsRequired')));
           return false;
         }
         desiredCapabilities['bitbar:options'] = {
@@ -382,11 +363,7 @@ export function newSession (caps, attachSessId = null) {
         desiredCapabilities['kobiton:options'] = {};
         desiredCapabilities['kobiton:options'].source = 'appiumdesktop';
         if (!username || !accessKey) {
-          notification.error({
-            message: i18n.t('Error'),
-            description: i18n.t('kobitonCredentialsRequired'),
-            duration: 4
-          });
+          showError(new Error(i18n.t('kobitonCredentialsRequired')));
           return false;
         }
         https = session.server.kobiton.ssl = true;
@@ -399,11 +376,7 @@ export function newSession (caps, attachSessId = null) {
         desiredCapabilities.pCloudy_ApiKey = session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
         if (!(session.server.pcloudy.username || process.env.PCLOUDY_USERNAME) ||
               !(session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY)) {
-          notification.error({
-            message: 'Error',
-            description: 'PCLOUDY username and api key are required!',
-            duration: 4
-          });
+          showError(new Error('PCLOUDY username and api key are required!'));
           return false;
         }
         https = session.server.pcloudy.ssl = true;
@@ -419,22 +392,14 @@ export function newSession (caps, attachSessId = null) {
         desiredCapabilities['tb:options'].secret = session.server.testingbot.secret || process.env.TB_SECRET;
         if (!(session.server.testingbot.key || process.env.TB_KEY) ||
               !(session.server.testingbot.secret || process.env.TB_SECRET)) {
-          notification.error({
-            message: 'Error',
-            description: i18n.t('testingbotCredentialsRequired'),
-            duration: 4
-          });
+          showError(new Error(i18n.t('testingbotCredentialsRequired')));
           return false;
         }
         https = session.server.testingbot.ssl = true;
         break;
       case ServerTypes.experitest: {
         if (!session.server.experitest.url || !session.server.experitest.accessKey) {
-          notification.error({
-            message: i18n.t('Error'),
-            description: i18n.t('experitestAccessKeyURLRequired'),
-            duration: 4
-          });
+          showError(new Error(i18n.t('experitestAccessKeyURLRequired')));
           return false;
         }
         desiredCapabilities['experitest:accessKey'] = session.server.experitest.accessKey;
@@ -443,7 +408,7 @@ export function newSession (caps, attachSessId = null) {
         try {
           experitestUrl = new URL(session.server.experitest.url);
         } catch (ign) {
-          showError(new Error(`${session.server.experitest.url} is invalid url`), null, 0);
+          showError(new Error(`${i18n.t('Invalid URL:')} ${session.server.experitest.url}`));
           return false;
         }
 

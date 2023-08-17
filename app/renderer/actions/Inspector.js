@@ -7,7 +7,6 @@ import frameworks from '../lib/client-frameworks';
 import { getSetting, setSetting, SAVED_FRAMEWORK, SET_SAVED_GESTURES } from '../../shared/settings';
 import i18n from '../../configs/i18next.config.renderer';
 import AppiumClient, { NATIVE_APP } from '../lib/appium-client';
-import { notification } from 'antd';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
 export const SET_SOURCE_AND_SCREENSHOT = 'SET_SOURCE_AND_SCREENSHOT';
@@ -285,11 +284,7 @@ export function quitSession (reason, killedByUser = true) {
     await applyAction(dispatch, getState);
     dispatch({type: QUIT_SESSION_DONE});
     if (!killedByUser) {
-      notification.error({
-        message: 'Error',
-        description: reason || i18n.t('Session has been terminated'),
-        duration: 0
-      });
+      showError(new Error(reason || i18n.t('Session has been terminated')), null, 0);
     }
   };
 }
@@ -571,11 +566,7 @@ export function selectLocatedElement (source, bounds, id) {
       const action = selectElement(foundPath);
       await action(dispatch, getState);
     } else {
-      notification.error({
-        message: i18n.t('Error'),
-        description: i18n.t('findingElementInSourceFailed'),
-        duration: 8
-      });
+      showError(new Error(i18n.t('findingElementInSourceFailed')), null, 8);
     }
     dispatch({type: FINDING_ELEMENT_IN_SOURCE_COMPLETED});
   };
