@@ -488,11 +488,24 @@ export function newSession (caps, attachSessId = null) {
     let driver = null;
     try {
       if (attachSessId) {
-        // When attaching to a session id, webdriver does not fully populate
-        // client information, so we should supplement by attaching session
-        // capabilities that we are attaching to.
-        const attachedSessionCaps = session.runningAppiumSessions.find((session) => session.id === attachSessId).capabilities;
+        // When attaching to a session id, webdriver does not fully populate client information, so
+        // we should supplement by attaching session capabilities that we are attaching to, if they
+        // exist in our cache of running appium sessions. Otherwise (in the case where we are
+        // autostarting and attaching to a new session, retrieve session details via a server call)
         serverOpts.isMobile = true;
+        const attachedSession = session.runningAppiumSessions.find((session) => session.id === attachSessId);
+        let attachedSessionCaps = {};
+        if (attachedSession) {
+          attachedSessionCaps = attachedSession.capabilities;
+        } else {
+          const {protocol, hostname, port, path} = serverOpts;
+          try {
+            const detailsUrl = `${protocol}://${hostname}:${port}${path.replace(/\/$/, '')}/session/${attachSessId}`;
+            attachedSessionCaps = (await ky(detailsUrl).json()).value;
+          } catch (err) {
+            showError(new Error(i18n.t('attachSessionNotRunning', {attachSessId})));
+          }
+        }
         serverOpts.isIOS = Boolean(attachedSessionCaps.platformName.match(/iOS/i));
         serverOpts.isAndroid = Boolean(attachedSessionCaps.platformName.match(/Android/i));
         driver = await Web2Driver.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
