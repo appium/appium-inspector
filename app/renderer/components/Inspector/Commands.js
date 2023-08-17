@@ -69,10 +69,10 @@ const Commands = (props) => {
     <Space className={InspectorStyles.spaceContainer} direction='vertical' size='middle'>
       {t('commandsDescription')}
       <Collapse>
-        { _.keys(COMMAND_DEFINITIONS).map((commandGroup) =>
+        { _.toPairs(COMMAND_DEFINITIONS).map(([commandGroup, commands]) =>
           <Collapse.Panel header={t(commandGroup)} key={commandGroup}>
             <Row>
-              {_.toPairs(COMMAND_DEFINITIONS[commandGroup]).map(([commandName, command], index) =>
+              {_.toPairs(commands).map(([commandName, command], index) =>
                 <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
                   <div className={InspectorStyles['btn-container']}>
                     <Button onClick={() => startPerformingCommand(commandName, command)}>
