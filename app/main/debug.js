@@ -1,6 +1,5 @@
 export async function installExtensions () {
-  const installer = require('electron-devtools-installer');
-  const { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = installer;
+  const { installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = require('electron-extension-installer');
   const opts = {
     forceDownload: !!process.env.UPGRADE_EXTENSIONS,
     loadExtensionOptions: {
@@ -8,7 +7,7 @@ export async function installExtensions () {
     }
   };
   try {
-    await installer.default([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], opts);
+    await installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], opts);
   } catch (e) {
     console.warn(`Error installing extension: ${e}`); // eslint-disable-line no-console
   }

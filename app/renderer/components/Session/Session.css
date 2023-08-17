@@ -101,6 +101,7 @@
 }
 
 .scrollingTab {
+  scrollbar-width: none; /* -webkit-scrollbar for Firefox */
   overflow-y: scroll;
   height: 100%;
 }
@@ -188,7 +189,7 @@
 }
 
 .capsFormCol {
-  min-width: 476px;
+  min-width: 420px;
   height: 100%;
 }
 

@@ -29,8 +29,16 @@ Appium Inspector is released in two formats:
 Both apps have the exact same set of features, so you might find that simply opening the web version is going to be easier and save you on disk space (and you can keep multiple tabs open!).
 
 ### Installing on macOS
+#### Method 1 - Simplest
+If you're using the desktop app on macOS, when you run it you may be greeted with some error about the app not being able to be opened, or not verified by Apple, or something similar. The easiest way to get around this is as follows:
+1. *Control+Click* the Appium Inspector icon in the Applications Finder folder and choose `Open`.
 
-If you're using the desktop app on macOS, when you run it you may be greeted with some error about the app not being able to be opened, or not verified by Apple, or something similar. The easiest way to get around this is to run `xattr -cr` on the file you downloaded. So let's say you downloaded `appium-inspector.dmg` and copy `Appium Inspector.app` in `/Applications` inside the disk image. Then you would run `xattr -cr "/Applications/Appium Inspector.app"` before opening it. The same goes for the zip version (or the .app itself). Alternatively, you can allow the Inspector to be opened by adjusting your Security settings in System Preferences to allow apps by third parties to run.
+   ![Appium Inspector Ctrl+Click](./docs/mac-ctrl-click.png)
+2. You'll be presented with the dialog below. Just click `Open` and Appium Inspector should launch.
+
+   ![Appium Inspector Open Warning](./docs/open-warning.png)
+#### Method 2 - Command Line
+If this doesn't work, you can try the command line. Run `xattr -cr` on the file you downloaded. So let's say you downloaded `appium-inspector.dmg` and copied `Appium Inspector.app` inside the disk image to the system `/Applications` folder. Then you would run `xattr -cr "/Applications/Appium Inspector.app"` before opening it. The same goes for the zip version (or the .app itself). 
 
 ### Installing on Linux
 
@@ -57,7 +65,7 @@ any other command: `./Appium-Inspector-linux.AppImage`.
 * Simulate Siri commands for iOS
 * Switch into web context modes and interact with web elements
 * Test out your own locator strategies
-* Access a huge library of Appium actions to run with a simple click, including providing your own parameters
+* Access a huge library of Appium commands to run with a simple click, including providing your own parameters
 
 ### Supported cloud platforms
 
@@ -84,6 +92,10 @@ As mentioned above, the Inspector is basically an Appium client, so for it to fu
 2. All of the appropriate Appium drivers, plugins, and other dependencies that those might entail.
 
 Basically, if you can start an Appium session from your typical client library, you should be able to do the same with the Inspector.
+
+### Screen size
+
+The Inspector desktop app has a minimum size of **890 x 710** pixels, whereas the web application works best when using a viewport size of at least **870 x 610** pixels.
 
 ### Connecting to a local server from the browser inspector (CORS)
 

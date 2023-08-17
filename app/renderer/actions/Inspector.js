@@ -1,11 +1,10 @@
 import _ from 'lodash';
-import { push } from 'connected-react-router';
 import { getLocators, APP_MODE } from '../components/Inspector/shared';
 import { showError } from './Session';
 import { xmlToJSON } from '../util';
 import { v4 as UUID } from 'uuid';
 import frameworks from '../lib/client-frameworks';
-import { getSetting, setSetting, SAVED_FRAMEWORK } from '../../shared/settings';
+import { getSetting, setSetting, SAVED_FRAMEWORK, SET_SAVED_GESTURES } from '../../shared/settings';
 import i18n from '../../configs/i18next.config.renderer';
 import AppiumClient, { NATIVE_APP } from '../lib/appium-client';
 import { notification } from 'antd';
@@ -71,12 +70,11 @@ export const HIDE_PROMPT_KEEP_ALIVE = 'HIDE_PROMPT_KEEP_ALIVE';
 
 export const SELECT_INTERACTION_MODE = 'SELECT_INTERACTION_MODE';
 
-export const SELECT_ACTION_GROUP = 'SELECT_ACTION_GROUP';
-export const SELECT_SUB_ACTION_GROUP = 'SELECT_SUB_ACTION_GROUP';
-
-export const ENTERING_ACTION_ARGS = 'ENTERING_ACTION_ARGS';
-export const REMOVE_ACTION = 'REMOVE_ACTION';
-export const SET_ACTION_ARG = 'SET_ACTION_ARG';
+export const SELECT_COMMAND_GROUP = 'SELECT_COMMAND_GROUP';
+export const SELECT_COMMAND_SUB_GROUP = 'SELECT_COMMAND_SUB_GROUP';
+export const ENTERING_COMMAND_ARGS = 'ENTERING_COMMAND_ARGS';
+export const CANCEL_PENDING_COMMAND = 'CANCEL_PENDING_COMMAND';
+export const SET_COMMAND_ARG = 'SET_COMMAND_ARG';
 
 export const SET_CONTEXT = 'SET_CONTEXT';
 
@@ -93,7 +91,6 @@ export const SET_AWAITING_MJPEG_STREAM = 'SET_AWAITING_MJPEG_STREAM';
 
 export const SHOW_GESTURE_EDITOR = 'SHOW_GESTURE_EDITOR';
 export const HIDE_GESTURE_EDITOR = 'HIDE_GESTURE_EDITOR';
-export const SET_SAVED_GESTURES = 'SET_SAVED_GESTURES';
 export const GET_SAVED_GESTURES_REQUESTED = 'GET_SAVED_GESTURES_REQUESTED';
 export const GET_SAVED_GESTURES_DONE = 'GET_SAVED_GESTURES_DONE';
 export const DELETE_SAVED_GESTURES_REQUESTED = 'DELETE_SAVED_GESTURES_REQUESTED';
@@ -112,7 +109,6 @@ export const TOGGLE_REFRESHING_STATE = 'TOGGLE_REFRESHING_STATE';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
-const WAIT_FOR_USER_KEEP_ALIVE = 60 * 60 * 1000; // Give user 1 hour to reply
 
 // A debounced function that calls findElement and gets info about the element
 const findElement = _.debounce(async function (strategyMap, dispatch, getState, path) {
@@ -138,26 +134,25 @@ export function selectElement (path) {
   return async (dispatch, getState) => {
     // Set the selected element in the source tree
     dispatch({type: SELECT_ELEMENT, path});
-    const state = getState().inspector;
-    const {attributes: selectedElementAttributes, xpath: selectedElementXPath} = state.selectedElement;
-    const {sourceXML} = state;
+    const { selectedElement, sourceXML, expandedPaths } = getState().inspector;
 
     // Expand all of this element's ancestors so that it's visible in the source tree
-    let {expandedPaths} = getState().inspector;
+    // Make a copy of the array to avoid state mutation
+    const copiedExpandedPaths = [...expandedPaths];
     let pathArr = path.split('.').slice(0, path.length - 1);
     while (pathArr.length > 1) {
       pathArr.splice(pathArr.length - 1);
       let path = pathArr.join('.');
-      if (expandedPaths.indexOf(path) < 0) {
-        expandedPaths.push(path);
+      if (!copiedExpandedPaths.includes(path)) {
+        copiedExpandedPaths.push(path);
       }
     }
-    dispatch({type: SET_EXPANDED_PATHS, paths: expandedPaths});
+    dispatch({type: SET_EXPANDED_PATHS, paths: copiedExpandedPaths});
 
 
     // Find the optimal selection strategy. If none found, fall back to XPath.
-    const strategyMap = _.toPairs(getLocators(selectedElementAttributes, sourceXML));
-    strategyMap.push(['xpath', selectedElementXPath]);
+    const strategyMap = _.toPairs(getLocators(selectedElement.attributes, sourceXML));
+    strategyMap.push(['xpath', selectedElement.xpath]);
 
     // Debounce find element so that if another element is selected shortly after, cancel the previous search
     await findElement(strategyMap, dispatch, getState, path);
@@ -201,9 +196,9 @@ export function selectHoveredElement (path) {
   };
 }
 
-export function unselectHoveredElement (path) {
+export function unselectHoveredElement () {
   return (dispatch) => {
-    dispatch({type: UNSELECT_HOVERED_ELEMENT, path});
+    dispatch({type: UNSELECT_HOVERED_ELEMENT});
   };
 }
 
@@ -289,7 +284,6 @@ export function quitSession (reason, killedByUser = true) {
     const applyAction = applyClientMethod({methodName: 'quit'});
     await applyAction(dispatch, getState);
     dispatch({type: QUIT_SESSION_DONE});
-    dispatch(push('/session'));
     if (!killedByUser) {
       notification.error({
         message: 'Error',
@@ -683,27 +677,15 @@ export function clearSwipeAction () {
   };
 }
 
-export function promptKeepAlive () {
+export function selectCommandGroup (group) {
   return (dispatch) => {
-    dispatch({type: PROMPT_KEEP_ALIVE});
+    dispatch({type: SELECT_COMMAND_GROUP, group});
   };
 }
 
-export function hideKeepAlivePrompt () {
+export function selectCommandSubGroup (group) {
   return (dispatch) => {
-    dispatch({type: HIDE_PROMPT_KEEP_ALIVE});
-  };
-}
-
-export function selectActionGroup (group) {
-  return (dispatch) => {
-    dispatch({type: SELECT_ACTION_GROUP, group});
-  };
-}
-
-export function selectSubActionGroup (group) {
-  return (dispatch) => {
-    dispatch({type: SELECT_SUB_ACTION_GROUP, group});
+    dispatch({type: SELECT_COMMAND_SUB_GROUP, group});
   };
 }
 
@@ -713,21 +695,27 @@ export function selectInteractionMode (interaction) {
   };
 }
 
-export function startEnteringActionArgs (actionName, action) {
+export function startEnteringCommandArgs (commandName, command) {
   return (dispatch) => {
-    dispatch({type: ENTERING_ACTION_ARGS, actionName, action});
+    dispatch({type: ENTERING_COMMAND_ARGS, commandName, command});
   };
 }
 
-export function cancelPendingAction () {
+export function cancelPendingCommand () {
   return (dispatch) => {
-    dispatch({type: REMOVE_ACTION});
+    dispatch({type: CANCEL_PENDING_COMMAND});
   };
 }
 
-export function setActionArg (index, value) {
+export function setCommandArg (index, value) {
   return (dispatch) => {
-    dispatch({type: SET_ACTION_ARG, index, value});
+    dispatch({type: SET_COMMAND_ARG, index, value});
+  };
+}
+
+export function setUserWaitTimeout (userWaitTimeout) {
+  return (dispatch) => {
+    dispatch({type: SET_USER_WAIT_TIMEOUT, userWaitTimeout});
   };
 }
 
@@ -737,10 +725,10 @@ export function setActionArg (index, value) {
 export function runKeepAliveLoop () {
   return (dispatch, getState) => {
     dispatch({type: SET_LAST_ACTIVE_MOMENT, lastActiveMoment: Date.now()});
-    const {driver} = getState().inspector;
+    const { driver } = getState().inspector;
 
     const keepAliveInterval = setInterval(async () => {
-      const {lastActiveMoment} = getState().inspector;
+      const { lastActiveMoment, showKeepAlivePrompt } = getState().inspector;
       console.log('Pinging Appium server to keep session active'); // eslint-disable-line no-console
       try {
         await driver.getTimeouts(); // Pings the Appium server to keep it alive
@@ -748,17 +736,8 @@ export function runKeepAliveLoop () {
       const now = Date.now();
 
       // If the new command limit has been surpassed, prompt user if they want to keep session going
-      // Give them WAIT_FOR_USER_KEEP_ALIVE ms to respond
-      if (now - lastActiveMoment > NO_NEW_COMMAND_LIMIT) {
-        const action = promptKeepAlive();
-        action(dispatch);
-
-        // After the time limit kill the session (this timeout will be killed if they keep it alive)
-        const userWaitTimeout = setTimeout(() => {
-          const action = quitSession(i18n.t('Session closed due to inactivity'), false);
-          action(dispatch, getState);
-        }, WAIT_FOR_USER_KEEP_ALIVE);
-        dispatch({type: SET_USER_WAIT_TIMEOUT, userWaitTimeout});
+      if (now - lastActiveMoment > NO_NEW_COMMAND_LIMIT && !showKeepAlivePrompt) {
+        dispatch({type: PROMPT_KEEP_ALIVE});
       }
     }, KEEP_ALIVE_PING_INTERVAL);
     dispatch({type: SET_KEEP_ALIVE_INTERVAL, keepAliveInterval});
@@ -786,8 +765,7 @@ export function killKeepAliveLoop () {
 export function keepSessionAlive () {
   return (dispatch, getState) => {
     const {userWaitTimeout} = getState().inspector;
-    const action = hideKeepAlivePrompt();
-    action(dispatch);
+    dispatch({type: HIDE_PROMPT_KEEP_ALIVE});
     dispatch({type: SET_LAST_ACTIVE_MOMENT, lastActiveMoment: +(new Date())});
     if (userWaitTimeout) {
       clearTimeout(userWaitTimeout);
@@ -851,8 +829,8 @@ export function setAwaitingMjpegStream (isAwaiting) {
 }
 
 export function saveGesture (params) {
-  return async (dispatch, getState) => {
-    const savedGestures = getState().inspector.savedGestures;
+  return async (dispatch) => {
+    let savedGestures = await getSetting(SET_SAVED_GESTURES) || [];
     if (!params.id) {
       params.id = UUID();
       params.date = Date.now();
@@ -866,7 +844,6 @@ export function saveGesture (params) {
         }
       }
     }
-    dispatch({type: SET_SAVED_GESTURES, savedGestures});
     await setSetting(SET_SAVED_GESTURES, savedGestures);
     const action = getSavedGestures();
     await action(dispatch);
@@ -902,6 +879,7 @@ export function showGestureEditor () {
 export function hideGestureEditor () {
   return (dispatch) => {
     dispatch({type: HIDE_GESTURE_EDITOR});
+    dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode: 'select' });
   };
 }
 

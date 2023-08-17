@@ -109,16 +109,16 @@ export const APP_MODE = {
   WEB_HYBRID: 'web_hybrid',
 };
 
-export const actionArgTypes = {
+export const COMMAND_ARG_TYPES = {
   STRING: 'string',
   NUMBER: 'number',
   BOOLEAN: 'boolean',
 };
 
-const { STRING, NUMBER, BOOLEAN } = actionArgTypes;
+const { STRING, NUMBER, BOOLEAN } = COMMAND_ARG_TYPES;
 
-// Note: When adding or removing actionDefinitions, update `en/translation.json`
-export const actionDefinitions = {
+// Note: When adding or removing COMMAND_DEFINITIONS, update `en/translation.json`
+export const COMMAND_DEFINITIONS = {
   'Device': {
     'Execute Script': {
       'Execute': {methodName: 'executeScript', args: [['executeScriptCommand', STRING], ['jsonArgument', STRING]]}
@@ -244,7 +244,7 @@ export const actionDefinitions = {
 
 export const INTERACTION_MODE = {
   SOURCE: 'source',
-  ACTIONS: 'actions',
+  COMMANDS: 'commands',
   GESTURES: 'gestures',
   SESSION_INFO: 'sessionInfo',
 };

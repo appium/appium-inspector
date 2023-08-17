@@ -59,7 +59,6 @@
 .inspector-main .screenshot-container img {
     max-width: 100%;
     max-height: 100%;
-    border: 1px solid #eee;
     box-shadow: 0px 0px 1px 2px rgba(0, 0, 0, 0.05);
 }
 
@@ -98,6 +97,7 @@
 .inspector-main :global(.ant-card-body) {
     height: calc(100% - 48px);
     padding: 12px;
+    scrollbar-width: none;  /* -webkit-scrollbar for Firefox */
 }
 
 .inspector-main .interaction-tab-container :global(.ant-tabs) {
@@ -201,7 +201,6 @@
 
 .inspector-main .interaction-tab-container .interaction-tab-card {
     height: 100%;
-    padding-bottom: 3em;
 }
 
 .highlighter-box {
@@ -366,6 +365,30 @@
     vertical-align: middle;
 }
 
+.wide-tooltip {
+    max-width: 400px;
+}
+
+.contexts-custom-btn {
+    height: 30px;
+    width: 30px;
+    color: #ffffff;
+    margin-top: 1px;
+    padding: 3px 0 0 7px;
+}
+
+.no-contexts-info-icon {
+    background-color: #faad14;
+}
+
+.contexts-info-icon {
+    background-color: #1890ff;
+}
+
+.header-context-selector {
+    width: 350px;
+}
+
 .elementActions {
     margin-bottom: 20px;
     gap: 8px;
@@ -402,11 +425,6 @@
 
 .selectedElemNotInteractableAlertRow {
     justify-content: center;
-}
-
-.context-selector {
-    width: 100%;
-    margin-bottom: 1em;
 }
 
 .sourceTag {
@@ -468,10 +486,6 @@
 .element-count-container {
     margin-top: 0.5em;
     margin-left: 0.5em;
-}
-
-.locatorStrategyGroup {
-    margin-bottom: 12px;
 }
 
 .locatorStrategyBtn {
@@ -575,15 +589,11 @@
     margin: 0 auto 2px auto;
 }
 
-.action-controls {
-    margin-right: 20px;
-}
-
-.actions-container .btn-container {
+.commands-container .btn-container {
     padding: 16px;
 }
 
-.actions-container .arg-row {
+.commands-container .arg-row {
     margin-bottom: 8px;
 }
 
@@ -591,11 +601,11 @@
     padding: 4px 4px 0 0
 }
 
-.actions-container :global(.ant-select) {
+.commands-container :global(.ant-select) {
     width: 100%;
 }
 
-.actions-container :global(.ant-btn) {
+.commands-container :global(.ant-btn) {
     width: 100%;
 }
 

@@ -9,10 +9,10 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          FINDING_ELEMENT_IN_SOURCE, FINDING_ELEMENT_IN_SOURCE_COMPLETED, ADD_ASSIGNED_VAR_CACHE, CLEAR_ASSIGNED_VAR_CACHE, SET_SCREENSHOT_INTERACTION_MODE,
          SET_SWIPE_START, SET_SWIPE_END, CLEAR_SWIPE_ACTION, SET_SEARCHED_FOR_ELEMENT_BOUNDS, CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS,
          PROMPT_KEEP_ALIVE, HIDE_PROMPT_KEEP_ALIVE, GET_FIND_ELEMENTS_TIMES, GET_FIND_ELEMENTS_TIMES_COMPLETED,
-         SELECT_ACTION_GROUP, SELECT_SUB_ACTION_GROUP, SET_APP_MODE,
-         SELECT_INTERACTION_MODE, ENTERING_ACTION_ARGS, SET_ACTION_ARG, REMOVE_ACTION, SET_CONTEXT,
+         SELECT_COMMAND_GROUP, SELECT_COMMAND_SUB_GROUP, SET_APP_MODE,
+         SELECT_INTERACTION_MODE, ENTERING_COMMAND_ARGS, SET_COMMAND_ARG, CANCEL_PENDING_COMMAND, SET_CONTEXT,
          SET_KEEP_ALIVE_INTERVAL, SET_USER_WAIT_TIMEOUT, SET_LAST_ACTIVE_MOMENT, SET_VISIBLE_COMMAND_RESULT,
-         SET_AWAITING_MJPEG_STREAM, SET_APP_ID, SET_SERVER_STATUS, SET_SESSION_TIME, SHOW_GESTURE_EDITOR, HIDE_GESTURE_EDITOR, SET_SAVED_GESTURES,
+         SET_AWAITING_MJPEG_STREAM, SET_APP_ID, SET_SERVER_STATUS, SET_SESSION_TIME, SHOW_GESTURE_EDITOR, HIDE_GESTURE_EDITOR,
          GET_SAVED_GESTURES_REQUESTED, GET_SAVED_GESTURES_DONE, SET_LOADED_GESTURE, REMOVE_LOADED_GESTURE, SHOW_GESTURE_ACTION, HIDE_GESTURE_ACTION,
          SELECT_TICK_ELEMENT, UNSELECT_TICK_ELEMENT, SET_GESTURE_TAP_COORDS_MODE, CLEAR_TAP_COORDINATES, DELETE_SAVED_GESTURES_REQUESTED, DELETE_SAVED_GESTURES_DONE,
          SELECT_HOVERED_CENTROID, UNSELECT_HOVERED_CENTROID, SELECT_CENTROID, UNSELECT_CENTROID,
@@ -21,6 +21,7 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from '../components/Inspector/shared';
 
 const DEFAULT_FRAMEWORK = 'java';
+const NATIVE_APP = 'NATIVE_APP';
 
 const INITIAL_STATE = {
   savedGestures: [],
@@ -48,12 +49,12 @@ const INITIAL_STATE = {
   assignedVarCache: {},
   screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
   searchedForElementBounds: null,
-  selectedActionGroup: null,
-  selectedSubActionGroup: null,
+  selectedCommandGroup: null,
+  selectedCommandSubGroup: null,
   selectedInteractionMode: INTERACTION_MODE.SOURCE,
   appMode: APP_MODE.NATIVE,
   mjpegScreenshotUrl: null,
-  pendingAction: null,
+  pendingCommand: null,
   findElementsExecutionTimes: [],
   isFindingElementsTimes: false,
   isFindingLocatedElementInSource: false,
@@ -83,7 +84,7 @@ export default function inspector (state = INITIAL_STATE, action) {
         ...state,
         contexts: action.contexts,
         contextsError: action.contextsError,
-        currentContext: action.currentContext,
+        currentContext: action.currentContext || NATIVE_APP,
         currentContextError: action.currentContextError,
         source: action.source,
         sourceXML: action.sourceXML,
@@ -421,16 +422,16 @@ export default function inspector (state = INITIAL_STATE, action) {
         showKeepAlivePrompt: false,
       };
 
-    case SELECT_ACTION_GROUP:
+    case SELECT_COMMAND_GROUP:
       return {
         ...state,
-        selectedActionGroup: action.group
+        selectedCommandGroup: action.group
       };
 
-    case SELECT_SUB_ACTION_GROUP:
+    case SELECT_COMMAND_SUB_GROUP:
       return {
         ...state,
-        selectedSubActionGroup: action.group,
+        selectedCommandSubGroup: action.group,
       };
 
     case SELECT_INTERACTION_MODE:
@@ -451,29 +452,29 @@ export default function inspector (state = INITIAL_STATE, action) {
         showCentroids: action.show,
       };
 
-    case ENTERING_ACTION_ARGS:
+    case ENTERING_COMMAND_ARGS:
       return {
         ...state,
-        pendingAction: {
-          actionName: action.actionName,
-          action: action.action,
+        pendingCommand: {
+          commandName: action.commandName,
+          command: action.command,
           args: [],
         }
       };
 
-    case SET_ACTION_ARG:
+    case SET_COMMAND_ARG:
       return {
         ...state,
-        pendingAction: {
-          ...state.pendingAction,
-          args: Object.assign([], state.pendingAction.args, {[action.index]: action.value}), // Replace 'value' at 'index'
+        pendingCommand: {
+          ...state.pendingCommand,
+          args: Object.assign([], state.pendingCommand.args, {[action.index]: action.value}), // Replace 'value' at 'index'
         },
       };
 
-    case REMOVE_ACTION:
+    case CANCEL_PENDING_COMMAND:
       return {
         ...state,
-        pendingAction: null,
+        pendingCommand: null,
       };
 
     case SET_CONTEXT:
@@ -491,7 +492,7 @@ export default function inspector (state = INITIAL_STATE, action) {
     case SET_USER_WAIT_TIMEOUT:
       return {
         ...state,
-        userWaitTimeout: null,
+        userWaitTimeout: action.userWaitTimeout,
       };
 
     case SET_LAST_ACTIVE_MOMENT:
@@ -538,12 +539,6 @@ export default function inspector (state = INITIAL_STATE, action) {
       return {
         ...state,
         isGestureEditorVisible: false,
-      };
-
-    case SET_SAVED_GESTURES:
-      return {
-        ...state,
-        savedGestures: action.savedGestures,
       };
 
     case GET_SAVED_GESTURES_REQUESTED:

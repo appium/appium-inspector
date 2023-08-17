@@ -1,7 +1,6 @@
 import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE,
          SESSION_SERVER_PARAMS } from '../../shared/settings';
 import { v4 as UUID } from 'uuid';
-import { push } from 'connected-react-router';
 import { notification } from 'antd';
 import { includes, debounce, toPairs, union, without, keys, isUndefined, isPlainObject } from 'lodash';
 import { setSessionDetails, quitSession } from './Inspector';
@@ -264,7 +263,7 @@ export function newSession (caps, attachSessId = null) {
             description: i18n.t('sauceCredentialsRequired'),
             duration: 4
           });
-          return;
+          return false;
         }
         https = false;
         if (!isPlainObject(desiredCapabilities[SAUCE_OPTIONS_CAP])) {
@@ -281,7 +280,7 @@ export function newSession (caps, attachSessId = null) {
           headspinUrl = new URL(session.server.headspin.webDriverUrl);
         } catch (ign) {
           showError(new Error(`${session.server.headspin.webDriverUrl} is invalid url`), null, 0);
-          return;
+          return false;
         }
         host = session.server.headspin.hostname = headspinUrl.hostname;
         path = session.server.headspin.path = headspinUrl.pathname;
@@ -301,7 +300,7 @@ export function newSession (caps, attachSessId = null) {
             description: i18n.t('Perfecto SecurityToken is required'),
             duration: 4
           });
-          return;
+          return false;
         }
         desiredCapabilities['perfecto:options'] = {securityToken: token};
         https = session.server.perfecto.ssl;
@@ -322,7 +321,7 @@ export function newSession (caps, attachSessId = null) {
             description: i18n.t('browserstackCredentialsRequired'),
             duration: 4
           });
-          return;
+          return false;
         }
         https = session.server.browserstack.ssl = (parseInt(port, 10) === 443);
         break;
@@ -351,7 +350,7 @@ export function newSession (caps, attachSessId = null) {
             description: i18n.t('lambdatestCredentialsRequired'),
             duration: 4,
           });
-          return;
+          return false;
         }
         https = session.server.lambdatest.ssl = parseInt(port, 10) === 443;
         break;
@@ -366,7 +365,7 @@ export function newSession (caps, attachSessId = null) {
             description: i18n.t('bitbarCredentialsRequired'),
             duration: 4
           });
-          return;
+          return false;
         }
         desiredCapabilities['bitbar:options'] = {
           source: 'appiumdesktop',
@@ -388,7 +387,7 @@ export function newSession (caps, attachSessId = null) {
             description: i18n.t('kobitonCredentialsRequired'),
             duration: 4
           });
-          return;
+          return false;
         }
         https = session.server.kobiton.ssl = true;
         break;
@@ -405,7 +404,7 @@ export function newSession (caps, attachSessId = null) {
             description: 'PCLOUDY username and api key are required!',
             duration: 4
           });
-          return;
+          return false;
         }
         https = session.server.pcloudy.ssl = true;
         break;
@@ -425,7 +424,7 @@ export function newSession (caps, attachSessId = null) {
             description: i18n.t('testingbotCredentialsRequired'),
             duration: 4
           });
-          return;
+          return false;
         }
         https = session.server.testingbot.ssl = true;
         break;
@@ -436,7 +435,7 @@ export function newSession (caps, attachSessId = null) {
             description: i18n.t('experitestAccessKeyURLRequired'),
             duration: 4
           });
-          return;
+          return false;
         }
         desiredCapabilities['experitest:accessKey'] = session.server.experitest.accessKey;
 
@@ -445,7 +444,7 @@ export function newSession (caps, attachSessId = null) {
           experitestUrl = new URL(session.server.experitest.url);
         } catch (ign) {
           showError(new Error(`${session.server.experitest.url} is invalid url`), null, 0);
-          return;
+          return false;
         }
 
         host = session.server.experitest.hostname = experitestUrl.hostname;
@@ -538,7 +537,7 @@ export function newSession (caps, attachSessId = null) {
       }
     } catch (err) {
       showError(err, null, 0);
-      return;
+      return false;
     } finally {
       dispatch({type: NEW_SESSION_DONE});
       // Save the current server settings
@@ -589,7 +588,7 @@ export function newSession (caps, attachSessId = null) {
       mjpegScreenshotUrl
     });
     action(dispatch);
-    dispatch(push('/inspector'));
+    return true;
   };
 }
 
@@ -1053,8 +1052,8 @@ export function setAddVendorPrefixes (addVendorPrefixes) {
   };
 }
 
-export function initFromQueryString () {
-  return async (dispatch, getState) => {
+export function initFromQueryString (loadNewSession) {
+  return (dispatch, getState) => {
     if (!isFirstRun) {
       return;
     }
@@ -1075,11 +1074,11 @@ export function initFromQueryString () {
     }
 
     if (autoStartSession === AUTO_START_URL_PARAM) {
-      const {attachSessId, caps} = getState().session;
+      const { attachSessId, caps } = getState().session;
       if (attachSessId) {
-        return await newSession(null, attachSessId)(dispatch, getState);
+        return loadNewSession(null, attachSessId);
       }
-      await newSession(caps)(dispatch, getState);
+      loadNewSession(caps);
     }
   };
 }

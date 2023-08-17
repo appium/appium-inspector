@@ -1,28 +1,25 @@
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import Root from './containers/Root';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-import Store from './store';
+import store from './store';
 
-const { history, configureStore } = Store;
+const container = document.getElementById('root');
+const root = createRoot(container);
 
-const store = configureStore();
-
-render(
+root.render(
   <ErrorBoundary>
-    <Root store={store} history={history} />
-  </ErrorBoundary>,
-  document.getElementById('root')
+    <Root store={store} />
+  </ErrorBoundary>
 );
 
 if (module.hot) {
   module.hot.accept('./containers/Root', () => {
     const NextRoot = require('./containers/Root').default;
-    render(
+    root.render(
       <AppContainer>
-        <NextRoot store={store} history={history} />
-      </AppContainer>,
-      document.getElementById('root')
+        <NextRoot store={store} />
+      </AppContainer>
     );
   });
 }
