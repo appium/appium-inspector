@@ -590,11 +590,7 @@
 }
 
 .commands-container .btn-container {
-    padding: 16px;
-}
-
-.commands-container .arg-row {
-    margin-bottom: 8px;
+    padding: 8px;
 }
 
 .arg-container {

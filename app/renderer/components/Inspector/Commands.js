@@ -1,18 +1,17 @@
 import React from 'react';
 import _ from 'lodash';
-import { Row, Col, Button, Select, Modal, Input, Switch, notification, } from 'antd';
+import { Alert, Row, Col, Button, Collapse, Modal, Input, Switch, Space, notification, Tooltip } from 'antd';
 import { COMMAND_DEFINITIONS, COMMAND_ARG_TYPES } from './shared';
 import InspectorStyles from './Inspector.css';
-import { INPUT } from '../AntdTypes';
+import { ALERT, INPUT } from '../AntdTypes';
 
 const Commands = (props) => {
-  const { selectCommandGroup, selectCommandSubGroup, selectedCommandGroup, selectedCommandSubGroup,
-          pendingCommand, cancelPendingCommand, setCommandArg, applyClientMethod, t } = props;
+  const { pendingCommand, cancelPendingCommand, setCommandArg, applyClientMethod, automationName, t } = props;
 
   const startPerformingCommand = (commandName, command) => {
     const { startEnteringCommandArgs } = props;
     if (_.isEmpty(command.args)) {
-      applyClientMethod({methodName: command.methodName, args: [], skipRefresh: !command.refresh, ignoreResult: false});
+      applyClientMethod({methodName: commandName, args: [], skipRefresh: !command.refresh, ignoreResult: false});
     } else {
       startEnteringCommandArgs(commandName, command);
     }
@@ -66,35 +65,47 @@ const Commands = (props) => {
     cancelPendingCommand();
   };
 
+  const generateCommandNotes = (notes) =>
+    notes.map((note) =>
+      _.isArray(note) ? `${t(note[0])}: ${note[1]}` : t(note)
+    ).join('; ');
+
   return <div className={InspectorStyles['commands-container']}>
-    <Row gutter={16} className={InspectorStyles['arg-row']}>
-      <Col span={24}>
-        <Select onChange={(commandGroupName) => selectCommandGroup(commandGroupName)} placeholder={t('Select Command Group')}>
-          { _.keys(COMMAND_DEFINITIONS).map((commandGroup) => <Select.Option key={commandGroup}>{t(commandGroup)}</Select.Option>) }
-        </Select>
-      </Col>
-    </Row>
-    {selectedCommandGroup && <Row>
-      <Col span={24}>
-        <Select onChange={(commandGroupName) => selectCommandSubGroup(commandGroupName)} placeholder={t('Select Sub Group')}>
-          { _.keys(COMMAND_DEFINITIONS[selectedCommandGroup]).map((commandGroup) => <Select.Option key={commandGroup}>{t(commandGroup)}</Select.Option>) }
-        </Select>
-      </Col>
-    </Row>}
-    <Row>
-      {selectedCommandSubGroup && _.toPairs(COMMAND_DEFINITIONS[selectedCommandGroup][selectedCommandSubGroup]).map(([commandName, command], index) => <Col key={index} span={8}>
-        <div className={InspectorStyles['btn-container']}>
-          <Button onClick={() => startPerformingCommand(commandName, command)}>{t(commandName)}</Button>
-        </div>
-      </Col>)}
-    </Row>
+    <Space className={InspectorStyles.spaceContainer} direction='vertical' size='middle'>
+      {t('commandsDescription')}
+      <Collapse>
+        { _.toPairs(COMMAND_DEFINITIONS).map(([commandGroup, commands]) =>
+          <Collapse.Panel header={t(commandGroup)} key={commandGroup}>
+            <Row>
+              {_.toPairs(commands).map(([commandName, command], index) =>
+                (!automationName || !command.drivers || command.drivers.includes(_.toLower(automationName))) &&
+                  <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
+                    <div className={InspectorStyles['btn-container']}>
+                      <Tooltip title={(command.notes && !command.args) ? generateCommandNotes(command.notes) : null}>
+                        <Button onClick={() => startPerformingCommand(commandName, command)}>
+                          {commandName}
+                        </Button>
+                      </Tooltip>
+                    </div>
+                  </Col>
+              )}
+            </Row>
+          </Collapse.Panel>
+        )}
+      </Collapse>
+    </Space>
     {!!pendingCommand && <Modal
-      title={t(pendingCommand.commandName)}
+      title={`${t('Enter Parameters for:')} ${t(pendingCommand.commandName)}`}
       okText={t('Execute Command')}
       cancelText={t('Cancel')}
       open={!!pendingCommand}
       onOk={() => executeCommand()}
       onCancel={() => cancelPendingCommand()}>
+      {pendingCommand.command.notes && <Alert
+        message={generateCommandNotes(pendingCommand.command.notes)}
+        type={ALERT.INFO}
+        showIcon/>
+      }
       {
         !_.isEmpty(pendingCommand.command.args) && _.map(pendingCommand.command.args, ([argName, argType], index) => <Row key={index} gutter={16}>
           <Col span={24} className={InspectorStyles['arg-container']}>
