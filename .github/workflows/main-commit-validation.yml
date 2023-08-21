@@ -1,0 +1,36 @@
+# Code validation job, executed on new commit on main branch
+# Builds the app, and runs lint, unit and integration tests
+
+name: Commit Validation
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '.github/ISSUE_TEMPLATE/**'
+      - 'assets/locales/**'
+      - 'docs/**'
+      - 'sample-session-files/**'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'README.md'
+      - 'renovate.json'
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js LTS
+      uses: actions/setup-node@v3
+      with:
+        node-version: lts/*
+        cache: 'npm'
+    - name: Install Dependencies
+      run: npm ci
+    - name: Build
+      run: npm run build --if-present
+    - name: Test
+      run: npm test

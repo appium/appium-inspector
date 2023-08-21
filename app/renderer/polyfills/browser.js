@@ -37,7 +37,7 @@ class BrowserSettings {
   }
 }
 
-const log = console; // eslint-disable-line no-console
+const log = console;
 const settings = new BrowserSettings();
 const {clipboard, shell, remote, ipcRenderer} = browser;
 const i18NextBackend = require('i18next-chained-backend').default;

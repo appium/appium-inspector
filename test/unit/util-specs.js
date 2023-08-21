@@ -1,7 +1,7 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { getOptimalXPath, xmlToJSON, addVendorPrefixes } from '../../app/renderer/util';
-import { DOMParser } from 'xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 import xpath from 'xpath';
 import sinon from 'sinon';
 
@@ -83,7 +83,7 @@ describe('util.js', function () {
       const json = xmlToJSON(`<hierarchy index="0" class="hierarchy" rotation="0" width="1080" height="2028">
         <android.widget.FrameLayout
             index="0"
-            package="com.appiumdesktop"
+            package="com.appiuminspector"
             class="android.widget.FrameLayout"
             text=""
             checkable="false"
@@ -100,7 +100,7 @@ describe('util.js', function () {
             displayed="true">
           <android.widget.LinearLayout
             index="0"
-            package="com.appiumdesktop"
+            package="com.appiuminspector"
             class="android.widget.LinearLayout"
             text=""
             checkable="false"
@@ -126,7 +126,7 @@ describe('util.js', function () {
               tagName: 'android.widget.LinearLayout',
               attributes: {
                 index: '0',
-                package: 'com.appiumdesktop',
+                package: 'com.appiuminspector',
                 class: 'android.widget.LinearLayout',
                 text: '',
                 checkable: 'false',
@@ -149,7 +149,7 @@ describe('util.js', function () {
           tagName: 'android.widget.FrameLayout',
           attributes: {
             index: '0',
-            package: 'com.appiumdesktop',
+            package: 'com.appiuminspector',
             class: 'android.widget.FrameLayout',
             text: '',
             checkable: 'false',
@@ -185,8 +185,8 @@ describe('util.js', function () {
       const json = xmlToJSON(`<hierarchy>
         <XCUIElementTypeApplication type="XCUIElementTypeApplication" name="wdioDemoApp" label="wdioDemoApp" enabled="true" visible="true" x="0" y="0" width="414" height="896">
           <XCUIElementTypeWindow type="XCUIElementTypeWindow" enabled="true" visible="true" x="0" y="0" width="414" height="896">
-            <XCUIElementTypeOther type="XCUIElementTypeOther" name="Appium Desktop" label="Appium Desktop" enabled="true" visible="true" x="0" y="0" width="414" height="896">
-              <XCUIElementTypeOther type="XCUIElementTypeOther" name="Appium Desktop" label="Appium Desktop" enabled="true" visible="true" x="0" y="0" width="414" height="802">
+            <XCUIElementTypeOther type="XCUIElementTypeOther" name="Appium Inspector" label="Appium Inspector" enabled="true" visible="true" x="0" y="0" width="414" height="896">
+              <XCUIElementTypeOther type="XCUIElementTypeOther" name="Appium Inspector" label="Appium Inspector" enabled="true" visible="true" x="0" y="0" width="414" height="802">
                 <XCUIElementTypeOther type="XCUIElementTypeOther" name="button-login-container" label="Login" enabled="true" visible="true" x="109" y="170" width="88" height="40">
                   <XCUIElementTypeOther type="XCUIElementTypeOther" name="Login" label="Login" enabled="true" visible="true" x="109" y="170" width="88" height="40">
                     <XCUIElementTypeStaticText type="XCUIElementTypeStaticText" value="Login" name="Login" label="Login" enabled="true" visible="true" x="124" y="175" width="58" height="30"/>
@@ -280,8 +280,8 @@ describe('util.js', function () {
                       tagName: 'XCUIElementTypeOther',
                       attributes: {
                         type: 'XCUIElementTypeOther',
-                        name: 'Appium Desktop',
-                        label: 'Appium Desktop',
+                        name: 'Appium Inspector',
+                        label: 'Appium Inspector',
                         enabled: 'true',
                         visible: 'true',
                         x: '0',
@@ -289,8 +289,8 @@ describe('util.js', function () {
                         width: '414',
                         height: '802'
                       },
-                      xpath: '(//XCUIElementTypeOther[@name="Appium Desktop"])[2]',
-                      classChain: '**/XCUIElementTypeOther[`label == "Appium Desktop"`][2]',
+                      xpath: '(//XCUIElementTypeOther[@name="Appium Inspector"])[2]',
+                      classChain: '**/XCUIElementTypeOther[`label == "Appium Inspector"`][2]',
                       predicateString: '',
                       path: '0.0.0.0'
                     },
@@ -358,8 +358,8 @@ describe('util.js', function () {
                   tagName: 'XCUIElementTypeOther',
                   attributes: {
                     type: 'XCUIElementTypeOther',
-                    name: 'Appium Desktop',
-                    label: 'Appium Desktop',
+                    name: 'Appium Inspector',
+                    label: 'Appium Inspector',
                     enabled: 'true',
                     visible: 'true',
                     x: '0',
@@ -367,8 +367,8 @@ describe('util.js', function () {
                     width: '414',
                     height: '896'
                   },
-                  xpath: '(//XCUIElementTypeOther[@name="Appium Desktop"])[1]',
-                  classChain: '**/XCUIElementTypeOther[`label == "Appium Desktop"`][1]',
+                  xpath: '(//XCUIElementTypeOther[@name="Appium Inspector"])[1]',
+                  classChain: '**/XCUIElementTypeOther[`label == "Appium Inspector"`][1]',
                   predicateString: '',
                   path: '0.0.0'
                 }

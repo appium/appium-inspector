@@ -15,7 +15,7 @@ class RobotFramework extends Framework {
 
   getPythonVal (jsonVal) {
     if (typeof jsonVal === 'boolean') {
-      return jsonVal ? 'True' : 'False';
+      return jsonVal ? 'true' : 'false';
     }
     return jsonVal;
   }
@@ -26,9 +26,14 @@ class RobotFramework extends Framework {
 # Then you can paste this into a file and simply run with robot
 #
 #  more keywords on: http://serhatbolsu.github.io/robotframework-appiumlibrary/AppiumLibrary.html
+#
+# if your tests fails saying 'did not match any elements' consider use 'wait activity' or 
+# 'wait until page contains element' before a click command 
 
 *** Settings ***
 Library           AppiumLibrary
+Test Teardown     Quit Application
+Suite Teardown    Close Application
 
 *** Variables ***
 $\{REMOTE_URL\}   ${this.serverUrl}
@@ -38,12 +43,7 @@ ${this.getCapsVariables}
 Test case name
 ${this.indent(this.getApplicationInitialization(), 4)}
 ${this.indent(code, 4)}
-
-*** Test Teardown ***
-    Quit Application
-
-*** Suite Teardown ***
-    Close Application`;
+`;
   }
 
   codeFor_findAndAssign (strategy, locator/*, localVar, isArray*/) {
@@ -64,41 +64,50 @@ ${this.indent(code, 4)}
     }
     //TODO: in the robot case, we need the ID on the codeFor_ for execution
     this.lastID = `${strategy}=${locator}`;
+
+    if (this.lastID.includes('accessibility id')) {
+      this.lastID = this.lastID.replace('accessibility id', 'accessibility_id');
+    }
+
     return `# ${this.lastID}`;
   }
 
   getApplicationInitialization () {
     let varString = Object.keys(this.caps).map((k) => `${k}=\$\{${k}\}`).join('  ');
-    return `Open Application    \$\{REMOTE_URL\}   ${varString}`;
+    return `    Open Application    \$\{REMOTE_URL\}   ${varString}`;
   }
 
   codeFor_executeScript (/*varNameIgnore, varIndexIgnore, args*/) {
-    return `TODO implement executeScript`;
+    return `    Execute Script    TODO implement executeScript`;
   }
 
 
   codeFor_click (/*varName, varIndex*/) {
-    return `Click Element    ${this.lastID}`;
+    return `    Click Element    ${this.lastID}`;
   }
 
   codeFor_clear (/*varName, varIndex*/) {
-    return `Clear Text    ${this.lastID}`;
+    return `    Clear Text    ${this.lastID}`;
   }
 
   codeFor_sendKeys (varName, varIndex, text) {
-    return `Input Text    ${this.lastID}    ${text}`;
+    return `    Input Text    ${this.lastID}    ${text}`;
   }
 
   codeFor_back () {
-    return `Go Back`;
+    return `    Go Back`;
   }
 
-  codeFor_tap (varNameIgnore, varIndexIgnore, x, y) {
-    return `Tap    ${this.lastID}    ${x}    ${y}`;
+  codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
+    const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
+
+    return `    Tap With Positions    100    \$\{${x}, ${y}\}`;
   }
 
-  codeFor_swipe (varNameIgnore, varIndexIgnore, x1, y1, x2, y2) {
-    return `Swipe    ${x1}    ${y1}    ${x2}    ${y2}`;
+  codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
+    const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
+
+    return `    Swipe    ${x1}    ${y1}    ${x2}    ${y2}`;
   }
 
   // TODO: Add these robot framework commands

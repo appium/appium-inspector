@@ -1,3 +1,5 @@
+import { DEFAULT_TAP, DEFAULT_SWIPE } from '../../components/Inspector/shared';
+
 export default class Framework {
 
   constructor (host, port, path, https, caps) {
@@ -13,8 +15,25 @@ export default class Framework {
     this.lastAssignedVar = null;
   }
 
+  getTapCoordinatesFromPointerActions (pointerActions) {
+    const pointerMoveAction = pointerActions[DEFAULT_TAP.POINTER_NAME][0];
+    return {x: pointerMoveAction.x, y: pointerMoveAction.y};
+  }
+
+  getSwipeCoordinatesFromPointerActions (pointerActions) {
+    const pointerMoveActionStart = pointerActions[DEFAULT_SWIPE.POINTER_NAME][0];
+    const pointerMoveActionEnd = pointerActions[DEFAULT_SWIPE.POINTER_NAME][2];
+
+    return {
+      x1: pointerMoveActionStart.x,
+      y1: pointerMoveActionStart.y,
+      x2: pointerMoveActionEnd.x,
+      y2: pointerMoveActionEnd.y
+    };
+  }
+
   get serverUrl () {
-    return `${this.scheme}://${this.host}:${this.port}${this.path}`;
+    return `${this.scheme}://${this.host}:${this.port}${this.path === '/' ? '' : this.path}`;
   }
 
   get name () {

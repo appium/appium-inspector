@@ -43,7 +43,7 @@ driver.quit()`;
 
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
     let suffixMap = {
-      xpath: 'AppiumBy.CLASS_NAME',
+      xpath: 'AppiumBy.XPATH',
       'accessibility id': 'AppiumBy.ACCESSIBILITY_ID',
       'id': 'AppiumBy.ID',
       'name': 'AppiumBy.NAME',
@@ -52,7 +52,7 @@ driver.quit()`;
       '-android datamatcher': 'AppiumBy.ANDROID_DATA_MATCHER',
       '-android viewtag': 'AppiumBy.ANDROID_VIEWTAG',
       '-ios predicate string': 'AppiumBy.IOS_PREDICATE',
-      '-ios class chain': 'AppiumBy.IOS_CLASS_CHAI',
+      '-ios class chain': 'AppiumBy.IOS_CLASS_CHAIN',
     };
     if (!suffixMap[strategy]) {
       throw new Error(`Strategy ${strategy} can't be code-gened`);
@@ -80,7 +80,9 @@ driver.quit()`;
     return `driver.back()`;
   }
 
-  codeFor_tap (varNameIgnore, varIndexIgnore, x, y) {
+  codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
+    const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
+
     return `actions = ActionChains(driver)
 actions.w3c_actions = ActionBuilder(driver, mouse=PointerInput(interaction.POINTER_TOUCH, "touch"))
 actions.w3c_actions.pointer_action.move_to_location(${x}, ${y})
@@ -91,7 +93,9 @@ actions.perform()
     `;
   }
 
-  codeFor_swipe (varNameIgnore, varIndexIgnore, x1, y1, x2, y2) {
+  codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
+    const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
+
     return `actions = ActionChains(driver)
 actions.w3c_actions = ActionBuilder(driver, mouse=PointerInput(interaction.POINTER_TOUCH, "touch"))
 actions.w3c_actions.pointer_action.move_to_location(${x1}, ${y1})

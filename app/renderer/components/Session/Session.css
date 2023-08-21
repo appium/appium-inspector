@@ -1,15 +1,15 @@
 .active-session {
-    background-color: #662d91;
-    color: white;
+  background-color: #662d91;
+  color: white;
 }
 
 .sessionContainer {
-    width: 100%;
-    height: 100%;
-    padding: 1em;
-    background: linear-gradient(180deg, #f9f9f9, #f2f2f2, 5%, #f2f2f2, 95%, #d9d9d9);
-    display: flex;
-    flex-flow: column;
+  width: 100%;
+  height: 100%;
+  padding: 1em;
+  background: linear-gradient(180deg, #f9f9f9, #f2f2f2, 5%, #f2f2f2, 95%, #d9d9d9);
+  display: flex;
+  flex-flow: column;
 }
 
 .sessionContainer :global(.ant-tabs-tab .anticon.anticon-close-square) {
@@ -43,11 +43,6 @@
 .cloudProviderModal :global(.ant-modal-body button img) {
   height: 100%;
 }
-
-.serverTabs :global(.ant-row > div) {
-  height: 56px;
-}
-
 .sessionFooter {
   text-align: right;
   height: 30px;
@@ -67,7 +62,7 @@
 }
 
 .serverTabs {
-  min-height: 160px;
+  padding-bottom: 8px;
 }
 
 .serverTabs :global(.ant-tabs-bar) {
@@ -79,6 +74,14 @@
   -webkit-app-region: drag;
 }
 
+.serverTabs :global(.ant-form > .ant-row > div) {
+  padding-bottom: 12px;
+}
+
+.serverTabs :global(.ant-form-item) {
+  margin: 0;
+}
+
 .scrollingTabCont {
   border-bottom: 1px solid #d9d9d9;
   margin-bottom: 15px;
@@ -86,6 +89,7 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  overflow: auto;
 }
 
 .scrollingTabCont :global(.ant-tabs-bar) {
@@ -97,84 +101,109 @@
 }
 
 .scrollingTab {
+  scrollbar-width: none; /* -webkit-scrollbar for Firefox */
   overflow-y: scroll;
   height: 100%;
-  padding-top: 16px;
 }
 
 .scrollingTab::-webkit-scrollbar {
   width: 0px;
 }
 
-.saved-sessions,
-.saved-sessions :global(.ant-col),
-.saved-sessions :global(.ant-table),
-.saved-sessions :global(.ant-table-wrapper) {
+:global(.ant-badge-count) {
+  background-color: #1890ff;
+}
+
+.savedSessions,
+.savedSessions :global(.ant-table),
+.savedSessions :global(.ant-table-wrapper) {
   height: 100%;
 }
 
-.saved-sessions :global(.ant-table) {
-  overflow-y: auto;
+.savedSessions :global(.ant-col) {
   height: calc(100% - 15px);
 }
 
-.saved-sessions :global(.ant-table::-webkit-scrollbar) {
+.savedSessions :global(.ant-table) {
+  overflow-y: auto;
+}
+
+.savedSessions :global(.ant-table-body .ant-table-cell) {
+  padding: 8px 16px;
+}
+
+.savedSessions :global(.ant-table::-webkit-scrollbar) {
   width: 0px;
 }
 
 .newSessionForm {
   overflow-y: auto;
   overflow-x: hidden;
-  height: calc(100% - 15px);
+  height: 100%;
+}
+
+.newSessionForm::-webkit-scrollbar {
+  width: 0px;
 }
 
 .capsFormattedCol {
+  padding-left: 12px;
+}
+
+.formattedCaps,
+.formattedCapsBody {
   height: 100%;
 }
 
-.formattedCapsCont {
-  height: 100%;
-}
-
-.formattedCaps {
-  height: calc(100% - 15px);
-  margin-left: 12px;
-  display: flex;
-  flex-flow: column;
-  align-items: stretch;
+.formattedCaps :global(.ant-card-head-title) {
+  height: 54px;
+  padding-right: 10px;
 }
 
 .formattedCaps :global(.ant-card-body) {
+  height: calc(100% - 54px);
+  padding: 0 14px 0 24px;
   flex: 1;
   overflow-y: auto;
 }
 
-.formattedCaps :global(.ant-card-body::-webkit-scrollbar) {
+.formattedCaps :global(.ant-card-extra) {
+  padding: 15px 0;
 }
 
-
-.formattedCaps pre {
+.formattedCapsBody pre {
+  height: 100%;
+  margin: 0;
+  padding: 24px 0;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
 
 
 .start-session-button {
-    margin-left: 1em;
+  margin-left: 1em;
 }
 
 .filepath-button {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .capsFormCol {
-    min-width: 476px;
-    height: 100%;
+  min-width: 420px;
+  height: 100%;
 }
 
 .capsFormRow {
   font-size: 14px;
   height: 100%;
+}
+
+.capsFormRow :global(.ant-col) {
+  height: calc(100% - 15px);
+}
+
+.capsBoxFont {
+  font-family: monospace;
 }
 
 .capsFormRow :global(.ant-form-item) {
@@ -191,44 +220,75 @@
 }
 
 .localDesc {
-    font-style: italic;
-    color: #666;
-    margin-top: 8px;
-    margin-left: 8px;
+  font-style: italic;
+  color: #666;
+  margin: 0;
+  padding: 6px 8px 0 8px;
 }
 
 .selected {
   background-color: #d6e8ff;
 }
 
+.capsNameEditorButton {
+  margin: 0 8px 0 0;
+  padding: 0;
+}
+
 .capsEditorControls {
   position: absolute;
   right: 0;
-  margin: 4px 24px;
+  padding: 28px;
 }
 
 .capsEditorButton {
-  margin: 0 4px 0 0;
+  margin: 0 0 0 4px;
 }
 
 .capsEditor {
   width: 100%;
   height: 100%;
+  padding: 24px 0;
+}
+
+.capsEditorTitle {
+  width: 100%;
+  height: 22px;
+  padding: 0;
+  margin: 0;
+  resize: none;
+}
+
+.capsEditorBody {
+  width: 100%;
+  padding: 0;
+  margin: -1px;
+  resize: none;
   border-color: lightgray;
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.capsEditorBodyFull {
+  height: 100%;
+}
+
+.capsEditorBodyResized {
+  height: calc(100% - 40px);
 }
 
 .advancedSettingsContainerCol {
   width: 100%;
 }
 
-.advancedSettingsContainer {
+.advancedSettingsContainer :global(.ant-form-item) {
+  margin: 0;
 }
 
 .add-desired-capability-button {
   float: right;
 }
 
-.edit-session {
+.editSession {
   margin-right: 10px;
 }
 
@@ -251,7 +311,7 @@
 }
 
 .addonDataCenterRadioContainer {
-  line-height: 32px;
   display: table-cell;
+  padding-top: 4px;
   padding-left: 11px;
 }

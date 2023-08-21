@@ -20,17 +20,12 @@ jobs:
       USE_HARD_LINKS: 'false'
     steps:
     - checkout: self
-      submodules: true
       persistCredentials: true
     - task: NodeTool@0
       inputs:
-        versionSpec: '14.x'
+        versionSpec: '16.x'
     - script: npm ci
       displayName: Install dependencies
-    - script: |
-        git clone https://github.com/appium/appium-desktop.git
-        npm run copy-en-i18n ./appium-desktop
-      displayName: Copy EN translations from server
     - script: npm run build
       displayName: Build
     - script: ${{ parameters.buildScript }}

@@ -1,91 +1,92 @@
-import React, { Component } from 'react';
-import { clipboard } from '../../polyfills';
-import { Input, Row, Col, Button } from 'antd';
+import React, { useRef } from 'react';
+import { Alert, Input, Row, Button, Badge, List, Space, Spin, Tooltip } from 'antd';
+import { AimOutlined, ClearOutlined, SendOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { ALERT } from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
-import { withTranslation } from '../../util';
 
-class LocatedElements extends Component {
+const LocatedElements = (props) => {
+  const { locatedElements, locatedElementsExecutionTime, applyClientMethod, setLocatorTestElement, locatorTestElement,
+          isFindingLocatedElementInSource, searchedForElementBounds, selectLocatedElement, source, driver, t } = props;
 
-  onSubmit () {
-    const {locatedElements, locatorTestStrategy, locatorTestValue, searchForElement, clearSearchResults, hideLocatorTestModal} = this.props;
-    if (locatedElements) {
-      hideLocatorTestModal();
-      clearSearchResults();
-    } else {
-      searchForElement(locatorTestStrategy, locatorTestValue);
+  const sendKeys = useRef(null);
+
+  const showIdAutocompleteInfo = () => {
+    const { locatorTestStrategy, locatorTestValue, automationName } = props;
+    const idLocatorAutocompletionDisabled = driver.client.capabilities.disableIdLocatorAutocompletion;
+    if (automationName && automationName.toLowerCase() === 'uiautomator2' &&
+      locatorTestStrategy === 'id' && !locatorTestValue.includes(':id/') && !idLocatorAutocompletionDisabled) {
+      return <Row><Alert message={t('idAutocompletionCanBeDisabled')} type={ALERT.INFO} showIcon/></Row>;
     }
-  }
+  };
 
-  onCancel () {
-    const {hideLocatorTestModal, clearSearchResults} = this.props;
-    hideLocatorTestModal();
-    clearSearchResults();
-  }
+  return <>
+    {locatedElements.length === 0 && <Space className={InspectorStyles.spaceContainer} direction='vertical' size='small'>
+      <Row><i>{t('couldNotFindAnyElements')}</i></Row>
+      {showIdAutocompleteInfo()}
+    </Space>}
+    {locatedElements.length > 0 && <Spin spinning={isFindingLocatedElementInSource}>
+      <Space className={InspectorStyles.spaceContainer} direction='vertical' size='small'>
+        <Row justify='space-between'>
+          <span>{t('elementsCount')} <Badge count={locatedElements.length} offset={[0, -2]}/></span>
+          <>{t('Time')}: {locatedElementsExecutionTime}</>
+        </Row>
+        <Row>
+          <List className={InspectorStyles.searchResultsList}
+            size='small'
+            dataSource={locatedElements}
+            renderItem={(elementId) =>
+              <List.Item type='text'
+                {...(locatorTestElement === elementId ? { className: InspectorStyles.searchResultsSelectedItem } : {})}
+                {...(locatorTestElement !== elementId ? { onClick: () => {setLocatorTestElement(elementId);} } : {})}
+              >
+                {elementId}
+              </List.Item>
+            }
+          />
+        </Row>
+        <Row justify='center'>
+          <Space direction='horizontal' size='small'>
+            <Tooltip title={t('Find and Select in Source')} placement='bottom'>
+              <Button
+                disabled={!locatorTestElement}
+                icon={<MenuUnfoldOutlined/>}
+                onClick={() => selectLocatedElement(source, searchedForElementBounds, locatorTestElement)}
+              />
+            </Tooltip>
+            <Tooltip title={t('Tap')} placement='bottom'>
+              <Button
+                disabled={!locatorTestElement}
+                icon={<AimOutlined/>}
+                onClick={() => applyClientMethod({methodName: 'click', elementId: locatorTestElement})}
+              />
+            </Tooltip>
+            <Button.Group className={InspectorStyles.searchResultsActions}>
+              <Input className={InspectorStyles.searchResultsKeyInput}
+                disabled={!locatorTestElement}
+                placeholder={t('Enter Keys to Send')}
+                allowClear={true}
+                onChange={(e) => sendKeys.current = e.target.value}/>
+              <Tooltip title={t('Send Keys')} placement='bottom'>
+                <Button
+                  disabled={!locatorTestElement}
+                  icon={<SendOutlined/>}
+                  onClick={() => applyClientMethod({methodName: 'sendKeys', elementId: locatorTestElement, args: [sendKeys.current || '']})}
+                />
+              </Tooltip>
+              <Tooltip title={t('Clear')} placement='bottom'>
+                <Button
+                  disabled={!locatorTestElement}
+                  id='btnClearElement'
+                  icon={<ClearOutlined/>}
+                  onClick={() => applyClientMethod({methodName: 'clear', elementId: locatorTestElement})}
+                />
+              </Tooltip>
+            </Button.Group>
+          </Space>
+        </Row>
+      </Space>
+    </Spin>}
+  </>;
+};
 
-  render () {
-    const {
-      locatedElements,
-      applyClientMethod,
-      setLocatorTestElement,
-      locatorTestElement,
-      t,
-    } = this.props;
-
-    return <Row>
-      <p className={InspectorStyles['element-count-container']}>
-        {locatedElements.length === 0 &&
-          <i>{t('couldNotFindAnyElements')}</i>}
-        {locatedElements.length > 0 &&
-          t('elementsCount', {elementCount: locatedElements.length})}
-      </p>
-      <Col>
-        {locatedElements.length > 0 &&
-        <div className={InspectorStyles['locator-test-interactions-container']}>
-          <select className={InspectorStyles['locator-search-results']}
-            multiple='true'
-            onChange={(e) => setLocatorTestElement(e.target.value)}
-            value={[locatorTestElement]}>
-            {locatedElements.map((elementId) => (
-              <option key={elementId} value={elementId}>{elementId}</option>
-            ))}
-          </select>
-          <div>
-            <Button size='small'
-              disabled={!locatorTestElement}
-              onClick={() => clipboard.writeText(locatorTestElement)}
-            >
-              {t('Copy ID')}
-            </Button>
-          </div>
-          <div>
-            <Button size='small'
-              disabled={!locatorTestElement}
-              onClick={() => applyClientMethod({methodName: 'click', elementId: locatorTestElement})}
-            >
-              {t('Tap Element')}
-            </Button>
-          </div>
-          <div>
-            <Button size='small'
-              disabled={!locatorTestElement}
-              onClick={() => applyClientMethod({methodName: 'clear', elementId: locatorTestElement})}
-            >
-              {t('Clear')}
-            </Button>
-          </div>
-          <div className={InspectorStyles['send-keys-container']}>
-            <Input size='small' placeholder={t('Enter keys')} onChange={(e) => this.setState({...this.state, sendKeys: e.target.value})}/>
-            <Button size='small'
-              disabled={!locatorTestElement}
-              onClick={() => applyClientMethod({methodName: 'sendKeys', elementId: locatorTestElement, args: [this.state.sendKeys || '']})}
-            >
-              {t('Send Keys')}
-            </Button>
-          </div>
-        </div>}
-      </Col>
-    </Row>;
-  }
-}
-
-export default withTranslation(LocatedElements);
+export default LocatedElements;

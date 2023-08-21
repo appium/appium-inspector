@@ -1,12 +1,28 @@
-import { DOMParser } from 'xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 import xpath from 'xpath';
+
+export function pixelsToPercentage (px, maxPixels) {
+  if (!isNaN(px)) {
+    return parseFloat(((px / maxPixels) * 100).toFixed(1), 10);
+  }
+}
+
+export function percentageToPixels (pct, maxPixels) {
+  if (!isNaN(pct)) {
+    return Math.round(maxPixels * (pct / 100));
+  }
+}
 
 export function parseCoordinates (element) {
   let {bounds, x, y, width, height} = element.attributes || {};
 
   if (bounds) {
     let boundsArray = bounds.split(/\[|\]|,/).filter((str) => str !== '');
-    return {x1: boundsArray[0], y1: boundsArray[1], x2: boundsArray[2], y2: boundsArray[3]};
+    const x1 = parseInt(boundsArray[0], 10);
+    const x2 = parseInt(boundsArray[2], 10);
+    const y1 = parseInt(boundsArray[1], 10);
+    const y2 = parseInt(boundsArray[3], 10);
+    return { x1, y1, x2, y2 };
   } else if (x) {
     x = parseInt(x, 10);
     y = parseInt(y, 10);
@@ -34,6 +50,8 @@ const STRATEGY_MAPPINGS = [
   ['id', 'id'],
   ['rntestid', 'id'],
   ['resource-id', 'id'],
+  ['class', 'class name'],
+  ['type', 'class name'],
 ];
 
 export function getLocators (attributes, sourceXML) {
@@ -47,10 +65,43 @@ export function getLocators (attributes, sourceXML) {
   return res;
 }
 
+export const POINTER_TYPES = {
+  POINTER_UP: 'pointerUp',
+  POINTER_DOWN: 'pointerDown',
+  PAUSE: 'pause',
+  POINTER_MOVE: 'pointerMove'
+};
+
+export const DEFAULT_SWIPE = {
+  POINTER_NAME: 'finger1',
+  DURATION_1: 0,
+  DURATION_2: 750,
+  BUTTON: 0,
+  ORIGIN: 'viewport'
+};
+
+export const DEFAULT_TAP = {
+  POINTER_NAME: 'finger1',
+  DURATION_1: 0,
+  DURATION_2: 100,
+  BUTTON: 0
+};
+
+// 3 Types of Centroids:
+// CENTROID is the circle/square displayed on the screen
+// EXPAND is the +/- circle displayed on the screen
+// OVERLAP is the same as CENTROID but is only visible when clicked on +/- circle
+export const RENDER_CENTROID_AS = {
+  CENTROID: 'centroid',
+  EXPAND: 'expand',
+  OVERLAP: 'overlap'
+};
+
 export const SCREENSHOT_INTERACTION_MODE = {
   SELECT: 'select',
   SWIPE: 'swipe',
   TAP: 'tap',
+  GESTURE: 'gesture',
 };
 
 export const APP_MODE = {
@@ -58,141 +109,240 @@ export const APP_MODE = {
   WEB_HYBRID: 'web_hybrid',
 };
 
-export const actionArgTypes = {
+export const COMMAND_ARG_TYPES = {
   STRING: 'string',
   NUMBER: 'number',
   BOOLEAN: 'boolean',
 };
 
-const { STRING, NUMBER, BOOLEAN } = actionArgTypes;
+const { STRING, NUMBER, BOOLEAN } = COMMAND_ARG_TYPES;
 
-// Note: When adding or removing actionDefinitions, update `en/translation.json`
-export const actionDefinitions = {
-  'Device': {
-    'Execute Script': {
-      'Execute': {methodName: 'executeScript', args: [['executeScriptCommand', STRING], ['jsonArgument', STRING]]}
-    },
-    'Android Activity': {
-      'Start Activity': {methodName: 'startActivity', args: [
+export const DRIVERS = {
+  UIAUTOMATOR2: 'uiautomator2',
+  ESPRESSO: 'espresso',
+  XCUITEST: 'xcuitest',
+  FLUTTER: 'flutter',
+  MAC2: 'mac2',
+  WINDOWS: 'windows',
+  CHROMIUM: 'chromium',
+  SAFARI: 'safari',
+  GECKO: 'gecko'
+};
+
+const { UIAUTOMATOR2, ESPRESSO, XCUITEST } = DRIVERS;
+
+// Note: When changing COMMAND_DEFINITIONS categories, or 'notes' for any command, update `en/translation.json`
+export const COMMAND_DEFINITIONS = {
+  'Execute Script': {
+    'executeScript': {
+      args: [['executeScriptCommand', STRING], ['jsonArgument', STRING]]
+    }
+  },
+  'App Management': {
+    'startActivity': {
+      args: [
         ['appPackage', STRING], ['appActivity', STRING], ['appWaitPackage', STRING],
         ['intentAction', STRING], ['intentCategory', STRING], ['intentFlags', STRING],
-        ['optionalIntentArguments', STRING], ['dontStopAppOnReset', STRING],
-      ], refresh: true},
-      'Current Activity': {methodName: 'getCurrentActivity'},
-      'Current Package': {methodName: 'getCurrentPackage'},
+        ['optionalIntentArguments', STRING], ['dontStopAppOnReset', STRING]
+      ],
+      drivers: [UIAUTOMATOR2, ESPRESSO],
+      refresh: true
     },
-    'App': {
-      'Install App': {methodName: 'installApp', args: [['appPathOrUrl', STRING]]},
-      'Is App Installed': {methodName: 'isAppInstalled', args: [['appId', STRING]]},
-      'Background App': {methodName: 'background', args: [['timeout', NUMBER]], refresh: true},
-      'Activate App': {methodName: 'activateApp', args: [['appId', STRING]], refresh: true},
-      'Terminate App': {methodName: 'terminateApp', args: [['appId', STRING]], refresh: true},
-      'Reset App': {methodName: 'resetApp', refresh: true},
-      'Remove App': {methodName: 'removeApp', args: [['appId', STRING]]},
-      'Get App Strings': {methodName: 'getStrings', args: [['language', STRING], ['stringFile', STRING]], refresh: true},
+    'getCurrentActivity': {
+      drivers: [UIAUTOMATOR2, ESPRESSO]
     },
-    'Clipboard': {
-      'Get Clipboard': {methodName: 'getClipboard'},
-      'Set Clipboard': {methodName: 'setClipboard', args: [
-        ['clipboardText', STRING], ['contentType', STRING], ['contentLabel', STRING]
-      ]},
+    'getCurrentPackage': {
+      drivers: [UIAUTOMATOR2, ESPRESSO]
     },
-    'File': {
-      'Push File': {methodName: 'pushFile', args: [['pathToInstallTo', STRING], ['fileContentString', STRING]]},
-      'Pull File': {methodName: 'pullFile', args: [['pathToPullFrom', STRING]]},
-      'Pull Folder': {methodName: 'pullFolder', args: [['folderToPullFrom', STRING]]},
+    'installApp': {
+      args: [['appPathOrUrl', STRING]]
     },
-    'Interaction': {
-      'Shake': {methodName: 'shake'},
-      'Lock': {methodName: 'lock', args: [['seconds', NUMBER]], refresh: true},
-      'Unlock': {methodName: 'unlock', refresh: true},
-      'Is Device Locked': {methodName: 'isLocked'},
-      'Rotate Device': {methodName: 'rotateDevice', args: [
-        ['x', NUMBER], ['y', NUMBER], ['radius', NUMBER], ['rotatation', NUMBER], ['touchCount', NUMBER], ['duration', NUMBER]
-      ], refresh: true},
+    'isAppInstalled': {
+      args: [['appId', STRING]]
     },
-    'Keys': {
-      'Press Key': {methodName: 'pressKeyCode', args: [['keyCode', NUMBER], ['metaState', NUMBER], ['flags', NUMBER]], refresh: true},
-      'Long Press Key': {methodName: 'longPressKeyCode', args: [['keyCode', NUMBER], ['metaState', NUMBER], ['flags', NUMBER]], refresh: true},
-      'Hide Keyboard': {methodName: 'hideKeyboard', refresh: true},
-      'Is Keyboard Shown': {methodName: 'isKeyboardShown'},
+    'background': {
+      args: [['timeout', NUMBER]],
+      refresh: true
     },
-    'Network': {
-      'Toggle Airplane Mode': {methodName: 'toggleAirplaneMode'},
-      'Toggle Data': {methodName: 'toggleData'},
-      'Toggle WiFi': {methodName: 'toggleWiFi'},
-      'Toggle Location Services': {methodName: 'toggleLocationServices'},
-      'Send SMS': {methodName: 'sendSMS', args: [['phoneNumber', STRING], ['text', STRING]]},
-      'GSM Call': {methodName: 'gsmCall', args: [['phoneNumber', STRING], ['action', STRING]]},
-      'GSM Signal': {methodName: 'gsmSignal', args: [['signalStrengh', NUMBER]]},
-      'GSM Voice': {methodName: 'gsmVoice', args: [['state', STRING]]},
+    'activateApp': {
+      args: [['appId', STRING]],
+      refresh: true
     },
-    'Performance Data': {
-      'Get Data': {methodName: 'getPerformanceData', args: [['packageName', STRING], ['dataType', STRING], ['dataReadTimeout', NUMBER]]},
-      'Get Data Types': {methodName: 'getPerformanceDataTypes'},
+    'terminateApp': {
+      args: [['appId', STRING]],
+      refresh: true
     },
-    'iOS Simulator': {
-      'Perform Touch Id': {methodName: 'touchId', args: [['shouldMatch', BOOLEAN]], refresh: true},
-      'Toggle Touch Id Enrollment': {methodName: 'toggleEnrollTouchId', args: [['shouldEnroll', BOOLEAN]]},
+    'removeApp': {
+      args: [['appId', STRING]]
     },
-    'System': {
-      'Open Notifications': {methodName: 'openNotifications', refresh: true},
-      'Get System Time': {methodName: 'getDeviceTime'},
-      'Fingerprint (Android)': {methodName: 'fingerPrint', args: [['fingerPrintId', NUMBER]], refresh: true}
+    'getStrings': {
+      args: [['language', STRING], ['stringFile', STRING]],
+      refresh: true
     },
+  },
+  'Clipboard': {
+    'getClipboard': {},
+    'setClipboard': {
+      args: [['clipboardText', STRING], ['contentType', STRING], ['contentLabel', STRING]]
+    },
+  },
+  'File Transfer': {
+    'pushFile': {
+      args: [['pathToInstallTo', STRING], ['fileContentString', STRING]]
+    },
+    'pullFile': {
+      args: [['pathToPullFrom', STRING]]
+    },
+    'pullFolder': {
+      args: [['folderToPullFrom', STRING]]
+    },
+  },
+  'Device Interaction': {
+    'shake': {},
+    'lock': {
+      args: [['seconds', NUMBER]],
+      refresh: true
+    },
+    'unlock': {
+      refresh: true
+    },
+    'isLocked': {},
+    'rotateDevice': {
+      args: [
+        ['x', NUMBER], ['y', NUMBER], ['duration', NUMBER], ['radius', NUMBER],
+        ['rotation', NUMBER], ['touchCount', NUMBER]
+      ],
+      refresh: true
+    },
+    'fingerPrint': {
+      args: [['fingerPrintId', NUMBER]],
+      drivers: [UIAUTOMATOR2, ESPRESSO],
+      notes: ['simulatorOnly', ['minAndroidSDK', 23]],
+      refresh: true
+    },
+    'touchId': {
+      args: [['shouldMatch', BOOLEAN]],
+      drivers: [XCUITEST],
+      notes: ['simulatorOnly'],
+      refresh: true
+    },
+    'toggleEnrollTouchId': {
+      args: [['shouldEnroll', BOOLEAN]],
+      drivers: [XCUITEST],
+      notes: ['simulatorOnly'],
+    },
+  },
+  'Keyboard': {
+    'pressKeyCode': {
+      args: [['keyCode', NUMBER], ['metaState', NUMBER], ['flags', NUMBER]],
+      refresh: true
+    },
+    'longPressKeyCode': {
+      args: [['keyCode', NUMBER], ['metaState', NUMBER], ['flags', NUMBER]],
+      refresh: true
+    },
+    'hideKeyboard': {
+      refresh: true
+    },
+    'isKeyboardShown': {},
+  },
+  'Connectivity': {
+    'toggleAirplaneMode': {},
+    'toggleData': {},
+    'toggleWiFi': {},
+    'toggleLocationServices': {},
+    'sendSMS': {
+      args: [['phoneNumber', STRING], ['text', STRING]]
+    },
+    'gsmCall': {
+      args: [['phoneNumber', STRING], ['action', STRING]]
+    },
+    'gsmSignal': {
+      args: [['signalStrengh', NUMBER]]
+    },
+    'gsmVoice': {
+      args: [['state', STRING]]
+    },
+  },
+  'Performance Data': {
+    'getPerformanceData': {
+      args: [['packageName', STRING], ['dataType', STRING], ['dataReadTimeout', NUMBER]]
+    },
+    'getPerformanceDataTypes': {},
+  },
+  'System': {
+    'openNotifications': {
+      refresh: true
+    },
+    'getDeviceTime': {},
   },
   'Session': {
-    'Session Capabilities': {
-      'Get Session Capabilities': {methodName: 'getSession'}
+    'getSession': {},
+    'setTimeouts': {
+      args: [['implicitTimeout', NUMBER], ['pageLoadTimeout', NUMBER], ['scriptTimeout', NUMBER]]
     },
-    'Timeouts': {
-      'Set Timeouts': {methodName: 'setTimeouts', args: [
-        ['implicitTimeout', NUMBER], ['pageLoadTimeout', NUMBER], ['scriptTimeout', NUMBER]
-      ]},
+    'getOrientation': {},
+    'setOrientation': {
+      args: [['orientation', STRING]],
+      refresh: true
     },
-    'Orientation': {
-      'Get Orientation': {methodName: 'getOrientation'},
-      'Set Orientation': {methodName: 'setOrientation', args: [['orientation', STRING]], refresh: true},
+    'getGeoLocation': {},
+    'setGeoLocation': {
+      args: [['latitude', NUMBER], ['longitude', NUMBER], ['altitude', NUMBER]]
     },
-    'Geolocation': {
-      'Get Geolocation': {methodName: 'getGeoLocation'},
-      'Set Geolocation': {methodName: 'setGeoLocation', args: [['latitude', NUMBER], ['longitude', NUMBER], ['altitude', NUMBER]]},
+    'getLogTypes': {},
+    'getLogs': {
+      args: [['logType', STRING]]
     },
-    'Logs': {
-      'Get Log Types': {methodName: 'getLogTypes'},
-      'Get Logs': {methodName: 'getLogs', args: [['logType', STRING]]},
+    'updateSettings': {
+      args: [['settingsJson', STRING]]
     },
-    'Settings': {
-      'Update Settings': {methodName: 'updateSettings', args: [['settingsJson', STRING]]},
-      'Get Device Settings': {methodName: 'getSettings'},
-    },
+    'getSettings': {},
   },
   'Web': {
-    'Navigation': {
-      'Go to URL': {methodName: 'navigateTo', args: [['url', STRING]], refresh: true},
-      'Get URL': {methodName: 'getUrl'},
-      'Back': {methodName: 'back', refresh: true},
-      'Forward': {methodName: 'forward', refresh: true},
-      'Refresh': {methodName: 'refresh', refresh: true}
+    'navigateTo': {
+      args: [['url', STRING]],
+      refresh: true
+    },
+    'getUrl': {},
+    'back': {
+      refresh: true
+    },
+    'forward': {
+      refresh: true
+    },
+    'refresh': {
+      refresh: true
     }
   },
   'Context': {
-    'Context': {
-      'Get Current Context': {methodName: 'getContext'},
-      'Get Context List': {methodName: 'getContexts'},
-      'Set Context': {methodName: 'switchContext', args: [['name', STRING]], refresh: true}
+    'getContext': {},
+    'getContexts': {},
+    'switchContext': {
+      args: [['name', STRING]],
+      refresh: true
+    }
+  },
+  'Window (W3C)': {
+    'getWindowHandle': {},
+    'closeWindow': {
+      refresh: true
     },
-    'Window (W3C)': {
-      'Get Window Handle': {methodName: 'getWindowHandle'},
-      'Close Window': {methodName: 'closeWindow', refresh: true},
-      'Switch To Window': {methodName: 'switchToWindow', args: [['handle', STRING]], refresh: true},
-      'Get Window Handles': {methodName: 'getWindowHandles'},
-      'New Window': {methodName: 'createWindow', args: [['type', STRING]], refresh: true}
+    'switchToWindow': {
+      args: [['handle', STRING]],
+      refresh: true
+    },
+    'getWindowHandles': {},
+    'createWindow': {
+      args: [['type', STRING]],
+      refresh: true
     }
   }
 };
 
 export const INTERACTION_MODE = {
   SOURCE: 'source',
-  ACTIONS: 'actions',
+  COMMANDS: 'commands',
+  GESTURES: 'gestures',
+  SESSION_INFO: 'sessionInfo',
 };

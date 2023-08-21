@@ -15,7 +15,7 @@ describe.skip('updateChecker', function () {
     if (!process.env.GITHUB_TOKEN) {
       return this.skip();
     }
-    const latestReleaseUrl = `https://api.github.com/repos/appium/appium-desktop/releases/latest?access_token=${process.env.GITHUB_TOKEN}`;
+    const latestReleaseUrl = `https://api.github.com/repos/appium/appium-inspector/releases/latest?access_token=${process.env.GITHUB_TOKEN}`;
     const res = JSON.parse(await request.get(latestReleaseUrl, {headers: {'user-agent': 'node.js'}}));
     latestVersion = res.name;
   });

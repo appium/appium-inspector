@@ -1,44 +1,37 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Collapse, Form, Row, Col, Checkbox, Input } from 'antd';
 import styles from './Session.css';
 
-const {Panel} = Collapse;
-const FormItem = Form.Item;
+const AdvancedServerParams = ({ server, setServerParam, serverType, t }) => (
+  <Row gutter={8}>
+    <Col className={styles.advancedSettingsContainerCol}>
+      <div className={styles.advancedSettingsContainer}>
+        <Collapse bordered={true}>
+          <Collapse.Panel header={t('Advanced Settings')}>
+            <Row>
+              {serverType !== 'lambdatest' &&
+              <Col span={7}>
+                <Form.Item>
+                  <Checkbox checked={!!server.advanced.allowUnauthorized} onChange={(e) => setServerParam('allowUnauthorized', e.target.checked, 'advanced')}>{t('allowUnauthorizedCerts')}</Checkbox>
+                </Form.Item>
+              </Col>}
+              <Col span={5} align='right'>
+                <Form.Item>
+                  <Checkbox checked={!!server.advanced.useProxy} onChange={(e) => setServerParam('useProxy', e.target.checked, 'advanced')}>{t('Use Proxy')}</Checkbox>
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item>
+                  <Input disabled={!server.advanced.useProxy} onChange={(e) => setServerParam('proxy', e.target.value, 'advanced')}
+                    placeholder={t('Proxy URL')} value={server.advanced.proxy} />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Collapse.Panel>
+        </Collapse>
+      </div>
+    </Col>
+  </Row>
+);
 
-export default class AdvancedServerParams extends Component {
-
-
-  render () {
-    const {server, setServerParam, t, serverType} = this.props;
-
-    return <Row gutter={8}>
-      <Col className={styles.advancedSettingsContainerCol}>
-        <div className={styles.advancedSettingsContainer}>
-          <Collapse bordered={true}>
-            <Panel header={t('Advanced Settings')}>
-              <Row>
-                {serverType !== 'lambdatest' &&
-                <Col span={6}>
-                  <FormItem>
-                    <Checkbox checked={!!server.advanced.allowUnauthorized} onChange={(e) => setServerParam('allowUnauthorized', e.target.checked, 'advanced')}>{t('allowUnauthorizedCerts')}</Checkbox>
-                  </FormItem>
-                </Col>}
-                <Col span={4}>
-                  <FormItem>
-                    <Checkbox checked={!!server.advanced.useProxy} onChange={(e) => setServerParam('useProxy', e.target.checked, 'advanced')}>{t('Use Proxy')}</Checkbox>
-                  </FormItem>
-                </Col>
-                <Col span={6}>
-                  <FormItem>
-                    <Input disabled={!server.advanced.useProxy} onChange={(e) => setServerParam('proxy', e.target.value, 'advanced')}
-                      placeholder={t('Proxy URL')} value={server.advanced.proxy} />
-                  </FormItem>
-                </Col>
-              </Row>
-            </Panel>
-          </Collapse>
-        </div>
-      </Col>
-    </Row>;
-  }
-}
+export default AdvancedServerParams;

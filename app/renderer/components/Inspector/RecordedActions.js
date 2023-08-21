@@ -1,122 +1,92 @@
 import { clipboard } from '../../polyfills';
-import React, { Component } from 'react';
+import React from 'react';
 import { Card, Select, Tooltip, Button } from 'antd';
 import InspectorStyles from './Inspector.css';
 import frameworks from '../../lib/client-frameworks';
 import { highlight } from 'highlight.js';
-import { withTranslation } from '../../util';
-import {
-  ExportOutlined,
-  CopyOutlined,
-  DeleteOutlined,
-  CloseOutlined,
-  CodeOutlined
-} from '@ant-design/icons';
-import { BUTTON } from '../../../../gui-common/components/AntdTypes';
+import { ExportOutlined, CopyOutlined, DeleteOutlined, CloseOutlined, CodeOutlined } from '@ant-design/icons';
+import { BUTTON } from '../AntdTypes';
 
-const Option = Select.Option;
-const ButtonGroup = Button.Group;
+const RecordedActions = (props) => {
+  const { showBoilerplate, recordedActions, actionFramework, t } = props;
 
-class RecordedActions extends Component {
+  const code = (raw = true) => {
+    const { host, port, path, https, desiredCapabilities } = props.sessionDetails;
 
-  code (raw = true) {
-    let {showBoilerplate, sessionDetails, recordedActions, actionFramework
-    } = this.props;
-    let {host, port, path, https, desiredCapabilities} = sessionDetails;
-
-    let framework = new frameworks[actionFramework](host, port, path,
-      https, desiredCapabilities);
+    let framework = new frameworks[actionFramework](host, port, path, https, desiredCapabilities);
     framework.actions = recordedActions;
-    let rawCode = framework.getCodeString(showBoilerplate);
+    const rawCode = framework.getCodeString(showBoilerplate);
     if (raw) {
       return rawCode;
     }
     return highlight(framework.language, rawCode, true).value;
-  }
+  };
 
-  actionBar () {
-    const {
-      showBoilerplate,
-      recordedActions,
-      setActionFramework,
-      toggleShowBoilerplate,
-      clearRecording,
-      closeRecorder,
-      actionFramework,
-      isRecording,
-      t,
-    } = this.props;
-
-    let frameworkOpts = Object.keys(frameworks).map((f) => <Option value={f} key={f}>
-      {frameworks[f].readableName}
-    </Option>);
+  const actionBar = () => {
+    const { setActionFramework, toggleShowBoilerplate, clearRecording, closeRecorder, isRecording } = props;
 
     return <div>
       {!!recordedActions.length &&
         <Select defaultValue={actionFramework} onChange={setActionFramework}
           className={InspectorStyles['framework-dropdown']} size="small">
-          {frameworkOpts}
+          {Object.keys(frameworks).map((f) =>
+            <Select.Option value={f} key={f}>{frameworks[f].readableName}</Select.Option>
+          )}
         </Select>
       }
       {(!!recordedActions.length || !isRecording) &&
-        <ButtonGroup size="small">
+        <Button.Group size="small">
           {!!recordedActions.length &&
           <Tooltip title={t('Show/Hide Boilerplate Code')}>
             <Button
               onClick={toggleShowBoilerplate}
               icon={<ExportOutlined/>}
-              type={showBoilerplate ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-            />
+              type={showBoilerplate ? BUTTON.PRIMARY : BUTTON.DEFAULT} />
           </Tooltip>
           }
           {!!recordedActions.length &&
           <Tooltip title={t('Copy code to clipboard')}>
             <Button
               icon={<CopyOutlined/>}
-              onClick={() => clipboard.writeText(this.code())}
-            />
+              onClick={() => clipboard.writeText(code())} />
           </Tooltip>
           }
           {!!recordedActions.length &&
           <Tooltip title={t('Clear Actions')}>
             <Button
               icon={<DeleteOutlined/>}
-              onClick={clearRecording}/>
+              onClick={clearRecording} />
           </Tooltip>
           }
           {!isRecording &&
           <Tooltip title={t('Close Recorder')}>
             <Button
               icon={<CloseOutlined/>}
-              onClick={closeRecorder}/>
+              onClick={closeRecorder} />
           </Tooltip>
           }
-        </ButtonGroup>
+        </Button.Group>
       }
     </div>;
-  }
+  };
 
-  render () {
-    const {recordedActions, t} = this.props;
+  const highlightedCode = code(false);
 
-    const highlightedCode = this.code(false);
-
-    return <Card title={<span><CodeOutlined /> {t('Recorder')}</span>}
+  return (
+    <Card title={<span><CodeOutlined /> {t('Recorder')}</span>}
       className={InspectorStyles['recorded-actions']}
-      extra={this.actionBar()}
-    >
+      extra={actionBar()}>
       {!recordedActions.length &&
         <div className={InspectorStyles['no-recorded-actions']}>
           {t('Perform some actions to see code show up here')}
         </div>
       }
       {!!recordedActions.length &&
-        <div
-          className={InspectorStyles['recorded-code']}
+        <div className={InspectorStyles['recorded-code']}
           dangerouslySetInnerHTML={{__html: highlightedCode}} />
       }
-    </Card>;
-  }
-}
+    </Card>
+  );
+};
 
-export default withTranslation(RecordedActions);
+export default RecordedActions;

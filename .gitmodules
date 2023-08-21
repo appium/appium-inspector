@@ -1,3 +1,0 @@
-[submodule "gui-common"]
-	path = gui-common
-	url = https://github.com/appium/appium-gui-libs.git

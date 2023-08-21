@@ -1,0 +1,33 @@
+{
+  "extends": [
+    "config:base",
+    ":semanticCommitTypeAll(chore)",
+    ":pinAllExceptPeerDependencies"
+  ],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "matchDepTypes": ["dependencies", "devDependencies"],
+      "automerge": true
+    },
+    {
+      "matchPackageNames": [],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": [
+        "ky"
+      ],
+      "matchUpdateTypes": ["minor"],
+      "enabled": false
+    }
+  ],
+  "baseBranches": ["main"],
+  "ignorePaths": ["assets", "build", "release", "sample-session-files"],
+  "semanticCommits": "enabled",
+  "schedule": ["after 10pm and before 5:00am"],
+  "timezone": "America/Vancouver",
+  "transitiveRemediation": true
+}

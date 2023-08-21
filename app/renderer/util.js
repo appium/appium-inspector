@@ -3,7 +3,7 @@ import { withTranslation as wt } from 'react-i18next';
 import _ from 'lodash';
 import { log } from './polyfills';
 import config from '../configs/app.config';
-import { DOMParser } from 'xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 
 const VALID_W3C_CAPS = ['platformName', 'browserName', 'browserVersion', 'acceptInsecureCerts',
   'pageLoadStrategy', 'proxy', 'setWindowRect', 'timeouts', 'unhandledPromptBehavior'];
