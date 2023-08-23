@@ -503,7 +503,10 @@ export function newSession (caps, attachSessId = null) {
             const detailsUrl = `${protocol}://${hostname}:${port}${path.replace(/\/$/, '')}/session/${attachSessId}`;
             attachedSessionCaps = (await ky(detailsUrl).json()).value;
           } catch (err) {
-            showError(new Error(i18n.t('attachSessionNotRunning', {attachSessId})));
+            // rethrow the error as session not running, but first log the original error to
+            // console
+            console.error(err); // eslint-disable-line no-console
+            throw new Error(i18n.t('attachSessionNotRunning', {attachSessId}));
           }
         }
         serverOpts.isIOS = Boolean(attachedSessionCaps.platformName.match(/iOS/i));
