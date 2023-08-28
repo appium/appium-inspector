@@ -419,7 +419,7 @@ export function newSession (caps, attachSessId = null) {
         break;
       } case ServerTypes.roboticmobi: {
         host = 'remote.robotqa.com';
-        path = '/wd/hub';
+        path = '/';
         port = 443;
         https = session.server.roboticmobi.ssl = true;
         if (caps) {
