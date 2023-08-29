@@ -1,6 +1,6 @@
 {
   "name": "appium-inspector",
-  "version": "2023.8.4",
+  "version": "2023.8.5",
   "description": "An app inspector for use with an Appium server",
   "repository": {
     "type": "git",
