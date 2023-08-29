@@ -18,23 +18,24 @@ const Commands = (props) => {
   };
 
   const executeCommand = () => {
-    const { args, command } = pendingCommand;
+    const { args, commandName, command } = pendingCommand;
+    const { refresh } = command;
 
     // Make a copy of the arguments to avoid state mutation
     let copiedArgs = _.cloneDeep(args);
 
     // Special case for 'rotateDevice'
-    if (command.methodName === 'rotateDevice') {
+    if (commandName === 'rotateDevice') {
       copiedArgs = {x: args[0], y: args[1], duration: args[2], radius: args[3], rotation: args[4], touchCount: args[5]};
     }
 
     // Special case for 'setGeoLocation'
-    if (command.methodName === 'setGeoLocation') {
+    if (commandName === 'setGeoLocation') {
       copiedArgs = {latitude: args[0], longitude: args[1], altitude: args[2]};
     }
 
     // Special case for 'execute'
-    if (command.methodName === 'executeScript') {
+    if (commandName === 'executeScript') {
       if (!_.isEmpty(args[1])) {
         try {
           copiedArgs[1] = JSON.parse(args[1]);
@@ -48,7 +49,7 @@ const Commands = (props) => {
     }
 
     // Special case for 'updateSettings'
-    if (command.methodName === 'updateSettings') {
+    if (commandName === 'updateSettings') {
       if (_.isString(args[0])) {
         try {
           copiedArgs[0] = JSON.parse(args[0]);
@@ -61,7 +62,7 @@ const Commands = (props) => {
       }
     }
 
-    applyClientMethod({methodName: command.methodName, args: copiedArgs, skipRefresh: !command.refresh, ignoreResult: false});
+    applyClientMethod({methodName: commandName, args: copiedArgs, skipRefresh: !refresh, ignoreResult: false});
     cancelPendingCommand();
   };
 
