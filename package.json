@@ -232,11 +232,11 @@
     "spectron": "15.0.0"
   },
   "devEngines": {
-    "node": ">=12.x",
-    "npm": ">=6.x"
+    "node": ">=18.x",
+    "npm": ">=8.x"
   },
   "engines": {
-    "node": ">=12.x",
-    "npm": ">=6.x"
+    "node": ">=18.x",
+    "npm": ">=8.x"
   }
 }
