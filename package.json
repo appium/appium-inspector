@@ -217,7 +217,7 @@
     "eslint-plugin-mocha": "10.1.0",
     "eslint-plugin-promise": "6.1.1",
     "eslint-plugin-react": "7.33.2",
-    "eslint-plugin-react-native": "4.0.0",
+    "eslint-plugin-react-native": "4.1.0",
     "less": "4.2.0",
     "mocha": "10.2.0",
     "mocha-junit-reporter": "2.2.1",
