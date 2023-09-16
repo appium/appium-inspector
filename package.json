@@ -159,7 +159,7 @@
     "i18next-fs-backend": "2.2.0",
     "i18next-http-backend": "2.2.2",
     "i18next-localstorage-backend": "4.2.0",
-    "ky": "0.25.1",
+    "ky": "1.0.1",
     "lodash": "4.17.21",
     "moment": "2.29.4",
     "react": "18.2.0",
