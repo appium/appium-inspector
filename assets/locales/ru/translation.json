@@ -257,7 +257,7 @@
   "Web": "Веб",
   "Context": "Контекст",
   "Window (W3C)": "Окно (W3C)",
-  "simulatorOnly": "Emulator/simulator only",
+  "simulatorOnly": "Только эмулятор/симулятор",
   "minAndroidSDK": "Minimum Android SDK level",
   "Error": "Ошибка",
   "findingElementInSourceFailed": "Не удалось найти указанный элемент. Возможно, текущий источник приложения или ID элемента изменился, или в источнике слишком много элементов с одинаковыми координатами.",
