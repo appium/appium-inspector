@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import HighlighterRects from './HighlighterRects';
-import { Spin, Tooltip } from 'antd';
+import { Spin } from 'antd';
 import B from 'bluebird';
 import styles from './Inspector.css';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, POINTER_TYPES,
@@ -25,7 +25,7 @@ const Screenshot = (props) => {
     const { setSwipeStart, setSwipeEnd, clearSwipeAction } = props;
     const { POINTER_NAME, DURATION_1, DURATION_2, BUTTON } = DEFAULT_TAP;
 
-  if (screenshotInteractionMode === SWIPE || screenshotInteractionMode === TAP) {
+  if (screenshotInteractionMode === TAP) {
       if (!swipeStart) {
         setSwipeStart(x, y);
       } else if (!swipeEnd) {
@@ -137,7 +137,7 @@ const Screenshot = (props) => {
   // Show the screenshot and highlighter rects.
   // Show loading indicator if a method call is in progress, unless using MJPEG mode.
   return (
-    <Spin size='large' spinning={false}>
+    <Spin size='large' spinning={!!methodCallInProgress && !mjpegScreenshotUrl}>
       <div className={styles.innerScreenshotContainer}>
         <div ref={containerEl}
           style={screenshotStyle}
@@ -167,9 +167,6 @@ const Screenshot = (props) => {
                 y2={swipeEnd.y / scaleRatio}
               />}
             </svg>
-          }
-          {screenshotInteractionMode === SWIPE &&
-            <div className={styles.tapDiv}></div>
           }
           {selectedInteractionMode === INTERACTION_MODE.GESTURES && points &&
             <svg key='gestureSVG' className={styles.gestureSvg}>
