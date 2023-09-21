@@ -25,7 +25,7 @@ const Screenshot = (props) => {
     const { setSwipeStart, setSwipeEnd, clearSwipeAction } = props;
     const { POINTER_NAME, DURATION_1, DURATION_2, BUTTON } = DEFAULT_TAP;
 
-  if (screenshotInteractionMode === TAP) {
+    if (screenshotInteractionMode === TAP) {
       if (!swipeStart) {
         setSwipeStart(x, y);
       } else if (!swipeEnd) {
