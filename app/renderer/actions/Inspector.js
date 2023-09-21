@@ -903,12 +903,6 @@ export function unselectTick () {
   };
 }
 
-export function tapTickCoordinates (x, y) {
-  return (dispatch) => {
-    dispatch({type: SET_GESTURE_TAP_COORDS_MODE, x, y});
-  };
-}
-
 export function toggleShowAttributes () {
   return (dispatch) => {
     dispatch({type: TOGGLE_SHOW_ATTRIBUTES});

@@ -209,14 +209,9 @@ const Inspector = (props) => {
             type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
             disabled={isGestureEditorVisible} />
         </Tooltip>
-        <Tooltip title={t('Swipe By Coordinates')}>
-          <Button icon={<SwapRightOutlined/>} onClick={() => screenshotInteractionChange(SWIPE)}
-            type={screenshotInteractionMode === SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-            disabled={isGestureEditorVisible} />
-        </Tooltip>
-        <Tooltip title={t('Tap By Coordinates')}>
+        <Tooltip title={t('Tap/Swipe By Coordinates')}>
           <Button icon={<ScanOutlined/>} onClick={() => screenshotInteractionChange(TAP)}
-            type={screenshotInteractionMode === TAP ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+            type={screenshotInteractionMode === SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
             disabled={isGestureEditorVisible} />
         </Tooltip>
       </Button.Group>
