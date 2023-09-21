@@ -14,7 +14,7 @@ import SavedGestures from './SavedGestures';
 import GestureEditor from './GestureEditor';
 import SessionInfo from './SessionInfo';
 import { clipboard } from '../../polyfills';
-import { SelectOutlined, ScanOutlined, SwapRightOutlined, CheckCircleOutlined,
+import { SelectOutlined, ScanOutlined, CheckCircleOutlined,
          CloseCircleOutlined, CopyOutlined, DownloadOutlined, FileTextOutlined,
          TagOutlined, InfoCircleOutlined, ThunderboltOutlined, HighlightOutlined,
          CodeOutlined } from '@ant-design/icons';
