@@ -14,13 +14,13 @@ import SavedGestures from './SavedGestures';
 import GestureEditor from './GestureEditor';
 import SessionInfo from './SessionInfo';
 import { clipboard } from '../../polyfills';
-import { SelectOutlined, ScanOutlined, CheckCircleOutlined,
+import { SelectOutlined, PlusSquareOutlined, CheckCircleOutlined,
          CloseCircleOutlined, CopyOutlined, DownloadOutlined, FileTextOutlined,
          TagOutlined, InfoCircleOutlined, ThunderboltOutlined, HighlightOutlined,
          CodeOutlined } from '@ant-design/icons';
 import { BUTTON } from '../AntdTypes';
 
-const { SELECT, SWIPE, TAP } = SCREENSHOT_INTERACTION_MODE;
+const { SELECT, TAP_SWIPE } = SCREENSHOT_INTERACTION_MODE;
 
 const MIN_WIDTH = 870;
 const MIN_HEIGHT = 610;
@@ -129,8 +129,8 @@ const Inspector = (props) => {
   };
 
   const screenshotInteractionChange = (mode) => {
-    const { selectScreenshotInteractionMode, clearSwipeAction } = props;
-    clearSwipeAction(); // When the action changes, reset the swipe action
+    const { selectScreenshotInteractionMode, clearCoordAction } = props;
+    clearCoordAction(); // When the action changes, reset the swipe action
     selectScreenshotInteractionMode(mode);
   };
 
@@ -210,8 +210,8 @@ const Inspector = (props) => {
             disabled={isGestureEditorVisible} />
         </Tooltip>
         <Tooltip title={t('Tap/Swipe By Coordinates')}>
-          <Button icon={<ScanOutlined/>} onClick={() => screenshotInteractionChange(TAP)}
-            type={screenshotInteractionMode === SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+          <Button icon={<PlusSquareOutlined/>} onClick={() => screenshotInteractionChange(TAP_SWIPE)}
+            type={screenshotInteractionMode === TAP_SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
             disabled={isGestureEditorVisible} />
         </Tooltip>
       </Button.Group>

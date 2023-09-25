@@ -101,6 +101,7 @@ export const SCREENSHOT_INTERACTION_MODE = {
   SELECT: 'select',
   SWIPE: 'swipe',
   TAP: 'tap',
+  TAP_SWIPE: 'tap_swipe',
   GESTURE: 'gesture',
 };
 
