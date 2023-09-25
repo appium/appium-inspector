@@ -20,6 +20,13 @@ const Screenshot = (props) => {
   const [x, setX] = useState();
   const [y, setY] = useState();
 
+  const handleScreenshotClick = async () => {
+    const { tapTickCoordinates } = props;
+    if (selectedTick) {
+      await tapTickCoordinates(x, y);
+    }
+  };
+
   const handleScreenshotDown = async () => {
     if (screenshotInteractionMode === TAP_SWIPE) {
       await setCoordStart(x, y);
@@ -118,7 +125,7 @@ const Screenshot = (props) => {
 
   // If we're tapping or swiping, show the 'crosshair' cursor style
   const screenshotStyle = {};
-  if ([TAP, SWIPE].includes(screenshotInteractionMode) || selectedTick) {
+  if (screenshotInteractionMode === TAP_SWIPE || selectedTick) {
     screenshotStyle.cursor = 'crosshair';
   }
 
@@ -136,6 +143,7 @@ const Screenshot = (props) => {
           onMouseDown={handleScreenshotDown}
           onMouseUp={handleScreenshotUp}
           onMouseMove={handleMouseMove}
+          onClick={handleScreenshotClick}
           className={styles.screenshotBox}>
           {screenshotInteractionMode !== SELECT && <div className={styles.coordinatesContainer}>
             <p>{t('xCoordinate', {x})}</p>
