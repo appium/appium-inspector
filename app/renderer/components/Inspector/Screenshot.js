@@ -14,7 +14,7 @@ const TYPES = {FILLED: 'filled', NEW_DASHED: 'newDashed', WHOLE: 'whole', DASHED
  */
 const Screenshot = (props) => {
   const { screenshot, mjpegScreenshotUrl, methodCallInProgress, screenshotInteractionMode, coordStart, coordEnd,
-          setCoordEnd, setCoordStart, scaleRatio, selectedTick, selectedInteractionMode, applyClientMethod, t, clearCoordAction } = props;
+          scaleRatio, selectedTick, selectedInteractionMode, applyClientMethod, t } = props;
 
   const containerEl = useRef();
   const [x, setX] = useState();
@@ -28,13 +28,14 @@ const Screenshot = (props) => {
   };
 
   const handleScreenshotDown = async () => {
+    const { setCoordStart } = props;
     if (screenshotInteractionMode === TAP_SWIPE) {
       await setCoordStart(x, y);
     }
   };
 
   const handleScreenshotUp = async () => {
-
+    const { setCoordEnd, clearCoordAction } = props;
     if (screenshotInteractionMode === TAP_SWIPE) {
       await setCoordEnd(x, y);
       if (Math.abs(coordStart.x - x) < 5 && Math.abs(coordStart.y - y) < 5) {
@@ -42,6 +43,7 @@ const Screenshot = (props) => {
       } else {
         await handleDoSwipe({x, y}); // Pass coordEnd because otherwise it is not retrieved
       }
+      clearCoordAction();
     }
   };
 
@@ -60,7 +62,6 @@ const Screenshot = (props) => {
         }
       ],
     });
-    clearCoordAction();
   };
 
   const handleDoSwipe = async (swipeEndLocal) => {
@@ -74,7 +75,6 @@ const Screenshot = (props) => {
         {type: POINTER_UP, button: BUTTON}
       ]},
     });
-    clearCoordAction();
   };
 
   const handleMouseMove = (e) => {
