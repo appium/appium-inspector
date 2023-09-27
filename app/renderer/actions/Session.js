@@ -517,7 +517,15 @@ export function newSession (caps, attachSessId = null) {
         driver = await Web2Driver.remote(serverOpts, desiredCapabilities);
       }
     } catch (err) {
-      showError(err, null, 0);
+      let parsedErr;
+      if (err.message && err.message.includes('The requested resource could not be found')) { // WDIO error - wrong URL
+        const { protocol, hostname, port, path } = serverOpts;
+        const detailsUrl = `${protocol}://${hostname}:${port}${path}`;
+        parsedErr = new Error(i18n.t('invalidServerUrl', {detailsUrl}));
+      } else {
+        parsedErr = err;
+      }
+      showError(parsedErr, null, 0);
       return false;
     } finally {
       dispatch({type: NEW_SESSION_DONE});

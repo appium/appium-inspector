@@ -78,6 +78,7 @@
   "findElementFailure": "Failed to find element for '{{methodName}}'. Please refresh page and try again.",
   "Could not start session": "Could not start session",
   "couldNotConnect": "Could not connect to server; are you sure it's running? If you are using the browser version, also ensure your Appium server has been started with --allow-cors.",
+  "invalidServerUrl": "Could not connect to server with the URL '{{detailsUrl}}'. Please check the Appium server log for the valid server URLs!",
   "Invalid URL:": "Invalid URL:",
   "sauceCredentialsRequired": "Sauce username and access key are required!",
   "testingbotCredentialsRequired": "TestingBot key and secret are required!",
