@@ -253,7 +253,7 @@ export function applyClientMethod (params) {
     } catch (error) {
       console.log(error); // eslint-disable-line no-console
       let methodName = params.methodName === 'click' ? 'tap' : params.methodName;
-      showError(error, methodName, 10);
+      showError(error, {methodName, secs: 10});
       dispatch({type: METHOD_CALL_DONE});
     }
   };
@@ -282,7 +282,7 @@ export function quitSession (reason, killedByUser = true) {
     await applyAction(dispatch, getState);
     dispatch({type: QUIT_SESSION_DONE});
     if (!killedByUser) {
-      showError(new Error(reason || i18n.t('Session has been terminated')), null, 0);
+      showError(new Error(reason || i18n.t('Session has been terminated')), {secs: 0});
     }
   };
 }
@@ -408,7 +408,7 @@ export function searchForElement (strategy, selector) {
       dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED, elements, executionTime});
     } catch (error) {
       dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED});
-      showError(error, 10);
+      showError(error, {methodName: 10});
     }
   };
 }
@@ -434,7 +434,7 @@ export function getFindElementsTimes (findDataSource) {
       });
     } catch (error) {
       dispatch({type: GET_FIND_ELEMENTS_TIMES_COMPLETED});
-      showError(error, 10);
+      showError(error, {methodName: 10});
     }
   };
 }
@@ -564,7 +564,7 @@ export function selectLocatedElement (source, bounds, id) {
       const action = selectElement(foundPath);
       await action(dispatch, getState);
     } else {
-      showError(new Error(i18n.t('findingElementInSourceFailed')), null, 8);
+      showError(new Error(i18n.t('findingElementInSourceFailed')), {secs: 8});
     }
     dispatch({type: FINDING_ELEMENT_IN_SOURCE_COMPLETED});
   };
