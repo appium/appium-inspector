@@ -77,7 +77,7 @@
   "frameworkNotSupported": "Фреймворк '{{framework}}' не підтримується",
   "findElementFailure": "Не вдалося знайти елемент для '{{methodName}}. Будь ласка, оновіть сторінку та повторіть спробу.",
   "Could not start session": "Не вдалося почати сеанс",
-  "couldNotConnect": "Could not connect to Appium server URL '{{url}}'. Please check if the server is running and the URL is correct (valid URLs can be found at the start of the Appium server log). If you are using the Inspector's browser version, ensure the server has been started with '--allow-cors'.",
+  "couldNotConnect": "Не вдалося з'єднатися з Appium сервером за URL-адресою '{{url}}. Перевірте, чи сервер запущений і чи правильний URL (дійсні URL-адреси можна знайти на початку журнала Appium). Якщо ви використовуєте Inspector версію браузера, переконайтеся, що сервер запущено з '--allow-cors'.",
   "Invalid URL:": "Невірний URL:",
   "sauceCredentialsRequired": "Необхідні ім'я користувача та ключ доступу від Sauce!",
   "testingbotCredentialsRequired": "Необхідні ключ та секрет від TestingBot!",
