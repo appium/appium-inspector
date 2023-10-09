@@ -152,7 +152,7 @@
     "electron-settings": "4.0.2",
     "electron-updater": "6.1.4",
     "format-json": "1.0.3",
-    "highlight.js": "11.8.0",
+    "highlight.js": "11.9.0",
     "htmlparser2": "7.2.0",
     "i18next": "23.5.1",
     "i18next-chained-backend": "4.5.0",
