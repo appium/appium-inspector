@@ -10,7 +10,7 @@ chai.use(chaiAsPromised);
 
 // Helper that checks that the optimal xpath for a node is the one that we expect and also
 // checks that the XPath successfully locates the node in it's doc
-function testXPath (doc, node, expectedXPath, uniqueAttributes) {
+function testXPath (doc, node, expectedXPath, uniqueAttributes = ['id']) {
   getOptimalXPath(doc, node, uniqueAttributes).should.equal(expectedXPath);
   xpath.select(expectedXPath, doc)[0].should.equal(node);
 }
@@ -602,6 +602,20 @@ describe('util.js', function () {
         testXPath(doc, children[3], '(//child[@id="foo"])[4]');
         testXPath(doc, children[4], '(//child[@id="foo"])[5]');
       });
+      it('should return conjunctively unique xpath locators if they exist', function () {
+        doc = new DOMParser().parseFromString(`<root>
+          <child text='bar'></child>
+          <child text='yo'></child>
+          <child id='foo' text='yo'></child>
+          <child id='foo'></child>
+        </root>`);
+        const children = doc.getElementsByTagName('child');
+        const attrs = ['id', 'text'];
+        testXPath(doc, children[0], '//child[@text="bar"]', attrs);
+        testXPath(doc, children[1], '(//child[@text="yo"])[1]', attrs);
+        testXPath(doc, children[2], '//child[@id="foo" and @text="yo"]', attrs);
+        testXPath(doc, children[3], '(//child[@id="foo"])[2]', attrs);
+      });
     });
 
     describe('when exceptions are thrown', function () {
@@ -613,7 +627,7 @@ describe('util.js', function () {
             <grandchild id='hello'></grandchild>
           </child>
         </node>`);
-        getOptimalXPath(doc, doc.getElementById('hello')).should.equal('/node/child[2]/grandchild');
+        getOptimalXPath(doc, doc.getElementById('hello'), ['id']).should.equal('/node/child[2]/grandchild');
         xpathSelectStub.restore();
       });
 
@@ -626,7 +640,7 @@ describe('util.js', function () {
         </node>`);
         const node = doc.getElementById('hello');
         node.getAttribute = () => { throw new Error('Some unexpected error'); };
-        should.not.exist(getOptimalXPath(doc, node));
+        should.not.exist(getOptimalXPath(doc, node, ['id']));
       });
     });
   });
