@@ -10,6 +10,11 @@ const IMPORTANT_ATTRS = [
   'resource-id',
   'AXDescription',
   'AXIdentifier',
+  'text',
+  'label',
+  'value',
+  'id',
+  'class',
 ];
 
 /**
@@ -24,7 +29,7 @@ const Source = (props) => {
     let attrs = [];
 
     for (let attr of Object.keys(attributes)) {
-      if (IMPORTANT_ATTRS.includes(attr) || showAllAttrs) {
+      if ((IMPORTANT_ATTRS.includes(attr) && attributes[attr]) || showAllAttrs) {
         attrs.push(<span key={attr}>&nbsp;
           <i
             className={InspectorStyles.sourceAttrName}
