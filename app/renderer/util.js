@@ -9,13 +9,18 @@ const VALID_W3C_CAPS = ['platformName', 'browserName', 'browserVersion', 'accept
   'pageLoadStrategy', 'proxy', 'setWindowRect', 'timeouts', 'unhandledPromptBehavior'];
 
 
-// Attributes on nodes that we know are unique to the node
+// Attributes on nodes that are likely to be unique to the node so we should consider first when
+// suggesting xpath locators. These are considered IN ORDER.
 const UNIQUE_XPATH_ATTRIBUTES = [
   'name',
   'content-desc',
   'id',
   'accessibility-id',
+  'text',
+  'label',
+  'value',
 ];
+
 const UNIQUE_CLASS_CHAIN_ATTRIBUTES = [
   'label',
   'name',
@@ -83,42 +88,93 @@ export function xmlToJSON (source) {
 }
 
 /**
+ * Return information about whether an xpath query results in a unique element, and the non-unique
+ * index of the element in the document if not unique
+ *
+ * @param {string} xpath
+ * @param {DOMDocument} doc
+ * @param {DOMNode} domNode - the current node
+ * @returns {[boolean, number?]} tuple consisting of (1) whether the xpath is unique and (2) its index in
+ * the set of other similar nodes if not unique
+ */
+function isXpathUnique(xpath, doc, domNode) {
+  let othersWithAttr = [];
+
+  // If the XPath does not parse, move to the next unique attribute
+  try {
+    othersWithAttr = XPath.select(xpath, doc);
+  } catch (ign) {
+    return [false];
+  }
+
+  if (othersWithAttr.length > 1) {
+    return [false, othersWithAttr.indexOf(domNode)];
+  }
+
+  return [true];
+}
+
+/**
  * Get an optimal XPath for a DOMNode
  *
  * @param {DOMDocument} doc
  * @param {DOMNode} domNode
- * @param {Array<String>} uniqueAttributes Attributes we know are unique (defaults to just 'id')
+ * @param {Array<String>} uniqueAttributes Attributes we know are unique
  * @returns {string|null}
  */
-export function getOptimalXPath (doc, domNode, uniqueAttributes = ['id']) {
+export function getOptimalXPath (doc, domNode, uniqueAttributes) {
   try {
     // BASE CASE #1: If this isn't an element, we're above the root, return empty string
     if (!domNode.tagName || domNode.nodeType !== 1) {
       return '';
     }
 
-    // BASE CASE #2: If this node has a unique attribute, return an absolute XPath with that attribute
-    for (let attrName of uniqueAttributes) {
+    const tagForXpath = domNode.tagName || '*';
+    let semiUniqueXpath = null;
+
+    // BASE CASE #2: If this node has a unique attribute or content attribute, return an absolute XPath with that attribute
+    for (const attrName of uniqueAttributes) {
       const attrValue = domNode.getAttribute(attrName);
-      if (attrValue) {
-        let xpath = `//${domNode.tagName || '*'}[@${attrName}="${attrValue}"]`;
-        let othersWithAttr;
+      if (!attrValue) {
+        continue;
+      }
+      const xpath = `//${tagForXpath}[@${attrName}="${attrValue}"]`;
+      const [isUnique, indexIfNotUnique] = isXpathUnique(xpath, doc, domNode);
+      if (isUnique) {
+        return xpath;
+      }
 
-        // If the XPath does not parse, move to the next unique attribute
-        try {
-          othersWithAttr = XPath.select(xpath, doc);
-        } catch (ign) {
-          continue;
-        }
+      // if the xpath wasn't totally unique it might still be our best bet. Store a less unique
+      // version qualified by an index for later in semiUniqueXpath. If we can't find a better
+      // unique option down the road, we'll fall back to this
+      if (!semiUniqueXpath && !_.isUndefined(indexIfNotUnique)) {
+        semiUniqueXpath = `(${xpath})[${indexIfNotUnique + 1}]`;
+      }
+    }
 
-        // If the attribute isn't actually unique, get it's index too
-        if (othersWithAttr.length > 1) {
-          let index = othersWithAttr.indexOf(domNode);
-          xpath = `(${xpath})[${index + 1}]`;
-        }
+    // BASE CASE #3: If this node has a unique pair of attributes, return an xpath based on that pair
+    const pairAttributes = uniqueAttributes.flatMap((v1, i) =>
+      uniqueAttributes.slice(i + 1).map((v2) => [v1, v2]));
+    for (const [attr1Name, attr2Name] of pairAttributes) {
+      const attr1Value = domNode.getAttribute(attr1Name);
+      const attr2Value = domNode.getAttribute(attr2Name);
+      if (!attr1Value || !attr2Value) {
+        continue;
+      }
+      const xpath = `//${tagForXpath}[@${attr1Name}="${attr1Value}" and @${attr2Name}="${attr2Value}"]`;
+      if (isXpathUnique(xpath, doc, domNode)[0]) {
         return xpath;
       }
     }
+
+    // if we couldn't find any good totally unique or pairwise unique attributes, but we did find
+    // almost unique attributes qualified by an index, return that instead
+    if (semiUniqueXpath) {
+      return semiUniqueXpath;
+    }
+
+    // Otherwise fall back to a purely hierarchical expression of this dom node's position in the
+    // document as a last resort.
 
     // Get the relative xpath of this node using tagName
     let xpath = `/${domNode.tagName}`;
