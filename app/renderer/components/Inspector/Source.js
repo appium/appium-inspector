@@ -14,7 +14,6 @@ const IMPORTANT_ATTRS = [
   'label',
   'value',
   'id',
-  'class',
 ];
 
 /**
