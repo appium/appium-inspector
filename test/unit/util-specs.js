@@ -10,8 +10,8 @@ chai.use(chaiAsPromised);
 
 // Helper that checks that the optimal xpath for a node is the one that we expect and also
 // checks that the XPath successfully locates the node in it's doc
-function testXPath (doc, node, expectedXPath, uniqueAttributes = ['id']) {
-  getOptimalXPath(doc, node, uniqueAttributes).should.equal(expectedXPath);
+function testXPath (doc, node, expectedXPath) {
+  getOptimalXPath(doc, node).should.equal(expectedXPath);
   xpath.select(expectedXPath, doc)[0].should.equal(node);
 }
 
@@ -477,14 +477,10 @@ describe('util.js', function () {
       });
       it('should set an absolute xpath if unique attributes is set to "content-desc" and that attr is set', function () {
         const doc = new DOMParser().parseFromString(`<node content-desc='foo'></node>`);
-        testXPath(doc, doc.firstChild, '//node[@content-desc="foo"]', ['content-desc']);
-      });
-      it('should set an absolute xpath if unique attributes is set to "content-desc" and "something-else" and that "content-desc" is set', function () {
-        const doc = new DOMParser().parseFromString(`<node content-desc='foo'></node>`);
-        testXPath(doc, doc.firstChild, '//node[@content-desc="foo"]', ['something-else', 'content-desc']);
+        testXPath(doc, doc.firstChild, '//node[@content-desc="foo"]');
       });
       it('should set relative xpath with tagname if no unique attributes are set', function () {
-        const doc = new DOMParser().parseFromString(`<node content-desc='foo'></node>`);
+        const doc = new DOMParser().parseFromString(`<node non-unique-attr='foo'></node>`);
         testXPath(doc, doc.firstChild, '/node');
       });
     });
@@ -493,26 +489,26 @@ describe('util.js', function () {
 
       it('should set first child node to relative xpath with tagname if the child node has no siblings', function () {
         doc = new DOMParser().parseFromString(`<xml>
-          <child-node content-desc='hello'>Hello</child-node>
+          <child-node non-unique-attr='hello'>Hello</child-node>
         </xml>`);
-        testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node', []);
+        testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node');
       });
 
       it('should set first child node to relative xpath with tagname and index', function () {
         doc = new DOMParser().parseFromString(`<xml>
-          <child-node content-desc='hello'>Hello</child-node>
-          <child-node content-desc='world'>World</child-node>
+          <child-node non-unique-attr='hello'>Hello</child-node>
+          <child-node non-unique-attr='world'>World</child-node>
         </xml>`);
-        testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node[1]', []);
-        testXPath(doc, doc.getElementsByTagName('child-node')[1], '/xml/child-node[2]', []);
+        testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node[1]');
+        testXPath(doc, doc.getElementsByTagName('child-node')[1], '/xml/child-node[2]');
       });
       it('should set first child node to absolute xpath if it has ID set', function () {
         doc = new DOMParser().parseFromString(`<xml>
           <child-node content-desc='hello'>Hello</child-node>
           <child-node content-desc='world'>World</child-node>
         </xml>`);
-        testXPath(doc, doc.getElementsByTagName('child-node')[0], '//child-node[@content-desc="hello"]', ['content-desc']);
-        testXPath(doc, doc.getElementsByTagName('child-node')[1], '//child-node[@content-desc="world"]', ['content-desc']);
+        testXPath(doc, doc.getElementsByTagName('child-node')[0], '//child-node[@content-desc="hello"]');
+        testXPath(doc, doc.getElementsByTagName('child-node')[1], '//child-node[@content-desc="world"]');
       });
       it('should index children based on tagName', function () {
         doc = new DOMParser().parseFromString(`<xml>
@@ -604,17 +600,22 @@ describe('util.js', function () {
       });
       it('should return conjunctively unique xpath locators if they exist', function () {
         doc = new DOMParser().parseFromString(`<root>
-          <child text='bar'></child>
+          <child id='foo' text='bar'></child>
           <child text='yo'></child>
           <child id='foo' text='yo'></child>
           <child id='foo'></child>
+          <child text='zoom'></child>
+          <child id='bar' text='ohai'></child>
+          <child id='bar' text='ohai'></child>
         </root>`);
         const children = doc.getElementsByTagName('child');
-        const attrs = ['id', 'text'];
-        testXPath(doc, children[0], '//child[@text="bar"]', attrs);
-        testXPath(doc, children[1], '(//child[@text="yo"])[1]', attrs);
-        testXPath(doc, children[2], '//child[@id="foo" and @text="yo"]', attrs);
-        testXPath(doc, children[3], '(//child[@id="foo"])[2]', attrs);
+        testXPath(doc, children[0], '//child[@id="foo" and @text="bar"]');
+        testXPath(doc, children[1], '(//child[@text="yo"])[1]');
+        testXPath(doc, children[2], '//child[@id="foo" and @text="yo"]');
+        testXPath(doc, children[3], '(//child[@id="foo"])[3]');
+        testXPath(doc, children[4], '//child[@text="zoom"]');
+        testXPath(doc, children[5], '(//child[@id="bar"])[1]');
+        testXPath(doc, children[6], '(//child[@id="bar"])[2]');
       });
     });
 
