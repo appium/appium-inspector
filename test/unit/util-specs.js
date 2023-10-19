@@ -48,7 +48,7 @@ describe('util.js', function () {
               width: '1024',
               height: '768',
             },
-            xpath: '//XCUIElementTypeApplication[@name="🦋"]/XCUIElementTypeWindow',
+            xpath: '//XCUIElementTypeWindow',
             path: '0.0',
             classChain: '**/XCUIElementTypeWindow',
             predicateString: 'type == "XCUIElementTypeWindow"',
@@ -142,7 +142,7 @@ describe('util.js', function () {
                 bounds: '[0,0][1080,2028]',
                 displayed: 'true'
               },
-              xpath: '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout',
+              xpath: '//android.widget.LinearLayout',
               path: '0.0'
             }
           ],
@@ -165,7 +165,7 @@ describe('util.js', function () {
             bounds: '[0,0][1080,2028]',
             displayed: 'true'
           },
-          xpath: '/hierarchy/android.widget.FrameLayout',
+          xpath: '//android.widget.FrameLayout',
           path: '0'
         }],
         attributes: {
@@ -236,8 +236,8 @@ describe('util.js', function () {
                                     height: '30'
                                   },
                                   xpath: '//XCUIElementTypeStaticText[@name="Login"]',
-                                  classChain: '**/XCUIElementTypeStaticText[`label == "Login"`]',
-                                  predicateString: 'label == "Login" AND name == "Login" AND value == "Login"',
+                                  classChain: '**/XCUIElementTypeStaticText[`name == "Login"`]',
+                                  predicateString: 'name == "Login" AND label == "Login" AND value == "Login"',
                                   path: '0.0.0.0.0.0.0'
                                 }
                               ],
@@ -254,8 +254,8 @@ describe('util.js', function () {
                                 height: '40'
                               },
                               xpath: '//XCUIElementTypeOther[@name="Login"]',
-                              classChain: '**/XCUIElementTypeOther[`label == "Login"`][2]',
-                              predicateString: 'label == "Login" AND name == "Login" AND type == "XCUIElementTypeOther"',
+                              classChain: '**/XCUIElementTypeOther[`name == "Login"`]',
+                              predicateString: 'name == "Login" AND label == "Login" AND type == "XCUIElementTypeOther"',
                               path: '0.0.0.0.0.0'
                             }
                           ],
@@ -272,8 +272,8 @@ describe('util.js', function () {
                             height: '40'
                           },
                           xpath: '//XCUIElementTypeOther[@name="button-login-container"]',
-                          classChain: '**/XCUIElementTypeOther[`label == "Login"`][1]',
-                          predicateString: 'label == "Login" AND name == "button-login-container"',
+                          classChain: '**/XCUIElementTypeOther[`name == "button-login-container"`]',
+                          predicateString: 'name == "button-login-container"',
                           path: '0.0.0.0.0'
                         }
                       ],
@@ -290,7 +290,7 @@ describe('util.js', function () {
                         height: '802'
                       },
                       xpath: '(//XCUIElementTypeOther[@name="Appium Inspector"])[2]',
-                      classChain: '**/XCUIElementTypeOther[`label == "Appium Inspector"`][2]',
+                      classChain: '**/XCUIElementTypeOther[`name == "Appium Inspector"`][2]',
                       predicateString: '',
                       path: '0.0.0.0'
                     },
@@ -314,8 +314,8 @@ describe('util.js', function () {
                                 height: '50'
                               },
                               xpath: '//XCUIElementTypeButton[@name="Login"]',
-                              classChain: '**/XCUIElementTypeButton[`label == "Login"`]',
-                              predicateString: 'label == "Login" AND name == "Login" AND value == "1"',
+                              classChain: '**/XCUIElementTypeButton[`name == "Login"`]',
+                              predicateString: 'name == "Login" AND label == "Login" AND value == "1"',
                               path: '0.0.0.1.0.0'
                             }
                           ],
@@ -332,7 +332,7 @@ describe('util.js', function () {
                             height: '94'
                           },
                           xpath: '(//XCUIElementTypeOther[@name="Home WebView Login Forms Swipe"])[2]',
-                          classChain: '**/XCUIElementTypeOther[`label == "Home WebView Login Forms Swipe"`][2]',
+                          classChain: '**/XCUIElementTypeOther[`name == "Home WebView Login Forms Swipe"`][2]',
                           predicateString: '',
                           path: '0.0.0.1.0'
                         }
@@ -350,7 +350,7 @@ describe('util.js', function () {
                         height: '94'
                       },
                       xpath: '(//XCUIElementTypeOther[@name="Home WebView Login Forms Swipe"])[1]',
-                      classChain: '**/XCUIElementTypeOther[`label == "Home WebView Login Forms Swipe"`][1]',
+                      classChain: '**/XCUIElementTypeOther[`name == "Home WebView Login Forms Swipe"`][1]',
                       predicateString: '',
                       path: '0.0.0.1'
                     }
@@ -368,7 +368,7 @@ describe('util.js', function () {
                     height: '896'
                   },
                   xpath: '(//XCUIElementTypeOther[@name="Appium Inspector"])[1]',
-                  classChain: '**/XCUIElementTypeOther[`label == "Appium Inspector"`][1]',
+                  classChain: '**/XCUIElementTypeOther[`name == "Appium Inspector"`][1]',
                   predicateString: '',
                   path: '0.0.0'
                 }
@@ -490,6 +490,9 @@ describe('util.js', function () {
       it('should set first child node to relative xpath with tagname if the child node has no siblings', function () {
         doc = new DOMParser().parseFromString(`<xml>
           <child-node non-unique-attr='hello'>Hello</child-node>
+          <other-node>
+            <child-node></child-node>
+          </other-node>
         </xml>`);
         testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node');
       });
@@ -528,10 +531,10 @@ describe('util.js', function () {
           <other-child-node>asdfasdf</other-child-node>
           <child-node>Bar</child-node>
         </xml>`);
-        testXPath(doc, doc.getElementsByTagName('child')[0], '/xml/child');
+        testXPath(doc, doc.getElementsByTagName('child')[0], '//child');
         testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node[1]');
         testXPath(doc, doc.getElementsByTagName('child-node')[1], '/xml/child-node[2]');
-        testXPath(doc, doc.getElementsByTagName('other-child-node')[0], '/xml/other-child-node');
+        testXPath(doc, doc.getElementsByTagName('other-child-node')[0], '//other-child-node');
       });
     });
     describe('on XML with height = 3', function () {
@@ -589,7 +592,7 @@ describe('util.js', function () {
         testXPath(doc, grandchildren[3], '(//child[@id="foo"])[4]/grandchild');
 
         const greatgrandchildren = doc.getElementsByTagName('great-grand-child');
-        testXPath(doc, greatgrandchildren[0], '(//child[@id="foo"])[5]/great-grand-child');
+        testXPath(doc, greatgrandchildren[0], '//great-grand-child');
 
         const children = doc.getElementsByTagName('child');
         testXPath(doc, children[0], '(//child[@id="foo"])[1]');

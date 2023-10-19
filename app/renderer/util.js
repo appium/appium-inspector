@@ -25,8 +25,6 @@ const MAYBE_UNIQUE_XPATH_ATTRIBUTES = [
   'label',
   'text',
   'value',
-  'class',
-  'type',
 ];
 
 const UNIQUE_CLASS_CHAIN_ATTRIBUTES = [
@@ -139,7 +137,25 @@ function getUniqueXPath(doc, domNode, attrs) {
   let uniqueXpath, semiUniqueXpath;
   const tagForXpath = domNode.tagName || '*';
   const isPairs = attrs.length > 0 && _.isArray(attrs[0]);
+  const isNodeName = attrs.length === 0;
 
+  // If we're looking for a unique //<nodetype>, return it only if it's actually unique. No
+  // semi-uniqueness here!
+  if (isNodeName) {
+    let xpath = `//${domNode.tagName}`;
+    const [isUnique] = determineXpathUniqueness(xpath, doc, domNode);
+    if (isUnique) {
+      // even if this node name is unique, if it's the root node, we don't want to refer to it using
+      // '//' but rather '/'
+      if (!(domNode.parentNode && domNode.parentNode.tagName)) {
+        xpath = `/${domNode.tagName}`;
+      }
+      return [xpath, true];
+    }
+    return [];
+  }
+
+  // Otherwise go through our various attributes to look for uniqueness
   for (const attrName of attrs) {
     let xpath;
     if (isPairs) {
@@ -209,6 +225,9 @@ export function getOptimalXPath (doc, domNode) {
       // of these that's unique in conjunction with another attribute, but if not, that's OK.
       // Better than a hierarchical query.
       MAYBE_UNIQUE_XPATH_ATTRIBUTES,
+
+      // BASE CASE #5: Look to see if the node type is unique in the document
+      [],
     ];
 
     // It's possible that in all of these cases we don't find a truly unique selector. But
