@@ -120,7 +120,9 @@ export function getCapsObject (caps) {
   })));
 }
 
-export function showError (e, methodName = null, secs = 5) {
+export function showError (e, params = { methodName: null, secs: 5, url: null }) {
+  const { secs, url } = params;
+  let { methodName } = params;
   let errMessage;
   if (e['jsonwire-error'] && e['jsonwire-error'].status === 7) {
     // FIXME: we probably should set 'findElement' as the method name
@@ -148,8 +150,10 @@ export function showError (e, methodName = null, secs = 5) {
   } else {
     errMessage = i18n.t('Could not start session');
   }
-  if (errMessage === 'ECONNREFUSED' || includes(errMessage, 'Failed to fetch')) {
-    errMessage = i18n.t('couldNotConnect');
+  if (errMessage === 'ECONNREFUSED' ||
+      includes(errMessage, 'Failed to fetch') ||
+      includes(errMessage, 'The requested resource could not be found')) {
+    errMessage = i18n.t('couldNotConnect', {url});
   }
 
   console.error(errMessage); // eslint-disable-line no-console
@@ -517,7 +521,9 @@ export function newSession (caps, attachSessId = null) {
         driver = await Web2Driver.remote(serverOpts, desiredCapabilities);
       }
     } catch (err) {
-      showError(err, null, 0);
+      const { protocol, hostname, port, path } = serverOpts;
+      const url = `${protocol}://${hostname}:${port}${path}`;
+      showError(err, {secs: 0, url});
       return false;
     } finally {
       dispatch({type: NEW_SESSION_DONE});
@@ -1050,7 +1056,7 @@ export function initFromQueryString (loadNewSession) {
         const state = JSON.parse(initialState);
         dispatch({type: SET_STATE_FROM_URL, state});
       } catch (e) {
-        showError(new Error('Could not parse initial state from URL'), null, 0);
+        showError(new Error('Could not parse initial state from URL'), {secs: 0});
       }
     }
 

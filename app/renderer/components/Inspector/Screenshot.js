@@ -1,20 +1,19 @@
 import React, { useRef, useState } from 'react';
 import HighlighterRects from './HighlighterRects';
-import { Spin, Tooltip } from 'antd';
-import B from 'bluebird';
+import { Spin } from 'antd';
 import styles from './Inspector.css';
 import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, POINTER_TYPES,
          DEFAULT_TAP, DEFAULT_SWIPE } from './shared';
 
 const { POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE } = POINTER_TYPES;
-const { TAP, SELECT, SWIPE } = SCREENSHOT_INTERACTION_MODE;
+const { TAP, SELECT, SWIPE, TAP_SWIPE } = SCREENSHOT_INTERACTION_MODE;
 const TYPES = {FILLED: 'filled', NEW_DASHED: 'newDashed', WHOLE: 'whole', DASHED: 'dashed'};
 
 /**
  * Shows screenshot of running application and divs that highlight the elements' bounding boxes
  */
 const Screenshot = (props) => {
-  const { screenshot, mjpegScreenshotUrl, methodCallInProgress, screenshotInteractionMode, swipeStart, swipeEnd,
+  const { screenshot, mjpegScreenshotUrl, methodCallInProgress, screenshotInteractionMode, coordStart, coordEnd,
           scaleRatio, selectedTick, selectedInteractionMode, applyClientMethod, t } = props;
 
   const containerEl = useRef();
@@ -22,49 +21,60 @@ const Screenshot = (props) => {
   const [y, setY] = useState();
 
   const handleScreenshotClick = async () => {
-    const { setSwipeStart, setSwipeEnd, tapTickCoordinates } = props;
-    const { POINTER_NAME, DURATION_1, DURATION_2, BUTTON } = DEFAULT_TAP;
-
-    if (screenshotInteractionMode === TAP) {
-      applyClientMethod({
-        methodName: TAP,
-        args: [
-          {
-            [POINTER_NAME]: [
-              {type: POINTER_MOVE, duration: DURATION_1, x, y},
-              {type: POINTER_DOWN, button: BUTTON},
-              {type: PAUSE, duration: DURATION_2},
-              {type: POINTER_UP, button: BUTTON}
-            ],
-          }
-        ],
-      });
-    } else if (selectedTick) {
-      tapTickCoordinates(x, y);
-    } else if (screenshotInteractionMode === SWIPE) {
-      if (!swipeStart) {
-        setSwipeStart(x, y);
-      } else if (!swipeEnd) {
-        setSwipeEnd(x, y);
-        await B.delay(500); // Wait a second to do the swipe so user can see the SVG line
-        await handleDoSwipe({x, y}); // Pass swipeEnd because otherwise it is not retrieved
-      }
+    const { tapTickCoordinates } = props;
+    if (selectedTick) {
+      await tapTickCoordinates(x, y);
     }
   };
 
+  const handleScreenshotDown = async () => {
+    const { setCoordStart } = props;
+    if (screenshotInteractionMode === TAP_SWIPE) {
+      await setCoordStart(x, y);
+    }
+  };
+
+  const handleScreenshotUp = async () => {
+    const { setCoordEnd, clearCoordAction } = props;
+    if (screenshotInteractionMode === TAP_SWIPE) {
+      await setCoordEnd(x, y);
+      if (Math.abs(coordStart.x - x) < 5 && Math.abs(coordStart.y - y) < 5) {
+        await handleDoTap({x, y}); // Pass coordEnd because otherwise it is not retrieved
+      } else {
+        await handleDoSwipe({x, y}); // Pass coordEnd because otherwise it is not retrieved
+      }
+      clearCoordAction();
+    }
+  };
+
+  const handleDoTap = async (tapLocal) => {
+    const { POINTER_NAME, DURATION_1, DURATION_2, BUTTON } = DEFAULT_TAP;
+    await applyClientMethod({
+      methodName: TAP,
+      args: [
+        {
+          [POINTER_NAME]: [
+            {type: POINTER_MOVE, duration: DURATION_1, x: tapLocal.x, y: tapLocal.y},
+            {type: POINTER_DOWN, button: BUTTON},
+            {type: PAUSE, duration: DURATION_2},
+            {type: POINTER_UP, button: BUTTON}
+          ],
+        }
+      ],
+    });
+  };
+
   const handleDoSwipe = async (swipeEndLocal) => {
-    const { clearSwipeAction } = props;
     const { POINTER_NAME, DURATION_1, DURATION_2, BUTTON, ORIGIN } = DEFAULT_SWIPE;
     await applyClientMethod({
       methodName: SWIPE,
       args: {[POINTER_NAME]: [
-        {type: POINTER_MOVE, duration: DURATION_1, x: swipeStart.x, y: swipeStart.y},
+        {type: POINTER_MOVE, duration: DURATION_1, x: coordStart.x, y: coordStart.y},
         {type: POINTER_DOWN, button: BUTTON},
         {type: POINTER_MOVE, duration: DURATION_2, origin: ORIGIN, x: swipeEndLocal.x, y: swipeEndLocal.y},
         {type: POINTER_UP, button: BUTTON}
       ]},
     });
-    clearSwipeAction();
   };
 
   const handleMouseMove = (e) => {
@@ -76,11 +86,6 @@ const Screenshot = (props) => {
       setX(Math.round(newX));
       setY(Math.round(newY));
     }
-  };
-
-  const handleMouseOut = () => {
-    setX(null);
-    setY(null);
   };
 
   // retrieve and format gesture for svg drawings
@@ -120,17 +125,8 @@ const Screenshot = (props) => {
 
   // If we're tapping or swiping, show the 'crosshair' cursor style
   const screenshotStyle = {};
-  if ([TAP, SWIPE].includes(screenshotInteractionMode) || selectedTick) {
+  if (screenshotInteractionMode === TAP_SWIPE || selectedTick) {
     screenshotStyle.cursor = 'crosshair';
-  }
-
-  let swipeInstructions = null;
-  if (screenshotInteractionMode === SWIPE && (!swipeStart || !swipeEnd)) {
-    if (!swipeStart) {
-      swipeInstructions = t('Click swipe start point');
-    } else if (!swipeEnd) {
-      swipeInstructions = t('Click swipe end point');
-    }
   }
 
   const screenSrc = mjpegScreenshotUrl || `data:image/gif;base64,${screenshot}`;
@@ -144,35 +140,38 @@ const Screenshot = (props) => {
       <div className={styles.innerScreenshotContainer}>
         <div ref={containerEl}
           style={screenshotStyle}
-          onClick={handleScreenshotClick}
+          onMouseDown={handleScreenshotDown}
+          onMouseUp={handleScreenshotUp}
           onMouseMove={handleMouseMove}
-          onMouseOut={handleMouseOut}
+          onClick={handleScreenshotClick}
           className={styles.screenshotBox}>
           {screenshotInteractionMode !== SELECT && <div className={styles.coordinatesContainer}>
             <p>{t('xCoordinate', {x})}</p>
             <p>{t('yCoordinate', {y})}</p>
           </div>}
-          {swipeInstructions && <Tooltip open={true} title={swipeInstructions} placement="topLeft">{screenImg}</Tooltip>}
-          {!swipeInstructions && screenImg}
+          {screenImg}
           {screenshotInteractionMode === SELECT && containerEl.current &&
             <HighlighterRects {...props} containerEl={containerEl.current} />
           }
-          {screenshotInteractionMode === SWIPE &&
+          {screenshotInteractionMode === TAP_SWIPE &&
             <svg className={styles.swipeSvg}>
-              {swipeStart && !swipeEnd && <circle
-                cx={swipeStart.x / scaleRatio}
-                cy={swipeStart.y / scaleRatio}
+              {coordStart && <circle
+                cx={coordStart.x / scaleRatio}
+                cy={coordStart.y / scaleRatio}
               />}
-              {swipeStart && swipeEnd && <line
-                x1={swipeStart.x / scaleRatio}
-                y1={swipeStart.y / scaleRatio}
-                x2={swipeEnd.x / scaleRatio}
-                y2={swipeEnd.y / scaleRatio}
+              {coordStart && !coordEnd && <line
+                x1={coordStart.x / scaleRatio}
+                y1={coordStart.y / scaleRatio}
+                x2={x / scaleRatio}
+                y2={y / scaleRatio}
+              />}
+              {coordStart && coordEnd && <line
+                x1={coordStart.x / scaleRatio}
+                y1={coordStart.y / scaleRatio}
+                x2={coordEnd.x / scaleRatio}
+                y2={coordEnd.y / scaleRatio}
               />}
             </svg>
-          }
-          {screenshotInteractionMode === TAP &&
-            <div className={styles.tapDiv}></div>
           }
           {selectedInteractionMode === INTERACTION_MODE.GESTURES && points &&
             <svg key='gestureSVG' className={styles.gestureSvg}>
