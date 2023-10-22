@@ -15,7 +15,7 @@ class PythonFramework extends Framework {
 
   wrapWithBoilerplate (code) {
     let optionsStr = Object.keys(this.caps).map((k) => `${JSON.stringify(k)}: ${this.getPythonVal(this.caps[k])}`).join(',\n\t');
-    optionsStr = `{\n\t${optionsStr}\n}`
+    optionsStr = `{\n\t${optionsStr}\n}`;
     return `# This sample code supports Appium Python client >=2.3.0
 # pip install Appium-Python-Client
 # Then you can paste this into a file and simply run with Python
