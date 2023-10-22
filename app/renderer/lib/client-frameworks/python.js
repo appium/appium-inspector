@@ -122,20 +122,8 @@ actions.perform()
     return `is_app_installed = driver.is_app_installed('${app}');`;
   }
 
-  codeFor_launchApp () {
-    return `driver.launch_app()`;
-  }
-
   codeFor_background (varNameIgnore, varIndexIgnore, timeout) {
     return `driver.background_app(${timeout})`;
-  }
-
-  codeFor_closeApp () {
-    return `driver.close_app()`;
-  }
-
-  codeFor_reset () {
-    return `driver.reset()`;
   }
 
   codeFor_removeApp (varNameIgnore, varIndexIgnore, app) {
