@@ -14,12 +14,14 @@ class PythonFramework extends Framework {
   }
 
   wrapWithBoilerplate (code) {
-    let capStr = Object.keys(this.caps).map((k) => `caps[${JSON.stringify(k)}] = ${this.getPythonVal(this.caps[k])}`).join('\n');
-    return `# This sample code uses the Appium python client v2
+    let optionsStr = Object.keys(this.caps).map((k) => `${JSON.stringify(k)}: ${this.getPythonVal(this.caps[k])}`).join(',\n\t');
+    optionsStr = `{\n\t${optionsStr}\n}`
+    return `# This sample code supports Appium Python client >=2.3.0
 # pip install Appium-Python-Client
 # Then you can paste this into a file and simply run with Python
 
 from appium import webdriver
+from appium.options.common.base import AppiumOptions
 from appium.webdriver.common.appiumby import AppiumBy
 
 # For W3C actions
@@ -28,10 +30,10 @@ from selenium.webdriver.common.actions import interaction
 from selenium.webdriver.common.actions.action_builder import ActionBuilder
 from selenium.webdriver.common.actions.pointer_input import PointerInput
 
-caps = {}
-${capStr}
+options = AppiumOptions()
+options.load_capabilities(${optionsStr})
 
-driver = webdriver.Remote("${this.serverUrl}", caps)
+driver = webdriver.Remote("${this.serverUrl}", options=options)
 
 ${code}
 driver.quit()`;
@@ -122,20 +124,8 @@ actions.perform()
     return `is_app_installed = driver.is_app_installed('${app}');`;
   }
 
-  codeFor_launchApp () {
-    return `driver.launch_app()`;
-  }
-
   codeFor_background (varNameIgnore, varIndexIgnore, timeout) {
     return `driver.background_app(${timeout})`;
-  }
-
-  codeFor_closeApp () {
-    return `driver.close_app()`;
-  }
-
-  codeFor_reset () {
-    return `driver.reset()`;
   }
 
   codeFor_removeApp (varNameIgnore, varIndexIgnore, app) {
