@@ -27,8 +27,8 @@ class RobotFramework extends Framework {
 #
 #  more keywords on: http://serhatbolsu.github.io/robotframework-appiumlibrary/AppiumLibrary.html
 #
-# if your tests fails saying 'did not match any elements' consider use 'wait activity' or 
-# 'wait until page contains element' before a click command 
+# if your tests fails saying 'did not match any elements' consider use 'wait activity' or
+# 'wait until page contains element' before a click command
 
 *** Settings ***
 Library           AppiumLibrary
@@ -127,19 +127,7 @@ ${this.indent(code, 4)}
     return ``;
   }
 
-  codeFor_launchApp () {
-    return ``;
-  }
-
   codeFor_background () {
-    return ``;
-  }
-
-  codeFor_closeApp () {
-    return ``;
-  }
-
-  codeFor_reset () {
     return ``;
   }
 
