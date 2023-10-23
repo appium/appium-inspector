@@ -10,8 +10,8 @@ chai.use(chaiAsPromised);
 
 // Helper that checks that the optimal xpath for a node is the one that we expect and also
 // checks that the XPath successfully locates the node in it's doc
-function testXPath (doc, node, expectedXPath, uniqueAttributes) {
-  getOptimalXPath(doc, node, uniqueAttributes).should.equal(expectedXPath);
+function testXPath (doc, node, expectedXPath) {
+  getOptimalXPath(doc, node).should.equal(expectedXPath);
   xpath.select(expectedXPath, doc)[0].should.equal(node);
 }
 
@@ -48,7 +48,7 @@ describe('util.js', function () {
               width: '1024',
               height: '768',
             },
-            xpath: '//XCUIElementTypeApplication[@name="🦋"]/XCUIElementTypeWindow',
+            xpath: '//XCUIElementTypeWindow',
             path: '0.0',
             classChain: '**/XCUIElementTypeWindow',
             predicateString: 'type == "XCUIElementTypeWindow"',
@@ -142,7 +142,7 @@ describe('util.js', function () {
                 bounds: '[0,0][1080,2028]',
                 displayed: 'true'
               },
-              xpath: '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout',
+              xpath: '//android.widget.LinearLayout',
               path: '0.0'
             }
           ],
@@ -165,7 +165,7 @@ describe('util.js', function () {
             bounds: '[0,0][1080,2028]',
             displayed: 'true'
           },
-          xpath: '/hierarchy/android.widget.FrameLayout',
+          xpath: '//android.widget.FrameLayout',
           path: '0'
         }],
         attributes: {
@@ -236,8 +236,8 @@ describe('util.js', function () {
                                     height: '30'
                                   },
                                   xpath: '//XCUIElementTypeStaticText[@name="Login"]',
-                                  classChain: '**/XCUIElementTypeStaticText[`label == "Login"`]',
-                                  predicateString: 'label == "Login" AND name == "Login" AND value == "Login"',
+                                  classChain: '**/XCUIElementTypeStaticText[`name == "Login"`]',
+                                  predicateString: 'name == "Login" AND label == "Login" AND value == "Login"',
                                   path: '0.0.0.0.0.0.0'
                                 }
                               ],
@@ -254,8 +254,8 @@ describe('util.js', function () {
                                 height: '40'
                               },
                               xpath: '//XCUIElementTypeOther[@name="Login"]',
-                              classChain: '**/XCUIElementTypeOther[`label == "Login"`][2]',
-                              predicateString: 'label == "Login" AND name == "Login" AND type == "XCUIElementTypeOther"',
+                              classChain: '**/XCUIElementTypeOther[`name == "Login"`]',
+                              predicateString: 'name == "Login" AND label == "Login" AND type == "XCUIElementTypeOther"',
                               path: '0.0.0.0.0.0'
                             }
                           ],
@@ -272,8 +272,8 @@ describe('util.js', function () {
                             height: '40'
                           },
                           xpath: '//XCUIElementTypeOther[@name="button-login-container"]',
-                          classChain: '**/XCUIElementTypeOther[`label == "Login"`][1]',
-                          predicateString: 'label == "Login" AND name == "button-login-container"',
+                          classChain: '**/XCUIElementTypeOther[`name == "button-login-container"`]',
+                          predicateString: 'name == "button-login-container"',
                           path: '0.0.0.0.0'
                         }
                       ],
@@ -290,7 +290,7 @@ describe('util.js', function () {
                         height: '802'
                       },
                       xpath: '(//XCUIElementTypeOther[@name="Appium Inspector"])[2]',
-                      classChain: '**/XCUIElementTypeOther[`label == "Appium Inspector"`][2]',
+                      classChain: '**/XCUIElementTypeOther[`name == "Appium Inspector"`][2]',
                       predicateString: '',
                       path: '0.0.0.0'
                     },
@@ -314,8 +314,8 @@ describe('util.js', function () {
                                 height: '50'
                               },
                               xpath: '//XCUIElementTypeButton[@name="Login"]',
-                              classChain: '**/XCUIElementTypeButton[`label == "Login"`]',
-                              predicateString: 'label == "Login" AND name == "Login" AND value == "1"',
+                              classChain: '**/XCUIElementTypeButton[`name == "Login"`]',
+                              predicateString: 'name == "Login" AND label == "Login" AND value == "1"',
                               path: '0.0.0.1.0.0'
                             }
                           ],
@@ -332,7 +332,7 @@ describe('util.js', function () {
                             height: '94'
                           },
                           xpath: '(//XCUIElementTypeOther[@name="Home WebView Login Forms Swipe"])[2]',
-                          classChain: '**/XCUIElementTypeOther[`label == "Home WebView Login Forms Swipe"`][2]',
+                          classChain: '**/XCUIElementTypeOther[`name == "Home WebView Login Forms Swipe"`][2]',
                           predicateString: '',
                           path: '0.0.0.1.0'
                         }
@@ -350,7 +350,7 @@ describe('util.js', function () {
                         height: '94'
                       },
                       xpath: '(//XCUIElementTypeOther[@name="Home WebView Login Forms Swipe"])[1]',
-                      classChain: '**/XCUIElementTypeOther[`label == "Home WebView Login Forms Swipe"`][1]',
+                      classChain: '**/XCUIElementTypeOther[`name == "Home WebView Login Forms Swipe"`][1]',
                       predicateString: '',
                       path: '0.0.0.1'
                     }
@@ -368,7 +368,7 @@ describe('util.js', function () {
                     height: '896'
                   },
                   xpath: '(//XCUIElementTypeOther[@name="Appium Inspector"])[1]',
-                  classChain: '**/XCUIElementTypeOther[`label == "Appium Inspector"`][1]',
+                  classChain: '**/XCUIElementTypeOther[`name == "Appium Inspector"`][1]',
                   predicateString: '',
                   path: '0.0.0'
                 }
@@ -477,14 +477,10 @@ describe('util.js', function () {
       });
       it('should set an absolute xpath if unique attributes is set to "content-desc" and that attr is set', function () {
         const doc = new DOMParser().parseFromString(`<node content-desc='foo'></node>`);
-        testXPath(doc, doc.firstChild, '//node[@content-desc="foo"]', ['content-desc']);
-      });
-      it('should set an absolute xpath if unique attributes is set to "content-desc" and "something-else" and that "content-desc" is set', function () {
-        const doc = new DOMParser().parseFromString(`<node content-desc='foo'></node>`);
-        testXPath(doc, doc.firstChild, '//node[@content-desc="foo"]', ['something-else', 'content-desc']);
+        testXPath(doc, doc.firstChild, '//node[@content-desc="foo"]');
       });
       it('should set relative xpath with tagname if no unique attributes are set', function () {
-        const doc = new DOMParser().parseFromString(`<node content-desc='foo'></node>`);
+        const doc = new DOMParser().parseFromString(`<node non-unique-attr='foo'></node>`);
         testXPath(doc, doc.firstChild, '/node');
       });
     });
@@ -493,26 +489,29 @@ describe('util.js', function () {
 
       it('should set first child node to relative xpath with tagname if the child node has no siblings', function () {
         doc = new DOMParser().parseFromString(`<xml>
-          <child-node content-desc='hello'>Hello</child-node>
+          <child-node non-unique-attr='hello'>Hello</child-node>
+          <other-node>
+            <child-node></child-node>
+          </other-node>
         </xml>`);
-        testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node', []);
+        testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node');
       });
 
       it('should set first child node to relative xpath with tagname and index', function () {
         doc = new DOMParser().parseFromString(`<xml>
-          <child-node content-desc='hello'>Hello</child-node>
-          <child-node content-desc='world'>World</child-node>
+          <child-node non-unique-attr='hello'>Hello</child-node>
+          <child-node non-unique-attr='world'>World</child-node>
         </xml>`);
-        testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node[1]', []);
-        testXPath(doc, doc.getElementsByTagName('child-node')[1], '/xml/child-node[2]', []);
+        testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node[1]');
+        testXPath(doc, doc.getElementsByTagName('child-node')[1], '/xml/child-node[2]');
       });
       it('should set first child node to absolute xpath if it has ID set', function () {
         doc = new DOMParser().parseFromString(`<xml>
           <child-node content-desc='hello'>Hello</child-node>
           <child-node content-desc='world'>World</child-node>
         </xml>`);
-        testXPath(doc, doc.getElementsByTagName('child-node')[0], '//child-node[@content-desc="hello"]', ['content-desc']);
-        testXPath(doc, doc.getElementsByTagName('child-node')[1], '//child-node[@content-desc="world"]', ['content-desc']);
+        testXPath(doc, doc.getElementsByTagName('child-node')[0], '//child-node[@content-desc="hello"]');
+        testXPath(doc, doc.getElementsByTagName('child-node')[1], '//child-node[@content-desc="world"]');
       });
       it('should index children based on tagName', function () {
         doc = new DOMParser().parseFromString(`<xml>
@@ -532,10 +531,10 @@ describe('util.js', function () {
           <other-child-node>asdfasdf</other-child-node>
           <child-node>Bar</child-node>
         </xml>`);
-        testXPath(doc, doc.getElementsByTagName('child')[0], '/xml/child');
+        testXPath(doc, doc.getElementsByTagName('child')[0], '//child');
         testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node[1]');
         testXPath(doc, doc.getElementsByTagName('child-node')[1], '/xml/child-node[2]');
-        testXPath(doc, doc.getElementsByTagName('other-child-node')[0], '/xml/other-child-node');
+        testXPath(doc, doc.getElementsByTagName('other-child-node')[0], '//other-child-node');
       });
     });
     describe('on XML with height = 3', function () {
@@ -593,7 +592,7 @@ describe('util.js', function () {
         testXPath(doc, grandchildren[3], '(//child[@id="foo"])[4]/grandchild');
 
         const greatgrandchildren = doc.getElementsByTagName('great-grand-child');
-        testXPath(doc, greatgrandchildren[0], '(//child[@id="foo"])[5]/great-grand-child');
+        testXPath(doc, greatgrandchildren[0], '//great-grand-child');
 
         const children = doc.getElementsByTagName('child');
         testXPath(doc, children[0], '(//child[@id="foo"])[1]');
@@ -601,6 +600,25 @@ describe('util.js', function () {
         testXPath(doc, children[2], '(//child[@id="foo"])[3]');
         testXPath(doc, children[3], '(//child[@id="foo"])[4]');
         testXPath(doc, children[4], '(//child[@id="foo"])[5]');
+      });
+      it('should return conjunctively unique xpath locators if they exist', function () {
+        doc = new DOMParser().parseFromString(`<root>
+          <child id='foo' text='bar'></child>
+          <child text='yo'></child>
+          <child id='foo' text='yo'></child>
+          <child id='foo'></child>
+          <child text='zoom'></child>
+          <child id='bar' text='ohai'></child>
+          <child id='bar' text='ohai'></child>
+        </root>`);
+        const children = doc.getElementsByTagName('child');
+        testXPath(doc, children[0], '//child[@id="foo" and @text="bar"]');
+        testXPath(doc, children[1], '(//child[@text="yo"])[1]');
+        testXPath(doc, children[2], '//child[@id="foo" and @text="yo"]');
+        testXPath(doc, children[3], '(//child[@id="foo"])[3]');
+        testXPath(doc, children[4], '//child[@text="zoom"]');
+        testXPath(doc, children[5], '(//child[@id="bar"])[1]');
+        testXPath(doc, children[6], '(//child[@id="bar"])[2]');
       });
     });
 
@@ -613,7 +631,7 @@ describe('util.js', function () {
             <grandchild id='hello'></grandchild>
           </child>
         </node>`);
-        getOptimalXPath(doc, doc.getElementById('hello')).should.equal('/node/child[2]/grandchild');
+        getOptimalXPath(doc, doc.getElementById('hello'), ['id']).should.equal('/node/child[2]/grandchild');
         xpathSelectStub.restore();
       });
 
@@ -626,7 +644,7 @@ describe('util.js', function () {
         </node>`);
         const node = doc.getElementById('hello');
         node.getAttribute = () => { throw new Error('Some unexpected error'); };
-        should.not.exist(getOptimalXPath(doc, node));
+        should.not.exist(getOptimalXPath(doc, node, ['id']));
       });
     });
   });

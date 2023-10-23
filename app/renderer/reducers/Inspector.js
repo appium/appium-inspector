@@ -7,7 +7,7 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          SHOW_LOCATOR_TEST_MODAL, HIDE_LOCATOR_TEST_MODAL, SHOW_SIRI_COMMAND_MODAL, HIDE_SIRI_COMMAND_MODAL, SET_LOCATOR_TEST_STRATEGY, SET_LOCATOR_TEST_VALUE,
          SEARCHING_FOR_ELEMENTS, SEARCHING_FOR_ELEMENTS_COMPLETED, SET_LOCATOR_TEST_ELEMENT, CLEAR_SEARCH_RESULTS,
          FINDING_ELEMENT_IN_SOURCE, FINDING_ELEMENT_IN_SOURCE_COMPLETED, ADD_ASSIGNED_VAR_CACHE, CLEAR_ASSIGNED_VAR_CACHE, SET_SCREENSHOT_INTERACTION_MODE,
-         SET_SWIPE_START, SET_SWIPE_END, CLEAR_SWIPE_ACTION, SET_SEARCHED_FOR_ELEMENT_BOUNDS, CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS,
+         SET_COORD_START, SET_COORD_END, CLEAR_COORD_ACTION, SET_SEARCHED_FOR_ELEMENT_BOUNDS, CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS,
          PROMPT_KEEP_ALIVE, HIDE_PROMPT_KEEP_ALIVE, GET_FIND_ELEMENTS_TIMES, GET_FIND_ELEMENTS_TIMES_COMPLETED,
          SET_APP_MODE, SELECT_INTERACTION_MODE, ENTERING_COMMAND_ARGS, SET_COMMAND_ARG, CANCEL_PENDING_COMMAND, SET_CONTEXT,
          SET_KEEP_ALIVE_INTERVAL, SET_USER_WAIT_TIMEOUT, SET_LAST_ACTIVE_MOMENT, SET_VISIBLE_COMMAND_RESULT,
@@ -369,29 +369,29 @@ export default function inspector (state = INITIAL_STATE, action) {
         screenshotInteractionMode: action.screenshotInteractionMode,
       };
 
-    case SET_SWIPE_START:
+    case SET_COORD_START:
       return {
         ...state,
-        swipeStart: {
-          x: action.swipeStartX,
-          y: action.swipeStartY,
+        coordStart: {
+          x: action.coordStartX,
+          y: action.coordStartY,
         },
       };
 
-    case SET_SWIPE_END:
+    case SET_COORD_END:
       return {
         ...state,
-        swipeEnd: {
-          x: action.swipeEndX,
-          y: action.swipeEndY,
+        coordEnd: {
+          x: action.coordEndX,
+          y: action.coordEndY,
         },
       };
 
-    case CLEAR_SWIPE_ACTION:
+    case CLEAR_COORD_ACTION:
       return {
         ...state,
-        swipeStart: null,
-        swipeEnd: null,
+        coordStart: null,
+        coordEnd: null,
       };
 
     case SET_SEARCHED_FOR_ELEMENT_BOUNDS:
