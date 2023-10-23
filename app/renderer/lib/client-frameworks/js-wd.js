@@ -108,20 +108,8 @@ main().catch(console.log);
     return `driver.isAppInstalled("${app}");`;
   }
 
-  codeFor_launchApp () {
-    return `await driver.launchApp();`;
-  }
-
   codeFor_background (varNameIgnore, varIndexIgnore, timeout) {
     return `await driver.background(${timeout});`;
-  }
-
-  codeFor_closeApp () {
-    return `await driver.closeApp();`;
-  }
-
-  codeFor_reset () {
-    return `await driver.reset();`;
   }
 
   codeFor_removeApp (varNameIgnore, varIndexIgnore, app) {
