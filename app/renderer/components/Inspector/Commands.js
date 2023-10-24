@@ -24,6 +24,19 @@ const Commands = (props) => {
     // Make a copy of the arguments to avoid state mutation
     let copiedArgs = _.cloneDeep(args);
 
+    let parsingSuccess = true;
+    const parseJsonArgument = (index) => {
+      try {
+        copiedArgs[index] = JSON.parse(args[index]);
+      } catch (e) {
+        notification.error({
+          message: t('invalidJson', {json: args[index]}),
+          duration: 5,
+        });
+        parsingSuccess = false;
+      }
+    };
+
     // Special case for 'rotateDevice'
     if (commandName === 'rotateDevice') {
       copiedArgs = {x: args[0], y: args[1], duration: args[2], radius: args[3], rotation: args[4], touchCount: args[5]};
@@ -37,32 +50,21 @@ const Commands = (props) => {
     // Special case for 'execute'
     if (commandName === 'executeScript') {
       if (!_.isEmpty(args[1])) {
-        try {
-          copiedArgs[1] = JSON.parse(args[1]);
-        } catch (e) {
-          notification.error({
-            message: t('invalidJson', {json: args[1]}),
-            duration: 5,
-          });
-        }
+        parseJsonArgument(1);
       }
     }
 
     // Special case for 'updateSettings'
     if (commandName === 'updateSettings') {
       if (_.isString(args[0])) {
-        try {
-          copiedArgs[0] = JSON.parse(args[0]);
-        } catch (e) {
-          notification.error({
-            message: t('invalidJson', {json: args[0]}),
-            duration: 5,
-          });
-        }
+        parseJsonArgument(0);
       }
     }
 
-    applyClientMethod({methodName: commandName, args: copiedArgs, skipRefresh: !refresh, ignoreResult: false});
+    if (parsingSuccess) {
+      applyClientMethod({methodName: commandName, args: copiedArgs, skipRefresh: !refresh, ignoreResult: false});
+    }
+
     cancelPendingCommand();
   };
 
