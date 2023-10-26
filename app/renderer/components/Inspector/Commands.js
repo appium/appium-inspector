@@ -17,6 +17,18 @@ const Commands = (props) => {
     }
   };
 
+  const parseJsonString = (jsonString) => {
+    try {
+      return JSON.parse(jsonString);
+    } catch (e) {
+      notification.error({
+        message: t('invalidJson', {json: jsonString}),
+        duration: 5,
+      });
+      return null;
+    }
+  };
+
   const executeCommand = () => {
     const { args, commandName, command } = pendingCommand;
     const { refresh } = command;
@@ -24,18 +36,7 @@ const Commands = (props) => {
     // Make a copy of the arguments to avoid state mutation
     let copiedArgs = _.cloneDeep(args);
 
-    let parsingSuccess = true;
-    const parseJsonArgument = (index) => {
-      try {
-        copiedArgs[index] = JSON.parse(args[index]);
-      } catch (e) {
-        notification.error({
-          message: t('invalidJson', {json: args[index]}),
-          duration: 5,
-        });
-        parsingSuccess = false;
-      }
-    };
+    let isJsonValid = true;
 
     // Special case for 'rotateDevice'
     if (commandName === 'rotateDevice') {
@@ -50,18 +51,24 @@ const Commands = (props) => {
     // Special case for 'execute'
     if (commandName === 'executeScript') {
       if (!_.isEmpty(args[1])) {
-        parseJsonArgument(1);
+        copiedArgs[1] = parseJsonString(args[1]);
+        if (copiedArgs[1] === null) {
+          isJsonValid = false;
+        }
       }
     }
 
     // Special case for 'updateSettings'
     if (commandName === 'updateSettings') {
       if (_.isString(args[0])) {
-        parseJsonArgument(0);
+        copiedArgs[0] = parseJsonString(args[0]);
+        if (copiedArgs[0] === null) {
+          isJsonValid = false;
+        }
       }
     }
 
-    if (parsingSuccess) {
+    if (isJsonValid) {
       applyClientMethod({methodName: commandName, args: copiedArgs, skipRefresh: !refresh, ignoreResult: false});
     }
 
