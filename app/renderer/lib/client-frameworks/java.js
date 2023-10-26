@@ -72,10 +72,6 @@ ${this.indent(code, 4)}
 `;
   }
 
-  codeFor_executeScript (/*varNameIgnore, varIndexIgnore, args*/) {
-    return `/* TODO implement executeScript */`;
-  }
-
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
     let suffixMap = {
       xpath: 'XPath',
@@ -117,10 +113,6 @@ ${this.indent(code, 4)}
 
   codeFor_sendKeys (varName, varIndex, text) {
     return `${this.getVarName(varName, varIndex)}.sendKeys(${JSON.stringify(text)});`;
-  }
-
-  codeFor_back () {
-    return `driver.navigate().back();`;
   }
 
   // Change TouchAction to Sequence.
@@ -168,16 +160,40 @@ ${this.indent(code, 4)}
   `;
   }
 
+  // Execute Script
+
+  codeFor_executeScript (varNameIgnore, varIndexIgnore, scriptCmd, jsonArg) {
+    let assembledCommand;
+    if (jsonArg === undefined) {
+      assembledCommand = `driver.executeScript("${scriptCmd}");`;
+    } else {
+      // change the JSON object into a format accepted by Map.ofEntries:
+      // combine the keys and values into a flattened array, then stringify it
+      const argsValuesArray = [].concat(...(_.toPairs(JSON.parse(jsonArg))));
+      const argsValuesString = JSON.stringify(argsValuesArray).slice(1, -1);
+      assembledCommand = `driver.executeScript("${scriptCmd}", ImmutableMap.ofEntries(${argsValuesString}));`;
+    }
+    return assembledCommand;
+  }
+
+  // App Management
+
+  codeFor_startActivity (varNameIgnore, varIndexIgnore, ...args) {
+    const argNames = ['appPackage', 'appActivity', 'appWaitPackage', 'intentAction', 'intentCategory',
+      'intentFlags', 'optionalIntentArguments', 'dontStopAppOnReset'];
+    // zip argument names and values into tuples, but only if the value was provided
+    // then flatten the array of tuples and stringify it
+    const argsValuesArray = argNames.flatMap((k, i) => (args[i] === undefined) ? [] : [k, args[i]]);
+    const argsValuesString = JSON.stringify(argsValuesArray).slice(1, -1);
+    return `driver.executeScript("mobile: startActivity", ImmutableMap.ofEntries(${argsValuesString}));`;
+  }
+
   codeFor_getCurrentActivity () {
-    return `String activityName = driver.currentActivity()`;
+    return `String activityName = driver.currentActivity();`;
   }
 
   codeFor_getCurrentPackage () {
-    return `String packageName = driver.currentPackage()`;
-  }
-
-  codeFor_startActivity () {
-    return `driver.`;
+    return `String packageName = driver.currentPackage();`;
   }
 
   codeFor_installApp (varNameIgnore, varIndexIgnore, app) {
@@ -192,6 +208,14 @@ ${this.indent(code, 4)}
     return `driver.runAppInBackground(Duration.ofSeconds(${timeout}));`;
   }
 
+  codeFor_activateApp (varNameIgnore, varIndexIgnore, app) {
+    return `driver.activateApp("${app}");`;
+  }
+
+  codeFor_terminateApp (varNameIgnore, varIndexIgnore, app) {
+    return `driver.terminateApp("${app}");`;
+  }
+
   codeFor_removeApp (varNameIgnore, varIndexIgnore, app) {
     return `driver.removeApp("${app}");`;
   }
@@ -200,6 +224,8 @@ ${this.indent(code, 4)}
     return `Map<String, String> appStrings = driver.getAppStringMap(${language ? `${language}, ` : ''}${stringFile ? `"${stringFile}` : ''});`;
   }
 
+  // Clipboard
+
   codeFor_getClipboard () {
     return `String clipboardText = driver.getClipboardText();`;
   }
@@ -207,6 +233,57 @@ ${this.indent(code, 4)}
   codeFor_setClipboard (varNameIgnore, varIndexIgnore, clipboardText) {
     return `driver.setClipboardText("${clipboardText}");`;
   }
+
+  // File Transfer
+
+
+  codeFor_pushFile (varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
+    return `driver.pushFile("${pathToInstallTo}", ${fileContentString});`;
+  }
+
+  codeFor_pullFile (varNameIgnore, varIndexIgnore, pathToPullFrom) {
+    return `byte[] fileBase64 = driver.pullFile("${pathToPullFrom}");`;
+  }
+
+  codeFor_pullFolder (varNameIgnore, varIndexIgnore, folderToPullFrom) {
+    return `byte[] fileBase64 = driver.pullFolder("${folderToPullFrom}");`;
+  }
+
+  // Device Interaction
+
+  codeFor_shake () {
+    return `driver.shake();`;
+  }
+
+  codeFor_lock (varNameIgnore, varIndexIgnore, seconds) {
+    return `driver.lockDevice(${seconds});`;
+  }
+
+  codeFor_unlock () {
+    return `driver.unlockDevice();`;
+  }
+
+  codeFor_isLocked () {
+    return `boolean isLocked = driver.isDeviceLocked();`;
+  }
+
+  codeFor_rotateDevice (varNameIgnore, varIndexIgnore, x, y, radius, rotation, touchCount, duration) {
+    return `driver.rotate(new DeviceRotation(${x}, ${y}, ${radius}, ${rotation}, ${touchCount}, ${duration}));`;
+  }
+
+  codeFor_fingerprint (varNameIgnore, varIndexIgnore, fingerprintId) {
+    return `driver.fingerPrint(${fingerprintId});`;
+  }
+
+  codeFor_touchId (varNameIgnore, varIndexIgnore, match) {
+    return `driver.performTouchID(${match});`;
+  }
+
+  codeFor_toggleEnrollTouchId (varNameIgnore, varIndexIgnore, enroll) {
+    return `driver.toggleTouchIDEnrollment(${enroll});`;
+  }
+
+  // Keyboard
 
   codeFor_pressKeyCode (varNameIgnore, varIndexIgnore, keyCode, metaState, flags) {
     return `driver.pressKeyCode(${keyCode}, ${metaState}, ${flags});`;
@@ -224,17 +301,7 @@ ${this.indent(code, 4)}
     return `boolean isKeyboardShown = driver.isKeyboardShown();`;
   }
 
-  codeFor_pushFile (varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
-    return `driver.pushFile("${pathToInstallTo}", ${fileContentString})`;
-  }
-
-  codeFor_pullFile (varNameIgnore, varIndexIgnore, pathToPullFrom) {
-    return `byte[] fileBase64 = driver.pullFile("${pathToPullFrom}");`;
-  }
-
-  codeFor_pullFolder (varNameIgnore, varIndexIgnore, folderToPullFrom) {
-    return `byte[] fileBase64 = driver.pullFolder("${folderToPullFrom}");`;
-  }
+  // Connectivity
 
   codeFor_toggleAirplaneMode () {
     return `driver.toggleAirplaneMode();`;
@@ -268,25 +335,7 @@ ${this.indent(code, 4)}
     return `driver.setGsmVoice("${state}");`;
   }
 
-  codeFor_shake () {
-    return `driver.shake();`;
-  }
-
-  codeFor_lock (varNameIgnore, varIndexIgnore, seconds) {
-    return `driver.lockDevice(${seconds});`;
-  }
-
-  codeFor_unlock () {
-    return `driver.unlockDevice()`;
-  }
-
-  codeFor_isLocked () {
-    return `boolean isLocked = driver.isDeviceLocked();`;
-  }
-
-  codeFor_rotateDevice (varNameIgnore, varIndexIgnore, x, y, radius, rotation, touchCount, duration) {
-    return `driver.rotate(new DeviceRotation(${x}, ${y}, ${radius}, ${rotation}, ${touchCount}, ${duration}));`;
-  }
+  // Performance Data
 
   codeFor_getPerformanceData (varNameIgnore, varIndexIgnore, packageName, dataType, dataReadTimeout) {
     return `List<List<Object>> performanceData = driver.getPerformanceData("${packageName}", "${dataType}", ${dataReadTimeout});`;
@@ -296,13 +345,7 @@ ${this.indent(code, 4)}
     return `List<String> performanceTypes = driver.getPerformanceDataTypes();`;
   }
 
-  codeFor_touchId (varNameIgnore, varIndexIgnore, match) {
-    return `driver.performTouchID(${match});`;
-  }
-
-  codeFor_toggleEnrollTouchId (varNameIgnore, varIndexIgnore, enroll) {
-    return `driver.toggleTouchIDEnrollment(${enroll});`;
-  }
+  // System
 
   codeFor_openNotifications () {
     return `driver.openNotifications();`;
@@ -312,9 +355,7 @@ ${this.indent(code, 4)}
     return `String time = driver.getDeviceTime();`;
   }
 
-  codeFor_fingerprint (varNameIgnore, varIndexIgnore, fingerprintId) {
-    return `driver.fingerPrint(${fingerprintId});`;
-  }
+  // Session
 
   codeFor_getSession () {
     return `Map<String, Object> caps = driver.getSessionDetails();`;
@@ -364,14 +405,6 @@ ${this.indent(code, 4)}
     return `Map<String, Object> settings = driver.getSettings();`;
   }
 
-  /*
-
-  codeFor_ REPLACE_ME (varNameIgnore, varIndexIgnore) {
-    return `REPLACE_ME`;
-  }
-
-  */
-
   // Web
 
   codeFor_navigateTo (varNameIgnore, varIndexIgnore, url) {
@@ -380,6 +413,10 @@ ${this.indent(code, 4)}
 
   codeFor_getUrl () {
     return `String current_url = driver.getCurrentUrl();`;
+  }
+
+  codeFor_back () {
+    return `driver.navigate().back();`;
   }
 
   codeFor_forward () {
@@ -393,7 +430,7 @@ ${this.indent(code, 4)}
   // Context
 
   codeFor_getContext () {
-    return `driver.getContext()`;
+    return `driver.getContext();`;
   }
 
   codeFor_getContexts () {
