@@ -20,9 +20,10 @@ const Commands = (props) => {
   const parseJsonString = (jsonString) => {
     try {
       return JSON.parse(jsonString);
-    } catch (e) {
+    } catch (err) {
       notification.error({
-        message: t('invalidJson', {json: jsonString}),
+        message: t('invalidJson'),
+        description: err.message,
         duration: 5,
       });
       return null;
