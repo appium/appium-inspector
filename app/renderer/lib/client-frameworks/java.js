@@ -47,7 +47,15 @@ public class SampleTest {
     var options = new BaseOptions()
 ${capStr};
 
-    driver = new ${cls}(new URL("${this.serverUrl}"), options);
+    private URL getUrl() {
+      try {
+        return new URL("${this.serverUrl}");
+      } catch (MalformedURLException e) {
+        e.printStackTrace();
+      }
+    }
+
+    driver = new ${cls}(this.getUrl(), options);
   }
 
   @Test
