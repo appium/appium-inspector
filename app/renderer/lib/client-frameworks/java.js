@@ -26,7 +26,7 @@ class JavaFramework extends Framework {
     let capStr = this.indent(Object.keys(this.caps).map((k) => `.amend(${JSON.stringify(k)}, ${JSON.stringify(this.caps[k])})`).join('\n'), 6);
     // Import everything from Selenium in order to use WebElement, Point and other classes.
     return `
-// This sample code supports Appium Java client >=8
+// This sample code supports Appium Java client >=9
 // https://github.com/appium/java-client
 import io.appium.java_client.remote.options.BaseOptions;
 import io.appium.java_client.${pkg}.${cls};
@@ -44,7 +44,7 @@ public class SampleTest {
 
   @Before
   public void setUp() {
-    BaseOptions options = new BaseOptions()
+    var options = new BaseOptions()
 ${capStr};
 
     driver = new ${cls}(new URL("${this.serverUrl}"), options);
@@ -65,11 +65,11 @@ ${this.indent(code, 4)}
 
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
     let suffixMap = {
-      'xpath': 'xpath',
+      xpath: 'xpath',
       'accessibility id': 'accessibilityId',
-      'id': 'id',
+      id: 'id',
       'class name': 'className',
-      'name': 'name',
+      name: 'name',
       '-android uiautomator': 'androidUIAutomator',
       '-android datamatcher': 'androidDataMatcher',
       '-android viewtag': 'androidViewTag',
@@ -77,12 +77,12 @@ ${this.indent(code, 4)}
       '-ios class chain': 'iOSClassChain',
     };
     if (!suffixMap[strategy]) {
-      throw new Error(`Strategy '${strategy}' can't be code-gened`);
+      throw new Error(`Code generation for location strategy '${strategy}' is not currently supported`);
     }
     if (isArray) {
-      return `List<WebElement> ${localVar} = driver.findElements(AppiumBy.${suffixMap[strategy]}(${JSON.stringify(locator)}));`;
+      return `var ${localVar} = driver.findElements(AppiumBy.${suffixMap[strategy]}(${JSON.stringify(locator)}));`;
     } else {
-      return `WebElement ${localVar} = driver.findElement(AppiumBy.${suffixMap[strategy]}(${JSON.stringify(locator)}));`;
+      return `var ${localVar} = driver.findElement(AppiumBy.${suffixMap[strategy]}(${JSON.stringify(locator)}));`;
     }
   }
 
@@ -108,14 +108,14 @@ ${this.indent(code, 4)}
   codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
     const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
     return `
-final PointerInput FINGER = new PointerInput(PointerInput.Kind.TOUCH, "finger");
-Point tapPoint = new Point(${x}, ${y});
-Sequence tap = new Sequence(FINGER, 1);
-tap.addAction(FINGER.createPointerMove(Duration.ofMillis(0),
+final var finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+var tapPoint = new Point(${x}, ${y});
+var tap = new Sequence(finger, 1);
+tap.addAction(finger.createPointerMove(Duration.ofMillis(0),
     PointerInput.Origin.viewport(), tapPoint.x, tapPoint.y));
-tap.addAction(FINGER.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+tap.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
 tap.addAction(new Pause(finger, Duration.ofMillis(50)));
-tap.addAction(FINGER.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+tap.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
 driver.perform(Arrays.asList(tap));
     `;
   }
@@ -123,16 +123,16 @@ driver.perform(Arrays.asList(tap));
   codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
     const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
     return `
-final PointerInput FINGER = new PointerInput(PointerInput.Kind.TOUCH, "finger");
-Point start = new Point(${x1}, ${y1});
-Point end = new Point (${x2}, ${y2});
-Sequence swipe = new Sequence(FINGER, 1);
-swipe.addAction(FINGER.createPointerMove(Duration.ofMillis(0),
+final var finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+var start = new Point(${x1}, ${y1});
+var end = new Point (${x2}, ${y2});
+var swipe = new Sequence(finger, 1);
+swipe.addAction(finger.createPointerMove(Duration.ofMillis(0),
     PointerInput.Origin.viewport(), start.getX(), start.getY()));
-swipe.addAction(FINGER.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
-swipe.addAction(FINGER.createPointerMove(Duration.ofMillis(1000),
+swipe.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+swipe.addAction(finger.createPointerMove(Duration.ofMillis(1000),
     PointerInput.Origin.viewport(), end.getX(), end.getY()));
-swipe.addAction(FINGER.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+swipe.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
 driver.perform(Arrays.asList(swipe));
   `;
   }
@@ -145,8 +145,9 @@ driver.perform(Arrays.asList(swipe));
       assembledCommand = `driver.executeScript("${scriptCmd}");`;
     } else {
       // change the JSON object into a format accepted by Map.ofEntries:
-      // combine the keys and values into a flattened array, then stringify it
-      const argsValuesArray = [].concat(...(_.toPairs(JSON.parse(jsonArg))));
+      // combine the keys and values into a flattened array
+      const argsValuesArray = _.flatMap(_.toPairs(JSON.parse(jsonArg)));
+      // stringify the array and remove its square brackets
       const argsValuesString = JSON.stringify(argsValuesArray).slice(1, -1);
       assembledCommand = `driver.executeScript("${scriptCmd}", ImmutableMap.ofEntries(${argsValuesString}));`;
     }
@@ -158,19 +159,19 @@ driver.perform(Arrays.asList(swipe));
   codeFor_startActivity (varNameIgnore, varIndexIgnore, ...args) {
     const argNames = ['appPackage', 'appActivity', 'appWaitPackage', 'intentAction', 'intentCategory',
       'intentFlags', 'optionalIntentArguments', 'dontStopAppOnReset'];
-    // zip argument names and values into tuples, but only if the value was provided
-    // then flatten the array of tuples and stringify it
-    const argsValuesArray = argNames.flatMap((k, i) => (args[i] === undefined) ? [] : [k, args[i]]);
-    const argsValuesString = JSON.stringify(argsValuesArray).slice(1, -1);
-    return `driver.executeScript("mobile: startActivity", ImmutableMap.ofEntries(${argsValuesString}));`;
+    // zip argument names and values into a JSON object, so that we can reuse executeScript
+    const argsJsonObject = _.zipObject(argNames, args);
+    // filter out arguments with no values, then stringify the JSON object
+    const argsJsonString = JSON.stringify(_.omitBy(argsJsonObject, _.isUndefined));
+    return this.codeFor_executeScript(varNameIgnore, varIndexIgnore, 'mobile: startActivity', argsJsonString);
   }
 
   codeFor_getCurrentActivity () {
-    return `String activityName = driver.currentActivity();`;
+    return `var activityName = driver.currentActivity();`;
   }
 
   codeFor_getCurrentPackage () {
-    return `String packageName = driver.currentPackage();`;
+    return `var packageName = driver.currentPackage();`;
   }
 
   codeFor_installApp (varNameIgnore, varIndexIgnore, app) {
@@ -178,7 +179,7 @@ driver.perform(Arrays.asList(swipe));
   }
 
   codeFor_isAppInstalled (varNameIgnore, varIndexIgnore, app) {
-    return `boolean isAppInstalled = driver.isAppInstalled("${app}");`;
+    return `var isAppInstalled = driver.isAppInstalled("${app}");`;
   }
 
   codeFor_background (varNameIgnore, varIndexIgnore, timeout) {
@@ -198,13 +199,13 @@ driver.perform(Arrays.asList(swipe));
   }
 
   codeFor_getStrings (varNameIgnore, varIndexIgnore, language, stringFile) {
-    return `Map<String, String> appStrings = driver.getAppStringMap(${language ? `${language}, ` : ''}${stringFile ? `"${stringFile}` : ''});`;
+    return `var appStrings = driver.getAppStringMap(${language ? `${language}, ` : ''}${stringFile ? `"${stringFile}` : ''});`;
   }
 
   // Clipboard
 
   codeFor_getClipboard () {
-    return `String clipboardText = driver.getClipboardText();`;
+    return `var clipboardText = driver.getClipboardText();`;
   }
 
   codeFor_setClipboard (varNameIgnore, varIndexIgnore, clipboardText) {
@@ -219,11 +220,11 @@ driver.perform(Arrays.asList(swipe));
   }
 
   codeFor_pullFile (varNameIgnore, varIndexIgnore, pathToPullFrom) {
-    return `byte[] fileBase64 = driver.pullFile("${pathToPullFrom}");`;
+    return `var fileBase64 = driver.pullFile("${pathToPullFrom}");`;
   }
 
   codeFor_pullFolder (varNameIgnore, varIndexIgnore, folderToPullFrom) {
-    return `byte[] fileBase64 = driver.pullFolder("${folderToPullFrom}");`;
+    return `var folderBase64 = driver.pullFolder("${folderToPullFrom}");`;
   }
 
   // Device Interaction
@@ -241,7 +242,7 @@ driver.perform(Arrays.asList(swipe));
   }
 
   codeFor_isLocked () {
-    return `boolean isLocked = driver.isDeviceLocked();`;
+    return `var isLocked = driver.isDeviceLocked();`;
   }
 
   codeFor_rotateDevice (varNameIgnore, varIndexIgnore, x, y, radius, rotation, touchCount, duration) {
@@ -275,7 +276,7 @@ driver.perform(Arrays.asList(swipe));
   }
 
   codeFor_isKeyboardShown () {
-    return `boolean isKeyboardShown = driver.isKeyboardShown();`;
+    return `var isKeyboardShown = driver.isKeyboardShown();`;
   }
 
   // Connectivity
@@ -315,11 +316,11 @@ driver.perform(Arrays.asList(swipe));
   // Performance Data
 
   codeFor_getPerformanceData (varNameIgnore, varIndexIgnore, packageName, dataType, dataReadTimeout) {
-    return `List<List<Object>> performanceData = driver.getPerformanceData("${packageName}", "${dataType}", ${dataReadTimeout});`;
+    return `var performanceData = driver.getPerformanceData("${packageName}", "${dataType}", ${dataReadTimeout});`;
   }
 
   codeFor_getPerformanceDataTypes () {
-    return `List<String> performanceTypes = driver.getPerformanceDataTypes();`;
+    return `var performanceTypes = driver.getPerformanceDataTypes();`;
   }
 
   // System
@@ -329,13 +330,13 @@ driver.perform(Arrays.asList(swipe));
   }
 
   codeFor_getDeviceTime () {
-    return `String time = driver.getDeviceTime();`;
+    return `var time = driver.getDeviceTime();`;
   }
 
   // Session
 
   codeFor_getSession () {
-    return `Map<String, Object> caps = driver.getSessionDetails();`;
+    return `var caps = driver.getSessionDetails();`;
   }
 
   codeFor_setTimeouts (/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
@@ -343,7 +344,7 @@ driver.perform(Arrays.asList(swipe));
   }
 
   codeFor_getOrientation () {
-    return `ScreenOrientation orientation = driver.getOrientation();`;
+    return `var orientation = driver.getOrientation();`;
   }
 
   codeFor_setOrientation (varNameIgnore, varIndexIgnore, orientation) {
@@ -351,7 +352,7 @@ driver.perform(Arrays.asList(swipe));
   }
 
   codeFor_getGeoLocation () {
-    return `Location location = driver.location();`;
+    return `var location = driver.location();`;
   }
 
   codeFor_setGeoLocation (varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
@@ -359,11 +360,11 @@ driver.perform(Arrays.asList(swipe));
   }
 
   codeFor_getLogTypes () {
-    return `Set<String> getLogTypes = driver.manage().logs().getAvailableLogTypes();`;
+    return `var getLogTypes = driver.manage().logs().getAvailableLogTypes();`;
   }
 
   codeFor_getLogs (varNameIgnore, varIndexIgnore, logType) {
-    return `LogEntries logEntries = driver.manage().logs().get("${logType}");`;
+    return `var logEntries = driver.manage().logs().get("${logType}");`;
   }
 
   codeFor_updateSettings (varNameIgnore, varIndexIgnore, settingsJson) {
@@ -379,7 +380,7 @@ driver.perform(Arrays.asList(swipe));
   }
 
   codeFor_getSettings () {
-    return `Map<String, Object> settings = driver.getSettings();`;
+    return `var settings = driver.getSettings();`;
   }
 
   // Web
@@ -389,7 +390,7 @@ driver.perform(Arrays.asList(swipe));
   }
 
   codeFor_getUrl () {
-    return `String current_url = driver.getCurrentUrl();`;
+    return `var currentUrl = driver.getCurrentUrl();`;
   }
 
   codeFor_back () {
