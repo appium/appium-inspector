@@ -38,14 +38,14 @@ public class SampleTest {
   private ${cls} driver;
   private PORT = ${port};
   private HOST = ${host};
-  
+
 
   @Before
   public void setUp() throws MalformedURLException {
     DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
 ${capStr}
 
-    
+
 
     private URL getUrl(String host, String port) {
         try {
@@ -188,20 +188,8 @@ ${this.indent(code, 4)}
     return `boolean isAppInstalled = driver.isAppInstalled("${app}");`;
   }
 
-  codeFor_launchApp () {
-    return `driver.launchApp();`;
-  }
-
   codeFor_background (varNameIgnore, varIndexIgnore, timeout) {
     return `driver.runAppInBackground(Duration.ofSeconds(${timeout}));`;
-  }
-
-  codeFor_closeApp () {
-    return `driver.closeApp();`;
-  }
-
-  codeFor_reset () {
-    return `driver.reset();`;
   }
 
   codeFor_removeApp (varNameIgnore, varIndexIgnore, app) {
