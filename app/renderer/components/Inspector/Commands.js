@@ -17,12 +17,27 @@ const Commands = (props) => {
     }
   };
 
+  const parseJsonString = (jsonString) => {
+    try {
+      return JSON.parse(jsonString);
+    } catch (err) {
+      notification.error({
+        message: t('invalidJson'),
+        description: err.message,
+        duration: 5,
+      });
+      return null;
+    }
+  };
+
   const executeCommand = () => {
     const { args, commandName, command } = pendingCommand;
     const { refresh } = command;
 
     // Make a copy of the arguments to avoid state mutation
     let copiedArgs = _.cloneDeep(args);
+
+    let isJsonValid = true;
 
     // Special case for 'rotateDevice'
     if (commandName === 'rotateDevice') {
@@ -37,13 +52,9 @@ const Commands = (props) => {
     // Special case for 'execute'
     if (commandName === 'executeScript') {
       if (!_.isEmpty(args[1])) {
-        try {
-          copiedArgs[1] = JSON.parse(args[1]);
-        } catch (e) {
-          notification.error({
-            message: t('invalidJson', {json: args[1]}),
-            duration: 5,
-          });
+        copiedArgs[1] = parseJsonString(args[1]);
+        if (copiedArgs[1] === null) {
+          isJsonValid = false;
         }
       }
     }
@@ -51,18 +62,17 @@ const Commands = (props) => {
     // Special case for 'updateSettings'
     if (commandName === 'updateSettings') {
       if (_.isString(args[0])) {
-        try {
-          copiedArgs[0] = JSON.parse(args[0]);
-        } catch (e) {
-          notification.error({
-            message: t('invalidJson', {json: args[0]}),
-            duration: 5,
-          });
+        copiedArgs[0] = parseJsonString(args[0]);
+        if (copiedArgs[0] === null) {
+          isJsonValid = false;
         }
       }
     }
 
-    applyClientMethod({methodName: commandName, args: copiedArgs, skipRefresh: !refresh, ignoreResult: false});
+    if (isJsonValid) {
+      applyClientMethod({methodName: commandName, args: copiedArgs, skipRefresh: !refresh, ignoreResult: false});
+    }
+
     cancelPendingCommand();
   };
 
