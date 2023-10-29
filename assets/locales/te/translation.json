@@ -241,6 +241,7 @@
   "Save Capability Set As": "సామర్థ్యాన్ని ఇలా సెట్ చేయండి...",
   "Edit Raw JSON": "రా JSONని సవరించండి",
   "Enter Parameters for:": "Enter Parameters for:",
+  "invalidJson": "Invalid JSON",
   "Execute Script": "Execute Script",
   "App Management": "App Management",
   "Clipboard": "క్లిప్‌బోర్డ్",

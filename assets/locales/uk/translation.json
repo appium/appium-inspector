@@ -241,6 +241,7 @@
   "Save Capability Set As": "Зберегти набір опцій як…",
   "Edit Raw JSON": "Редагувати сирий JSON",
   "Enter Parameters for:": "Введіть параметри для:",
+  "invalidJson": "Невалідний JSON",
   "Execute Script": "Виконати скрипт",
   "App Management": "Керування додатками",
   "Clipboard": "Буфер обміну",
