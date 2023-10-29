@@ -241,6 +241,7 @@
   "Save Capability Set As": "保存能力设置为…",
   "Edit Raw JSON": "直接编辑 JSON",
   "Enter Parameters for:": "Enter Parameters for:",
+  "invalidJson": "Invalid JSON",
   "Execute Script": "Execute Script",
   "App Management": "App Management",
   "Clipboard": "剪贴板",

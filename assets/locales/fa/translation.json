@@ -241,6 +241,7 @@
   "Save Capability Set As": "ذخیره Capability Set به عنوان…",
   "Edit Raw JSON": "ویرایش JSON خام",
   "Enter Parameters for:": "Enter Parameters for:",
+  "invalidJson": "Invalid JSON",
   "Execute Script": "Execute Script",
   "App Management": "App Management",
   "Clipboard": "کلیپ‌بورد",

@@ -241,6 +241,7 @@
   "Save Capability Set As": "Guardar el conjunto de capacidades como…",
   "Edit Raw JSON": "Editar JSON sin procesar",
   "Enter Parameters for:": "Enter Parameters for:",
+  "invalidJson": "Invalid JSON",
   "Execute Script": "Execute Script",
   "App Management": "App Management",
   "Clipboard": "Portapapeles",

@@ -241,6 +241,7 @@
   "Save Capability Set As": "Capability 셋 새로 저장하기",
   "Edit Raw JSON": "Raw JSON 변경",
   "Enter Parameters for:": "Enter Parameters for:",
+  "invalidJson": "Invalid JSON",
   "Execute Script": "Execute Script",
   "App Management": "App Management",
   "Clipboard": "클립보드",

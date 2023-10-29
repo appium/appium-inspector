@@ -241,6 +241,7 @@
   "Save Capability Set As": "Save Capability Set As…",
   "Edit Raw JSON": "Edit Raw JSON",
   "Enter Parameters for:": "Enter Parameters for:",
+  "invalidJson": "Invalid JSON",
   "Execute Script": "Execute Script",
   "App Management": "App Management",
   "Clipboard": "Zwischenablage",
