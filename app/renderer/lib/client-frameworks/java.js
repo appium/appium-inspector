@@ -152,12 +152,12 @@ driver.perform(Arrays.asList(swipe));
     if (jsonArg === undefined) {
       assembledCommand = `driver.executeScript("${scriptCmd}");`;
     } else {
-      // change the JSON object into a format accepted by Map.ofEntries:
-      // combine the keys and values into a flattened array
-      const argsValuesArray = _.flatMap(_.toPairs(JSON.parse(jsonArg)));
-      // stringify the array and remove its square brackets
-      const argsValuesString = JSON.stringify(argsValuesArray).slice(1, -1);
-      assembledCommand = `driver.executeScript("${scriptCmd}", ImmutableMap.ofEntries(${argsValuesString}));`;
+      // change the JSON object into a format accepted by Map.ofEntries: a sequence of Map.entry(key, value)
+      // first create an array for each key-value pair
+      const argsValuesArray = _.toPairs(JSON.parse(jsonArg));
+      // then wrap each key-value array in Map.entry()
+      const argsValuesStrings = argsValuesArray.map((kv) => `Map.entry(${JSON.stringify(kv).slice(1, -1)})`);
+      assembledCommand = `driver.executeScript("${scriptCmd}", Map.ofEntries(${argsValuesStrings.join(', ')}));`;
     }
     return assembledCommand;
   }
