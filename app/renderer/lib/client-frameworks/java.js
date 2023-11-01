@@ -71,6 +71,10 @@ ${this.indent(code, 4)}
 `;
   }
 
+  addComment(comment) {
+    return `// ${comment}`;
+  }
+
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
     let suffixMap = {
       xpath: 'xpath',
@@ -85,7 +89,7 @@ ${this.indent(code, 4)}
       '-ios class chain': 'iOSClassChain',
     };
     if (!suffixMap[strategy]) {
-      throw new Error(`Code generation for location strategy '${strategy}' is not currently supported`);
+      return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
       return `var ${localVar} = driver.findElements(AppiumBy.${suffixMap[strategy]}(${JSON.stringify(locator)}));`;
@@ -147,32 +151,20 @@ driver.perform(Arrays.asList(swipe));
 
   // Execute Script
 
-  codeFor_executeScript (varNameIgnore, varIndexIgnore, scriptCmd, jsonArg) {
-    let assembledCommand;
-    if (jsonArg === undefined) {
-      assembledCommand = `driver.executeScript("${scriptCmd}");`;
-    } else {
-      // change the JSON object into a format accepted by Map.ofEntries: a sequence of Map.entry(key, value)
-      // first create an array for each key-value pair
-      const argsValuesArray = _.toPairs(JSON.parse(jsonArg));
-      // then wrap each key-value array in Map.entry()
-      const argsValuesStrings = argsValuesArray.map((kv) => `Map.entry(${JSON.stringify(kv).slice(1, -1)})`);
-      assembledCommand = `driver.executeScript("${scriptCmd}", Map.ofEntries(${argsValuesStrings.join(', ')}));`;
-    }
-    return assembledCommand;
+  codeFor_executeScriptNoArgs (scriptCmd) {
+    return `driver.executeScript("${scriptCmd}");`;
+  }
+
+  codeFor_executeScriptWithArgs (scriptCmd, jsonArg) {
+    // change the JSON object into a format accepted by Map.ofEntries: a sequence of Map.entry(key, value)
+    // first create an array for each key-value pair
+    const argsValuesArray = _.toPairs(jsonArg[0]);
+    // then wrap each key-value array in Map.entry()
+    const argsValuesStrings = argsValuesArray.map((kv) => `Map.entry(${JSON.stringify(kv).slice(1, -1)})`);
+    return `driver.executeScript("${scriptCmd}", Map.ofEntries(${argsValuesStrings.join(', ')}));`;
   }
 
   // App Management
-
-  codeFor_startActivity (varNameIgnore, varIndexIgnore, ...args) {
-    const argNames = ['appPackage', 'appActivity', 'appWaitPackage', 'intentAction', 'intentCategory',
-      'intentFlags', 'optionalIntentArguments', 'dontStopAppOnReset'];
-    // zip argument names and values into a JSON object, so that we can reuse executeScript
-    const argsJsonObject = _.zipObject(argNames, args);
-    // filter out arguments with no values, then stringify the JSON object
-    const argsJsonString = JSON.stringify(_.omitBy(argsJsonObject, _.isUndefined));
-    return this.codeFor_executeScript(varNameIgnore, varIndexIgnore, 'mobile: startActivity', argsJsonString);
-  }
 
   codeFor_getCurrentActivity () {
     return `var activityName = driver.currentActivity();`;
@@ -416,11 +408,11 @@ driver.perform(Arrays.asList(swipe));
   // Context
 
   codeFor_getContext () {
-    return `driver.getContext();`;
+    return `var context = driver.getContext();`;
   }
 
   codeFor_getContexts () {
-    return `driver.getContextHandles();`;
+    return `var contexts = driver.getContextHandles();`;
   }
 
   codeFor_switchContext (varNameIgnore, varIndexIgnore, name) {

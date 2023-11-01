@@ -30,6 +30,10 @@ driver.quit`;
     return `driver.execute_script '${args}'`;
   }
 
+  addComment(comment) {
+    return `# ${comment}`;
+  }
+
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
     let suffixMap = {
       'xpath': ':xpath',
@@ -44,7 +48,7 @@ driver.quit`;
       '-ios class chain': ':class_chain',
     };
     if (!suffixMap[strategy]) {
-      throw new Error(`Strategy ${strategy} can't be code-gened`);
+      return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
       return `${localVar} = driver.find_elements ${suffixMap[strategy]}, ${JSON.stringify(locator)}`;

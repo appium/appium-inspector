@@ -39,6 +39,10 @@ ${code}
 driver.quit()`;
   }
 
+  addComment(comment) {
+    return `# ${comment}`;
+  }
+
   codeFor_executeScript (varNameIgnore, varIndexIgnore, args) {
     return `driver.execute_script('${args}')`;
   }
@@ -57,7 +61,7 @@ driver.quit()`;
       '-ios class chain': 'AppiumBy.IOS_CLASS_CHAIN',
     };
     if (!suffixMap[strategy]) {
-      throw new Error(`Strategy ${strategy} can't be code-gened`);
+      return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
       return `${localVar} = driver.find_elements(by=${suffixMap[strategy]}, value=${JSON.stringify(locator)})`;

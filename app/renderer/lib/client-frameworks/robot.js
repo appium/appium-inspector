@@ -46,6 +46,10 @@ ${this.indent(code, 4)}
 `;
   }
 
+  addComment(comment) {
+    return `# ${comment}`;
+  }
+
   codeFor_findAndAssign (strategy, locator/*, localVar, isArray*/) {
     let suffixMap = {
       xpath: 'xpath',
@@ -60,7 +64,7 @@ ${this.indent(code, 4)}
       '-ios class chain': 'ios_uiautomation', // TODO: Could not find iOS UIAutomation
     };
     if (!suffixMap[strategy]) {
-      throw new Error(`Strategy ${strategy} can't be code-gened`);
+      return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     //TODO: in the robot case, we need the ID on the codeFor_ for execution
     this.lastID = `${strategy}=${locator}`;
