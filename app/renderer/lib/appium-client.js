@@ -213,11 +213,11 @@ export default class AppiumClient {
         // we stick with device dimensions, but swap them depending on detected orientation
         // deviceScreenSize value fits portrait mode for phones, but landscape mode for tablets
         const [width, height] = deviceScreenSize.split('x');
-        if ((windowSize.height > windowSize.width && height > width) || // phone portrait mode
-            (windowSize.height < windowSize.width && height < width)) { // tablet landscape mode
+        // check if the orientation for windowSize matches orientation for deviceScreenSize
+        if ((windowSize.height >= windowSize.width) === (height >= width)) {
           windowSize.height = height;
           windowSize.width = width;
-        } else { // phone landscape mode / tablet portrait mode
+        } else { // orientations do not match - swap dimensions
           windowSize.height = width;
           windowSize.width = height;
         }
