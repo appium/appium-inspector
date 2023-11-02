@@ -201,7 +201,7 @@
     "@babel/preset-react": "7.22.15",
     "@babel/register": "7.22.15",
     "@types/react-router-dom": "5.3.3",
-    "asyncbox": "2.9.4",
+    "asyncbox": "3.0.0",
     "chai": "4.3.10",
     "chai-as-promised": "7.1.1",
     "check-engines": "1.6.0",
