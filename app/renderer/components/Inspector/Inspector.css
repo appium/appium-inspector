@@ -11,7 +11,6 @@
     justify-content: center;
     width: 100%;
     height: 50px;
-    margin-bottom: 12px;
     background: linear-gradient(180deg, #e2e2e2, #e0e0e0, 10%, #d6d6d6, 50%, #cacaca);
     border-top: 1px solid #f5f4f5;
     border-bottom: 1px solid #a5a4a5;
@@ -32,14 +31,14 @@
     display: flex;
     flex: 1;
     flex-direction: row;
-    padding: 0em 1em 0 1em;
+    padding: 1em;
     max-width: 100%;
-    height: calc(100% - 48px);
+    height: calc(100% - 50px);
 }
 
 .inspector-main .screenshot-container {
     max-width: 500px;
-    max-height: 90%;
+    max-height: calc(100% - 50px);
     flex-grow: 1;
     flex-shrink: 2;
     flex-basis: 400px;
@@ -60,7 +59,6 @@
 .inspector-main .screenshot-container img {
     max-width: 100%;
     max-height: 100%;
-    border: 1px solid #eee;
     box-shadow: 0px 0px 1px 2px rgba(0, 0, 0, 0.05);
 }
 
@@ -72,12 +70,15 @@
     overflow: hidden;
 }
 
+.inspector-main .interaction-tab-container :global(.ant-tabs-tabpane) {
+    height: 100%;
+}
+
 .inspector-main .interaction-tab-container {
     position: relative;
     flex-grow: 3;
     flex-basis: 550px;
     min-width: 380px;
-    padding-bottom: 1em;
     padding-left: 1em;
     display: flex;
     flex-flow: column;
@@ -89,9 +90,14 @@
     padding: 0px 12px;
 }
 
+.inspector-main :global(.ant-card-head-wrapper) {
+    max-height: 48px;
+}
+
 .inspector-main :global(.ant-card-body) {
     height: calc(100% - 48px);
     padding: 12px;
+    scrollbar-width: none;  /* -webkit-scrollbar for Firefox */
 }
 
 .inspector-main .interaction-tab-container :global(.ant-tabs) {
@@ -133,7 +139,7 @@
 .session-inner-table :global(.ant-table) {
     width: 102%;
     margin-left: -32px;
-} 
+}
 
 .session-inner-table :global(.ant-table-body)::-webkit-scrollbar {
     -webkit-appearance: none;
@@ -195,7 +201,6 @@
 
 .inspector-main .interaction-tab-container .interaction-tab-card {
     height: 100%;
-    padding-bottom: 3em;
 }
 
 .highlighter-box {
@@ -239,7 +244,7 @@
     overflow: hidden;
     cursor: pointer;
     visibility: visible;
-    transform: translate(-50%, -50%); 
+    transform: translate(-50%, -50%);
 }
 
 .centroid-box.centroid {
@@ -344,7 +349,7 @@
 .centroid-box.expand.inspected-element-box.hovered-element-box div {
     background-color: rgb(255, 133, 133);
     transition: background-color 0.2s ease-in-out;
-    
+
 }
 
 .centroid-box.expand.hovered-element-box div,
@@ -355,8 +360,43 @@
     visibility: visible;
 }
 
+.custom-button-icon {
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+.wide-tooltip {
+    max-width: 400px;
+}
+
+.contexts-custom-btn {
+    height: 30px;
+    width: 30px;
+    color: #ffffff;
+    margin-top: 1px;
+    padding: 3px 0 0 7px;
+}
+
+.no-contexts-info-icon {
+    background-color: #faad14;
+}
+
+.contexts-info-icon {
+    background-color: #1890ff;
+}
+
+.header-context-selector {
+    width: 350px;
+}
+
 .elementActions {
     margin-bottom: 20px;
+    gap: 8px;
+}
+
+.elementKeyInputActions {
+    max-width: 300px;
+    flex: 1;
 }
 
 .inspector-main #selectedElementContainer {
@@ -380,6 +420,11 @@
 .selected-element-card :global(.ant-card-body) {
     flex: 1;
     overflow: auto;
+    margin-right: -12px;
+}
+
+.selectedElemNotInteractableAlertRow {
+    justify-content: center;
 }
 
 .sourceTag {
@@ -408,38 +453,34 @@
     width: 150px;
 }
 
-.locator-test-interactions-container {
-    float: right;
-    margin-top: 0.5em;
-}
-
-.locator-test-interactions-container div {
-    display: inline-block;
-    width: 50%;
-    padding: 4px;
-}
-
-.locator-test-interactions-container .send-keys-container {
+.searchResultsList {
     width: 100%;
+    flex: 1;
+    min-height: 24px;
+    max-height: 150px;
+    overflow: auto;
+    border-style: solid;
+    border-width: 1px;
 }
 
-.locator-test-interactions-container .send-keys-container input {
-    width: 76%;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+.searchResultsList :global(.ant-list-item) {
+    padding: 4px 6px !important;
+    height: 25px;
+    text-align: left;
 }
 
-.locator-test-interactions-container .send-keys-container button {
-    position: absolute;
-    right: 0;
-    width: 25%;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+.searchResultsSelectedItem {
+    background-color: #bae7ff;
 }
 
-.locator-test-interactions-container div button,
-.locator-test-interactions-container div input {
-    width: 100%;
+.searchResultsActions {
+    width: 350px;
+}
+
+.searchResultsKeyInput,
+.elementKeyInput {
+    height: 32px;
+    width: calc(100% - 64px);
 }
 
 .element-count-container {
@@ -447,13 +488,14 @@
     margin-left: 0.5em;
 }
 
-.locator-search-results {
-    width: 100%;
+.locatorStrategyBtn {
+    margin-top: -1px;
+    min-width: 25%;
+    text-align: center;
 }
 
-.locator-strategy-selector {
+.locatorSelectorTextArea {
     width: 100%;
-    margin-bottom: 1em;
 }
 
 .coordinatesContainer {
@@ -461,16 +503,6 @@
     background: rgba(255, 250, 205, 0.8);
     z-index: 10000000;
     padding: 2px;
-}
-
-.swipeInstructions {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 100000000;
-    background-color: white;
-    padding: 4px;
-    width: 10em;
 }
 
 .swipeSvg {
@@ -499,7 +531,7 @@
     top: 0;
     left: 0;
     height: 100%;
-    width: 100%; 
+    width: 100%;
 }
 
 .gestureSvg {
@@ -547,27 +579,19 @@
     margin: 0 auto 2px auto;
 }
 
-.action-controls {
-    margin-right: 20px;
-}
-
-.actions-container .btn-container {
-    padding: 16px;
-}
-
-.actions-container .arg-row {
-    margin-bottom: 8px;
+.commands-container .btn-container {
+    padding: 8px;
 }
 
 .arg-container {
     padding: 4px 4px 0 0
 }
 
-.actions-container :global(.ant-select) {
+.commands-container :global(.ant-select) {
     width: 100%;
 }
 
-.actions-container :global(.ant-btn) {
+.commands-container :global(.ant-btn) {
     width: 100%;
 }
 
@@ -610,7 +634,7 @@
 
 .gesture-header-timeline {
     width: 90%;
-    margin-top: -15px; 
+    margin-top: -15px;
     min-height: 36px;
 }
 
@@ -663,7 +687,7 @@
     top: 40%;
 }
 
-.space-container {
+.spaceContainer {
     display: flex;
 }
 

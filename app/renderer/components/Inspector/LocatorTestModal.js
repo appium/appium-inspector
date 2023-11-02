@@ -1,67 +1,43 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
 import { Modal, Button } from 'antd';
 import LocatedElements from './LocatedElements';
 import ElementLocator from './ElementLocator';
-import { withTranslation } from '../../util';
 
+const LocatorTestModal = (props) => {
+  const { isLocatorTestModalVisible, isSearchingForElements, clearSearchResults, locatedElements, t } = props;
 
-class LocatorTestModal extends Component {
+  const onCancel = () => {
+    const { hideLocatorTestModal } = props;
+    hideLocatorTestModal();
+    clearSearchResults();
+  };
 
-  onSubmit () {
-    const {
-      locatedElements,
-      locatorTestStrategy,
-      locatorTestValue,
-      searchForElement,
-      clearSearchResults,
-      hideLocatorTestModal,
-    } = this.props;
+  const onSubmit = () => {
+    const { locatorTestStrategy, locatorTestValue, searchForElement } = props;
     if (locatedElements) {
-      hideLocatorTestModal();
-      clearSearchResults();
+      onCancel();
     } else {
       searchForElement(locatorTestStrategy, locatorTestValue);
     }
-  }
+  };
 
-  onCancel () {
-    const {hideLocatorTestModal, clearSearchResults} = this.props;
-    hideLocatorTestModal();
-    clearSearchResults();
-  }
+  // Footer displays all the buttons at the bottom of the Modal
+  return <Modal open={isLocatorTestModalVisible}
+    title={t('Search for element')}
+    onCancel={onCancel}
+    footer=
+      {<>
+        {locatedElements &&
+        <Button onClick={(e) => e.preventDefault() || clearSearchResults()}>
+          {t('Back')}
+        </Button>}
+        <Button loading={isSearchingForElements} onClick={onSubmit} type="primary">
+          {locatedElements ? t('Done') : t('Search')}
+        </Button>
+      </>}>
+    {!locatedElements && <ElementLocator {...props} />}
+    {locatedElements && <LocatedElements {...props} />}
+  </Modal>;
+};
 
-  render () {
-    const {
-      clearSearchResults,
-      isLocatorTestModalVisible,
-      isSearchingForElements,
-      locatedElements,
-      t,
-    } = this.props;
-
-    // Footer displays all the buttons at the bottom of the Modal
-    return <Modal visible={isLocatorTestModalVisible}
-      title={t('Search for element')}
-      confirmLoading={isSearchingForElements}
-      onCancel={this.onCancel.bind(this)}
-      footer=
-        {[
-          locatedElements &&
-          <Button onClick={(e) => e.preventDefault() || clearSearchResults()}>
-            Back
-          </Button>,
-          <Button onClick={this.onSubmit.bind(this)} type="primary">
-            {locatedElements ?
-              t('Done')
-              :
-              t('Search')}
-          </Button>
-        ]}>
-      {!locatedElements && <ElementLocator {...this.props} />}
-      {locatedElements && <LocatedElements {...this.props} />}
-    </Modal>;
-  }
-}
-
-export default withTranslation(LocatorTestModal);
+export default LocatorTestModal;

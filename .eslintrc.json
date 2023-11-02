@@ -1,0 +1,47 @@
+{
+  "extends": "@appium/eslint-config-appium",
+  "parser": "@babel/eslint-parser",
+  "plugins": [
+    "import",
+    "react",
+    "react-native",
+    "@babel"
+  ],
+  "env": {
+    "browser": true,
+    "mocha": true,
+    "node": true
+  },
+  "rules": {
+    "@babel/arrow-parens": 0,
+    "indent": [
+      2,
+      2,
+      {
+        "VariableDeclarator": {
+          "var": 2,
+          "let": 2,
+          "const": 3
+        },
+        "ImportDeclaration": "first",
+        "CallExpression": {
+          "arguments": "off"
+        },
+        "MemberExpression": "off",
+        "ObjectExpression": "first",
+        "SwitchCase": 1,
+        "flatTernaryExpressions": false,
+        "offsetTernaryExpressions": false,
+        "ignoreComments": false
+      }
+    ],
+    "import/no-unresolved": [
+      2,
+      {
+        "ignore": ["electron"]
+      }
+    ],
+    "require-await": 2,
+    "react-native/no-inline-styles": 2
+  }
+}

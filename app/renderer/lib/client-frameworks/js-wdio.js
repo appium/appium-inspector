@@ -19,14 +19,14 @@ class JsWdIoFramework extends Framework {
     let proto = JSON.stringify(this.scheme);
     let path = JSON.stringify(this.path);
     return `// Requires the webdriverio client library
-// (npm install webdriverio)
+// (npm i --save webdriverio)
 // Then paste this into a .js file and run with Node:
 // node <file>.js
 
-const wdio = require('webdriverio');
+const {remote} = require('webdriverio');
 async function main () {
   const caps = ${caps}
-  const driver = await wdio.remote({
+  const driver = await remote({
     protocol: ${proto},
     hostname: ${host},
     port: ${this.port},
@@ -38,6 +38,10 @@ ${this.indent(code, 2)}
 }
 
 main().catch(console.log);`;
+  }
+
+  addComment(comment) {
+    return `// ${comment}`;
   }
 
   codeFor_executeScript (/*varNameIgnore, varIndexIgnore, args*/) {
@@ -58,7 +62,7 @@ main().catch(console.log);`;
       case '-android viewtag': locator = `android=unsupported`; break;
       case '-ios predicate string': locator = `ios=${locator}`; break;
       case '-ios class chain': locator = `ios=${locator}`; break; // TODO: Handle IOS class chain properly. Not all libs support it. Or take it out
-      default: throw new Error(`Can't handle strategy ${strategy}`);
+      default: return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
       return `let ${localVar} = await driver.$$(${JSON.stringify(locator)});`;
@@ -116,20 +120,8 @@ main().catch(console.log);`;
     return `let isAppInstalled = await driver.isAppInstalled("${app}");`;
   }
 
-  codeFor_launchApp () {
-    return `await driver.launchApp();`;
-  }
-
   codeFor_background (varNameIgnore, varIndexIgnore, timeout) {
     return `await driver.background(${timeout});`;
-  }
-
-  codeFor_closeApp () {
-    return `await driver.closeApp();`;
-  }
-
-  codeFor_reset () {
-    return `await driver.reset();`;
   }
 
   codeFor_removeApp (varNameIgnore, varIndexIgnore, app) {

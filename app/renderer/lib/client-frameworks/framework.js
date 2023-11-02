@@ -1,4 +1,5 @@
 import { DEFAULT_TAP, DEFAULT_SWIPE } from '../../components/Inspector/shared';
+import _ from 'lodash';
 
 export default class Framework {
 
@@ -33,23 +34,7 @@ export default class Framework {
   }
 
   get serverUrl () {
-    return `${this.scheme}://${this.host}:${this.port}${this.path}`;
-  }
-
-  get name () {
-    throw new Error('Must implement name getter');
-  }
-
-  get language () {
-    throw new Error('Must implement language getter');
-  }
-
-  addAction (action, params) {
-    this.actions.push({action, params});
-  }
-
-  wrapWithBoilerplate () {
-    throw new Error('Must implement wrapWithBoilerplate');
+    return `${this.scheme}://${this.host}:${this.port}${this.path === '/' ? '' : this.path}`;
   }
 
   indent (str, spaces) {
@@ -66,12 +51,14 @@ export default class Framework {
 
   getCodeString (includeBoilerplate = false) {
     let str = '';
+    let code;
     for (let {action, params} of this.actions) {
       const genCodeFn = `codeFor_${action}`;
       if (!this[genCodeFn]) {
-        throw new Error(`Need to implement '${genCodeFn}()': ${this[genCodeFn]}`);
+        code = this.addComment(`Code generation for action '${action}' is not currently supported`);
+      } else {
+        code = this[genCodeFn](...params);
       }
-      let code = this[genCodeFn](...params);
       if (code) {
         str += `${code}\n`;
       }
@@ -105,9 +92,12 @@ export default class Framework {
     return varName;
   }
 
-  codeFor_findAndAssign () {
-    throw new Error('Need to implement codeFor_findAndAssign');
+  handleUnsupportedLocatorStrategy (strategy, locator) {
+    return this.addComment(`Code generation for locator strategy '${strategy}' ` +
+      `(selector '${locator}') is not currently supported`);
   }
+
+  // Common entrypoints for code generation
 
   codeFor_findElement (strategy, locator) {
     let [localVar, wasNew] = this.getVarForFind(strategy, locator);
@@ -116,16 +106,25 @@ export default class Framework {
       // finding it again
       return '';
     }
-
     return this.codeFor_findAndAssign(strategy, locator, localVar);
-
   }
 
-  codeFor_tap () {
-    throw new Error('Need to implement codeFor_tap');
+  codeFor_executeScript (varNameIgnore, varIndexIgnore, scriptCmd, jsonArg) {
+    // jsonArg is expected to be an array with 0-1 objects
+    if (_.isEmpty(jsonArg)) {
+      return this.codeFor_executeScriptNoArgs(scriptCmd);
+    }
+    return this.codeFor_executeScriptWithArgs(scriptCmd, jsonArg);
   }
 
-  codeFor_swipe () {
-    throw new Error('Need to implement codeFor_tap');
+  codeFor_startActivity (varNameIgnore, varIndexIgnore, ...args) {
+    const argNames = ['appPackage', 'appActivity', 'appWaitPackage', 'intentAction', 'intentCategory',
+      'intentFlags', 'optionalIntentArguments', 'dontStopAppOnReset'];
+    // zip argument names and values into a JSON object, so that we can reuse executeScript
+    const argsJsonObject = _.zipObject(argNames, args);
+    // filter out arguments with no values
+    const cleanedArgsJson = _.omitBy(argsJsonObject, _.isUndefined);
+    return this.codeFor_executeScriptWithArgs('mobile: startActivity', [cleanedArgsJson]);
   }
+
 }

@@ -9,7 +9,7 @@ import ServerTabPcloudy from './ServerTabPcloudy';
 import ServerTabSauce from './ServerTabSauce';
 import ServerTabTestingbot from './ServerTabTestingbot';
 import ServerTabExperitest from './ServerTabExperitest';
-import ServerTabRoboticMobi from './ServerTabRoboticMobi';
+import ServerTabRobotQA from './ServerTabRobotQA';
 import ServerTabRemoteTestKit from './ServerTabRemoteTestKit';
 
 import SessionStyles from './Session.css';
@@ -21,11 +21,11 @@ import BrowserStackLogo from '../../images/browserstack_logo.svg';
 import LambdaTestLogo from '../../images/lambdatest_logo.svg';
 import BitBarLogo from '../../images/bitbar_logo.svg';
 import KobitonLogo from '../../images/kobiton_logo.svg';
-import PerfectoLogo from '../../images/perfecto_logo.png';
+import PerfectoLogo from '../../images/perfecto_logo.svg';
 import PcloudyLogo from '../../images/pcloudy_logo.svg';
 import TestingBotLogo from '../../images/testingbot_logo.svg';
 import ExperitestLogo from '../../images/experitest_logo.svg';
-import RoboticMobiLogo from '../../images/roboticmobi_logo.svg';
+import RobotQALogo from '../../images/robotqa_logo.svg';
 import RemoteTestKitLogo from '../../images/remotetestkit_logo.svg';
 
 const CloudProviders = {
@@ -80,9 +80,9 @@ const CloudProviders = {
     logo: ExperitestLogo,
   },
   roboticmobi: {
-    tabhead: () => <span className={SessionStyles.tabText}><img src={RoboticMobiLogo} /></span>,
-    tab: (props) => <ServerTabRoboticMobi {...props} />,
-    logo: RoboticMobiLogo,
+    tabhead: () => <span className={SessionStyles.tabText}><img src={RobotQALogo} /></span>,
+    tab: (props) => <ServerTabRobotQA {...props} />,
+    logo: RobotQALogo,
   },
   remotetestkit: {
     tabhead: () => <span className={SessionStyles.tabText}><img src={RemoteTestKitLogo} /></span>,

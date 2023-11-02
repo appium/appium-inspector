@@ -1,7 +1,6 @@
 import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE,
          SESSION_SERVER_PARAMS } from '../../shared/settings';
 import { v4 as UUID } from 'uuid';
-import { push } from 'connected-react-router';
 import { notification } from 'antd';
 import { includes, debounce, toPairs, union, without, keys, isUndefined, isPlainObject } from 'lodash';
 import { setSessionDetails, quitSession } from './Inspector';
@@ -16,7 +15,7 @@ import { ipcRenderer, fs, util } from '../polyfills';
 import { getSaveableState } from '../../main/helpers';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
-export const NEW_SESSION_BEGAN = 'NEW_SESSION_BEGAN';
+export const NEW_SESSION_LOADING = 'NEW_SESSION_LOADING';
 export const NEW_SESSION_DONE = 'NEW_SESSION_DONE';
 export const CHANGE_CAPABILITY = 'CHANGE_CAPABILITY';
 export const SAVE_SESSION_REQUESTED = 'SAVE_SESSION_REQUESTED';
@@ -36,8 +35,6 @@ export const DELETE_SAVED_SESSION_DONE = 'DELETE_SAVED_SESSION_DONE';
 export const CHANGE_SERVER_TYPE = 'CHANGE_SERVER_TYPE';
 export const SET_SERVER_PARAM = 'SET_SERVER_PARAM';
 export const SET_SERVER = 'SET_SERVER';
-export const SESSION_LOADING = 'SESSION_LOADING';
-export const SESSION_LOADING_DONE = 'SESSION_LOADING_DONE';
 
 export const VISIBLE_PROVIDERS = 'VISIBLE_PROVIDERS';
 
@@ -46,6 +43,10 @@ export const SET_ATTACH_SESS_ID = 'SET_ATTACH_SESS_ID';
 export const GET_SESSIONS_REQUESTED = 'GET_SESSIONS_REQUESTED';
 export const GET_SESSIONS_DONE = 'GET_SESSIONS_DONE';
 
+export const ENABLE_DESIRED_CAPS_NAME_EDITOR = 'ENABLE_DESIRED_CAPS_NAME_EDITOR';
+export const ABORT_DESIRED_CAPS_NAME_EDITOR = 'ABORT_DESIRED_CAPS_NAME_EDITOR';
+export const SAVE_DESIRED_CAPS_NAME = 'SAVE_DESIRED_CAPS_NAME';
+export const SET_DESIRED_CAPS_NAME = 'SET_DESIRED_CAPS_NAME';
 
 export const ENABLE_DESIRED_CAPS_EDITOR = 'ENABLE_DESIRED_CAPS_EDITOR';
 export const ABORT_DESIRED_CAPS_EDITOR = 'ABORT_DESIRED_CAPS_EDITOR';
@@ -74,6 +75,7 @@ const FILE_PATH_STORAGE_KEY = 'last_opened_file';
 const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to turn it on
 
 const MJPEG_CAP = 'mjpegScreenshotUrl';
+const MJPEG_PORT_CAP = 'mjpegServerPort';
 
 // Multiple requests sometimes send a new session request
 // after establishing a session.
@@ -118,7 +120,9 @@ export function getCapsObject (caps) {
   })));
 }
 
-export function showError (e, methodName, secs = 5) {
+export function showError (e, params = { methodName: null, secs: 5, url: null }) {
+  const { secs, url } = params;
+  let { methodName } = params;
   let errMessage;
   if (e['jsonwire-error'] && e['jsonwire-error'].status === 7) {
     // FIXME: we probably should set 'findElement' as the method name
@@ -146,10 +150,13 @@ export function showError (e, methodName, secs = 5) {
   } else {
     errMessage = i18n.t('Could not start session');
   }
-  if (errMessage === 'ECONNREFUSED' || includes(errMessage, 'Failed to fetch')) {
-    errMessage = i18n.t('couldNotConnect');
+  if (errMessage === 'ECONNREFUSED' ||
+      includes(errMessage, 'Failed to fetch') ||
+      includes(errMessage, 'The requested resource could not be found')) {
+    errMessage = i18n.t('couldNotConnect', {url});
   }
 
+  console.error(errMessage); // eslint-disable-line no-console
   notification.error({
     message: methodName ? i18n.t('callToMethodFailed', {methodName}) : i18n.t('Error'),
     description: errMessage,
@@ -161,9 +168,9 @@ export function showError (e, methodName, secs = 5) {
 /**
  * Change the caps object, along with the server details and then go back to the new session tab
  */
-export function setCapsAndServer (server, serverType, caps, uuid) {
+export function setCapsAndServer (server, serverType, caps, uuid, name) {
   return (dispatch) => {
-    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid});
+    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name});
   };
 }
 
@@ -204,9 +211,9 @@ export function removeCapability (index) {
 }
 
 function _addVendorPrefixes (caps, dispatch, getState) {
-  const {server, serverType, capsUUID} = getState().session;
+  const {server, serverType, capsUUID, capsName} = getState().session;
   const prefixedCaps = addVendorPrefixes(caps);
-  setCapsAndServer(server, serverType, prefixedCaps, capsUUID)(dispatch);
+  setCapsAndServer(server, serverType, prefixedCaps, capsUUID, capsName)(dispatch);
   return prefixedCaps;
 }
 
@@ -256,12 +263,8 @@ export function newSession (caps, attachSessId = null) {
         username = session.server.sauce.username || process.env.SAUCE_USERNAME;
         accessKey = session.server.sauce.accessKey || process.env.SAUCE_ACCESS_KEY;
         if (!username || !accessKey) {
-          notification.error({
-            message: i18n.t('Error'),
-            description: i18n.t('sauceCredentialsRequired'),
-            duration: 4
-          });
-          return;
+          showError(new Error(i18n.t('sauceCredentialsRequired')));
+          return false;
         }
         https = false;
         if (!isPlainObject(desiredCapabilities[SAUCE_OPTIONS_CAP])) {
@@ -277,8 +280,8 @@ export function newSession (caps, attachSessId = null) {
         try {
           headspinUrl = new URL(session.server.headspin.webDriverUrl);
         } catch (ign) {
-          showError(new Error(`${session.server.headspin.webDriverUrl} is invalid url`), null, 0);
-          return;
+          showError(new Error(`${i18n.t('Invalid URL:')} ${session.server.headspin.webDriverUrl}`));
+          return false;
         }
         host = session.server.headspin.hostname = headspinUrl.hostname;
         path = session.server.headspin.path = headspinUrl.pathname;
@@ -293,12 +296,8 @@ export function newSession (caps, attachSessId = null) {
         token = session.server.perfecto.token || process.env.PERFECTO_TOKEN;
         path = session.server.perfecto.path = '/nexperience/perfectomobile/wd/hub';
         if (!token) {
-          notification.error({
-            message: i18n.t('Error'),
-            description: i18n.t('Perfecto SecurityToken is required'),
-            duration: 4
-          });
-          return;
+          showError(new Error(i18n.t('Perfecto SecurityToken is required')));
+          return false;
         }
         desiredCapabilities['perfecto:options'] = {securityToken: token};
         https = session.server.perfecto.ssl;
@@ -314,12 +313,8 @@ export function newSession (caps, attachSessId = null) {
         desiredCapabilities['bstack:options'].source = 'appiumdesktop';
         accessKey = session.server.browserstack.accessKey || process.env.BROWSERSTACK_ACCESS_KEY;
         if (!username || !accessKey) {
-          notification.error({
-            message: i18n.t('Error'),
-            description: i18n.t('browserstackCredentialsRequired'),
-            duration: 4
-          });
-          return;
+          showError(new Error(i18n.t('browserstackCredentialsRequired')));
+          return false;
         }
         https = session.server.browserstack.ssl = (parseInt(port, 10) === 443);
         break;
@@ -343,12 +338,8 @@ export function newSession (caps, attachSessId = null) {
         }
         accessKey = session.server.lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
         if (!username || !accessKey) {
-          notification.error({
-            message: i18n.t('Error'),
-            description: i18n.t('lambdatestCredentialsRequired'),
-            duration: 4,
-          });
-          return;
+          showError(new Error(i18n.t('lambdatestCredentialsRequired')));
+          return false;
         }
         https = session.server.lambdatest.ssl = parseInt(port, 10) === 443;
         break;
@@ -358,12 +349,8 @@ export function newSession (caps, attachSessId = null) {
         path = session.server.bitbar.path = '/wd/hub';
         accessKey = session.server.bitbar.apiKey || process.env.BITBAR_API_KEY;
         if (!accessKey) {
-          notification.error({
-            message: i18n.t('Error'),
-            description: i18n.t('bitbarCredentialsRequired'),
-            duration: 4
-          });
-          return;
+          showError(new Error(i18n.t('bitbarCredentialsRequired')));
+          return false;
         }
         desiredCapabilities['bitbar:options'] = {
           source: 'appiumdesktop',
@@ -380,12 +367,8 @@ export function newSession (caps, attachSessId = null) {
         desiredCapabilities['kobiton:options'] = {};
         desiredCapabilities['kobiton:options'].source = 'appiumdesktop';
         if (!username || !accessKey) {
-          notification.error({
-            message: i18n.t('Error'),
-            description: i18n.t('kobitonCredentialsRequired'),
-            duration: 4
-          });
-          return;
+          showError(new Error(i18n.t('kobitonCredentialsRequired')));
+          return false;
         }
         https = session.server.kobiton.ssl = true;
         break;
@@ -397,12 +380,8 @@ export function newSession (caps, attachSessId = null) {
         desiredCapabilities.pCloudy_ApiKey = session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
         if (!(session.server.pcloudy.username || process.env.PCLOUDY_USERNAME) ||
               !(session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY)) {
-          notification.error({
-            message: 'Error',
-            description: 'PCLOUDY username and api key are required!',
-            duration: 4
-          });
-          return;
+          showError(new Error('PCLOUDY username and api key are required!'));
+          return false;
         }
         https = session.server.pcloudy.ssl = true;
         break;
@@ -410,28 +389,22 @@ export function newSession (caps, attachSessId = null) {
         host = session.server.testingbot.hostname = process.env.TB_HOST || 'hub.testingbot.com';
         port = session.server.testingbot.port = 443;
         path = session.server.testingbot.path = '/wd/hub';
-        desiredCapabilities['tb:options'] = {};
+        if (!desiredCapabilities['tb:options']) {
+          desiredCapabilities['tb:options'] = {};
+        }
         desiredCapabilities['tb:options'].key = session.server.testingbot.key || process.env.TB_KEY;
         desiredCapabilities['tb:options'].secret = session.server.testingbot.secret || process.env.TB_SECRET;
         if (!(session.server.testingbot.key || process.env.TB_KEY) ||
               !(session.server.testingbot.secret || process.env.TB_SECRET)) {
-          notification.error({
-            message: 'Error',
-            description: i18n.t('testingbotCredentialsRequired'),
-            duration: 4
-          });
-          return;
+          showError(new Error(i18n.t('testingbotCredentialsRequired')));
+          return false;
         }
         https = session.server.testingbot.ssl = true;
         break;
       case ServerTypes.experitest: {
         if (!session.server.experitest.url || !session.server.experitest.accessKey) {
-          notification.error({
-            message: i18n.t('Error'),
-            description: i18n.t('experitestAccessKeyURLRequired'),
-            duration: 4
-          });
-          return;
+          showError(new Error(i18n.t('experitestAccessKeyURLRequired')));
+          return false;
         }
         desiredCapabilities['experitest:accessKey'] = session.server.experitest.accessKey;
 
@@ -439,8 +412,8 @@ export function newSession (caps, attachSessId = null) {
         try {
           experitestUrl = new URL(session.server.experitest.url);
         } catch (ign) {
-          showError(new Error(`${session.server.experitest.url} is invalid url`), null, 0);
-          return;
+          showError(new Error(`${i18n.t('Invalid URL:')} ${session.server.experitest.url}`));
+          return false;
         }
 
         host = session.server.experitest.hostname = experitestUrl.hostname;
@@ -449,13 +422,13 @@ export function newSession (caps, attachSessId = null) {
         port = session.server.experitest.port = experitestUrl.port === '' ? (https ? 443 : 80) : experitestUrl.port;
         break;
       } case ServerTypes.roboticmobi: {
-        host = 'api.robotic.mobi';
-        path = '/wd/hub';
+        host = 'remote.robotqa.com';
+        path = '/';
         port = 443;
         https = session.server.roboticmobi.ssl = true;
         if (caps) {
-          desiredCapabilities['roboticmobi:options'] = {};
-          desiredCapabilities['roboticmobi:options'].robotic_mobi_token = session.server.roboticmobi.token || process.env.ROBOTIC_MOBI_TOKEN;
+          desiredCapabilities['robotqa:options'] = {};
+          desiredCapabilities['robotqa:options'].robotqa_token = session.server.roboticmobi.token || process.env.ROBOTQA_TOKEN;
         }
         break;
       } case ServerTypes.remotetestkit: {
@@ -484,7 +457,7 @@ export function newSession (caps, attachSessId = null) {
     //  proxy = session.server.advanced.proxy;
     //}
 
-    dispatch({type: SESSION_LOADING});
+    dispatch({type: NEW_SESSION_LOADING});
 
 
     const serverOpts = {
@@ -519,21 +492,41 @@ export function newSession (caps, attachSessId = null) {
     let driver = null;
     try {
       if (attachSessId) {
-        // When attaching to a session id, webdriver does not check if the device
-        // is mobile or not. Since we're attaching in appium-inspector, we can
-        // assume the device is mobile so that Appium protocols are included
-        // in the userPrototype.
+        // When attaching to a session id, webdriver does not fully populate client information, so
+        // we should supplement by attaching session capabilities that we are attaching to, if they
+        // exist in our cache of running appium sessions. Otherwise (in the case where we are
+        // autostarting and attaching to a new session, retrieve session details via a server call)
         serverOpts.isMobile = true;
-        driver = await Web2Driver.attachToSession(attachSessId, serverOpts);
+        const attachedSession = session.runningAppiumSessions.find((session) => session.id === attachSessId);
+        let attachedSessionCaps = {};
+        if (attachedSession) {
+          attachedSessionCaps = attachedSession.capabilities;
+        } else {
+          const {protocol, hostname, port, path} = serverOpts;
+          try {
+            const detailsUrl = `${protocol}://${hostname}:${port}${path.replace(/\/$/, '')}/session/${attachSessId}`;
+            attachedSessionCaps = (await ky(detailsUrl).json()).value;
+          } catch (err) {
+            // rethrow the error as session not running, but first log the original error to
+            // console
+            console.error(err); // eslint-disable-line no-console
+            throw new Error(i18n.t('attachSessionNotRunning', {attachSessId}));
+          }
+        }
+        serverOpts.isIOS = Boolean(attachedSessionCaps.platformName.match(/iOS/i));
+        serverOpts.isAndroid = Boolean(attachedSessionCaps.platformName.match(/Android/i));
+        driver = await Web2Driver.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
         driver._isAttachedSession = true;
       } else {
         driver = await Web2Driver.remote(serverOpts, desiredCapabilities);
       }
     } catch (err) {
-      showError(err, null, 0);
-      return;
+      const { protocol, hostname, port, path } = serverOpts;
+      const url = `${protocol}://${hostname}:${port}${path}`;
+      showError(err, {secs: 0, url});
+      return false;
     } finally {
-      dispatch({type: SESSION_LOADING_DONE});
+      dispatch({type: NEW_SESSION_DONE});
       // Save the current server settings
       await setSetting(SESSION_SERVER_PARAMS, session.server);
     }
@@ -547,15 +540,23 @@ export function newSession (caps, attachSessId = null) {
     if (browserName.trim() !== '') {
       try {
         mode = APP_MODE.WEB_HYBRID;
-        await driver.navigateTo('http://appium.io/docs/en/about-appium/intro/');
+        await driver.navigateTo('https://appium.io');
       } catch (ign) {}
     }
 
 
-    const mjpegScreenshotUrl = desiredCapabilities[`appium:${MJPEG_CAP}`] ||
-      desiredCapabilities[MJPEG_CAP] ||
+    let mjpegScreenshotUrl = driver.capabilities[`appium:${MJPEG_CAP}`] ||
+      driver.capabilities[MJPEG_CAP] ||
       null;
 
+    const mjpegScreenshotPort = driver.capabilities[`appium:${MJPEG_PORT_CAP}`] ||
+      driver.capabilities[MJPEG_PORT_CAP] ||
+      null;
+
+    // Build mjpegScreenshotUrl if mjpegServerPort in session capabilities
+    if (!mjpegScreenshotUrl && mjpegScreenshotPort) {
+      mjpegScreenshotUrl = `${https ? 'https' : 'http'}://${host}:${mjpegScreenshotPort}`;
+    }
 
     // pass some state to the inspector that it needs to build recorder
     // code boilerplate
@@ -571,10 +572,10 @@ export function newSession (caps, attachSessId = null) {
         https,
       },
       mode,
-      mjpegScreenshotUrl,
+      mjpegScreenshotUrl
     });
     action(dispatch);
-    dispatch(push('/inspector'));
+    return true;
   };
 }
 
@@ -605,6 +606,7 @@ export function saveSession (server, serverType, caps, params) {
       // If it's an existing session, overwrite it
       for (let session of savedSessions) {
         if (session.uuid === uuid) {
+          session.name = name;
           session.caps = caps;
           session.server = server;
           session.serverType = serverType;
@@ -614,7 +616,7 @@ export function saveSession (server, serverType, caps, params) {
     await setSetting(SAVED_SESSIONS, savedSessions);
     const action = getSavedSessions();
     await action(dispatch);
-    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid});
+    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name});
     dispatch({type: SAVE_SESSION_DONE});
   };
 }
@@ -856,6 +858,32 @@ export function getRunningSessions () {
   };
 }
 
+export function startDesiredCapsNameEditor () {
+  return (dispatch) => {
+    dispatch({type: ENABLE_DESIRED_CAPS_NAME_EDITOR});
+  };
+}
+
+export function abortDesiredCapsNameEditor () {
+  return (dispatch) => {
+    dispatch({type: ABORT_DESIRED_CAPS_NAME_EDITOR});
+  };
+}
+
+export function saveDesiredCapsName () {
+  return (dispatch, getState) => {
+    const {server, serverType, caps, capsUUID, desiredCapsName} = getState().session;
+    dispatch({type: SAVE_DESIRED_CAPS_NAME, name: desiredCapsName});
+    saveSession(server, serverType, caps, {name: desiredCapsName, uuid: capsUUID})(dispatch);
+  };
+}
+
+export function setDesiredCapsName (desiredCapsName) {
+  return (dispatch) => {
+    dispatch({type: SET_DESIRED_CAPS_NAME, desiredCapsName});
+  };
+}
+
 export function startDesiredCapsEditor () {
   return (dispatch) => {
     dispatch({type: ENABLE_DESIRED_CAPS_EDITOR});
@@ -1011,8 +1039,8 @@ export function setAddVendorPrefixes (addVendorPrefixes) {
   };
 }
 
-export function initFromQueryString () {
-  return async (dispatch, getState) => {
+export function initFromQueryString (loadNewSession) {
+  return (dispatch, getState) => {
     if (!isFirstRun) {
       return;
     }
@@ -1028,16 +1056,16 @@ export function initFromQueryString () {
         const state = JSON.parse(initialState);
         dispatch({type: SET_STATE_FROM_URL, state});
       } catch (e) {
-        showError(new Error('Could not parse initial state from URL'), null, 0);
+        showError(new Error('Could not parse initial state from URL'), {secs: 0});
       }
     }
 
     if (autoStartSession === AUTO_START_URL_PARAM) {
-      const {attachSessId, caps} = getState().session;
+      const { attachSessId, caps } = getState().session;
       if (attachSessId) {
-        return await newSession(null, attachSessId)(dispatch, getState);
+        return loadNewSession(null, attachSessId);
       }
-      await newSession(caps)(dispatch, getState);
+      loadNewSession(caps);
     }
   };
 }

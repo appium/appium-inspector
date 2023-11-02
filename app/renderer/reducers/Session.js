@@ -1,14 +1,15 @@
 import _, {omit} from 'lodash';
 import formatJSON from 'format-json';
 
-import { NEW_SESSION_REQUESTED, NEW_SESSION_BEGAN, NEW_SESSION_DONE,
-         SAVE_SESSION_REQUESTED, SAVE_SESSION_DONE, GET_SAVED_SESSIONS_REQUESTED,
-         GET_SAVED_SESSIONS_DONE, SESSION_LOADING, SESSION_LOADING_DONE,
+import { NEW_SESSION_REQUESTED, NEW_SESSION_LOADING, NEW_SESSION_DONE,
+         SAVE_SESSION_REQUESTED, SAVE_SESSION_DONE,
+         GET_SAVED_SESSIONS_REQUESTED, GET_SAVED_SESSIONS_DONE,
          SET_CAPABILITY_PARAM, ADD_CAPABILITY, REMOVE_CAPABILITY, SET_CAPS_AND_SERVER,
          SWITCHED_TABS, SAVE_AS_MODAL_REQUESTED, HIDE_SAVE_AS_MODAL_REQUESTED, SET_SAVE_AS_TEXT,
          DELETE_SAVED_SESSION_REQUESTED, DELETE_SAVED_SESSION_DONE,
          CHANGE_SERVER_TYPE, SET_SERVER_PARAM, SET_SERVER, SET_ATTACH_SESS_ID,
          GET_SESSIONS_REQUESTED, GET_SESSIONS_DONE,
+         ENABLE_DESIRED_CAPS_NAME_EDITOR, ABORT_DESIRED_CAPS_NAME_EDITOR, SAVE_DESIRED_CAPS_NAME, SET_DESIRED_CAPS_NAME,
          ENABLE_DESIRED_CAPS_EDITOR, ABORT_DESIRED_CAPS_EDITOR, SAVE_RAW_DESIRED_CAPS, SET_RAW_DESIRED_CAPS, SHOW_DESIRED_CAPS_JSON_ERROR,
          IS_ADDING_CLOUD_PROVIDER, SET_PROVIDERS, SET_ADD_VENDOR_PREFIXES, SET_STATE_FROM_URL, SET_STATE_FROM_SAVED,
          ServerTypes } from '../actions/Session';
@@ -60,6 +61,7 @@ const INITIAL_STATE = {
   isCapsDirty: true,
   gettingSessions: false,
   runningAppiumSessions: [],
+  isEditingDesiredCapsName: false,
   isEditingDesiredCaps: false,
   isValidCapsJson: true,
   isValidatingCapsJson: false,
@@ -90,15 +92,15 @@ export default function session (state = INITIAL_STATE, action) {
         newSessionRequested: true,
       };
 
-    case NEW_SESSION_BEGAN:
+    case NEW_SESSION_LOADING:
       nextState = {
         ...state,
-        newSessionBegan: true,
+        newSessionLoading: true,
       };
       return omit(nextState, 'newSessionRequested');
 
     case NEW_SESSION_DONE:
-      return omit(state, 'newSessionBegan');
+      return omit(state, 'newSessionLoading');
 
 
     case ADD_CAPABILITY:
@@ -134,6 +136,7 @@ export default function session (state = INITIAL_STATE, action) {
         serverType: action.serverType,
         caps: action.caps,
         capsUUID: action.uuid,
+        capsName: action.name,
       };
       return omit(nextState, 'isCapsDirty');
 
@@ -170,7 +173,8 @@ export default function session (state = INITIAL_STATE, action) {
       return {
         ...state,
         deletingSession: false,
-        capsUUID: null
+        capsUUID: null,
+        capsName: null,
       };
 
     case SWITCHED_TABS:
@@ -239,15 +243,6 @@ export default function session (state = INITIAL_STATE, action) {
         attachSessId: action.attachSessId
       };
 
-    case SESSION_LOADING:
-      return {
-        ...state,
-        sessionLoading: true,
-      };
-
-    case SESSION_LOADING_DONE:
-      return omit(state, 'sessionLoading');
-
     case GET_SESSIONS_REQUESTED:
       return {
         ...state,
@@ -263,6 +258,33 @@ export default function session (state = INITIAL_STATE, action) {
         runningAppiumSessions: action.sessions || [],
       };
     }
+
+    case ENABLE_DESIRED_CAPS_NAME_EDITOR:
+      return {
+        ...state,
+        isEditingDesiredCapsName: true,
+        desiredCapsName: state.capsName,
+      };
+
+    case ABORT_DESIRED_CAPS_NAME_EDITOR:
+      return {
+        ...state,
+        isEditingDesiredCapsName: false,
+        desiredCapsName: null,
+      };
+
+    case SAVE_DESIRED_CAPS_NAME:
+      return {
+        ...state,
+        isEditingDesiredCapsName: false,
+        capsName: action.name,
+      };
+
+    case SET_DESIRED_CAPS_NAME:
+      return {
+        ...state,
+        desiredCapsName: action.desiredCapsName,
+      };
 
     case ENABLE_DESIRED_CAPS_EDITOR:
       return {

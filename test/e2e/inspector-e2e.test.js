@@ -10,13 +10,13 @@ chai.use(chaiAsPromised);
 
 const FAKE_DRIVER_PORT = 12121;
 
-const FAKE_DRIVER_PATH = path.resolve(path.dirname(require.resolve('@appium/fake-driver')), '..');
+const FAKE_DRIVER_PATH = path.dirname(require.resolve('@appium/fake-driver'));
 const TEST_APP = path.resolve(FAKE_DRIVER_PATH, 'test', 'fixtures', 'app.xml');
 
 const DEFAULT_CAPS = {
-  platformName: 'Fake',
-  deviceName: 'Fake',
-  app: TEST_APP,
+  'platformName': 'Fake',
+  'appium:deviceName': 'Fake',
+  'appium:app': TEST_APP,
 };
 
 let client;

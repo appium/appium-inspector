@@ -2,7 +2,7 @@ import path from 'path';
 import { clipboard, shell, remote, ipcRenderer } from 'electron';
 import log from 'electron-log';
 import settings from 'electron-settings';
-import i18NextBackend from 'i18next-node-fs-backend';
+import i18NextBackend from 'i18next-fs-backend';
 import fs from 'fs';
 import util from 'util';
 const i18NextBackendOptions = {

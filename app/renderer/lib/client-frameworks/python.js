@@ -9,17 +9,27 @@ class PythonFramework extends Framework {
   getPythonVal (jsonVal) {
     if (typeof jsonVal === 'boolean') {
       return jsonVal ? 'True' : 'False';
+    } else if (Array.isArray(jsonVal)) {
+      const convertedItems = jsonVal.map((item) => this.getPythonVal(item));
+      return `[${convertedItems.join(', ')}]`;
+    } else if (typeof jsonVal === 'object') {
+      const convertedItems = Object.keys(jsonVal).map((k) =>
+        `${JSON.stringify(k)}: ${this.getPythonVal(jsonVal[k])}`
+      );
+      return `{${convertedItems.join(', ')}}`;
     }
     return JSON.stringify(jsonVal);
   }
 
   wrapWithBoilerplate (code) {
-    let capStr = Object.keys(this.caps).map((k) => `caps[${JSON.stringify(k)}] = ${this.getPythonVal(this.caps[k])}`).join('\n');
-    return `# This sample code uses the Appium python client v2
+    let optionsStr = Object.keys(this.caps).map((k) => `${JSON.stringify(k)}: ${this.getPythonVal(this.caps[k])}`).join(',\n\t');
+    optionsStr = `{\n\t${optionsStr}\n}`;
+    return `# This sample code supports Appium Python client >=2.3.0
 # pip install Appium-Python-Client
 # Then you can paste this into a file and simply run with Python
 
 from appium import webdriver
+from appium.options.common.base import AppiumOptions
 from appium.webdriver.common.appiumby import AppiumBy
 
 # For W3C actions
@@ -28,26 +38,26 @@ from selenium.webdriver.common.actions import interaction
 from selenium.webdriver.common.actions.action_builder import ActionBuilder
 from selenium.webdriver.common.actions.pointer_input import PointerInput
 
-caps = {}
-${capStr}
+options = AppiumOptions()
+options.load_capabilities(${optionsStr})
 
-driver = webdriver.Remote("${this.serverUrl}", caps)
+driver = webdriver.Remote("${this.serverUrl}", options=options)
 
 ${code}
 driver.quit()`;
   }
 
-  codeFor_executeScript (varNameIgnore, varIndexIgnore, args) {
-    return `driver.execute_script('${args}')`;
+  addComment(comment) {
+    return `# ${comment}`;
   }
 
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
     let suffixMap = {
       xpath: 'AppiumBy.XPATH',
       'accessibility id': 'AppiumBy.ACCESSIBILITY_ID',
-      'id': 'AppiumBy.ID',
-      'name': 'AppiumBy.NAME',
+      id: 'AppiumBy.ID',
       'class name': 'AppiumBy.CLASS_NAME',
+      name: 'AppiumBy.NAME',
       '-android uiautomator': 'AppiumBy.ANDROID_UIAUTOMATOR',
       '-android datamatcher': 'AppiumBy.ANDROID_DATA_MATCHER',
       '-android viewtag': 'AppiumBy.ANDROID_VIEWTAG',
@@ -55,7 +65,7 @@ driver.quit()`;
       '-ios class chain': 'AppiumBy.IOS_CLASS_CHAIN',
     };
     if (!suffixMap[strategy]) {
-      throw new Error(`Strategy ${strategy} can't be code-gened`);
+      return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
       return `${localVar} = driver.find_elements(by=${suffixMap[strategy]}, value=${JSON.stringify(locator)})`;
@@ -76,13 +86,8 @@ driver.quit()`;
     return `${this.getVarName(varName, varIndex)}.send_keys(${JSON.stringify(text)})`;
   }
 
-  codeFor_back () {
-    return `driver.back()`;
-  }
-
   codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
     const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
-
     return `actions = ActionChains(driver)
 actions.w3c_actions = ActionBuilder(driver, mouse=PointerInput(interaction.POINTER_TOUCH, "touch"))
 actions.w3c_actions.pointer_action.move_to_location(${x}, ${y})
@@ -90,12 +95,11 @@ actions.w3c_actions.pointer_action.pointer_down()
 actions.w3c_actions.pointer_action.pause(0.1)
 actions.w3c_actions.pointer_action.release()
 actions.perform()
-    `;
+`;
   }
 
   codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
     const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
-
     return `actions = ActionChains(driver)
 actions.w3c_actions = ActionBuilder(driver, mouse=PointerInput(interaction.POINTER_TOUCH, "touch"))
 actions.w3c_actions.pointer_action.move_to_location(${x1}, ${y1})
@@ -103,8 +107,21 @@ actions.w3c_actions.pointer_action.pointer_down()
 actions.w3c_actions.pointer_action.move_to_location(${x2}, ${y2})
 actions.w3c_actions.pointer_action.release()
 actions.perform()
-    `;
+`;
   }
+
+  // Execute Script
+
+  codeFor_executeScriptNoArgs (scriptCmd) {
+    return `driver.execute_script('${scriptCmd}')`;
+  }
+
+
+  codeFor_executeScriptWithArgs (scriptCmd, jsonArg) {
+    return `driver.execute_script('${scriptCmd}', ${this.getPythonVal(jsonArg[0])})`;
+  }
+
+  // App Management
 
   codeFor_getCurrentActivity () {
     return `activity_name = driver.current_activity`;
@@ -115,36 +132,34 @@ actions.perform()
   }
 
   codeFor_installApp (varNameIgnore, varIndexIgnore, app) {
-    return `driver.install_app('${app}');`;
+    return `driver.install_app('${app}')`;
   }
 
   codeFor_isAppInstalled (varNameIgnore, varIndexIgnore, app) {
-    return `is_app_installed = driver.is_app_installed('${app}');`;
-  }
-
-  codeFor_launchApp () {
-    return `driver.launch_app()`;
+    return `is_app_installed = driver.is_app_installed('${app}')`;
   }
 
   codeFor_background (varNameIgnore, varIndexIgnore, timeout) {
     return `driver.background_app(${timeout})`;
   }
 
-  codeFor_closeApp () {
-    return `driver.close_app()`;
+  codeFor_activateApp (varNameIgnore, varIndexIgnore, app) {
+    return `driver.activate_app('${app}')`;
   }
 
-  codeFor_reset () {
-    return `driver.reset()`;
+  codeFor_terminateApp (varNameIgnore, varIndexIgnore, app) {
+    return `driver.terminate_app('${app}')`;
   }
 
   codeFor_removeApp (varNameIgnore, varIndexIgnore, app) {
-    return `driver.remove_app('${app}');`;
+    return `driver.remove_app('${app}')`;
   }
 
   codeFor_getStrings (varNameIgnore, varIndexIgnore, language, stringFile) {
-    return `appStrings = driver.app_strings(${language ? `${language}, ` : ''}${stringFile ? `"${stringFile}` : ''})`;
+    return `app_strings = driver.app_strings(${language ? `'${language}'` : 'None'}, ${stringFile ? `'${stringFile}'` : 'None'})`;
   }
+
+  // Clipboard
 
   codeFor_getClipboard () {
     return `clipboard_text = driver.get_clipboard_text()`;
@@ -154,12 +169,62 @@ actions.perform()
     return `driver.set_clipboard_text('${clipboardText}')`;
   }
 
+  // File Transfer
+
+  codeFor_pushFile (varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
+    return `driver.push_file('${pathToInstallTo}', '${fileContentString}')`;
+  }
+
+  codeFor_pullFile (varNameIgnore, varIndexIgnore, pathToPullFrom) {
+    return `file_base64 = driver.pull_file('${pathToPullFrom}')`;
+  }
+
+  codeFor_pullFolder (varNameIgnore, varIndexIgnore, folderToPullFrom) {
+    return `folder_base64 = driver.pull_folder('${folderToPullFrom}')`;
+  }
+
+  // Device Interaction
+
+  codeFor_shake () {
+    return `driver.shake()`;
+  }
+
+  codeFor_lock (varNameIgnore, varIndexIgnore, seconds) {
+    return `driver.lock(${seconds})`;
+  }
+
+  codeFor_unlock () {
+    return `driver.unlock()`;
+  }
+
+  codeFor_isLocked () {
+    return `is_locked = driver.is_locked()`;
+  }
+
+  codeFor_rotateDevice () {
+    return `# Not supported: rotate device`;
+  }
+
+  codeFor_fingerprint (varNameIgnore, varIndexIgnore, fingerprintId) {
+    return `driver.finger_print(${fingerprintId})`;
+  }
+
+  codeFor_touchId (varNameIgnore, varIndexIgnore, match) {
+    return `driver.touch_id(${match})`;
+  }
+
+  codeFor_toggleEnrollTouchId () {
+    return `driver.toggle_touch_id_enrollment()`;
+  }
+
+  // Keyboard
+
   codeFor_pressKeyCode (varNameIgnore, varIndexIgnore, keyCode, metaState, flags) {
-    return `driver.press_keycode(${keyCode}, ${metaState}, ${flags});`;
+    return `driver.press_keycode(${keyCode}, ${metaState}, ${flags})`;
   }
 
   codeFor_longPressKeyCode (varNameIgnore, varIndexIgnore, keyCode, metaState, flags) {
-    return `driver.long_press_keycode(${keyCode}, ${metaState}, ${flags});`;
+    return `driver.long_press_keycode(${keyCode}, ${metaState}, ${flags})`;
   }
 
   codeFor_hideKeyboard () {
@@ -167,20 +232,10 @@ actions.perform()
   }
 
   codeFor_isKeyboardShown () {
-    return `driver.is_keyboard_shown()`;
+    return `is_keyboard_shown = driver.is_keyboard_shown()`;
   }
 
-  codeFor_pushFile (varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
-    return `driver.push_file('${pathToInstallTo}', '${fileContentString}');`;
-  }
-
-  codeFor_pullFile (varNameIgnore, varIndexIgnore, pathToPullFrom) {
-    return `file_base64 = self.driver.pull_file('${pathToPullFrom}');`;
-  }
-
-  codeFor_pullFolder (varNameIgnore, varIndexIgnore, folderToPullFrom) {
-    return `file_base64 = self.driver.pull_folder('${folderToPullFrom}');`;
-  }
+  // Connectivity
 
   codeFor_toggleAirplaneMode () {
     return `# Not supported: toggleAirplaneMode`;
@@ -195,15 +250,15 @@ actions.perform()
   }
 
   codeFor_toggleLocationServices () {
-    return `driver.toggle_location_services();`;
+    return `driver.toggle_location_services()`;
   }
 
-  codeFor_sendSMS () {
-    return `# Not supported: sendSMS`;
+  codeFor_sendSMS (varNameIgnore, varIndexIgnore, phoneNumber, text) {
+    return `driver.send_sms('${phoneNumber}', '${text}')`;
   }
 
   codeFor_gsmCall (varNameIgnore, varIndexIgnore, phoneNumber, action) {
-    return `driver.make_gsm_call(${phoneNumber}, ${action})`;
+    return `driver.make_gsm_call('${phoneNumber}', '${action}')`;
   }
 
   codeFor_gsmSignal (varNameIgnore, varIndexIgnore, signalStrength) {
@@ -211,59 +266,33 @@ actions.perform()
   }
 
   codeFor_gsmVoice (varNameIgnore, varIndexIgnore, state) {
-    return `driver.set_gsm_voice(${state})`;
+    return `driver.set_gsm_voice('${state}')`;
   }
 
-  codeFor_shake () {
-    return `driver.shake();`;
-  }
-
-  codeFor_lock (varNameIgnore, varIndexIgnore, seconds) {
-    return `driver.lock(${seconds});`;
-  }
-
-  codeFor_unlock () {
-    return `driver.unlock();`;
-  }
-
-  codeFor_isLocked () {
-    return `driver.is_locked()`;
-  }
-
-  codeFor_rotateDevice () {
-    return `# Not supported: rotate device`;
-  }
+  // Performance Data
 
   codeFor_getPerformanceData (varNameIgnore, varIndexIgnore, packageName, dataType, dataReadTimeout) {
-    return `driver.get_performance_data('${packageName}', '${dataType}', ${dataReadTimeout})`;
+    return `performance_data = driver.get_performance_data('${packageName}', '${dataType}', ${dataReadTimeout})`;
   }
 
   codeFor_getPerformanceDataTypes () {
-    return `driver.get_performance_data_types()`;
+    return `performance_types = driver.get_performance_data_types()`;
   }
 
-  codeFor_touchId (varNameIgnore, varIndexIgnore, match) {
-    return `driver.touch_id(${match})`;
-  }
-
-  codeFor_toggleEnrollTouchId (varNameIgnore, varIndexIgnore, enroll) {
-    return `driver.toggle_touch_id_enrollment(${enroll})`;
-  }
+  // System
 
   codeFor_openNotifications () {
     return `driver.open_notifications();`;
   }
 
   codeFor_getDeviceTime () {
-    return `time = self.driver.device_time()`;
+    return `time = driver.device_time()`;
   }
 
-  codeFor_fingerprint (varNameIgnore, varIndexIgnore, fingerprintId) {
-    return `driver.finger_print(${fingerprintId})`;
-  }
+  // Session
 
   codeFor_getSession () {
-    return `desired_caps = self.driver.desired_capabilities()`;
+    return `desired_caps = driver.desired_capabilities()`;
   }
 
   codeFor_setTimeouts (/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
@@ -271,15 +300,15 @@ actions.perform()
   }
 
   codeFor_getOrientation () {
-    return `orientation = self.driver.orientation()`;
+    return `orientation = driver.orientation`;
   }
 
   codeFor_setOrientation (varNameIgnore, varIndexIgnore, orientation) {
-    return `driver.orientation = "${orientation}"`;
+    return `driver.orientation = '${orientation}'`;
   }
 
   codeFor_getGeoLocation () {
-    return `location = self.driver.location()`;
+    return `location = driver.location()`;
   }
 
   codeFor_setGeoLocation (varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
@@ -287,11 +316,11 @@ actions.perform()
   }
 
   codeFor_getLogTypes () {
-    return `log_types = driver.log_types();`;
+    return `log_types = driver.log_types()`;
   }
 
   codeFor_getLogs (varNameIgnore, varIndexIgnore, logType) {
-    return `logs = driver.get_log('${logType}');`;
+    return `logs = driver.get_log('${logType}')`;
   }
 
   codeFor_updateSettings (varNameIgnore, varIndexIgnore, settingsJson) {
@@ -299,7 +328,7 @@ actions.perform()
   }
 
   codeFor_getSettings () {
-    return `settings = driver.get_settings`;
+    return `settings = driver.get_settings()`;
   }
 
   // Web
@@ -310,6 +339,10 @@ actions.perform()
 
   codeFor_getUrl () {
     return `current_url = driver.current_url`;
+  }
+
+  codeFor_back () {
+    return `driver.back()`;
   }
 
   codeFor_forward () {
@@ -323,11 +356,11 @@ actions.perform()
   // Context
 
   codeFor_getContext () {
-    return `driver.current_context`;
+    return `context = driver.current_context`;
   }
 
   codeFor_getContexts () {
-    return `driver.contexts()`;
+    return `contexts = driver.contexts`;
   }
 
   codeFor_switchContext (varNameIgnore, varIndexIgnore, name) {

@@ -27,8 +27,8 @@ class RobotFramework extends Framework {
 #
 #  more keywords on: http://serhatbolsu.github.io/robotframework-appiumlibrary/AppiumLibrary.html
 #
-# if your tests fails saying 'did not match any elements' consider use 'wait activity' or 
-# 'wait until page contains element' before a click command 
+# if your tests fails saying 'did not match any elements' consider use 'wait activity' or
+# 'wait until page contains element' before a click command
 
 *** Settings ***
 Library           AppiumLibrary
@@ -46,6 +46,10 @@ ${this.indent(code, 4)}
 `;
   }
 
+  addComment(comment) {
+    return `# ${comment}`;
+  }
+
   codeFor_findAndAssign (strategy, locator/*, localVar, isArray*/) {
     let suffixMap = {
       xpath: 'xpath',
@@ -60,7 +64,7 @@ ${this.indent(code, 4)}
       '-ios class chain': 'ios_uiautomation', // TODO: Could not find iOS UIAutomation
     };
     if (!suffixMap[strategy]) {
-      throw new Error(`Strategy ${strategy} can't be code-gened`);
+      return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     //TODO: in the robot case, we need the ID on the codeFor_ for execution
     this.lastID = `${strategy}=${locator}`;
@@ -74,40 +78,40 @@ ${this.indent(code, 4)}
 
   getApplicationInitialization () {
     let varString = Object.keys(this.caps).map((k) => `${k}=\$\{${k}\}`).join('  ');
-    return `Open Application    \$\{REMOTE_URL\}   ${varString}`;
+    return `    Open Application    \$\{REMOTE_URL\}   ${varString}`;
   }
 
   codeFor_executeScript (/*varNameIgnore, varIndexIgnore, args*/) {
-    return `TODO implement executeScript`;
+    return `    Execute Script    TODO implement executeScript`;
   }
 
 
   codeFor_click (/*varName, varIndex*/) {
-    return `Click Element    ${this.lastID}`;
+    return `    Click Element    ${this.lastID}`;
   }
 
   codeFor_clear (/*varName, varIndex*/) {
-    return `Clear Text    ${this.lastID}`;
+    return `    Clear Text    ${this.lastID}`;
   }
 
   codeFor_sendKeys (varName, varIndex, text) {
-    return `Input Text    ${this.lastID}    ${text}`;
+    return `    Input Text    ${this.lastID}    ${text}`;
   }
 
   codeFor_back () {
-    return `Go Back`;
+    return `    Go Back`;
   }
 
   codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
     const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
 
-    return `Tap    ${this.lastID}    ${x}    ${y}`;
+    return `    Tap With Positions    100    \$\{${x}, ${y}\}`;
   }
 
   codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
     const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
 
-    return `Swipe    ${x1}    ${y1}    ${x2}    ${y2}`;
+    return `    Swipe    ${x1}    ${y1}    ${x2}    ${y2}`;
   }
 
   // TODO: Add these robot framework commands
@@ -127,19 +131,7 @@ ${this.indent(code, 4)}
     return ``;
   }
 
-  codeFor_launchApp () {
-    return ``;
-  }
-
   codeFor_background () {
-    return ``;
-  }
-
-  codeFor_closeApp () {
-    return ``;
-  }
-
-  codeFor_reset () {
     return ``;
   }
 

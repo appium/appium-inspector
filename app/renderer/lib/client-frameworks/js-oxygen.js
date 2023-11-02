@@ -43,6 +43,10 @@ ${code}
 `;
   }
 
+  addComment(comment) {
+    return `// ${comment}`;
+  }
+
   codeFor_executeScript (varNameIgnore, varIndexIgnore, args) {
     return `${this.type}.execute(${args})`;
   }
@@ -59,7 +63,7 @@ ${code}
       case '-android datamatcher': locator = `android=${locator}`; break;
       case '-ios predicate string': locator = `ios=${locator}`; break;
       case '-ios class chain': locator = `ios=${locator}`; break; // TODO: Handle IOS class chain properly. Not all libs support it. Or take it out
-      default: throw new Error(`Can't handle strategy ${strategy}`);
+      default: return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
       return `let ${localVar} = mob.findElements(${JSON.stringify(locator)});`;
@@ -112,20 +116,8 @@ ${code}
     return `let isAppInstalled = ${this.type}.isAppInstalled("${app}");`;
   }
 
-  codeFor_launchApp () {
-    return `${this.type}.launchApp();`;
-  }
-
   codeFor_background (varNameIgnore, varIndexIgnore, timeout) {
     return `${this.type}.getDriver().background(${timeout});`;
-  }
-
-  codeFor_closeApp () {
-    return `${this.type}.closeApp();`;
-  }
-
-  codeFor_reset () {
-    return `${this.type}.resetApp();`;
   }
 
   codeFor_removeApp (varNameIgnore, varIndexIgnore, app) {

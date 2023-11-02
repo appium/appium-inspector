@@ -13,35 +13,49 @@ class JavaFramework extends Framework {
         switch (this.caps.platformName.toLowerCase()) {
           case 'ios': return ['ios', 'IOSDriver'];
           case 'android': return ['android', 'AndroidDriver'];
+          case 'windows': return ['windows', 'WindowsDriver'];
+          case 'mac2': return ['mac', 'Mac2Driver'];
+          case 'gecko': return ['gecko', 'GeckoDriver'];
+          case 'safari': return ['safari', 'SafariDriver'];
           default: return ['unknownPlatform', 'UnknownDriver'];
         }
       } else {
         return ['unknownPlatform', 'UnknownDriver'];
       }
     })();
-    let capStr = this.indent(Object.keys(this.caps).map((k) => `desiredCapabilities.setCapability(${JSON.stringify(k)}, ${JSON.stringify(this.caps[k])});`).join('\n'), 4);
-    return `import io.appium.java_client.MobileElement;
+    let capStr = this.indent(Object.keys(this.caps).map((k) => `.amend(${JSON.stringify(k)}, ${JSON.stringify(this.caps[k])})`).join('\n'), 6);
+    // Import everything from Selenium in order to use WebElement, Point and other classes.
+    return `
+// This sample code supports Appium Java client >=9
+// https://github.com/appium/java-client
+import io.appium.java_client.remote.options.BaseOptions;
 import io.appium.java_client.${pkg}.${cls};
-import junit.framework.TestCase;
+import java.net.URL;
+import java.time.Duration;
+import java.util.Arrays;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import java.net.MalformedURLException;
-import java.net.URL;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.*;
 
 public class SampleTest {
 
   private ${cls} driver;
 
   @Before
-  public void setUp() throws MalformedURLException {
-    DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
-${capStr}
+  public void setUp() {
+    var options = new BaseOptions()
+${capStr};
 
-    URL remoteUrl = new URL("${this.serverUrl}");
+    private URL getUrl() {
+      try {
+        return new URL("${this.serverUrl}");
+      } catch (MalformedURLException e) {
+        e.printStackTrace();
+      }
+    }
 
-    driver = new ${cls}(remoteUrl, desiredCapabilities);
+    driver = new ${cls}(this.getUrl(), options);
   }
 
   @Test
@@ -57,30 +71,30 @@ ${this.indent(code, 4)}
 `;
   }
 
-  codeFor_executeScript (/*varNameIgnore, varIndexIgnore, args*/) {
-    return `/* TODO implement executeScript */`;
+  addComment(comment) {
+    return `// ${comment}`;
   }
 
   codeFor_findAndAssign (strategy, locator, localVar, isArray) {
     let suffixMap = {
-      xpath: 'XPath',
-      'accessibility id': 'AccessibilityId',
-      'id': 'Id',
-      'class name': 'ClassName',
-      'name': 'Name',
-      '-android uiautomator': 'AndroidUIAutomator',
-      '-android datamatcher': 'AndroidDataMatcher',
-      '-android viewtag': 'AndroidViewTag',
-      '-ios predicate string': 'IosNsPredicate',
-      '-ios class chain': 'IosClassChain',
+      xpath: 'xpath',
+      'accessibility id': 'accessibilityId',
+      id: 'id',
+      'class name': 'className',
+      name: 'name',
+      '-android uiautomator': 'androidUIAutomator',
+      '-android datamatcher': 'androidDataMatcher',
+      '-android viewtag': 'androidViewTag',
+      '-ios predicate string': 'iOSNsPredicateString',
+      '-ios class chain': 'iOSClassChain',
     };
     if (!suffixMap[strategy]) {
-      throw new Error(`Strategy ${strategy} can't be code-gened`);
+      return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `List<MobileElement> ${localVar} = (MobileElement) driver.findElementsBy${suffixMap[strategy]}(${JSON.stringify(locator)});`;
+      return `var ${localVar} = driver.findElements(AppiumBy.${suffixMap[strategy]}(${JSON.stringify(locator)}));`;
     } else {
-      return `MobileElement ${localVar} = (MobileElement) driver.findElementBy${suffixMap[strategy]}(${JSON.stringify(locator)});`;
+      return `var ${localVar} = driver.findElement(AppiumBy.${suffixMap[strategy]}(${JSON.stringify(locator)}));`;
     }
   }
 
@@ -103,37 +117,61 @@ ${this.indent(code, 4)}
     return `${this.getVarName(varName, varIndex)}.sendKeys(${JSON.stringify(text)});`;
   }
 
-  codeFor_back () {
-    return `driver.navigate().back();`;
-  }
-
   codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
     const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
-
-    return `(new TouchAction(driver)).tap(${x}, ${y}).perform()`;
+    return `
+final var finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+var tapPoint = new Point(${x}, ${y});
+var tap = new Sequence(finger, 1);
+tap.addAction(finger.createPointerMove(Duration.ofMillis(0),
+    PointerInput.Origin.viewport(), tapPoint.x, tapPoint.y));
+tap.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+tap.addAction(new Pause(finger, Duration.ofMillis(50)));
+tap.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+driver.perform(Arrays.asList(tap));
+    `;
   }
 
   codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
     const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
-
-    return `(new TouchAction(driver))
-  .press(PointOption.point(${x1}, ${y1}}))
-  .moveTo(PointOption.point(${x2}, ${y2}}))
-  .release()
-  .perform();
+    return `
+final var finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+var start = new Point(${x1}, ${y1});
+var end = new Point (${x2}, ${y2});
+var swipe = new Sequence(finger, 1);
+swipe.addAction(finger.createPointerMove(Duration.ofMillis(0),
+    PointerInput.Origin.viewport(), start.getX(), start.getY()));
+swipe.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+swipe.addAction(finger.createPointerMove(Duration.ofMillis(1000),
+    PointerInput.Origin.viewport(), end.getX(), end.getY()));
+swipe.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+driver.perform(Arrays.asList(swipe));
   `;
   }
 
+  // Execute Script
+
+  codeFor_executeScriptNoArgs (scriptCmd) {
+    return `driver.executeScript("${scriptCmd}");`;
+  }
+
+  codeFor_executeScriptWithArgs (scriptCmd, jsonArg) {
+    // change the JSON object into a format accepted by Map.ofEntries: a sequence of Map.entry(key, value)
+    // first create an array for each key-value pair
+    const argsValuesArray = _.toPairs(jsonArg[0]);
+    // then wrap each key-value array in Map.entry()
+    const argsValuesStrings = argsValuesArray.map((kv) => `Map.entry(${JSON.stringify(kv).slice(1, -1)})`);
+    return `driver.executeScript("${scriptCmd}", Map.ofEntries(${argsValuesStrings.join(', ')}));`;
+  }
+
+  // App Management
+
   codeFor_getCurrentActivity () {
-    return `String activityName = driver.currentActivity()`;
+    return `var activityName = driver.currentActivity();`;
   }
 
   codeFor_getCurrentPackage () {
-    return `String packageName = driver.currentPackage()`;
-  }
-
-  codeFor_startActivity () {
-    return `driver.`;
+    return `var packageName = driver.currentPackage();`;
   }
 
   codeFor_installApp (varNameIgnore, varIndexIgnore, app) {
@@ -141,23 +179,19 @@ ${this.indent(code, 4)}
   }
 
   codeFor_isAppInstalled (varNameIgnore, varIndexIgnore, app) {
-    return `boolean isAppInstalled = driver.isAppInstalled("${app}");`;
-  }
-
-  codeFor_launchApp () {
-    return `driver.launchApp();`;
+    return `var isAppInstalled = driver.isAppInstalled("${app}");`;
   }
 
   codeFor_background (varNameIgnore, varIndexIgnore, timeout) {
     return `driver.runAppInBackground(Duration.ofSeconds(${timeout}));`;
   }
 
-  codeFor_closeApp () {
-    return `driver.closeApp();`;
+  codeFor_activateApp (varNameIgnore, varIndexIgnore, app) {
+    return `driver.activateApp("${app}");`;
   }
 
-  codeFor_reset () {
-    return `driver.reset();`;
+  codeFor_terminateApp (varNameIgnore, varIndexIgnore, app) {
+    return `driver.terminateApp("${app}");`;
   }
 
   codeFor_removeApp (varNameIgnore, varIndexIgnore, app) {
@@ -165,16 +199,69 @@ ${this.indent(code, 4)}
   }
 
   codeFor_getStrings (varNameIgnore, varIndexIgnore, language, stringFile) {
-    return `Map<String, String> appStrings = driver.getAppStringMap(${language ? `${language}, ` : ''}${stringFile ? `"${stringFile}` : ''});`;
+    return `var appStrings = driver.getAppStringMap(${language ? `${language}, ` : ''}${stringFile ? `"${stringFile}` : ''});`;
   }
 
+  // Clipboard
+
   codeFor_getClipboard () {
-    return `String clipboardText = driver.getClipboardText();`;
+    return `var clipboardText = driver.getClipboardText();`;
   }
 
   codeFor_setClipboard (varNameIgnore, varIndexIgnore, clipboardText) {
     return `driver.setClipboardText("${clipboardText}");`;
   }
+
+  // File Transfer
+
+
+  codeFor_pushFile (varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
+    return `driver.pushFile("${pathToInstallTo}", ${fileContentString});`;
+  }
+
+  codeFor_pullFile (varNameIgnore, varIndexIgnore, pathToPullFrom) {
+    return `var fileBase64 = driver.pullFile("${pathToPullFrom}");`;
+  }
+
+  codeFor_pullFolder (varNameIgnore, varIndexIgnore, folderToPullFrom) {
+    return `var folderBase64 = driver.pullFolder("${folderToPullFrom}");`;
+  }
+
+  // Device Interaction
+
+  codeFor_shake () {
+    return `driver.shake();`;
+  }
+
+  codeFor_lock (varNameIgnore, varIndexIgnore, seconds) {
+    return `driver.lockDevice(${seconds});`;
+  }
+
+  codeFor_unlock () {
+    return `driver.unlockDevice();`;
+  }
+
+  codeFor_isLocked () {
+    return `var isLocked = driver.isDeviceLocked();`;
+  }
+
+  codeFor_rotateDevice (varNameIgnore, varIndexIgnore, x, y, radius, rotation, touchCount, duration) {
+    return `driver.rotate(new DeviceRotation(${x}, ${y}, ${radius}, ${rotation}, ${touchCount}, ${duration}));`;
+  }
+
+  codeFor_fingerprint (varNameIgnore, varIndexIgnore, fingerprintId) {
+    return `driver.fingerPrint(${fingerprintId});`;
+  }
+
+  codeFor_touchId (varNameIgnore, varIndexIgnore, match) {
+    return `driver.performTouchID(${match});`;
+  }
+
+  codeFor_toggleEnrollTouchId (varNameIgnore, varIndexIgnore, enroll) {
+    return `driver.toggleTouchIDEnrollment(${enroll});`;
+  }
+
+  // Keyboard
 
   codeFor_pressKeyCode (varNameIgnore, varIndexIgnore, keyCode, metaState, flags) {
     return `driver.pressKeyCode(${keyCode}, ${metaState}, ${flags});`;
@@ -189,20 +276,10 @@ ${this.indent(code, 4)}
   }
 
   codeFor_isKeyboardShown () {
-    return `boolean isKeyboardShown = driver.isKeyboardShown();`;
+    return `var isKeyboardShown = driver.isKeyboardShown();`;
   }
 
-  codeFor_pushFile (varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
-    return `driver.pushFile("${pathToInstallTo}", ${fileContentString})`;
-  }
-
-  codeFor_pullFile (varNameIgnore, varIndexIgnore, pathToPullFrom) {
-    return `byte[] fileBase64 = driver.pullFile("${pathToPullFrom}");`;
-  }
-
-  codeFor_pullFolder (varNameIgnore, varIndexIgnore, folderToPullFrom) {
-    return `byte[] fileBase64 = driver.pullFolder("${folderToPullFrom}");`;
-  }
+  // Connectivity
 
   codeFor_toggleAirplaneMode () {
     return `driver.toggleAirplaneMode();`;
@@ -236,56 +313,30 @@ ${this.indent(code, 4)}
     return `driver.setGsmVoice("${state}");`;
   }
 
-  codeFor_shake () {
-    return `driver.shake();`;
-  }
-
-  codeFor_lock (varNameIgnore, varIndexIgnore, seconds) {
-    return `driver.lockDevice(${seconds});`;
-  }
-
-  codeFor_unlock () {
-    return `driver.unlockDevice()`;
-  }
-
-  codeFor_isLocked () {
-    return `boolean isLocked = driver.isDeviceLocked();`;
-  }
-
-  codeFor_rotateDevice (varNameIgnore, varIndexIgnore, x, y, radius, rotation, touchCount, duration) {
-    return `driver.rotate(new DeviceRotation(${x}, ${y}, ${radius}, ${rotation}, ${touchCount}, ${duration}));`;
-  }
+  // Performance Data
 
   codeFor_getPerformanceData (varNameIgnore, varIndexIgnore, packageName, dataType, dataReadTimeout) {
-    return `List<List<Object>> performanceData = driver.getPerformanceData("${packageName}", "${dataType}", ${dataReadTimeout});`;
+    return `var performanceData = driver.getPerformanceData("${packageName}", "${dataType}", ${dataReadTimeout});`;
   }
 
   codeFor_getPerformanceDataTypes () {
-    return `List<String> performanceTypes = driver.getPerformanceDataTypes();`;
+    return `var performanceTypes = driver.getPerformanceDataTypes();`;
   }
 
-  codeFor_touchId (varNameIgnore, varIndexIgnore, match) {
-    return `driver.performTouchID(${match});`;
-  }
-
-  codeFor_toggleEnrollTouchId (varNameIgnore, varIndexIgnore, enroll) {
-    return `driver.toggleTouchIDEnrollment(${enroll});`;
-  }
+  // System
 
   codeFor_openNotifications () {
     return `driver.openNotifications();`;
   }
 
   codeFor_getDeviceTime () {
-    return `String time = driver.getDeviceTime();`;
+    return `var time = driver.getDeviceTime();`;
   }
 
-  codeFor_fingerprint (varNameIgnore, varIndexIgnore, fingerprintId) {
-    return `driver.fingerPrint(${fingerprintId});`;
-  }
+  // Session
 
   codeFor_getSession () {
-    return `Map<String, Object> caps = driver.getSessionDetails();`;
+    return `var caps = driver.getSessionDetails();`;
   }
 
   codeFor_setTimeouts (/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
@@ -293,7 +344,7 @@ ${this.indent(code, 4)}
   }
 
   codeFor_getOrientation () {
-    return `ScreenOrientation orientation = driver.getOrientation();`;
+    return `var orientation = driver.getOrientation();`;
   }
 
   codeFor_setOrientation (varNameIgnore, varIndexIgnore, orientation) {
@@ -301,7 +352,7 @@ ${this.indent(code, 4)}
   }
 
   codeFor_getGeoLocation () {
-    return `Location location = driver.location();`;
+    return `var location = driver.location();`;
   }
 
   codeFor_setGeoLocation (varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
@@ -309,11 +360,11 @@ ${this.indent(code, 4)}
   }
 
   codeFor_getLogTypes () {
-    return `Set<String> getLogTypes = driver.manage().logs().getAvailableLogTypes();`;
+    return `var getLogTypes = driver.manage().logs().getAvailableLogTypes();`;
   }
 
   codeFor_getLogs (varNameIgnore, varIndexIgnore, logType) {
-    return `LogEntries logEntries = driver.manage().logs().get("${logType}");`;
+    return `var logEntries = driver.manage().logs().get("${logType}");`;
   }
 
   codeFor_updateSettings (varNameIgnore, varIndexIgnore, settingsJson) {
@@ -329,16 +380,8 @@ ${this.indent(code, 4)}
   }
 
   codeFor_getSettings () {
-    return `Map<String, Object> settings = driver.getSettings();`;
+    return `var settings = driver.getSettings();`;
   }
-
-  /*
-
-  codeFor_ REPLACE_ME (varNameIgnore, varIndexIgnore) {
-    return `REPLACE_ME`;
-  }
-
-  */
 
   // Web
 
@@ -347,7 +390,11 @@ ${this.indent(code, 4)}
   }
 
   codeFor_getUrl () {
-    return `String current_url = driver.getCurrentUrl();`;
+    return `var currentUrl = driver.getCurrentUrl();`;
+  }
+
+  codeFor_back () {
+    return `driver.navigate().back();`;
   }
 
   codeFor_forward () {
@@ -361,11 +408,11 @@ ${this.indent(code, 4)}
   // Context
 
   codeFor_getContext () {
-    return `driver.getContext()`;
+    return `var context = driver.getContext();`;
   }
 
   codeFor_getContexts () {
-    return `driver.getContextHandles();`;
+    return `var contexts = driver.getContextHandles();`;
   }
 
   codeFor_switchContext (varNameIgnore, varIndexIgnore, name) {

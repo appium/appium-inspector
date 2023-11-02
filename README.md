@@ -1,5 +1,8 @@
 # Appium Inspector
 
+[![Crowdin](https://badges.crowdin.net/appium-desktop/localized.svg)](https://crowdin.com/project/appium-desktop)
+
+
 ![Appium Inspector icon](./docs/icon.png)
 
 A GUI inspector for mobile apps and more, powered by a (separately installed) Appium server. When you're using it to inspect a mobile app, it looks like this:
@@ -26,8 +29,16 @@ Appium Inspector is released in two formats:
 Both apps have the exact same set of features, so you might find that simply opening the web version is going to be easier and save you on disk space (and you can keep multiple tabs open!).
 
 ### Installing on macOS
+#### Method 1 - Simplest
+If you're using the desktop app on macOS, when you run it you may be greeted with some error about the app not being able to be opened, or not verified by Apple, or something similar. The easiest way to get around this is as follows:
+1. *Control+Click* the Appium Inspector icon in the Applications Finder folder and choose `Open`.
 
-If you're using the desktop app on macOS, when you run it you may be greeted with some error about the app not being able to be opened, or not verified by Apple, or something similar. The easiest way to get around this is to run `xattr -cr` on the file you downloaded. So let's say you downloaded `appium-inspector.dmg` and copy `Appium Inspector.app` in `/Applications` inside the disk image. Then you would run `xattr -cr "/Applications/Appium Inspector.app"` before opening it. The same goes for the zip version (or the .app itself). Alternatively, you can allow the Inspector to be opened by adjusting your Security settings in System Preferences to allow apps by third parties to run.
+   ![Appium Inspector Ctrl+Click](./docs/mac-ctrl-click.png)
+2. You'll be presented with the dialog below. Just click `Open` and Appium Inspector should launch.
+
+   ![Appium Inspector Open Warning](./docs/open-warning.png)
+#### Method 2 - Command Line
+If this doesn't work, you can try the command line. Run `xattr -cr` on the file you downloaded. So let's say you downloaded `appium-inspector.dmg` and copied `Appium Inspector.app` inside the disk image to the system `/Applications` folder. Then you would run `xattr -cr "/Applications/Appium Inspector.app"` before opening it. The same goes for the zip version (or the .app itself). 
 
 ### Installing on Linux
 
@@ -47,11 +58,14 @@ any other command: `./Appium-Inspector-linux.AppImage`.
 * Get a list of suggested element locator strategies and selectors to be used in your scripts
 * Compare the speed of different element finding strategies
 * Start and stop "recording" mode, which translates your actions in the Inspector to code samples you can use in your scripts
+* Start and stop "source refreshing", which allows interacting with the device screen without reloading page source (MJPEG stream capabilities are required)
 * Tap on the screen at an arbitrary location
 * Perform a swipe gesture
+* Simulate system buttons for iOS (home) and Android (back/home/app switch)
+* Simulate Siri commands for iOS
 * Switch into web context modes and interact with web elements
 * Test out your own locator strategies
-* Access a huge library of Appium actions to run with a simple click, including providing your own parameters
+* Access a huge library of Appium commands to run with a simple click, including providing your own parameters
 
 ### Supported cloud platforms
 
@@ -67,7 +81,7 @@ any other command: `./Appium-Inspector-linux.AppImage`.
 | [Pcloudy](https://www.pcloudy.com) | [Documentation](https://www.pcloudy.com/mobile-application-testing-documentation) |
 | [TestingBot](https://testingbot.com) | [Documentation](https://testingbot.com/support) |
 | [Experitest](http://www.experitest.com) | [Documentation](https://docs.experitest.com/display/TE/Appium) |
-| [Robotic.mobi](https://www.robotic.mobi) | [Documentation](https://robotic.mobi/appium-remote) |
+| [RobotQA](https://www.robotqa.com) | [Documentation](https://robotqa.com/appium-remote) |
 | [Remote TestKit](https://appkitbox.com/en/) | [Documentation](https://appkitbox.com/en/support/automation/appium/) |
 
 ## Requirements
@@ -78,6 +92,10 @@ As mentioned above, the Inspector is basically an Appium client, so for it to fu
 2. All of the appropriate Appium drivers, plugins, and other dependencies that those might entail.
 
 Basically, if you can start an Appium session from your typical client library, you should be able to do the same with the Inspector.
+
+### Screen size
+
+The Inspector desktop app has a minimum size of **890 x 710** pixels, whereas the web application works best when using a viewport size of at least **870 x 610** pixels.
 
 ### Connecting to a local server from the browser inspector (CORS)
 
@@ -98,8 +116,7 @@ Issues that have to do with the Inspector specifically can be reported here at t
 Want to help us develop this app? We'd love it! Getting set up to do development is pretty easy:
 
 1. Clone the repo
-2. Clone git submodules (`git submodule update --init`)
-3. Install dependencies (`npm install`)
+2. Install dependencies (`npm install`)
 
 From here, have a look at the `scripts` field of our package.json to see what kind of dev scripts you might want to run. Some of the most useful are:
 
@@ -112,13 +129,11 @@ From here, have a look at the `scripts` field of our package.json to see what ki
 * `npm run clean`: remove all caches and node modules and reinstall everything
 * `npx electron-builder build --publish never`: package the app for your platform (into `release/`). Note that for macOS this requires code signing environment variables to be set.
 
-### Shared components and utilities
-
-This app shares components and utilities with [Appium Desktop](https://github.com/appium/appium-desktop), via a third repo called [appium-gui-libs](https://github.com/appium/appium-gui-libs). This is cloned as a submodule in `gui-common`. If you need to make changes to any of that code, you'll want to first submit your PR to appium-gui-libs.
-
 ### Localization
 
-We try to use only localized strings (`t('localizationKey')`). If you find yourself needing to add strings, you'll need to do that in the [Appium Desktop repo](https://github.com/appium/appium-desktop)'s English translation file, as the strings for both apps are maintained there for a variety of reasons. Once the string changes have been merged, you can run `npm run copy-en-i18n <path-to-appium-desktop-dir>` to copy them over and commit them as part of your Inspector change.
+We try to use only localized strings (`t('localizationKey')`), which are synchronized with [Crowdin](https://crowdin.com/project/appium-desktop). If you would like to contribute translations, please leave your suggestions on Crowdin.
+
+If you find yourself needing to add completely new strings, you'll need to first add them in the [English translation file](assets/locales/en/translation.json). After your changes are merged, the new strings will be added to Crowdin, and become available for translation into other languages.
 
 ### Publishing new versions
 

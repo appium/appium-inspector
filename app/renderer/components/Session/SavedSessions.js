@@ -1,116 +1,110 @@
-import React, { Component } from 'react';
+import React from 'react';
 import moment from 'moment';
 import { Button, Row, Col, Table } from 'antd';
 import FormattedCaps from './FormattedCaps';
-import SessionCSS from './Session.css';
-import {
-  EditOutlined,
-  DeleteOutlined
-} from '@ant-design/icons';
+import SessionStyles from './Session.css';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
-export default class SavedSessions extends Component {
+const DATE_COLUMN_WIDTH = '25%';
+const ACTIONS_COLUMN_WIDTH = '106px';
 
-  constructor (props) {
-    super(props);
-    this.onRow = this.onRow.bind(this);
-    this.getRowClassName = this.getRowClassName.bind(this);
+const dataSource = (savedSessions) => {
+  if (!savedSessions) {
+    return [];
   }
+  return savedSessions.map((session) => ({
+    key: session.uuid,
+    name: (session.name || '(Unnamed)'),
+    date: moment(session.date).format('YYYY-MM-DD')
+  }));
+};
 
-  onRow (record) {
-    return {
-      onClick: () => {
-        let session = this.sessionFromUUID(record.key);
-        this.handleCapsAndServer(session);
-      }
-    };
+const sessionFromUUID = (savedSessions, uuid) => {
+  for (let session of savedSessions) {
+    if (session.uuid === uuid) {
+      return session;
+    }
   }
+  throw new Error(`Couldn't find session with uuid ${uuid}`);
+};
 
-  getRowClassName (record) {
-    const {capsUUID} = this.props;
-    return capsUUID === record.key ? SessionCSS.selected : '';
-  }
+const SavedSessions = (props) => {
+  const { savedSessions, capsUUID, switchTabs } = props;
 
-  handleCapsAndServer (session) {
-    const {setCapsAndServer, server, serverType } = this.props;
+  const handleCapsAndServer = (uuid) => {
+    const { setCapsAndServer, server, serverType,
+            isEditingDesiredCapsName, abortDesiredCapsNameEditor,
+            isEditingDesiredCaps, abortDesiredCapsEditor } = props;
+    const session = sessionFromUUID(savedSessions, uuid);
 
-    // Incase user has CAPS saved from older version of Inspector which
+    // Disable any editors before changing the selected caps
+    if (isEditingDesiredCapsName) {
+      abortDesiredCapsNameEditor();
+    }
+    if (isEditingDesiredCaps) {
+      abortDesiredCapsEditor();
+    }
+
+    // In case user has CAPS saved from older version of Inspector which
     // doesn't contain server and serverType within the session object
-    setCapsAndServer(session.server || server, session.serverType || serverType, session.caps, session.uuid);
-  }
+    setCapsAndServer(
+      session.server || server,
+      session.serverType || serverType,
+      session.caps,
+      session.uuid,
+      session.name
+    );
+  };
 
-  handleDelete (uuid) {
-    return () => {
-      if (window.confirm('Are you sure?')) {
-        this.props.deleteSavedSession(uuid);
-      }
-    };
-  }
-
-  sessionFromUUID (uuid) {
-    const {savedSessions} = this.props;
-    for (let session of savedSessions) {
-      if (session.uuid === uuid) {
-        return session;
-      }
+  const handleDelete = (uuid) => {
+    const { deleteSavedSession } = props;
+    if (window.confirm('Are you sure?')) {
+      deleteSavedSession(uuid);
     }
-    throw new Error(`Couldn't find session with uuid ${uuid}`);
-  }
+  };
 
-  render () {
-    const {savedSessions, capsUUID, switchTabs} = this.props;
+  const columns = [{
+    title: 'Capability Set',
+    dataIndex: 'name',
+    key: 'name'
+  }, {
+    title: 'Created',
+    dataIndex: 'date',
+    key: 'date',
+    width: DATE_COLUMN_WIDTH
+  }, {
+    title: 'Actions',
+    key: 'action',
+    width: ACTIONS_COLUMN_WIDTH,
+    render: (_, record) => <div>
+      <Button
+        icon={<EditOutlined/>}
+        onClick={() => {handleCapsAndServer(record.key); switchTabs('new');}}
+        className={SessionStyles.editSession}
+      />
+      <Button
+        icon={<DeleteOutlined/>}
+        onClick={() => handleDelete(record.key)}/>
+    </div>
+  }];
 
-    const columns = [{
-      title: 'Capability Set',
-      dataIndex: 'name',
-      key: 'name'
-    }, {
-      title: 'Created',
-      dataIndex: 'date',
-      key: 'date'
-    }, {
-      title: 'Actions',
-      key: 'action',
-      render: (text, record) => {
-        let session = this.sessionFromUUID(record.key);
-        return (
-          <div>
-            <Button
-              icon={<EditOutlined/>}
-              onClick={() => {this.handleCapsAndServer(session); switchTabs('new');}}
-              className={SessionCSS['edit-session']}
-            />
-            <Button
-              icon={<DeleteOutlined/>}
-              onClick={this.handleDelete(session.uuid)}/>
-          </div>
-        );
-      }
-    }];
-
-    let dataSource = [];
-    if (savedSessions) {
-      dataSource = savedSessions.map((session) => ({
-        key: session.uuid,
-        name: (session.name || '(Unnamed)'),
-        date: moment(session.date).format('YYYY-MM-DD')
-      }));
-    }
-
-    return (<Row className={SessionCSS['saved-sessions']}>
+  return (
+    <Row className={SessionStyles.savedSessions}>
       <Col span={12}>
         <Table
           pagination={false}
-          dataSource={dataSource}
+          sticky={true}
+          dataSource={dataSource(savedSessions)}
           columns={columns}
-          onRow={this.onRow}
-          rowClassName={this.getRowClassName}
-        />
+          onRow={(row) => ({onClick: () => handleCapsAndServer(row.key)})}
+          rowClassName={(row) => (capsUUID === row.key ? SessionStyles.selected : '')} />
       </Col>
-      <Col span={12}>
-        <FormattedCaps {...this.props}
-          title={capsUUID ? this.sessionFromUUID(capsUUID).name : null}
-        />
+      <Col span={12} className={SessionStyles.capsFormattedCol}>
+        <FormattedCaps {...props}
+          title={capsUUID ? sessionFromUUID(savedSessions, capsUUID).name : null} />
       </Col>
-    </Row>);
-  }
-}
+    </Row>
+  );
+};
+
+export default SavedSessions;
