@@ -288,13 +288,11 @@ Execute Script    ${scriptCmd}    &\{scriptArgument\}`;
   }
 
   codeFor_setOrientation (varNameIgnore, varIndexIgnore, orientation) {
-    let robotOrientation;
     if (orientation === 'LANDSCAPE') {
-      robotOrientation = 'Landscape';
+      return 'Landscape';
     } else if (orientation === 'PORTRAIT') {
-      robotOrientation = 'Portrait';
+      return 'Portrait';
     }
-    return robotOrientation;
   }
 
   codeFor_getGeoLocation () {
