@@ -439,6 +439,32 @@ export function newSession (caps, attachSessId = null) {
         desiredCapabilities['remotetestkit:options'] = {};
         desiredCapabilities['remotetestkit:options'].accessToken = session.server.remotetestkit.token;
         break;
+      } case ServerTypes.mobitru: {
+        const webDriverUrl = session.server.mobitru.webDriverUrl || process.env.MOBITRU_WEBDRIVER_URL || 'https://app.mobitru.com/wd/hub';
+        let mobitruUrl;
+        try {
+          mobitruUrl = new URL(webDriverUrl);
+        } catch (ign) {
+          showError(new Error(`${i18n.t('Invalid URL:')} ${webDriverUrl}`));
+          return false;
+        }
+        host = session.server.mobitru.hostname = mobitruUrl.hostname;
+        path = session.server.mobitru.path = mobitruUrl.pathname;
+        https = session.server.mobitru.ssl = mobitruUrl.protocol === 'https:';
+        port = session.server.mobitru.port = mobitruUrl.port === '' ? (https ? 443 : 80) : mobitruUrl.port;
+
+        username = session.server.mobitru.username || process.env.MOBITRU_BILLING_UNIT || 'personal';
+        accessKey = session.server.mobitru.accessKey || process.env.MOBUTRU_ACCESS_KEY;
+        if (!accessKey) {
+          showError(new Error(i18n.t('mobitruCredentialsRequired')));
+          return false;
+        }
+
+        if (!desiredCapabilities['mobitru:options']) {
+          desiredCapabilities['mobitru:options'] = {};
+        }
+        desiredCapabilities['mobitru:options'].source = 'appium-inspector';
+        break;
       }
 
       default:
