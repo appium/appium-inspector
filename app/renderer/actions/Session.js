@@ -454,7 +454,7 @@ export function newSession (caps, attachSessId = null) {
         port = session.server.mobitru.port = mobitruUrl.port === '' ? (https ? 443 : 80) : mobitruUrl.port;
 
         username = session.server.mobitru.username || process.env.MOBITRU_BILLING_UNIT || 'personal';
-        accessKey = session.server.mobitru.accessKey || process.env.MOBUTRU_ACCESS_KEY;
+        accessKey = session.server.mobitru.accessKey || process.env.MOBITRU_ACCESS_KEY;
         if (!accessKey) {
           showError(new Error(i18n.t('mobitruCredentialsRequired')));
           return false;

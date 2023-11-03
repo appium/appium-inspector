@@ -17,8 +17,8 @@ const mobitruBillingUnitPlaceholder = (t) => {
 };
 
 const mobitruAccessKeyPlaceholder = (t) => {
-  if (process.env.MOBUTRU_ACCESS_KEY) {
-    return t('usingDataFoundIn', {environmentVariable: 'MOBUTRU_ACCESS_KEY'});
+  if (process.env.MOBITRU_ACCESS_KEY) {
+    return t('usingDataFoundIn', {environmentVariable: 'MOBITRU_ACCESS_KEY'});
   }
   return t('yourAccessKey');
 };
