@@ -32,10 +32,8 @@ require 'appium_lib_core'
 caps = {}
 ${capStr}
 
-appium_lib_opts = {
-  server_url: "${this.serverUrl}"
-}
-driver = Appium::Core.for({caps: caps, appium_lib: appium_lib_opts}).start_driver
+core = Appium::Core.for url: "${this.serverUrl}", caps: caps
+driver = core.start_driver
 
 ${code}
 driver.quit`;
@@ -327,7 +325,7 @@ driver.quit`;
   }
 
   codeFor_getSettings () {
-    return `settings = driver.get_settings`;
+    return `settings = driver.settings.get`;
   }
 
   // Web
@@ -345,11 +343,11 @@ driver.quit`;
   }
 
   codeFor_forward () {
-    return `driver.forward`;
+    return `driver.navigate.forward`;
   }
 
   codeFor_refresh () {
-    return `driver.refresh`;
+    return `driver.navigate.refresh`;
   }
 
   // Context
@@ -363,7 +361,7 @@ driver.quit`;
   }
 
   codeFor_switchContext (varNameIgnore, varIndexIgnore, name) {
-    return `driver.set_context '${name}'`;
+    return `driver.context = '${name}'`;
   }
 }
 
