@@ -1,39 +1,51 @@
-const { logger } = require('@appium/support');
-const request = require('request');
 const path = require('path');
 const { createReadStream } = require('fs');
+const B = require('bluebird');
+const {
+  log, RESOURCES_ROOT, ORIGINAL_LANGUAGE, performApiRequest
+} = require('./crowdin-common');
 
-const log = logger.getLogger('CROWDIN');
+const RESOURCE_NAME = 'translation.json';
+const RESOURCE_PATH = path.resolve(RESOURCES_ROOT, ORIGINAL_LANGUAGE, RESOURCE_NAME);
 
-const PROJECT_ID = process.env.CROWDIN_PROJECT_ID;
-const PROJECT_KEY = process.env.CROWDIN_PROJECT_KEY;
-if (!PROJECT_ID || !PROJECT_KEY) {
-  throw new Error(`Both CROWDIN_PROJECT_ID and CROWDIN_PROJECT_KEY environment ` +
-    `variables must be set`);
+async function uploadToStorage() {
+  log.info(`Uploading '${RESOURCE_PATH}' to Crowdin`);
+  const {data: storageData} = await performApiRequest('/storages', {
+    method: 'POST',
+    headers: {
+      'Crowdin-API-FileName': encodeURIComponent(RESOURCE_NAME),
+    },
+    payload: createReadStream(RESOURCE_PATH),
+    isProjectSpecific: false,
+  });
+  log.info(`'${RESOURCE_NAME}' has been succesfully uploaded to Crowdin`);
+  return storageData.id;
 }
-const resourcePath = path.resolve('assets', 'locales', 'en', 'translation.json');
-const fieldName = `files[/${path.basename(resourcePath)}]`;
 
-const options = {
-  url: `https://api.crowdin.com/api/project/${PROJECT_ID}/update-file?key=${PROJECT_KEY}`,
-  port: 443,
-  method: 'POST',
-  headers: {
-    'User-Agent': 'Appium Inspector',
-  },
-  formData: {
-    [fieldName]: createReadStream(resourcePath)
+async function getFileId() {
+  const {data: filesData} = await performApiRequest('/files');
+  const mainFile = filesData.map(({data}) => data).find(({name}) => name === RESOURCE_NAME);
+  if (!mainFile) {
+    log.debug(JSON.stringify(filesData));
+    throw new Error(`Cannot determine the Crowdin identifier of the '${RESOURCE_NAME}' resource`);
   }
-};
+  return mainFile.id;
+}
 
-// eslint-disable-next-line promise/prefer-await-to-callbacks
-request(options, (err, res, body) => {
-  if (err) {
-    throw err;
-  }
+async function updateFile(fileId, storageId) {
+  log.info(`Updating the project with the newly uploaded '${RESOURCE_NAME}' instance`);
+  await performApiRequest(`/files/${fileId}`, {
+    method: 'PUT',
+    payload: {
+      storageId,
+    }
+  });
+}
 
-  log.debug(`Response code: ${res.statusCode}`);
-  if (res.statusCode >= 400) {
-    throw new Error(JSON.stringify(body));
-  }
-});
+async function main () {
+  const [storageId, fileId] = await B.all([uploadToStorage(), getFileId()]);
+  await updateFile(fileId, storageId);
+  log.info('All done');
+}
+
+(async () => await main())();

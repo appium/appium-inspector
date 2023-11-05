@@ -1,72 +1,54 @@
-const { logger, tempDir, fs, zip } = require('@appium/support');
-const request = require('request');
+const { tempDir, fs, zip, net } = require('@appium/support');
 const path = require('path');
-const { createWriteStream } = require('fs');
-const B = require('bluebird');
-const { asyncify } = require('asyncbox');
+const {
+  log, RESOURCES_ROOT, ORIGINAL_LANGUAGE, performApiRequest
+} = require('./crowdin-common');
+const { waitForCondition } = require('asyncbox');
 
-const log = logger.getLogger('CROWDIN');
+const BUILD_TIMEOUT_MS = 1000 * 60 * 10;
+const BUILD_STATUS = {
+  finished: 'finished',
+  created: 'created',
+  inProgress: 'inProgress',
+  canceled: 'canceled',
+  failed: 'failed',
+};
 
-const PROJECT_ID = process.env.CROWDIN_PROJECT_ID;
-const PROJECT_KEY = process.env.CROWDIN_PROJECT_KEY;
-if (!PROJECT_ID || !PROJECT_KEY) {
-  throw new Error(`Both CROWDIN_PROJECT_ID and CROWDIN_PROJECT_KEY environment ` +
-    `variables must be set`);
-}
-const RESOURCES_ROOT = path.resolve('assets', 'locales');
-const ORIGINAL_LANGUAGE = 'en';
-const USER_AGENT = 'Appium Desktop';
-
-async function exportTranslations () {
-  const options = {
-    url: `https://api.crowdin.com/api/project/${PROJECT_ID}/export?key=${PROJECT_KEY}`,
-    port: 443,
-    method: 'GET',
-    headers: {
-      'User-Agent': USER_AGENT,
-    },
-  };
-  return await new B((resolve, reject) => {
-    request(options)
-      .on('error', reject)
-      .on('response', (res) => {
-        if (res.statusCode >= 400) {
-          return reject(`Cannot export the translated resources in Crowdin. Error code: ${res.statusCode}`);
-        }
-        log.info(`Successfully exported Crowdin translations`);
-      })
-      .on('close', resolve);
+async function buildTranslations () {
+  log.info('Building project translations');
+  const {data: buildData} = await performApiRequest('/translations/builds', {
+    method: 'POST',
   });
+  return buildData.id;
 }
 
-async function downloadTranslations (dstPath) {
-  const options = {
-    url: `https://api.crowdin.com/api/project/${PROJECT_ID}/download/all.zip?key=${PROJECT_KEY}`,
-    port: 443,
-    method: 'GET',
-    headers: {
-      'User-Agent': USER_AGENT,
-    },
-  };
-  return await new B((resolve, reject) => {
-    request(options)
-      .on('error', reject)
-      .on('response', (res) => {
-        if (res.statusCode >= 400) {
-          return reject(`Cannot download the translated resources from Crowdin. Error code: ${res.statusCode}`);
-        }
-        log.info(`Successfully downloaded Crowdin translations`);
-      })
-      .pipe(createWriteStream(dstPath))
-      .on('close', resolve);
+async function downloadTranslations (buildId, dstPath) {
+  log.info(`Waiting up to ${BUILD_TIMEOUT_MS / 1000}s for the build #${buildId} to finish`);
+  await waitForCondition(async () => {
+    const {data: buildData} = await performApiRequest(`/translations/builds/${buildId}`);
+    switch (buildData.status) {
+      case BUILD_STATUS.finished:
+        return true;
+      case BUILD_STATUS.inProgress:
+      case BUILD_STATUS.created:
+        return false;
+      default:
+        throw new Error(`The translations build got an unexpected status '${buildData.status}'`);
+    }
+  }, {
+    waitMs: BUILD_TIMEOUT_MS,
+    intervalMs: 1000,
   });
+  const {data: downloadData} = await performApiRequest(`/translations/builds/${buildId}/download`);
+  log.info(`Downloading translations to '${dstPath}'`);
+  await net.downloadFile(downloadData.url, dstPath);
 }
 
 async function main () {
-  await exportTranslations();
+  const buildId = await buildTranslations();
   const zipPath = await tempDir.path({prefix: 'translations', suffix: '.zip'});
   try {
-    await downloadTranslations(zipPath);
+    await downloadTranslations(buildId, zipPath);
     const tmpRoot = await tempDir.openDir();
     try {
       await zip.extractAllTo(zipPath, tmpRoot);
@@ -77,10 +59,11 @@ async function main () {
         }
 
         const dstPath = path.resolve(RESOURCES_ROOT, name);
+        log.debug(`Moving '${currentPath}' to '${dstPath}'`);
         if (await fs.exists(dstPath)) {
           await fs.rimraf(dstPath);
         }
-        await fs.mv(currentPath, path.resolve(RESOURCES_ROOT, name), {
+        await fs.mv(currentPath, dstPath, {
           mkdirp: true
         });
         log.info(`Successfully updated resources for the '${name}' language`);
@@ -93,4 +76,4 @@ async function main () {
   }
 }
 
-asyncify(main);
+(async () => await main())();

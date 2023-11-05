@@ -1,0 +1,50 @@
+const { logger } = require('@appium/support');
+const axios = require('axios');
+const path = require('path');
+const _ = require('lodash');
+
+const log = logger.getLogger('CROWDIN');
+
+// https://developer.crowdin.com/api/v2/
+const PROJECT_ID = process.env.CROWDIN_PROJECT_ID;
+const API_TOKEN = process.env.CROWDIN_TOKEN;
+if (!PROJECT_ID || !API_TOKEN) {
+  throw new Error(
+    `Both CROWDIN_PROJECT_ID and CROWDIN_TOKEN environment variables must be set`
+  );
+}
+const RESOURCES_ROOT = path.resolve('assets', 'locales');
+const ORIGINAL_LANGUAGE = 'en';
+const USER_AGENT = 'Appium Inspector CI';
+const API_ROOT = 'https://api.crowdin.com/api/v2';
+
+async function performApiRequest(suffix = '', opts = {}) {
+  const {
+    method = 'GET',
+    payload,
+    headers,
+    isProjectSpecific = true,
+  } = opts;
+  const url = isProjectSpecific
+    ? `${API_ROOT}/projects/${PROJECT_ID}${suffix}`
+    : `${API_ROOT}${suffix}`;
+  log.debug(`Sending ${method} request to ${url}`);
+  if (_.isPlainObject(payload)) {
+    log.debug(`Request payload: ${JSON.stringify(payload)}`);
+  }
+  return (await axios({
+    method,
+    headers: {
+      Authorization: `Bearer ${API_TOKEN}`,
+      'Content-Type': 'application/json',
+      'User-Agent': USER_AGENT,
+      ...(headers || {}),
+    },
+    url,
+    data: payload,
+  })).data;
+}
+
+module.exports = {
+  log, RESOURCES_ROOT, ORIGINAL_LANGUAGE, performApiRequest,
+};
