@@ -139,8 +139,6 @@
     "format-json": "Abandoned: replace with alternatives like pretty-print-json",
     "htmlparser2": "8.0.0: errors with export namespace",
     "ky": "0.26.0: module is now ESM and parcel tries to bundle it with require",
-    "request": "Deprecated: replace with alternatives like got",
-    "request-promise": "Deprecated: replace with alternatives",
     "uuid": "Obsolete: can be replaced with crypto.randomUUID in Electron 14+"
   },
   "dependencies": {

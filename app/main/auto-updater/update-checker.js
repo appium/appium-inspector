@@ -9,10 +9,7 @@ export async function checkUpdate (currentVersion) {
     //    "notes":"* Bump up Appium to v1.15.0",
     //    "pub_date":"2019-10-04T04:40:37Z",
     //    "url":"https://github.com/appium/appium-desktop/releases/download/v1.15.0-1/Appium-1.15.0-1-mac.zip"}
-    const res = await axios({
-      method: 'GET',
-      url: getFeedUrl(currentVersion),
-    });
+    const res = await axios.get(getFeedUrl(currentVersion));
     if (res && semver.lt(currentVersion, res.name)) {
       return res;
     }
