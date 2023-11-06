@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { getLocators, APP_MODE } from '../components/Inspector/shared';
 import { showError } from './Session';
 import { xmlToJSON } from '../util';
-import { v4 as UUID } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import frameworks from '../lib/client-frameworks';
 import { getSetting, setSetting, SAVED_FRAMEWORK, SET_SAVED_GESTURES } from '../../shared/settings';
 import i18n from '../../configs/i18next.config.renderer';
@@ -809,7 +809,7 @@ export function saveGesture (params) {
   return async (dispatch) => {
     let savedGestures = await getSetting(SET_SAVED_GESTURES) || [];
     if (!params.id) {
-      params.id = UUID();
+      params.id = randomUUID();
       params.date = Date.now();
       savedGestures.push(params);
     } else {

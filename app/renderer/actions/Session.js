@@ -1,6 +1,6 @@
 import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE,
          SESSION_SERVER_PARAMS } from '../../shared/settings';
-import { v4 as UUID } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import { notification } from 'antd';
 import { includes, debounce, toPairs, union, without, keys, isUndefined, isPlainObject } from 'lodash';
 import { setSessionDetails, quitSession } from './Inspector';
@@ -591,7 +591,7 @@ export function saveSession (server, serverType, caps, params) {
     if (!uuid) {
 
       // If it's a new session, add it to the list
-      uuid = UUID();
+      uuid = randomUUID();
       let newSavedSession = {
         date: Date.now(),
         name,
