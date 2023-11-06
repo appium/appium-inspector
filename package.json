@@ -47,8 +47,8 @@
     "clean:browser": "rimraf dist-browser/ && rimraf .cache",
     "clean:npm": "rimraf package-lock.json && rimraf node_modules && npm install",
     "postversion": "git pull --tags && git push && git push --tags",
-    "crowdin-sync": "node ./ci-jobs/crowdin-sync-translations.js",
-    "crowdin-update": "node ./ci-jobs/crowdin-update-resources.js"
+    "crowdin-sync": "node ./ci-jobs/crowdin-sync-translations.mjs",
+    "crowdin-update": "node ./ci-jobs/crowdin-update-resources.mjs"
   },
   "build": {
     "productName": "Appium Inspector",
@@ -139,14 +139,13 @@
     "format-json": "Abandoned: replace with alternatives like pretty-print-json",
     "htmlparser2": "8.0.0: errors with export namespace",
     "ky": "0.26.0: module is now ESM and parcel tries to bundle it with require",
-    "request": "Deprecated: replace with alternatives like got",
-    "request-promise": "Deprecated: replace with alternatives",
     "uuid": "Obsolete: can be replaced with crypto.randomUUID in Electron 14+"
   },
   "dependencies": {
     "@reduxjs/toolkit": "1.9.7",
     "@xmldom/xmldom": "0.8.10",
     "antd": "4.24.14",
+    "axios": "1.6.0",
     "bluebird": "3.7.2",
     "cheerio": "1.0.0-rc.10",
     "electron-log": "4.4.8",
@@ -169,8 +168,6 @@
     "react-icons": "4.11.0",
     "react-redux": "8.1.3",
     "react-router-dom": "6.18.0",
-    "request": "2.88.2",
-    "request-promise": "4.2.6",
     "semver": "7.5.4",
     "uuid": "9.0.1",
     "web2driver": "3.0.4",

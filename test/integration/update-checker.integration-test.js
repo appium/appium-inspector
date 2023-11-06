@@ -1,7 +1,7 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
-import request from 'request-promise';
+import axios from 'axios';
 import { checkUpdate } from '../../app/main/auto-updater/update-checker';
 
 chai.should();
@@ -16,7 +16,10 @@ describe.skip('updateChecker', function () {
       return this.skip();
     }
     const latestReleaseUrl = `https://api.github.com/repos/appium/appium-inspector/releases/latest?access_token=${process.env.GITHUB_TOKEN}`;
-    const res = JSON.parse(await request.get(latestReleaseUrl, {headers: {'user-agent': 'node.js'}}));
+    const res = await axios({
+      url: latestReleaseUrl,
+      headers: {'user-agent': 'node.js'}
+    });
     latestVersion = res.name;
   });
 
@@ -32,7 +35,7 @@ describe.skip('updateChecker', function () {
       url.should.be.a.string;
     });
     it('should return false if request for update throws error', async function () {
-      let promiseStub = sinon.stub(request, 'get', () => { throw new Error(`Failed Request`); });
+      let promiseStub = sinon.stub(axios, 'get', () => { throw new Error(`Failed Request`); });
       await checkUpdate('v0.0.0').should.eventually.be.false;
       promiseStub.restore();
     });
