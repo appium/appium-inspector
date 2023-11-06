@@ -1,6 +1,5 @@
 import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE,
          SESSION_SERVER_PARAMS } from '../../shared/settings';
-import { randomUUID } from 'crypto';
 import { notification } from 'antd';
 import { includes, debounce, toPairs, union, without, keys, isUndefined, isPlainObject } from 'lodash';
 import { setSessionDetails, quitSession } from './Inspector';
@@ -12,7 +11,7 @@ import ky from 'ky/umd';
 import moment from 'moment';
 import { APP_MODE } from '../components/Inspector/shared';
 import { ipcRenderer, fs, util } from '../polyfills';
-import { getSaveableState } from '../../main/helpers';
+import { getSaveableState, uuidV4 } from '../../main/helpers';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_LOADING = 'NEW_SESSION_LOADING';
@@ -591,7 +590,7 @@ export function saveSession (server, serverType, caps, params) {
     if (!uuid) {
 
       // If it's a new session, add it to the list
-      uuid = randomUUID();
+      uuid = uuidV4();
       let newSavedSession = {
         date: Date.now(),
         name,

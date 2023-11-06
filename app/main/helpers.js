@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 const APPIUM_SESSION_FILE_VERSION = '1.0';
 
 export function getAppiumSessionFilePath (argv, isPackaged, isDev) {
@@ -24,6 +26,10 @@ export function getSaveableState (reduxState) {
     serverType: reduxState.serverType,
     visibleProviders: reduxState.visibleProviders,
   };
+}
+
+export function uuidV4() {
+  return randomUUID();
 }
 
 export const APPIUM_SESSION_EXTENSION = 'appiumsession';
