@@ -241,7 +241,7 @@
   "Save Capability Set As": "Сохранить набор возможностей как…",
   "Edit Raw JSON": "Изменить JSON",
   "Enter Parameters for:": "Введите параметры для:",
-  "invalidJson": "Невалдный JSON",
+  "invalidJson": "Неверный JSON",
   "Execute Script": "Выполнение скрипта",
   "App Management": "Управление приложениями",
   "Clipboard": "Буфер обмена",
