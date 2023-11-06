@@ -1,6 +1,6 @@
 import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE,
          SESSION_SERVER_PARAMS } from '../../shared/settings';
-import { randomUUID } from 'node:crypto';
+import { randomUUID } from 'crypto';
 import { notification } from 'antd';
 import { includes, debounce, toPairs, union, without, keys, isUndefined, isPlainObject } from 'lodash';
 import { setSessionDetails, quitSession } from './Inspector';
