@@ -93,21 +93,21 @@ Tap With Positions    $\{100}    $\{positions}`;
     return `Execute Script    ${scriptCmd}`;
   }
 
-  codeFor_executeScriptWithArgs (scriptCmd, jsonArg) {
+  codeFor_executeScriptWithArgs (scriptCmd, jsonArg, varAssignment = '') {
     // change the JSON object into a format accepted by Create Dictionary: a sequence of key=value
     const argsValuesStrings = _.map(jsonArg[0], (v, k) => `${k}=${this.getRobotVal(v)}`);
     return `&{scriptArgument}    Create Dictionary    ${argsValuesStrings.join('    ')}
-Execute Script    ${scriptCmd}    &{scriptArgument}`;
+${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
   }
 
   // App Management
 
   codeFor_getCurrentActivity () {
-    return '${activity_name} =    Get Activity';
+    return `$\{activity_name} =    ${this.codeFor_executeScriptNoArgs('mobile: getCurrentActivity')}`;
   }
 
   codeFor_getCurrentPackage () {
-    return '# Not supported: getCurrentPackage';
+    return `$\{package_name} =    ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
   }
 
   codeFor_installApp (varNameIgnore, varIndexIgnore, app) {
@@ -116,10 +116,6 @@ Execute Script    ${scriptCmd}    &{scriptArgument}`;
 
   codeFor_isAppInstalled () {
     return '# Not supported: isAppInstalled';
-  }
-
-  codeFor_background (varNameIgnore, varIndexIgnore, timeout) {
-    return `Background Application    $\{${timeout}}`;
   }
 
   codeFor_activateApp (varNameIgnore, varIndexIgnore, app) {
@@ -134,8 +130,12 @@ Execute Script    ${scriptCmd}    &{scriptArgument}`;
     return `Remove Application    ${app}`;
   }
 
-  codeFor_getStrings () {
-    return '# Not supported: getStrings';
+  codeFor_getStrings (varNameIgnore, varIndexIgnore, language) {
+    if (language === undefined) {
+      return `$\{app_strings} =    ${this.codeFor_executeScriptNoArgs('mobile: getAppStrings')}`;
+    } else {
+      return this.codeFor_executeScriptWithArgs('mobile: getAppStrings', [{language}], `$\{app_strings} =    `);
+    }
   }
 
   // Clipboard
@@ -164,28 +164,12 @@ Execute Script    ${scriptCmd}    &{scriptArgument}`;
 
   // Device Interaction
 
-  codeFor_shake () {
-    return 'Shake';
-  }
-
-  codeFor_lock (varNameIgnore, varIndexIgnore, seconds) {
-    return `Lock    $\{${seconds}}`;
-  }
-
-  codeFor_unlock () {
-    return '# Not supported: unlock';
-  }
-
   codeFor_isLocked () {
-    return '# Not supported: isLocked';
+    return `$\{is_locked} =    ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
   }
 
   codeFor_rotateDevice () {
     return '# Not supported: rotateDevice';
-  }
-
-  codeFor_fingerprint () {
-    return '# Not supported: fingerprint';
   }
 
   codeFor_touchId (varNameIgnore, varIndexIgnore, match) {
@@ -198,25 +182,11 @@ Execute Script    ${scriptCmd}    &{scriptArgument}`;
 
   // Keyboard
 
-  codeFor_pressKeyCode (varNameIgnore, varIndexIgnore, keyCode, metaState) {
-    return `Press Keycode    $\{${keyCode}}    $\{${metaState}}`;
-  }
-
-  codeFor_longPressKeyCode (varNameIgnore, varIndexIgnore, keyCode, metaState) {
-    return `Long Press Keycode    $\{${keyCode}}    $\{${metaState}}`;
-  }
-
-  codeFor_hideKeyboard () {
-    return 'Hide Keyboard';
-  }
-
   codeFor_isKeyboardShown () {
-    return '${is_keyboard_shown} =    Is Keyboard Shown';
+    return `$\{is_keyboard_shown} =    ${this.codeFor_executeScriptNoArgs('mobile: isKeyboardShown')}`;
   }
 
   // Connectivity
-
-  // Some unsupported methods may be replaced with 'Set Network Connection Status'
 
   codeFor_toggleAirplaneMode () {
     return '# Not supported: toggleAirplaneMode';
@@ -228,10 +198,6 @@ Execute Script    ${scriptCmd}    &{scriptArgument}`;
 
   codeFor_toggleWiFi () {
     return '# Not supported: toggleWifi';
-  }
-
-  codeFor_toggleLocationServices () {
-    return '# Not supported: toggleLocationServices';
   }
 
   codeFor_sendSMS () {
@@ -248,26 +214,6 @@ Execute Script    ${scriptCmd}    &{scriptArgument}`;
 
   codeFor_gsmVoice () {
     return '# Not supported: gsmVoice';
-  }
-
-  // Performance Data
-
-  codeFor_getPerformanceData () {
-    return '# Not supported: getPerformanceData';
-  }
-
-  codeFor_getPerformanceDataTypes () {
-    return '# Not supported: getPerformanceDataTypes';
-  }
-
-  // System
-
-  codeFor_openNotifications () {
-    return 'Open Notifications';
-  }
-
-  codeFor_getDeviceTime () {
-    return '# Not supported: getDeviceTime';
   }
 
   // Session
