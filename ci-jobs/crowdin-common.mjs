@@ -1,9 +1,9 @@
-const { logger } = require('@appium/support');
-const axios = require('axios');
-const path = require('path');
-const _ = require('lodash');
+import { logger } from '@appium/support';
+import axios from 'axios';
+import path from 'node:path';
+import _ from 'lodash';
 
-const log = logger.getLogger('CROWDIN');
+export const log = logger.getLogger('CROWDIN');
 
 // https://developer.crowdin.com/api/v2/
 const PROJECT_ID = process.env.CROWDIN_PROJECT_ID;
@@ -13,12 +13,12 @@ if (!PROJECT_ID || !API_TOKEN) {
     `Both CROWDIN_PROJECT_ID and CROWDIN_TOKEN environment variables must be set`
   );
 }
-const RESOURCES_ROOT = path.resolve('assets', 'locales');
-const ORIGINAL_LANGUAGE = 'en';
+export const RESOURCES_ROOT = path.resolve('assets', 'locales');
+export const ORIGINAL_LANGUAGE = 'en';
 const USER_AGENT = 'Appium Inspector CI';
 const API_ROOT = 'https://api.crowdin.com/api/v2';
 
-async function performApiRequest(suffix = '', opts = {}) {
+export async function performApiRequest(suffix = '', opts = {}) {
   const {
     method = 'GET',
     payload,
@@ -44,7 +44,3 @@ async function performApiRequest(suffix = '', opts = {}) {
     data: payload,
   })).data;
 }
-
-module.exports = {
-  log, RESOURCES_ROOT, ORIGINAL_LANGUAGE, performApiRequest,
-};

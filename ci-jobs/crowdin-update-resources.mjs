@@ -1,9 +1,9 @@
-const path = require('path');
-const { createReadStream } = require('fs');
-const B = require('bluebird');
-const {
+import path from 'node:path';
+import { createReadStream } from 'node:fs';
+import B from 'bluebird';
+import {
   log, RESOURCES_ROOT, ORIGINAL_LANGUAGE, performApiRequest
-} = require('./crowdin-common');
+} from './crowdin-common.mjs';
 
 const RESOURCE_NAME = 'translation.json';
 const RESOURCE_PATH = path.resolve(RESOURCES_ROOT, ORIGINAL_LANGUAGE, RESOURCE_NAME);

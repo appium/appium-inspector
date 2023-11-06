@@ -1,9 +1,9 @@
-const { tempDir, fs, zip, net } = require('@appium/support');
-const path = require('path');
-const {
+import { tempDir, fs, zip, net } from '@appium/support';
+import path from 'node:path';
+import {
   log, RESOURCES_ROOT, ORIGINAL_LANGUAGE, performApiRequest
-} = require('./crowdin-common');
-const { waitForCondition } = require('asyncbox');
+} from './crowdin-common.mjs';
+import { waitForCondition } from 'asyncbox';
 
 const BUILD_TIMEOUT_MS = 1000 * 60 * 10;
 const BUILD_STATUS = {
