@@ -129,10 +129,6 @@ driver.quit`;
     return `is_app_installed = driver.app_installed? '${app}'`;
   }
 
-  codeFor_background (varNameIgnore, varIndexIgnore, seconds) {
-    return this.codeFor_executeScriptWithArgs('mobile: backgroundApp', [{seconds}]);
-  }
-
   codeFor_activateApp (varNameIgnore, varIndexIgnore, app) {
     return `driver.activate_app '${app}'`;
   }
@@ -179,29 +175,12 @@ driver.quit`;
 
   // Device Interaction
 
-  codeFor_shake () {
-    return this.codeFor_executeScriptNoArgs('mobile: shake');
-  }
-
-  codeFor_lock (varNameIgnore, varIndexIgnore, seconds) {
-    return this.codeFor_executeScriptWithArgs('mobile: lock', [{seconds}]);
-  }
-
-  codeFor_unlock () {
-    // TODO: UiAutomator2 requires arguments, XCUITest does not
-    return this.codeFor_executeScriptNoArgs('mobile: unlock');
-  }
-
   codeFor_isLocked () {
     return `is_locked = ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
   }
 
   codeFor_rotateDevice () {
     return `# Not supported: rotateDevice`;
-  }
-
-  codeFor_fingerprint (varNameIgnore, varIndexIgnore, fingerprintId) {
-    return this.codeFor_executeScriptWithArgs('mobile: fingerprint', [{fingerprintId}]);
   }
 
   codeFor_touchId (varNameIgnore, varIndexIgnore, match) {
@@ -214,25 +193,11 @@ driver.quit`;
 
   // Keyboard
 
-  codeFor_pressKeyCode (varNameIgnore, varIndexIgnore, keycode, metastate, flags) {
-    return this.codeFor_executeScriptWithArgs('mobile: pressKey', [{keycode, metastate, flags}]);
-  }
-
-  codeFor_longPressKeyCode (varNameIgnore, varIndexIgnore, keycode, metastate, flags) {
-    return this.codeFor_executeScriptWithArgs('mobile: pressKey', [{keycode, metastate, flags, isLongPress: true}]);
-  }
-
-  codeFor_hideKeyboard () {
-    return this.codeFor_executeScriptNoArgs('mobile: hideKeyboard');
-  }
-
   codeFor_isKeyboardShown () {
     return `is_keyboard_shown = ${this.codeFor_executeScriptNoArgs('mobile: isKeyboardShown')}`;
   }
 
   // Connectivity
-
-  // TODO: use mobile: setConnectivity after adding it in GUI
 
   codeFor_toggleAirplaneMode () {
     return `driver.toggle_airplane_mode`;
@@ -244,10 +209,6 @@ driver.quit`;
 
   codeFor_toggleWiFi () {
     return `driver.toggle_wifi`;
-  }
-
-  codeFor_toggleLocationServices () {
-    return this.codeFor_executeScriptNoArgs('mobile: toggleGps');
   }
 
   codeFor_sendSMS (varNameIgnore, varIndexIgnore, phoneNumber, text) {
@@ -264,26 +225,6 @@ driver.quit`;
 
   codeFor_gsmVoice (varNameIgnore, varIndexIgnore, state) {
     return `driver.gsm_voice :${state}`;
-  }
-
-  // Performance Data
-
-  codeFor_getPerformanceData (varNameIgnore, varIndexIgnore, packageName, dataType) {
-    return this.codeFor_executeScriptWithArgs('mobile: getPerformanceData', [{packageName, dataType}]);
-  }
-
-  codeFor_getPerformanceDataTypes () {
-    return this.codeFor_executeScriptNoArgs('mobile: getPerformanceDataTypes');
-  }
-
-  // System
-
-  codeFor_openNotifications () {
-    return this.codeFor_executeScriptNoArgs('mobile: openNotifications');
-  }
-
-  codeFor_getDeviceTime () {
-    return this.codeFor_executeScriptNoArgs('mobile: getDeviceTime');
   }
 
   // Session
