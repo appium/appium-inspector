@@ -1,6 +1,7 @@
 import JsWdIoFramework from './js-wdio';
 import JsOxygenFramework from './js-oxygen';
-import JavaFramework from './java';
+import JavaJUnit4Framework from './java-junit4';
+import JavaJUnit5Framework from './java-junit5';
 import PythonFramework from './python';
 import RubyFramework from './ruby';
 import RobotFramework from './robot';
@@ -8,7 +9,8 @@ import RobotFramework from './robot';
 const frameworks = {
   jsWdIo: JsWdIoFramework,
   jsOxygen: JsOxygenFramework,
-  java: JavaFramework,
+  java: JavaJUnit4Framework,
+  javaJUnit5: JavaJUnit5Framework,
   python: PythonFramework,
   ruby: RubyFramework,
   robot: RobotFramework,
