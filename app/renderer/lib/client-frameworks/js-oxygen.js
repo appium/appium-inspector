@@ -80,11 +80,11 @@ ${code}`;
   // Execute Script
 
   codeFor_executeScriptNoArgs (scriptCmd) {
-    return `${this.type}.execute(${JSON.stringify(scriptCmd)});`;
+    return `${this.type}.getDriver().executeScript(${JSON.stringify(scriptCmd)});`;
   }
 
   codeFor_executeScriptWithArgs (scriptCmd, jsonArg) {
-    return `${this.type}.execute(${JSON.stringify(scriptCmd)}, ${JSON.stringify(jsonArg[0])});`;
+    return `${this.type}.getDriver().executeScript(${JSON.stringify(scriptCmd)}, ${JSON.stringify(jsonArg)});`;
   }
 
   // App Management
