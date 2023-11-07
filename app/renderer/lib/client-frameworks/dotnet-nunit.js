@@ -7,6 +7,19 @@ class DotNetNUnitFramework extends Framework {
     return 'csharp';
   }
 
+  getCSharpVal (jsonVal) {
+    if (Array.isArray(jsonVal)) {
+      const convertedItems = jsonVal.map((item) => this.getCSharpVal(item));
+      return `{${convertedItems.join(', ')}}`;
+    } else if (typeof jsonVal === 'object') {
+      const convertedItems = _.map(jsonVal, (v, k) =>
+        `{${JSON.stringify(k)}, ${this.getCSharpVal(v)}}`
+      );
+      return `new Dictionary<string, dynamic> {${convertedItems.join(', ')}}`;
+    }
+    return JSON.stringify(jsonVal);
+  }
+
   wrapWithBoilerplate (code) {
     let [pkg, cls] = (() => {
       if (this.caps.platformName) {
@@ -22,7 +35,7 @@ class DotNetNUnitFramework extends Framework {
       }
     })();
     let capStr = this.indent(_.map(this.caps, (v, k) =>
-      `options.AddAdditionalAppiumOption(${JSON.stringify(k)}, ${JSON.stringify(v)})`
+      `options.AddAdditionalAppiumOption(${JSON.stringify(k)}, ${this.getCSharpVal(v)})`
     ).join('\n'), 8);
 
     return `// This sample code supports Appium .NET client >=5
@@ -142,12 +155,8 @@ driver.PerformActions(new List<ActionSequence> { swipe });
   }
 
   codeFor_executeScriptWithArgs (scriptCmd, jsonArg) {
-    // change the JSON object into a format accepted by C# Dictionary: a sequence of tuples
-    // first create an array for each key-value pair
-    const argsValuesArray = _.toPairs(jsonArg[0]);
-    // then wrap each key-value array in curly brackets
-    const argsValuesStrings = argsValuesArray.map((kv) => `{${JSON.stringify(kv).slice(1, -1)}}`);
-    return `_driver.ExecuteScript(${JSON.stringify(scriptCmd)}, new Dictionary<string, dynamic> {${argsValuesStrings.join(', ')}});`;
+    // C# Dictionary accepts a sequence of tuples
+    return `_driver.ExecuteScript(${JSON.stringify(scriptCmd)}, ${this.getCSharpVal(jsonArg[0])});`;
   }
 
   // App Management
@@ -300,7 +309,7 @@ driver.PerformActions(new List<ActionSequence> { swipe });
     try {
       let settings = [];
       for (let [settingName, settingValue] of _.toPairs(settingsJson)) {
-        settings.push(`_driver.SetSetting("${settingName}", ${JSON.stringify(settingValue)});`);
+        settings.push(`_driver.SetSetting("${settingName}", ${this.getCSharpVal(settingValue)});`);
       }
       return settings.join('\n');
     } catch (e) {
