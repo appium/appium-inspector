@@ -1,3 +1,4 @@
+import DotNetNUnitFramework from './dotnet-nunit';
 import JsWdIoFramework from './js-wdio';
 import JsOxygenFramework from './js-oxygen';
 import JavaFramework from './java';
@@ -6,6 +7,7 @@ import RubyFramework from './ruby';
 import RobotFramework from './robot';
 
 const frameworks = {
+  dotNetNUnit: DotNetNUnitFramework,
   jsWdIo: JsWdIoFramework,
   jsOxygen: JsOxygenFramework,
   java: JavaFramework,
