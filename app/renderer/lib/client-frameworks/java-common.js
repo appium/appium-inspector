@@ -7,8 +7,8 @@ class JavaFramework extends Framework {
     return 'java';
   }
 
-  wrapWithBoilerplate (code) {
-    let [pkg, cls] = (() => {
+  getBoilerplateParams () {
+    const [pkg, cls] = (() => {
       if (this.caps.platformName) {
         switch (this.caps.platformName.toLowerCase()) {
           case 'ios': return ['ios', 'IOSDriver'];
@@ -23,52 +23,8 @@ class JavaFramework extends Framework {
         return ['unknownPlatform', 'UnknownDriver'];
       }
     })();
-    let capStr = this.indent(Object.keys(this.caps).map((k) => `.amend(${JSON.stringify(k)}, ${JSON.stringify(this.caps[k])})`).join('\n'), 6);
-    // Import everything from Selenium in order to use WebElement, Point and other classes.
-    return `
-// This sample code supports Appium Java client >=9
-// https://github.com/appium/java-client
-import io.appium.java_client.remote.options.BaseOptions;
-import io.appium.java_client.${pkg}.${cls};
-import java.net.URL;
-import java.time.Duration;
-import java.util.Arrays;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.openqa.selenium.*;
-
-public class SampleTest {
-
-  private ${cls} driver;
-
-  @Before
-  public void setUp() {
-    var options = new BaseOptions()
-${capStr};
-
-    private URL getUrl() {
-      try {
-        return new URL("${this.serverUrl}");
-      } catch (MalformedURLException e) {
-        e.printStackTrace();
-      }
-    }
-
-    driver = new ${cls}(this.getUrl(), options);
-  }
-
-  @Test
-  public void sampleTest() {
-${this.indent(code, 4)}
-  }
-
-  @After
-  public void tearDown() {
-    driver.quit();
-  }
-}
-`;
+    const capStr = this.indent(_.map(this.caps, (v, k) => `.amend(${JSON.stringify(k)}, ${JSON.stringify(v)})`).join('\n'), 6);
+    return [pkg, cls, capStr];
   }
 
   addComment(comment) {
@@ -419,7 +375,5 @@ driver.perform(Arrays.asList(swipe));
     return `driver.context("${name}");`;
   }
 }
-
-JavaFramework.readableName = 'Java - JUnit';
 
 export default JavaFramework;
