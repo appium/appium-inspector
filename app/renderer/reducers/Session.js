@@ -50,6 +50,7 @@ const INITIAL_STATE = {
     experitest: {},
     roboticmobi: {},
     remotetestkit: {},
+    mobitru: {},
   },
   attachSessId: null,
 
