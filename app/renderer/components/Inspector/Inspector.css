@@ -443,10 +443,10 @@
 }
 
 .recorded-code {
+    height: 100%;
     font-family: monospace;
     white-space: pre-wrap;
-    word-break: break-all;
-    margin-bottom: 20px;
+    word-break: break-word;
 }
 
 .framework-dropdown {

@@ -1,13 +1,13 @@
 import { clipboard } from '../../polyfills';
 import React from 'react';
-import { Card, Select, Tooltip, Button } from 'antd';
+import { Card, Select, Space, Tooltip, Button } from 'antd';
 import InspectorStyles from './Inspector.css';
 import frameworks from '../../lib/client-frameworks';
 import { highlight } from 'highlight.js';
-import { ExportOutlined, CopyOutlined, DeleteOutlined, CloseOutlined, CodeOutlined } from '@ant-design/icons';
+import { PicRightOutlined, CopyOutlined, ClearOutlined, CodeOutlined } from '@ant-design/icons';
 import { BUTTON } from '../AntdTypes';
 
-const RecordedActions = (props) => {
+const Recorder = (props) => {
   const { showBoilerplate, recordedActions, actionFramework, t } = props;
 
   const code = (raw = true) => {
@@ -23,62 +23,47 @@ const RecordedActions = (props) => {
   };
 
   const actionBar = () => {
-    const { setActionFramework, toggleShowBoilerplate, clearRecording, closeRecorder, isRecording } = props;
+    const { setActionFramework, toggleShowBoilerplate, clearRecording } = props;
 
-    return <div>
+    return <Space size='middle'>
       {!!recordedActions.length &&
-        <Select defaultValue={actionFramework} onChange={setActionFramework}
-          className={InspectorStyles['framework-dropdown']} size="small">
-          {Object.keys(frameworks).map((f) =>
-            <Select.Option value={f} key={f}>{frameworks[f].readableName}</Select.Option>
-          )}
-        </Select>
-      }
-      {(!!recordedActions.length || !isRecording) &&
-        <Button.Group size="small">
-          {!!recordedActions.length &&
+        <Button.Group>
           <Tooltip title={t('Show/Hide Boilerplate Code')}>
             <Button
               onClick={toggleShowBoilerplate}
-              icon={<ExportOutlined/>}
+              icon={<PicRightOutlined/>}
               type={showBoilerplate ? BUTTON.PRIMARY : BUTTON.DEFAULT} />
           </Tooltip>
-          }
-          {!!recordedActions.length &&
           <Tooltip title={t('Copy code to clipboard')}>
             <Button
               icon={<CopyOutlined/>}
               onClick={() => clipboard.writeText(code())} />
           </Tooltip>
-          }
-          {!!recordedActions.length &&
           <Tooltip title={t('Clear Actions')}>
             <Button
-              icon={<DeleteOutlined/>}
+              icon={<ClearOutlined/>}
               onClick={clearRecording} />
           </Tooltip>
-          }
-          {!isRecording &&
-          <Tooltip title={t('Close Recorder')}>
-            <Button
-              icon={<CloseOutlined/>}
-              onClick={closeRecorder} />
-          </Tooltip>
-          }
         </Button.Group>
       }
-    </div>;
+      <Select defaultValue={actionFramework} onChange={setActionFramework}
+        className={InspectorStyles['framework-dropdown']}>
+        {Object.keys(frameworks).map((f) =>
+          <Select.Option value={f} key={f}>{frameworks[f].readableName}</Select.Option>
+        )}
+      </Select>
+    </Space>;
   };
 
   const highlightedCode = code(false);
 
   return (
     <Card title={<span><CodeOutlined /> {t('Recorder')}</span>}
-      className={InspectorStyles['recorded-actions']}
+      className={InspectorStyles['interaction-tab-card']}
       extra={actionBar()}>
       {!recordedActions.length &&
         <div className={InspectorStyles['no-recorded-actions']}>
-          {t('Perform some actions to see code show up here')}
+          {t('enableRecordingAndPerformActions')}
         </div>
       }
       {!!recordedActions.length &&
@@ -89,4 +74,4 @@ const RecordedActions = (props) => {
   );
 };
 
-export default RecordedActions;
+export default Recorder;
