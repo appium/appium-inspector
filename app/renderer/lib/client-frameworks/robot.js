@@ -95,7 +95,8 @@ Tap With Positions    $\{100}    $\{positions}`;
 
   codeFor_executeScriptWithArgs (scriptCmd, jsonArg, varAssignment = '') {
     // change the JSON object into a format accepted by Create Dictionary: a sequence of key=value
-    const argsValuesStrings = _.map(jsonArg[0], (v, k) => `${k}=${this.getRobotVal(v)}`);
+    const cleanedJson = _.omitBy(jsonArg[0], _.isUndefined);
+    const argsValuesStrings = _.map(cleanedJson, (v, k) => `${k}=${this.getRobotVal(v)}`);
     return `&{scriptArgument}    Create Dictionary    ${argsValuesStrings.join('    ')}
 ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
   }
