@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Table, Row, Col } from 'antd';
 import SessionCodeBox from './SessionCodeBox';
 import InspectorStyles from './Inspector.css';
-import formatJSON from 'format-json';
 
 const SESSION_OBJ = {
   session_id: 'Session ID', session_url: 'Session URL',
@@ -59,7 +58,7 @@ const SessionInfo = (props) => {
         (text) => generateSessionInfo(text)
         :
         (text) => typeof text === 'object' ?
-          <pre>{formatJSON.plain(text)}</pre>
+          <pre>{JSON.stringify(text, null, 2)}</pre>
           :
           String(text)
     }];

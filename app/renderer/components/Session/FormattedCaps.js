@@ -1,5 +1,4 @@
 import React from 'react';
-import formatJSON from 'format-json';
 import SessionStyles from './Session.css';
 import { Card, Button, Alert, Tooltip } from 'antd';
 import { getCapsObject } from '../../actions/Session.js';
@@ -14,7 +13,7 @@ const FormattedCaps = (props) => {
           isValidCapsJson, invalidCapsJsonReason, t } = props;
 
   const getHighlightedCaps = (caps) => {
-    const formattedJson = formatJSON.plain(getCapsObject(caps));
+    const formattedJson = JSON.stringify(getCapsObject(caps), null, 2);
     return hljs.highlight(formattedJson, {language: 'json'}).value
   }
 
