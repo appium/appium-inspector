@@ -432,7 +432,7 @@
 
 .recorded-code {
     height: 100%;
-    font-family: monospace;
+    margin: 0;
     white-space: pre-wrap;
     word-break: break-word;
 }

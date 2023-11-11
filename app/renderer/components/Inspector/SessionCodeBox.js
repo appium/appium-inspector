@@ -3,7 +3,7 @@ import { Card, Tooltip, Button, Select, Space } from 'antd';
 import { CopyOutlined, CodeOutlined } from '@ant-design/icons';
 import InspectorStyles from './Inspector.css';
 import frameworks from '../../lib/client-frameworks';
-import { highlight } from 'highlight.js';
+import hljs from 'highlight.js';
 import { clipboard } from '../../polyfills';
 
 const SessionCodeBox = ({ actionFramework, setActionFramework, sessionDetails, t }) => {
@@ -16,7 +16,7 @@ const SessionCodeBox = ({ actionFramework, setActionFramework, sessionDetails, t
       return rawCode;
     }
 
-    return highlight(framework.language, rawCode, true).value;
+    return hljs.highlight(rawCode, {language: framework.language}).value;
   };
 
   const actionBar = () => <Space size='middle'>
@@ -36,7 +36,9 @@ const SessionCodeBox = ({ actionFramework, setActionFramework, sessionDetails, t
   return (
     <Card title={<span><CodeOutlined /> {t('Start this Kind of Session with Code')}</span>}
       extra={actionBar()}>
-      <div className={InspectorStyles['recorded-code']} dangerouslySetInnerHTML={{__html: code(false)}} />
+      <pre className={InspectorStyles['recorded-code']}>
+        <code dangerouslySetInnerHTML={{__html: code(false)}} />
+      </pre>
     </Card>
   );
 };

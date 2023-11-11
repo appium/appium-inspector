@@ -78,9 +78,7 @@ const SessionInfo = (props) => {
           </Col>
         </Row>
         <div className={InspectorStyles['session-code-box']}>
-          <Row>
-            <SessionCodeBox {...props} />
-          </Row>
+          <SessionCodeBox {...props} />
         </div>
       </div>
       :

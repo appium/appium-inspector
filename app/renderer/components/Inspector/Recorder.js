@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, Select, Space, Tooltip, Button } from 'antd';
 import InspectorStyles from './Inspector.css';
 import frameworks from '../../lib/client-frameworks';
-import { highlight } from 'highlight.js';
+import hljs from 'highlight.js';
 import { PicRightOutlined, CopyOutlined, ClearOutlined, CodeOutlined } from '@ant-design/icons';
 import { BUTTON } from '../AntdTypes';
 
@@ -19,7 +19,7 @@ const Recorder = (props) => {
     if (raw) {
       return rawCode;
     }
-    return highlight(framework.language, rawCode, true).value;
+    return hljs.highlight(rawCode, {language: framework.language}).value;
   };
 
   const actionBar = () => {
@@ -55,8 +55,6 @@ const Recorder = (props) => {
     </Space>;
   };
 
-  const highlightedCode = code(false);
-
   return (
     <Card title={<span><CodeOutlined /> {t('Recorder')}</span>}
       className={InspectorStyles['interaction-tab-card']}
@@ -67,8 +65,9 @@ const Recorder = (props) => {
         </div>
       }
       {!!recordedActions.length &&
-        <div className={InspectorStyles['recorded-code']}
-          dangerouslySetInnerHTML={{__html: highlightedCode}} />
+        <pre className={InspectorStyles['recorded-code']}>
+          <code dangerouslySetInnerHTML={{__html: code(false)}} />
+        </pre>
       }
     </Card>
   );
