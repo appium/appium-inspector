@@ -14,8 +14,8 @@ const FormattedCaps = (props) => {
 
   const getHighlightedCaps = (caps) => {
     const formattedJson = JSON.stringify(getCapsObject(caps), null, 2);
-    return hljs.highlight(formattedJson, {language: 'json'}).value
-  }
+    return hljs.highlight(formattedJson, {language: 'json'}).value;
+  };
 
   const setCapsTitle = () => {
     const { setDesiredCapsName } = props;
