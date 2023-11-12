@@ -6,6 +6,7 @@
   "zh-CN": "Chinês",
   "ko": "Coreano",
   "hi": "हिंदी",
+  "hu": "Magyar",
   "kn": "ಕನ್ನಡ",
   "ml-IN": "മലയാളം",
   "pa-IN": "ਪੰਜਾਬੀ",
@@ -269,5 +270,9 @@
   "Native App Mode": "Modo nativo do app",
   "Web/Hybrid App Mode": "Modo Web / Híbrido do App",
   "autoAddPrefixes": "Adicionar automaticamente os prefixos necessários do fornecedor de Appium ao iniciar",
-  "attachSessionNotRunning": "Não foi possível confirmar que a sessão {{attachSessId}} está em execução no servidor fornecido. Por favor, verifique os detalhes antes de tentar anexar a sessão novamente."
+  "attachSessionNotRunning": "Não foi possível confirmar que a sessão {{attachSessId}} está em execução no servidor fornecido. Por favor, verifique os detalhes antes de tentar anexar a sessão novamente.",
+  "Mobitru WebDriver URL": "Mobitru WebDriver URL",
+  "Mobitru Billing Unit": "Mobitru Billing Unit",
+  "Mobitru Access Key": "Mobitru Access Key",
+  "mobitruCredentialsRequired": "Mobitru Access Key is required"
 }

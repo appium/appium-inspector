@@ -6,6 +6,7 @@
   "zh-CN": "中文",
   "ko": "한국어",
   "hi": "हिन्दी",
+  "hu": "Угорська",
   "kn": "ಕನ್ನಡ",
   "ml-IN": "മലയാളം",
   "pa-IN": "ਪੰਜਾਬੀ",
@@ -269,5 +270,9 @@
   "Native App Mode": "Нативний режим додатку",
   "Web/Hybrid App Mode": "Режим додатку Web/Hybrid",
   "autoAddPrefixes": "Автоматично додавати необхідні префікси Appium при запуску",
-  "attachSessionNotRunning": "Не вдалося підтвердити, що сесія {{attachSessId}} працює на вказаному сервері. Будь ласка, перевірте деталі перед тим, як намагатися приєднатися до сеансу знову."
+  "attachSessionNotRunning": "Не вдалося підтвердити, що сесія {{attachSessId}} працює на вказаному сервері. Будь ласка, перевірте деталі перед тим, як намагатися приєднатися до сеансу знову.",
+  "Mobitru WebDriver URL": "Mobitru WebDriver посилання",
+  "Mobitru Billing Unit": "Платіжний блок Mobitru",
+  "Mobitru Access Key": "Mobitru ключ доступу",
+  "mobitruCredentialsRequired": "Потрібен ключ доступу Mobitru"
 }
