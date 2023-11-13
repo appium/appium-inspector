@@ -1,16 +1,21 @@
 import React from 'react';
-import formatJSON from 'format-json';
 import SessionStyles from './Session.css';
 import { Card, Button, Alert, Tooltip } from 'antd';
 import { getCapsObject } from '../../actions/Session.js';
 import { CloseOutlined, SaveOutlined, EditOutlined } from '@ant-design/icons';
 import { ALERT } from '../AntdTypes';
+import hljs from 'highlight.js';
 
 const FormattedCaps = (props) => {
   const { caps, title, desiredCapsName, isEditingDesiredCapsName,
           isEditingDesiredCaps, startDesiredCapsEditor, abortDesiredCapsEditor,
           saveRawDesiredCaps, setRawDesiredCaps, rawDesiredCaps,
           isValidCapsJson, invalidCapsJsonReason, t } = props;
+
+  const getHighlightedCaps = (caps) => {
+    const formattedJson = JSON.stringify(getCapsObject(caps), null, 2);
+    return hljs.highlight(formattedJson, {language: 'json'}).value;
+  };
 
   const setCapsTitle = () => {
     const { setDesiredCapsName } = props;
@@ -88,7 +93,9 @@ const FormattedCaps = (props) => {
       {!isValidCapsJson && <Alert message={invalidCapsJsonReason} type={ALERT.ERROR} />}
     </div>}
     {!isEditingDesiredCaps && <div className={SessionStyles.formattedCapsBody}>
-      <pre>{formatJSON.plain(getCapsObject(caps))}</pre>
+      <pre>
+        <code dangerouslySetInnerHTML={{__html: getHighlightedCaps(caps)}} />
+      </pre>
     </div>}
   </Card>;
 };
