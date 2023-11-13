@@ -7,6 +7,20 @@ class JavaFramework extends Framework {
     return 'java';
   }
 
+  getJavaVal (jsonVal) {
+    if (Array.isArray(jsonVal)) {
+      const convertedItems = jsonVal.map((item) => this.getJavaVal(item));
+      return `{${convertedItems.join(', ')}}`;
+    } else if (typeof jsonVal === 'object') {
+      const cleanedJson = _.omitBy(jsonVal, _.isUndefined);
+      const convertedItems = _.map(cleanedJson, (v, k) =>
+        `Map.entry(${JSON.stringify(k)}, ${this.getJavaVal(v)})`
+      );
+      return `Map.ofEntries(${convertedItems.join(', ')})`;
+    }
+    return JSON.stringify(jsonVal);
+  }
+
   getBoilerplateParams () {
     const [pkg, cls] = (() => {
       if (this.caps.platformName) {
@@ -23,7 +37,7 @@ class JavaFramework extends Framework {
         return ['unknownPlatform', 'UnknownDriver'];
       }
     })();
-    const capStr = this.indent(_.map(this.caps, (v, k) => `.amend(${JSON.stringify(k)}, ${JSON.stringify(v)})`).join('\n'), 6);
+    const capStr = this.indent(_.map(this.caps, (v, k) => `.amend(${JSON.stringify(k)}, ${this.getJavaVal(v)})`).join('\n'), 6);
     return [pkg, cls, capStr];
   }
 
@@ -112,22 +126,18 @@ driver.perform(Arrays.asList(swipe));
   }
 
   codeFor_executeScriptWithArgs (scriptCmd, jsonArg) {
-    // change the JSON object into a format accepted by Map.ofEntries: a sequence of Map.entry(key, value)
-    // first create an array for each key-value pair
-    const argsValuesArray = _.toPairs(jsonArg[0]);
-    // then wrap each key-value array in Map.entry()
-    const argsValuesStrings = argsValuesArray.map((kv) => `Map.entry(${JSON.stringify(kv).slice(1, -1)})`);
-    return `driver.executeScript("${scriptCmd}", Map.ofEntries(${argsValuesStrings.join(', ')}));`;
+    // Java dictionary needs to use the Map.ofEntries(Map.entry() ...) syntax
+    return `driver.executeScript("${scriptCmd}", ${this.getJavaVal(jsonArg[0])};`;
   }
 
   // App Management
 
   codeFor_getCurrentActivity () {
-    return `var activityName = driver.currentActivity();`;
+    return `var activityName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentActivity')}`;
   }
 
   codeFor_getCurrentPackage () {
-    return `var packageName = driver.currentPackage();`;
+    return `var packageName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
   }
 
   codeFor_installApp (varNameIgnore, varIndexIgnore, app) {
@@ -136,10 +146,6 @@ driver.perform(Arrays.asList(swipe));
 
   codeFor_isAppInstalled (varNameIgnore, varIndexIgnore, app) {
     return `var isAppInstalled = driver.isAppInstalled("${app}");`;
-  }
-
-  codeFor_background (varNameIgnore, varIndexIgnore, timeout) {
-    return `driver.runAppInBackground(Duration.ofSeconds(${timeout}));`;
   }
 
   codeFor_activateApp (varNameIgnore, varIndexIgnore, app) {
@@ -185,28 +191,12 @@ driver.perform(Arrays.asList(swipe));
 
   // Device Interaction
 
-  codeFor_shake () {
-    return `driver.shake();`;
-  }
-
-  codeFor_lock (varNameIgnore, varIndexIgnore, seconds) {
-    return `driver.lockDevice(${seconds});`;
-  }
-
-  codeFor_unlock () {
-    return `driver.unlockDevice();`;
-  }
-
   codeFor_isLocked () {
-    return `var isLocked = driver.isDeviceLocked();`;
+    return `var isLocked = ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
   }
 
   codeFor_rotateDevice (varNameIgnore, varIndexIgnore, x, y, radius, rotation, touchCount, duration) {
     return `driver.rotate(new DeviceRotation(${x}, ${y}, ${radius}, ${rotation}, ${touchCount}, ${duration}));`;
-  }
-
-  codeFor_fingerprint (varNameIgnore, varIndexIgnore, fingerprintId) {
-    return `driver.fingerPrint(${fingerprintId});`;
   }
 
   codeFor_touchId (varNameIgnore, varIndexIgnore, match) {
@@ -218,18 +208,6 @@ driver.perform(Arrays.asList(swipe));
   }
 
   // Keyboard
-
-  codeFor_pressKeyCode (varNameIgnore, varIndexIgnore, keyCode, metaState, flags) {
-    return `driver.pressKeyCode(${keyCode}, ${metaState}, ${flags});`;
-  }
-
-  codeFor_longPressKeyCode (varNameIgnore, varIndexIgnore, keyCode, metaState, flags) {
-    return `driver.longPressKeyCode(${keyCode}, ${metaState}, ${flags});`;
-  }
-
-  codeFor_hideKeyboard () {
-    return `driver.hideKeyboard();`;
-  }
 
   codeFor_isKeyboardShown () {
     return `var isKeyboardShown = driver.isKeyboardShown();`;
@@ -249,10 +227,6 @@ driver.perform(Arrays.asList(swipe));
     return `driver.toggleWifi();`;
   }
 
-  codeFor_toggleLocationServices () {
-    return `driver.toggleLocationServices();`;
-  }
-
   codeFor_sendSMS (varNameIgnore, varIndexIgnore, phoneNumber, text) {
     return `driver.sendSMS("${phoneNumber}", "${text}");`;
   }
@@ -267,26 +241,6 @@ driver.perform(Arrays.asList(swipe));
 
   codeFor_gsmVoice (varNameIgnore, varIndexIgnore, state) {
     return `driver.setGsmVoice("${state}");`;
-  }
-
-  // Performance Data
-
-  codeFor_getPerformanceData (varNameIgnore, varIndexIgnore, packageName, dataType, dataReadTimeout) {
-    return `var performanceData = driver.getPerformanceData("${packageName}", "${dataType}", ${dataReadTimeout});`;
-  }
-
-  codeFor_getPerformanceDataTypes () {
-    return `var performanceTypes = driver.getPerformanceDataTypes();`;
-  }
-
-  // System
-
-  codeFor_openNotifications () {
-    return `driver.openNotifications();`;
-  }
-
-  codeFor_getDeviceTime () {
-    return `var time = driver.getDeviceTime();`;
   }
 
   // Session
@@ -325,11 +279,11 @@ driver.perform(Arrays.asList(swipe));
 
   codeFor_updateSettings (varNameIgnore, varIndexIgnore, settingsJson) {
     try {
-      let settings = '';
-      for (let [settingName, settingValue] of _.toPairs(JSON.parse(settingsJson))) {
-        settings += `driver.setSetting("${settingName}", "${settingValue}");\n`;
+      let settings = [];
+      for (let [settingName, settingValue] of _.toPairs(settingsJson)) {
+        settings.push(`driver.setSetting("${settingName}", ${this.getJavaVal(settingValue)});`);
       }
-      return settings;
+      return settings.join('\n');
     } catch (e) {
       return `// Could not parse: ${settingsJson}`;
     }

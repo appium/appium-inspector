@@ -20,7 +20,7 @@ class JsOxygenFramework extends Framework {
 // Then paste this into a .js file and run with:
 // oxygen <file>.js
 
-const caps = ${JSON.stringify(this.caps)};
+const caps = ${JSON.stringify(this.caps, null, 2)};
 const appiumUrl = "${this.serverUrl}";
 ${this.type}.init(caps, appiumUrl);
 
@@ -49,9 +49,9 @@ ${code}`;
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `const ${localVar} = mob.findElements(${JSON.stringify(`${strategy}:${locator}`)});`;
+      return `const ${localVar} = ${this.type}.findElements(${JSON.stringify(`${strategy}:${locator}`)});`;
     } else {
-      return `const ${localVar} = mob.findElement(${JSON.stringify(`${strategy}:${locator}`)});`;
+      return `const ${localVar} = ${this.type}.findElement(${JSON.stringify(`${strategy}:${locator}`)});`;
     }
   }
 
