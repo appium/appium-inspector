@@ -195,7 +195,6 @@
     "@babel/preset-env": "7.23.3",
     "@babel/preset-react": "7.23.3",
     "@babel/register": "7.22.15",
-    "@types/react-router-dom": "5.3.3",
     "asyncbox": "3.0.0",
     "chai": "4.3.10",
     "chai-as-promised": "7.1.1",
