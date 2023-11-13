@@ -13,7 +13,8 @@ class RubyFramework extends Framework {
       const convertedItems = jsonVal.map((item) => this.getRubyVal(item));
       return `[${convertedItems.join(', ')}]`;
     } else if (typeof jsonVal === 'object') {
-      const convertedItems = _.map(jsonVal, (v, k) =>
+      const cleanedJson = _.omitBy(jsonVal, _.isUndefined);
+      const convertedItems = _.map(cleanedJson, (v, k) =>
         `${k}: ${this.getRubyVal(v)}`
       );
       return `{${convertedItems.join(', ')}}`;

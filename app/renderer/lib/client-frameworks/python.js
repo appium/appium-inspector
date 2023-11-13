@@ -1,4 +1,5 @@
 import Framework from './framework';
+import _ from 'lodash';
 
 class PythonFramework extends Framework {
 
@@ -13,8 +14,9 @@ class PythonFramework extends Framework {
       const convertedItems = jsonVal.map((item) => this.getPythonVal(item));
       return `[${convertedItems.join(', ')}]`;
     } else if (typeof jsonVal === 'object') {
-      const convertedItems = Object.keys(jsonVal).map((k) =>
-        `${JSON.stringify(k)}: ${this.getPythonVal(jsonVal[k])}`
+      const cleanedJson = _.omitBy(jsonVal, _.isUndefined);
+      const convertedItems = _.map(cleanedJson, (v, k) =>
+        `${JSON.stringify(k)}: ${this.getPythonVal(v)}`
       );
       return `{${convertedItems.join(', ')}}`;
     }
@@ -22,7 +24,7 @@ class PythonFramework extends Framework {
   }
 
   wrapWithBoilerplate (code) {
-    let optionsStr = Object.keys(this.caps).map((k) => `${JSON.stringify(k)}: ${this.getPythonVal(this.caps[k])}`).join(',\n\t');
+    let optionsStr = _.map(this.caps, (v, k) => `${JSON.stringify(k)}: ${this.getPythonVal(v)}`).join(',\n\t');
     optionsStr = `{\n\t${optionsStr}\n}`;
     return `# This sample code supports Appium Python client >=2.3.0
 # pip install Appium-Python-Client
@@ -116,7 +118,6 @@ actions.perform()
     return `driver.execute_script('${scriptCmd}')`;
   }
 
-
   codeFor_executeScriptWithArgs (scriptCmd, jsonArg) {
     return `driver.execute_script('${scriptCmd}', ${this.getPythonVal(jsonArg[0])})`;
   }
@@ -124,11 +125,11 @@ actions.perform()
   // App Management
 
   codeFor_getCurrentActivity () {
-    return `activity_name = driver.current_activity`;
+    return `activity_name = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentActivity')}`;
   }
 
   codeFor_getCurrentPackage () {
-    return `package_name = driver.current_package`;
+    return `package_name = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
   }
 
   codeFor_installApp (varNameIgnore, varIndexIgnore, app) {
@@ -137,10 +138,6 @@ actions.perform()
 
   codeFor_isAppInstalled (varNameIgnore, varIndexIgnore, app) {
     return `is_app_installed = driver.is_app_installed('${app}')`;
-  }
-
-  codeFor_background (varNameIgnore, varIndexIgnore, timeout) {
-    return `driver.background_app(${timeout})`;
   }
 
   codeFor_activateApp (varNameIgnore, varIndexIgnore, app) {
@@ -185,28 +182,12 @@ actions.perform()
 
   // Device Interaction
 
-  codeFor_shake () {
-    return `driver.shake()`;
-  }
-
-  codeFor_lock (varNameIgnore, varIndexIgnore, seconds) {
-    return `driver.lock(${seconds})`;
-  }
-
-  codeFor_unlock () {
-    return `driver.unlock()`;
-  }
-
   codeFor_isLocked () {
-    return `is_locked = driver.is_locked()`;
+    return `is_locked = ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
   }
 
   codeFor_rotateDevice () {
     return `# Not supported: rotate device`;
-  }
-
-  codeFor_fingerprint (varNameIgnore, varIndexIgnore, fingerprintId) {
-    return `driver.finger_print(${fingerprintId})`;
   }
 
   codeFor_touchId (varNameIgnore, varIndexIgnore, match) {
@@ -218,18 +199,6 @@ actions.perform()
   }
 
   // Keyboard
-
-  codeFor_pressKeyCode (varNameIgnore, varIndexIgnore, keyCode, metaState, flags) {
-    return `driver.press_keycode(${keyCode}, ${metaState}, ${flags})`;
-  }
-
-  codeFor_longPressKeyCode (varNameIgnore, varIndexIgnore, keyCode, metaState, flags) {
-    return `driver.long_press_keycode(${keyCode}, ${metaState}, ${flags})`;
-  }
-
-  codeFor_hideKeyboard () {
-    return `driver.hide_keyboard()`;
-  }
 
   codeFor_isKeyboardShown () {
     return `is_keyboard_shown = driver.is_keyboard_shown()`;
@@ -249,10 +218,6 @@ actions.perform()
     return `driver.toggle_wifi()`;
   }
 
-  codeFor_toggleLocationServices () {
-    return `driver.toggle_location_services()`;
-  }
-
   codeFor_sendSMS (varNameIgnore, varIndexIgnore, phoneNumber, text) {
     return `driver.send_sms('${phoneNumber}', '${text}')`;
   }
@@ -267,26 +232,6 @@ actions.perform()
 
   codeFor_gsmVoice (varNameIgnore, varIndexIgnore, state) {
     return `driver.set_gsm_voice('${state}')`;
-  }
-
-  // Performance Data
-
-  codeFor_getPerformanceData (varNameIgnore, varIndexIgnore, packageName, dataType, dataReadTimeout) {
-    return `performance_data = driver.get_performance_data('${packageName}', '${dataType}', ${dataReadTimeout})`;
-  }
-
-  codeFor_getPerformanceDataTypes () {
-    return `performance_types = driver.get_performance_data_types()`;
-  }
-
-  // System
-
-  codeFor_openNotifications () {
-    return `driver.open_notifications();`;
-  }
-
-  codeFor_getDeviceTime () {
-    return `time = driver.device_time()`;
   }
 
   // Session
@@ -324,7 +269,7 @@ actions.perform()
   }
 
   codeFor_updateSettings (varNameIgnore, varIndexIgnore, settingsJson) {
-    return `driver.update_settings(${settingsJson}))`;
+    return `driver.update_settings(${this.getPythonVal(settingsJson)}))`;
   }
 
   codeFor_getSettings () {

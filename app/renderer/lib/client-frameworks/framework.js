@@ -125,10 +125,7 @@ export default class Framework {
     const argNames = ['appPackage', 'appActivity', 'appWaitPackage', 'intentAction', 'intentCategory',
       'intentFlags', 'optionalIntentArguments', 'dontStopAppOnReset'];
     // zip argument names and values into a JSON object, so that we can reuse executeScript
-    const argsJsonObject = _.zipObject(argNames, args);
-    // filter out arguments with no values
-    const cleanedArgsJson = _.omitBy(argsJsonObject, _.isUndefined);
-    return this.codeFor_executeScriptWithArgs('mobile: startActivity', [cleanedArgsJson]);
+    return this.codeFor_executeScriptWithArgs('mobile: startActivity', [_.zipObject(argNames, args)]);
   }
 
   codeFor_background (varNameIgnore, varIndexIgnore, seconds) {
