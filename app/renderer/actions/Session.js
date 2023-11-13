@@ -867,14 +867,10 @@ export function getRunningSessions () {
     try {
       const adjPath = path.endsWith('/') ? path : `${path}/`;
       const url = `http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`;
-      const res = username && accessKey
-        ? await axios({url, headers: {
-          'Authorization': `Basic ${btoa(`${username}:${accessKey}`)}`,
-          'content-type': HEADERS_CONTENT
-        }})
-        : await axios({url, headers: {
-          'content-type': HEADERS_CONTENT
-        }});
+      const res = await axios({url, headers: {
+        'content-type': HEADERS_CONTENT,
+        ...(username && accessKey ? {'Authorization': `Basic ${btoa(`${username}:${accessKey}`)}`} : {})
+      }});
       dispatch({type: GET_SESSIONS_DONE, sessions: res.data.value});
     } catch (err) {
       console.warn(`Ignoring error in getting list of active sessions: ${err}`); // eslint-disable-line no-console
