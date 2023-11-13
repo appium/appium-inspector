@@ -136,7 +136,6 @@
     "bluebird": "Deprecated: recommended to replace with native promises",
     "cheerio": "1.0.0-rc.11: errors with export namespace",
     "electron-settings": "V5: need to rewrite to IPC while keeping browser version working",
-    "format-json": "Abandoned: replace with alternatives like pretty-print-json",
     "htmlparser2": "8.0.0: errors with export namespace",
     "ky": "0.26.0: module is now ESM and parcel tries to bundle it with require",
     "uuid": "Obsolete: can be replaced with crypto.randomUUID in Electron 14+"
@@ -151,7 +150,6 @@
     "electron-log": "4.4.8",
     "electron-settings": "4.0.2",
     "electron-updater": "6.1.4",
-    "format-json": "1.0.3",
     "highlight.js": "11.9.0",
     "htmlparser2": "7.2.0",
     "i18next": "23.7.3",

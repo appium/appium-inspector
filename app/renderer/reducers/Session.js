@@ -1,5 +1,4 @@
 import _, {omit} from 'lodash';
-import formatJSON from 'format-json';
 
 import { NEW_SESSION_REQUESTED, NEW_SESSION_LOADING, NEW_SESSION_DONE,
          SAVE_SESSION_REQUESTED, SAVE_SESSION_DONE,
@@ -291,7 +290,7 @@ export default function session (state = INITIAL_STATE, action) {
       return {
         ...state,
         isEditingDesiredCaps: true,
-        rawDesiredCaps: formatJSON.plain(
+        rawDesiredCaps: JSON.stringify(
           // Translate the caps definition to a proper capabilities JS Object
           _.reduce(
             state.caps,
@@ -300,7 +299,7 @@ export default function session (state = INITIAL_STATE, action) {
               [obj.name]: obj.value,
             }),
             {}
-          )
+          ), null, 2
         ),
         isValidCapsJson: true,
         isValidatingCapsJson: false, // Don't start validating JSON until the user has attempted to save the JSON

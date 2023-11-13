@@ -11,8 +11,7 @@ import {
   ReloadOutlined,
   PlayCircleOutlined,
   PauseCircleOutlined,
-  EyeOutlined,
-  PauseOutlined,
+  VideoCameraOutlined,
   SearchOutlined,
   CloseOutlined,
   AppstoreOutlined,
@@ -126,12 +125,12 @@ const HeaderButtons = (props) => {
     </Tooltip>
     {!isRecording &&
       <Tooltip title={t('Start Recording')}>
-        <Button id='btnStartRecording' icon={<EyeOutlined/>} onClick={startRecording}/>
+        <Button id='btnStartRecording' icon={<VideoCameraOutlined/>} onClick={startRecording}/>
       </Tooltip>
     }
     {isRecording &&
       <Tooltip title={t('Pause Recording')}>
-        <Button id='btnPause' icon={<PauseOutlined/>} type={BUTTON.DANGER} onClick={pauseRecording}/>
+        <Button id='btnPause' icon={<VideoCameraOutlined/>} type={BUTTON.DANGER} onClick={pauseRecording}/>
       </Tooltip>
     }
   </Button.Group>;

@@ -169,23 +169,11 @@
     float: right;
 }
 
-.inspector-main .recorded-actions {
-    margin-bottom: 12px;
-    max-height: 40%;
-    min-height: 30%;
-    flex: 1;
-}
-
 ._inspector-main_0387c .ant-card-body {
     height: 100%;
     padding: 12px;
 }
 
-.inspector-main .recorded-actions :global(.ant-btn-group) {
-    margin-left: 10px;
-}
-
-.inspector-main .recorded-actions :global(.ant-card-body),
 .inspector-main .interaction-tab-card :global(.ant-card-body) {
     overflow: scroll;
 }
@@ -443,10 +431,10 @@
 }
 
 .recorded-code {
-    font-family: monospace;
+    height: 100%;
+    margin: 0;
     white-space: pre-wrap;
-    word-break: break-all;
-    margin-bottom: 20px;
+    word-break: break-word;
 }
 
 .framework-dropdown {
