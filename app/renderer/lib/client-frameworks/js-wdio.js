@@ -6,13 +6,6 @@ class JsWdIoFramework extends Framework {
     return 'js';
   }
 
-  chainifyCode (code) {
-    return code
-      .replace(/let .+ = /g, '')
-      .replace(/(\n|^)(driver|el[0-9]+)\./g, '\n.')
-      .replace(/;\n/g, '\n');
-  }
-
   wrapWithBoilerplate (code) {
     return `// This sample code supports WebdriverIO client >=7
 // (npm i --save webdriverio)
