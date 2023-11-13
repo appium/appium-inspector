@@ -14,7 +14,7 @@ class JsWdIoFramework extends Framework {
 
 import {remote} from 'webdriverio';
 async function main () {
-  const caps = ${JSON.stringify(this.caps)}
+  const caps = ${JSON.stringify(this.caps, null, 2)}
   const driver = await remote({
     protocol: "${this.scheme}",
     hostname: "${this.host}",

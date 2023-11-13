@@ -20,7 +20,7 @@ class JsOxygenFramework extends Framework {
 // Then paste this into a .js file and run with:
 // oxygen <file>.js
 
-const caps = ${JSON.stringify(this.caps)};
+const caps = ${JSON.stringify(this.caps, null, 2)};
 const appiumUrl = "${this.serverUrl}";
 ${this.type}.init(caps, appiumUrl);
 
