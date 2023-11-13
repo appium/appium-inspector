@@ -137,7 +137,6 @@
     "cheerio": "1.0.0-rc.11: errors with export namespace",
     "electron-settings": "V5: need to rewrite to IPC while keeping browser version working",
     "htmlparser2": "8.0.0: errors with export namespace",
-    "ky": "0.26.0: module is now ESM and parcel tries to bundle it with require",
     "uuid": "Obsolete: can be replaced with crypto.randomUUID in Electron 14+"
   },
   "dependencies": {
@@ -157,7 +156,6 @@
     "i18next-fs-backend": "2.3.0",
     "i18next-http-backend": "2.4.1",
     "i18next-localstorage-backend": "4.2.0",
-    "ky": "0.25.1",
     "lodash": "4.17.21",
     "moment": "2.29.4",
     "react": "18.2.0",

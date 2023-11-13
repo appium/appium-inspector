@@ -8,7 +8,7 @@ import i18n from '../../configs/i18next.config.renderer';
 import CloudProviders from '../components/Session/CloudProviders';
 import { Web2Driver } from 'web2driver';
 import { addVendorPrefixes } from '../util';
-import ky from 'ky/umd';
+import axios from 'axios';
 import moment from 'moment';
 import { APP_MODE } from '../components/Inspector/shared';
 import { ipcRenderer, fs, util } from '../polyfills';
@@ -531,7 +531,7 @@ export function newSession (caps, attachSessId = null) {
           const {protocol, hostname, port, path} = serverOpts;
           try {
             const detailsUrl = `${protocol}://${hostname}:${port}${path.replace(/\/$/, '')}/session/${attachSessId}`;
-            attachedSessionCaps = (await ky(detailsUrl).json()).value;
+            attachedSessionCaps = (await axios(detailsUrl).data).value;
           } catch (err) {
             // rethrow the error as session not running, but first log the original error to
             // console
@@ -867,16 +867,18 @@ export function getRunningSessions () {
     try {
       const adjPath = path.endsWith('/') ? path : `${path}/`;
       const res = username && accessKey
-        ? await ky(`http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`, {
+        ? await axios({
+          url: `http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`,
           headers: {
             'Authorization': `Basic ${btoa(`${username}:${accessKey}`)}`,
             'content-type': HEADERS_CONTENT
           }
-        }).json()
-        : await ky(`http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`, {
+        })
+        : await axios({
+          url: `http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`,
           headers: {'content-type': HEADERS_CONTENT}
-        }).json();
-      dispatch({type: GET_SESSIONS_DONE, sessions: res.value});
+        });
+      dispatch({type: GET_SESSIONS_DONE, sessions: res.data.value});
     } catch (err) {
       console.warn(`Ignoring error in getting list of active sessions: ${err}`); // eslint-disable-line no-console
       dispatch({type: GET_SESSIONS_DONE});
