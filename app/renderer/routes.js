@@ -12,7 +12,7 @@ ipcRenderer.on('appium-language-changed', (event, message) => {
   }
 });
 
-export default () => (
+const AllRoutes = () => (
   <Suspense fallback={<Spinner />}>
     <Routes>
       <Route path="/" element={<SessionPage />} />
@@ -21,3 +21,5 @@ export default () => (
     </Routes>
   </Suspense>
 );
+
+export default AllRoutes;

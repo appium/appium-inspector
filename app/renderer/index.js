@@ -17,9 +17,9 @@ if (module.hot) {
   module.hot.accept('./containers/Root', () => {
     const NextRoot = require('./containers/Root').default;
     root.render(
-      <AppContainer>
+      <ErrorBoundary>
         <NextRoot store={store} />
-      </AppContainer>
+      </ErrorBoundary>
     );
   });
 }
