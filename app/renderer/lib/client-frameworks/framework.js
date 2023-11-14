@@ -1,9 +1,8 @@
-import { DEFAULT_TAP, DEFAULT_SWIPE } from '../../components/Inspector/shared';
+import {DEFAULT_TAP, DEFAULT_SWIPE} from '../../components/Inspector/shared';
 import _ from 'lodash';
 
 export default class Framework {
-
-  constructor (host, port, path, https, caps) {
+  constructor(host, port, path, https, caps) {
     this.host = host || 'localhost';
     this.port = port || 4723;
     this.path = path || '/wd/hub';
@@ -16,12 +15,12 @@ export default class Framework {
     this.lastAssignedVar = null;
   }
 
-  getTapCoordinatesFromPointerActions (pointerActions) {
+  getTapCoordinatesFromPointerActions(pointerActions) {
     const pointerMoveAction = pointerActions[DEFAULT_TAP.POINTER_NAME][0];
     return {x: pointerMoveAction.x, y: pointerMoveAction.y};
   }
 
-  getSwipeCoordinatesFromPointerActions (pointerActions) {
+  getSwipeCoordinatesFromPointerActions(pointerActions) {
     const pointerMoveActionStart = pointerActions[DEFAULT_SWIPE.POINTER_NAME][0];
     const pointerMoveActionEnd = pointerActions[DEFAULT_SWIPE.POINTER_NAME][2];
 
@@ -29,15 +28,15 @@ export default class Framework {
       x1: pointerMoveActionStart.x,
       y1: pointerMoveActionStart.y,
       x2: pointerMoveActionEnd.x,
-      y2: pointerMoveActionEnd.y
+      y2: pointerMoveActionEnd.y,
     };
   }
 
-  get serverUrl () {
+  get serverUrl() {
     return `${this.scheme}://${this.host}:${this.port}${this.path === '/' ? '' : this.path}`;
   }
 
-  indent (str, spaces) {
+  indent(str, spaces) {
     let lines = str.split('\n');
     let spaceStr = '';
     for (let i = 0; i < spaces; i++) {
@@ -49,7 +48,7 @@ export default class Framework {
       .join('\n');
   }
 
-  getCodeString (includeBoilerplate = false) {
+  getCodeString(includeBoilerplate = false) {
     let str = '';
     let code;
     for (let {action, params} of this.actions) {
@@ -69,12 +68,12 @@ export default class Framework {
     return str;
   }
 
-  getNewLocalVar () {
+  getNewLocalVar() {
     this.localVarCount++;
     return `el${this.localVarCount}`;
   }
 
-  getVarForFind (strategy, locator) {
+  getVarForFind(strategy, locator) {
     const key = `${strategy}-${locator}`;
     let wasNew = false;
     if (!this.localVarCache[key]) {
@@ -85,21 +84,23 @@ export default class Framework {
     return [this.localVarCache[key], wasNew];
   }
 
-  getVarName (varName, varIndex) {
+  getVarName(varName, varIndex) {
     if (varIndex || varIndex === 0) {
       return `${varName}[${varIndex}]`;
     }
     return varName;
   }
 
-  handleUnsupportedLocatorStrategy (strategy, locator) {
-    return this.addComment(`Code generation for locator strategy '${strategy}' ` +
-      `(selector '${locator}') is not currently supported`);
+  handleUnsupportedLocatorStrategy(strategy, locator) {
+    return this.addComment(
+      `Code generation for locator strategy '${strategy}' ` +
+        `(selector '${locator}') is not currently supported`,
+    );
   }
 
   // Common entrypoints for code generation
 
-  codeFor_findElement (strategy, locator) {
+  codeFor_findElement(strategy, locator) {
     let [localVar, wasNew] = this.getVarForFind(strategy, locator);
     if (!wasNew) {
       // if we've already found this element, don't print out
@@ -111,7 +112,7 @@ export default class Framework {
 
   // Execute Script
 
-  codeFor_executeScript (varNameIgnore, varIndexIgnore, scriptCmd, jsonArg) {
+  codeFor_executeScript(varNameIgnore, varIndexIgnore, scriptCmd, jsonArg) {
     // jsonArg is expected to be an array with 0-1 objects
     if (_.isEmpty(jsonArg)) {
       return this.codeFor_executeScriptNoArgs(scriptCmd);
@@ -121,75 +122,88 @@ export default class Framework {
 
   // App Management
 
-  codeFor_startActivity (varNameIgnore, varIndexIgnore, ...args) {
-    const argNames = ['appPackage', 'appActivity', 'appWaitPackage', 'intentAction', 'intentCategory',
-      'intentFlags', 'optionalIntentArguments', 'dontStopAppOnReset'];
+  codeFor_startActivity(varNameIgnore, varIndexIgnore, ...args) {
+    const argNames = [
+      'appPackage',
+      'appActivity',
+      'appWaitPackage',
+      'intentAction',
+      'intentCategory',
+      'intentFlags',
+      'optionalIntentArguments',
+      'dontStopAppOnReset',
+    ];
     // zip argument names and values into a JSON object, so that we can reuse executeScript
-    return this.codeFor_executeScriptWithArgs('mobile: startActivity', [_.zipObject(argNames, args)]);
+    return this.codeFor_executeScriptWithArgs('mobile: startActivity', [
+      _.zipObject(argNames, args),
+    ]);
   }
 
-  codeFor_background (varNameIgnore, varIndexIgnore, seconds) {
+  codeFor_background(varNameIgnore, varIndexIgnore, seconds) {
     return this.codeFor_executeScriptWithArgs('mobile: backgroundApp', [{seconds}]);
   }
 
   // Device Interaction
 
-  codeFor_shake () {
+  codeFor_shake() {
     return this.codeFor_executeScriptNoArgs('mobile: shake');
   }
 
-  codeFor_lock (varNameIgnore, varIndexIgnore, seconds) {
+  codeFor_lock(varNameIgnore, varIndexIgnore, seconds) {
     return this.codeFor_executeScriptWithArgs('mobile: lock', [{seconds}]);
   }
 
-  codeFor_unlock () {
+  codeFor_unlock() {
     // TODO: UiAutomator2 requires arguments, XCUITest does not
     return this.codeFor_executeScriptNoArgs('mobile: unlock');
   }
 
-  codeFor_fingerprint (varNameIgnore, varIndexIgnore, fingerprintId) {
+  codeFor_fingerprint(varNameIgnore, varIndexIgnore, fingerprintId) {
     return this.codeFor_executeScriptWithArgs('mobile: fingerprint', [{fingerprintId}]);
   }
 
   // Keyboard
 
-  codeFor_pressKeyCode (varNameIgnore, varIndexIgnore, keycode, metastate, flags) {
+  codeFor_pressKeyCode(varNameIgnore, varIndexIgnore, keycode, metastate, flags) {
     return this.codeFor_executeScriptWithArgs('mobile: pressKey', [{keycode, metastate, flags}]);
   }
 
-  codeFor_longPressKeyCode (varNameIgnore, varIndexIgnore, keycode, metastate, flags) {
-    return this.codeFor_executeScriptWithArgs('mobile: pressKey', [{keycode, metastate, flags, isLongPress: true}]);
+  codeFor_longPressKeyCode(varNameIgnore, varIndexIgnore, keycode, metastate, flags) {
+    return this.codeFor_executeScriptWithArgs('mobile: pressKey', [
+      {keycode, metastate, flags, isLongPress: true},
+    ]);
   }
 
-  codeFor_hideKeyboard () {
+  codeFor_hideKeyboard() {
     return this.codeFor_executeScriptNoArgs('mobile: hideKeyboard');
   }
 
   // Connectivity
   // TODO: use mobile: setConnectivity after adding it in GUI
 
-  codeFor_toggleLocationServices () {
+  codeFor_toggleLocationServices() {
     return this.codeFor_executeScriptNoArgs('mobile: toggleGps');
   }
 
   // Performance Data
 
-  codeFor_getPerformanceData (varNameIgnore, varIndexIgnore, packageName, dataType) {
-    return this.codeFor_executeScriptWithArgs('mobile: getPerformanceData', [{packageName, dataType}]);
+  codeFor_getPerformanceData(varNameIgnore, varIndexIgnore, packageName, dataType) {
+    return this.codeFor_executeScriptWithArgs('mobile: getPerformanceData', [
+      {packageName, dataType},
+    ]);
   }
 
-  codeFor_getPerformanceDataTypes () {
+  codeFor_getPerformanceDataTypes() {
     return this.codeFor_executeScriptNoArgs('mobile: getPerformanceDataTypes');
   }
 
   // System
 
-  codeFor_openNotifications () {
+  codeFor_openNotifications() {
     return this.codeFor_executeScriptNoArgs('mobile: openNotifications');
   }
 
-  codeFor_getDeviceTime () {
+  codeFor_getDeviceTime() {
     return this.codeFor_executeScriptNoArgs('mobile: getDeviceTime');
   }
-
 }
