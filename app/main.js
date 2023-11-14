@@ -1,7 +1,7 @@
-import { app } from 'electron';
-import { installExtensions } from './main/debug';
-import { setupMainWindow } from './main/windows';
-import { getAppiumSessionFilePath } from './main/helpers';
+import {app} from 'electron';
+import {installExtensions} from './main/debug';
+import {setupMainWindow} from './main/windows';
+import {getAppiumSessionFilePath} from './main/helpers';
 
 const isDev = process.env.NODE_ENV === 'development';
 

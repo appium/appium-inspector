@@ -1,13 +1,13 @@
-import { BrowserWindow, dialog, ipcMain, Menu, webContents } from 'electron';
-import { APPIUM_SESSION_EXTENSION } from './helpers';
-import { rebuildMenus } from './menus';
-import { openFilePath } from '../main';
+import {BrowserWindow, dialog, ipcMain, Menu, webContents} from 'electron';
+import {APPIUM_SESSION_EXTENSION} from './helpers';
+import {rebuildMenus} from './menus';
+import {openFilePath} from '../main';
 import i18n from '../configs/i18next.config';
 import settings from '../shared/settings';
 
 let mainWindow = null;
 
-function buildSplashWindow () {
+function buildSplashWindow() {
   return new BrowserWindow({
     width: 300,
     height: 300,
@@ -17,7 +17,7 @@ function buildSplashWindow () {
   });
 }
 
-function buildSessionWindow () {
+function buildSessionWindow() {
   const window = new BrowserWindow({
     show: false,
     width: 1100,
@@ -34,11 +34,9 @@ function buildSessionWindow () {
   });
 
   ipcMain.on('save-file-as', async () => {
-    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+    const {canceled, filePath} = await dialog.showSaveDialog(mainWindow, {
       title: 'Save Appium File',
-      filters: [
-        {name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]},
-      ]
+      filters: [{name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}],
     });
     if (!canceled) {
       mainWindow.webContents.send('save-file', filePath);
@@ -48,7 +46,7 @@ function buildSessionWindow () {
   return window;
 }
 
-export function setupMainWindow ({splashUrl, mainUrl, isDev, shouldShowFileMenu = false}) {
+export function setupMainWindow({splashUrl, mainUrl, isDev, shouldShowFileMenu = false}) {
   const splashWindow = buildSplashWindow();
   mainWindow = buildSessionWindow();
 
@@ -65,7 +63,6 @@ export function setupMainWindow ({splashUrl, mainUrl, isDev, shouldShowFileMenu 
     if (isDev) {
       mainWindow.openDevTools();
     }
-
   });
 
   mainWindow.on('closed', () => {
@@ -75,12 +72,14 @@ export function setupMainWindow ({splashUrl, mainUrl, isDev, shouldShowFileMenu 
   mainWindow.webContents.on('context-menu', (e, props) => {
     const {x, y} = props;
 
-    Menu.buildFromTemplate([{
-      label: i18n.t('Inspect element'),
-      click () {
-        mainWindow.inspectElement(x, y);
-      }
-    }]).popup(mainWindow);
+    Menu.buildFromTemplate([
+      {
+        label: i18n.t('Inspect element'),
+        click() {
+          mainWindow.inspectElement(x, y);
+        },
+      },
+    ]).popup(mainWindow);
   });
 
   i18n.on('languageChanged', async (languageCode) => {
@@ -96,7 +95,7 @@ export function setupMainWindow ({splashUrl, mainUrl, isDev, shouldShowFileMenu 
   rebuildMenus(mainWindow, shouldShowFileMenu);
 }
 
-export function launchNewSessionWindow () {
+export function launchNewSessionWindow() {
   const url = `file://${__dirname}/index.html`;
   const win = buildSessionWindow();
   win.loadURL(url);
