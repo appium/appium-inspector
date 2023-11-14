@@ -22,7 +22,7 @@
   "main": "dist/main.js",
   "scripts": {
     "test": "npm run test:lint && npm run test:unit && npm run test:integration",
-    "test:lint": "eslint app test",
+    "test:lint": "eslint .",
     "test:unit": "cross-env BUILD_BROWSER=1 E2E_TIMEOUT=600000 NODE_ENV=test RUNNING_IN_SPECTRON=true mocha --reporter mocha-multi-reporters --reporter-options configFile=./test/mochareporters.json ./test/unit",
     "test:integration": "cross-env BUILD_BROWSER=1 E2E_TIMEOUT=600000 NODE_ENV=test RUNNING_IN_SPECTRON=true mocha --reporter mocha-multi-reporters --reporter-options configFile=./test/mochareporters.json ./test/integration",
     "e2e": "cross-env E2E_TIMEOUT=600000 NODE_ENV=test RUNNING_IN_SPECTRON=true mocha --reporter mocha-multi-reporters --reporter-options configFile=./test/mochareporters.json ./test/e2e",

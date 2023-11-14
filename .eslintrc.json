@@ -1,5 +1,8 @@
 {
-  "extends": "@appium/eslint-config-appium",
+  "extends": [
+    "plugin:react/recommended",
+    "@appium/eslint-config-appium"
+  ],
   "parser": "@babel/eslint-parser",
   "plugins": [
     "import",
@@ -11,6 +14,15 @@
     "browser": true,
     "mocha": true,
     "node": true
+  },
+  "ignorePatterns": [
+    // node_modules, dotfolders and dotfiles are ignored by default
+    "dist"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   },
   "rules": {
     "@babel/arrow-parens": 0,
@@ -41,7 +53,7 @@
         "ignore": ["electron"]
       }
     ],
-    "require-await": 2,
+    "react/prop-types": 0,
     "react-native/no-inline-styles": 2
   }
 }
