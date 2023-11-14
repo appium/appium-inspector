@@ -1,8 +1,8 @@
 import path from 'path';
 import os from 'os';
-import { retryInterval } from 'asyncbox';
-import { Application } from 'spectron';
-import { fs, logger } from '@appium/support';
+import {retryInterval} from 'asyncbox';
+import {Application} from 'spectron';
+import {fs, logger} from '@appium/support';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
@@ -18,11 +18,38 @@ before(async function () {
   let args = [];
   if (process.env.SPECTRON_TEST_PROD_BINARIES) {
     if (platform === 'linux') {
-      appPath = path.join(__dirname, '..', '..', appName, 'release', 'linux-unpacked', 'appium-desktop');
+      appPath = path.join(
+        __dirname,
+        '..',
+        '..',
+        appName,
+        'release',
+        'linux-unpacked',
+        'appium-desktop',
+      );
     } else if (platform === 'darwin') {
-      appPath = path.join(__dirname, '..', '..', appName, 'release', 'mac', 'Appium.app', 'Contents', 'MacOS', 'Appium');
+      appPath = path.join(
+        __dirname,
+        '..',
+        '..',
+        appName,
+        'release',
+        'mac',
+        'Appium.app',
+        'Contents',
+        'MacOS',
+        'Appium',
+      );
     } else if (platform === 'win32') {
-      appPath = path.join(__dirname, '..', '..', appName, 'release', 'win-ia32-unpacked', 'Appium.exe');
+      appPath = path.join(
+        __dirname,
+        '..',
+        '..',
+        appName,
+        'release',
+        'win-ia32-unpacked',
+        'Appium.exe',
+      );
     }
   } else {
     appPath = require(path.join(__dirname, '..', '..', 'node_modules', 'electron'));

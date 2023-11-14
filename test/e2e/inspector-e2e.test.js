@@ -1,8 +1,8 @@
 import path from 'path';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { startServer as startAppiumFakeDriverServer } from '@appium/fake-driver';
-import { retryInterval } from 'asyncbox';
+import {startServer as startAppiumFakeDriverServer} from '@appium/fake-driver';
+import {retryInterval} from 'asyncbox';
 import InspectorPage from './pages/inspector-page-object';
 
 chai.should();
@@ -14,7 +14,7 @@ const FAKE_DRIVER_PATH = path.dirname(require.resolve('@appium/fake-driver'));
 const TEST_APP = path.resolve(FAKE_DRIVER_PATH, 'test', 'fixtures', 'app.xml');
 
 const DEFAULT_CAPS = {
-  'platformName': 'Fake',
+  platformName: 'Fake',
   'appium:deviceName': 'Fake',
   'appium:app': TEST_APP,
 };
@@ -22,7 +22,6 @@ const DEFAULT_CAPS = {
 let client;
 
 describe('inspector window', function () {
-
   let inspector, server;
 
   before(async function () {
@@ -56,12 +55,16 @@ describe('inspector window', function () {
   });
 
   it('shows content in "Selected Element" pane when clicking on an item in the Source inspector', async function () {
-    await (await client.$(inspector.selectedElementBody)).getHTML().should.eventually.contain('Select an element');
+    await (await client.$(inspector.selectedElementBody))
+      .getHTML()
+      .should.eventually.contain('Select an element');
     await (await client.$(inspector.sourceTreeNode)).waitForExist({timeout: 3000});
     await (await client.$(inspector.sourceTreeNode)).click();
     await (await client.$(inspector.tapSelectedElementButton)).waitForExist({timeout: 3000});
     await (await client.$(inspector.tapSelectedElementButton)).waitForEnabled({timeout: 4000});
-    await (await client.$(inspector.selectedElementBody)).getHTML().should.eventually.contain('btnTapElement');
+    await (await client.$(inspector.selectedElementBody))
+      .getHTML()
+      .should.eventually.contain('btnTapElement');
     await (await client.$(inspector.tapSelectedElementButton)).click();
   });
 

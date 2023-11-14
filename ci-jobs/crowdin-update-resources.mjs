@@ -1,9 +1,7 @@
 import path from 'node:path';
-import { createReadStream } from 'node:fs';
+import {createReadStream} from 'node:fs';
 import B from 'bluebird';
-import {
-  log, RESOURCES_ROOT, ORIGINAL_LANGUAGE, performApiRequest
-} from './crowdin-common.mjs';
+import {log, RESOURCES_ROOT, ORIGINAL_LANGUAGE, performApiRequest} from './crowdin-common.mjs';
 
 const RESOURCE_NAME = 'translation.json';
 const RESOURCE_PATH = path.resolve(RESOURCES_ROOT, ORIGINAL_LANGUAGE, RESOURCE_NAME);
@@ -38,11 +36,11 @@ async function updateFile(fileId, storageId) {
     method: 'PUT',
     payload: {
       storageId,
-    }
+    },
   });
 }
 
-async function main () {
+async function main() {
   const [storageId, fileId] = await B.all([uploadToStorage(), getFileId()]);
   await updateFile(fileId, storageId);
   log.info('All done');

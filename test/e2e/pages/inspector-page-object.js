@@ -1,35 +1,35 @@
 import _ from 'lodash';
-import { retryInterval } from 'asyncbox';
-import { setValueReact } from './utils';
+import {retryInterval} from 'asyncbox';
+import {setValueReact} from './utils';
 import BasePage from './base-page-object';
 
 export default class InspectorPage extends BasePage {
-  constructor (client) {
+  constructor(client) {
     super(client);
     Object.assign(this, InspectorPage.selectors);
   }
 
-  desiredCapabilityNameInput (rowIndex) {
+  desiredCapabilityNameInput(rowIndex) {
     return `#desiredCapabilityName_${rowIndex}`;
   }
 
-  desiredCapabilityValueInput (rowIndex) {
+  desiredCapabilityValueInput(rowIndex) {
     return `#desiredCapabilityValue_${rowIndex}`;
   }
 
-  async setCustomServerHost (host) {
+  async setCustomServerHost(host) {
     await this.setValueWithPlaceholder(this.customServerHost, host);
   }
 
-  async setCustomServerPort (port) {
+  async setCustomServerPort(port) {
     await this.setValueWithPlaceholder(this.customServerPort, port);
   }
 
-  async setCustomServerPath (path) {
+  async setCustomServerPath(path) {
     await this.setValueWithPlaceholder(this.customServerPath, path);
   }
 
-  async setValueWithPlaceholder (locator, value) {
+  async setValueWithPlaceholder(locator, value) {
     // for some reason, antd's placeholder based input fields screw with the way wdio or
     // chromedriver fills out the fields. so we need to set the value using some complicated
     // javascript. moreover this on its own isn't sufficient because it doesn't seem to trigger the
@@ -40,7 +40,7 @@ export default class InspectorPage extends BasePage {
     await (await this.client.$(locator)).click();
   }
 
-  async addDCaps (dcaps) {
+  async addDCaps(dcaps) {
     const dcapsPairs = _.toPairs(dcaps);
     for (let i = 0; i < dcapsPairs.length; i++) {
       const [name, value] = dcapsPairs[i];
@@ -50,30 +50,29 @@ export default class InspectorPage extends BasePage {
     }
   }
 
-  async startSession () {
+  async startSession() {
     await (await this.client.$(this.formSubmitButton)).click();
   }
 
-  async closeNotification () {
+  async closeNotification() {
     try {
       await retryInterval(5, 500, async () => {
         await (await this.client.$('.ant-notification-notice-close')).click();
       });
-    } catch (ign) { }
+    } catch (ign) {}
   }
 
-  async startRecording () {
+  async startRecording() {
     await (await this.client.$(this.startRecordingButton)).click();
   }
 
-  async pauseRecording () {
+  async pauseRecording() {
     await (await this.client.$(this.pauseRecordingButton)).click();
   }
 
-  async reload () {
+  async reload() {
     await (await this.client.$(this.reloadButton)).click();
   }
-
 }
 
 InspectorPage.selectors = {

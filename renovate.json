@@ -1,9 +1,5 @@
 {
-  "extends": [
-    "config:base",
-    ":semanticCommitTypeAll(chore)",
-    ":pinAllExceptPeerDependencies"
-  ],
+  "extends": ["config:base", ":semanticCommitTypeAll(chore)", ":pinAllExceptPeerDependencies"],
   "labels": ["dependencies"],
   "packageRules": [
     {
@@ -17,9 +13,7 @@
       "enabled": false
     },
     {
-      "matchPackageNames": [
-        "ky"
-      ],
+      "matchPackageNames": ["ky"],
       "matchUpdateTypes": ["minor"],
       "enabled": false
     }

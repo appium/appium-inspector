@@ -1,9 +1,7 @@
-import { tempDir, fs, zip, net } from '@appium/support';
+import {tempDir, fs, zip, net} from '@appium/support';
 import path from 'node:path';
-import {
-  log, RESOURCES_ROOT, ORIGINAL_LANGUAGE, performApiRequest
-} from './crowdin-common.mjs';
-import { waitForCondition } from 'asyncbox';
+import {log, RESOURCES_ROOT, ORIGINAL_LANGUAGE, performApiRequest} from './crowdin-common.mjs';
+import {waitForCondition} from 'asyncbox';
 
 const BUILD_TIMEOUT_MS = 1000 * 60 * 10;
 const BUILD_STATUS = {
@@ -14,7 +12,7 @@ const BUILD_STATUS = {
   failed: 'failed',
 };
 
-async function buildTranslations () {
+async function buildTranslations() {
   log.info('Building project translations');
   const {data: buildData} = await performApiRequest('/translations/builds', {
     method: 'POST',
@@ -22,29 +20,32 @@ async function buildTranslations () {
   return buildData.id;
 }
 
-async function downloadTranslations (buildId, dstPath) {
+async function downloadTranslations(buildId, dstPath) {
   log.info(`Waiting up to ${BUILD_TIMEOUT_MS / 1000}s for the build #${buildId} to finish`);
-  await waitForCondition(async () => {
-    const {data: buildData} = await performApiRequest(`/translations/builds/${buildId}`);
-    switch (buildData.status) {
-      case BUILD_STATUS.finished:
-        return true;
-      case BUILD_STATUS.inProgress:
-      case BUILD_STATUS.created:
-        return false;
-      default:
-        throw new Error(`The translations build got an unexpected status '${buildData.status}'`);
-    }
-  }, {
-    waitMs: BUILD_TIMEOUT_MS,
-    intervalMs: 1000,
-  });
+  await waitForCondition(
+    async () => {
+      const {data: buildData} = await performApiRequest(`/translations/builds/${buildId}`);
+      switch (buildData.status) {
+        case BUILD_STATUS.finished:
+          return true;
+        case BUILD_STATUS.inProgress:
+        case BUILD_STATUS.created:
+          return false;
+        default:
+          throw new Error(`The translations build got an unexpected status '${buildData.status}'`);
+      }
+    },
+    {
+      waitMs: BUILD_TIMEOUT_MS,
+      intervalMs: 1000,
+    },
+  );
   const {data: downloadData} = await performApiRequest(`/translations/builds/${buildId}/download`);
   log.info(`Downloading translations to '${dstPath}'`);
   await net.downloadFile(downloadData.url, dstPath);
 }
 
-async function main () {
+async function main() {
   const buildId = await buildTranslations();
   const zipPath = await tempDir.path({prefix: 'translations', suffix: '.zip'});
   try {
@@ -64,7 +65,7 @@ async function main () {
           await fs.rimraf(dstPath);
         }
         await fs.mv(currentPath, dstPath, {
-          mkdirp: true
+          mkdirp: true,
         });
         log.info(`Successfully updated resources for the '${name}' language`);
       }
