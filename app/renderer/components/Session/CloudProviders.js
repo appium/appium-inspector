@@ -32,70 +32,122 @@ import MobitruLogo from '../../images/mobitru_logo.svg';
 
 const CloudProviders = {
   sauce: {
-    tabhead: () => <span className={SessionStyles.tabText}><img src={SauceLogo} /></span>,
+    tabhead: () => (
+      <span className={SessionStyles.tabText}>
+        <img src={SauceLogo} />
+      </span>
+    ),
     tab: (props) => <ServerTabSauce {...props} />,
     logo: SauceLogo,
   },
   headspin: {
-    tabhead: () => <span className={SessionStyles.tabText}><img src={HeadSpinLogo} /></span>,
+    tabhead: () => (
+      <span className={SessionStyles.tabText}>
+        <img src={HeadSpinLogo} />
+      </span>
+    ),
     tab: (props) => <ServerTabHeadspin {...props} />,
     logo: HeadSpinLogo,
   },
   browserstack: {
-    tabhead: () => <span className={SessionStyles.tabText}><img src={BrowserStackLogo} /></span>,
+    tabhead: () => (
+      <span className={SessionStyles.tabText}>
+        <img src={BrowserStackLogo} />
+      </span>
+    ),
     tab: (props) => <ServerTabBrowserstack {...props} />,
     logo: BrowserStackLogo,
   },
   lambdatest: {
-    tabhead: () => <span className={SessionStyles.tabText}><img src={LambdaTestLogo} /></span>,
+    tabhead: () => (
+      <span className={SessionStyles.tabText}>
+        <img src={LambdaTestLogo} />
+      </span>
+    ),
     tab: (props) => <ServerTabLambdatest {...props} />,
     logo: LambdaTestLogo,
   },
   bitbar: {
-    tabhead: () => <span className={SessionStyles.tabText}><img src={BitBarLogo} /></span>,
+    tabhead: () => (
+      <span className={SessionStyles.tabText}>
+        <img src={BitBarLogo} />
+      </span>
+    ),
     tab: (props) => <ServerTabBitbar {...props} />,
     logo: BitBarLogo,
   },
   kobiton: {
-    tabhead: () => <span className={SessionStyles.tabText}><img src={KobitonLogo} /></span>,
+    tabhead: () => (
+      <span className={SessionStyles.tabText}>
+        <img src={KobitonLogo} />
+      </span>
+    ),
     tab: (props) => <ServerTabKobiton {...props} />,
     logo: KobitonLogo,
   },
   perfecto: {
-    tabhead: () => <span className={SessionStyles.tabText}><img src={PerfectoLogo} /></span>,
+    tabhead: () => (
+      <span className={SessionStyles.tabText}>
+        <img src={PerfectoLogo} />
+      </span>
+    ),
     tab: (props) => <ServerTabPerfecto {...props} />,
     logo: PerfectoLogo,
   },
   pcloudy: {
-    tabhead: () => <span className={SessionStyles.tabText}><img src={PcloudyLogo} /></span>,
+    tabhead: () => (
+      <span className={SessionStyles.tabText}>
+        <img src={PcloudyLogo} />
+      </span>
+    ),
     tab: (props) => <ServerTabPcloudy {...props} />,
     logo: PcloudyLogo,
   },
   testingbot: {
-    tabhead: () => <span className={SessionStyles.tabText}><img src={TestingBotLogo} /></span>,
+    tabhead: () => (
+      <span className={SessionStyles.tabText}>
+        <img src={TestingBotLogo} />
+      </span>
+    ),
     tab: (props) => <ServerTabTestingbot {...props} />,
     logo: TestingBotLogo,
   },
   experitest: {
-    tabhead: () => <span className={SessionStyles.tabText}><img src={ExperitestLogo} /></span>,
+    tabhead: () => (
+      <span className={SessionStyles.tabText}>
+        <img src={ExperitestLogo} />
+      </span>
+    ),
     tab: (props) => <ServerTabExperitest {...props} />,
     logo: ExperitestLogo,
   },
   roboticmobi: {
-    tabhead: () => <span className={SessionStyles.tabText}><img src={RobotQALogo} /></span>,
+    tabhead: () => (
+      <span className={SessionStyles.tabText}>
+        <img src={RobotQALogo} />
+      </span>
+    ),
     tab: (props) => <ServerTabRobotQA {...props} />,
     logo: RobotQALogo,
   },
   remotetestkit: {
-    tabhead: () => <span className={SessionStyles.tabText}><img src={RemoteTestKitLogo} /></span>,
+    tabhead: () => (
+      <span className={SessionStyles.tabText}>
+        <img src={RemoteTestKitLogo} />
+      </span>
+    ),
     tab: (props) => <ServerTabRemoteTestKit {...props} />,
     logo: RemoteTestKitLogo,
   },
   mobitru: {
-    tabhead: () => <span className={SessionStyles.tabText}><img src={MobitruLogo} /></span>,
+    tabhead: () => (
+      <span className={SessionStyles.tabText}>
+        <img src={MobitruLogo} />
+      </span>
+    ),
     tab: (props) => <ServerTabMobitru {...props} />,
     logo: MobitruLogo,
-  }
+  },
 };
 
 export default CloudProviders;

@@ -18,7 +18,7 @@
 }
 
 .sessionContainer :global(.anticon:hover) {
-  background-color: #F08080;
+  background-color: #f08080;
   color: white;
 }
 
@@ -179,7 +179,6 @@
   word-wrap: break-word;
 }
 
-
 .start-session-button {
   margin-left: 1em;
 }
@@ -265,7 +264,7 @@
   margin: -1px;
   resize: none;
   border-color: lightgray;
-  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
 }
 
 .capsEditorBodyFull {
