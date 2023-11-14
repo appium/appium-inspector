@@ -50,6 +50,11 @@
     "crowdin-sync": "node ./ci-jobs/crowdin-sync-translations.mjs",
     "crowdin-update": "node ./ci-jobs/crowdin-update-resources.mjs"
   },
+  "prettier": {
+    "bracketSpacing": false,
+    "printWidth": 100,
+    "singleQuote": true
+  },
   "build": {
     "productName": "Appium Inspector",
     "appId": "io.appium.inspector",
@@ -218,6 +223,7 @@
     "parcel-bundler": "1.12.5",
     "parcel-plugin-asset-copier": "1.1.1",
     "postcss-modules": "3.2.2",
+    "prettier": "3.1.0",
     "redux-logger": "3.0.6",
     "rimraf": "5.0.5",
     "sinon": "17.0.1",
