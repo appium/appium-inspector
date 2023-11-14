@@ -1,5 +1,5 @@
 import path from 'path';
-import { clipboard, shell, remote, ipcRenderer } from 'electron';
+import {clipboard, shell, remote, ipcRenderer} from 'electron';
 import log from 'electron-log';
 import settings from 'electron-settings';
 import i18NextBackend from 'i18next-fs-backend';

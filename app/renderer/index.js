@@ -1,5 +1,5 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import {createRoot} from 'react-dom/client';
 import Root from './containers/Root';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import store from './store';
@@ -10,7 +10,7 @@ const root = createRoot(container);
 root.render(
   <ErrorBoundary>
     <Root store={store} />
-  </ErrorBoundary>
+  </ErrorBoundary>,
 );
 
 if (module.hot) {
@@ -19,7 +19,7 @@ if (module.hot) {
     root.render(
       <ErrorBoundary>
         <NextRoot store={store} />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
   });
 }

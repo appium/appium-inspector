@@ -1,9 +1,9 @@
-import React, { Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, {Suspense} from 'react';
+import {Routes, Route} from 'react-router-dom';
 import SessionPage from './containers/SessionPage';
 import InspectorPage from './containers/InspectorPage';
 import Spinner from './components/Spinner/Spinner';
-import { ipcRenderer } from './polyfills';
+import {ipcRenderer} from './polyfills';
 import i18n from '../configs/i18next.config.renderer';
 
 ipcRenderer.on('appium-language-changed', (event, message) => {
