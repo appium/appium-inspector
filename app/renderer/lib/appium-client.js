@@ -1,7 +1,8 @@
-import _ from 'lodash';
 import Bluebird from 'bluebird';
+import _ from 'lodash';
+
+import {APP_MODE, SCREENSHOT_INTERACTION_MODE} from '../components/Inspector/shared';
 import {parseSource, setHtmlElementAttributes} from './webview-helpers';
-import {SCREENSHOT_INTERACTION_MODE, APP_MODE} from '../components/Inspector/shared';
 
 const {TAP, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
 

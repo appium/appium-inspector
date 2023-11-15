@@ -1,7 +1,8 @@
 import React from 'react';
 import {createRoot} from 'react-dom/client';
-import Root from './containers/Root';
+
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import Root from './containers/Root';
 import store from './store';
 
 const container = document.getElementById('root');

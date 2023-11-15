@@ -1,12 +1,13 @@
 import _ from 'lodash';
-import {getLocators, APP_MODE} from '../components/Inspector/shared';
-import {showError} from './Session';
-import {xmlToJSON} from '../util';
 import {v4 as UUID} from 'uuid';
-import frameworks from '../lib/client-frameworks';
-import {getSetting, setSetting, SAVED_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/settings';
+
 import i18n from '../../configs/i18next.config.renderer';
+import {SAVED_FRAMEWORK, SET_SAVED_GESTURES, getSetting, setSetting} from '../../shared/settings';
+import {APP_MODE, getLocators} from '../components/Inspector/shared';
 import AppiumClient, {NATIVE_APP} from '../lib/appium-client';
+import frameworks from '../lib/client-frameworks';
+import {xmlToJSON} from '../util';
+import {showError} from './Session';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
 export const SET_SOURCE_AND_SCREENSHOT = 'SET_SOURCE_AND_SCREENSHOT';

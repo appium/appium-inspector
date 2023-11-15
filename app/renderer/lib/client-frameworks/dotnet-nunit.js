@@ -1,5 +1,6 @@
-import Framework from './framework';
 import _ from 'lodash';
+
+import Framework from './framework';
 
 class DotNetNUnitFramework extends Framework {
   get language() {

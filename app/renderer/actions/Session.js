@@ -1,33 +1,34 @@
-import {
-  getSetting,
-  setSetting,
-  SAVED_SESSIONS,
-  SERVER_ARGS,
-  SESSION_SERVER_TYPE,
-  SESSION_SERVER_PARAMS,
-} from '../../shared/settings';
-import {v4 as UUID} from 'uuid';
 import {notification} from 'antd';
+import axios from 'axios';
 import {
-  includes,
   debounce,
+  includes,
+  isPlainObject,
+  isUndefined,
+  keys,
   toPairs,
   union,
   without,
-  keys,
-  isUndefined,
-  isPlainObject,
 } from 'lodash';
-import {setSessionDetails, quitSession} from './Inspector';
-import i18n from '../../configs/i18next.config.renderer';
-import CloudProviders from '../components/Session/CloudProviders';
-import {Web2Driver} from 'web2driver';
-import {addVendorPrefixes} from '../util';
-import axios from 'axios';
 import moment from 'moment';
-import {APP_MODE} from '../components/Inspector/shared';
-import {ipcRenderer, fs, util} from '../polyfills';
+import {v4 as UUID} from 'uuid';
+import {Web2Driver} from 'web2driver';
+
+import i18n from '../../configs/i18next.config.renderer';
 import {getSaveableState} from '../../main/helpers';
+import {
+  SAVED_SESSIONS,
+  SERVER_ARGS,
+  SESSION_SERVER_PARAMS,
+  SESSION_SERVER_TYPE,
+  getSetting,
+  setSetting,
+} from '../../shared/settings';
+import {APP_MODE} from '../components/Inspector/shared';
+import CloudProviders from '../components/Session/CloudProviders';
+import {fs, ipcRenderer, util} from '../polyfills';
+import {addVendorPrefixes} from '../util';
+import {quitSession, setSessionDetails} from './Inspector';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_LOADING = 'NEW_SESSION_LOADING';

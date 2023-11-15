@@ -1,4 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
+
 import actions from './actions';
 import createRootReducer from './reducers';
 

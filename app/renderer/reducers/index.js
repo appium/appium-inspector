@@ -1,6 +1,7 @@
 import {combineReducers} from '@reduxjs/toolkit';
-import session from './Session';
+
 import inspector from './Inspector';
+import session from './Session';
 import updater from './Updater';
 
 // create our root reducer
