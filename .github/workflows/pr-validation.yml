@@ -39,7 +39,7 @@ jobs:
         run: npm run test:unit && npm run test:integration
 
   lint:
-    name: Lint
+    name: Lint & Format
     runs-on: ubuntu-latest
 
     steps:
@@ -53,3 +53,5 @@ jobs:
         run: npm ci
       - name: Lint
         run: npm run test:lint
+      - name: Format
+        run: npm run test:format
