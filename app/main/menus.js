@@ -1,9 +1,10 @@
-import {app, shell, dialog, Menu} from 'electron';
-import {checkNewUpdates} from './auto-updater';
-import {launchNewSessionWindow} from './windows';
+import {Menu, app, dialog, shell} from 'electron';
+
 import config from '../configs/app.config';
 import i18n from '../configs/i18next.config';
+import {checkNewUpdates} from './auto-updater';
 import {APPIUM_SESSION_EXTENSION} from './helpers';
+import {launchNewSessionWindow} from './windows';
 
 let menuTemplates = {mac: {}, other: {}};
 

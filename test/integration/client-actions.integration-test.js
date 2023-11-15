@@ -1,8 +1,9 @@
+import {startServer as startAppiumFakeDriverServer} from '@appium/fake-driver';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import {startServer as startAppiumFakeDriverServer} from '@appium/fake-driver';
 import path from 'path';
 import {Web2Driver} from 'web2driver/node';
+
 import AppiumClient from '../../app/renderer/lib/appium-client';
 
 const should = chai.should();

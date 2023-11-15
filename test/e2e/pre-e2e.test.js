@@ -1,10 +1,10 @@
-import path from 'path';
-import os from 'os';
-import {retryInterval} from 'asyncbox';
-import {Application} from 'spectron';
 import {fs, logger} from '@appium/support';
+import {retryInterval} from 'asyncbox';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import os from 'os';
+import path from 'path';
+import {Application} from 'spectron';
 
 const platform = os.platform();
 const appName = 'inspector';

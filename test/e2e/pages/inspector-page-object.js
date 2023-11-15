@@ -1,7 +1,8 @@
-import _ from 'lodash';
 import {retryInterval} from 'asyncbox';
-import {setValueReact} from './utils';
+import _ from 'lodash';
+
 import BasePage from './base-page-object';
+import {setValueReact} from './utils';
 
 export default class InspectorPage extends BasePage {
   constructor(client) {

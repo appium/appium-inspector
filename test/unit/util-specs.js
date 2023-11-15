@@ -1,9 +1,10 @@
+import {DOMParser} from '@xmldom/xmldom';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import {getOptimalXPath, xmlToJSON, addVendorPrefixes} from '../../app/renderer/util';
-import {DOMParser} from '@xmldom/xmldom';
-import xpath from 'xpath';
 import sinon from 'sinon';
+import xpath from 'xpath';
+
+import {addVendorPrefixes, getOptimalXPath, xmlToJSON} from '../../app/renderer/util';
 
 const should = chai.should();
 chai.use(chaiAsPromised);

@@ -1,6 +1,7 @@
 import axios from 'axios';
-import {getFeedUrl} from './config';
 import semver from 'semver';
+
+import {getFeedUrl} from './config';
 
 export async function checkUpdate(currentVersion) {
   try {

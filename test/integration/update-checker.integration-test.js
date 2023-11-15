@@ -1,7 +1,8 @@
+import axios from 'axios';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
-import axios from 'axios';
+
 import {checkUpdate} from '../../app/main/auto-updater/update-checker';
 
 chai.should();

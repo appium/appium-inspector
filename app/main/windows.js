@@ -1,9 +1,10 @@
-import {BrowserWindow, dialog, ipcMain, Menu, webContents} from 'electron';
+import {BrowserWindow, Menu, dialog, ipcMain, webContents} from 'electron';
+
+import i18n from '../configs/i18next.config';
+import {openFilePath} from '../main';
+import settings from '../shared/settings';
 import {APPIUM_SESSION_EXTENSION} from './helpers';
 import {rebuildMenus} from './menus';
-import {openFilePath} from '../main';
-import i18n from '../configs/i18next.config';
-import settings from '../shared/settings';
 
 let mainWindow = null;
 

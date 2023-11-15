@@ -1,8 +1,9 @@
-import path from 'path';
-import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import {startServer as startAppiumFakeDriverServer} from '@appium/fake-driver';
 import {retryInterval} from 'asyncbox';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import path from 'path';
+
 import InspectorPage from './pages/inspector-page-object';
 
 chai.should();

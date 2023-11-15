@@ -1,7 +1,8 @@
-import path from 'node:path';
-import {createReadStream} from 'node:fs';
 import B from 'bluebird';
-import {log, RESOURCES_ROOT, ORIGINAL_LANGUAGE, performApiRequest} from './crowdin-common.mjs';
+import {createReadStream} from 'node:fs';
+import path from 'node:path';
+
+import {ORIGINAL_LANGUAGE, RESOURCES_ROOT, log, performApiRequest} from './crowdin-common.mjs';
 
 const RESOURCE_NAME = 'translation.json';
 const RESOURCE_PATH = path.resolve(RESOURCES_ROOT, ORIGINAL_LANGUAGE, RESOURCE_NAME);

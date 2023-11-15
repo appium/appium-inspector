@@ -1,5 +1,6 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+
 import {getLocators, isUnique} from '../../app/renderer/components/Inspector/shared';
 
 const should = chai.should();
