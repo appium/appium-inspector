@@ -2,16 +2,23 @@ import React from 'react';
 import HighlighterRectForElem from './HighlighterRectForElem';
 import HighlighterRectForBounds from './HighlighterRectForBounds';
 import HighlighterCentroid from './HighlighterCentroid';
-import { parseCoordinates, RENDER_CENTROID_AS } from './shared';
+import {parseCoordinates, RENDER_CENTROID_AS} from './shared';
 
-const { CENTROID, OVERLAP, EXPAND } = RENDER_CENTROID_AS;
+const {CENTROID, OVERLAP, EXPAND} = RENDER_CENTROID_AS;
 
 /**
  * Shows screenshot of running application and divs that highlight the elements' bounding boxes
  */
 const HighlighterRects = (props) => {
-  const { source, containerEl, searchedForElementBounds, scaleRatio, showCentroids,
-          isLocatorTestModalVisible, isSiriCommandModalVisible } = props;
+  const {
+    source,
+    containerEl,
+    searchedForElementBounds,
+    scaleRatio,
+    showCentroids,
+    isLocatorTestModalVisible,
+    isSiriCommandModalVisible,
+  } = props;
 
   const highlighterRects = [];
   const highlighterCentroids = [];
@@ -45,11 +52,10 @@ const HighlighterRects = (props) => {
             path: key,
             keyCode: key,
             container: null,
-            accessible: null
-          }
+            accessible: null,
+          },
         };
-        elements = [...elements, element,
-          ...updateOverlapsAngles(elementsByOverlap[key], key)];
+        elements = [...elements, element, ...updateOverlapsAngles(elementsByOverlap[key], key)];
       } else {
         elements.push(elementsByOverlap[key][0]);
       }
@@ -62,10 +68,12 @@ const HighlighterRects = (props) => {
   // 'elements' is an array that stores all prev elements
   // 'overlaps' is an object which organzies elements by their positions
   const buildElementsWithProps = (source, prevElement, elements, overlaps) => {
-    if (!source) { return {}; }
-    const { x1, y1, x2, y2 } = parseCoordinates(source);
+    if (!source) {
+      return {};
+    }
+    const {x1, y1, x2, y2} = parseCoordinates(source);
     const xOffset = highlighterXOffset || 0;
-    const centerPoint = (v1, v2) => Math.round(v1 + ((v2 - v1) / 2)) / scaleRatio;
+    const centerPoint = (v1, v2) => Math.round(v1 + (v2 - v1) / 2) / scaleRatio;
     const obj = {
       type: CENTROID,
       element: source,
@@ -82,8 +90,8 @@ const HighlighterRects = (props) => {
         path: source.path,
         keyCode: null,
         container: false,
-        accessible: source.attributes ? source.attributes.accessible : null
-      }
+        accessible: source.attributes ? source.attributes.accessible : null,
+      },
     };
     const coordinates = `${obj.properties.centerX},${obj.properties.centerY}`;
     obj.properties.container = isElementContainer(obj, elements);
@@ -109,9 +117,11 @@ const HighlighterRects = (props) => {
 
   const isElementContainer = (element1, elements) => {
     for (const element2 of elements) {
-      if (element2.element !== element1.element
-        && isElementOverElement(element1.properties, element2.properties)
-        && !isAncestor(element1.parent, element2.element, elements)) {
+      if (
+        element2.element !== element1.element &&
+        isElementOverElement(element1.properties, element2.properties) &&
+        !isAncestor(element1.parent, element2.element, elements)
+      ) {
         return true;
       }
     }
@@ -119,19 +129,23 @@ const HighlighterRects = (props) => {
   };
 
   const isElementOverElement = (element1, element2) =>
-    element1.left <= element2.left
-      && element1.width >= element2.width
-      && element1.top >= element2.top
-      && element1.height >= element2.height;
+    element1.left <= element2.left &&
+    element1.width >= element2.width &&
+    element1.top >= element2.top &&
+    element1.height >= element2.height;
 
   // Traverse through parent elements until we reach maybeAncestor
   const isAncestor = (curElement, maybeAncestor, elements) => {
     if (elements.length > 0) {
       while (curElement !== null) {
-        if (curElement === maybeAncestor) { return true; }
+        if (curElement === maybeAncestor) {
+          return true;
+        }
 
         for (const elem of elements) {
-          if (elem.element === curElement) { curElement = elem.parent; }
+          if (elem.element === curElement) {
+            curElement = elem.parent;
+          }
         }
       }
     }
@@ -155,12 +169,16 @@ const HighlighterRects = (props) => {
   const renderElements = (source) => {
     for (const elem of source) {
       // only render elements with non-zero height and width
-      if (!elem.properties.width || !elem.properties.height) { continue; }
+      if (!elem.properties.width || !elem.properties.height) {
+        continue;
+      }
       highlighterRects.push(
-        <HighlighterRectForElem {...props}
+        <HighlighterRectForElem
+          {...props}
           dimensions={elem.properties}
           element={elem.element}
-          key={elem.properties.path} />
+          key={elem.properties.path}
+        />,
       );
     }
   };
@@ -169,11 +187,13 @@ const HighlighterRects = (props) => {
   const renderCentroids = (centroids) => {
     for (const elem of centroids) {
       highlighterCentroids.push(
-        <HighlighterCentroid {...props}
+        <HighlighterCentroid
+          {...props}
           centroidType={elem.type}
           elementProperties={elem.properties}
           element={elem.element}
-          key={elem.properties.path} />
+          key={elem.properties.path}
+        />,
       );
     }
   };
@@ -183,20 +203,21 @@ const HighlighterRects = (props) => {
 
   if (containerEl) {
     screenshotEl = containerEl.querySelector('img');
-    highlighterXOffset = screenshotEl.getBoundingClientRect().left -
-                         containerEl.getBoundingClientRect().left;
+    highlighterXOffset =
+      screenshotEl.getBoundingClientRect().left - containerEl.getBoundingClientRect().left;
   }
 
   // If the user selected an element that they searched for, highlight that element
   if (searchedForElementBounds && isLocatorTestModalVisible) {
-    const { location, size } = searchedForElementBounds;
+    const {location, size} = searchedForElementBounds;
     highlighterRects.push(
       <HighlighterRectForBounds
         elSize={size}
         elLocation={location}
         scaleRatio={scaleRatio}
         key={`el.${location.x}.${location.y}.${size.width}.${size.height}`}
-        xOffset={highlighterXOffset} />
+        xOffset={highlighterXOffset}
+      />,
     );
   }
 

@@ -1,15 +1,14 @@
 import React from 'react';
-import { Card, Tooltip, Button, Select, Space } from 'antd';
-import { CopyOutlined, CodeOutlined } from '@ant-design/icons';
+import {Card, Tooltip, Button, Select, Space} from 'antd';
+import {CopyOutlined, CodeOutlined} from '@ant-design/icons';
 import InspectorStyles from './Inspector.css';
 import frameworks from '../../lib/client-frameworks';
 import hljs from 'highlight.js';
-import { clipboard } from '../../polyfills';
+import {clipboard} from '../../polyfills';
 
-const SessionCodeBox = ({ actionFramework, setActionFramework, sessionDetails, t }) => {
-
+const SessionCodeBox = ({actionFramework, setActionFramework, sessionDetails, t}) => {
   const code = (raw = true) => {
-    const { host, port, path, https, desiredCapabilities } = sessionDetails;
+    const {host, port, path, https, desiredCapabilities} = sessionDetails;
     const framework = new frameworks[actionFramework](host, port, path, https, desiredCapabilities);
     const rawCode = framework.getCodeString(true);
     if (raw) {
@@ -19,23 +18,34 @@ const SessionCodeBox = ({ actionFramework, setActionFramework, sessionDetails, t
     return hljs.highlight(rawCode, {language: framework.language}).value;
   };
 
-  const actionBar = () => <Space size='middle'>
-    <Tooltip title={t('Copy code to clipboard')}>
-      <Button
-        icon={<CopyOutlined/>}
-        onClick={() => clipboard.writeText(code())} />
-    </Tooltip>
-    <Select defaultValue={actionFramework} onChange={setActionFramework}
-      className={InspectorStyles['framework-dropdown']}>
-      {Object.keys(frameworks).map((f) =>
-        <Select.Option value={f} key={f}>{frameworks[f].readableName}</Select.Option>
-      )}
-    </Select>
-  </Space>;
+  const actionBar = () => (
+    <Space size="middle">
+      <Tooltip title={t('Copy code to clipboard')}>
+        <Button icon={<CopyOutlined />} onClick={() => clipboard.writeText(code())} />
+      </Tooltip>
+      <Select
+        defaultValue={actionFramework}
+        onChange={setActionFramework}
+        className={InspectorStyles['framework-dropdown']}
+      >
+        {Object.keys(frameworks).map((f) => (
+          <Select.Option value={f} key={f}>
+            {frameworks[f].readableName}
+          </Select.Option>
+        ))}
+      </Select>
+    </Space>
+  );
 
   return (
-    <Card title={<span><CodeOutlined /> {t('Start this Kind of Session with Code')}</span>}
-      extra={actionBar()}>
+    <Card
+      title={
+        <span>
+          <CodeOutlined /> {t('Start this Kind of Session with Code')}
+        </span>
+      }
+      extra={actionBar()}
+    >
       <pre className={InspectorStyles['recorded-code']}>
         <code dangerouslySetInnerHTML={{__html: code(false)}} />
       </pre>

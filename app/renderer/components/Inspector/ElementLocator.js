@@ -1,6 +1,6 @@
 import React from 'react';
-import { Alert, Input, Space, Radio, Row } from 'antd';
-import { ALERT } from '../AntdTypes';
+import {Alert, Input, Space, Radio, Row} from 'antd';
+import {ALERT} from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
 
 const STRAT_ID = ['id', 'Id'];
@@ -16,7 +16,9 @@ const STRAT_VIEWTAG = ['-android viewtag', 'View Tag'];
 
 const locatorStrategies = (automationName) => {
   let strategies = [STRAT_ID, STRAT_XPATH, STRAT_NAME, STRAT_CLASS_NAME, STRAT_ACCESSIBILITY_ID];
-  if (!automationName) { return strategies; }
+  if (!automationName) {
+    return strategies;
+  }
   switch (automationName.toLowerCase()) {
     case 'xcuitest':
     case 'mac2':
@@ -33,13 +35,21 @@ const locatorStrategies = (automationName) => {
 };
 
 const ElementLocator = (props) => {
-  const { setLocatorTestValue, locatorTestValue, setLocatorTestStrategy, locatorTestStrategy, automationName, t } = props;
+  const {
+    setLocatorTestValue,
+    locatorTestValue,
+    setLocatorTestStrategy,
+    locatorTestStrategy,
+    automationName,
+    t,
+  } = props;
 
   return (
-    <Space className={InspectorStyles.spaceContainer} direction='vertical' size='small'>
+    <Space className={InspectorStyles.spaceContainer} direction="vertical" size="small">
       {t('locatorStrategy')}
       <Row justify="center">
-        <Radio.Group buttonStyle="solid"
+        <Radio.Group
+          buttonStyle="solid"
           onChange={(e) => setLocatorTestStrategy(e.target.value)}
           defaultValue={locatorTestStrategy}
         >
@@ -56,14 +66,17 @@ const ElementLocator = (props) => {
           </Row>
         </Radio.Group>
       </Row>
-      {!automationName && <Alert message={t('missingAutomationNameForStrategies')} type={ALERT.INFO} showIcon/>}
+      {!automationName && (
+        <Alert message={t('missingAutomationNameForStrategies')} type={ALERT.INFO} showIcon />
+      )}
       {t('selector')}
       <Input.TextArea
         className={InspectorStyles.locatorSelectorTextArea}
         onChange={(e) => setLocatorTestValue(e.target.value)}
         value={locatorTestValue}
         allowClear={true}
-        rows={3} />
+        rows={3}
+      />
     </Space>
   );
 };
