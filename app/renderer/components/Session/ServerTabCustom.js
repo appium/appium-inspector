@@ -1,6 +1,7 @@
+import {Checkbox, Col, Form, Input, Row} from 'antd';
 import React from 'react';
-import {Form, Row, Col, Input, Checkbox} from 'antd';
-import {DEFAULT_SERVER_PATH, DEFAULT_SERVER_HOST, DEFAULT_SERVER_PORT} from '../../actions/Session';
+
+import {DEFAULT_SERVER_HOST, DEFAULT_SERVER_PATH, DEFAULT_SERVER_PORT} from '../../actions/Session';
 
 const ServerTabCustom = ({server, setServerParam, t}) => (
   <Form>

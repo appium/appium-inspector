@@ -1,18 +1,19 @@
-import {shell, ipcRenderer} from '../../polyfills';
+import {LinkOutlined} from '@ant-design/icons';
+import {Badge, Button, Spin, Tabs} from 'antd';
+import _ from 'lodash';
 import React, {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
-import _ from 'lodash';
-import CapabilityEditor from './CapabilityEditor';
-import SavedSessions from './SavedSessions';
-import AttachToSession from './AttachToSession';
-import ServerTabCustom from './ServerTabCustom';
-import {Tabs, Button, Spin, Badge} from 'antd';
-import AdvancedServerParams from './AdvancedServerParams';
-import SessionStyles from './Session.css';
-import CloudProviders from './CloudProviders';
-import CloudProviderSelector from './CloudProviderSelector';
-import {LinkOutlined} from '@ant-design/icons';
+
+import {ipcRenderer, shell} from '../../polyfills';
 import {BUTTON} from '../AntdTypes';
+import AdvancedServerParams from './AdvancedServerParams';
+import AttachToSession from './AttachToSession';
+import CapabilityEditor from './CapabilityEditor';
+import CloudProviderSelector from './CloudProviderSelector';
+import CloudProviders from './CloudProviders';
+import SavedSessions from './SavedSessions';
+import ServerTabCustom from './ServerTabCustom';
+import SessionStyles from './Session.css';
 
 const ADD_CLOUD_PROVIDER = 'addCloudProvider';
 const CAPS_DOCS_LINK = 'https://appium.io/docs/en/latest/guides/caps/';

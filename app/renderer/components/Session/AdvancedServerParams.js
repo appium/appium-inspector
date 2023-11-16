@@ -1,5 +1,6 @@
+import {Checkbox, Col, Collapse, Form, Input, Row} from 'antd';
 import React from 'react';
-import {Collapse, Form, Row, Col, Checkbox, Input} from 'antd';
+
 import styles from './Session.css';
 
 const AdvancedServerParams = ({server, setServerParam, serverType, t}) => (

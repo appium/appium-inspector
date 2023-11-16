@@ -1,10 +1,11 @@
-import React from 'react';
-import {Switch, Input} from 'antd';
-import SessionStyles from './Session.css';
-import {remote, log} from '../../polyfills';
 import {FileOutlined} from '@ant-design/icons';
-import {INPUT} from '../AntdTypes';
+import {Input, Switch} from 'antd';
 import _ from 'lodash';
+import React from 'react';
+
+import {log, remote} from '../../polyfills';
+import {INPUT} from '../AntdTypes';
+import SessionStyles from './Session.css';
 
 const getLocalFilePath = async () => {
   try {

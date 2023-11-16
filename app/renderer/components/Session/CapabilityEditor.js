@@ -1,10 +1,11 @@
-import React, {useEffect, useRef} from 'react';
-import {Button, Checkbox, Input, Modal, Form, Row, Col, Select, Tooltip} from 'antd';
-import FormattedCaps from './FormattedCaps';
-import CapabilityControl from './CapabilityControl';
-import SessionStyles from './Session.css';
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
+import {Button, Checkbox, Col, Form, Input, Modal, Row, Select, Tooltip} from 'antd';
+import React, {useEffect, useRef} from 'react';
+
 import {ROW} from '../AntdTypes';
+import CapabilityControl from './CapabilityControl';
+import FormattedCaps from './FormattedCaps';
+import SessionStyles from './Session.css';
 
 const whitespaces = /^\s|\s$/;
 

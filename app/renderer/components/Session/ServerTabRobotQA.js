@@ -1,5 +1,5 @@
+import {Col, Form, Input, Row} from 'antd';
 import React from 'react';
-import {Form, Input, Row, Col} from 'antd';
 
 const robotQATokenPlaceholder = (t) => {
   if (process.env.ROBOTQA_TOKEN) {

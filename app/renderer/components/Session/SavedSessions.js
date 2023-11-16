@@ -1,9 +1,10 @@
-import React from 'react';
+import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
+import {Button, Col, Row, Table} from 'antd';
 import moment from 'moment';
-import {Button, Row, Col, Table} from 'antd';
+import React from 'react';
+
 import FormattedCaps from './FormattedCaps';
 import SessionStyles from './Session.css';
-import {EditOutlined, DeleteOutlined} from '@ant-design/icons';
 
 const DATE_COLUMN_WIDTH = '25%';
 const ACTIONS_COLUMN_WIDTH = '106px';

@@ -1,7 +1,8 @@
+import {Checkbox, Col, Form, Input, Radio, Row} from 'antd';
 import React from 'react';
-import {Form, Row, Col, Input, Checkbox, Radio} from 'antd';
-import SessionStyles from './Session.css';
+
 import {INPUT} from '../AntdTypes';
+import SessionStyles from './Session.css';
 
 const sauceUsernamePlaceholder = (t) => {
   if (process.env.SAUCE_USERNAME) {

@@ -1,5 +1,6 @@
+import {Col, Form, Input, Row} from 'antd';
 import React from 'react';
-import {Form, Input, Row, Col} from 'antd';
+
 import {INPUT} from '../AntdTypes';
 
 const kobitonUsernamePlaceholder = (t) => {

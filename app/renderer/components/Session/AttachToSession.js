@@ -1,8 +1,9 @@
-import React from 'react';
-import {Form, Card, Select, Button, Row, Col} from 'antd';
-import SessionStyles from './Session.css';
 import {ReloadOutlined} from '@ant-design/icons';
+import {Button, Card, Col, Form, Row, Select} from 'antd';
+import React from 'react';
+
 import {ServerTypes} from '../../actions/Session';
+import SessionStyles from './Session.css';
 
 const formatCaps = (caps) => {
   let importantCaps = [caps.app, caps.platformName, caps.deviceName];

@@ -1,9 +1,10 @@
-import React from 'react';
+import {Button, Col, Modal, Row} from 'antd';
 import _ from 'lodash';
-import {Modal, Row, Col, Button} from 'antd';
+import React from 'react';
+
+import {BUTTON} from '../AntdTypes';
 import CloudProviders from './CloudProviders';
 import SessionStyles from './Session.css';
-import {BUTTON} from '../AntdTypes';
 
 const CloudProviderSelector = (props) => {
   const {visibleProviders = [], isAddingCloudProvider, stopAddCloudProvider, t} = props;

@@ -1,34 +1,34 @@
 import React from 'react';
-import ServerTabHeadspin from './ServerTabHeadspin';
-import ServerTabBrowserstack from './ServerTabBrowserstack';
-import ServerTabLambdatest from './ServerTabLambdatest';
+
 import ServerTabBitbar from './ServerTabBitbar';
+import ServerTabBrowserstack from './ServerTabBrowserstack';
+import ServerTabExperitest from './ServerTabExperitest';
+import ServerTabHeadspin from './ServerTabHeadspin';
 import ServerTabKobiton from './ServerTabKobiton';
-import ServerTabPerfecto from './ServerTabPerfecto';
+import ServerTabLambdatest from './ServerTabLambdatest';
+import ServerTabMobitru from './ServerTabMobitru';
 import ServerTabPcloudy from './ServerTabPcloudy';
+import ServerTabPerfecto from './ServerTabPerfecto';
+import ServerTabRemoteTestKit from './ServerTabRemoteTestKit';
+import ServerTabRobotQA from './ServerTabRobotQA';
 import ServerTabSauce from './ServerTabSauce';
 import ServerTabTestingbot from './ServerTabTestingbot';
-import ServerTabExperitest from './ServerTabExperitest';
-import ServerTabRobotQA from './ServerTabRobotQA';
-import ServerTabRemoteTestKit from './ServerTabRemoteTestKit';
-import ServerTabMobitru from './ServerTabMobitru';
-
 import SessionStyles from './Session.css';
 
 // ParcelJS handles image loading by exporting a path to the image
-import SauceLogo from '../../images/sauce_logo.svg';
-import HeadSpinLogo from '../../images/headspin_logo.svg';
-import BrowserStackLogo from '../../images/browserstack_logo.svg';
-import LambdaTestLogo from '../../images/lambdatest_logo.svg';
 import BitBarLogo from '../../images/bitbar_logo.svg';
-import KobitonLogo from '../../images/kobiton_logo.svg';
-import PerfectoLogo from '../../images/perfecto_logo.svg';
-import PcloudyLogo from '../../images/pcloudy_logo.svg';
-import TestingBotLogo from '../../images/testingbot_logo.svg';
+import BrowserStackLogo from '../../images/browserstack_logo.svg';
 import ExperitestLogo from '../../images/experitest_logo.svg';
-import RobotQALogo from '../../images/robotqa_logo.svg';
-import RemoteTestKitLogo from '../../images/remotetestkit_logo.svg';
+import HeadSpinLogo from '../../images/headspin_logo.svg';
+import KobitonLogo from '../../images/kobiton_logo.svg';
+import LambdaTestLogo from '../../images/lambdatest_logo.svg';
 import MobitruLogo from '../../images/mobitru_logo.svg';
+import PcloudyLogo from '../../images/pcloudy_logo.svg';
+import PerfectoLogo from '../../images/perfecto_logo.svg';
+import RemoteTestKitLogo from '../../images/remotetestkit_logo.svg';
+import RobotQALogo from '../../images/robotqa_logo.svg';
+import SauceLogo from '../../images/sauce_logo.svg';
+import TestingBotLogo from '../../images/testingbot_logo.svg';
 
 const CloudProviders = {
   sauce: {

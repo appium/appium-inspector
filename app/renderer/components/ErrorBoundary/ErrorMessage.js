@@ -1,10 +1,11 @@
-import React from 'react';
-import {Alert, Button, Tooltip} from 'antd';
 import {CopyOutlined} from '@ant-design/icons';
-import styles from './ErrorMessage.css';
-import {ALERT} from '../AntdTypes';
-import {withTranslation} from '../../util';
+import {Alert, Button, Tooltip} from 'antd';
+import React from 'react';
+
 import {shell} from '../../polyfills';
+import {withTranslation} from '../../util';
+import {ALERT} from '../AntdTypes';
+import styles from './ErrorMessage.css';
 
 const CREATE_ISSUE_URL = 'https://github.com/appium/appium-inspector/issues/new/choose';
 

@@ -1,10 +1,11 @@
-import React from 'react';
-import SessionStyles from './Session.css';
-import {Card, Button, Alert, Tooltip} from 'antd';
-import {getCapsObject} from '../../actions/Session.js';
-import {CloseOutlined, SaveOutlined, EditOutlined} from '@ant-design/icons';
-import {ALERT} from '../AntdTypes';
+import {CloseOutlined, EditOutlined, SaveOutlined} from '@ant-design/icons';
+import {Alert, Button, Card, Tooltip} from 'antd';
 import hljs from 'highlight.js';
+import React from 'react';
+
+import {getCapsObject} from '../../actions/Session.js';
+import {ALERT} from '../AntdTypes';
+import SessionStyles from './Session.css';
 
 const FormattedCaps = (props) => {
   const {

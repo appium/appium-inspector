@@ -1,5 +1,6 @@
+import {Checkbox, Col, Form, Input, Row} from 'antd';
 import React from 'react';
-import {Form, Row, Col, Input, Checkbox} from 'antd';
+
 import SessionStyles from './Session.css';
 
 const cloudPerfectoUrl = 'cloud.Perfectomobile.com';

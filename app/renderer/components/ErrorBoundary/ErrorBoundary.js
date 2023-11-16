@@ -1,6 +1,7 @@
 import React from 'react';
-import ErrorMessage from './ErrorMessage';
+
 import {clipboard} from '../../polyfills';
+import ErrorMessage from './ErrorMessage';
 
 const copyTrace = (trace) => {
   clipboard.writeText(trace);

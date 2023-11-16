@@ -1,5 +1,6 @@
+import {Col, Form, Input, Row} from 'antd';
 import React from 'react';
-import {Form, Row, Col, Input} from 'antd';
+
 import {INPUT} from '../AntdTypes';
 
 const ServerTabRemoteTestkit = ({server, setServerParam, t}) => (
