@@ -1,18 +1,19 @@
-import React, {useRef} from 'react';
-import _ from 'lodash';
-import {getLocators} from './shared';
-import styles from './Inspector.css';
-import {Button, Row, Col, Input, Table, Alert, Tooltip, Spin} from 'antd';
-import {clipboard, shell} from '../../polyfills';
 import {
-  LoadingOutlined,
-  CopyOutlined,
   AimOutlined,
-  SendOutlined,
   ClearOutlined,
+  CopyOutlined,
   HourglassOutlined,
+  LoadingOutlined,
+  SendOutlined,
 } from '@ant-design/icons';
-import {ROW, ALERT} from '../AntdTypes';
+import {Alert, Button, Col, Input, Row, Spin, Table, Tooltip} from 'antd';
+import _ from 'lodash';
+import React, {useRef} from 'react';
+
+import {clipboard, shell} from '../../polyfills';
+import {ALERT, ROW} from '../AntdTypes';
+import styles from './Inspector.css';
+import {getLocators} from './shared';
 
 const NATIVE_APP = 'NATIVE_APP';
 const CLASS_CHAIN_DOCS_URL =

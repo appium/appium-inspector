@@ -1,34 +1,35 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {debounce} from 'lodash';
-import {SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE} from './shared';
-import {Card, Button, Spin, Tooltip, Modal, Tabs, Space, Switch} from 'antd';
-import Screenshot from './Screenshot';
-import HeaderButtons from './HeaderButtons';
-import SelectedElement from './SelectedElement';
-import Source from './Source';
-import InspectorStyles from './Inspector.css';
-import Recorder from './Recorder';
-import Commands from './Commands';
-import SavedGestures from './SavedGestures';
-import GestureEditor from './GestureEditor';
-import SessionInfo from './SessionInfo';
-import {clipboard} from '../../polyfills';
 import {
-  SelectOutlined,
-  PlusSquareOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
+  CodeOutlined,
   CopyOutlined,
   DownloadOutlined,
   FileTextOutlined,
-  TagOutlined,
-  InfoCircleOutlined,
-  ThunderboltOutlined,
   HighlightOutlined,
-  CodeOutlined,
+  InfoCircleOutlined,
+  PlusSquareOutlined,
+  SelectOutlined,
+  TagOutlined,
+  ThunderboltOutlined,
 } from '@ant-design/icons';
+import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip} from 'antd';
+import {debounce} from 'lodash';
+import React, {useEffect, useRef, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+
+import {clipboard} from '../../polyfills';
 import {BUTTON} from '../AntdTypes';
+import Commands from './Commands';
+import GestureEditor from './GestureEditor';
+import HeaderButtons from './HeaderButtons';
+import InspectorStyles from './Inspector.css';
+import Recorder from './Recorder';
+import SavedGestures from './SavedGestures';
+import Screenshot from './Screenshot';
+import SelectedElement from './SelectedElement';
+import SessionInfo from './SessionInfo';
+import Source from './Source';
+import {INTERACTION_MODE, SCREENSHOT_INTERACTION_MODE} from './shared';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 

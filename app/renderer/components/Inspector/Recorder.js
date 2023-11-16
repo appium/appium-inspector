@@ -1,11 +1,12 @@
-import {clipboard} from '../../polyfills';
-import React from 'react';
-import {Card, Select, Space, Tooltip, Button} from 'antd';
-import InspectorStyles from './Inspector.css';
-import frameworks from '../../lib/client-frameworks';
+import {ClearOutlined, CodeOutlined, CopyOutlined, PicRightOutlined} from '@ant-design/icons';
+import {Button, Card, Select, Space, Tooltip} from 'antd';
 import hljs from 'highlight.js';
-import {PicRightOutlined, CopyOutlined, ClearOutlined, CodeOutlined} from '@ant-design/icons';
+import React from 'react';
+
+import frameworks from '../../lib/client-frameworks';
+import {clipboard} from '../../polyfills';
 import {BUTTON} from '../AntdTypes';
+import InspectorStyles from './Inspector.css';
 
 const Recorder = (props) => {
   const {showBoilerplate, recordedActions, actionFramework, t} = props;

@@ -1,39 +1,40 @@
-import React, {useEffect, useState} from 'react';
-import _ from 'lodash';
 import {
-  Tabs,
-  Input,
-  Button,
-  Card,
-  Select,
-  Row,
-  Col,
-  notification,
-  PageHeader,
-  Space,
-  Steps,
-  Divider,
-  Tooltip,
-  Popover,
-} from 'antd';
-import {
-  QuestionCircleOutlined,
+  AimOutlined,
+  CloseOutlined,
+  DownCircleOutlined,
+  PauseCircleOutlined,
   PlayCircleOutlined,
   PlusCircleOutlined,
-  CloseOutlined,
-  AimOutlined,
+  QuestionCircleOutlined,
   RightCircleOutlined,
-  DownCircleOutlined,
   UpCircleOutlined,
-  PauseCircleOutlined,
 } from '@ant-design/icons';
 import {
-  SCREENSHOT_INTERACTION_MODE,
+  Button,
+  Card,
+  Col,
+  Divider,
+  Input,
+  PageHeader,
+  Popover,
+  Row,
+  Select,
+  Space,
+  Steps,
+  Tabs,
+  Tooltip,
+  notification,
+} from 'antd';
+import _ from 'lodash';
+import React, {useEffect, useState} from 'react';
+
+import InspectorCSS from './Inspector.css';
+import {
   POINTER_TYPES,
+  SCREENSHOT_INTERACTION_MODE,
   percentageToPixels,
   pixelsToPercentage,
 } from './shared';
-import InspectorCSS from './Inspector.css';
 
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
 

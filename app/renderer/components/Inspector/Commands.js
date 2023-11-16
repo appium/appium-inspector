@@ -1,21 +1,22 @@
-import React from 'react';
-import _ from 'lodash';
 import {
   Alert,
-  Row,
-  Col,
   Button,
+  Col,
   Collapse,
-  Modal,
   Input,
-  Switch,
+  Modal,
+  Row,
   Space,
-  notification,
+  Switch,
   Tooltip,
+  notification,
 } from 'antd';
-import {COMMAND_DEFINITIONS, COMMAND_ARG_TYPES} from './shared';
-import InspectorStyles from './Inspector.css';
+import _ from 'lodash';
+import React from 'react';
+
 import {ALERT, INPUT} from '../AntdTypes';
+import InspectorStyles from './Inspector.css';
+import {COMMAND_ARG_TYPES, COMMAND_DEFINITIONS} from './shared';
 
 const Commands = (props) => {
   const {

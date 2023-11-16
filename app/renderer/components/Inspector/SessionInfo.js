@@ -1,7 +1,8 @@
+import {Col, Row, Table} from 'antd';
 import React, {useEffect, useRef, useState} from 'react';
-import {Table, Row, Col} from 'antd';
-import SessionCodeBox from './SessionCodeBox';
+
 import InspectorStyles from './Inspector.css';
+import SessionCodeBox from './SessionCodeBox';
 
 const SESSION_OBJ = {
   session_id: 'Session ID',

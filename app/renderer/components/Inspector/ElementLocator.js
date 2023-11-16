@@ -1,5 +1,6 @@
+import {Alert, Input, Radio, Row, Space} from 'antd';
 import React from 'react';
-import {Alert, Input, Space, Radio, Row} from 'antd';
+
 import {ALERT} from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
 

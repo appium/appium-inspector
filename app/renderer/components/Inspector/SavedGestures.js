@@ -1,10 +1,11 @@
-import React, {useEffect, useRef} from 'react';
-import {Table, Button, Space, Tooltip} from 'antd';
-import InspectorStyles from './Inspector.css';
-import {EditOutlined, DeleteOutlined, PlusOutlined, PlayCircleOutlined} from '@ant-design/icons';
-import {SCREENSHOT_INTERACTION_MODE, POINTER_TYPES, percentageToPixels} from './shared';
+import {DeleteOutlined, EditOutlined, PlayCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {Button, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
+import React, {useEffect, useRef} from 'react';
+
+import InspectorStyles from './Inspector.css';
+import {POINTER_TYPES, SCREENSHOT_INTERACTION_MODE, percentageToPixels} from './shared';
 
 const SAVED_ACTIONS_OBJ = {
   NAME: 'Name',

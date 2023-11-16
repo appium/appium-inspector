@@ -1,7 +1,8 @@
+import {Spin, Tree} from 'antd';
 import React from 'react';
-import {Tree, Spin} from 'antd';
-import LocatorTestModal from './LocatorTestModal';
+
 import InspectorStyles from './Inspector.css';
+import LocatorTestModal from './LocatorTestModal';
 import SiriCommandModal from './SiriCommandModal';
 
 const IMPORTANT_ATTRS = [

@@ -1,7 +1,8 @@
+import {Button, Modal} from 'antd';
 import React from 'react';
-import {Modal, Button} from 'antd';
-import LocatedElements from './LocatedElements';
+
 import ElementLocator from './ElementLocator';
+import LocatedElements from './LocatedElements';
 
 const LocatorTestModal = (props) => {
   const {

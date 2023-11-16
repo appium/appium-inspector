@@ -1,5 +1,5 @@
+import {Button, Input, Modal, Row} from 'antd';
 import React from 'react';
-import {Modal, Button, Input, Row} from 'antd';
 
 const SiriCommandModal = (props) => {
   const {siriCommandValue, setSiriCommandValue, isSiriCommandModalVisible, t} = props;

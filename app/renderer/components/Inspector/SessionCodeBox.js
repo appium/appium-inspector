@@ -1,10 +1,11 @@
-import React from 'react';
-import {Card, Tooltip, Button, Select, Space} from 'antd';
-import {CopyOutlined, CodeOutlined} from '@ant-design/icons';
-import InspectorStyles from './Inspector.css';
-import frameworks from '../../lib/client-frameworks';
+import {CodeOutlined, CopyOutlined} from '@ant-design/icons';
+import {Button, Card, Select, Space, Tooltip} from 'antd';
 import hljs from 'highlight.js';
+import React from 'react';
+
+import frameworks from '../../lib/client-frameworks';
 import {clipboard} from '../../polyfills';
+import InspectorStyles from './Inspector.css';
 
 const SessionCodeBox = ({actionFramework, setActionFramework, sessionDetails, t}) => {
   const code = (raw = true) => {

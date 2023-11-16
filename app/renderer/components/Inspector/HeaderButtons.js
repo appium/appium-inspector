@@ -1,24 +1,25 @@
-import React from 'react';
-import {Button, Tooltip, Select, Space} from 'antd';
-import InspectorStyles from './Inspector.css';
-import {HiOutlineMicrophone, HiOutlineHome} from 'react-icons/hi';
-import {BiSquare, BiCircle} from 'react-icons/bi';
-import {IoChevronBackOutline} from 'react-icons/io5';
-import {shell} from '../../polyfills';
-import {APP_MODE} from './shared';
-import {BUTTON} from '../AntdTypes';
 import {
-  ReloadOutlined,
-  PlayCircleOutlined,
-  PauseCircleOutlined,
-  VideoCameraOutlined,
-  SearchOutlined,
-  CloseOutlined,
   AppstoreOutlined,
+  CloseOutlined,
+  ExclamationCircleOutlined,
   GlobalOutlined,
   InfoCircleOutlined,
-  ExclamationCircleOutlined,
+  PauseCircleOutlined,
+  PlayCircleOutlined,
+  ReloadOutlined,
+  SearchOutlined,
+  VideoCameraOutlined,
 } from '@ant-design/icons';
+import {Button, Select, Space, Tooltip} from 'antd';
+import React from 'react';
+import {BiCircle, BiSquare} from 'react-icons/bi';
+import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
+import {IoChevronBackOutline} from 'react-icons/io5';
+
+import {shell} from '../../polyfills';
+import {BUTTON} from '../AntdTypes';
+import InspectorStyles from './Inspector.css';
+import {APP_MODE} from './shared';
 
 const HYBRID_MODE_DOCS_URL =
   'https://appium.github.io/appium.io/docs/en/writing-running-appium/web/hybrid/';

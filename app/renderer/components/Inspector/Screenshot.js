@@ -1,13 +1,14 @@
-import React, {useRef, useState} from 'react';
-import HighlighterRects from './HighlighterRects';
 import {Spin} from 'antd';
+import React, {useRef, useState} from 'react';
+
+import HighlighterRects from './HighlighterRects';
 import styles from './Inspector.css';
 import {
-  SCREENSHOT_INTERACTION_MODE,
+  DEFAULT_SWIPE,
+  DEFAULT_TAP,
   INTERACTION_MODE,
   POINTER_TYPES,
-  DEFAULT_TAP,
-  DEFAULT_SWIPE,
+  SCREENSHOT_INTERACTION_MODE,
 } from './shared';
 
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;

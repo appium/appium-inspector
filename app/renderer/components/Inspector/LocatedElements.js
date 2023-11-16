@@ -1,6 +1,7 @@
+import {AimOutlined, ClearOutlined, MenuUnfoldOutlined, SendOutlined} from '@ant-design/icons';
+import {Alert, Badge, Button, Input, List, Row, Space, Spin, Tooltip} from 'antd';
 import React, {useRef} from 'react';
-import {Alert, Input, Row, Button, Badge, List, Space, Spin, Tooltip} from 'antd';
-import {AimOutlined, ClearOutlined, SendOutlined, MenuUnfoldOutlined} from '@ant-design/icons';
+
 import {ALERT} from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
 

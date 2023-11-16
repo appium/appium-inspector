@@ -1,4 +1,5 @@
 import React from 'react';
+
 import InspectorCSS from './Inspector.css';
 import {RENDER_CENTROID_AS} from './shared';
 
