@@ -49,12 +49,19 @@ const Commands = (props) => {
       copiedArgs = {latitude: args[0], longitude: args[1], altitude: args[2]};
     }
 
-    // Special case for 'execute'
+    // Special case for 'executeScript'
+    // Unlike other clients, webdriver/WDIO requires the argument object to be wrapped in an array,
+    // but we should still allow omitting the array to avoid confusion for non-WDIO users.
+    // So we can have 4 cases for the argument: undefined, "[]", "{...}", "[{...}]"
     if (commandName === 'executeScript') {
-      if (!_.isEmpty(args[1])) {
+      if (_.isEmpty(args[1])) {
+        copiedArgs[1] = [];
+      } else {
         copiedArgs[1] = parseJsonString(args[1]);
         if (copiedArgs[1] === null) {
           isJsonValid = false;
+        } else if (!_.isArray(copiedArgs[1])) {
+          copiedArgs[1] = [copiedArgs[1]];
         }
       }
     }

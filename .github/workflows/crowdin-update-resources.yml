@@ -22,6 +22,6 @@ jobs:
     - name: Crowdin Update
       run: npm run crowdin-update
       env:
-        CROWDIN_PROJECT_ID: appium-desktop
-        CROWDIN_PROJECT_KEY: ${{ secrets.CROWDIN_PROJECT_KEY }}
-      
+        # appium-desktop
+        CROWDIN_PROJECT_ID: 346705
+        CROWDIN_TOKEN: ${{ secrets.CROWDIN_TOKEN }}

@@ -6,6 +6,7 @@
   "zh-CN": "中文",
   "ko": "한국어",
   "hi": "हिंदी",
+  "hu": "Magyar",
   "kn": "ಕನ್ನಡ",
   "ml-IN": "മലയാളം",
   "pa-IN": "ਪੰਜਾਬੀ",
@@ -241,6 +242,7 @@
   "Save Capability Set As": "名前をつけてCapabilityを保存",
   "Edit Raw JSON": "直接JSONを編集する",
   "Enter Parameters for:": "パラメータを入力する：",
+  "invalidJson": "Invalid JSON",
   "Execute Script": "スクリプトを実行する",
   "App Management": "アプリ操作",
   "Clipboard": "クリップボード",
@@ -268,5 +270,9 @@
   "Native App Mode": "ネイティブモード",
   "Web/Hybrid App Mode": "Web/ハイブリッドモード",
   "autoAddPrefixes": "セッション接続時にAppiumベンダープレフィックスを自動的に追加する",
-  "attachSessionNotRunning": "指定されたサーバー上でセッション {{attachSessId}} が実行されていることを確認できませんでした。再接続する前に詳細を確認してください。"
+  "attachSessionNotRunning": "指定されたサーバー上でセッション {{attachSessId}} が実行されていることを確認できませんでした。再接続する前に詳細を確認してください。",
+  "Mobitru WebDriver URL": "Mobitru WebDriver URL",
+  "Mobitru Billing Unit": "Mobitru Billing Unit",
+  "Mobitru Access Key": "Mobitru Access Key",
+  "mobitruCredentialsRequired": "Mobitru Access Key is required"
 }

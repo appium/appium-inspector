@@ -34,7 +34,6 @@ export const SET_SESSION_TIME = 'SET_SESSION_TIME';
 export const START_RECORDING = 'START_RECORDING';
 export const PAUSE_RECORDING = 'PAUSE_RECORDING';
 export const CLEAR_RECORDING = 'CLEAR_RECORDING';
-export const CLOSE_RECORDER = 'CLOSE_RECORDER';
 export const SET_ACTION_FRAMEWORK = 'SET_ACTION_FRAMEWORK';
 export const RECORD_ACTION = 'RECORD_ACTION';
 export const SET_SHOW_BOILERPLATE = 'SET_SHOW_BOILERPLATE';
@@ -326,12 +325,6 @@ export function setActionFramework (framework) {
 export function recordAction (action, params) {
   return (dispatch) => {
     dispatch({type: RECORD_ACTION, action, params});
-  };
-}
-
-export function closeRecorder () {
-  return (dispatch) => {
-    dispatch({type: CLOSE_RECORDER});
   };
 }
 

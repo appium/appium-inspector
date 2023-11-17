@@ -6,6 +6,7 @@
   "zh-CN": "చైనీస్",
   "ko": "కొరియన్",
   "hi": "हिंदी",
+  "hu": "Magyar",
   "kn": "ಕನ್ನಡ",
   "ml-IN": "മലയാളം",
   "pa-IN": "ਪੰਜਾਬੀ",
@@ -241,6 +242,7 @@
   "Save Capability Set As": "సామర్థ్యాన్ని ఇలా సెట్ చేయండి...",
   "Edit Raw JSON": "రా JSONని సవరించండి",
   "Enter Parameters for:": "Enter Parameters for:",
+  "invalidJson": "Invalid JSON",
   "Execute Script": "Execute Script",
   "App Management": "App Management",
   "Clipboard": "క్లిప్‌బోర్డ్",
@@ -268,5 +270,9 @@
   "Native App Mode": "స్థానిక అప్లికేషన్ మోడ్",
   "Web/Hybrid App Mode": "వెబ్/హైబ్రిడ్ అప్లికేషన్ మోడ్",
   "autoAddPrefixes": "ప్రారంభంలో అవసరమైన Appium విక్రేత ప్రిఫిక్స్‌లను స్వయంచాలకంగా జోడించండి",
-  "attachSessionNotRunning": "Could not confirm that session {{attachSessId}} is running on the provided server. Please check details before trying to attach to the session again."
+  "attachSessionNotRunning": "Could not confirm that session {{attachSessId}} is running on the provided server. Please check details before trying to attach to the session again.",
+  "Mobitru WebDriver URL": "Mobitru WebDriver URL",
+  "Mobitru Billing Unit": "Mobitru Billing Unit",
+  "Mobitru Access Key": "Mobitru Access Key",
+  "mobitruCredentialsRequired": "Mobitru Access Key is required"
 }

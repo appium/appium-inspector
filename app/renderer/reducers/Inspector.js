@@ -3,7 +3,7 @@ import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
          SESSION_DONE, SELECT_ELEMENT, UNSELECT_ELEMENT, SELECT_HOVERED_ELEMENT, SET_SELECTED_ELEMENT_ID, SET_INTERACTIONS_NOT_AVAILABLE,
          UNSELECT_HOVERED_ELEMENT, METHOD_CALL_REQUESTED, METHOD_CALL_DONE,
          SET_EXPANDED_PATHS, START_RECORDING, PAUSE_RECORDING, CLEAR_RECORDING,
-         SET_ACTION_FRAMEWORK, RECORD_ACTION, CLOSE_RECORDER, SET_SHOW_BOILERPLATE, SET_SESSION_DETAILS,
+         SET_ACTION_FRAMEWORK, RECORD_ACTION, SET_SHOW_BOILERPLATE, SET_SESSION_DETAILS,
          SHOW_LOCATOR_TEST_MODAL, HIDE_LOCATOR_TEST_MODAL, SHOW_SIRI_COMMAND_MODAL, HIDE_SIRI_COMMAND_MODAL, SET_LOCATOR_TEST_STRATEGY, SET_LOCATOR_TEST_VALUE,
          SEARCHING_FOR_ELEMENTS, SEARCHING_FOR_ELEMENTS_COMPLETED, SET_LOCATOR_TEST_ELEMENT, CLEAR_SEARCH_RESULTS,
          FINDING_ELEMENT_IN_SOURCE, FINDING_ELEMENT_IN_SOURCE_COMPLETED, ADD_ASSIGNED_VAR_CACHE, CLEAR_ASSIGNED_VAR_CACHE, SET_SCREENSHOT_INTERACTION_MODE,
@@ -33,7 +33,6 @@ const INITIAL_STATE = {
   expandedPaths: ['0'],
   isRecording: false,
   isSourceRefreshOn: true,
-  showRecord: false,
   showBoilerplate: false,
   recordedActions: [],
   actionFramework: DEFAULT_FRAMEWORK,
@@ -200,15 +199,13 @@ export default function inspector (state = INITIAL_STATE, action) {
     case START_RECORDING:
       return {
         ...state,
-        isRecording: true,
-        showRecord: true
+        isRecording: true
       };
 
     case PAUSE_RECORDING:
       return {
         ...state,
-        isRecording: false,
-        showRecord: state.recordedActions.length > 0
+        isRecording: false
       };
 
     case CLEAR_RECORDING:
@@ -245,12 +242,6 @@ export default function inspector (state = INITIAL_STATE, action) {
       return {
         ...state,
         assignedVarCache: [],
-      };
-
-    case CLOSE_RECORDER:
-      return {
-        ...state,
-        showRecord: false
       };
 
     case SET_SHOW_BOILERPLATE:

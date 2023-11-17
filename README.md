@@ -83,6 +83,7 @@ any other command: `./Appium-Inspector-linux.AppImage`.
 | [Experitest](http://www.experitest.com) | [Documentation](https://docs.experitest.com/display/TE/Appium) |
 | [RobotQA](https://www.robotqa.com) | [Documentation](https://robotqa.com/appium-remote) |
 | [Remote TestKit](https://appkitbox.com/en/) | [Documentation](https://appkitbox.com/en/support/automation/appium/) |
+| [Mobitru](https://mobitru.com/) | [Documentation](https://docs.mobitru.com/automation/) |
 
 ## Requirements
 

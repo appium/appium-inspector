@@ -1,41 +1,44 @@
 import React from 'react';
-import { Card, Tooltip, Button, Select } from 'antd';
+import { Card, Tooltip, Button, Select, Space } from 'antd';
 import { CopyOutlined, CodeOutlined } from '@ant-design/icons';
 import InspectorStyles from './Inspector.css';
 import frameworks from '../../lib/client-frameworks';
-import { highlight } from 'highlight.js';
+import hljs from 'highlight.js';
 import { clipboard } from '../../polyfills';
 
 const SessionCodeBox = ({ actionFramework, setActionFramework, sessionDetails, t }) => {
 
-  const code = () => {
+  const code = (raw = true) => {
     const { host, port, path, https, desiredCapabilities } = sessionDetails;
     const framework = new frameworks[actionFramework](host, port, path, https, desiredCapabilities);
     const rawCode = framework.getCodeString(true);
+    if (raw) {
+      return rawCode;
+    }
 
-    return highlight(framework.language, rawCode, true).value;
+    return hljs.highlight(rawCode, {language: framework.language}).value;
   };
 
-  const actionBar = () => <div>
+  const actionBar = () => <Space size='middle'>
+    <Tooltip title={t('Copy code to clipboard')}>
+      <Button
+        icon={<CopyOutlined/>}
+        onClick={() => clipboard.writeText(code())} />
+    </Tooltip>
     <Select defaultValue={actionFramework} onChange={setActionFramework}
-      className={InspectorStyles['framework-dropdown']} size='small'>
+      className={InspectorStyles['framework-dropdown']}>
       {Object.keys(frameworks).map((f) =>
         <Select.Option value={f} key={f}>{frameworks[f].readableName}</Select.Option>
       )}
     </Select>
-    <Tooltip title={t('Copy Code to Clipboard')}>
-      <Button
-        icon={<CopyOutlined/>}
-        onClick={() => clipboard.writeText(code())}
-        type='text' />
-    </Tooltip>
-  </div>;
+  </Space>;
 
   return (
     <Card title={<span><CodeOutlined /> {t('Start this Kind of Session with Code')}</span>}
-      className={InspectorStyles['recorded-actions']}
       extra={actionBar()}>
-      <div className={InspectorStyles['recorded-code']} dangerouslySetInnerHTML={{__html: code()}} />
+      <pre className={InspectorStyles['recorded-code']}>
+        <code dangerouslySetInnerHTML={{__html: code(false)}} />
+      </pre>
     </Card>
   );
 };

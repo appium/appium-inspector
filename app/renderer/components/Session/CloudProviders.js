@@ -11,6 +11,7 @@ import ServerTabTestingbot from './ServerTabTestingbot';
 import ServerTabExperitest from './ServerTabExperitest';
 import ServerTabRobotQA from './ServerTabRobotQA';
 import ServerTabRemoteTestKit from './ServerTabRemoteTestKit';
+import ServerTabMobitru from './ServerTabMobitru';
 
 import SessionStyles from './Session.css';
 
@@ -27,6 +28,7 @@ import TestingBotLogo from '../../images/testingbot_logo.svg';
 import ExperitestLogo from '../../images/experitest_logo.svg';
 import RobotQALogo from '../../images/robotqa_logo.svg';
 import RemoteTestKitLogo from '../../images/remotetestkit_logo.svg';
+import MobitruLogo from '../../images/mobitru_logo.svg';
 
 const CloudProviders = {
   sauce: {
@@ -88,6 +90,11 @@ const CloudProviders = {
     tabhead: () => <span className={SessionStyles.tabText}><img src={RemoteTestKitLogo} /></span>,
     tab: (props) => <ServerTabRemoteTestKit {...props} />,
     logo: RemoteTestKitLogo,
+  },
+  mobitru: {
+    tabhead: () => <span className={SessionStyles.tabText}><img src={MobitruLogo} /></span>,
+    tab: (props) => <ServerTabMobitru {...props} />,
+    logo: MobitruLogo,
   }
 };
 

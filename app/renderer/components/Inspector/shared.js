@@ -345,5 +345,6 @@ export const INTERACTION_MODE = {
   SOURCE: 'source',
   COMMANDS: 'commands',
   GESTURES: 'gestures',
+  RECORDER: 'recorder',
   SESSION_INFO: 'sessionInfo',
 };

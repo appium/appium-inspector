@@ -8,7 +8,7 @@ import HeaderButtons from './HeaderButtons';
 import SelectedElement from './SelectedElement';
 import Source from './Source';
 import InspectorStyles from './Inspector.css';
-import RecordedActions from './RecordedActions';
+import Recorder from './Recorder';
 import Commands from './Commands';
 import SavedGestures from './SavedGestures';
 import GestureEditor from './GestureEditor';
@@ -54,7 +54,7 @@ const downloadScreenshot = (screenshot) => {
 };
 
 const Inspector = (props) => {
-  const { screenshot, screenshotError, selectedElement = {}, quitSession, showRecord,
+  const { screenshot, screenshotError, selectedElement = {}, quitSession,
           screenshotInteractionMode, visibleCommandMethod, selectedInteractionMode,
           selectInteractionMode, setVisibleCommandResult, setUserWaitTimeout,
           showKeepAlivePrompt, keepSessionAlive, sourceXML, visibleCommandResult,
@@ -231,7 +231,6 @@ const Inspector = (props) => {
       </Spin>}
     </div>
     <div id='sourceTreeContainer' className={InspectorStyles['interaction-tab-container']} >
-      {showRecord && <RecordedActions {...props} />}
       <Tabs activeKey={selectedInteractionMode}
         size="small"
         onChange={(tab) => selectInteractionMode(tab)}
@@ -286,6 +285,9 @@ const Inspector = (props) => {
                 className={InspectorStyles['interaction-tab-card']}>
                 <SavedGestures {...props} />
               </Card>
+        }, {
+          label: t('Recorder'), key: INTERACTION_MODE.RECORDER, children:
+            <Recorder {...props} />
         }, {
           label: t('Session Information'), key: INTERACTION_MODE.SESSION_INFO, children:
             <Card
