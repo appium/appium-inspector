@@ -132,7 +132,7 @@
   "Start this Kind of Session with Code": "Start this Kind of Session with Code",
   "Clear Actions": "Clear Actions",
   "Close Recorder": "Recorder 닫기",
-  "Perform some actions to see code show up here": "일부 작업을 수행하여 코드가 여기에 표시되는지 확인하십시오",
+  "enableRecordingAndPerformActions": "Enable recording in the application header, then perform some actions to see code show up here",
   "Recorder": "Recorder",
   "Attribute": "Attribute",
   "Value": "Value",
