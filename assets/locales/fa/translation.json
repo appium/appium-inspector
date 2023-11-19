@@ -132,7 +132,7 @@
   "Start this Kind of Session with Code": "Start this Kind of Session with Code",
   "Clear Actions": "پاک کردن Action ها",
   "Close Recorder": "Recorder را ببند",
-  "Perform some actions to see code show up here": "برای نمایش کد در اینجا، اقداماتی را انجام دهید",
+  "enableRecordingAndPerformActions": "Enable recording in the application header, then perform some actions to see code show up here",
   "Recorder": "ضبط کننده",
   "Attribute": "ویژگی",
   "Value": "مقدار",

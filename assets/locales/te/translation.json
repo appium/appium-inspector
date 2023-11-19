@@ -132,7 +132,7 @@
   "Start this Kind of Session with Code": "Start this Kind of Session with Code",
   "Clear Actions": "చర్యలను క్లియర్ చేయండి",
   "Close Recorder": "రికార్డర్‌ను మూసివేయండి",
-  "Perform some actions to see code show up here": "కోడ్‌ని ఇక్కడ చూపడాన్ని చూడటానికి కొన్ని చర్యలను చేయండి",
+  "enableRecordingAndPerformActions": "Enable recording in the application header, then perform some actions to see code show up here",
   "Recorder": "రికార్డర్",
   "Attribute": "గుణం",
   "Value": "విలువ",
