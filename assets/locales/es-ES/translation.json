@@ -132,7 +132,7 @@
   "Start this Kind of Session with Code": "Start this Kind of Session with Code",
   "Clear Actions": "Borrar Acciones",
   "Close Recorder": "Parar Grabación",
-  "Perform some actions to see code show up here": "Realiza algunas acciones para ver el código aparecer aquí",
+  "enableRecordingAndPerformActions": "Enable recording in the application header, then perform some actions to see code show up here",
   "Recorder": "Grabador",
   "Attribute": "Atributo",
   "Value": "Valor",

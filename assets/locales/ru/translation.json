@@ -132,7 +132,7 @@
   "Start this Kind of Session with Code": "Начать подобную сессию с помощью кода",
   "Clear Actions": "Очистить действия",
   "Close Recorder": "Закрыть запись",
-  "Perform some actions to see code show up here": "Выполните какое-нибудь действие и код появится здесь",
+  "enableRecordingAndPerformActions": "Enable recording in the application header, then perform some actions to see code show up here",
   "Recorder": "Запись",
   "Attribute": "Атрибут",
   "Value": "Значение",

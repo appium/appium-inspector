@@ -132,7 +132,7 @@
   "Start this Kind of Session with Code": "Start this Kind of Session with Code",
   "Clear Actions": "Clear Actions",
   "Close Recorder": "إغلاق المسجل",
-  "Perform some actions to see code show up here": "Perform some actions to see code show up here",
+  "enableRecordingAndPerformActions": "Enable recording in the application header, then perform some actions to see code show up here",
   "Recorder": "المُسجل",
   "Attribute": "Attribute",
   "Value": "Value",

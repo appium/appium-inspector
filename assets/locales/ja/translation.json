@@ -132,7 +132,7 @@
   "Start this Kind of Session with Code": "この種のセッションをコードで開始",
   "Clear Actions": "操作をクリアする",
   "Close Recorder": "レコーダーを閉じる",
-  "Perform some actions to see code show up here": "コードを表示するためにいくつかの操作を実行します",
+  "enableRecordingAndPerformActions": "Enable recording in the application header, then perform some actions to see code show up here",
   "Recorder": "レコーダー",
   "Attribute": "属性",
   "Value": "値",
