@@ -1,26 +1,37 @@
-import React, { useRef } from 'react';
+import {
+  AimOutlined,
+  ClearOutlined,
+  CopyOutlined,
+  HourglassOutlined,
+  LoadingOutlined,
+  SendOutlined,
+} from '@ant-design/icons';
+import {Alert, Button, Col, Input, Row, Spin, Table, Tooltip} from 'antd';
 import _ from 'lodash';
-import { getLocators } from './shared';
+import React, {useRef} from 'react';
+
+import {clipboard, shell} from '../../polyfills';
+import {ALERT, ROW} from '../AntdTypes';
 import styles from './Inspector.css';
-import { Button, Row, Col, Input, Table, Alert, Tooltip, Spin } from 'antd';
-import { clipboard, shell } from '../../polyfills';
-import { LoadingOutlined, CopyOutlined, AimOutlined, SendOutlined,
-         ClearOutlined, HourglassOutlined } from '@ant-design/icons';
-import { ROW, ALERT } from '../AntdTypes';
+import {getLocators} from './shared';
 
 const NATIVE_APP = 'NATIVE_APP';
-const CLASS_CHAIN_DOCS_URL = 'https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules';
-const PREDICATE_DOCS_URL = 'https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules';
+const CLASS_CHAIN_DOCS_URL =
+  'https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules';
+const PREDICATE_DOCS_URL =
+  'https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules';
 
 const selectedElementTableCell = (text, copyToClipBoard) => {
   if (copyToClipBoard) {
-    return <div className={styles['selected-element-table-cells']}>
-      <Tooltip title='Copied!' trigger="click">
-        <span className={styles['element-cell-copy']} onClick = {() => clipboard.writeText(text)}>
-          {text}
-        </span>
-      </Tooltip>
-    </div>;
+    return (
+      <div className={styles['selected-element-table-cells']}>
+        <Tooltip title="Copied!" trigger="click">
+          <span className={styles['element-cell-copy']} onClick={() => clipboard.writeText(text)}>
+            {text}
+          </span>
+        </Tooltip>
+      </div>
+    );
   } else {
     return <div className={styles['selected-element-table-cells']}>{text}</div>;
   }
@@ -31,28 +42,41 @@ const selectedElementTableCell = (text, copyToClipBoard) => {
  * be called on the elements (tap, sendKeys)
  */
 const SelectedElement = (props) => {
-  const { applyClientMethod, currentContext, getFindElementsTimes, findElementsExecutionTimes,
-          isFindingElementsTimes, selectedElement, selectedElementId, sourceXML,
-          elementInteractionsNotAvailable, selectedElementSearchInProgress, t } = props;
+  const {
+    applyClientMethod,
+    currentContext,
+    getFindElementsTimes,
+    findElementsExecutionTimes,
+    isFindingElementsTimes,
+    selectedElement,
+    selectedElementId,
+    sourceXML,
+    elementInteractionsNotAvailable,
+    selectedElementSearchInProgress,
+    t,
+  } = props;
 
   const sendKeys = useRef();
 
-  const { attributes, classChain, predicateString, xpath } = selectedElement;
+  const {attributes, classChain, predicateString, xpath} = selectedElement;
   const isDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
 
   // Get the columns for the attributes table
-  let attributeColumns = [{
-    title: t('Attribute'),
-    dataIndex: 'name',
-    key: 'name',
-    width: 100,
-    render: (text) => selectedElementTableCell(text, false),
-  }, {
-    title: t('Value'),
-    dataIndex: 'value',
-    key: 'value',
-    render: (text) => selectedElementTableCell(text, true),
-  }];
+  let attributeColumns = [
+    {
+      title: t('Attribute'),
+      dataIndex: 'name',
+      key: 'name',
+      width: 100,
+      render: (text) => selectedElementTableCell(text, false),
+    },
+    {
+      title: t('Value'),
+      dataIndex: 'value',
+      key: 'value',
+      render: (text) => selectedElementTableCell(text, true),
+    },
+  ];
 
   // Get the data for the attributes table
   let attrArray = _.toPairs(attributes).filter(([key]) => key !== 'path');
@@ -64,18 +88,21 @@ const SelectedElement = (props) => {
   dataSource.unshift({key: 'elementId', value: selectedElementId, name: 'elementId'});
 
   // Get the columns for the strategies table
-  let findColumns = [{
-    title: t('Find By'),
-    dataIndex: 'find',
-    key: 'find',
-    width: 100,
-    render: (text) => selectedElementTableCell(text, false),
-  }, {
-    title: t('Selector'),
-    dataIndex: 'selector',
-    key: 'selector',
-    render: (text) => selectedElementTableCell(text, true),
-  }];
+  let findColumns = [
+    {
+      title: t('Find By'),
+      dataIndex: 'find',
+      key: 'find',
+      width: 100,
+      render: (text) => selectedElementTableCell(text, false),
+    },
+    {
+      title: t('Selector'),
+      dataIndex: 'selector',
+      key: 'selector',
+      render: (text) => selectedElementTableCell(text, true),
+    },
+  ];
 
   if (findElementsExecutionTimes.length > 0) {
     findColumns.push({
@@ -103,12 +130,16 @@ const SelectedElement = (props) => {
 
   // Add class chain to the data source as well
   if (classChain && currentContext === NATIVE_APP) {
-    const classChainText = <span>
-      -ios class chain
-      <strong>
-        <a onClick={(e) => e.preventDefault() || shell.openExternal(CLASS_CHAIN_DOCS_URL)}>&nbsp;(docs)</a>
-      </strong>
-    </span>;
+    const classChainText = (
+      <span>
+        -ios class chain
+        <strong>
+          <a onClick={(e) => e.preventDefault() || shell.openExternal(CLASS_CHAIN_DOCS_URL)}>
+            &nbsp;(docs)
+          </a>
+        </strong>
+      </span>
+    );
 
     findDataSource.push({
       key: '-ios class chain',
@@ -119,12 +150,16 @@ const SelectedElement = (props) => {
 
   // Add predicate string to the data source as well
   if (predicateString && currentContext === NATIVE_APP) {
-    const predicateStringText = <span>
-      -ios predicate string
-      <strong>
-        <a onClick={(e) => e.preventDefault() || shell.openExternal(PREDICATE_DOCS_URL)}>&nbsp;(docs)</a>
-      </strong>
-    </span>;
+    const predicateStringText = (
+      <span>
+        -ios predicate string
+        <strong>
+          <a onClick={(e) => e.preventDefault() || shell.openExternal(PREDICATE_DOCS_URL)}>
+            &nbsp;(docs)
+          </a>
+        </strong>
+      </span>
+    );
 
     findDataSource.push({
       key: '-ios predicate string',
@@ -147,97 +182,111 @@ const SelectedElement = (props) => {
     findDataSource = findElementsExecutionTimes;
   }
 
-  let tapIcon = <AimOutlined/>;
+  let tapIcon = <AimOutlined />;
   if (!(elementInteractionsNotAvailable || selectedElementId) || selectedElementSearchInProgress) {
-    tapIcon = <LoadingOutlined/>;
+    tapIcon = <LoadingOutlined />;
   }
 
-  return <div>
-    {elementInteractionsNotAvailable &&
-      <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemNotInteractableAlertRow}>
-        <Col>
-          <Alert type={ALERT.INFO} message={t('interactionsNotAvailable')} showIcon />
-        </Col>
+  return (
+    <div>
+      {elementInteractionsNotAvailable && (
+        <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemNotInteractableAlertRow}>
+          <Col>
+            <Alert type={ALERT.INFO} message={t('interactionsNotAvailable')} showIcon />
+          </Col>
+        </Row>
+      )}
+      <Row justify="center" type={ROW.FLEX} align="middle" className={styles.elementActions}>
+        <Tooltip title={t('Tap')}>
+          <Button
+            disabled={isDisabled}
+            icon={tapIcon}
+            id="btnTapElement"
+            onClick={() => applyClientMethod({methodName: 'click', elementId: selectedElementId})}
+          />
+        </Tooltip>
+        <Button.Group className={styles.elementKeyInputActions}>
+          <Input
+            className={styles.elementKeyInput}
+            disabled={isDisabled}
+            placeholder={t('Enter Keys to Send')}
+            allowClear={true}
+            onChange={(e) => (sendKeys.current = e.target.value)}
+          />
+          <Tooltip title={t('Send Keys')}>
+            <Button
+              disabled={isDisabled}
+              id="btnSendKeysToElement"
+              icon={<SendOutlined />}
+              onClick={() =>
+                applyClientMethod({
+                  methodName: 'sendKeys',
+                  elementId: selectedElementId,
+                  args: [sendKeys.current || ''],
+                })
+              }
+            />
+          </Tooltip>
+          <Tooltip title={t('Clear')}>
+            <Button
+              disabled={isDisabled}
+              id="btnClearElement"
+              icon={<ClearOutlined />}
+              onClick={() => applyClientMethod({methodName: 'clear', elementId: selectedElementId})}
+            />
+          </Tooltip>
+        </Button.Group>
+        <Button.Group>
+          <Tooltip title={t('Copy Attributes to Clipboard')}>
+            <Button
+              disabled={isDisabled}
+              id="btnCopyAttributes"
+              icon={<CopyOutlined />}
+              onClick={() => clipboard.writeText(JSON.stringify(dataSource))}
+            />
+          </Tooltip>
+          <Tooltip title={t('Get Timing')}>
+            <Button
+              disabled={isDisabled}
+              id="btnGetTiming"
+              icon={<HourglassOutlined />}
+              onClick={() => getFindElementsTimes(findDataSource)}
+            />
+          </Tooltip>
+        </Button.Group>
       </Row>
-    }
-    <Row justify="center" type={ROW.FLEX} align="middle" className={styles.elementActions}>
-      <Tooltip title={t('Tap')}>
-        <Button
-          disabled={isDisabled}
-          icon={tapIcon}
-          id='btnTapElement'
-          onClick={() => applyClientMethod({methodName: 'click', elementId: selectedElementId})} />
-      </Tooltip>
-      <Button.Group className={styles.elementKeyInputActions}>
-        <Input className={styles.elementKeyInput}
-          disabled={isDisabled}
-          placeholder={t('Enter Keys to Send')}
-          allowClear={true}
-          onChange={(e) => sendKeys.current = e.target.value} />
-        <Tooltip title={t('Send Keys')}>
-          <Button
-            disabled={isDisabled}
-            id='btnSendKeysToElement'
-            icon={<SendOutlined/>}
-            onClick={() => applyClientMethod({methodName: 'sendKeys', elementId: selectedElementId, args: [sendKeys.current || '']})} />
-        </Tooltip>
-        <Tooltip title={t('Clear')}>
-          <Button
-            disabled={isDisabled}
-            id='btnClearElement'
-            icon={<ClearOutlined/>}
-            onClick={() => applyClientMethod({methodName: 'clear', elementId: selectedElementId})} />
-        </Tooltip>
-      </Button.Group>
-      <Button.Group>
-        <Tooltip title={t('Copy Attributes to Clipboard')}>
-          <Button
-            disabled={isDisabled}
-            id='btnCopyAttributes'
-            icon={<CopyOutlined/>}
-            onClick={() => clipboard.writeText(JSON.stringify(dataSource))} />
-        </Tooltip>
-        <Tooltip title={t('Get Timing')}>
-          <Button
-            disabled={isDisabled}
-            id='btnGetTiming'
-            icon={<HourglassOutlined/>}
-            onClick={() => getFindElementsTimes(findDataSource)} />
-        </Tooltip>
-      </Button.Group>
-    </Row>
-    {findDataSource.length > 0 &&
-      <Row>
-        <Spin spinning={isFindingElementsTimes}>
+      {findDataSource.length > 0 && (
+        <Row>
+          <Spin spinning={isFindingElementsTimes}>
+            <Table
+              columns={findColumns}
+              dataSource={findDataSource}
+              size="small"
+              tableLayout="fixed"
+              pagination={false}
+            />
+          </Spin>
+        </Row>
+      )}
+      <br />
+      {currentContext === NATIVE_APP && showXpathWarning && (
+        <div>
+          <Alert message={t('usingXPathNotRecommended')} type={ALERT.WARNING} showIcon />
+          <br />
+        </div>
+      )}
+      {dataSource.length > 0 && (
+        <Row>
           <Table
-            columns={findColumns}
-            dataSource={findDataSource}
+            columns={attributeColumns}
+            dataSource={dataSource}
             size="small"
-            tableLayout='fixed'
-            pagination={false} />
-        </Spin>
-      </Row>
-    }
-    <br />
-    {currentContext === NATIVE_APP && showXpathWarning &&
-      <div>
-        <Alert
-          message={t('usingXPathNotRecommended')}
-          type={ALERT.WARNING}
-          showIcon />
-        <br />
-      </div>
-    }
-    {dataSource.length > 0 &&
-      <Row>
-        <Table
-          columns={attributeColumns}
-          dataSource={dataSource}
-          size="small"
-          pagination={false} />
-      </Row>
-    }
-  </div>;
+            pagination={false}
+          />
+        </Row>
+      )}
+    </div>
+  );
 };
 
 export default SelectedElement;

@@ -1,18 +1,34 @@
-import { getSetting, setSetting, SAVED_SESSIONS, SERVER_ARGS, SESSION_SERVER_TYPE,
-         SESSION_SERVER_PARAMS } from '../../shared/settings';
-import { v4 as UUID } from 'uuid';
-import { notification } from 'antd';
-import { includes, debounce, toPairs, union, without, keys, isUndefined, isPlainObject } from 'lodash';
-import { setSessionDetails, quitSession } from './Inspector';
-import i18n from '../../configs/i18next.config.renderer';
-import CloudProviders from '../components/Session/CloudProviders';
-import { Web2Driver } from 'web2driver';
-import { addVendorPrefixes } from '../util';
+import {notification} from 'antd';
 import axios from 'axios';
+import {
+  debounce,
+  includes,
+  isPlainObject,
+  isUndefined,
+  keys,
+  toPairs,
+  union,
+  without,
+} from 'lodash';
 import moment from 'moment';
-import { APP_MODE } from '../components/Inspector/shared';
-import { ipcRenderer, fs, util } from '../polyfills';
-import { getSaveableState } from '../../main/helpers';
+import {v4 as UUID} from 'uuid';
+import {Web2Driver} from 'web2driver';
+
+import i18n from '../../configs/i18next.config.renderer';
+import {getSaveableState} from '../../main/helpers';
+import {
+  SAVED_SESSIONS,
+  SERVER_ARGS,
+  SESSION_SERVER_PARAMS,
+  SESSION_SERVER_TYPE,
+  getSetting,
+  setSetting,
+} from '../../shared/settings';
+import {APP_MODE} from '../components/Inspector/shared';
+import CloudProviders from '../components/Session/CloudProviders';
+import {fs, ipcRenderer, util} from '../polyfills';
+import {addVendorPrefixes} from '../util';
+import {quitSession, setSessionDetails} from './Inspector';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_LOADING = 'NEW_SESSION_LOADING';
@@ -63,7 +79,6 @@ export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
 export const SET_STATE_FROM_URL = 'SET_STATE_FROM_URL';
 export const SET_STATE_FROM_SAVED = 'SET_STATE_FROM_SAVED';
 
-
 const CAPS_NEW_COMMAND = 'appium:newCommandTimeout';
 const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
 const CAPS_NATIVE_WEB_SCREENSHOT = 'appium:nativeWebScreenshot';
@@ -108,21 +123,24 @@ const SAUCE_OPTIONS_CAP = 'sauce:options';
 
 const JSON_TYPES = ['object', 'number', 'boolean'];
 
-export function getCapsObject (caps) {
-  return Object.assign({}, ...(caps.map((cap) => {
-    if (JSON_TYPES.indexOf(cap.type) !== -1) {
-      try {
-        let obj = JSON.parse(cap.value);
-        return {[cap.name]: obj};
-      } catch (ign) {}
-    }
-    return {[cap.name]: cap.value};
-  })));
+export function getCapsObject(caps) {
+  return Object.assign(
+    {},
+    ...caps.map((cap) => {
+      if (JSON_TYPES.indexOf(cap.type) !== -1) {
+        try {
+          let obj = JSON.parse(cap.value);
+          return {[cap.name]: obj};
+        } catch (ign) {}
+      }
+      return {[cap.name]: cap.value};
+    }),
+  );
 }
 
-export function showError (e, params = { methodName: null, secs: 5, url: null }) {
-  const { secs, url } = params;
-  let { methodName } = params;
+export function showError(e, params = {methodName: null, secs: 5, url: null}) {
+  const {secs, url} = params;
+  let {methodName} = params;
   let errMessage;
   if (e['jsonwire-error'] && e['jsonwire-error'].status === 7) {
     // FIXME: we probably should set 'findElement' as the method name
@@ -150,9 +168,11 @@ export function showError (e, params = { methodName: null, secs: 5, url: null })
   } else {
     errMessage = i18n.t('Could not start session');
   }
-  if (errMessage === 'ECONNREFUSED' ||
-      includes(errMessage, 'Failed to fetch') ||
-      includes(errMessage, 'The requested resource could not be found')) {
+  if (
+    errMessage === 'ECONNREFUSED' ||
+    includes(errMessage, 'Failed to fetch') ||
+    includes(errMessage, 'The requested resource could not be found')
+  ) {
     errMessage = i18n.t('couldNotConnect', {url});
   }
 
@@ -160,15 +180,14 @@ export function showError (e, params = { methodName: null, secs: 5, url: null })
   notification.error({
     message: methodName ? i18n.t('callToMethodFailed', {methodName}) : i18n.t('Error'),
     description: errMessage,
-    duration: secs
+    duration: secs,
   });
-
 }
 
 /**
  * Change the caps object, along with the server details and then go back to the new session tab
  */
-export function setCapsAndServer (server, serverType, caps, uuid, name) {
+export function setCapsAndServer(server, serverType, caps, uuid, name) {
   return (dispatch) => {
     dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name});
   };
@@ -177,7 +196,7 @@ export function setCapsAndServer (server, serverType, caps, uuid, name) {
 /**
  * Change a single desired capability
  */
-export function changeCapability (key, value) {
+export function changeCapability(key, value) {
   return (dispatch) => {
     dispatch({type: CHANGE_CAPABILITY, key, value});
   };
@@ -186,7 +205,7 @@ export function changeCapability (key, value) {
 /**
  * Push a capability to the list
  */
-export function addCapability () {
+export function addCapability() {
   return (dispatch) => {
     dispatch({type: ADD_CAPABILITY});
   };
@@ -195,7 +214,7 @@ export function addCapability () {
 /**
  * Update value of a capability parameter
  */
-export function setCapabilityParam (index, name, value) {
+export function setCapabilityParam(index, name, value) {
   return (dispatch) => {
     dispatch({type: SET_CAPABILITY_PARAM, index, name, value});
   };
@@ -204,13 +223,13 @@ export function setCapabilityParam (index, name, value) {
 /**
  * Delete a capability from the list
  */
-export function removeCapability (index) {
+export function removeCapability(index) {
   return (dispatch) => {
     dispatch({type: REMOVE_CAPABILITY, index});
   };
 }
 
-function _addVendorPrefixes (caps, dispatch, getState) {
+function _addVendorPrefixes(caps, dispatch, getState) {
   const {server, serverType, capsUUID, capsName} = getState().session;
   const prefixedCaps = addVendorPrefixes(caps);
   setCapsAndServer(server, serverType, prefixedCaps, capsUUID, capsName)(dispatch);
@@ -220,7 +239,7 @@ function _addVendorPrefixes (caps, dispatch, getState) {
 /**
  * Start a new appium session with the given caps
  */
-export function newSession (caps, attachSessId = null) {
+export function newSession(caps, attachSessId = null) {
   return async (dispatch, getState) => {
     let session = getState().session;
 
@@ -287,7 +306,8 @@ export function newSession (caps, attachSessId = null) {
         path = session.server.headspin.path = headspinUrl.pathname;
         https = session.server.headspin.ssl = headspinUrl.protocol === 'https:';
         // new URL() does not have the port of 443 when `https` and 80 when `http`
-        port = session.server.headspin.port = headspinUrl.port === '' ? (https ? 443 : 80) : headspinUrl.port;
+        port = session.server.headspin.port =
+          headspinUrl.port === '' ? (https ? 443 : 80) : headspinUrl.port;
         break;
       }
       case ServerTypes.perfecto:
@@ -303,7 +323,8 @@ export function newSession (caps, attachSessId = null) {
         https = session.server.perfecto.ssl;
         break;
       case ServerTypes.browserstack:
-        host = session.server.browserstack.hostname = process.env.BROWSERSTACK_HOST || 'hub-cloud.browserstack.com';
+        host = session.server.browserstack.hostname =
+          process.env.BROWSERSTACK_HOST || 'hub-cloud.browserstack.com';
         port = session.server.browserstack.port = process.env.BROWSERSTACK_PORT || 443;
         path = session.server.browserstack.path = '/wd/hub';
         username = session.server.browserstack.username || process.env.BROWSERSTACK_USERNAME;
@@ -316,10 +337,11 @@ export function newSession (caps, attachSessId = null) {
           showError(new Error(i18n.t('browserstackCredentialsRequired')));
           return false;
         }
-        https = session.server.browserstack.ssl = (parseInt(port, 10) === 443);
+        https = session.server.browserstack.ssl = parseInt(port, 10) === 443;
         break;
       case ServerTypes.lambdatest:
-        host = session.server.lambdatest.hostname = process.env.LAMBDATEST_HOST || 'mobile-hub.lambdatest.com';
+        host = session.server.lambdatest.hostname =
+          process.env.LAMBDATEST_HOST || 'mobile-hub.lambdatest.com';
         port = session.server.lambdatest.port = process.env.LAMBDATEST_PORT || 443;
         path = session.server.lambdatest.path = '/wd/hub';
         username = session.server.lambdatest.username || process.env.LAMBDATEST_USERNAME;
@@ -327,13 +349,17 @@ export function newSession (caps, attachSessId = null) {
           desiredCapabilities['lt:options'].source = 'appiumdesktop';
           desiredCapabilities['lt:options'].isRealMobile = true;
           if (session.server.advanced.useProxy) {
-            desiredCapabilities['lt:options'].proxyUrl = isUndefined(session.server.advanced.proxy) ? '' : session.server.advanced.proxy;
+            desiredCapabilities['lt:options'].proxyUrl = isUndefined(session.server.advanced.proxy)
+              ? ''
+              : session.server.advanced.proxy;
           }
         } else {
           desiredCapabilities['lambdatest:source'] = 'appiumdesktop';
           desiredCapabilities['lambdatest:isRealMobile'] = true;
           if (session.server.advanced.useProxy) {
-            desiredCapabilities['lambdatest:proxyUrl'] = isUndefined(session.server.advanced.proxy) ? '' : session.server.advanced.proxy;
+            desiredCapabilities['lambdatest:proxyUrl'] = isUndefined(session.server.advanced.proxy)
+              ? ''
+              : session.server.advanced.proxy;
           }
         }
         accessKey = session.server.lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
@@ -376,10 +402,14 @@ export function newSession (caps, attachSessId = null) {
         host = session.server.pcloudy.hostname;
         port = session.server.pcloudy.port = 443;
         path = session.server.pcloudy.path = '/objectspy/wd/hub';
-        desiredCapabilities.pCloudy_Username = session.server.pcloudy.username || process.env.PCLOUDY_USERNAME;
-        desiredCapabilities.pCloudy_ApiKey = session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
-        if (!(session.server.pcloudy.username || process.env.PCLOUDY_USERNAME) ||
-              !(session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY)) {
+        desiredCapabilities.pCloudy_Username =
+          session.server.pcloudy.username || process.env.PCLOUDY_USERNAME;
+        desiredCapabilities.pCloudy_ApiKey =
+          session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
+        if (
+          !(session.server.pcloudy.username || process.env.PCLOUDY_USERNAME) ||
+          !(session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY)
+        ) {
           showError(new Error('PCLOUDY username and api key are required!'));
           return false;
         }
@@ -393,9 +423,12 @@ export function newSession (caps, attachSessId = null) {
           desiredCapabilities['tb:options'] = {};
         }
         desiredCapabilities['tb:options'].key = session.server.testingbot.key || process.env.TB_KEY;
-        desiredCapabilities['tb:options'].secret = session.server.testingbot.secret || process.env.TB_SECRET;
-        if (!(session.server.testingbot.key || process.env.TB_KEY) ||
-              !(session.server.testingbot.secret || process.env.TB_SECRET)) {
+        desiredCapabilities['tb:options'].secret =
+          session.server.testingbot.secret || process.env.TB_SECRET;
+        if (
+          !(session.server.testingbot.key || process.env.TB_KEY) ||
+          !(session.server.testingbot.secret || process.env.TB_SECRET)
+        ) {
           showError(new Error(i18n.t('testingbotCredentialsRequired')));
           return false;
         }
@@ -419,28 +452,37 @@ export function newSession (caps, attachSessId = null) {
         host = session.server.experitest.hostname = experitestUrl.hostname;
         path = session.server.experitest.path = '/wd/hub';
         https = session.server.experitest.ssl = experitestUrl.protocol === 'https:';
-        port = session.server.experitest.port = experitestUrl.port === '' ? (https ? 443 : 80) : experitestUrl.port;
+        port = session.server.experitest.port =
+          experitestUrl.port === '' ? (https ? 443 : 80) : experitestUrl.port;
         break;
-      } case ServerTypes.roboticmobi: {
+      }
+      case ServerTypes.roboticmobi: {
         host = 'remote.robotqa.com';
         path = '/';
         port = 443;
         https = session.server.roboticmobi.ssl = true;
         if (caps) {
           desiredCapabilities['robotqa:options'] = {};
-          desiredCapabilities['robotqa:options'].robotqa_token = session.server.roboticmobi.token || process.env.ROBOTQA_TOKEN;
+          desiredCapabilities['robotqa:options'].robotqa_token =
+            session.server.roboticmobi.token || process.env.ROBOTQA_TOKEN;
         }
         break;
-      } case ServerTypes.remotetestkit: {
+      }
+      case ServerTypes.remotetestkit: {
         host = 'gwjp.appkitbox.com';
         path = '/wd/hub';
         port = 443;
         https = true;
         desiredCapabilities['remotetestkit:options'] = {};
-        desiredCapabilities['remotetestkit:options'].accessToken = session.server.remotetestkit.token;
+        desiredCapabilities['remotetestkit:options'].accessToken =
+          session.server.remotetestkit.token;
         break;
-      } case ServerTypes.mobitru: {
-        const webDriverUrl = session.server.mobitru.webDriverUrl || process.env.MOBITRU_WEBDRIVER_URL || 'https://app.mobitru.com/wd/hub';
+      }
+      case ServerTypes.mobitru: {
+        const webDriverUrl =
+          session.server.mobitru.webDriverUrl ||
+          process.env.MOBITRU_WEBDRIVER_URL ||
+          'https://app.mobitru.com/wd/hub';
         let mobitruUrl;
         try {
           mobitruUrl = new URL(webDriverUrl);
@@ -451,9 +493,11 @@ export function newSession (caps, attachSessId = null) {
         host = session.server.mobitru.hostname = mobitruUrl.hostname;
         path = session.server.mobitru.path = mobitruUrl.pathname;
         https = session.server.mobitru.ssl = mobitruUrl.protocol === 'https:';
-        port = session.server.mobitru.port = mobitruUrl.port === '' ? (https ? 443 : 80) : mobitruUrl.port;
+        port = session.server.mobitru.port =
+          mobitruUrl.port === '' ? (https ? 443 : 80) : mobitruUrl.port;
 
-        username = session.server.mobitru.username || process.env.MOBITRU_BILLING_UNIT || 'personal';
+        username =
+          session.server.mobitru.username || process.env.MOBITRU_BILLING_UNIT || 'personal';
         accessKey = session.server.mobitru.accessKey || process.env.MOBITRU_ACCESS_KEY;
         if (!accessKey) {
           showError(new Error(i18n.t('mobitruCredentialsRequired')));
@@ -485,14 +529,13 @@ export function newSession (caps, attachSessId = null) {
 
     dispatch({type: NEW_SESSION_LOADING});
 
-
     const serverOpts = {
       hostname: host,
       port: parseInt(port, 10),
       protocol: https ? 'https' : 'http',
       path,
       connectionRetryCount: CONN_RETRIES,
-      connectionRetryTimeout: CONN_TIMEOUT
+      connectionRetryTimeout: CONN_TIMEOUT,
     };
 
     if (username && accessKey) {
@@ -523,15 +566,22 @@ export function newSession (caps, attachSessId = null) {
         // exist in our cache of running appium sessions. Otherwise (in the case where we are
         // autostarting and attaching to a new session, retrieve session details via a server call)
         serverOpts.isMobile = true;
-        const attachedSession = session.runningAppiumSessions.find((session) => session.id === attachSessId);
+        const attachedSession = session.runningAppiumSessions.find(
+          (session) => session.id === attachSessId,
+        );
         let attachedSessionCaps = {};
         if (attachedSession) {
           attachedSessionCaps = attachedSession.capabilities;
         } else {
           const {protocol, hostname, port, path} = serverOpts;
           try {
-            const detailsUrl = `${protocol}://${hostname}:${port}${path.replace(/\/$/, '')}/session/${attachSessId}`;
-            const res = await axios({url: detailsUrl, headers: { 'content-type': HEADERS_CONTENT }, timeout: CONN_TIMEOUT});
+            const cleanedPath = path.replace(/\/$/, '');
+            const detailsUrl = `${protocol}://${hostname}:${port}${cleanedPath}/session/${attachSessId}`;
+            const res = await axios({
+              url: detailsUrl,
+              headers: {'content-type': HEADERS_CONTENT},
+              timeout: CONN_TIMEOUT,
+            });
             attachedSessionCaps = res.data.value;
           } catch (err) {
             // rethrow the error as session not running, but first log the original error to
@@ -548,7 +598,7 @@ export function newSession (caps, attachSessId = null) {
         driver = await Web2Driver.remote(serverOpts, desiredCapabilities);
       }
     } catch (err) {
-      const { protocol, hostname, port, path } = serverOpts;
+      const {protocol, hostname, port, path} = serverOpts;
       const url = `${protocol}://${hostname}:${port}${path}`;
       showError(err, {secs: 0, url});
       return false;
@@ -571,12 +621,11 @@ export function newSession (caps, attachSessId = null) {
       } catch (ign) {}
     }
 
+    let mjpegScreenshotUrl =
+      driver.capabilities[`appium:${MJPEG_CAP}`] || driver.capabilities[MJPEG_CAP] || null;
 
-    let mjpegScreenshotUrl = driver.capabilities[`appium:${MJPEG_CAP}`] ||
-      driver.capabilities[MJPEG_CAP] ||
-      null;
-
-    const mjpegScreenshotPort = driver.capabilities[`appium:${MJPEG_PORT_CAP}`] ||
+    const mjpegScreenshotPort =
+      driver.capabilities[`appium:${MJPEG_PORT_CAP}`] ||
       driver.capabilities[MJPEG_PORT_CAP] ||
       null;
 
@@ -599,24 +648,22 @@ export function newSession (caps, attachSessId = null) {
         https,
       },
       mode,
-      mjpegScreenshotUrl
+      mjpegScreenshotUrl,
     });
     action(dispatch);
     return true;
   };
 }
 
-
 /**
  * Saves the caps and server details
  */
-export function saveSession (server, serverType, caps, params) {
+export function saveSession(server, serverType, caps, params) {
   return async (dispatch) => {
     let {name, uuid} = params;
     dispatch({type: SAVE_SESSION_REQUESTED});
-    let savedSessions = await getSetting(SAVED_SESSIONS) || [];
+    let savedSessions = (await getSetting(SAVED_SESSIONS)) || [];
     if (!uuid) {
-
       // If it's a new session, add it to the list
       uuid = UUID();
       let newSavedSession = {
@@ -629,7 +676,6 @@ export function saveSession (server, serverType, caps, params) {
       };
       savedSessions.push(newSavedSession);
     } else {
-
       // If it's an existing session, overwrite it
       for (let session of savedSessions) {
         if (session.uuid === uuid) {
@@ -651,7 +697,7 @@ export function saveSession (server, serverType, caps, params) {
 /**
  * Get the sessions saved by the user
  */
-export function getSavedSessions () {
+export function getSavedSessions() {
   return async (dispatch) => {
     dispatch({type: GET_SAVED_SESSIONS_REQUESTED});
     let savedSessions = await getSetting(SAVED_SESSIONS);
@@ -662,7 +708,7 @@ export function getSavedSessions () {
 /**
  * Switch to a different tab
  */
-export function switchTabs (key) {
+export function switchTabs(key) {
   return (dispatch) => {
     dispatch({type: SWITCHED_TABS, key});
   };
@@ -671,7 +717,7 @@ export function switchTabs (key) {
 /**
  * Open a 'Save As' modal
  */
-export function requestSaveAsModal () {
+export function requestSaveAsModal() {
   return (dispatch) => {
     dispatch({type: SAVE_AS_MODAL_REQUESTED});
   };
@@ -680,7 +726,7 @@ export function requestSaveAsModal () {
 /**
  * Hide the 'Save As' modal
  */
-export function hideSaveAsModal () {
+export function hideSaveAsModal() {
   return (dispatch) => {
     dispatch({type: HIDE_SAVE_AS_MODAL_REQUESTED});
   };
@@ -689,7 +735,7 @@ export function hideSaveAsModal () {
 /**
  * Set the text to save capabilities as
  */
-export function setSaveAsText (saveAsText) {
+export function setSaveAsText(saveAsText) {
   return (dispatch) => {
     dispatch({type: SET_SAVE_AS_TEXT, saveAsText});
   };
@@ -698,7 +744,7 @@ export function setSaveAsText (saveAsText) {
 /**
  * Delete a saved session
  */
-export function deleteSavedSession (uuid) {
+export function deleteSavedSession(uuid) {
   return async (dispatch) => {
     dispatch({type: DELETE_SAVED_SESSION_REQUESTED, uuid});
     let savedSessions = await getSetting(SAVED_SESSIONS);
@@ -712,7 +758,7 @@ export function deleteSavedSession (uuid) {
 /**
  * Set the session id to attach to
  */
-export function setAttachSessId (attachSessId) {
+export function setAttachSessId(attachSessId) {
   return (dispatch) => {
     dispatch({type: SET_ATTACH_SESS_ID, attachSessId});
   };
@@ -721,7 +767,7 @@ export function setAttachSessId (attachSessId) {
 /**
  * Change the server type
  */
-export function changeServerType (serverType) {
+export function changeServerType(serverType) {
   return async (dispatch, getState) => {
     await setSetting(SESSION_SERVER_TYPE, serverType);
     dispatch({type: CHANGE_SERVER_TYPE, serverType});
@@ -733,7 +779,7 @@ export function changeServerType (serverType) {
 /**
  * Set a server parameter (host, port, etc...)
  */
-export function setServerParam (name, value, serverType) {
+export function setServerParam(name, value, serverType) {
   const debounceGetRunningSessions = debounce(getRunningSessions(), 5000);
   return async (dispatch, getState) => {
     serverType = serverType || getState().session.serverType;
@@ -747,17 +793,37 @@ export function setServerParam (name, value, serverType) {
  * Set the local server hostname and port to whatever was saved in 'actions/StartServer.js' so that it
  * defaults to what the currently running appium server is
  */
-export function setLocalServerParams () {
+export function setLocalServerParams() {
   return async (dispatch, getState) => {
     let serverArgs = await getSetting(SERVER_ARGS);
     // Get saved server args from settings and set local server settings to it. If there are no saved args, set local
     // host and port to undefined
     if (serverArgs) {
-      dispatch({type: SET_SERVER_PARAM, serverType: ServerTypes.local, name: 'port', value: serverArgs.port});
-      dispatch({type: SET_SERVER_PARAM, serverType: ServerTypes.local, name: 'hostname', value: 'localhost'});
+      dispatch({
+        type: SET_SERVER_PARAM,
+        serverType: ServerTypes.local,
+        name: 'port',
+        value: serverArgs.port,
+      });
+      dispatch({
+        type: SET_SERVER_PARAM,
+        serverType: ServerTypes.local,
+        name: 'hostname',
+        value: 'localhost',
+      });
     } else {
-      dispatch({type: SET_SERVER_PARAM, serverType: ServerTypes.local, name: 'port', value: undefined});
-      dispatch({type: SET_SERVER_PARAM, serverType: ServerTypes.local, name: 'hostname', value: undefined});
+      dispatch({
+        type: SET_SERVER_PARAM,
+        serverType: ServerTypes.local,
+        name: 'port',
+        value: undefined,
+      });
+      dispatch({
+        type: SET_SERVER_PARAM,
+        serverType: ServerTypes.local,
+        name: 'hostname',
+        value: undefined,
+      });
       if (getState().session.serverType === 'local') {
         const action = changeServerType('remote');
         await action(dispatch, getState);
@@ -770,7 +836,7 @@ export function setLocalServerParams () {
  * Set the server parameters to whatever they were last saved as.
  * Params are saved whenever there's a new session
  */
-export function setSavedServerParams () {
+export function setSavedServerParams() {
   return async (dispatch, getState) => {
     let server = await getSetting(SESSION_SERVER_PARAMS);
     let serverType = await getSetting(SESSION_SERVER_TYPE);
@@ -779,8 +845,7 @@ export function setSavedServerParams () {
     if (server) {
       // if we have a cloud provider as a saved server, but for some reason the
       // cloud provider is no longer in the list, revert server type to remote
-      if (keys(CloudProviders).includes(serverType) &&
-          !currentProviders.includes(serverType)) {
+      if (keys(CloudProviders).includes(serverType) && !currentProviders.includes(serverType)) {
         serverType = ServerTypes.remote;
       }
       dispatch({type: SET_SERVER, server, serverType});
@@ -788,7 +853,7 @@ export function setSavedServerParams () {
   };
 }
 
-export function setStateFromAppiumFile (newFilepath = null) {
+export function setStateFromAppiumFile(newFilepath = null) {
   return async (dispatch) => {
     // no "fs" means we're not in an Electron renderer so do nothing
     if (!fs) {
@@ -818,7 +883,7 @@ export function setStateFromAppiumFile (newFilepath = null) {
   };
 }
 
-export function saveFile (filepath) {
+export function saveFile(filepath) {
   return async (dispatch, getState) => {
     const state = getState().session;
     const filePath = filepath || state.filePath;
@@ -834,11 +899,9 @@ export function saveFile (filepath) {
   };
 }
 
-export function getRunningSessions () {
+export function getRunningSessions() {
   return async (dispatch, getState) => {
-    const avoidServerTypes = [
-      'sauce'
-    ];
+    const avoidServerTypes = ['sauce'];
     // Get currently running sessions for this server
     const state = getState().session;
     const {server, serverType} = state;
@@ -868,10 +931,15 @@ export function getRunningSessions () {
     try {
       const adjPath = path.endsWith('/') ? path : `${path}/`;
       const url = `http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`;
-      const res = await axios({url, headers: {
-        'content-type': HEADERS_CONTENT,
-        ...(username && accessKey ? {'Authorization': `Basic ${btoa(`${username}:${accessKey}`)}`} : {})
-      }});
+      const res = await axios({
+        url,
+        headers: {
+          'content-type': HEADERS_CONTENT,
+          ...(username && accessKey
+            ? {Authorization: `Basic ${btoa(`${username}:${accessKey}`)}`}
+            : {}),
+        },
+      });
       dispatch({type: GET_SESSIONS_DONE, sessions: res.data.value});
     } catch (err) {
       console.warn(`Ignoring error in getting list of active sessions: ${err}`); // eslint-disable-line no-console
@@ -880,19 +948,19 @@ export function getRunningSessions () {
   };
 }
 
-export function startDesiredCapsNameEditor () {
+export function startDesiredCapsNameEditor() {
   return (dispatch) => {
     dispatch({type: ENABLE_DESIRED_CAPS_NAME_EDITOR});
   };
 }
 
-export function abortDesiredCapsNameEditor () {
+export function abortDesiredCapsNameEditor() {
   return (dispatch) => {
     dispatch({type: ABORT_DESIRED_CAPS_NAME_EDITOR});
   };
 }
 
-export function saveDesiredCapsName () {
+export function saveDesiredCapsName() {
   return (dispatch, getState) => {
     const {server, serverType, caps, capsUUID, desiredCapsName} = getState().session;
     dispatch({type: SAVE_DESIRED_CAPS_NAME, name: desiredCapsName});
@@ -900,25 +968,25 @@ export function saveDesiredCapsName () {
   };
 }
 
-export function setDesiredCapsName (desiredCapsName) {
+export function setDesiredCapsName(desiredCapsName) {
   return (dispatch) => {
     dispatch({type: SET_DESIRED_CAPS_NAME, desiredCapsName});
   };
 }
 
-export function startDesiredCapsEditor () {
+export function startDesiredCapsEditor() {
   return (dispatch) => {
     dispatch({type: ENABLE_DESIRED_CAPS_EDITOR});
   };
 }
 
-export function abortDesiredCapsEditor () {
+export function abortDesiredCapsEditor() {
   return (dispatch) => {
     dispatch({type: ABORT_DESIRED_CAPS_EDITOR});
   };
 }
 
-export function saveRawDesiredCaps () {
+export function saveRawDesiredCaps() {
   return (dispatch, getState) => {
     const state = getState().session;
     const {rawDesiredCaps, caps: capsArray} = state;
@@ -955,7 +1023,7 @@ export function saveRawDesiredCaps () {
   };
 }
 
-export function setRawDesiredCaps (rawDesiredCaps) {
+export function setRawDesiredCaps(rawDesiredCaps) {
   return (dispatch, getState) => {
     const state = getState().session;
     let isValidCapsJson = true;
@@ -972,19 +1040,19 @@ export function setRawDesiredCaps (rawDesiredCaps) {
   };
 }
 
-export function addCloudProvider () {
+export function addCloudProvider() {
   return (dispatch) => {
     dispatch({type: IS_ADDING_CLOUD_PROVIDER, isAddingProvider: true});
   };
 }
 
-export function stopAddCloudProvider () {
+export function stopAddCloudProvider() {
   return (dispatch) => {
     dispatch({type: IS_ADDING_CLOUD_PROVIDER, isAddingProvider: false});
   };
 }
 
-export function addVisibleProvider (provider) {
+export function addVisibleProvider(provider) {
   return async (dispatch, getState) => {
     let currentProviders = getState().session.visibleProviders;
     const providers = union(currentProviders, [provider]);
@@ -993,7 +1061,7 @@ export function addVisibleProvider (provider) {
   };
 }
 
-export function removeVisibleProvider (provider) {
+export function removeVisibleProvider(provider) {
   return async (dispatch, getState) => {
     let currentProviders = getState().session.visibleProviders;
     const providers = without(currentProviders, provider);
@@ -1002,7 +1070,7 @@ export function removeVisibleProvider (provider) {
   };
 }
 
-export function setVisibleProviders () {
+export function setVisibleProviders() {
   return async (dispatch) => {
     const providers = await getSetting(VISIBLE_PROVIDERS);
     dispatch({type: SET_PROVIDERS, providers});
@@ -1014,7 +1082,7 @@ export function setVisibleProviders () {
  *
  * @param {object} caps
  */
-function addCustomCaps (caps) {
+function addCustomCaps(caps) {
   const {platformName = ''} = caps;
   const androidCustomCaps = {};
   // @TODO: remove when this is defaulted in the newest Appium 1.8.x release
@@ -1035,7 +1103,7 @@ function addCustomCaps (caps) {
   };
 }
 
-export function bindWindowClose () {
+export function bindWindowClose() {
   return (dispatch, getState) => {
     window.addEventListener('beforeunload', async (evt) => {
       let {driver} = getState().inspector;
@@ -1055,13 +1123,13 @@ export function bindWindowClose () {
   };
 }
 
-export function setAddVendorPrefixes (addVendorPrefixes) {
+export function setAddVendorPrefixes(addVendorPrefixes) {
   return (dispatch) => {
     dispatch({type: SET_ADD_VENDOR_PREFIXES, addVendorPrefixes});
   };
 }
 
-export function initFromQueryString (loadNewSession) {
+export function initFromQueryString(loadNewSession) {
   return (dispatch, getState) => {
     if (!isFirstRun) {
       return;
@@ -1083,7 +1151,7 @@ export function initFromQueryString (loadNewSession) {
     }
 
     if (autoStartSession === AUTO_START_URL_PARAM) {
-      const { attachSessId, caps } = getState().session;
+      const {attachSessId, caps} = getState().session;
       if (attachSessId) {
         return loadNewSession(null, attachSessId);
       }

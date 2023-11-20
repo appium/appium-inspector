@@ -2,13 +2,13 @@ const BUTTON = {
   DEFAULT: 'default',
   PRIMARY: 'primary',
   DISABLED: 'disabled',
-  DANGER: 'danger'
+  DANGER: 'danger',
 };
 
 const ALERT = {
   ERROR: 'error',
   WARNING: 'warning',
-  INFO: 'info'
+  INFO: 'info',
 };
 
 const INPUT = {
@@ -16,17 +16,11 @@ const INPUT = {
   TEXT: 'text',
   TEXTAREA: 'textarea',
   PASSWORD: 'password',
-  SUBMIT: 'submit'
+  SUBMIT: 'submit',
 };
 
 const ROW = {
-  FLEX: 'flex'
+  FLEX: 'flex',
 };
 
-
-export {
-  BUTTON,
-  ALERT,
-  INPUT,
-  ROW
-};
+export {BUTTON, ALERT, INPUT, ROW};

@@ -1,6 +1,6 @@
 const APPIUM_SESSION_FILE_VERSION = '1.0';
 
-export function getAppiumSessionFilePath (argv, isPackaged, isDev) {
+export function getAppiumSessionFilePath(argv, isPackaged, isDev) {
   if (isDev) {
     // do not use file launcher in dev mode because argv is different
     // then it is in production
@@ -16,7 +16,7 @@ export function getAppiumSessionFilePath (argv, isPackaged, isDev) {
 }
 
 // get the slice of the redux state that's needed for the .appiumsession files
-export function getSaveableState (reduxState) {
+export function getSaveableState(reduxState) {
   return {
     version: APPIUM_SESSION_FILE_VERSION,
     caps: reduxState.caps,

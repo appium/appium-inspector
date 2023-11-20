@@ -1,4 +1,4 @@
-export function setValueReact (selector, value) {
+export function setValueReact(selector, value) {
   return `
     const element = document.querySelector("${selector}");
     const value = "${value}";
