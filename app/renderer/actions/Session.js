@@ -577,7 +577,11 @@ export function newSession(caps, attachSessId = null) {
           try {
             const cleanedPath = path.replace(/\/$/, '');
             const detailsUrl = `${protocol}://${hostname}:${port}${cleanedPath}/session/${attachSessId}`;
-            const res = await axios({url: detailsUrl, headers: { 'content-type': HEADERS_CONTENT }, timeout: CONN_TIMEOUT});
+            const res = await axios({
+              url: detailsUrl,
+              headers: {'content-type': HEADERS_CONTENT},
+              timeout: CONN_TIMEOUT,
+            });
             attachedSessionCaps = res.data.value;
           } catch (err) {
             // rethrow the error as session not running, but first log the original error to
