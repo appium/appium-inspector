@@ -8,15 +8,15 @@ body:
       label: Is this an issue specifically with Appium Inspector?
       description: Appium Inspector is a wrapper around Appium. If you are having trouble running tests, it is much more likely that your problem is caused by Appium, not Appium Inspector, and should be reported in [the Appium repository](https://github.com/appium/appium/issues) instead.
       options:
-      - label: I have verified that my issue does _not_ occur with Appium, and should be investigated as an Appium Inspector issue
-        required: true
+        - label: I have verified that my issue does _not_ occur with Appium, and should be investigated as an Appium Inspector issue
+          required: true
   - type: checkboxes
     attributes:
       label: Is there an existing issue for this?
       description: 'Please [search :mag: the issues](https://github.com/appium/appium-inspector/issues) to check if this bug has already been reported.'
       options:
-      - label: I have searched the existing issues
-        required: true
+        - label: I have searched the existing issues
+          required: true
   - type: textarea
     attributes:
       label: Current Behavior

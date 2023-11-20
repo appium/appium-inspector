@@ -22,7 +22,10 @@
   "main": "dist/main.js",
   "scripts": {
     "test": "npm run test:lint && npm run test:unit && npm run test:integration",
-    "test:lint": "eslint app test",
+    "test:lint": "eslint .",
+    "test:lint:fix": "eslint . --fix",
+    "test:format": "prettier . -c",
+    "test:format:fix": "prettier . -w",
     "test:unit": "cross-env BUILD_BROWSER=1 E2E_TIMEOUT=600000 NODE_ENV=test RUNNING_IN_SPECTRON=true mocha --reporter mocha-multi-reporters --reporter-options configFile=./test/mochareporters.json ./test/unit",
     "test:integration": "cross-env BUILD_BROWSER=1 E2E_TIMEOUT=600000 NODE_ENV=test RUNNING_IN_SPECTRON=true mocha --reporter mocha-multi-reporters --reporter-options configFile=./test/mochareporters.json ./test/integration",
     "e2e": "cross-env E2E_TIMEOUT=600000 NODE_ENV=test RUNNING_IN_SPECTRON=true mocha --reporter mocha-multi-reporters --reporter-options configFile=./test/mochareporters.json ./test/e2e",
@@ -49,6 +52,11 @@
     "postversion": "git pull --tags && git push && git push --tags",
     "crowdin-sync": "node ./ci-jobs/crowdin-sync-translations.mjs",
     "crowdin-update": "node ./ci-jobs/crowdin-update-resources.mjs"
+  },
+  "prettier": {
+    "bracketSpacing": false,
+    "printWidth": 100,
+    "singleQuote": true
   },
   "build": {
     "productName": "Appium Inspector",
@@ -206,7 +214,6 @@
     "electron-extension-installer": "1.2.0",
     "eslint": "8.54.0",
     "eslint-plugin-import": "2.29.0",
-    "eslint-plugin-jsx-a11y": "6.8.0",
     "eslint-plugin-mocha": "10.2.0",
     "eslint-plugin-promise": "6.1.1",
     "eslint-plugin-react": "7.33.2",
@@ -219,6 +226,7 @@
     "parcel-bundler": "1.12.5",
     "parcel-plugin-asset-copier": "1.1.1",
     "postcss-modules": "3.2.2",
+    "prettier": "3.1.0",
     "redux-logger": "3.0.6",
     "rimraf": "5.0.5",
     "sinon": "17.0.1",

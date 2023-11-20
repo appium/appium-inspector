@@ -1,0 +1,8 @@
+# ESLint ignores node_modules, dotfolders and dotfiles by default
+dist
+dist-browser
+release
+
+**/*.log
+**/*.xml
+**/*.html

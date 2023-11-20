@@ -1,15 +1,21 @@
-import React, { useEffect, useRef } from 'react';
-import { Table, Button, Space, Tooltip } from 'antd';
-import InspectorStyles from './Inspector.css';
-import { EditOutlined, DeleteOutlined, PlusOutlined, PlayCircleOutlined } from '@ant-design/icons';
-import { SCREENSHOT_INTERACTION_MODE, POINTER_TYPES, percentageToPixels } from './shared';
+import {DeleteOutlined, EditOutlined, PlayCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {Button, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
+import React, {useEffect, useRef} from 'react';
 
-const SAVED_ACTIONS_OBJ = {NAME: 'Name', DESCRIPTION: 'Description', CREATED: 'Created', ACTIONS: 'Actions'};
+import InspectorStyles from './Inspector.css';
+import {POINTER_TYPES, SCREENSHOT_INTERACTION_MODE, percentageToPixels} from './shared';
+
+const SAVED_ACTIONS_OBJ = {
+  NAME: 'Name',
+  DESCRIPTION: 'Description',
+  CREATED: 'Created',
+  ACTIONS: 'Actions',
+};
 
 const SavedGestures = (props) => {
-  const { savedGestures, showGestureEditor, removeGestureDisplay, t } = props;
+  const {savedGestures, showGestureEditor, removeGestureDisplay, t} = props;
 
   const drawnGestureRef = useRef(null);
 
@@ -25,14 +31,14 @@ const SavedGestures = (props) => {
   };
 
   const loadSavedGesture = (gesture) => {
-    const { setLoadedGesture } = props;
+    const {setLoadedGesture} = props;
     removeGestureDisplay();
     setLoadedGesture(gesture);
     showGestureEditor();
   };
 
   const handleDelete = (id) => {
-    const { deleteSavedGesture } = props;
+    const {deleteSavedGesture} = props;
     if (window.confirm('Are you sure?')) {
       deleteSavedGesture(id);
     }
@@ -48,13 +54,13 @@ const SavedGestures = (props) => {
   };
 
   const onDraw = (gesture) => {
-    const { displayGesture } = props;
+    const {displayGesture} = props;
     const pointers = convertCoordinates(gesture.actions);
     displayGesture(pointers);
   };
 
   const onPlay = (gesture) => {
-    const { applyClientMethod } = props;
+    const {applyClientMethod} = props;
     const pointers = convertCoordinates(gesture.actions);
     const actions = formatGesture(pointers);
     applyClientMethod({methodName: SCREENSHOT_INTERACTION_MODE.GESTURE, args: [actions]});
@@ -69,7 +75,7 @@ const SavedGestures = (props) => {
   };
 
   const convertCoordinates = (pointers) => {
-    const { windowSize } = props;
+    const {windowSize} = props;
     const newPointers = JSON.parse(JSON.stringify(pointers));
     for (const pointer of newPointers) {
       for (const tick of pointer.ticks) {
@@ -83,52 +89,64 @@ const SavedGestures = (props) => {
   };
 
   const dataSource = () => {
-    if (!savedGestures) { return []; }
+    if (!savedGestures) {
+      return [];
+    }
     return savedGestures.map((gesture) => ({
       key: gesture.id,
-      Name: (gesture.name || '(Unnamed)'),
+      Name: gesture.name || '(Unnamed)',
       Created: moment(gesture.date).format('YYYY-MM-DD'),
       Description: gesture.description || 'No Description',
     }));
   };
 
-  const columns = (Object.keys(SAVED_ACTIONS_OBJ)).map((key) => {
+  const columns = Object.keys(SAVED_ACTIONS_OBJ).map((key) => {
     if (SAVED_ACTIONS_OBJ[key] === SAVED_ACTIONS_OBJ.ACTIONS) {
-      return {title: SAVED_ACTIONS_OBJ[key], key: SAVED_ACTIONS_OBJ[key], render: (_, record) => {
-        const gesture = getGestureByID(record.key);
-        return (
-          <Button.Group>
-            <Tooltip title={t('Play')}>
-              <Button key='play' type='primary' icon={<PlayCircleOutlined />} onClick={() => onPlay(gesture)}/>
-            </Tooltip>
-            <Button icon={<EditOutlined/>} onClick={() => loadSavedGesture(gesture)}/>
-            <Button icon={<DeleteOutlined/>} onClick={() => handleDelete(gesture.id)}/>
-          </Button.Group>
-        );
-      }};
+      return {
+        title: SAVED_ACTIONS_OBJ[key],
+        key: SAVED_ACTIONS_OBJ[key],
+        render: (_, record) => {
+          const gesture = getGestureByID(record.key);
+          return (
+            <Button.Group>
+              <Tooltip title={t('Play')}>
+                <Button
+                  key="play"
+                  type="primary"
+                  icon={<PlayCircleOutlined />}
+                  onClick={() => onPlay(gesture)}
+                />
+              </Tooltip>
+              <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
+              <Button icon={<DeleteOutlined />} onClick={() => handleDelete(gesture.id)} />
+            </Button.Group>
+          );
+        },
+      };
     } else {
-      return {title: SAVED_ACTIONS_OBJ[key], dataIndex: SAVED_ACTIONS_OBJ[key], key: SAVED_ACTIONS_OBJ[key]};
+      return {
+        title: SAVED_ACTIONS_OBJ[key],
+        dataIndex: SAVED_ACTIONS_OBJ[key],
+        key: SAVED_ACTIONS_OBJ[key],
+      };
     }
   });
 
   useEffect(() => {
-    const { getSavedGestures } = props;
+    const {getSavedGestures} = props;
     getSavedGestures();
-    return () => drawnGestureRef.current = null;
+    return () => (drawnGestureRef.current = null);
   }, []);
 
   return (
-    <Space className={InspectorStyles.spaceContainer} direction='vertical' size='middle'>
+    <Space className={InspectorStyles.spaceContainer} direction="vertical" size="middle">
       {t('gesturesDescription')}
       <Table
         onRow={(row) => ({onClick: () => onRowClick(row.key)})}
         pagination={false}
         dataSource={dataSource()}
         columns={columns}
-        footer={() => <Button
-          onClick={showGestureEditor}
-          icon={<PlusOutlined/>}
-        />}
+        footer={() => <Button onClick={showGestureEditor} icon={<PlusOutlined />} />}
       />
     </Space>
   );

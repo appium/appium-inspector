@@ -1,5 +1,5 @@
-import { load } from 'cheerio';
-import { parseDocument } from 'htmlparser2';
+import {load} from 'cheerio';
+import {parseDocument} from 'htmlparser2';
 
 /**
  * JS code that is executed in the webview to set the needed attributes on the DOM so the source can be used for the
@@ -12,8 +12,8 @@ import { parseDocument } from 'htmlparser2';
  *
  * That's why the object destructuring is done in the method itself
  */
-export function setHtmlElementAttributes (obj) {
-  const { isAndroid, webviewTopOffset, webviewLeftOffset } = obj;
+export function setHtmlElementAttributes(obj) {
+  const {isAndroid, webviewTopOffset, webviewLeftOffset} = obj;
   const htmlElements = document.body.getElementsByTagName('*');
   // iOS uses CSS sizes for elements and screenshots, Android sizes times DRP
   // for other platforms, use default DRP of 1
@@ -24,8 +24,8 @@ export function setHtmlElementAttributes (obj) {
 
     el.setAttribute('data-appium-inspector-width', Math.round(rect.width * dpr));
     el.setAttribute('data-appium-inspector-height', Math.round(rect.height * dpr));
-    el.setAttribute('data-appium-inspector-x', Math.round(webviewLeftOffset + (rect.left * dpr)));
-    el.setAttribute('data-appium-inspector-y', Math.round(webviewTopOffset + (rect.top * dpr)));
+    el.setAttribute('data-appium-inspector-x', Math.round(webviewLeftOffset + rect.left * dpr));
+    el.setAttribute('data-appium-inspector-y', Math.round(webviewTopOffset + rect.top * dpr));
   });
 }
 
@@ -34,7 +34,7 @@ export function setHtmlElementAttributes (obj) {
  * - head and scripts need to be removed to clean the HTML tree
  * - all custom attributes need to be transformed to normal width/height/x/y
  */
-export function parseSource (source) {
+export function parseSource(source) {
   // TODO this check is a bit brittle, figure out a better way to check whether we have a web
   // source vs something else. Just checking for <html in the source doesn't work because fake
   // driver app sources can include embedded <html elements even though the overall source is not
