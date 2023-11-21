@@ -35,7 +35,8 @@ const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 
 const MIN_WIDTH = 870;
 const MIN_HEIGHT = 610;
-const MAX_SCREENSHOT_WIDTH = 500;
+const SMALLEST_MAX_SCREENSHOT_WIDTH = 500;
+const MAX_SCREENSHOT_WIDTH_FRACTION = 0.4;
 
 const MJPEG_STREAM_CHECK_INTERVAL = 1000;
 const SESSION_EXPIRY_PROMPT_TIMEOUT = 60 * 60 * 1000; // Give user 1 hour to reply
@@ -131,8 +132,12 @@ const Inspector = (props) => {
     if (imgRect.height < screenshotRect.height) {
       // get what the img width would be if it fills screenshot box height
       const attemptedWidth = (screenshotRect.height / imgRect.height) * imgRect.width;
-      screenshotBox.style.maxWidth =
-        attemptedWidth > MAX_SCREENSHOT_WIDTH ? `${MAX_SCREENSHOT_WIDTH}px` : `${attemptedWidth}px`;
+      const maxWindowFractionWidth = Math.trunc(window.innerWidth * MAX_SCREENSHOT_WIDTH_FRACTION);
+      const curMaxScreenshotWidth = Math.min(
+        Math.max(maxWindowFractionWidth, SMALLEST_MAX_SCREENSHOT_WIDTH),
+        attemptedWidth,
+      );
+      screenshotBox.style.maxWidth = `${curMaxScreenshotWidth}px`;
     } else if (imgRect.width < screenshotRect.width) {
       screenshotBox.style.maxWidth = `${imgRect.width}px`;
     }
