@@ -127,7 +127,7 @@ Want to help us develop this app? We'd love it! Getting set up to do development
 From here, have a look at the `scripts` field of our package.json to see what kind of dev scripts you might want to run. Some of the most useful are:
 
 - `npm test`: run basic lint and unit tests
-- `npm e2e`: run E2E tests
+- `npm run e2e`: run E2E tests
 - `npm run dev`: run the app in dev mode (will refresh when you make code changes)
 - `npm run build`: build the production version of the app into `dist/`
 - `npm run build:browser`: build a version of the app for web browsers into `dist-browser/`
