@@ -153,7 +153,7 @@
     "antd": "4.24.15",
     "axios": "1.6.2",
     "bluebird": "3.7.2",
-    "cheerio": "1.0.0-rc.12",
+    "cheerio": "1.0.0-rc.10",
     "electron-log": "4.4.8",
     "electron-settings": "4.0.2",
     "electron-updater": "6.1.7",
