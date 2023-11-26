@@ -124,6 +124,10 @@ Want to help us develop this app? We'd love it! Getting set up to do development
 1. Clone the repo
 2. Install dependencies (`npm ci`)
 
+> **Note** There are some possible requirements prior to the install, because of [node-gyp](https://github.com/nodejs/node-gyp#installation):
+> - [Python](https://www.python.org/)
+> - some C/C++ compiler tools matching your operating system
+
 From here, have a look at the `scripts` field of our package.json to see what kind of dev scripts you might want to run. Some of the most useful are:
 
 - `npm test`: run basic lint and unit tests
