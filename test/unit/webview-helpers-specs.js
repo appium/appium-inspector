@@ -5,6 +5,7 @@ import {join} from 'path';
 
 import {parseSource} from '../../app/renderer/lib/webview-helpers';
 
+chai.should();
 chai.use(chaiAsPromised);
 
 describe('webview-helpers.js', function () {
