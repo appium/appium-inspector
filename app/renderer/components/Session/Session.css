@@ -17,9 +17,16 @@
   margin-left: 10px;
 }
 
-.sessionContainer :global(.anticon:hover) {
-  background-color: #f08080;
+.sessionContainer :global(.ant-btn-icon-only:not([disabled]):hover),
+.sessionContainer :global(.ant-btn-icon-only:not([disabled]):focus) {
   color: white;
+  border-color: #f08080;
+  background: #f08080;
+}
+.sessionContainer :global(.ant-btn-icon-only:not([disabled]):active) {
+  color: white;
+  border-color: #dc3d32;
+  background: #dc3d32;
 }
 
 .sessionContainer :global(.addCloudProviderTab) {
