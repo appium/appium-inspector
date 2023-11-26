@@ -125,6 +125,7 @@ Want to help us develop this app? We'd love it! Getting set up to do development
 2. Install dependencies (`npm ci`)
 
 > **Note** There are some possible requirements prior to the install, because of [node-gyp](https://github.com/nodejs/node-gyp#installation):
+>
 > - [Python](https://www.python.org/)
 > - some C/C++ compiler tools matching your operating system
 
