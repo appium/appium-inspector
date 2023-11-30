@@ -80,6 +80,7 @@ any other command: `./Appium-Inspector-linux.AppImage`.
 | [HeadSpin](https://headspin.io)             | [Documentation](https://headspin.io/)                                                 |
 | [Browserstack](https://browserstack.com)    | [Documentation](https://www.browserstack.com/docs)                                    |
 | [Lambdatest](https://lambdatest.com)        | [Documentation](https://www.lambdatest.com/support/docs/appium-inspector-integration) |
+| [TestGrid](https://testgrid.io)             | [Documentation]([https://testgrid.io/blog/appium-inspector-tutorial/)                                                 |
 | [Bitbar](https://bitbar.com)                | [Documentation](http://docs.bitbar.com/)                                              |
 | [Kobiton](https://kobiton.com)              | [Documentation](https://docs.kobiton.com/)                                            |
 | [Perfecto](https://www.perfecto.io)         | [Documentation](https://developers.perfectomobile.com/display/PD/Appium)              |
