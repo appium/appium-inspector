@@ -175,7 +175,7 @@
     "semver": "7.5.4",
     "uuid": "9.0.1",
     "web2driver": "3.0.4",
-    "xpath": "0.0.33"
+    "xpath": "0.0.34"
   },
   "//devDependencies": {
     "chai-as-promised": "Abandoned",
