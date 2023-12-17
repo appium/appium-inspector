@@ -69,7 +69,7 @@
   "Update Downloaded": "Update Downloaded",
   "Could not download update": "Could not download update",
   "Unexpected Error:": "Unexpected Error:",
-  "Please report this issue at:": "Please report this issue at:",
+  "Please report this issue at:": "",
   "Full error trace:": "Full error trace:",
   "Copy Error Trace": "Copy Error Trace",
   "Inspect element": "Inspect element",
