@@ -1,12 +1,13 @@
 import _ from 'lodash';
-import { getLocators, APP_MODE } from '../components/Inspector/shared';
-import { showError } from './Session';
-import { xmlToJSON } from '../util';
-import { v4 as UUID } from 'uuid';
-import frameworks from '../lib/client-frameworks';
-import { getSetting, setSetting, SAVED_FRAMEWORK, SET_SAVED_GESTURES } from '../../shared/settings';
+import {v4 as UUID} from 'uuid';
+
 import i18n from '../../configs/i18next.config.renderer';
-import AppiumClient, { NATIVE_APP } from '../lib/appium-client';
+import {SAVED_FRAMEWORK, SET_SAVED_GESTURES, getSetting, setSetting} from '../../shared/settings';
+import {APP_MODE, getLocators} from '../components/Inspector/shared';
+import AppiumClient, {NATIVE_APP} from '../lib/appium-client';
+import frameworks from '../lib/client-frameworks';
+import {xmlToJSON} from '../util';
+import {showError} from './Session';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
 export const SET_SOURCE_AND_SCREENSHOT = 'SET_SOURCE_AND_SCREENSHOT';
@@ -34,7 +35,6 @@ export const SET_SESSION_TIME = 'SET_SESSION_TIME';
 export const START_RECORDING = 'START_RECORDING';
 export const PAUSE_RECORDING = 'PAUSE_RECORDING';
 export const CLEAR_RECORDING = 'CLEAR_RECORDING';
-export const CLOSE_RECORDER = 'CLOSE_RECORDER';
 export const SET_ACTION_FRAMEWORK = 'SET_ACTION_FRAMEWORK';
 export const RECORD_ACTION = 'RECORD_ACTION';
 export const SET_SHOW_BOILERPLATE = 'SET_SHOW_BOILERPLATE';
@@ -61,9 +61,9 @@ export const SET_APP_MODE = 'SET_APP_MODE';
 export const SET_SEARCHED_FOR_ELEMENT_BOUNDS = 'SET_SEARCHED_FOR_ELEMENT_BOUNDS';
 export const CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS = 'CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS';
 
-export const SET_SWIPE_START = 'SET_SWIPE_START';
-export const SET_SWIPE_END = 'SET_SWIPE_END';
-export const CLEAR_SWIPE_ACTION = 'CLEAR_SWIPE_ACTION';
+export const SET_COORD_START = 'SET_COORD_START';
+export const SET_COORD_END = 'SET_COORD_END';
+export const CLEAR_COORD_ACTION = 'CLEAR_COORD_ACTION';
 export const PROMPT_KEEP_ALIVE = 'PROMPT_KEEP_ALIVE';
 export const HIDE_PROMPT_KEEP_ALIVE = 'HIDE_PROMPT_KEEP_ALIVE';
 
@@ -127,11 +127,11 @@ const findElement = _.debounce(async function (strategyMap, dispatch, getState, 
   return dispatch({type: SET_INTERACTIONS_NOT_AVAILABLE});
 }, 1000);
 
-export function selectElement (path) {
+export function selectElement(path) {
   return async (dispatch, getState) => {
     // Set the selected element in the source tree
     dispatch({type: SELECT_ELEMENT, path});
-    const { selectedElement, sourceXML, expandedPaths } = getState().inspector;
+    const {selectedElement, sourceXML, expandedPaths} = getState().inspector;
 
     // Expand all of this element's ancestors so that it's visible in the source tree
     // Make a copy of the array to avoid state mutation
@@ -146,7 +146,6 @@ export function selectElement (path) {
     }
     dispatch({type: SET_EXPANDED_PATHS, paths: copiedExpandedPaths});
 
-
     // Find the optimal selection strategy. If none found, fall back to XPath.
     const strategyMap = _.toPairs(getLocators(selectedElement.attributes, sourceXML));
     strategyMap.push(['xpath', selectedElement.xpath]);
@@ -156,44 +155,43 @@ export function selectElement (path) {
   };
 }
 
-export function unselectElement () {
+export function unselectElement() {
   return (dispatch) => {
     dispatch({type: UNSELECT_ELEMENT});
   };
 }
 
-
-export function selectCentroid (path) {
+export function selectCentroid(path) {
   return (dispatch) => {
     dispatch({type: SELECT_CENTROID, path});
   };
 }
 
-export function unselectCentroid () {
+export function unselectCentroid() {
   return (dispatch) => {
     dispatch({type: UNSELECT_CENTROID});
   };
 }
 
-export function selectHoveredCentroid (path) {
+export function selectHoveredCentroid(path) {
   return (dispatch) => {
     dispatch({type: SELECT_HOVERED_CENTROID, path});
   };
 }
 
-export function unselectHoveredCentroid () {
+export function unselectHoveredCentroid() {
   return (dispatch) => {
     dispatch({type: UNSELECT_HOVERED_CENTROID});
   };
 }
 
-export function selectHoveredElement (path) {
+export function selectHoveredElement(path) {
   return (dispatch) => {
     dispatch({type: SELECT_HOVERED_ELEMENT, path});
   };
 }
 
-export function unselectHoveredElement () {
+export function unselectHoveredElement() {
   return (dispatch) => {
     dispatch({type: UNSELECT_HOVERED_ELEMENT});
   };
@@ -202,20 +200,34 @@ export function unselectHoveredElement () {
 /**
  * Requests a method call on appium
  */
-export function applyClientMethod (params) {
+export function applyClientMethod(params) {
   return async (dispatch, getState) => {
-    const isRecording = params.methodName !== 'quit' &&
-                      params.methodName !== 'getPageSource' &&
-                      params.methodName !== 'gesture' &&
-                      params.methodName !== 'status' &&
-                      getState().inspector.isRecording;
+    const isRecording =
+      params.methodName !== 'quit' &&
+      params.methodName !== 'getPageSource' &&
+      params.methodName !== 'gesture' &&
+      params.methodName !== 'status' &&
+      getState().inspector.isRecording;
     try {
       dispatch({type: METHOD_CALL_REQUESTED});
       const callAction = callClientMethod(params);
-      const {contexts, contextsError, commandRes, currentContext, currentContextError,
-             source, screenshot, windowSize, sourceError,
-             screenshotError, windowSizeError, variableName,
-             variableIndex, strategy, selector} = await callAction(dispatch, getState);
+      const {
+        contexts,
+        contextsError,
+        commandRes,
+        currentContext,
+        currentContextError,
+        source,
+        screenshot,
+        windowSize,
+        sourceError,
+        screenshotError,
+        windowSizeError,
+        variableName,
+        variableIndex,
+        strategy,
+        selector,
+      } = await callAction(dispatch, getState);
 
       // TODO: Implement recorder code for gestures
       if (isRecording) {
@@ -228,7 +240,7 @@ export function applyClientMethod (params) {
         // now record the actual action
         let args = [variableName, variableIndex];
         args = args.concat(params.args || []);
-        dispatch({type: RECORD_ACTION, action: params.methodName, params: args });
+        dispatch({type: RECORD_ACTION, action: params.methodName, params: args});
       }
       dispatch({type: METHOD_CALL_DONE});
 
@@ -253,19 +265,19 @@ export function applyClientMethod (params) {
     } catch (error) {
       console.log(error); // eslint-disable-line no-console
       let methodName = params.methodName === 'click' ? 'tap' : params.methodName;
-      showError(error, methodName, 10);
+      showError(error, {methodName, secs: 10});
       dispatch({type: METHOD_CALL_DONE});
     }
   };
 }
 
-export function addAssignedVarCache (varName) {
+export function addAssignedVarCache(varName) {
   return (dispatch) => {
     dispatch({type: ADD_ASSIGNED_VAR_CACHE, varName});
   };
 }
 
-export function setExpandedPaths (paths) {
+export function setExpandedPaths(paths) {
   return (dispatch) => {
     dispatch({type: SET_EXPANDED_PATHS, paths});
   };
@@ -274,7 +286,7 @@ export function setExpandedPaths (paths) {
 /**
  * Quit the session and go back to the new session window
  */
-export function quitSession (reason, killedByUser = true) {
+export function quitSession(reason, killedByUser = true) {
   return async (dispatch, getState) => {
     const killAction = killKeepAliveLoop();
     killAction(dispatch, getState);
@@ -282,38 +294,38 @@ export function quitSession (reason, killedByUser = true) {
     await applyAction(dispatch, getState);
     dispatch({type: QUIT_SESSION_DONE});
     if (!killedByUser) {
-      showError(new Error(reason || i18n.t('Session has been terminated')), null, 0);
+      showError(new Error(reason || i18n.t('Session has been terminated')), {secs: 0});
     }
   };
 }
 
-export function startRecording () {
+export function startRecording() {
   return (dispatch) => {
     dispatch({type: START_RECORDING});
   };
 }
 
-export function pauseRecording () {
+export function pauseRecording() {
   return (dispatch) => {
     dispatch({type: PAUSE_RECORDING});
   };
 }
 
-export function clearRecording () {
+export function clearRecording() {
   return (dispatch) => {
     dispatch({type: CLEAR_RECORDING});
     dispatch({type: CLEAR_ASSIGNED_VAR_CACHE}); // Get rid of the variable cache
   };
 }
 
-export function getSavedActionFramework () {
+export function getSavedActionFramework() {
   return async (dispatch) => {
     let framework = await getSetting(SAVED_FRAMEWORK);
     dispatch({type: SET_ACTION_FRAMEWORK, framework});
   };
 }
 
-export function setActionFramework (framework) {
+export function setActionFramework(framework) {
   return async (dispatch) => {
     if (!frameworks[framework]) {
       throw new Error(i18n.t('frameworkNotSupported', {framework}));
@@ -323,92 +335,86 @@ export function setActionFramework (framework) {
   };
 }
 
-export function recordAction (action, params) {
+export function recordAction(action, params) {
   return (dispatch) => {
     dispatch({type: RECORD_ACTION, action, params});
   };
 }
 
-export function closeRecorder () {
-  return (dispatch) => {
-    dispatch({type: CLOSE_RECORDER});
-  };
-}
-
-export function toggleShowBoilerplate () {
+export function toggleShowBoilerplate() {
   return (dispatch, getState) => {
     const show = !getState().inspector.showBoilerplate;
     dispatch({type: SET_SHOW_BOILERPLATE, show});
   };
 }
 
-export function setSessionDetails ({driver, sessionDetails, mode, mjpegScreenshotUrl}) {
+export function setSessionDetails({driver, sessionDetails, mode, mjpegScreenshotUrl}) {
   return (dispatch) => {
     dispatch({type: SET_SESSION_DETAILS, driver, sessionDetails, mode, mjpegScreenshotUrl});
   };
 }
 
-export function showLocatorTestModal () {
+export function showLocatorTestModal() {
   return (dispatch) => {
     dispatch({type: SHOW_LOCATOR_TEST_MODAL});
   };
 }
 
-export function hideLocatorTestModal () {
+export function hideLocatorTestModal() {
   return (dispatch) => {
     dispatch({type: HIDE_LOCATOR_TEST_MODAL});
   };
 }
 
-export function showSiriCommandModal () {
+export function showSiriCommandModal() {
   return (dispatch) => {
     dispatch({type: SHOW_SIRI_COMMAND_MODAL});
   };
 }
 
-export function hideSiriCommandModal () {
+export function hideSiriCommandModal() {
   return (dispatch) => {
     dispatch({type: HIDE_SIRI_COMMAND_MODAL});
   };
 }
 
-export function setSiriCommandValue (siriCommandValue) {
+export function setSiriCommandValue(siriCommandValue) {
   return (dispatch) => {
     dispatch({type: SET_SIRI_COMMAND_VALUE, siriCommandValue});
   };
 }
 
-export function setLocatorTestValue (locatorTestValue) {
+export function setLocatorTestValue(locatorTestValue) {
   return (dispatch) => {
     dispatch({type: SET_LOCATOR_TEST_VALUE, locatorTestValue});
   };
 }
 
-export function setLocatorTestStrategy (locatorTestStrategy) {
+export function setLocatorTestStrategy(locatorTestStrategy) {
   return (dispatch) => {
     dispatch({type: SET_LOCATOR_TEST_STRATEGY, locatorTestStrategy});
   };
 }
 
-export function setContext (context) {
+export function setContext(context) {
   return (dispatch) => {
     dispatch({type: SET_CONTEXT, context});
   };
 }
 
-export function searchForElement (strategy, selector) {
+export function searchForElement(strategy, selector) {
   return async (dispatch, getState) => {
     dispatch({type: SEARCHING_FOR_ELEMENTS});
     try {
       const callAction = callClientMethod({strategy, selector, fetchArray: true});
-      let { elements, variableName, executionTime } = await callAction(dispatch, getState);
+      let {elements, variableName, executionTime} = await callAction(dispatch, getState);
       const findAction = findAndAssign(strategy, selector, variableName, true);
       findAction(dispatch, getState);
       elements = elements.map((el) => el.id);
       dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED, elements, executionTime});
     } catch (error) {
       dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED});
-      showError(error, 10);
+      showError(error, {methodName: 10});
     }
   };
 }
@@ -416,7 +422,7 @@ export function searchForElement (strategy, selector) {
 /**
  * Get all the find element times based on the find data source
  */
-export function getFindElementsTimes (findDataSource) {
+export function getFindElementsTimes(findDataSource) {
   return async (dispatch, getState) => {
     dispatch({type: GET_FIND_ELEMENTS_TIMES});
     try {
@@ -434,24 +440,28 @@ export function getFindElementsTimes (findDataSource) {
       });
     } catch (error) {
       dispatch({type: GET_FIND_ELEMENTS_TIMES_COMPLETED});
-      showError(error, 10);
+      showError(error, {methodName: 10});
     }
   };
 }
 
-export function findAndAssign (strategy, selector, variableName, isArray) {
+export function findAndAssign(strategy, selector, variableName, isArray) {
   return (dispatch, getState) => {
     const {assignedVarCache} = getState().inspector;
 
     // If this call to 'findAndAssign' for this variable wasn't done already, do it now
     if (!assignedVarCache[variableName]) {
-      dispatch({type: RECORD_ACTION, action: 'findAndAssign', params: [strategy, selector, variableName, isArray]});
+      dispatch({
+        type: RECORD_ACTION,
+        action: 'findAndAssign',
+        params: [strategy, selector, variableName, isArray],
+      });
       dispatch({type: ADD_ASSIGNED_VAR_CACHE, varName: variableName});
     }
   };
 }
 
-export function setLocatorTestElement (elementId) {
+export function setLocatorTestElement(elementId) {
   return async (dispatch, getState) => {
     dispatch({type: SET_LOCATOR_TEST_ELEMENT, elementId});
     dispatch({type: CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS});
@@ -462,15 +472,15 @@ export function setLocatorTestElement (elementId) {
           methodName: 'getRect',
           skipRefresh: true,
           skipRecord: true,
-          ignoreResult: true
+          ignoreResult: true,
         });
-        const { commandRes } = await action(dispatch, getState);
+        const {commandRes} = await action(dispatch, getState);
         dispatch({
           type: SET_SEARCHED_FOR_ELEMENT_BOUNDS,
           location: {x: commandRes.x, y: commandRes.y},
           size: {width: commandRes.width, height: commandRes.height},
         });
-      } catch (ign) { }
+      } catch (ign) {}
     }
   };
 }
@@ -479,15 +489,20 @@ export function setLocatorTestElement (elementId) {
  * Given an element ID found through search, and its bounds,
  * attempt to find and select this element in the source tree
  */
-export function selectLocatedElement (source, bounds, id) {
+export function selectLocatedElement(source, bounds, id) {
   const UPPER_FILTER_LIMIT = 10;
 
   // Parse the source tree and find all nodes whose bounds match the expected bounds
   // Return the path + xpath of each node
-  function findPathsMatchingBounds () {
-    if (!bounds || !source.children || !source.children[0].attributes) { return null; }
+  function findPathsMatchingBounds() {
+    if (!bounds || !source.children || !source.children[0].attributes) {
+      return null;
+    }
     if (source.children[0].attributes.bounds) {
-      const [endX, endY] = [bounds.location.x + bounds.size.width, bounds.location.y + bounds.size.height];
+      const [endX, endY] = [
+        bounds.location.x + bounds.size.width,
+        bounds.location.y + bounds.size.height,
+      ];
       const coords = `[${bounds.location.x},${bounds.location.y}][${endX},${endY}]`;
       return findPathsFromCoords(source.children, coords);
     } else if (source.children[0].attributes.x) {
@@ -503,7 +518,7 @@ export function selectLocatedElement (source, bounds, id) {
   }
 
   // Recursive function for parsing source tree when elements have 'bounds' property
-  function findPathsFromCoords (trees, coords) {
+  function findPathsFromCoords(trees, coords) {
     let collectedPaths = [];
     for (const tree of trees) {
       if (tree.attributes.bounds === coords) {
@@ -517,11 +532,15 @@ export function selectLocatedElement (source, bounds, id) {
   }
 
   // Recursive function for parsing source tree when elements have 'x/y/height/width' properties
-  function findPathsFromBounds (trees, bounds) {
+  function findPathsFromBounds(trees, bounds) {
     let collectedPaths = [];
     for (const tree of trees) {
-      if (tree.attributes.x === bounds.x && tree.attributes.y === bounds.y
-        && tree.attributes.height === bounds.height && tree.attributes.width === bounds.width) {
+      if (
+        tree.attributes.x === bounds.x &&
+        tree.attributes.y === bounds.y &&
+        tree.attributes.height === bounds.height &&
+        tree.attributes.width === bounds.width
+      ) {
         collectedPaths.push([tree.path, tree.xpath]);
       }
       if (tree.children.length) {
@@ -533,8 +552,10 @@ export function selectLocatedElement (source, bounds, id) {
 
   // If findPathsMatchingBounds found multiple items,
   // use Appium findElement to filter further by element ID
-  async function filterFoundPaths (foundPaths, dispatch, getState) {
-    if (!foundPaths) { return null; }
+  async function filterFoundPaths(foundPaths, dispatch, getState) {
+    if (!foundPaths) {
+      return null;
+    }
     if (foundPaths.length === 1) {
       return foundPaths[0][0];
     } else if (foundPaths.length !== 0 && foundPaths.length <= UPPER_FILTER_LIMIT) {
@@ -545,10 +566,10 @@ export function selectLocatedElement (source, bounds, id) {
 
   // Calls Appium findElement for each provided xpath, and returns the path
   // of the element whose ID matches the expected ID
-  async function findElementWithMatchingId (foundPaths, dispatch, getState) {
+  async function findElementWithMatchingId(foundPaths, dispatch, getState) {
     for (const path of foundPaths) {
       const action = callClientMethod({strategy: 'xpath', selector: path[1]});
-      const { el } = await action(dispatch, getState);
+      const {el} = await action(dispatch, getState);
       if (el && el.elementId === id) {
         return path[0];
       }
@@ -564,32 +585,32 @@ export function selectLocatedElement (source, bounds, id) {
       const action = selectElement(foundPath);
       await action(dispatch, getState);
     } else {
-      showError(new Error(i18n.t('findingElementInSourceFailed')), null, 8);
+      showError(new Error(i18n.t('findingElementInSourceFailed')), {secs: 8});
     }
     dispatch({type: FINDING_ELEMENT_IN_SOURCE_COMPLETED});
   };
 }
 
-export function clearSearchResults () {
+export function clearSearchResults() {
   return (dispatch) => {
     dispatch({type: CLEAR_SEARCH_RESULTS});
     dispatch({type: CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS});
   };
 }
 
-export function selectScreenshotInteractionMode (screenshotInteractionMode) {
+export function selectScreenshotInteractionMode(screenshotInteractionMode) {
   return (dispatch) => {
-    dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode });
+    dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode});
   };
 }
 
-export function toggleRefreshingState () {
+export function toggleRefreshingState() {
   return (dispatch) => {
     dispatch({type: TOGGLE_REFRESHING_STATE});
   };
 }
 
-export function selectAppMode (mode) {
+export function selectAppMode(mode) {
   return async (dispatch, getState) => {
     const {appMode} = getState().inspector;
     dispatch({type: SET_APP_MODE, mode});
@@ -599,13 +620,13 @@ export function selectAppMode (mode) {
       await action(dispatch, getState);
     }
     if (appMode !== mode && mode === APP_MODE.NATIVE) {
-      const action = applyClientMethod({ methodName: 'switchContext', args: [NATIVE_APP] });
+      const action = applyClientMethod({methodName: 'switchContext', args: [NATIVE_APP]});
       await action(dispatch, getState);
     }
   };
 }
 
-export function toggleShowCentroids () {
+export function toggleShowCentroids() {
   return (dispatch, getState) => {
     const {showCentroids} = getState().inspector;
     const show = !showCentroids;
@@ -613,12 +634,15 @@ export function toggleShowCentroids () {
   };
 }
 
-export function getActiveAppId (isIOS, isAndroid) {
+export function getActiveAppId(isIOS, isAndroid) {
   return async (dispatch, getState) => {
     try {
       if (isIOS) {
-        const action = applyClientMethod({methodName: 'executeScript', args: ['mobile:activeAppInfo', []]});
-        const { bundleId } = await action(dispatch, getState);
+        const action = applyClientMethod({
+          methodName: 'executeScript',
+          args: ['mobile:activeAppInfo', []],
+        });
+        const {bundleId} = await action(dispatch, getState);
         dispatch({type: SET_APP_ID, appId: bundleId});
       }
       if (isAndroid) {
@@ -633,64 +657,64 @@ export function getActiveAppId (isIOS, isAndroid) {
   };
 }
 
-export function getServerStatus () {
+export function getServerStatus() {
   return async (dispatch, getState) => {
     const status = applyClientMethod({methodName: 'status'});
-    const { build } = await status(dispatch, getState);
+    const {build} = await status(dispatch, getState);
     dispatch({type: SET_SERVER_STATUS, status: build});
   };
 }
 
 // Start the session timer once session starts
-export function setSessionTime (time) {
+export function setSessionTime(time) {
   return (dispatch) => {
     dispatch({type: SET_SESSION_TIME, sessionStartTime: time});
   };
 }
 
-export function setSwipeStart (swipeStartX, swipeStartY) {
+export function setCoordStart(coordStartX, coordStartY) {
   return (dispatch) => {
-    dispatch({type: SET_SWIPE_START, swipeStartX, swipeStartY});
+    dispatch({type: SET_COORD_START, coordStartX, coordStartY});
   };
 }
 
-export function setSwipeEnd (swipeEndX, swipeEndY) {
+export function setCoordEnd(coordEndX, coordEndY) {
   return (dispatch) => {
-    dispatch({type: SET_SWIPE_END, swipeEndX, swipeEndY});
+    dispatch({type: SET_COORD_END, coordEndX, coordEndY});
   };
 }
 
-export function clearSwipeAction () {
+export function clearCoordAction() {
   return (dispatch) => {
-    dispatch({type: CLEAR_SWIPE_ACTION});
+    dispatch({type: CLEAR_COORD_ACTION});
   };
 }
 
-export function selectInteractionMode (interaction) {
+export function selectInteractionMode(interaction) {
   return (dispatch) => {
     dispatch({type: SELECT_INTERACTION_MODE, interaction});
   };
 }
 
-export function startEnteringCommandArgs (commandName, command) {
+export function startEnteringCommandArgs(commandName, command) {
   return (dispatch) => {
     dispatch({type: ENTERING_COMMAND_ARGS, commandName, command});
   };
 }
 
-export function cancelPendingCommand () {
+export function cancelPendingCommand() {
   return (dispatch) => {
     dispatch({type: CANCEL_PENDING_COMMAND});
   };
 }
 
-export function setCommandArg (index, value) {
+export function setCommandArg(index, value) {
   return (dispatch) => {
     dispatch({type: SET_COMMAND_ARG, index, value});
   };
 }
 
-export function setUserWaitTimeout (userWaitTimeout) {
+export function setUserWaitTimeout(userWaitTimeout) {
   return (dispatch) => {
     dispatch({type: SET_USER_WAIT_TIMEOUT, userWaitTimeout});
   };
@@ -699,13 +723,13 @@ export function setUserWaitTimeout (userWaitTimeout) {
 /**
  * Ping server every 30 seconds to prevent `newCommandTimeout` from killing session
  */
-export function runKeepAliveLoop () {
+export function runKeepAliveLoop() {
   return (dispatch, getState) => {
     dispatch({type: SET_LAST_ACTIVE_MOMENT, lastActiveMoment: Date.now()});
-    const { driver } = getState().inspector;
+    const {driver} = getState().inspector;
 
     const keepAliveInterval = setInterval(async () => {
-      const { lastActiveMoment, showKeepAlivePrompt } = getState().inspector;
+      const {lastActiveMoment, showKeepAlivePrompt} = getState().inspector;
       console.log('Pinging Appium server to keep session active'); // eslint-disable-line no-console
       try {
         await driver.getTimeouts(); // Pings the Appium server to keep it alive
@@ -724,7 +748,7 @@ export function runKeepAliveLoop () {
 /**
  * Get rid of the intervals to keep the session alive
  */
-export function killKeepAliveLoop () {
+export function killKeepAliveLoop() {
   return (dispatch, getState) => {
     const {keepAliveInterval, userWaitTimeout} = getState().inspector;
     clearInterval(keepAliveInterval);
@@ -739,11 +763,11 @@ export function killKeepAliveLoop () {
 /**
  * Reset the new command clock and kill the wait for user timeout
  */
-export function keepSessionAlive () {
+export function keepSessionAlive() {
   return (dispatch, getState) => {
     const {userWaitTimeout} = getState().inspector;
     dispatch({type: HIDE_PROMPT_KEEP_ALIVE});
-    dispatch({type: SET_LAST_ACTIVE_MOMENT, lastActiveMoment: +(new Date())});
+    dispatch({type: SET_LAST_ACTIVE_MOMENT, lastActiveMoment: +new Date()});
     if (userWaitTimeout) {
       clearTimeout(userWaitTimeout);
       dispatch({type: SET_USER_WAIT_TIMEOUT, userWaitTimeout: null});
@@ -751,7 +775,7 @@ export function keepSessionAlive () {
   };
 }
 
-export function callClientMethod (params) {
+export function callClientMethod(params) {
   return async (dispatch, getState) => {
     const {driver, appMode, mjpegScreenshotUrl, isSourceRefreshOn} = getState().inspector;
     const {methodName, ignoreResult = true} = params;
@@ -793,21 +817,21 @@ export function callClientMethod (params) {
   };
 }
 
-export function setVisibleCommandResult (result, methodName) {
+export function setVisibleCommandResult(result, methodName) {
   return (dispatch) => {
     dispatch({type: SET_VISIBLE_COMMAND_RESULT, result, methodName});
   };
 }
 
-export function setAwaitingMjpegStream (isAwaiting) {
+export function setAwaitingMjpegStream(isAwaiting) {
   return (dispatch) => {
     dispatch({type: SET_AWAITING_MJPEG_STREAM, isAwaiting});
   };
 }
 
-export function saveGesture (params) {
+export function saveGesture(params) {
   return async (dispatch) => {
-    let savedGestures = await getSetting(SET_SAVED_GESTURES) || [];
+    let savedGestures = (await getSetting(SET_SAVED_GESTURES)) || [];
     if (!params.id) {
       params.id = UUID();
       params.date = Date.now();
@@ -827,7 +851,7 @@ export function saveGesture (params) {
   };
 }
 
-export function getSavedGestures () {
+export function getSavedGestures() {
   return async (dispatch) => {
     dispatch({type: GET_SAVED_GESTURES_REQUESTED});
     const savedGestures = await getSetting(SET_SAVED_GESTURES);
@@ -835,7 +859,7 @@ export function getSavedGestures () {
   };
 }
 
-export function deleteSavedGesture (id) {
+export function deleteSavedGesture(id) {
   return async (dispatch) => {
     dispatch({type: DELETE_SAVED_GESTURES_REQUESTED, deleteGesture: id});
     const gestures = await getSetting(SET_SAVED_GESTURES);
@@ -846,45 +870,45 @@ export function deleteSavedGesture (id) {
   };
 }
 
-export function showGestureEditor () {
+export function showGestureEditor() {
   return (dispatch) => {
     dispatch({type: SHOW_GESTURE_EDITOR});
-    dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode: 'gesture' });
+    dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode: 'gesture'});
   };
 }
 
-export function hideGestureEditor () {
+export function hideGestureEditor() {
   return (dispatch) => {
     dispatch({type: HIDE_GESTURE_EDITOR});
-    dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode: 'select' });
+    dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode: 'select'});
   };
 }
 
-export function setLoadedGesture (loadedGesture) {
+export function setLoadedGesture(loadedGesture) {
   return (dispatch) => {
     dispatch({type: SET_LOADED_GESTURE, loadedGesture});
   };
 }
 
-export function removeLoadedGesture () {
+export function removeLoadedGesture() {
   return (dispatch) => {
     dispatch({type: REMOVE_LOADED_GESTURE});
   };
 }
 
-export function displayGesture (showGesture) {
+export function displayGesture(showGesture) {
   return (dispatch) => {
     dispatch({type: SHOW_GESTURE_ACTION, showGesture});
   };
 }
 
-export function removeGestureDisplay () {
+export function removeGestureDisplay() {
   return (dispatch) => {
     dispatch({type: HIDE_GESTURE_ACTION});
   };
 }
 
-export function selectTick (tick) {
+export function selectTick(tick) {
   return (dispatch, getState) => {
     const {tickCoordinates} = getState().inspector;
 
@@ -896,20 +920,20 @@ export function selectTick (tick) {
   };
 }
 
-export function unselectTick () {
+export function unselectTick() {
   return (dispatch) => {
     dispatch({type: CLEAR_TAP_COORDINATES});
     dispatch({type: UNSELECT_TICK_ELEMENT});
   };
 }
 
-export function tapTickCoordinates (x, y) {
+export function tapTickCoordinates(x, y) {
   return (dispatch) => {
     dispatch({type: SET_GESTURE_TAP_COORDS_MODE, x, y});
   };
 }
 
-export function toggleShowAttributes () {
+export function toggleShowAttributes() {
   return (dispatch) => {
     dispatch({type: TOGGLE_SHOW_ATTRIBUTES});
   };

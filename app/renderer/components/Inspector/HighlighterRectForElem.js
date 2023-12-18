@@ -1,4 +1,5 @@
 import React from 'react';
+
 import InspectorCSS from './Inspector.css';
 
 /**
@@ -6,10 +7,18 @@ import InspectorCSS from './Inspector.css';
  * boxes of the elements in the app
  */
 const HighlighterRectForElem = (props) => {
-  const { hoveredElement = {}, selectHoveredElement, unselectHoveredElement,
-          selectedElement = {}, selectElement, unselectElement, dimensions, element } = props;
+  const {
+    hoveredElement = {},
+    selectHoveredElement,
+    unselectHoveredElement,
+    selectedElement = {},
+    selectElement,
+    unselectElement,
+    dimensions,
+    element,
+  } = props;
 
-  const { width, height, left, top } = dimensions;
+  const {width, height, left, top} = dimensions;
   const key = element.path;
   let highlighterClasses = [InspectorCSS['highlighter-box']];
 
@@ -21,14 +30,18 @@ const HighlighterRectForElem = (props) => {
     highlighterClasses.push(InspectorCSS['inspected-element-box']);
   }
 
-  return <div className={highlighterClasses.join(' ').trim()}
-    onMouseOver={() => selectHoveredElement(key)}
-    onMouseOut={unselectHoveredElement}
-    onClick={() => key === selectedElement.path ? unselectElement() : selectElement(key)}
-    key={key}
-    style={{left: (left || 0), top: (top || 0), width: (width || 0), height: (height || 0)}}>
-    <div></div>
-  </div>;
+  return (
+    <div
+      className={highlighterClasses.join(' ').trim()}
+      onMouseOver={() => selectHoveredElement(key)}
+      onMouseOut={unselectHoveredElement}
+      onClick={() => (key === selectedElement.path ? unselectElement() : selectElement(key))}
+      key={key}
+      style={{left: left || 0, top: top || 0, width: width || 0, height: height || 0}}
+    >
+      <div></div>
+    </div>
+  );
 };
 
 export default HighlighterRectForElem;

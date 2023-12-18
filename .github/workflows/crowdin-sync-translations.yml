@@ -12,24 +12,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js LTS
-      uses: actions/setup-node@v3
-      with:
-        node-version: lts/*
-        cache: 'npm'
-    - name: Install Dependencies
-      run: npm ci
-    - name: Crowdin Sync
-      run: npm run crowdin-sync
-      env:
-        CROWDIN_PROJECT_ID: appium-desktop
-        CROWDIN_PROJECT_KEY: ${{ secrets.CROWDIN_PROJECT_KEY }}
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v5.0.2
-      with:
-        token: ${{ github.token }}
-        commit-message: 'chore: Update translations'
-        title: 'chore: Update translations'
-        branch: crowdin-sync-${{ github.run_id }}
-        body: 'Update Crowdin Translations: https://crowdin.com/project/appium-desktop'
+      - uses: actions/checkout@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Crowdin Sync
+        run: npm run crowdin-sync
+        env:
+          # appium-desktop
+          CROWDIN_PROJECT_ID: 346705
+          CROWDIN_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5.0.2
+        with:
+          token: ${{ github.token }}
+          commit-message: 'chore: Update translations'
+          title: 'chore: Update translations'
+          branch: crowdin-sync-${{ github.run_id }}
+          body: 'Update Crowdin Translations: https://crowdin.com/project/appium-desktop'

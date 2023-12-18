@@ -19,18 +19,18 @@ jobs:
       CSC_IDENTITY_AUTO_DISCOVERY: true
       USE_HARD_LINKS: 'false'
     steps:
-    - checkout: self
-      persistCredentials: true
-    - task: NodeTool@0
-      inputs:
-        versionSpec: '16.x'
-    - script: npm ci
-      displayName: Install dependencies
-    - script: npm run build
-      displayName: Build
-    - script: ${{ parameters.buildScript }}
-      displayName: Bundle
-      env:
-        GH_TOKEN: $(GH_TOKEN)
-        CSC_LINK: $(CSC_LINK)
-        CSC_KEY_PASSWORD: $(CSC_KEY_PASSWORD)
+      - checkout: self
+        persistCredentials: true
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '16.x'
+      - script: npm ci
+        displayName: Install dependencies
+      - script: npm run build
+        displayName: Build
+      - script: ${{ parameters.buildScript }}
+        displayName: Bundle
+        env:
+          GH_TOKEN: $(GH_TOKEN)
+          CSC_LINK: $(CSC_LINK)
+          CSC_KEY_PASSWORD: $(CSC_KEY_PASSWORD)

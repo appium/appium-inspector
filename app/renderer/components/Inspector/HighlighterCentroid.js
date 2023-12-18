@@ -1,8 +1,9 @@
 import React from 'react';
-import InspectorCSS from './Inspector.css';
-import { RENDER_CENTROID_AS } from './shared';
 
-const { CENTROID, OVERLAP, EXPAND } = RENDER_CENTROID_AS;
+import InspectorCSS from './Inspector.css';
+import {RENDER_CENTROID_AS} from './shared';
+
+const {CENTROID, OVERLAP, EXPAND} = RENDER_CENTROID_AS;
 const CENTROID_STYLES = {
   VISIBLE: 'visible',
   HIDDEN: 'hidden',
@@ -23,12 +24,19 @@ const getCentroidPos = (type, angle, coord) => {
  * Shows all element centroids
  */
 const HighlighterCentroid = (props) => {
-  const { selectedElementPath, hoveredElement = {}, element, elementProperties,
-          centroidType, hoveredCentroid, selectedCentroid } = props;
-  const { centerX, centerY, angleX, angleY, keyCode, path, container } = elementProperties;
+  const {
+    selectedElementPath,
+    hoveredElement = {},
+    element,
+    elementProperties,
+    centroidType,
+    hoveredCentroid,
+    selectedCentroid,
+  } = props;
+  const {centerX, centerY, angleX, angleY, keyCode, path, container} = elementProperties;
 
   const onMouseEnter = (path) => {
-    const { selectHoveredElement, selectHoveredCentroid } = props;
+    const {selectHoveredElement, selectHoveredCentroid} = props;
     if (centroidType === EXPAND) {
       selectHoveredCentroid(path);
     } else {
@@ -37,7 +45,7 @@ const HighlighterCentroid = (props) => {
   };
 
   const onMouseLeave = () => {
-    const { unselectHoveredElement, unselectHoveredCentroid } = props;
+    const {unselectHoveredElement, unselectHoveredCentroid} = props;
     if (centroidType === EXPAND) {
       unselectHoveredCentroid();
     } else {
@@ -46,7 +54,7 @@ const HighlighterCentroid = (props) => {
   };
 
   const onClickCentroid = (path) => {
-    const { selectElement, unselectElement, selectCentroid, unselectCentroid } = props;
+    const {selectElement, unselectElement, selectCentroid, unselectCentroid} = props;
     if (centroidType === EXPAND) {
       if (path === selectedCentroid) {
         unselectCentroid();
@@ -86,36 +94,35 @@ const HighlighterCentroid = (props) => {
   }
 
   const overlapDivStyle = {
-    visibility:
-      keyCode === selectedCentroid ?
-        CENTROID_STYLES.VISIBLE : CENTROID_STYLES.HIDDEN,
+    visibility: keyCode === selectedCentroid ? CENTROID_STYLES.VISIBLE : CENTROID_STYLES.HIDDEN,
   };
 
   const centroidDivStyle = {
     left: getCentroidPos(centroidType, angleX, centerX),
     top: getCentroidPos(centroidType, angleY, centerY),
-    borderRadius:
-      element && !container ?
-        CENTROID_STYLES.NON_CONTAINER : CENTROID_STYLES.CONTAINER,
-    ...(centroidType === OVERLAP ? overlapDivStyle : {})
+    borderRadius: element && !container ? CENTROID_STYLES.NON_CONTAINER : CENTROID_STYLES.CONTAINER,
+    ...(centroidType === OVERLAP ? overlapDivStyle : {}),
   };
 
-  const placeHolder = centroidType === EXPAND ?
-    <div className={InspectorCSS['plus-minus']}>
-      {keyCode === selectedCentroid ? '-' : '+'}
-    </div>
-    :
-    <div></div>;
+  const placeHolder =
+    centroidType === EXPAND ? (
+      <div className={InspectorCSS['plus-minus']}>{keyCode === selectedCentroid ? '-' : '+'}</div>
+    ) : (
+      <div></div>
+    );
 
-  return <div
-    className={centroidClasses.join(' ').trim()}
-    onMouseOver={() => onMouseEnter(path)}
-    onMouseOut={() => onMouseLeave()}
-    onClick={() => onClickCentroid(path)}
-    key={path}
-    style={centroidDivStyle}>
-    {placeHolder}
-  </div>;
+  return (
+    <div
+      className={centroidClasses.join(' ').trim()}
+      onMouseOver={() => onMouseEnter(path)}
+      onMouseOut={() => onMouseLeave()}
+      onClick={() => onClickCentroid(path)}
+      key={path}
+      style={centroidDivStyle}
+    >
+      {placeHolder}
+    </div>
+  );
 };
 
 export default HighlighterCentroid;

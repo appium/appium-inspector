@@ -1,23 +1,92 @@
-import { omit } from 'lodash';
-import { SET_SOURCE_AND_SCREENSHOT, QUIT_SESSION_REQUESTED, QUIT_SESSION_DONE,
-         SESSION_DONE, SELECT_ELEMENT, UNSELECT_ELEMENT, SELECT_HOVERED_ELEMENT, SET_SELECTED_ELEMENT_ID, SET_INTERACTIONS_NOT_AVAILABLE,
-         UNSELECT_HOVERED_ELEMENT, METHOD_CALL_REQUESTED, METHOD_CALL_DONE,
-         SET_EXPANDED_PATHS, START_RECORDING, PAUSE_RECORDING, CLEAR_RECORDING,
-         SET_ACTION_FRAMEWORK, RECORD_ACTION, CLOSE_RECORDER, SET_SHOW_BOILERPLATE, SET_SESSION_DETAILS,
-         SHOW_LOCATOR_TEST_MODAL, HIDE_LOCATOR_TEST_MODAL, SHOW_SIRI_COMMAND_MODAL, HIDE_SIRI_COMMAND_MODAL, SET_LOCATOR_TEST_STRATEGY, SET_LOCATOR_TEST_VALUE,
-         SEARCHING_FOR_ELEMENTS, SEARCHING_FOR_ELEMENTS_COMPLETED, SET_LOCATOR_TEST_ELEMENT, CLEAR_SEARCH_RESULTS,
-         FINDING_ELEMENT_IN_SOURCE, FINDING_ELEMENT_IN_SOURCE_COMPLETED, ADD_ASSIGNED_VAR_CACHE, CLEAR_ASSIGNED_VAR_CACHE, SET_SCREENSHOT_INTERACTION_MODE,
-         SET_SWIPE_START, SET_SWIPE_END, CLEAR_SWIPE_ACTION, SET_SEARCHED_FOR_ELEMENT_BOUNDS, CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS,
-         PROMPT_KEEP_ALIVE, HIDE_PROMPT_KEEP_ALIVE, GET_FIND_ELEMENTS_TIMES, GET_FIND_ELEMENTS_TIMES_COMPLETED,
-         SET_APP_MODE, SELECT_INTERACTION_MODE, ENTERING_COMMAND_ARGS, SET_COMMAND_ARG, CANCEL_PENDING_COMMAND, SET_CONTEXT,
-         SET_KEEP_ALIVE_INTERVAL, SET_USER_WAIT_TIMEOUT, SET_LAST_ACTIVE_MOMENT, SET_VISIBLE_COMMAND_RESULT,
-         SET_AWAITING_MJPEG_STREAM, SET_APP_ID, SET_SERVER_STATUS, SET_SESSION_TIME, SHOW_GESTURE_EDITOR, HIDE_GESTURE_EDITOR,
-         GET_SAVED_GESTURES_REQUESTED, GET_SAVED_GESTURES_DONE, SET_LOADED_GESTURE, REMOVE_LOADED_GESTURE, SHOW_GESTURE_ACTION, HIDE_GESTURE_ACTION,
-         SELECT_TICK_ELEMENT, UNSELECT_TICK_ELEMENT, SET_GESTURE_TAP_COORDS_MODE, CLEAR_TAP_COORDINATES, DELETE_SAVED_GESTURES_REQUESTED, DELETE_SAVED_GESTURES_DONE,
-         SELECT_HOVERED_CENTROID, UNSELECT_HOVERED_CENTROID, SELECT_CENTROID, UNSELECT_CENTROID,
-         SET_SHOW_CENTROIDS, TOGGLE_SHOW_ATTRIBUTES, TOGGLE_REFRESHING_STATE, SET_SIRI_COMMAND_VALUE
+import {omit} from 'lodash';
+
+import {
+  ADD_ASSIGNED_VAR_CACHE,
+  CANCEL_PENDING_COMMAND,
+  CLEAR_ASSIGNED_VAR_CACHE,
+  CLEAR_COORD_ACTION,
+  CLEAR_RECORDING,
+  CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS,
+  CLEAR_SEARCH_RESULTS,
+  CLEAR_TAP_COORDINATES,
+  DELETE_SAVED_GESTURES_DONE,
+  DELETE_SAVED_GESTURES_REQUESTED,
+  ENTERING_COMMAND_ARGS,
+  FINDING_ELEMENT_IN_SOURCE,
+  FINDING_ELEMENT_IN_SOURCE_COMPLETED,
+  GET_FIND_ELEMENTS_TIMES,
+  GET_FIND_ELEMENTS_TIMES_COMPLETED,
+  GET_SAVED_GESTURES_DONE,
+  GET_SAVED_GESTURES_REQUESTED,
+  HIDE_GESTURE_ACTION,
+  HIDE_GESTURE_EDITOR,
+  HIDE_LOCATOR_TEST_MODAL,
+  HIDE_PROMPT_KEEP_ALIVE,
+  HIDE_SIRI_COMMAND_MODAL,
+  METHOD_CALL_DONE,
+  METHOD_CALL_REQUESTED,
+  PAUSE_RECORDING,
+  PROMPT_KEEP_ALIVE,
+  QUIT_SESSION_DONE,
+  QUIT_SESSION_REQUESTED,
+  RECORD_ACTION,
+  REMOVE_LOADED_GESTURE,
+  SEARCHING_FOR_ELEMENTS,
+  SEARCHING_FOR_ELEMENTS_COMPLETED,
+  SELECT_CENTROID,
+  SELECT_ELEMENT,
+  SELECT_HOVERED_CENTROID,
+  SELECT_HOVERED_ELEMENT,
+  SELECT_INTERACTION_MODE,
+  SELECT_TICK_ELEMENT,
+  SESSION_DONE,
+  SET_ACTION_FRAMEWORK,
+  SET_APP_ID,
+  SET_APP_MODE,
+  SET_AWAITING_MJPEG_STREAM,
+  SET_COMMAND_ARG,
+  SET_CONTEXT,
+  SET_COORD_END,
+  SET_COORD_START,
+  SET_EXPANDED_PATHS,
+  SET_GESTURE_TAP_COORDS_MODE,
+  SET_INTERACTIONS_NOT_AVAILABLE,
+  SET_KEEP_ALIVE_INTERVAL,
+  SET_LAST_ACTIVE_MOMENT,
+  SET_LOADED_GESTURE,
+  SET_LOCATOR_TEST_ELEMENT,
+  SET_LOCATOR_TEST_STRATEGY,
+  SET_LOCATOR_TEST_VALUE,
+  SET_SCREENSHOT_INTERACTION_MODE,
+  SET_SEARCHED_FOR_ELEMENT_BOUNDS,
+  SET_SELECTED_ELEMENT_ID,
+  SET_SERVER_STATUS,
+  SET_SESSION_DETAILS,
+  SET_SESSION_TIME,
+  SET_SHOW_BOILERPLATE,
+  SET_SHOW_CENTROIDS,
+  SET_SIRI_COMMAND_VALUE,
+  SET_SOURCE_AND_SCREENSHOT,
+  SET_USER_WAIT_TIMEOUT,
+  SET_VISIBLE_COMMAND_RESULT,
+  SHOW_GESTURE_ACTION,
+  SHOW_GESTURE_EDITOR,
+  SHOW_LOCATOR_TEST_MODAL,
+  SHOW_SIRI_COMMAND_MODAL,
+  START_RECORDING,
+  TOGGLE_REFRESHING_STATE,
+  TOGGLE_SHOW_ATTRIBUTES,
+  UNSELECT_CENTROID,
+  UNSELECT_ELEMENT,
+  UNSELECT_HOVERED_CENTROID,
+  UNSELECT_HOVERED_ELEMENT,
+  UNSELECT_TICK_ELEMENT,
 } from '../actions/Inspector';
-import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from '../components/Inspector/shared';
+import {
+  APP_MODE,
+  INTERACTION_MODE,
+  SCREENSHOT_INTERACTION_MODE,
+} from '../components/Inspector/shared';
 
 const DEFAULT_FRAMEWORK = 'java';
 const NATIVE_APP = 'NATIVE_APP';
@@ -33,7 +102,6 @@ const INITIAL_STATE = {
   expandedPaths: ['0'],
   isRecording: false,
   isSourceRefreshOn: true,
-  showRecord: false,
   showBoilerplate: false,
   recordedActions: [],
   actionFramework: DEFAULT_FRAMEWORK,
@@ -67,7 +135,7 @@ let nextState;
 /**
  * Look up an element in the source with the provided path
  */
-function findElementByPath (path, source) {
+function findElementByPath(path, source) {
   let selectedElement = source;
   for (let index of path.split('.')) {
     selectedElement = selectedElement.children[index];
@@ -75,7 +143,7 @@ function findElementByPath (path, source) {
   return {...selectedElement};
 }
 
-export default function inspector (state = INITIAL_STATE, action) {
+export default function inspector(state = INITIAL_STATE, action) {
   switch (action.type) {
     case SET_SOURCE_AND_SCREENSHOT:
       return {
@@ -103,7 +171,7 @@ export default function inspector (state = INITIAL_STATE, action) {
 
     case QUIT_SESSION_DONE:
       return {
-        ...INITIAL_STATE
+        ...INITIAL_STATE,
       };
 
     case SESSION_DONE:
@@ -201,35 +269,30 @@ export default function inspector (state = INITIAL_STATE, action) {
       return {
         ...state,
         isRecording: true,
-        showRecord: true
       };
 
     case PAUSE_RECORDING:
       return {
         ...state,
         isRecording: false,
-        showRecord: state.recordedActions.length > 0
       };
 
     case CLEAR_RECORDING:
       return {
         ...state,
-        recordedActions: []
+        recordedActions: [],
       };
 
     case SET_ACTION_FRAMEWORK:
       return {
         ...state,
-        actionFramework: action.framework || DEFAULT_FRAMEWORK
+        actionFramework: action.framework || DEFAULT_FRAMEWORK,
       };
 
     case RECORD_ACTION:
       return {
         ...state,
-        recordedActions: [
-          ...state.recordedActions,
-          {action: action.action, params: action.params}
-        ]
+        recordedActions: [...state.recordedActions, {action: action.action, params: action.params}],
       };
 
     case ADD_ASSIGNED_VAR_CACHE:
@@ -238,19 +301,13 @@ export default function inspector (state = INITIAL_STATE, action) {
         assignedVarCache: {
           ...state.assignedVarCache,
           [action.varName]: true,
-        }
+        },
       };
 
     case CLEAR_ASSIGNED_VAR_CACHE:
       return {
         ...state,
         assignedVarCache: [],
-      };
-
-    case CLOSE_RECORDER:
-      return {
-        ...state,
-        showRecord: false
       };
 
     case SET_SHOW_BOILERPLATE:
@@ -263,7 +320,7 @@ export default function inspector (state = INITIAL_STATE, action) {
         driver: action.driver,
         automationName: action.driver.client.capabilities.automationName,
         appMode: action.mode,
-        mjpegScreenshotUrl: action.mjpegScreenshotUrl
+        mjpegScreenshotUrl: action.mjpegScreenshotUrl,
       };
 
     case SHOW_LOCATOR_TEST_MODAL:
@@ -293,19 +350,19 @@ export default function inspector (state = INITIAL_STATE, action) {
     case SET_SIRI_COMMAND_VALUE:
       return {
         ...state,
-        siriCommandValue: action.siriCommandValue
+        siriCommandValue: action.siriCommandValue,
       };
 
     case SET_LOCATOR_TEST_STRATEGY:
       return {
         ...state,
-        locatorTestStrategy: action.locatorTestStrategy
+        locatorTestStrategy: action.locatorTestStrategy,
       };
 
     case SET_LOCATOR_TEST_VALUE:
       return {
         ...state,
-        locatorTestValue: action.locatorTestValue
+        locatorTestValue: action.locatorTestValue,
       };
 
     case SEARCHING_FOR_ELEMENTS:
@@ -369,29 +426,29 @@ export default function inspector (state = INITIAL_STATE, action) {
         screenshotInteractionMode: action.screenshotInteractionMode,
       };
 
-    case SET_SWIPE_START:
+    case SET_COORD_START:
       return {
         ...state,
-        swipeStart: {
-          x: action.swipeStartX,
-          y: action.swipeStartY,
+        coordStart: {
+          x: action.coordStartX,
+          y: action.coordStartY,
         },
       };
 
-    case SET_SWIPE_END:
+    case SET_COORD_END:
       return {
         ...state,
-        swipeEnd: {
-          x: action.swipeEndX,
-          y: action.swipeEndY,
+        coordEnd: {
+          x: action.coordEndX,
+          y: action.coordEndY,
         },
       };
 
-    case CLEAR_SWIPE_ACTION:
+    case CLEAR_COORD_ACTION:
       return {
         ...state,
-        swipeStart: null,
-        swipeEnd: null,
+        coordStart: null,
+        coordEnd: null,
       };
 
     case SET_SEARCHED_FOR_ELEMENT_BOUNDS:
@@ -400,7 +457,7 @@ export default function inspector (state = INITIAL_STATE, action) {
         searchedForElementBounds: {
           location: action.location,
           size: action.size,
-        }
+        },
       };
 
     case CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS:
@@ -446,7 +503,7 @@ export default function inspector (state = INITIAL_STATE, action) {
           commandName: action.commandName,
           command: action.command,
           args: [],
-        }
+        },
       };
 
     case SET_COMMAND_ARG:
@@ -467,7 +524,7 @@ export default function inspector (state = INITIAL_STATE, action) {
     case SET_CONTEXT:
       return {
         ...state,
-        currentContext: action.context
+        currentContext: action.context,
       };
 
     case SET_KEEP_ALIVE_INTERVAL:

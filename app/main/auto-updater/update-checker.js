@@ -1,35 +1,25 @@
-import request from 'request-promise';
-import { getFeedUrl } from './config';
+import axios from 'axios';
 import semver from 'semver';
 
-export async function checkUpdate (currentVersion) {
+import {getFeedUrl} from './config';
+
+export async function checkUpdate(currentVersion) {
   try {
     // The response is like (macOS):
     // {  "name":"v1.15.0-1",
     //    "notes":"* Bump up Appium to v1.15.0",
     //    "pub_date":"2019-10-04T04:40:37Z",
     //    "url":"https://github.com/appium/appium-desktop/releases/download/v1.15.0-1/Appium-1.15.0-1-mac.zip"}
-    const res = await request.get(getFeedUrl(currentVersion));
-    if (res) {
-      const j = JSON.parse(res);
-      if (semver.lt(currentVersion, j.name)) {
-        return j;
-      }
+    const res = await axios.get(getFeedUrl(currentVersion));
+    if (res && semver.lt(currentVersion, res.name)) {
+      return res;
     }
-  } catch (ign) { }
+  } catch (ign) {}
 
   return false;
 }
 
-export function setUpAutoUpdater ({
-  autoUpdater,
-  app,
-  moment,
-  i18n,
-  env,
-  dialog,
-  B
-}) {
+export function setUpAutoUpdater({autoUpdater, app, moment, i18n, env, dialog, B}) {
   autoUpdater.setFeedURL(getFeedUrl(app.getVersion()));
 
   /**
@@ -52,24 +42,26 @@ export function setUpAutoUpdater ({
         detail += `\n\nhttps://www.github.com/appium/appium-inspector/releases/latest`;
       }
 
-
       // Ask user if they wish to install now or later
       if (!process.env.RUNNING_IN_SPECTRON) {
-        dialog.showMessageBox({
-          type: 'info',
-          buttons: env.NO_AUTO_UPDATE
-            ? [i18n.t('OK')]
-            : [i18n.t('Install Now'), i18n.t('Install Later')],
-          message: i18n.t('appiumIsAvailable', {name}),
-          detail,
-        }, (response) => {
-          if (response === 0) {
-            // If they say yes, get the updates now
-            if (!env.NO_AUTO_UPDATE) {
-              autoUpdater.checkForUpdates();
+        dialog.showMessageBox(
+          {
+            type: 'info',
+            buttons: env.NO_AUTO_UPDATE
+              ? [i18n.t('OK')]
+              : [i18n.t('Install Now'), i18n.t('Install Later')],
+            message: i18n.t('appiumIsAvailable', {name}),
+            detail,
+          },
+          (response) => {
+            if (response === 0) {
+              // If they say yes, get the updates now
+              if (!env.NO_AUTO_UPDATE) {
+                autoUpdater.checkForUpdates();
+              }
             }
-          }
-        });
+          },
+        );
       }
     } else {
       if (fromMenu) {
@@ -105,17 +97,20 @@ export function setUpAutoUpdater ({
 
   // When it's done, ask if user want to restart now or later
   autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-    dialog.showMessageBox({
-      type: 'info',
-      buttons: [i18n.t('Restart Now'), i18n.t('Later')],
-      message: i18n.t('Update Downloaded'),
-      detail: i18n.t('updateIsDownloaded', {releaseName}),
-    }, (response) => {
-      // If they say yes, restart now
-      if (response === 0) {
-        autoUpdater.quitAndInstall();
-      }
-    });
+    dialog.showMessageBox(
+      {
+        type: 'info',
+        buttons: [i18n.t('Restart Now'), i18n.t('Later')],
+        message: i18n.t('Update Downloaded'),
+        detail: i18n.t('updateIsDownloaded', {releaseName}),
+      },
+      (response) => {
+        // If they say yes, restart now
+        if (response === 0) {
+          autoUpdater.quitAndInstall();
+        }
+      },
+    );
   });
 
   // Handle error case

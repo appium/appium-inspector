@@ -5,7 +5,7 @@ name: PR Validation
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths-ignore:
       - '.github/ISSUE_TEMPLATE/**'
       - 'assets/locales/**'
@@ -25,31 +25,33 @@ jobs:
     runs-on: ${{ matrix.image }}
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js LTS
-      uses: actions/setup-node@v3
-      with:
-        node-version: lts/*
-        cache: 'npm'
-    - name: Install Dependencies
-      run: npm ci
-    - name: Build
-      run: npm run build --if-present
-    - name: Test
-      run: npm run test:unit && npm run test:integration
+      - uses: actions/checkout@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build --if-present
+      - name: Test
+        run: npm run test:unit && npm run test:integration
 
   lint:
-    name: Lint
+    name: Lint & Format
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js LTS
-      uses: actions/setup-node@v3
-      with:
-        node-version: lts/*
-        cache: 'npm'
-    - name: Install Dependencies
-      run: npm ci
-    - name: Lint
-      run: npm run test:lint
+      - uses: actions/checkout@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run test:lint
+      - name: Format
+        run: npm run test:format

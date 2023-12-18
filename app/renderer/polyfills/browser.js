@@ -1,38 +1,38 @@
 const browser = {
   clipboard: {
-    writeText: (text) => navigator.clipboard.writeText(text)
+    writeText: (text) => navigator.clipboard.writeText(text),
   },
   shell: {
-    openExternal: (url) => window.open(url, '')
+    openExternal: (url) => window.open(url, ''),
   },
   remote: {
     getCurrentWindow: () => ({
-      getSize: () => [window.innerWidth, window.innerHeight]
-    })
+      getSize: () => [window.innerWidth, window.innerHeight],
+    }),
   },
   ipcRenderer: {
     on: (evt) => {
       console.warn(`Cannot listen for IPC event ${evt} in browser context`); // eslint-disable-line no-console
-    }
+    },
   },
   fs: null,
   util: null,
 };
 
 class BrowserSettings {
-  has (key) {
+  has(key) {
     return this.get(key) !== null;
   }
 
-  set (key, val) {
+  set(key, val) {
     return localStorage.setItem(key, JSON.stringify(val));
   }
 
-  get (key) {
+  get(key) {
     return JSON.parse(localStorage.getItem(key));
   }
 
-  getSync (key) {
+  getSync(key) {
     return this.get(key);
   }
 }
@@ -45,10 +45,13 @@ const i18NextBackendOptions = {
   backends: [
     require('i18next-localstorage-backend').default,
     require('i18next-http-backend').default,
-  ], backendOptions: [{
-  }, {
-    loadPath: './locales/{{lng}}/{{ns}}.json'
-  }]
+  ],
+  backendOptions: [
+    {},
+    {
+      loadPath: './locales/{{lng}}/{{ns}}.json',
+    },
+  ],
 };
 
 export {

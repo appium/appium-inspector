@@ -5,7 +5,7 @@ name: Commit Validation
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths-ignore:
       - '.github/ISSUE_TEMPLATE/**'
       - 'assets/locales/**'
@@ -22,15 +22,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js LTS
-      uses: actions/setup-node@v3
-      with:
-        node-version: lts/*
-        cache: 'npm'
-    - name: Install Dependencies
-      run: npm ci
-    - name: Build
-      run: npm run build --if-present
-    - name: Test
-      run: npm test
+      - uses: actions/checkout@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build --if-present
+      - name: Test
+        run: npm test
