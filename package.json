@@ -32,7 +32,7 @@
     "build": "npm run build:prod:main && npm run build:prod:renderer && npm run build:prod:browser",
     "build:main": "parcel build --target node --public-url . --out-dir ./dist --out-file main.js ./app/main.js",
     "build:renderer": "parcel build --no-content-hash --out-dir ./dist --target electron --public-url . ./app/renderer/*.html",
-    "build:browser": "parcel build --no-minify --out-dir ./dist-browser --target browser --public-url . ./app/renderer/index.html",
+    "build:browser": "cross-env PUBLIC_URL=. npm run build:browser:url",
     "build:browser:url": "cross-env parcel build --out-dir ./dist-browser --target browser --public-url $PUBLIC_URL ./app/renderer/index.html",
     "watch:main": "parcel watch --target node --public-url . --out-dir ./dist --out-file main.js ./app/main.js",
     "watch:renderer": "parcel watch --out-dir ./dist --target electron --public-url . ./app/renderer/*.html",
