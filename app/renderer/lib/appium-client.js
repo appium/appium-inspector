@@ -235,7 +235,7 @@ export default class AppiumClient {
         // returned Android height and width can both be affected by UiAutomator2 calculations
         // we stick with device dimensions, but swap them depending on detected orientation
         // deviceScreenSize value fits portrait mode for phones, but landscape mode for tablets
-        const [width, height] = deviceScreenSize.split('x');
+        const [width, height] = deviceScreenSize.split('x').map((param) => parseInt(param, 10));
         // check if the orientation for windowSize matches orientation for deviceScreenSize
         if (windowSize.height >= windowSize.width === height >= width) {
           windowSize.height = height;
