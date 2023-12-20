@@ -110,7 +110,7 @@
       "package.json"
     ],
     "win": {
-      "artifactName": "${productName}-windows-${version}.${ext}",
+      "artifactName": "${productName}-windows-${version}-${arch}.${ext}",
       "target": [
         "nsis",
         "zip"
