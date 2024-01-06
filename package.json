@@ -202,7 +202,7 @@
     "@babel/preset-react": "7.23.3",
     "@babel/register": "7.23.7",
     "asyncbox": "3.0.0",
-    "chai": "4.3.10",
+    "chai": "4.4.0",
     "chai-as-promised": "7.1.1",
     "check-engines": "1.6.0",
     "concurrently": "8.2.2",
