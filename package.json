@@ -49,6 +49,9 @@
     "clean:electron": "rimraf dist/ && rimraf .cache",
     "clean:browser": "rimraf dist-browser/ && rimraf .cache",
     "clean:npm": "rimraf package-lock.json && rimraf node_modules && npm install",
+    "dev:docs": "appium-docs build --serve",
+    "publish:docs": "appium-docs build --deploy --push -b docs-site -m 'docs: build docs for appium-inspector@%s' --alias latest",
+    "install-docs-deps": "appium-docs init --no-mkdocs",
     "postversion": "git pull --tags && git push && git push --tags",
     "crowdin-sync": "node ./ci-jobs/crowdin-sync-translations.mjs",
     "crowdin-update": "node ./ci-jobs/crowdin-update-resources.mjs"
@@ -190,6 +193,7 @@
     "spectron": "Deprecated. Newer V16 also requires Electron 14"
   },
   "devDependencies": {
+    "@appium/docutils": "1.0.2",
     "@appium/eslint-config-appium": "8.0.5",
     "@appium/fake-driver": "5.4.0",
     "@appium/support": "4.2.0",
