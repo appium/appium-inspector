@@ -20,14 +20,14 @@ providing visual inspection of the application under test (screenshots and page 
 features such as interacting with the app screenshot, searching for and interacting with elements,
 executing driver actions, recording user actions, and more!
 
-The Appium Inspector is part of the Appium ecosystem. For information on Appium itself, please visit
+Appium Inspector is part of the Appium ecosystem. For information on Appium itself, please visit
 [the Appium documentation](https://appium.io).
 
 ## Explore the Documentation
 
 <div class="grid cards" markdown>
 
--   Check out the __Overview__ to learn the basics of the Inspector
+-   Check out the [__Overview__](./overview.md) to learn the basics of the Inspector
 -   Go through the __Quickstart__ steps to get set up and start inspecting your app
 -   The __Session Creator__ section acts as a reference for the default landing screen
 -   The __Session Inspector__ section acts as a reference for the inspector screen

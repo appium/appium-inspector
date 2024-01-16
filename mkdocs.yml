@@ -27,4 +27,5 @@ extra:
 
 nav:
   - Welcome: index.md
+  - Overview: overview.md
   - Troubleshooting: troubleshooting.md
