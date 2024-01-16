@@ -19,12 +19,6 @@ The Inspector is distributed in two formats:
 
 Note that the web application may not be fully up-to-date with the desktop application.
 
-## Appium Server Compatibility
-
-The Inspector is designed to work with Appium 2, but it is also compatible with later versions of
-Appium 1. Please be aware of [the differences between both Appium versions](https://appium.io/docs/en/latest/guides/migrating-1-to-2/),
-particularly the default server base path.
-
 ## GUI Overview
 
 There are two main parts to the Inspector user interface:
