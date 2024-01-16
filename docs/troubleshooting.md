@@ -46,9 +46,8 @@ advised to use Chrome or Firefox instead.
 
 ## Start Session button is cut off
 
-This problem may appear if your computer screen size is too small. The Inspector desktop app has a
-minimum size of **890 x 710** pixels, whereas the web application works best when using a viewport
-size of at least **870 x 610** pixels. Please make sure your screen is sufficiently large.
+This problem may appear if your computer screen size is too small. Check the
+[System Requirements](./quickstart/requirements.md) for more details.
 
 ## Cannot see full source tree
 

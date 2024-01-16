@@ -26,6 +26,11 @@ extra:
       link: https://twitter.com/AppiumDevs
 
 nav:
-  - Welcome: index.md
-  - Overview: overview.md
-  - Troubleshooting: troubleshooting.md
+  - index.md
+  - overview.md
+  - Quickstart:
+      - quickstart/index.md
+      - quickstart/requirements.md
+      - quickstart/installation.md
+      - quickstart/starting-a-session.md
+  - troubleshooting.md
