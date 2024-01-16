@@ -35,11 +35,11 @@ If you're using the desktop app on macOS, when you run it you may be greeted wit
 
 1. _Control+Click_ the Appium Inspector icon in the Applications Finder folder and choose `Open`.
 
-   ![Appium Inspector Ctrl+Click](./docs/assets/images/mac-ctrl-click.png)
+   ![Appium Inspector Ctrl+Click](./docs/quickstart/assets/images/mac-ctrl-click.png)
 
 2. You'll be presented with the dialog below. Just click `Open` and Appium Inspector should launch.
 
-   ![Appium Inspector Open Warning](./docs/assets/images/open-warning.png)
+   ![Appium Inspector Open Warning](./docs/quickstart/assets/images/open-warning.png)
 
 #### Method 2 - Command Line
 
