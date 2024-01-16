@@ -11,6 +11,11 @@ This page aims to act as a reference for issues that may be encountered when usi
 
 Please refer to the Installation guide.
 
+## Auto-updater not working
+
+This is [a known issue](https://github.com/appium/appium-inspector/issues/733) and is planned to be
+fixed in future versions.
+
 ## Cannot start a session using browser Inspector
 
 The reason for this issue is [cross-origin resource sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
@@ -34,11 +39,6 @@ create a session.
     If you encounter this issue with a cloud provider, the fix must be applied on their side,
     because they are the ones hosting the Appium server.
 
-## Auto-updater not working
-
-This is [a known issue](https://github.com/appium/appium-inspector/issues/733) and is planned to be
-fixed in future versions.
-
 ## Browser version does not work in Safari
 
 This is [a known issue](https://github.com/appium/appium-inspector/issues/103). Currently it is
@@ -49,3 +49,25 @@ advised to use Chrome or Firefox instead.
 This problem may appear if your computer screen size is too small. The Inspector desktop app has a
 minimum size of **890 x 710** pixels, whereas the web application works best when using a viewport
 size of at least **870 x 610** pixels. Please make sure your screen is sufficiently large.
+
+## Cannot see full source tree
+
+This is [a known issue](https://github.com/appium/appium/issues/14825) when using the XCUITest
+driver with React Native apps. The problem is caused by Apple's XCTest framework, so unfortunately
+this issue cannot be resolved from the Appium side. However, there are a few suggestions to help
+mitigate this:
+
+* Set [the `snapshotMaxDepth` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/)
+  to `62` (the maximum stable value)
+* Configure [the `pageSourceExcludedAttributes` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/)
+  to exclude some attributes that you may find less relevant (e.g. `"visible,accessible"`)
+* Set [the `customSnapshotTimeout` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/)
+  to a higher value
+
+If these do not help, then the only remaining solution is to work with the app developers to
+refactor the application code. Some suggestions from the linked issue thread include:
+
+* Try to remove unnecessary nesting levels
+* Use the Fabric renderer with [View Flattening](https://reactnative.dev/architecture/view-flattening)
+* Use native stack navigator instead of stack navigator
+* Reduce the amount of view tags/test IDs
