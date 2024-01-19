@@ -32,6 +32,6 @@ Appium Inspector is part of the Appium ecosystem. For information on Appium itse
 -   The __Session Creator__ section acts as a reference for the default landing screen
 -   The __Session Inspector__ section acts as a reference for the inspector screen
 -   Refer to the [__Troubleshooting__](./troubleshooting.md) page for a list of potential issues
--   For contributions to the Inspector, refer to the __Contributing__ page
+-   For contributions to the Inspector, refer to the [__Contributing__](./contributing.md) page
 
 </div>
