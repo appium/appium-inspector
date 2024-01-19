@@ -12,7 +12,7 @@ title: Welcome
 </style>
 
 <div style="text-align: center">
-  <img src="assets/images/icon.png" />
+  <img src="assets/images/icon.png" style="max-width: 200px;"/>
 </div>
 
 Welcome to the Appium Inspector documentation! The Inspector is a GUI assistant tool for Appium,
