@@ -18,7 +18,7 @@ extra_css:
   - assets/stylesheets/extra.css
 
 extra:
-  homepage: /appium-xcuitest-driver
+  homepage: /appium-inspector
   version:
     provider: mike
   social:
