@@ -14,17 +14,17 @@ requirements for these will differ.
 * The desktop app requires up to around **600MB** of space on the computer
     * The minimum application window size is **890 x 710** pixels
 
-Both Inspector versions also requires an __Appium server__ to connect to, which is not bundled with
-the Inspector. While the Inspector is designed to work with Appium 2, it is also compatible with
-later versions of Appium 1. Please be aware of
-[the differences between both Appium versions](https://appium.io/docs/en/latest/guides/migrating-1-to-2/),
-in particular, the default server base path.
-
-The target Appium server can be run either locally or remotely. If you need to install the Appium
-server, please check the [Appium System Requirements](https://appium.io/docs/en/latest/quickstart/requirements/)
+Both Inspector versions also require an __Appium server__ to connect to, which is _not_ bundled with
+the Inspector. This server can be run either locally or remotely. If you need to install it, please
+check the [Appium Install documentation](https://appium.io/docs/en/latest/quickstart/install/)
 for details.
 
 !!! note
 
     If using a standalone Appium server, make sure the server also has the necessary
     [driver(s)](https://appium.io/docs/en/latest/ecosystem/drivers/) for your target platform(s)!
+
+While the Inspector is designed to work with Appium 2, it is also compatible with
+later versions of Appium 1. Please be aware of
+[the differences between both Appium versions](https://appium.io/docs/en/latest/guides/migrating-1-to-2/),
+in particular, the default server base path.

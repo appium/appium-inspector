@@ -2,8 +2,8 @@
 title: Installation
 ---
 
-If you are using the Inspector's web app version, this step is, of course, not required. But for
-the Inspector desktop app, it needs to be installed first.
+If you are using the Inspector's web app version, this step is, of course, not required. But if
+you wish to use the Inspector desktop app, it needs to be installed first.
 
 The app can be downloaded from [the Inspector's GitHub repository](https://github.com/appium/appium-inspector/releases).
 Different file formats are provided for each supported platform.

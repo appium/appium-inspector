@@ -19,9 +19,9 @@ specified, so that the Inspector knows how to connect to it:
 * If you wish to connect to a cloud provider service, choose your vendor using the _Select Cloud
   Providers_ button, switch to its tab, and fill in the required details.
 
-* If you wish to connect to a standalone local or remote Appium server, please make sure the server
-  is launched and running. The start of the server log will have a list of addresses and ports that
-  can be used to connect to it.
+* If you wish to connect to a standalone local or remote Appium server, first make sure the server
+  is launched and running. The start of the server log will have a list of IP addresses and ports
+  that can be used to connect to the server.
 
     * For a local Appium server running on its default port, __all server details fields can be left
       unchanged__. By default, the Inspector will attempt to connect to `http://127.0.0.1:4723`,
@@ -47,7 +47,7 @@ where your session [Capabilities](https://appium.io/docs/en/latest/guides/caps/)
 
 !!! warning
 
-    Appium has several mandatory capabilities (see above link). Attempting to establish a session
+    Appium has several mandatory capabilities (see above link). Attempting to start a new session
     without any capabilities will not work.
 
 You can enter these capabilities one by one on the left side, or you can edit the whole capability
@@ -116,6 +116,6 @@ which case the __Session Inspector__ screen will open:
 
 ![Session Inspector](../assets/images/session-inspector.png)
 
-If this has worked, you are done with the quickstart, and can start exploring your app, as well as
-other Inspector features! If something went wrong, please check the [Troubleshooting](../troubleshooting.md)
-page for potential issues.
+If this has worked, you are done with the quickstart! You can now start exploring your app, as well
+as other Inspector features! If something went wrong, please check the
+[Troubleshooting](../troubleshooting.md) page for potential issues.

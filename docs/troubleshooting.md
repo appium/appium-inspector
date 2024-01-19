@@ -9,7 +9,7 @@ This page aims to act as a reference for issues that may be encountered when usi
 
 ## Cannot open the app after installation
 
-Please refer to the Installation guide.
+Please refer to the [Installation guide](./quickstart/installation.md).
 
 ## Auto-updater not working
 
@@ -36,7 +36,7 @@ create a session.
 
 !!! note
 
-    If you encounter this issue with a cloud provider, the fix must be applied on their side,
+    If you encounter this issue with a cloud provider, the fix must be applied on the provider side,
     because they are the ones hosting the Appium server.
 
 ## Browser version does not work in Safari
@@ -49,12 +49,11 @@ advised to use Chrome or Firefox instead.
 This problem may appear if your computer screen size is too small. Check the
 [System Requirements](./quickstart/requirements.md) for more details.
 
-## Cannot see full source tree
+## Cannot see full source tree with XCUITest driver + React Native app
 
-This is [a known issue](https://github.com/appium/appium/issues/14825) when using the XCUITest
-driver with React Native apps. The problem is caused by Apple's XCTest framework, so unfortunately
-this issue cannot be resolved from the Appium side. However, there are a few suggestions to help
-mitigate this:
+This is [a known issue](https://github.com/appium/appium/issues/14825). The problem is caused by
+Apple's XCTest framework, so unfortunately it cannot be resolved from the Appium side. However,
+there are a few suggestions that may help mitigate this:
 
 * Set [the `snapshotMaxDepth` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/)
   to `62` (the maximum stable value)

@@ -43,10 +43,10 @@ features. Here is a non-exhaustive list of such features:
 * Easily define Appium server connection details and capabilities
 * Save server details and capability sets for future sessions
 * Connect to 10+ different cloud platforms
-* Attach to an existing Appium session using its session ID
+* Attach to an existing Appium session
 * Interact with the application through its screenshot (click/tap, swipe)
 * Create and save custom gestures
-* Select application elements directly through its screenshot
+* Select elements directly through the application screenshot
 * Search for elements using supported locator strategies and your own selectors
 * Interact with elements (click/tap, send keys, clear)
 * View suggested element locator strategies and selectors to be used in your scripts
