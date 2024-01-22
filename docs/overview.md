@@ -25,8 +25,8 @@ There are two main parts to the Inspector user interface:
 
 <div class="grid cards" markdown>
 
--   __The Session Configurator__
-    ![Session Configurator](./assets/images/session-configurator.png)
+-   __The Session Builder__
+    ![Session Builder](./assets/images/session-builder.png)
     The default screen, where all the server and session details must be specified.
 
 -   __The Session Inspector__
@@ -56,7 +56,7 @@ features. Here is a non-exhaustive list of such features:
 * Switch to different application contexts
 * Access a library of various Appium driver commands
 
-All features are described in detail in the Session Configurator and Session Inspector sections.
+All features are described in detail in the Session Builder and Session Inspector sections.
 
 ## Under the Hood
 

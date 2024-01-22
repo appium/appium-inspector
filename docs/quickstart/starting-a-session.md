@@ -5,13 +5,14 @@ title: Configuring and Starting a Session
 Now that the Inspector is installed (if necessary) and opened, you should be greeted with a screen
 like this:
 
-![Empty Session Configurator](assets/images/empty-session-configurator.png)
+![Empty Session Builder](../session-builder/assets/images/empty-session-builder.png)
 
-This is the __Session Configurator__ screen, where the server and session details are specified.
+This is the [__Session Builder__](../session-builder/index.md) screen, where the server
+and session details are specified.
 
 ## Adding Server Details
 
-![Server Details](assets/images/server-configuration.png)
+![Server Details](../session-builder/assets/images/server-configuration.png)
 
 The server details section at the top of the window is where information about the Appium server is
 specified, so that the Inspector knows how to connect to it:
@@ -40,9 +41,9 @@ With the server details specified, you can move on to the session details!
 
 ## Adding Session Details
 
-![Session Details](assets/images/session-configuration.png)
+![Session Details](../session-builder/assets/images/session-configuration.png)
 
-The session details take up the majority of the Session Configurator screen. This is the place
+The session details take up the majority of the Session Builder screen. This is the place
 where your session [Capabilities](https://appium.io/docs/en/latest/guides/caps/) should be specified.
 
 !!! warning
@@ -97,10 +98,10 @@ Now that the capabilities are set, the session can be launched!
 
 ## Launching the Session
 
-For a final check, here is an example image of a Session Configurator with fully configured server
+For a final check, here is an example image of a Session Builder with fully configured server
 and session information:
 
-![Full Session Configurator](../assets/images/session-configurator.png)
+![Full Session Builder](../assets/images/session-builder.png)
 
 You can see the following details:
 
