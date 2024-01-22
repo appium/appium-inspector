@@ -1,6 +1,6 @@
 import {LinkOutlined} from '@ant-design/icons';
 import {Badge, Button, Spin, Tabs} from 'antd';
-import _ from 'lodash';
+import _, {cloneDeep} from 'lodash';
 import React, {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 
@@ -53,7 +53,7 @@ const Session = (props) => {
   };
 
   const loadNewSession = async (caps, attachSessId = null) => {
-    if (await newSession(caps, attachSessId)) {
+    if (await newSession(cloneDeep(caps), attachSessId)) {
       navigate('/inspector', {replace: true});
     }
   };
