@@ -5,7 +5,7 @@ title: Server Details
 The top of the Session Builder screen is used to configure server details - that is, how the
 Inspector should connect to the target Appium server.
 
-![Server Details](./assets/images/server-configuration.png)
+![Server Details](./assets/images/server-details/server-configuration.png)
 
 By default, the _Appium Server_ tab is selected, which is used for connecting to a standalone local
 or remote Appium server. However, it is also possible to connect to a server provided by a cloud
@@ -15,7 +15,7 @@ service. [See the section below for more details.](#cloud-providers)
 
 The default server details have 4 fields:
 
-![Default Server Details](./assets/images/default-server-details.png)
+![Default Server Details](./assets/images/server-details/default-server-details.png)
 
 * __Remote Host__: the host URL of the server
 * __Remote Port__: the port on which the server is running
@@ -32,7 +32,7 @@ also be using this address, in which case you can leave the fields unchanged.
 Clicking the _Select Cloud Providers_ button opens a screen showing various cloud providers that
 support integration through Appium Inspector:
 
-![Cloud Providers](./assets/images/cloud-providers.png)
+![Cloud Providers](./assets/images/server-details/cloud-providers.png)
 
 Currently, the Inspector supports the following cloud service providers:
 
@@ -56,10 +56,10 @@ Selecting any provider then adds a new tab next to the default _Appium Server_ t
 the provider's tab changes the available server detail fields. Different providers will have
 different fields - for example, LambdaTest only requires the _username_ and _access key_:
 
-![LambdaTest Server Details](./assets/images/lambdatest-details.png)
+![LambdaTest Server Details](./assets/images/server-details/lambdatest-details.png)
 
 ## Advanced Settings
 
 The _Advanced Settings_ options allow further configuration of the Appium server connection:
 
-![Advanced Settings](./assets/images/advanced-settings.png)
+![Advanced Settings](./assets/images/server-details/advanced-settings.png)
