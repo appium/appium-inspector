@@ -14,8 +14,8 @@ and session details are specified.
 
 ![Server Details](../session-builder/assets/images/server-details/server-configuration.png)
 
-The server details section at the top of the window is where information about the Appium server is
-specified, so that the Inspector knows how to connect to it:
+The [server details section](../session-builder/server-details.md) at the top of the window is where
+information about the Appium server is specified, so that the Inspector knows how to connect to it:
 
 * If you wish to connect to a cloud provider service, choose your vendor using the _Select Cloud
   Providers_ button, switch to its tab, and fill in the required details.
@@ -43,16 +43,18 @@ With the server details specified, you can move on to the session details!
 
 ![Session Details](../session-builder/assets/images/capability-builder/capability-builder.png)
 
-The capability builder take up the majority of the Session Builder screen. This is the place
-where your session [Capabilities](https://appium.io/docs/en/latest/guides/caps/) should be specified.
+The [Capability Builder](../session-builder/capability-builder.md) take up the majority of the
+Session Builder screen. This is the place where your session
+[Capabilities](https://appium.io/docs/en/latest/guides/caps/) should be specified.
 
 !!! warning
 
     Appium has several mandatory capabilities (see above link). Attempting to start a new session
     without any capabilities will not work.
 
-You can enter these capabilities one by one on the left side, or you can edit the whole capability
-set in JSON format on the right. Choose your preferred input method.
+You can enter these capabilities [one by one on the left side](../session-builder/capability-builder.md#capability-fields),
+or you can [edit the whole capability set in JSON format on the right](../session-builder/capability-builder.md#capability-json-structure).
+Choose your preferred input method.
 
 So then, what capabilities should be entered? This depends on your target platform, and the Appium
 driver that you want to use. Here are some basic capability sets not specific to any app:

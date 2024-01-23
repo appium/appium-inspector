@@ -10,8 +10,8 @@ Appium session using the Inspector.
 
 ![Attach to Session](assets/images/attach-to-session/attach-to-session.png)
 
-If there are no locally discovered Appium sessions, the dropdown is likely to be empty. But if there
-is at least one session, the dropdown will automatically populate with a session identifier:
+If there are no discovered Appium sessions, the dropdown is likely to be empty. But if there is at
+least one session, the dropdown will automatically populate with a session identifier:
 
 ![Found Session](assets/images/attach-to-session/found-session.png)
 
