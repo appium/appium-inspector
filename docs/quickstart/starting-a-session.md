@@ -12,7 +12,7 @@ and session details are specified.
 
 ## Adding Server Details
 
-![Server Details](../session-builder/assets/images/server-configuration.png)
+![Server Details](../session-builder/assets/images/server-details/server-configuration.png)
 
 The server details section at the top of the window is where information about the Appium server is
 specified, so that the Inspector knows how to connect to it:
@@ -41,9 +41,9 @@ With the server details specified, you can move on to the session details!
 
 ## Adding Session Details
 
-![Session Details](../session-builder/assets/images/session-configuration.png)
+![Session Details](../session-builder/assets/images/capability-builder/capability-builder.png)
 
-The session details take up the majority of the Session Builder screen. This is the place
+The capability builder take up the majority of the Session Builder screen. This is the place
 where your session [Capabilities](https://appium.io/docs/en/latest/guides/caps/) should be specified.
 
 !!! warning
