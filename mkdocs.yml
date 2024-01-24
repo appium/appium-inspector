@@ -41,5 +41,6 @@ nav:
       - session-builder/attach-to-session.md
   - Session Inspector:
       - session-inspector/index.md
+      - session-inspector/header.md
   - troubleshooting.md
   - contributing.md
