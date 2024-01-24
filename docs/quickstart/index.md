@@ -10,9 +10,9 @@ Let's get started with Appium Inspector! Make sure you have checked out the
 
 This quickstart will cover the following:
 
-1. Appium Inspector install requirements
-2. Installing the Inspector
-3. Configure Appium session details
-4. Start an Inspector session
+1. [Appium Inspector install requirements](./requirements.md)
+2. [Installing the Inspector](./installation.md)
+3. [Configure Appium session details](./starting-a-session.md)
+4. [Start an Inspector session](./starting-a-session.md#launching-the-session)
 
 Continue with the [installation requirements](./requirements.md)!
