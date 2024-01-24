@@ -30,7 +30,7 @@ Appium Inspector is part of the Appium ecosystem. For information on Appium itse
 -   Check out the [__Overview__](./overview.md) to learn the basics of the Inspector
 -   Go through the [__Quickstart__](./quickstart/index.md) steps to get set up and start inspecting your app
 -   The [__Session Builder__](./session-builder/index.md) section acts as a reference for the default landing screen
--   The __Session Inspector__ section acts as a reference for the inspector screen
+-   The [__Session Inspector__](./session-inspector/) section acts as a reference for the inspector screen
 -   Refer to the [__Troubleshooting__](./troubleshooting.md) page for a list of potential issues
 -   For contributions to the Inspector, refer to the [__Contributing__](./contributing.md) page
 

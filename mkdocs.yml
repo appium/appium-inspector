@@ -39,5 +39,7 @@ nav:
       - session-builder/capability-builder.md
       - session-builder/saved-capability-sets.md
       - session-builder/attach-to-session.md
+  - Session Inspector:
+      - session-inspector/index.md
   - troubleshooting.md
   - contributing.md
