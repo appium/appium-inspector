@@ -42,5 +42,6 @@ nav:
   - Session Inspector:
       - session-inspector/index.md
       - session-inspector/header.md
+      - session-inspector/screenshot.md
   - troubleshooting.md
   - contributing.md
