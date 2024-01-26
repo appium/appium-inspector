@@ -3,7 +3,8 @@ title: Saved Capability Sets
 ---
 
 The Saved Capability Sets tab of the Session Builder is used for listing and configuring any saved
-capability sets. Parts of this tab are similar to the Capability Builder tab.
+capability sets, which can be created using [the button in the footer of the Capability Builder tab](./capability-builder.md#footer).
+Parts of this tab are similar to the Capability Builder tab.
 
 ![Saved Capability Sets](assets/images/saved-capability-sets/saved-caps-sets.png)
 
