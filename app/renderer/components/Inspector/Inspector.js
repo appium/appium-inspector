@@ -35,8 +35,7 @@ const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 
 const MIN_WIDTH = 870;
 const MIN_HEIGHT = 610;
-const SMALLEST_MAX_SCREENSHOT_WIDTH = 500;
-const MAX_SCREENSHOT_WIDTH_FRACTION = 0.4;
+const MAX_IMAGE_WIDTH_WINDOW_FRACTION = 0.4;
 
 const MJPEG_STREAM_CHECK_INTERVAL = 1000;
 const SESSION_EXPIRY_PROMPT_TIMEOUT = 60 * 60 * 1000; // Give user 1 hour to reply
@@ -130,14 +129,12 @@ const Inspector = (props) => {
     const imgRect = img.getBoundingClientRect();
     const screenshotRect = screenshotBox.getBoundingClientRect();
     if (imgRect.height < screenshotRect.height) {
-      // get what the img width would be if it fills screenshot box height
-      const attemptedWidth = (screenshotRect.height / imgRect.height) * imgRect.width;
-      const maxWindowFractionWidth = Math.trunc(window.innerWidth * MAX_SCREENSHOT_WIDTH_FRACTION);
-      const curMaxScreenshotWidth = Math.min(
-        Math.max(maxWindowFractionWidth, SMALLEST_MAX_SCREENSHOT_WIDTH),
-        attemptedWidth,
-      );
-      screenshotBox.style.maxWidth = `${curMaxScreenshotWidth}px`;
+      // get the expected image width if the image would fill the screenshot box height
+      const attemptedImgWidth = (screenshotRect.height / imgRect.height) * imgRect.width;
+      // get the maximum image width as a fraction of the current window width
+      const maxImgWidth = window.innerWidth * MAX_IMAGE_WIDTH_WINDOW_FRACTION;
+      const curMaxImgWidth = Math.min(maxImgWidth, attemptedImgWidth);
+      screenshotBox.style.maxWidth = `${curMaxImgWidth}px`;
     } else if (imgRect.width < screenshotRect.width) {
       screenshotBox.style.maxWidth = `${imgRect.width}px`;
     }
