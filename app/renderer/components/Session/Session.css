@@ -17,11 +17,6 @@
   margin-left: 10px;
 }
 
-.sessionContainer :global(.anticon:hover) {
-  background-color: #f08080;
-  color: white;
-}
-
 .sessionContainer :global(.addCloudProviderTab) {
   font-style: italic;
 }

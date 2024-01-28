@@ -11,11 +11,6 @@
       "matchPackageNames": [],
       "matchUpdateTypes": ["major"],
       "enabled": false
-    },
-    {
-      "matchPackageNames": ["ky"],
-      "matchUpdateTypes": ["minor"],
-      "enabled": false
     }
   ],
   "baseBranches": ["main"],

@@ -53,7 +53,7 @@ const Session = (props) => {
   };
 
   const loadNewSession = async (caps, attachSessId = null) => {
-    if (await newSession(caps, attachSessId)) {
+    if (await newSession(_.cloneDeep(caps), attachSessId)) {
       navigate('/inspector', {replace: true});
     }
   };
