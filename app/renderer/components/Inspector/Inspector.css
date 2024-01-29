@@ -75,7 +75,7 @@
 
 .inspector-main .interaction-tab-container {
   position: relative;
-  flex-grow: 3;
+  flex-grow: 1;
   flex-basis: 550px;
   min-width: 380px;
   padding-left: 1em;
