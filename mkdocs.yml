@@ -45,5 +45,6 @@ nav:
       - session-inspector/screenshot.md
       - session-inspector/source.md
       - session-inspector/commands.md
+      - session-inspector/gestures.md
   - troubleshooting.md
   - contributing.md
