@@ -44,31 +44,38 @@ various ways.
 
 ![Toggle Element Handles Button](./assets/images/screenshot/toggle-element-handles-button.png)
 
-This switch toggles the visibility of highlighter handles for all identified elements. This can be
-very useful if multiple elements overlap around the same coordinates, since the handles then allow
-selecting each of these elements separately.
+This switch toggles the visibility of highlighter handles for all identified elements.
+
+!!! info
+
+    Highlighter handles are only visible in [Element Mode](#interaction-mode).
 
 ![Screenshot With Element Handles](./assets/images/screenshot/app-screenshot-highlighters.png)
 
-Note that highlighter handles are only shown in Element Interaction Mode.
+Highlighter handles can be very useful if there are multiple elements overlapping around the same
+coordinates. Such element handles are merged together in a single group handle, identified by the
+`+` symbol. This group handle can then be clicked to reveal the individual highlighter handles,
+enabling the selection of each individual element.
+
+![Expanded Group Handle](./assets/images/screenshot/expanded-group-handle.png)
 
 ### Interaction Mode
 
 ![Screenshot Interaction Mode Buttons](./assets/images/screenshot/interaction-mode-buttons.png)
 
-The Interaction Mode buttons allow switching between the default Element Interaction Mode, and the
-Coordinates Interaction Mode. The differences are as follows:
+The Interaction Mode buttons allow switching between the default Element Mode, and the Coordinates
+Mode. The differences are as follows:
 
-| Mode | Description |
+| <div style="width:9em">Mode</div> | Description |
 | ---- | ------ |
-| Element Interaction Mode | In this mode, hovering over the screenshot will highlight any detected elements. Clicking on any highlighter will then select the corresponding element in the application source, and show its details in the selected element panel. |
-| Coordinates Interaction Mode | In this mode, the top left corner of the screenshot will show an coordinates overlay. Hovering over the screenshot will update this overlay with the coordinates on the device screen, and clicking or swiping the screenshot will execute a tap/swipe action on the device. |
+| Element Mode | In this mode, hovering over the screenshot will highlight any detected elements. Clicking on any highlighter will then select the corresponding element in the application source, and show its details in the selected element panel. |
+| Coordinates Mode | In this mode, the top left corner of the screenshot will show an coordinates overlay. Hovering over the screenshot will update this overlay with the coordinates on the device screen, and clicking or swiping the screenshot will execute a tap/swipe action on the device. |
 
 ### Download Screenshot
 
 ![Download Sreenshot Button](./assets/images/screenshot/download-screenshot-button.png)
 
-This button allows to save the currently shown screenshot on your computer as a `.PNG` file.
+This button allows to save the currently shown screenshot to your computer as a `.PNG` file.
 
 !!! info
 
