@@ -23,17 +23,12 @@ Currently, the limit is either the full window height, or 40% of the window widt
 ## Refreshing the Screenshot
 
 By default, the screenshot itself is a static image, which is only updated when a refresh is
-requested. This can happen when:
+requested, exactly like for the [Source tab](./source.md#refreshing-the-source). Interacting with
+the application outside of the Inspector will _not_ cause the screenshot to refresh.
 
-* interacting with an element (tap/send keys/clear)
-* interacting with the screenshot itself (tap/swipe)
-* [simulating system actions](./header.md#device-system-buttons)
-* [executing driver commands](./commands.md) (depends on the command)
-* [executing custom gestures](./gestures.md)
-* [pressing the Refresh button](./header.md#refresh-source-screenshot)
-
-It is also possible to have the screenshot update automatically, and always mirror the actual device
-screen. This can be achieved by using MJPEG session capabilities, such as `appium:mjpegServerPort`.
+However, it is possible to have the screenshot update automatically, and always mirror the actual
+device screen, even when interacting with the device outside of the Inspector. This can be achieved
+by using MJPEG session capabilities, such as `appium:mjpegServerPort`.
 
 ## Screenshot Panel Header
 
@@ -75,9 +70,9 @@ Mode. The differences are as follows:
 
 ![Download Sreenshot Button](./assets/images/screenshot/download-screenshot-button.png)
 
-This button allows to save the currently shown screenshot to your computer as a `.PNG` file.
-
 !!! info
 
     This button is not visible when using MJPEG screenshotting capabilities like
     `appium:mjpegServerUrl`.
+
+This button allows to save the currently shown screenshot to your computer as a `.PNG` file.

@@ -3,14 +3,14 @@ title: Header
 ---
 
 The header of the Session Inspector contains various buttons that are key to interacting with the
-device itself or the application source.
+device itself, or the application source.
 
 ![Inspector Header](./assets/images/header/app-header.png)
 
 ## Device System Buttons
 
 If using the Inspector with an Android or iOS device, the first button group in the header will be
-the system buttons, which allow you to simulate the equivalent Android or iOS system functionality:
+the system buttons, which simulate the equivalent Android or iOS system functionality:
 
 ![Android Buttons](./assets/images/header/system-buttons-android.png) ![iOS Buttons](./assets/images/header/system-buttons-ios.png)
 
@@ -47,35 +47,38 @@ The current context can now be switched by selecting the new context in the drop
 
 ## Toggle Automatic Source Refresh
 
+![Pause Source Refresh Button](./assets/images/header/refresh-source-pause.png) ![Resume Source Refresh Button](./assets/images/header/refresh-source-resume.png)
+
 !!! info
 
     This button is only visible when using MJPEG screenshotting capabilities like
     `appium:mjpegServerUrl`.
 
-![Pause Source Refresh Button](./assets/images/header/refresh-source-pause.png) ![Resume Source Refresh Button](./assets/images/header/refresh-source-resume.png)
+This button allows to disable or re-enable refreshing the application XML source, when executing
+actions that normally trigger a refresh (these are listed in the [Source tab page](./source.md#refreshing-the-source)).
+Once automatic refresh is disabled, the only way to refresh the source is by using the [Refresh button](#refresh-source-screenshot).
 
-This button allows to disable or re-enable automatic refreshing of the application XML source, once
-any changes are detected. This may be useful while interacting with the device through the screenshot,
-and the application source is not as relevant. In cases where the XML source is complex and takes
+Disabling automatic refresh can be useful while interacting with the device through the screenshot,
+in situations when the application source is not important. If the XML source is complex and takes
 some time to retrieve, disabling its retrieval allows for more seamless device interaction.
 
 ## Refresh Source & Screenshot
 
 ![Refresh Button](./assets/images/header/refresh-button.png)
 
-If the application screenshot and/or source have changed from the data last captured by the
-Inspector, this button allows to trigger a manual refresh and retrieve the latest data.
+This button triggers a manual refresh of the application screenshot and source, thereby retrieving
+the latest data.
 
 ## Search for Element
 
 ![Search Button](./assets/images/header/search-button.png)
 
-This button allows you to search for elements within the current application XML source. Opening it
-will show a modal that allows entering the element search details:
+This button allows searching for elements within the current application XML source. Opening it
+will show a modal window for specifying the element search details:
 
-![Element Search Modal](./assets/images/header/search-inputs.png)
+![Element Search Window](./assets/images/header/search-inputs.png)
 
-It is possible to select the locator strategy to be used during element search. Different drivers
+The Inspector provides multiple locator strategies that can be used during search. Different drivers
 support different locator strategies, and the Inspector will try to hide strategies that are not
 supported by the current driver.
 

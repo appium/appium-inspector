@@ -32,6 +32,25 @@ to toggle visibility of such child elements.
 For supported Appium drivers, the maximum depth of the returned XML tree can be adjusted with the
 `snapshotMaxDepth` setting.
 
+### Refreshing the Source
+
+By default, the source XML is only updated when a refresh is requested. This can happen when:
+
+* interacting with an element (tap/send keys/clear)
+* interacting with the [screenshot](./screenshot.md) (tap/swipe)
+* [simulating system actions](./header.md#device-system-buttons)
+* [executing driver commands](./commands.md) (depends on the command)
+* [executing custom gestures](./gestures.md)
+* [pressing the Refresh button](./header.md#refresh-source-screenshot)
+
+Note that interacting with the application outside of the Inspector will _not_ cause the source XML
+to refresh.
+
+The use of MJPEG session capabilities (such as `appium:mjpegServerPort`) allows to modify this
+behavior. While the default source refresh behavior in MJPEG mode stays the same, the mode adds the
+[automatic source refresh button](./header.md#toggle-automatic-source-refresh) in the application
+header, which allows to disable automatic refreshing.
+
 ### Toggle Attributes Button
 
 ![Toggle Attributes Button](./assets/images/source/toggle-attributes-button.png)

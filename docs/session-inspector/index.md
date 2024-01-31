@@ -5,7 +5,7 @@ hide:
 title: Session Inspector Overview
 ---
 
-The __Session Inspector__ is the screen shown when connected to a session, and includes the majority
+The __Session Inspector__ is the screen shown when connected to a session, and provides the majority
 of the Inspector's functionality.
 
 ![Session Inspector](../assets/images/session-inspector.png)
