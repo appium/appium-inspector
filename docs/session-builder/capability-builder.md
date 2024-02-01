@@ -30,6 +30,11 @@ There are 5 options for the value type:
 
 Selecting a different option may change the value input field.
 
+!!! note
+
+    Capabilities with nested objects, such as `chrome:options`, must be added by directly editing
+    the [the JSON structure](#capability-json-structure).
+
 To add or remove capabilities, use the add and delete buttons on the right side.
 
 There is also a checkbox that allows automatically adding the Appium vendor prefix to capabilities
