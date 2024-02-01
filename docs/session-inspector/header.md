@@ -14,10 +14,10 @@ the system buttons, which simulate the equivalent Android or iOS system function
 
 ![Android Buttons](./assets/images/header/system-buttons-android.png) ![iOS Buttons](./assets/images/header/system-buttons-ios.png)
 
-* Android: back / home / app switcher
-* iOS: home / Siri
-    * The Siri button will open a prompt for input text, which will be used as the Siri command.
-      Please note that the command will not work if Siri is disabled.
+-   Android: back / home / app switcher
+-   iOS: home / Siri
+    -   The Siri button will open a prompt for input text, which will be used as the Siri command.
+        Please note that the command will not work if Siri is disabled.
 
 ## Context Switcher
 
@@ -92,11 +92,11 @@ list of selectable element IDs:
 
 Selecting any element enables the element action buttons:
 
-| Icon | Description |
-| ---- | ------ |
-| ![Reveal Element in Source](./assets/images/header/search-reveal-element.png) | Attempt to select the element in the application source. Note that this may not work if the element ID has changed. |
-| ![Tap Element](./assets/images/header/search-tap-element.png) | Tap the element |
-| ![Send or Clear Element Text](./assets/images/header/search-send-clear-element-text.png) | Enter text to send to the element, or clear its text |
+| Icon                                                                                     | Description                                                                                                         |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| ![Reveal Element in Source](./assets/images/header/search-reveal-element.png)            | Attempt to select the element in the application source. Note that this may not work if the element ID has changed. |
+| ![Tap Element](./assets/images/header/search-tap-element.png)                            | Tap the element                                                                                                     |
+| ![Send or Clear Element Text](./assets/images/header/search-send-clear-element-text.png) | Enter text to send to the element, or clear its text                                                                |
 
 ## Toggle Recorder
 
@@ -107,10 +107,10 @@ and translate them into code that can be used with various [Appium clients](http
 
 Interactions that can be recorded include:
 
-* Actions for a specific element (tap/send keys/clear)
-* Generic tap/swipe actions on the application screenshot
-* [Mobile device system actions](#device-system-buttons)
-* [Driver commands](./commands.md)
+-   Actions for a specific element (tap/send keys/clear)
+-   Generic tap/swipe actions on the application screenshot
+-   [Mobile device system actions](#device-system-buttons)
+-   [Driver commands](./commands.md)
 
 !!! note
 

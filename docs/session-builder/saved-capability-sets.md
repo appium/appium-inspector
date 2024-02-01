@@ -31,6 +31,6 @@ additional functionality here is the ability to rename a saved set:
 The footer is largely similar to [that in the Capability Builder tab](./capability-builder.md#footer),
 with one additional button:
 
-* The _Save_ button is shown upon selecting any saved capability set, and is enabled after making
-  any changes in its capabilities. Pressing it overwrites the capabilities in the saved set with the
-  new changes.
+-   The _Save_ button is shown upon selecting any saved capability set, and is enabled after making
+    any changes in its capabilities. Pressing it overwrites the capabilities in the saved set with the
+    new changes.

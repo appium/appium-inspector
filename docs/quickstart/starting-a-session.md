@@ -7,7 +7,7 @@ like this:
 
 ![Empty Session Builder](../session-builder/assets/images/empty-session-builder.png)
 
-This is the [__Session Builder__](../session-builder/index.md) screen, where the server
+This is the [**Session Builder**](../session-builder/index.md) screen, where the server
 and session details are specified.
 
 ## Adding Server Details
@@ -17,16 +17,16 @@ and session details are specified.
 The [server details section](../session-builder/server-details.md) at the top of the window is where
 information about the Appium server is specified, so that the Inspector knows how to connect to it:
 
-* If you wish to connect to a cloud provider service, choose your vendor using the _Select Cloud
-  Providers_ button, switch to its tab, and fill in the required details.
+-   If you wish to connect to a cloud provider service, choose your vendor using the _Select Cloud
+    Providers_ button, switch to its tab, and fill in the required details.
 
-* If you wish to connect to a standalone local or remote Appium server, first make sure the server
-  is launched and running. The start of the server log will have a list of IP addresses and ports
-  that can be used to connect to the server.
+-   If you wish to connect to a standalone local or remote Appium server, first make sure the server
+    is launched and running. The start of the server log will have a list of IP addresses and ports
+    that can be used to connect to the server.
 
-    * For a local Appium server running on its default port, __all server details fields can be left
-      unchanged__. By default, the Inspector will attempt to connect to `http://127.0.0.1:4723`,
-      which matches the default values of the Appium server.
+    -   For a local Appium server running on its default port, **all server details fields can be left
+        unchanged**. By default, the Inspector will attempt to connect to `http://127.0.0.1:4723`,
+        which matches the default values of the Appium server.
 
     !!! note
 
@@ -34,8 +34,8 @@ information about the Appium server is specified, so that the Inspector knows ho
         must be changed to `/wd/hub`. This may also apply to an Appium 2 server, if it was launched
         with the `--base-path="/wd/hub"` argument.
 
-    * For a local or remote Appium server with non-default properties, please change the field
-      values accordingly.
+    -   For a local or remote Appium server with non-default properties, please change the field
+        values accordingly.
 
 With the server details specified, you can move on to the session details!
 
@@ -107,15 +107,15 @@ and session information:
 
 You can see the following details:
 
-* The server details are unchanged, which means the Inspector will try to connect to a local Appium
-  server on its default port
-* The session capabilities are set to use the UiAutomator2 driver, with additional capabilities for
-  the Android system settings app
+-   The server details are unchanged, which means the Inspector will try to connect to a local Appium
+    server on its default port
+-   The session capabilities are set to use the UiAutomator2 driver, with additional capabilities for
+    the Android system settings app
 
 Of course, your own server and session details will likely vary.
 
 You can now press the blue _Start Session_ button - hopefully your session will be created, in
-which case the __[Session Inspector](../session-inspector/index.md)__ screen will open:
+which case the **[Session Inspector](../session-inspector/index.md)** screen will open:
 
 ![Session Inspector](../assets/images/session-inspector.png)
 

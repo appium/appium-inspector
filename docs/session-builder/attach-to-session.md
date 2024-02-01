@@ -1,6 +1,6 @@
 ---
 hide:
-  - toc
+    - toc
 
 title: Attach to Session Tab
 ---

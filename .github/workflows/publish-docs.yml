@@ -9,19 +9,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Use GH Actions credentials
-      run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-    - name: Use Node.js LTS
-      uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-        cache: 'npm'
-    - name: Install dependencies (Node.js)
-      run: npm install
-    - name: Install dependencies (Python)
-      run: npm run install-docs-deps
-    - name: Build and deploy docs
-      run: npm run publish:docs
+      - uses: actions/checkout@v4
+      - name: Use GH Actions credentials
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      - name: Install dependencies (Node.js)
+        run: npm install
+      - name: Install dependencies (Python)
+        run: npm run install-docs-deps
+      - name: Build and deploy docs
+        run: npm run publish:docs

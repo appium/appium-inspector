@@ -17,9 +17,9 @@ Once a gesture has been created and saved, clicking its entry in the saved gestu
 its expected actions as an overlay over the [screenshot](./screenshot.md). There are also 3 buttons
 for each gesture:
 
-* Execute the gesture
-* Edit the gesture (will open it in the [Gesture Builder](#gesture-builder))
-* Delete the gesture
+-   Execute the gesture
+-   Edit the gesture (will open it in the [Gesture Builder](#gesture-builder))
+-   Delete the gesture
 
 ## Gesture Builder
 
@@ -32,10 +32,10 @@ while the gesture builder is opened.
 
 The builder screen can be divided into 4 parts:
 
-* Header
-* Gesture timeline
-* Pointer tabs
-* Pointer actions
+-   Header
+-   Gesture timeline
+-   Pointer tabs
+-   Pointer actions
 
 ### Header
 
@@ -43,13 +43,13 @@ The header lists general gesture information, settings, and actions.
 
 ![Gesture Editor Header](./assets/images/gestures/gesture-editor-header.png)
 
-* The gesture title and description can be clicked and edited
-* The 2-button group allows to set the X/Y coordinate units used for [Move pointer actions](#move):
-  either the default relative (percentage) or absolute (pixels)
-* The _Play_ button executes the gesture
-* The _Save As_ button allows to save the gesture using the specified gesture title
-* The _Save_ button is only enabled when editing an existing gesture, and it overwrites the previously
-  saved gesture details with the current ones
+-   The gesture title and description can be clicked and edited
+-   The 2-button group allows to set the X/Y coordinate units used for [Move pointer actions](#move):
+    either the default relative (percentage) or absolute (pixels)
+-   The _Play_ button executes the gesture
+-   The _Save As_ button allows to save the gesture using the specified gesture title
+-   The _Save_ button is only enabled when editing an existing gesture, and it overwrites the previously
+    saved gesture details with the current ones
 
 ### Gesture Timeline
 

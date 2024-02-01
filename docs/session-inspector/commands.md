@@ -1,6 +1,6 @@
 ---
 hide:
-  - toc
+    - toc
 
 title: Commands Tab
 ---
@@ -21,16 +21,16 @@ of which corresponds to an Appium driver command.
 
 The available buttons may correspond to commands without parameters, and commands with parameters:
 
-* For a command without parameters, clicking its button will execute the command
-* For a command with parameters, clicking its button will open the parameter popup:
+-   For a command without parameters, clicking its button will execute the command
+-   For a command with parameters, clicking its button will open the parameter popup:
 
     ![Command Parameters](./assets/images/commands/command-params.png)
 
 Some commands may require special conditions (e.g. they are only supported in simulators). This
 additional information, if present, is shown as follows:
 
-* For a command without parameters, this is shown by hovering over the button
-* For a command with parameters, this is listed inside the parameter popup
+-   For a command without parameters, this is shown by hovering over the button
+-   For a command with parameters, this is listed inside the parameter popup
 
 Regardless of the command type, once it is run and its execution finishes, a new popup will show the
 result returned by the command.

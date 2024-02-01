@@ -1,10 +1,11 @@
 ---
 hide:
-  - navigation
-  - toc
+    - navigation
+    - toc
 
 title: Welcome
 ---
+
 <style>
   .md-typeset h1 {
     display: none;
@@ -27,11 +28,11 @@ Appium Inspector is part of the Appium ecosystem. For information on Appium itse
 
 <div class="grid cards" markdown>
 
--   Check out the [__Overview__](./overview.md) to learn the basics of the Inspector
--   Go through the [__Quickstart__](./quickstart/index.md) steps to get set up and start inspecting your app
--   The [__Session Builder__](./session-builder/index.md) section acts as a reference for the default landing screen
--   The [__Session Inspector__](./session-inspector/index.md) section acts as a reference for the inspector screen
--   Refer to the [__Troubleshooting__](./troubleshooting.md) page for a list of potential issues
--   For contributions to the Inspector, refer to the [__Contributing__](./contributing.md) page
+-   Check out the [**Overview**](./overview.md) to learn the basics of the Inspector
+-   Go through the [**Quickstart**](./quickstart/index.md) steps to get set up and start inspecting your app
+-   The [**Session Builder**](./session-builder/index.md) section acts as a reference for the default landing screen
+-   The [**Session Inspector**](./session-inspector/index.md) section acts as a reference for the inspector screen
+-   Refer to the [**Troubleshooting**](./troubleshooting.md) page for a list of potential issues
+-   For contributions to the Inspector, refer to the [**Contributing**](./contributing.md) page
 
 </div>

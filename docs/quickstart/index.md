@@ -1,6 +1,6 @@
 ---
 hide:
-  - toc
+    - toc
 
 title: Quickstart Intro
 ---

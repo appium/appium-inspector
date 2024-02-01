@@ -1,6 +1,6 @@
 ---
 hide:
-  - navigation
+    - navigation
 
 title: Troubleshooting
 ---
@@ -55,17 +55,17 @@ This is [a known issue](https://github.com/appium/appium/issues/14825). The prob
 Apple's XCTest framework, so unfortunately it cannot be resolved from the Appium side. However,
 there are a few suggestions that may help mitigate this:
 
-* Set [the `snapshotMaxDepth` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/)
-  to `62` (the maximum stable value)
-* Configure [the `pageSourceExcludedAttributes` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/)
-  to exclude some attributes that you may find less relevant (e.g. `"visible,accessible"`)
-* Set [the `customSnapshotTimeout` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/)
-  to a higher value
+-   Set [the `snapshotMaxDepth` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/)
+    to `62` (the maximum stable value)
+-   Configure [the `pageSourceExcludedAttributes` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/)
+    to exclude some attributes that you may find less relevant (e.g. `"visible,accessible"`)
+-   Set [the `customSnapshotTimeout` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/)
+    to a higher value
 
 If these do not help, then the only remaining solution is to work with the app developers to
 refactor the application code. Some suggestions from the linked issue thread include:
 
-* Try to remove unnecessary nesting levels
-* Use the Fabric renderer with [View Flattening](https://reactnative.dev/architecture/view-flattening)
-* Use native stack navigator instead of stack navigator
-* Reduce the amount of view tags/test IDs
+-   Try to remove unnecessary nesting levels
+-   Use the Fabric renderer with [View Flattening](https://reactnative.dev/architecture/view-flattening)
+-   Use native stack navigator instead of stack navigator
+-   Reduce the amount of view tags/test IDs
