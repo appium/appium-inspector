@@ -26,5 +26,5 @@ for details.
 
 While the Inspector is designed to work with Appium 2, it is also compatible with
 later versions of Appium 1. Please be aware of
-[the differences between both Appium versions](https://appium.io/docs/en/latest/guides/migrating-1-to-2/),
+[the differences between both Appium versions](https://appium.io/docs/en/latest/guides/migrating-1-to-2/) -
 in particular, the default server base path.

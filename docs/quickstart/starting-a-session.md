@@ -115,10 +115,12 @@ You can see the following details:
 Of course, your own server and session details will likely vary.
 
 You can now press the blue _Start Session_ button - hopefully your session will be created, in
-which case the __Session Inspector__ screen will open:
+which case the __[Session Inspector](../session-inspector/index.md)__ screen will open:
 
 ![Session Inspector](../assets/images/session-inspector.png)
 
-If this has worked, you are done with the quickstart! You can now start exploring your app, as well
-as other Inspector features! If something went wrong, please check the
-[Troubleshooting](../troubleshooting.md) page for potential issues.
+If this works, you are done with the quickstart! You can now start exploring your app using the
+various features described in the Session Inspector page.
+
+If something went wrong, please check the [Troubleshooting](../troubleshooting.md) page for
+potential issues.

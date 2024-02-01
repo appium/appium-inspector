@@ -1,5 +1,5 @@
 ---
-title: Saved Capability Sets
+title: Saved Capability Sets Tab
 ---
 
 The Saved Capability Sets tab of the Session Builder is used for listing and configuring any saved
@@ -16,7 +16,7 @@ is also shown in the title of the Saved Capability Sets tab.
 ![Saved Caps Set List](assets/images/saved-capability-sets/saved-caps-set-list.png)
 
 Selecting any set populates the JSON structure on the right side with the contents of the set. There
-are also 2 buttons, for opening the set in the Capability Builder tab, and for deleting the set.
+are also 2 buttons: one for opening the set in the Capability Builder tab, and one for deleting the set.
 
 ## Saved Capability Set JSON Structure
 

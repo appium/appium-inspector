@@ -3,7 +3,7 @@ title: Header
 ---
 
 The header of the Session Inspector contains various buttons that are key to interacting with the
-device itself, or the application source.
+device itself, or the [application source](./source.md).
 
 ![Inspector Header](./assets/images/header/app-header.png)
 
@@ -56,9 +56,9 @@ The current context can now be switched by selecting the new context in the drop
 
 This button allows to disable or re-enable refreshing the application XML source, when executing
 actions that normally trigger a refresh (these are listed in the [Source tab page](./source.md#refreshing-the-source)).
-Once automatic refresh is disabled, the only way to refresh the source is by using the [Refresh button](#refresh-source-screenshot).
+While automatic refresh is disabled, the only way to refresh the source is by using the [Refresh button](#refresh-source-screenshot).
 
-Disabling automatic refresh can be useful while interacting with the device through the screenshot,
+Disabling automatic refresh can be useful while interacting with the device through the [screenshot](./screenshot.md),
 in situations when the application source is not important. If the XML source is complex and takes
 some time to retrieve, disabling its retrieval allows for more seamless device interaction.
 
@@ -73,21 +73,17 @@ the latest data.
 
 ![Search Button](./assets/images/header/search-button.png)
 
-This button allows searching for elements within the current application XML source. Opening it
-will show a modal window for specifying the element search details:
+This button opens a new modal window, which can be used to search for elements within the current
+application XML source. Searching requires providing the element details:
 
 ![Element Search Window](./assets/images/header/search-inputs.png)
 
-The Inspector provides multiple locator strategies that can be used during search. Different drivers
+There is a choice of multiple locator strategies that can be used during search. Different drivers
 support different locator strategies, and the Inspector will try to hide strategies that are not
 supported by the current driver.
 
-After selecting the locator strategy, entering the locator string, and pressing Search, the results
-screen is shown.
-
-It is possible that no elements are found:
-
-![Empty Element Search Results](./assets/images/header/search-results-empty.png)
+After selecting the locator strategy, entering the selector string, and pressing _Search_, the
+results screen is shown.
 
 If one or more elements are found, the Inspector will list the element count, time taken, and a
 list of selectable element IDs:
@@ -107,25 +103,24 @@ Selecting any element enables the element action buttons:
 ![Start Recording Button](./assets/images/header/record-start-button.png) ![Stop Recording Button](./assets/images/header/record-stop-button.png)
 
 This button allows to enable or disable recording of various user interactions with the application,
-and translate them into code that can be used with various Appium clients.
+and translate them into code that can be used with various [Appium clients](https://appium.io/docs/en/latest/ecosystem/clients/).
 
 Interactions that can be recorded include:
 
 * Actions for a specific element (tap/send keys/clear)
 * Generic tap/swipe actions on the application screenshot
-* [System actions](#device-system-buttons)
+* [Mobile device system actions](#device-system-buttons)
 * [Driver commands](./commands.md)
 
 !!! note
 
     Recording of custom gestures is not currently supported.
 
-While recording is enabled, the [Recorder tab](./recorder.md) is automatically populated with Appium
-client code for all supported interactions.
+While recording is enabled, the [Recorder tab](./recorder.md) contents are automatically populated
+with Appium client code for all supported interactions.
 
 ## Quit Session
 
 ![Quit Button](./assets/images/header/quit-button.png)
 
-As the name implies, this button quits the Inspector session and returns to the
-[Session Builder](../session-builder/index.md).
+This button quits the Inspector session and returns to the [Session Builder](../session-builder/index.md).

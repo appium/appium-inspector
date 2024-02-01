@@ -2,7 +2,7 @@
 hide:
   - toc
 
-title: Attach to Session
+title: Attach to Session Tab
 ---
 
 The Attach to Session tab of the Session Builder provides the ability to connect to an existing

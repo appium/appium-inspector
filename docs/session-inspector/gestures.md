@@ -119,7 +119,7 @@ The values for X and Y coordinates will automatically change depending on the [s
 ![Pointer Down Action](./assets/images/gestures/pointer-down-action.png)
 
 Both of these actions only require specifying whether the left or right pointer should be used. For
-pointer types where this does not apply (e.g. touch), the default left pointer applies.
+pointer types where this does not apply (e.g. touch), the default left pointer can be used.
 
 #### Pause
 

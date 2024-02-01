@@ -9,6 +9,9 @@ The main purpose of the Inspector is to provide inspection capabilities for the 
 source. It is primarily intended to be used in test automation development, but it can also be
 useful in app development - or if one simply wants to take a look at an application's page source!
 
+Under the hood, the Inspector is essentially just an Appium client (based on [WebdriverIO](https://webdriver.io/)),
+with a graphical user interface and additional features.
+
 ## Formats
 
 The Inspector is distributed in two formats:
@@ -25,11 +28,11 @@ There are two main parts to the Inspector user interface:
 
 <div class="grid cards" markdown>
 
--   __The Session Builder__
+-   __[The Session Builder](./session-builder/index.md)__
     ![Session Builder](./assets/images/session-builder.png)
     The default screen, where all the server and session details must be specified.
 
--   __The Session Inspector__
+-   __[The Session Inspector](./session-inspector/index.md)__
     ![Session Inspector](./assets/images/session-inspector.png)
     The active session screen, showing the app screenshot, page source, and more.
 
@@ -56,13 +59,5 @@ features. Here is a non-exhaustive list of such features:
 * Switch to different application contexts
 * Access a library of various Appium driver commands
 
-All features are described in detail in the Session Builder and Session Inspector sections.
-
-## Under the Hood
-
-Structurally, the Inspector is just an Appium client with a graphical user interface and additional
-features.
-
-* The rendered GUI components are built with React and Electron
-* The Appium client functionality is provided by the [`web2driver`](https://github.com/headspinio/web2driver)
-  module, which itself uses [WebdriverIO](https://webdriver.io/)
+All features are described in detail in the [Session Builder](./session-builder/index.md) and
+[Session Inspector](./session-inspector/index.md) sections.

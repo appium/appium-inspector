@@ -112,4 +112,5 @@ was returned.
 This table lists all attributes retrieved from the element, along with their values. Clicking on a
 value copies it to the clipboard.
 
-Refer to your Appium driver documentation for ways to customize the attributes shown in this table.
+Refer to your [Appium driver](https://appium.io/docs/en/latest/ecosystem/drivers/) documentation for
+ways to customize the attributes shown in this table.

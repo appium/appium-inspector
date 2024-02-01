@@ -29,28 +29,10 @@ also be using this address, in which case you can leave the fields unchanged.
 
 ## Cloud Providers
 
-Clicking the _Select Cloud Providers_ button opens a screen showing various cloud providers that
+Clicking the _Select Cloud Providers_ button opens a screen with various cloud providers that
 support integration through Appium Inspector:
 
 ![Cloud Providers](./assets/images/server-details/cloud-providers.png)
-
-Currently, the Inspector supports the following cloud service providers:
-
-| Platform                                    | Docs                                                                                  |
-| ------------------------------------------- | ------------------------------------------------------------------------------------- |
-| [Sauce Labs](https://saucelabs.com)         | [Documentation](https://wiki.saucelabs.com/)                                          |
-| [HeadSpin](https://headspin.io)             | [Documentation](https://headspin.io/)                                                 |
-| [Browserstack](https://browserstack.com)    | [Documentation](https://www.browserstack.com/docs)                                    |
-| [LambdaTest](https://lambdatest.com)        | [Documentation](https://www.lambdatest.com/support/docs/appium-inspector-integration) |
-| [Bitbar](https://bitbar.com)                | [Documentation](http://docs.bitbar.com/)                                              |
-| [Kobiton](https://kobiton.com)              | [Documentation](https://docs.kobiton.com/)                                            |
-| [Perfecto](https://www.perfecto.io)         | [Documentation](https://developers.perfectomobile.com/display/PD/Appium)              |
-| [Pcloudy](https://www.pcloudy.com)          | [Documentation](https://www.pcloudy.com/mobile-application-testing-documentation)     |
-| [TestingBot](https://testingbot.com)        | [Documentation](https://testingbot.com/support)                                       |
-| [Experitest](http://www.experitest.com)     | [Documentation](https://docs.experitest.com/display/TE/Appium)                        |
-| [RobotQA](https://www.robotqa.com)          | [Documentation](https://robotqa.com/appium-remote)                                    |
-| [Remote TestKit](https://appkitbox.com/en/) | [Documentation](https://appkitbox.com/en/support/automation/appium/)                  |
-| [Mobitru](https://mobitru.com/)             | [Documentation](https://mobitru.com/docs/automation/)                                 |
 
 Selecting any provider then adds a new tab next to the default _Appium Server_ tab, and switching to
 the provider's tab changes the available server detail fields. Different providers will have

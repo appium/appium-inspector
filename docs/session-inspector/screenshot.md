@@ -26,7 +26,7 @@ By default, the screenshot itself is a static image, which is only updated when 
 requested, exactly like for the [Source tab](./source.md#refreshing-the-source). Interacting with
 the application outside of the Inspector will _not_ cause the screenshot to refresh.
 
-However, it is possible to have the screenshot update automatically, and always mirror the actual
+However, it _is_ possible to have the screenshot update automatically, and always mirror the actual
 device screen, even when interacting with the device outside of the Inspector. This can be achieved
 by using MJPEG session capabilities, such as `appium:mjpegServerPort`.
 
@@ -63,7 +63,7 @@ Mode. The differences are as follows:
 
 | <div style="width:9em">Mode</div> | Description |
 | ---- | ------ |
-| Element Mode | In this mode, hovering over the screenshot will highlight any detected elements. Clicking on any highlighter will then select the corresponding element in the application source, and show its details in the selected element panel. |
+| Element Mode | In this mode, hovering over the screenshot will highlight any detected elements. Clicking on any highlighter will then select the corresponding element in the [application source](./source.md#application-source), and show its details in the [selected element panel](./source.md#selected-element). |
 | Coordinates Mode | In this mode, the top left corner of the screenshot will show an coordinates overlay. Hovering over the screenshot will update this overlay with the coordinates on the device screen, and clicking or swiping the screenshot will execute a tap/swipe action on the device. |
 
 ### Download Screenshot

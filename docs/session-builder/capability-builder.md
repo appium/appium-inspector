@@ -1,5 +1,5 @@
 ---
-title: Capability Builder
+title: Capability Builder Tab
 ---
 
 Most of the Session Builder screen is taken up by one of 3 tabs, of which the Capability Builder tab
@@ -22,7 +22,7 @@ Changing the name or value of any capability will automatically adjust the conte
 
 There are 5 options for the value type:
 
-* text (string)
+* text
 * boolean
 * number
 * JSON object
@@ -30,7 +30,7 @@ There are 5 options for the value type:
 
 Selecting a different option may change the value input field.
 
-To add or remove capabilities, use the add and delete buttons on the right edge.
+To add or remove capabilities, use the add and delete buttons on the right side.
 
 There is also a checkbox that allows automatically adding the Appium vendor prefix to capabilities
 that do not have them, when starting a new session. This means that if you have a non-W3C capability
@@ -44,7 +44,7 @@ format, which may be more useful when working with code.
 
 ![Capability JSON Structure](assets/images/capability-builder/capability-json.png)
 
-At the top right of the JSON structure, there is an Edit button, which allows configuring the
+At the top right of the JSON structure, there is an Edit button, which allows adjusting the
 capabilities by directly editing the JSON structure. Toggling this editor mode then shows buttons
 for discarding any changes, or saving them. After saving, any changes will also be reflected in
 [the capability fields](#capability-fields) on the left side of the Session Builder.

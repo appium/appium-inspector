@@ -22,7 +22,7 @@ The reason for this issue is [cross-origin resource sharing](https://developer.m
 (CORS). Web browsers have security features which prevent CORS. The browser version of the Inspector
 needs to make requests to the Appium server directly from the browser via JavaScript, but these
 requests are typically not made to the same host (for example, the Inspector is accessed at
-`appiumpro.com`, whereas your local Appium Server is `localhost:4723`).
+`appiumpro.com`, whereas your local Appium server is `localhost:4723`).
 
 In this scenario, you will be unable to start a session, because the browser will prevent it. You
 can resolve this issue by starting your Appium server with the `--allow-cors` flag:
