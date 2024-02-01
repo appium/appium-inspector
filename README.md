@@ -2,11 +2,11 @@
 
 [![Crowdin](https://badges.crowdin.net/appium-desktop/localized.svg)](https://crowdin.com/project/appium-desktop)
 
-![Appium Inspector icon](./docs/icon.png)
+<img src="./docs/assets/images/icon.png" alt="Appium Inspector Icon" width="128"/>
 
 A GUI inspector for mobile apps and more, powered by a (separately installed) Appium server. When you're using it to inspect a mobile app, it looks like this:
 
-![Appium Inspector screenshot](./docs/inspector-window.png)
+![Appium Inspector screenshot](./docs/assets/images/inspector-window.png)
 
 Appium Inspector is basically just an Appium client (like WebdriverIO, Appium's Java client, Appium's Python client, etc...) with a user interface. There's an interface for specifying which Appium server to use, which capabilities to set, and then interacting with elements and other Appium commands once you've started a session.
 
@@ -35,11 +35,11 @@ If you're using the desktop app on macOS, when you run it you may be greeted wit
 
 1. _Control+Click_ the Appium Inspector icon in the Applications Finder folder and choose `Open`.
 
-   ![Appium Inspector Ctrl+Click](./docs/mac-ctrl-click.png)
+   ![Appium Inspector Ctrl+Click](./docs/quickstart/assets/images/mac-ctrl-click.png)
 
 2. You'll be presented with the dialog below. Just click `Open` and Appium Inspector should launch.
 
-   ![Appium Inspector Open Warning](./docs/open-warning.png)
+   ![Appium Inspector Open Warning](./docs/quickstart/assets/images/open-warning.png)
 
 #### Method 2 - Command Line
 

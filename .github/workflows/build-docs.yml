@@ -1,0 +1,32 @@
+# Builds the Appium Inspector MkDocs documentation
+# Executed on pull request if documentation-related files are changed
+
+name: Build Docs
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - 'tsconfig.json'
+      - 'package*.json'
+      - '.github/workflows/build-docs.yml' # this file
+
+jobs:
+  docs:
+    name: Build Docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      - name: Install dependencies (Node.js)
+        run: npm install
+      - name: Install dependencies (Python)
+        run: npm run install-docs-deps
+      - name: Build Docs
+        run: npm run build:docs
