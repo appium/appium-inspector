@@ -3,6 +3,7 @@ node_modules
 dist
 dist-browser
 release
+site
 main.map
 
 *.log
