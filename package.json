@@ -194,7 +194,7 @@
     "@appium/fake-driver": "5.4.0",
     "@appium/support": "4.2.0",
     "@babel/core": "7.23.9",
-    "@babel/eslint-parser": "7.23.9",
+    "@babel/eslint-parser": "7.23.10",
     "@babel/eslint-plugin": "7.23.5",
     "@babel/plugin-proposal-class-properties": "7.18.6",
     "@babel/plugin-transform-runtime": "7.23.9",
