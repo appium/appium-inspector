@@ -47,5 +47,6 @@ nav:
       - session-inspector/commands.md
       - session-inspector/gestures.md
       - session-inspector/recorder.md
+      - session-inspector/session-info.md
   - troubleshooting.md
   - contributing.md
