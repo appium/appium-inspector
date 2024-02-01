@@ -2,7 +2,7 @@
 
 [![Crowdin](https://badges.crowdin.net/appium-desktop/localized.svg)](https://crowdin.com/project/appium-desktop)
 
-![Appium Inspector icon](./docs/assets/images/icon.png)
+<img src="./docs/assets/images/icon.png" alt="Appium Inspector Icon" width="128"/>
 
 A GUI inspector for mobile apps and more, powered by a (separately installed) Appium server. When you're using it to inspect a mobile app, it looks like this:
 
