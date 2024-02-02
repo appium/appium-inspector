@@ -156,6 +156,9 @@
   "saveAs": "Save As…",
   "attachToSession": "Attach to Session",
   "selectedElement": "Selected Element",
+  "unnamed": "(Unnamed)",
+  "No Description": "No Description",
+  "couldNotFindEntryWithId": "Could not find an entry with ID {{id}}",
   "couldNotFindAnyElements": "Could not find any elements",
   "elementsCount": "Elements found:",
   "xCoordinate": "X: {{x}}",
@@ -209,6 +212,9 @@
   "RemoteTestKit AccessToken": "RemoteTestKit AccessToken",
   "RobotQA Token": "RobotQA Token",
   "Name": "Name",
+  "Description": "Description",
+  "Created": "Created",
+  "Actions": "Actions",
   "enterYourSessionId": "Enter your session ID here",
   "Proxy URL": "Proxy URL",
   "Source": "Source",
@@ -274,5 +280,11 @@
   "Mobitru WebDriver URL": "Mobitru WebDriver URL",
   "Mobitru Billing Unit": "Mobitru Billing Unit",
   "Mobitru Access Key": "Mobitru Access Key",
-  "mobitruCredentialsRequired": "Mobitru Access Key is required"
+  "mobitruCredentialsRequired": "Mobitru Access Key is required",
+  "Session URL": "Session URL",
+  "Server Details": "Server Details",
+  "Session Length": "Session Length",
+  "Session Details": "Session Details",
+  "Currently Active App ID": "Currently Active App ID",
+  "Session ID": "Session ID"
 }

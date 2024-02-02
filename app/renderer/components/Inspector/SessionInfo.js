@@ -22,7 +22,7 @@ const COLUMN_WIDTH = 200;
 let SESSION_DETAILS;
 
 const SessionInfo = (props) => {
-  const {driver} = props;
+  const {driver, t} = props;
 
   const sessionArray = Object.keys(SESSION_OBJ).map((key) => [key, String(SESSION_OBJ[key])]);
 
@@ -47,7 +47,7 @@ const SessionInfo = (props) => {
     const keyValue = `${keyName}_value`;
     const dataSource = tableValues.map(([name, value]) => ({
       key: name,
-      [keyName]: outerTable ? value : name,
+      [keyName]: outerTable ? t(value) : name,
       [keyValue]: value,
     }));
 

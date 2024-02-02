@@ -14,13 +14,34 @@ const SAVED_ACTIONS_OBJ = {
   ACTIONS: 'Actions',
 };
 
+const dataSource = (savedGestures, t) => {
+  if (!savedGestures) {
+    return [];
+  }
+  return savedGestures.map((gesture) => ({
+    key: gesture.id,
+    Name: gesture.name || t('unnamed'),
+    Created: moment(gesture.date).format('YYYY-MM-DD'),
+    Description: gesture.description || t('No Description'),
+  }));
+};
+
+const getGestureByID = (savedGestures, id, t) => {
+  for (const gesture of savedGestures) {
+    if (gesture.id === id) {
+      return gesture;
+    }
+  }
+  throw new Error(t('couldNotFindEntryWithId', {id}));
+};
+
 const SavedGestures = (props) => {
   const {savedGestures, showGestureEditor, removeGestureDisplay, t} = props;
 
   const drawnGestureRef = useRef(null);
 
   const onRowClick = (rowKey) => {
-    const gesture = getGestureByID(rowKey);
+    const gesture = getGestureByID(savedGestures, rowKey, t);
     if (gesture.id === drawnGestureRef.current) {
       removeGestureDisplay();
       drawnGestureRef.current = null;
@@ -42,15 +63,6 @@ const SavedGestures = (props) => {
     if (window.confirm('Are you sure?')) {
       deleteSavedGesture(id);
     }
-  };
-
-  const getGestureByID = (id) => {
-    for (const gesture of savedGestures) {
-      if (gesture.id === id) {
-        return gesture;
-      }
-    }
-    throw new Error(`Couldn't find session with id ${id}`);
   };
 
   const onDraw = (gesture) => {
@@ -88,25 +100,13 @@ const SavedGestures = (props) => {
     return newPointers;
   };
 
-  const dataSource = () => {
-    if (!savedGestures) {
-      return [];
-    }
-    return savedGestures.map((gesture) => ({
-      key: gesture.id,
-      Name: gesture.name || '(Unnamed)',
-      Created: moment(gesture.date).format('YYYY-MM-DD'),
-      Description: gesture.description || 'No Description',
-    }));
-  };
-
   const columns = Object.keys(SAVED_ACTIONS_OBJ).map((key) => {
     if (SAVED_ACTIONS_OBJ[key] === SAVED_ACTIONS_OBJ.ACTIONS) {
       return {
-        title: SAVED_ACTIONS_OBJ[key],
+        title: t(SAVED_ACTIONS_OBJ[key]),
         key: SAVED_ACTIONS_OBJ[key],
         render: (_, record) => {
-          const gesture = getGestureByID(record.key);
+          const gesture = getGestureByID(savedGestures, record.key, t);
           return (
             <Button.Group>
               <Tooltip title={t('Play')}>
@@ -125,7 +125,7 @@ const SavedGestures = (props) => {
       };
     } else {
       return {
-        title: SAVED_ACTIONS_OBJ[key],
+        title: t(SAVED_ACTIONS_OBJ[key]),
         dataIndex: SAVED_ACTIONS_OBJ[key],
         key: SAVED_ACTIONS_OBJ[key],
       };
@@ -144,7 +144,7 @@ const SavedGestures = (props) => {
       <Table
         onRow={(row) => ({onClick: () => onRowClick(row.key)})}
         pagination={false}
-        dataSource={dataSource()}
+        dataSource={dataSource(savedGestures, t)}
         columns={columns}
         footer={() => <Button onClick={showGestureEditor} icon={<PlusOutlined />} />}
       />
