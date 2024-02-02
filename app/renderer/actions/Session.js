@@ -572,6 +572,9 @@ export function newSession(caps, attachSessId = null) {
         let attachedSessionCaps = {};
         if (attachedSession) {
           attachedSessionCaps = attachedSession.capabilities;
+          if (attachedSessionCaps.platformName === undefined) {
+            attachedSessionCaps = attachedSession.capabilities.capabilities;
+          }
         } else {
           const {protocol, hostname, port, path} = serverOpts;
           try {
