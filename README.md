@@ -1,9 +1,9 @@
-<p style="text-align: center">
+<p align="center">
    <a href="https://appium.github.io/appium-inspector/">
       <img alt="Appium" src="./docs/assets/images/icon.png" width="200">
    </a>
 </p>
-<p style="text-align: center">
+<p align="center">
    GUI Inspector tool for all kinds of apps, powered by Appium.
 </p>
 
@@ -13,7 +13,7 @@
 
 ***
 
-<p style="text-align: center"><b>
+<p align="center"><b>
    <a href="https://appium.github.io/appium-inspector/">Documentation</a> |
    <a href="https://appium.github.io/appium-inspector/latest/quickstart/">Get Started</a> |
    <a href="https://discuss.appium.io">Discussion Forum</a> |
@@ -61,77 +61,77 @@ for a more comprehensive list!
 
 The Inspector has built-in integrations with various cloud service provider platforms:
 
-<table style="width: 100%">
+<table style="background-color:#FFFFFF; width: 100%">
   <tr>
-    <td style="text-align: center; vertical-align: middle">
+    <td align="center" valign="center">
       <a href="https://docs.saucelabs.com/mobile-apps/automated-testing/appium/">
-        <img width="200" alt="SauceLabs" src="app/renderer/images/sauce_logo.svg">
+        <img width="200" height="50" alt="SauceLabs" src="app/renderer/images/sauce_logo.svg">
       </a>
     </td>
-    <td style="text-align: center; vertical-align: middle">
+    <td align="center" valign="center">
       <a href="https://www.headspin.io/docs/appium-inspector-integration">
-        <img width="200" alt="HeadSpin" src="app/renderer/images/headspin_logo.svg">
+        <img width="200" height="50" alt="HeadSpin" src="app/renderer/images/headspin_logo.svg">
       </a>
     </td>
-    <td style="text-align: center; vertical-align: middle">
+    <td align="center" valign="center">
       <a href="https://www.browserstack.com/docs/app-automate/appium/integrations/appium-desktop">
-        <img width="200" alt="BrowserStack" src="app/renderer/images/browserstack_logo.svg">
+        <img width="200" height="50" alt="BrowserStack" src="app/renderer/images/browserstack_logo.svg">
       </a>
     </td>
-    <td style="text-align: center; vertical-align: middle">
+    <td align="center" valign="center">
       <a href="https://www.lambdatest.com/support/docs/appium-inspector-integration">
-        <img width="200" alt="LambdaTest" src="app/renderer/images/lambdatest_logo.svg">
+        <img width="200" height="50" alt="LambdaTest" src="app/renderer/images/lambdatest_logo.svg">
       </a>
     </td>
   </tr>
   <tr>
-    <td style="text-align: center; vertical-align: middle">
+    <td align="center" valign="center">
       <a href="https://support.smartbear.com/bitbar/docs/en/mobile-app-tests/automated-testing/appium-support.html">
-        <img width="200" alt="BitBar" src="app/renderer/images/bitbar_logo.svg">
+        <img width="200" height="50" alt="BitBar" src="app/renderer/images/bitbar_logo.svg">
       </a>
     </td>
-    <td style="text-align: center; vertical-align: middle">
+    <td align="center" valign="center">
       <a href="https://docs.kobiton.com/automation-testing/basic-appium-server/launch-a-basic-appium-2-session">
-        <img width="200" alt="Kobiton" src="app/renderer/images/kobiton_logo.svg">
+        <img width="200" height="50" alt="Kobiton" src="app/renderer/images/kobiton_logo.svg">
       </a>
     </td>
-    <td style="text-align: center; vertical-align: middle">
+    <td align="center" valign="center">
       <a href="https://help.perfecto.io/perfecto-help/content/perfecto/automation-testing/appium.htm">
-        <img width="200" alt="Perfecto" src="app/renderer/images/perfecto_logo.svg">
+        <img width="200" height="50" alt="Perfecto" src="app/renderer/images/perfecto_logo.svg">
       </a>
     </td>
-    <td style="text-align: center; vertical-align: middle">
+    <td align="center" valign="center">
       <a href="https://www.pcloudy.com/docs/inspect-element-using-appium-desktop">
-        <img width="200" alt="Pcloudy" src="app/renderer/images/pcloudy_logo.svg">
+        <img width="200" height="50" alt="Pcloudy" src="app/renderer/images/pcloudy_logo.svg">
       </a>
     </td>
   </tr>
   <tr>
-    <td style="text-align: center; vertical-align: middle">
+    <td align="center" valign="center">
       <a href="https://testingbot.com/support/getting-started/appium.html">
-        <img width="200" alt="TestingBot" src="app/renderer/images/testingbot_logo.svg">
+        <img width="200" height="50" alt="TestingBot" src="app/renderer/images/testingbot_logo.svg">
       </a>
     </td>
-    <td style="text-align: center; vertical-align: middle">
+    <td align="center" valign="center">
       <a href="https://docs.digital.ai/bundle/TE/page/appium.html">
-        <img width="200" alt="ExperiTest" src="app/renderer/images/experitest_logo.svg">
+        <img width="200" height="50" alt="ExperiTest" src="app/renderer/images/experitest_logo.svg">
       </a>
     </td>
-    <td style="text-align: center; vertical-align: middle">
+    <td align="center" valign="center">
       <a href="https://robotqa.com/appium-remote">
-        <img width="200" alt="RobotQA" src="app/renderer/images/robotqa_logo.svg">
+        <img width="200" height="50" alt="RobotQA" src="app/renderer/images/robotqa_logo.svg">
       </a>
     </td>
-    <td style="text-align: center; vertical-align: middle">
+    <td align="center" valign="center">
       <a href="https://appkitbox.com/en/support/automation/appium/">
-        <img width="200" alt="Remote TestKit" src="app/renderer/images/remotetestkit_logo.svg">
+        <img width="200" height="50" alt="Remote TestKit" src="app/renderer/images/remotetestkit_logo.svg">
       </a>
     </td>
   </tr>
   <tr>
-    <td style="text-align: center; vertical-align: middle">
+    <td align="center" valign="center">
       <a href="https://mobitru.com/docs/automation/">
-        <img width="200" alt="Mobitru" src="app/renderer/images/mobitru_logo.svg">
+        <img width="200" height="50" alt="Mobitru" src="app/renderer/images/mobitru_logo.svg">
       </a>
     </td>
   </tr>
@@ -141,10 +141,9 @@ The Inspector has built-in integrations with various cloud service provider plat
 
 If you run into a problem, first check whether you can reproduce it *without* the Inspector, by using a different Appium client.
 
--  If the issue still exists, then it's *not* an issue with the Inspector, and it should be reported
-   instead at the [main Appium repo](https://github.com/appium/appium/issues).
+-  If the issue still exists, then it's *not* an issue with the Inspector - report it at the [main Appium repo](https://github.com/appium/appium/issues)
 -  If the issue is gone, then it is likely specific to the Inspector -
-   [please report it in this repo](https://github.com/appium/appium-inspector/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml&title=bug%3A+%3Ctitle%3E).
+   [please report it in this repo](https://github.com/appium/appium-inspector/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml&title=bug%3A+%3Ctitle%3E)
 
 ## Development
 
