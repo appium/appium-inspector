@@ -62,7 +62,6 @@ for a more comprehensive list!
 The Inspector has built-in integrations with various cloud service provider platforms:
 
 <table>
-  <tr></tr>
   <tr>
     <td align="center" valign="center">
       <a href="https://docs.saucelabs.com/mobile-apps/automated-testing/appium/">
@@ -85,30 +84,6 @@ The Inspector has built-in integrations with various cloud service provider plat
       </a>
     </td>
   </tr>
-  <tr></tr>
-  <tr>
-    <td align="center" valign="center">
-      <a href="https://support.smartbear.com/bitbar/docs/en/mobile-app-tests/automated-testing/appium-support.html">
-        <img width="200" height="50" alt="BitBar" src="app/renderer/images/bitbar_logo.svg">
-      </a>
-    </td>
-    <td align="center" valign="center">
-      <a href="https://docs.kobiton.com/automation-testing/basic-appium-server/launch-a-basic-appium-2-session">
-        <img width="200" height="50" alt="Kobiton" src="app/renderer/images/kobiton_logo.svg">
-      </a>
-    </td>
-    <td align="center" valign="center">
-      <a href="https://help.perfecto.io/perfecto-help/content/perfecto/automation-testing/appium.htm">
-        <img width="200" height="50" alt="Perfecto" src="app/renderer/images/perfecto_logo.svg">
-      </a>
-    </td>
-    <td align="center" valign="center">
-      <a href="https://www.pcloudy.com/docs/inspect-element-using-appium-desktop">
-        <img width="200" height="50" alt="Pcloudy" src="app/renderer/images/pcloudy_logo.svg">
-      </a>
-    </td>
-  </tr>
-  <tr></tr>
   <tr>
     <td align="center" valign="center">
       <a href="https://testingbot.com/support/getting-started/appium.html">
@@ -131,7 +106,28 @@ The Inspector has built-in integrations with various cloud service provider plat
       </a>
     </td>
   </tr>
-  <tr></tr>
+  <tr>
+    <td align="center" valign="center">
+      <a href="https://support.smartbear.com/bitbar/docs/en/mobile-app-tests/automated-testing/appium-support.html">
+        <img width="200" height="50" alt="BitBar" src="app/renderer/images/bitbar_logo.svg">
+      </a>
+    </td>
+    <td align="center" valign="center">
+      <a href="https://docs.kobiton.com/automation-testing/basic-appium-server/launch-a-basic-appium-2-session">
+        <img width="200" height="50" alt="Kobiton" src="app/renderer/images/kobiton_logo.svg">
+      </a>
+    </td>
+    <td align="center" valign="center">
+      <a href="https://help.perfecto.io/perfecto-help/content/perfecto/automation-testing/appium.htm">
+        <img width="200" height="50" alt="Perfecto" src="app/renderer/images/perfecto_logo.svg">
+      </a>
+    </td>
+    <td align="center" valign="center">
+      <a href="https://www.pcloudy.com/docs/inspect-element-using-appium-desktop">
+        <img width="200" height="50" alt="Pcloudy" src="app/renderer/images/pcloudy_logo.svg">
+      </a>
+    </td>
+  </tr>
   <tr>
     <td align="center" valign="center">
       <a href="https://mobitru.com/docs/automation/">
