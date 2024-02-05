@@ -9,28 +9,28 @@ import SessionStyles from './Session.css';
 const DATE_COLUMN_WIDTH = '25%';
 const ACTIONS_COLUMN_WIDTH = '106px';
 
-const dataSource = (savedSessions) => {
+const dataSource = (savedSessions, t) => {
   if (!savedSessions) {
     return [];
   }
   return savedSessions.map((session) => ({
     key: session.uuid,
-    name: session.name || '(Unnamed)',
+    name: session.name || t('unnamed'),
     date: moment(session.date).format('YYYY-MM-DD'),
   }));
 };
 
-const sessionFromUUID = (savedSessions, uuid) => {
+const getSessionById = (savedSessions, id, t) => {
   for (let session of savedSessions) {
-    if (session.uuid === uuid) {
+    if (session.uuid === id) {
       return session;
     }
   }
-  throw new Error(`Couldn't find session with uuid ${uuid}`);
+  throw new Error(t('couldNotFindEntryWithId', {id}));
 };
 
 const SavedSessions = (props) => {
-  const {savedSessions, capsUUID, switchTabs} = props;
+  const {savedSessions, capsUUID, switchTabs, t} = props;
 
   const handleCapsAndServer = (uuid) => {
     const {
@@ -42,7 +42,7 @@ const SavedSessions = (props) => {
       isEditingDesiredCaps,
       abortDesiredCapsEditor,
     } = props;
-    const session = sessionFromUUID(savedSessions, uuid);
+    const session = getSessionById(savedSessions, uuid);
 
     // Disable any editors before changing the selected caps
     if (isEditingDesiredCapsName) {
@@ -65,25 +65,25 @@ const SavedSessions = (props) => {
 
   const handleDelete = (uuid) => {
     const {deleteSavedSession} = props;
-    if (window.confirm('Are you sure?')) {
+    if (window.confirm(t('confirmDeletion'))) {
       deleteSavedSession(uuid);
     }
   };
 
   const columns = [
     {
-      title: 'Capability Set',
+      title: t('Name'),
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Created',
+      title: t('Created'),
       dataIndex: 'date',
       key: 'date',
       width: DATE_COLUMN_WIDTH,
     },
     {
-      title: 'Actions',
+      title: t('Actions'),
       key: 'action',
       width: ACTIONS_COLUMN_WIDTH,
       render: (_, record) => (
@@ -117,7 +117,7 @@ const SavedSessions = (props) => {
       <Col span={12} className={SessionStyles.capsFormattedCol}>
         <FormattedCaps
           {...props}
-          title={capsUUID ? sessionFromUUID(savedSessions, capsUUID).name : null}
+          title={capsUUID ? getSessionById(savedSessions, capsUUID).name : null}
         />
       </Col>
     </Row>
