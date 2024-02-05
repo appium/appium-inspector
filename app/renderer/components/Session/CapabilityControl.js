@@ -102,7 +102,7 @@ const CapabilityControl = ({
         </div>
       );
     default:
-      throw `Invalid cap type: ${cap.type}`;
+      throw new Error(t('invalidCapType', {type: cap.type}));
   }
 };
 

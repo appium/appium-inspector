@@ -21,22 +21,6 @@ const CLASS_CHAIN_DOCS_URL =
 const PREDICATE_DOCS_URL =
   'https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules';
 
-const selectedElementTableCell = (text, copyToClipBoard) => {
-  if (copyToClipBoard) {
-    return (
-      <div className={styles['selected-element-table-cells']}>
-        <Tooltip title="Copied!" trigger="click">
-          <span className={styles['element-cell-copy']} onClick={() => clipboard.writeText(text)}>
-            {text}
-          </span>
-        </Tooltip>
-      </div>
-    );
-  } else {
-    return <div className={styles['selected-element-table-cells']}>{text}</div>;
-  }
-};
-
 /**
  * Shows details of the currently selected element and shows methods that can
  * be called on the elements (tap, sendKeys)
@@ -60,6 +44,22 @@ const SelectedElement = (props) => {
 
   const {attributes, classChain, predicateString, xpath} = selectedElement;
   const isDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
+
+  const selectedElementTableCell = (text, copyToClipBoard) => {
+    if (copyToClipBoard) {
+      return (
+        <div className={styles['selected-element-table-cells']}>
+          <Tooltip title={t('Copied!')} trigger="click">
+            <span className={styles['element-cell-copy']} onClick={() => clipboard.writeText(text)}>
+              {text}
+            </span>
+          </Tooltip>
+        </div>
+      );
+    } else {
+      return <div className={styles['selected-element-table-cells']}>{text}</div>;
+    }
+  };
 
   // Get the columns for the attributes table
   let attributeColumns = [
