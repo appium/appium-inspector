@@ -1,28 +1,30 @@
 import settings from '../shared/settings';
 
+const languageList = [
+  {name: 'Chinese Simplified', code: 'zh-CN', original: '中文'},
+  {name: 'English', code: 'en', original: 'English'},
+  {name: 'German', code: 'de', original: 'Deutsch'},
+  {name: 'Hindi', code: 'hi', original: 'हिंदी'},
+  {name: 'Hungarian', code: 'hu', original: 'Magyar'},
+  {name: 'Italian', code: 'it', original: 'Italiano'},
+  {name: 'Japanese', code: 'ja', original: '日本語'},
+  {name: 'Kannada', code: 'kn', original: 'ಕನ್ನಡ'},
+  {name: 'Korean', code: 'ko', original: '한국어'},
+  {name: 'Malayalam', code: 'ml-IN', original: 'മലയാളം'},
+  {name: 'Persian', code: 'fa', original: 'فارسی'},
+  {name: 'Polish', code: 'pl', original: 'Polski'},
+  {name: 'Portuguese', code: 'pt-PT', original: 'Português'},
+  {name: 'Portuguese (Brazil)', code: 'pt-BR', original: 'Português (Brasil)'},
+  {name: 'Punjabi', code: 'pa-IN', original: 'ਪੰਜਾਬੀ'},
+  {name: 'Russian', code: 'ru', original: 'Русский'},
+  {name: 'Spanish', code: 'es-ES', original: 'Español'},
+  {name: 'Telugu', code: 'te', original: 'తెలుగు'},
+  {name: 'Ukrainian', code: 'uk', original: 'Українська'},
+];
+
 const config = {
   platform: process.platform,
-  languages: [
-    'de',
-    'en',
-    'es-ES',
-    'fa',
-    'hi',
-    'hu',
-    'it',
-    'ja',
-    'ko',
-    'kn',
-    'ml-IN',
-    'pa-IN',
-    'pl',
-    'pt-BR',
-    'pt-PT',
-    'ru',
-    'te',
-    'uk',
-    'zh-CN',
-  ],
+  languages: languageList.map((language) => language.code),
   fallbackLng: 'en',
   namespace: 'translation',
 };
@@ -42,4 +44,4 @@ function getI18NextOptions(backend) {
 }
 
 export default config;
-export {getI18NextOptions};
+export {languageList, getI18NextOptions};
