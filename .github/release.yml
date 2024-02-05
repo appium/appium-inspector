@@ -1,0 +1,19 @@
+# Configuration for automatically generated release notes
+
+changelog:
+  exclude:
+    labels:
+      - dependencies
+  categories:
+    - title: 🚀 New Features
+      labels:
+        - enhancement
+    - title: 🛠 Fixes
+      labels:
+        - fix
+    - title: 📖 Documentation
+      labels:
+        - documentation
+    - title: 🔍 Other Changes
+      labels:
+        - '*'
