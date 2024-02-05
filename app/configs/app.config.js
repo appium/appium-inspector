@@ -2,8 +2,8 @@ import settings from '../shared/settings';
 
 const languageList = [
   {name: 'Arabic', code: 'ar', original: 'العربية'},
-  {name: 'Chinese Simplified', code: 'zh-CN', original: '中文'},
-  {name: 'Chinese Traditional', code: 'zh-TW', original: '中文'},
+  {name: 'Chinese Simplified', code: 'zh-CN', original: '中文简体'},
+  {name: 'Chinese Traditional', code: 'zh-TW', original: '中文繁體'},
   {name: 'English', code: 'en', original: 'English'},
   {name: 'French', code: 'fr', original: 'Française'},
   {name: 'German', code: 'de', original: 'Deutsch'},
