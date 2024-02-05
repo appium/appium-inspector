@@ -61,7 +61,8 @@ for a more comprehensive list!
 
 The Inspector has built-in integrations with various cloud service provider platforms:
 
-<table style="background-color:#FFFFFF; width: 100%">
+<table>
+  <tr></tr>
   <tr>
     <td align="center" valign="center">
       <a href="https://docs.saucelabs.com/mobile-apps/automated-testing/appium/">
@@ -84,6 +85,7 @@ The Inspector has built-in integrations with various cloud service provider plat
       </a>
     </td>
   </tr>
+  <tr></tr>
   <tr>
     <td align="center" valign="center">
       <a href="https://support.smartbear.com/bitbar/docs/en/mobile-app-tests/automated-testing/appium-support.html">
@@ -106,6 +108,7 @@ The Inspector has built-in integrations with various cloud service provider plat
       </a>
     </td>
   </tr>
+  <tr></tr>
   <tr>
     <td align="center" valign="center">
       <a href="https://testingbot.com/support/getting-started/appium.html">
@@ -128,6 +131,7 @@ The Inspector has built-in integrations with various cloud service provider plat
       </a>
     </td>
   </tr>
+  <tr></tr>
   <tr>
     <td align="center" valign="center">
       <a href="https://mobitru.com/docs/automation/">
