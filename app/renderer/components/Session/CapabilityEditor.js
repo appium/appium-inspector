@@ -9,18 +9,12 @@ import SessionStyles from './Session.css';
 
 const whitespaces = /^\s|\s$/;
 
-const whitespaceMsg = (value) => {
+const whitespaceMsg = (value, t) => {
   const leadingSpace = /^\s/.test(value);
   const trailingSpace = /\s$/.test(value);
 
-  if (leadingSpace && trailingSpace) {
-    return 'Contains Leading & Trailing Whitespace';
-  }
-  if (leadingSpace) {
-    return 'Contains Leading Whitespace';
-  }
-  if (trailingSpace) {
-    return 'Contains Trailing Whitespace';
+  if (leadingSpace || trailingSpace) {
+    return t('whitespaceDetected');
   }
 };
 
@@ -101,7 +95,7 @@ const CapabilityEditor = (props) => {
             <Row gutter={8} key={index}>
               <Col span={7}>
                 <Form.Item>
-                  <Tooltip title={whitespaceMsg(cap.name)} open={whitespaces.test(cap.name)}>
+                  <Tooltip title={whitespaceMsg(cap.name, t)} open={whitespaces.test(cap.name)}>
                     <Input
                       disabled={isEditingDesiredCaps}
                       id={`desiredCapabilityName_${index}`}
@@ -131,7 +125,7 @@ const CapabilityEditor = (props) => {
               </Col>
               <Col span={7}>
                 <Form.Item>
-                  <Tooltip title={whitespaceMsg(cap.value)} open={whitespaces.test(cap.value)}>
+                  <Tooltip title={whitespaceMsg(cap.value, t)} open={whitespaces.test(cap.value)}>
                     <CapabilityControl
                       {...props}
                       cap={cap}
@@ -185,8 +179,8 @@ const CapabilityEditor = (props) => {
         <Modal
           open={showSaveAsModal}
           title={t('Save Capability Set As')}
-          okText="Save"
-          cancelText="Cancel"
+          okText={t('Save')}
+          cancelText={t('Cancel')}
           onCancel={hideSaveAsModal}
           onOk={onSaveAsOk}
         >

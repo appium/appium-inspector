@@ -65,7 +65,7 @@ const SavedSessions = (props) => {
 
   const handleDelete = (uuid) => {
     const {deleteSavedSession} = props;
-    if (window.confirm('Are you sure?')) {
+    if (window.confirm(t('confirmDeletion'))) {
       deleteSavedSession(uuid);
     }
   };

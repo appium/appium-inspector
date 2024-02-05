@@ -178,6 +178,7 @@
   "selectSessionIDInDropdown": "Select the Session ID in the dropdown below.",
   "allowUnauthorizedCerts": "Allow Unauthorized Certificates",
   "Use Proxy": "Use Proxy",
+  "JSON Representation": "JSON Representation",
   "Desired Capabilities": "Desired Capabilities",
   "Saved Capability Sets": "Saved Capability Sets",
   "Attach to Session": "Attach to Session…",
@@ -286,5 +287,11 @@
   "Session Length": "Session Length",
   "Session Details": "Session Details",
   "Currently Active App ID": "Currently Active App ID",
-  "Session ID": "Session ID"
+  "Session ID": "Session ID",
+  "confirmDeletion": "Are you sure you want to delete this?",
+  "Copied!": "Copied!",
+  "Error Fetching Session URL": "Error Fetching Session URL",
+  "noResultsFound": "No results found",
+  "invalidCapType": "Invalid capability type: {{type}}",
+  "whitespaceDetected": "Text Starts and/or Ends With Whitespace"
 }

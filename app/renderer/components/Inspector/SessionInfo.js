@@ -119,7 +119,7 @@ const SessionInfo = (props) => {
     const sessionUrl =
       sessionId && connectedUrl
         ? `${connectedUrl}session/${sessionId}`
-        : 'Error Fetching Session Url';
+        : t('Error Fetching Session URL');
 
     switch (name) {
       case 'Session ID':

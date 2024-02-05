@@ -60,7 +60,7 @@ const SavedGestures = (props) => {
 
   const handleDelete = (id) => {
     const {deleteSavedGesture} = props;
-    if (window.confirm('Are you sure?')) {
+    if (window.confirm(t('confirmDeletion'))) {
       deleteSavedGesture(id);
     }
   };

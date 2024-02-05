@@ -57,7 +57,7 @@ const ServerTabPerfecto = ({server, setServerParam, t}) => (
             checked={!!server.perfecto.ssl}
             onChange={(e) => setServerParam('ssl', e.target.checked)}
           >
-            {'SSL'}
+            {t('SSL')}
           </Checkbox>
         </Form.Item>
       </Col>

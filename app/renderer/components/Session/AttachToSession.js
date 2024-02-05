@@ -64,8 +64,7 @@ const AttachToSession = ({
         <Col span={23}>
           <Select
             showSearch
-            mode="AutoComplete"
-            notFoundContent="None found"
+            notFoundContent={t('noResultsFound')}
             placeholder={t('enterYourSessionId')}
             value={attachSessId || undefined}
             onChange={(value) => setAttachSessId(value)}
