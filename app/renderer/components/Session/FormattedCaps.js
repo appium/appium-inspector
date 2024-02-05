@@ -32,7 +32,7 @@ const FormattedCaps = (props) => {
   const setCapsTitle = () => {
     const {setDesiredCapsName} = props;
     if (!title) {
-      return 'JSON Representation';
+      return t('JSON Representation');
     } else if (!isEditingDesiredCapsName) {
       return title;
     } else {
