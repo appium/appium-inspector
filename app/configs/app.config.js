@@ -1,8 +1,11 @@
 import settings from '../shared/settings';
 
 const languageList = [
+  {name: 'Arabic', code: 'ar', original: 'العربية'},
   {name: 'Chinese Simplified', code: 'zh-CN', original: '中文'},
+  {name: 'Chinese Traditional', code: 'zh-TW', original: '中文'},
   {name: 'English', code: 'en', original: 'English'},
+  {name: 'French', code: 'fr', original: 'Française'},
   {name: 'German', code: 'de', original: 'Deutsch'},
   {name: 'Hindi', code: 'hi', original: 'हिंदी'},
   {name: 'Hungarian', code: 'hu', original: 'Magyar'},
@@ -15,10 +18,10 @@ const languageList = [
   {name: 'Polish', code: 'pl', original: 'Polski'},
   {name: 'Portuguese', code: 'pt-PT', original: 'Português'},
   {name: 'Portuguese (Brazil)', code: 'pt-BR', original: 'Português (Brasil)'},
-  {name: 'Punjabi', code: 'pa-IN', original: 'ਪੰਜਾਬੀ'},
   {name: 'Russian', code: 'ru', original: 'Русский'},
   {name: 'Spanish', code: 'es-ES', original: 'Español'},
   {name: 'Telugu', code: 'te', original: 'తెలుగు'},
+  {name: 'Turkish', code: 'tr', original: 'Türk'},
   {name: 'Ukrainian', code: 'uk', original: 'Українська'},
 ];
 
