@@ -11,7 +11,7 @@
 ![Total GitHub Downloads](https://img.shields.io/github/downloads/appium/appium-inspector/total)
 [![Crowdin](https://badges.crowdin.net/appium-desktop/localized.svg)](https://crowdin.com/project/appium-desktop)
 
-***
+---
 
 <p align="center"><b>
    <a href="https://appium.github.io/appium-inspector/">Documentation</a> |
@@ -20,7 +20,7 @@
    <a href="https://crowdin.com/project/appium-desktop">Help with Translations</a>
 </b></p>
 
-***
+---
 
 Appium Inspector is a GUI assistant tool for Appium, providing visual inspection of the application
 under test. It can show the application page screenshot along with its page source, and includes
@@ -143,11 +143,11 @@ The Inspector has built-in integrations with various cloud service provider plat
 
 ## Reporting Issues
 
-If you run into a problem, first check whether you can reproduce it *without* the Inspector, by using a different Appium client.
+If you run into a problem, first check whether you can reproduce it _without_ the Inspector, by using a different Appium client.
 
--  If the issue still exists, then it's *not* an issue with the Inspector - report it at the [main Appium repo](https://github.com/appium/appium/issues)
--  If the issue is gone, then it is likely specific to the Inspector -
-   [please report it in this repo](https://github.com/appium/appium-inspector/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml&title=bug%3A+%3Ctitle%3E)
+- If the issue still exists, then it's _not_ an issue with the Inspector - report it at the [main Appium repo](https://github.com/appium/appium/issues)
+- If the issue is gone, then it is likely specific to the Inspector -
+  [please report it in this repo](https://github.com/appium/appium-inspector/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml&title=bug%3A+%3Ctitle%3E)
 
 ## Development
 
