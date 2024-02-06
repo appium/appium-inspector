@@ -89,7 +89,7 @@ const Session = (props) => {
   return [
     <Spin spinning={!!newSessionLoading} key="main">
       <div className={SessionStyles.sessionContainer}>
-        <div id='serverTypeTabs' className={SessionStyles.serverTab}>
+        <div id="serverTypeTabs" className={SessionStyles.serverTab}>
           <Tabs
             activeKey={serverType}
             onChange={(tab) => handleSelectServerTab(tab)}
@@ -104,7 +104,7 @@ const Session = (props) => {
                 return {
                   label: <div>{provider.tabhead()}</div>,
                   key: providerName,
-                  children: provider.tab(props)
+                  children: provider.tab(props),
                 };
               }),
             ]}
