@@ -137,6 +137,10 @@ The Inspector has built-in integrations with various cloud service provider plat
   </tr>
 </table>
 
+> [!NOTE]
+>
+> We may remove cloud providers if they no longer work properly with this inspector, as there is no compatibility.
+
 ## Reporting Issues
 
 If you run into a problem, first check whether you can reproduce it _without_ the Inspector, by using a different Appium client.
