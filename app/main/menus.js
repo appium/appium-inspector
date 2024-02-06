@@ -8,9 +8,341 @@ import {launchNewSessionWindow} from './windows';
 
 let menuTemplates = {mac: {}, other: {}};
 
+function t(string, params = null) {
+  return i18n.t(string, params);
+}
+
+function separator() {
+  return {
+    type: 'separator',
+  };
+}
+
+function optionAbout() {
+  return {
+    label: t('About Appium'),
+    click: () => {
+      dialog.showMessageBox({
+        title: t('appiumInspector'),
+        message: t('showAppInfo', {
+          appVersion: app.getVersion(),
+          electronVersion: process.versions.electron,
+          nodejsVersion: process.versions.node,
+        }),
+      });
+    },
+  };
+}
+
+function optionCheckForUpdates() {
+  return {
+    label: t('Check for updates'),
+    click() {
+      checkNewUpdates(true);
+    },
+  };
+}
+
+function optionHide() {
+  return {
+    label: t('Hide Appium'),
+    accelerator: 'Command+H',
+    selector: 'hide:',
+  };
+}
+
+function optionHideOthers() {
+  return {
+    label: t('Hide Others'),
+    accelerator: 'Command+Shift+H',
+    selector: 'hideOtherApplications:',
+  };
+}
+
+function optionShowAll() {
+  return {
+    label: t('Show All'),
+    selector: 'unhideAllApplications:',
+  };
+}
+
+function optionQuit() {
+  return {
+    label: t('Quit'),
+    accelerator: 'Command+Q',
+    click() {
+      app.quit();
+    },
+  };
+}
+
+function optionNewWindow() {
+  return {
+    label: t('New Session Window…'),
+    accelerator: 'Command+N',
+    click: launchNewSessionWindow,
+  };
+}
+
+function optionOpen(mainWindow) {
+  return {
+    label: t('Open'),
+    accelerator: 'Command+O',
+    click: () => openFileCallback(mainWindow),
+  };
+}
+
+function optionSave(mainWindow) {
+  return {
+    label: t('Save'),
+    accelerator: 'Command+S',
+    click: () => mainWindow.webContents.send('save-file'),
+  };
+}
+
+function optionSaveAs(mainWindow) {
+  return {
+    label: t('saveAs'),
+    accelerator: 'Command+Shift+S',
+    click: () => saveAsCallback(mainWindow),
+  };
+}
+
+function optionUndo() {
+  return {
+    label: t('Undo'),
+    accelerator: 'Command+Z',
+    selector: 'undo:',
+  };
+}
+
+function optionRedo() {
+  return {
+    label: t('Redo'),
+    accelerator: 'Shift+Command+Z',
+    selector: 'redo:',
+  };
+}
+
+function optionCut() {
+  return {
+    label: t('Cut'),
+    accelerator: 'Command+X',
+    selector: 'cut:',
+  };
+}
+
+function optionCopy() {
+  return {
+    label: t('Copy'),
+    accelerator: 'Command+C',
+    selector: 'copy:',
+  };
+}
+
+function optionPaste() {
+  return {
+    label: t('Paste'),
+    accelerator: 'Command+V',
+    selector: 'paste:',
+  };
+}
+
+function optionSelectAll() {
+  return {
+    label: t('Select All'),
+    accelerator: 'Command+A',
+    selector: 'selectAll:',
+  };
+}
+
+function optionReload(mainWindow) {
+  return {
+    label: t('Reload'),
+    accelerator: 'Command+R',
+    click() {
+      mainWindow.webContents.reload();
+    },
+  };
+}
+
+function optionToggleDevTools(mainWindow) {
+  return {
+    label: t('Toggle Developer Tools'),
+    accelerator: 'Alt+Command+I',
+    click() {
+      mainWindow.toggleDevTools();
+    },
+  };
+}
+
+function optionToggleFullscreen(mainWindow) {
+  return {
+    label: t('Toggle Full Screen'),
+    accelerator: 'Ctrl+Command+F',
+    click() {
+      mainWindow.setFullScreen(!mainWindow.isFullScreen());
+    },
+  };
+}
+
+function optionLanguages() {
+  return {
+    label: t('Languages'),
+    submenu: config.languages.map((languageCode) => ({
+      label: t(languageCode),
+      type: 'radio',
+      checked: i18n.language === languageCode,
+      click: () => i18n.changeLanguage(languageCode),
+    })),
+  };
+}
+
+function optionMinimize() {
+  return {
+    label: t('Minimize'),
+    accelerator: 'Command+M',
+    selector: 'performMiniaturize:',
+  };
+}
+
+function optionClose() {
+  return {
+    label: t('Close'),
+    accelerator: 'Command+W',
+    selector: 'performClose:',
+  };
+}
+
+function optionBringAllToFront() {
+  return {
+    label: t('Bring All to Front'),
+    selector: 'arrangeInFront:',
+  };
+}
+
+function optionInspectorDocumentation() {
+  return {
+    label: t('Inspector Documentation'),
+    click() {
+      shell.openExternal('https://github.com/appium/appium-inspector');
+    },
+  };
+}
+
+function optionAppiumDocumentation() {
+  return {
+    label: t('Appium Documentation'),
+    click() {
+      shell.openExternal('https://appium.io');
+    },
+  };
+}
+
+function optionOpenIssues() {
+  return {
+    label: t('Search Issues'),
+    click() {
+      shell.openExternal('https://github.com/appium/appium-inspector/issues');
+    },
+  };
+}
+
+function optionImproveTranslations() {
+  return {
+    label: t('Add Or Improve Translations'),
+    click() {
+      shell.openExternal('https://crowdin.com/project/appium-desktop');
+    },
+  };
+}
+
+function dropdownMacAppiumInspector() {
+  return {
+    label: t('appiumInspector'),
+    submenu: [
+      optionAbout(),
+      optionCheckForUpdates(),
+      separator(),
+      optionHide(),
+      optionHideOthers(),
+      optionShowAll(),
+      separator(),
+      optionQuit(),
+    ],
+  };
+}
+
+function dropdownMacFile(mainWindow) {
+  return {
+    label: t('File'),
+    submenu: [
+      optionNewWindow(),
+      optionOpen(mainWindow),
+      optionSave(mainWindow),
+      optionSaveAs(mainWindow),
+    ],
+  };
+}
+
+function dropdownMacEdit() {
+  return {
+    label: t('Edit'),
+    submenu: [
+      optionUndo(),
+      optionRedo(),
+      separator(),
+      optionCut(),
+      optionCopy(),
+      optionPaste(),
+      optionSelectAll(),
+    ],
+  };
+}
+
+function dropdownMacView(mainWindow) {
+  const submenu = [];
+  if (process.env.NODE_ENV === 'development') {
+    submenu.push(optionReload(mainWindow));
+    submenu.push(optionToggleDevTools(mainWindow));
+  }
+  submenu.push(optionToggleFullscreen(mainWindow));
+  submenu.push(optionLanguages());
+
+  return {
+    label: t('View'),
+    submenu,
+  };
+}
+
+function dropdownMacWindow() {
+  return {
+    label: t('Window'),
+    submenu: [
+      optionMinimize(),
+      optionClose(),
+      separator(),
+      optionBringAllToFront(),
+    ],
+  };
+}
+
+function dropdownMacHelp() {
+  return {
+    label: t('Help'),
+    submenu: [
+      optionInspectorDocumentation(),
+      optionAppiumDocumentation(),
+      optionOpenIssues(),
+      optionImproveTranslations(),
+    ],
+  };
+}
+
+
 function languageMenu() {
   return config.languages.map((languageCode) => ({
-    label: i18n.t(languageCode),
+    label: t(languageCode),
     type: 'radio',
     checked: i18n.language === languageCode,
     click: () => i18n.changeLanguage(languageCode),
@@ -20,8 +352,8 @@ function languageMenu() {
 function getShowAppInfoClickAction() {
   return () => {
     dialog.showMessageBox({
-      title: i18n.t('appiumInspector'),
-      message: i18n.t('showAppInfo', {
+      title: t('appiumInspector'),
+      message: t('showAppInfo', {
         appVersion: app.getVersion(),
         electronVersion: process.versions.electron,
         nodejsVersion: process.versions.node,
@@ -30,196 +362,13 @@ function getShowAppInfoClickAction() {
   };
 }
 
-function macMenuAppium() {
-  return {
-    label: 'Appium',
-    submenu: [
-      {
-        label: i18n.t('About Appium'),
-        click: getShowAppInfoClickAction(),
-      },
-      {
-        label: i18n.t('Check for updates'),
-        click() {
-          checkNewUpdates(true);
-        },
-      },
-      {
-        type: 'separator',
-      },
-      {
-        label: i18n.t('Hide Appium'),
-        accelerator: 'Command+H',
-        selector: 'hide:',
-      },
-      {
-        label: i18n.t('Hide Others'),
-        accelerator: 'Command+Shift+H',
-        selector: 'hideOtherApplications:',
-      },
-      {
-        label: i18n.t('Show All'),
-        selector: 'unhideAllApplications:',
-      },
-      {
-        type: 'separator',
-      },
-      {
-        label: i18n.t('Quit'),
-        accelerator: 'Command+Q',
-        click() {
-          app.quit();
-        },
-      },
-    ],
-  };
-}
-
-function macMenuEdit() {
-  return {
-    label: i18n.t('Edit'),
-    submenu: [
-      {
-        label: i18n.t('Undo'),
-        accelerator: 'Command+Z',
-        selector: 'undo:',
-      },
-      {
-        label: i18n.t('Redo'),
-        accelerator: 'Shift+Command+Z',
-        selector: 'redo:',
-      },
-      {
-        type: 'separator',
-      },
-      {
-        label: i18n.t('Cut'),
-        accelerator: 'Command+X',
-        selector: 'cut:',
-      },
-      {
-        label: i18n.t('Copy'),
-        accelerator: 'Command+C',
-        selector: 'copy:',
-      },
-      {
-        label: i18n.t('Paste'),
-        accelerator: 'Command+V',
-        selector: 'paste:',
-      },
-      {
-        label: i18n.t('Select All'),
-        accelerator: 'Command+A',
-        selector: 'selectAll:',
-      },
-    ],
-  };
-}
-
-function macMenuView({mainWindow}) {
-  const submenu =
-    process.env.NODE_ENV === 'development'
-      ? [
-          {
-            label: i18n.t('Reload'),
-            accelerator: 'Command+R',
-            click() {
-              mainWindow.webContents.reload();
-            },
-          },
-          {
-            label: i18n.t('Toggle Developer Tools'),
-            accelerator: 'Alt+Command+I',
-            click() {
-              mainWindow.toggleDevTools();
-            },
-          },
-        ]
-      : [];
-
-  submenu.push({
-    label: i18n.t('Toggle Full Screen'),
-    accelerator: 'Ctrl+Command+F',
-    click() {
-      mainWindow.setFullScreen(!mainWindow.isFullScreen());
-    },
-  });
-
-  submenu.push({
-    label: i18n.t('Languages'),
-    submenu: languageMenu(),
-  });
-
-  return {
-    label: i18n.t('View'),
-    submenu,
-  };
-}
-
-function macMenuWindow() {
-  return {
-    label: i18n.t('Window'),
-    submenu: [
-      {
-        label: i18n.t('Minimize'),
-        accelerator: 'Command+M',
-        selector: 'performMiniaturize:',
-      },
-      {
-        label: i18n.t('Close'),
-        accelerator: 'Command+W',
-        selector: 'performClose:',
-      },
-      {
-        type: 'separator',
-      },
-      {
-        label: i18n.t('Bring All to Front'),
-        selector: 'arrangeInFront:',
-      },
-    ],
-  };
-}
-
-function macMenuHelp() {
-  return {
-    label: i18n.t('Help'),
-    submenu: [
-      {
-        label: i18n.t('Inspector Documentation'),
-        click() {
-          shell.openExternal('https://github.com/appium/appium-inspector');
-        },
-      },
-      {
-        label: i18n.t('Appium Documentation'),
-        click() {
-          shell.openExternal('https://appium.io');
-        },
-      },
-      {
-        label: i18n.t('Search Issues'),
-        click() {
-          shell.openExternal('https://github.com/appium/appium-inspector/issues');
-        },
-      },
-      {
-        label: i18n.t('Add Or Improve Translations'),
-        click() {
-          shell.openExternal('https://crowdin.com/project/appium-desktop');
-        },
-      },
-    ],
-  };
-}
-
 menuTemplates.mac = ({mainWindow, shouldShowFileMenu}) => [
-  macMenuAppium(),
-  ...(shouldShowFileMenu ? [macMenuFile({mainWindow})] : []),
-  macMenuEdit(),
-  macMenuView({mainWindow}),
-  macMenuWindow(),
-  macMenuHelp(),
+  dropdownMacAppiumInspector(),
+  ...(shouldShowFileMenu ? [dropdownMacFile({mainWindow})] : []),
+  dropdownMacEdit(),
+  dropdownMacView({mainWindow}),
+  dropdownMacWindow(),
+  dropdownMacHelp(),
 ];
 
 async function openFileCallback(mainWindow) {
@@ -235,7 +384,7 @@ async function openFileCallback(mainWindow) {
 
 async function saveAsCallback(mainWindow) {
   const {canceled, filePath} = await dialog.showSaveDialog({
-    title: i18n.t('saveAs'),
+    title: t('saveAs'),
     filters: [{name: 'Appium', extensions: [APPIUM_SESSION_EXTENSION]}],
   });
   if (!canceled) {
@@ -243,53 +392,25 @@ async function saveAsCallback(mainWindow) {
   }
 }
 
-function macMenuFile({mainWindow}) {
-  return {
-    label: i18n.t('File'),
-    submenu: [
-      {
-        label: i18n.t('New Session Window…'),
-        accelerator: 'Command+N',
-        click: launchNewSessionWindow,
-      },
-      {
-        label: i18n.t('Open'),
-        accelerator: 'Command+O',
-        click: () => openFileCallback(mainWindow),
-      },
-      {
-        label: i18n.t('Save'),
-        accelerator: 'Command+S',
-        click: () => mainWindow.webContents.send('save-file'),
-      },
-      {
-        label: i18n.t('saveAs'),
-        accelerator: 'Command+Shift+S',
-        click: () => saveAsCallback(mainWindow),
-      },
-    ],
-  };
-}
-
 function otherMenuFile({mainWindow, shouldShowFileMenu}) {
   const fileSavingOperations = [
     {
-      label: i18n.t('New Session Window…'),
+      label: t('New Session Window…'),
       accelerator: 'Ctrl+N',
       click: launchNewSessionWindow,
     },
     {
-      label: i18n.t('Open'),
+      label: t('Open'),
       accelerator: 'Ctrl+O',
       click: () => openFileCallback(mainWindow),
     },
     {
-      label: i18n.t('Save'),
+      label: t('Save'),
       accelerator: 'Ctrl+S',
       click: () => mainWindow.webContents.send('save-file'),
     },
     {
-      label: i18n.t('saveAs'),
+      label: t('saveAs'),
       accelerator: 'Ctrl+Shift+S',
       click: () => saveAsCallback(mainWindow),
     },
@@ -298,14 +419,14 @@ function otherMenuFile({mainWindow, shouldShowFileMenu}) {
   let fileSubmenu = [
     ...(shouldShowFileMenu ? fileSavingOperations : []),
     {
-      label: '&' + i18n.t('About Appium'),
+      label: '&' + t('About Appium'),
       click: getShowAppInfoClickAction(),
     },
     {
       type: 'separator',
     },
     {
-      label: '&' + i18n.t('Close'),
+      label: '&' + t('Close'),
       accelerator: 'Ctrl+W',
       click() {
         mainWindow.close();
@@ -316,7 +437,7 @@ function otherMenuFile({mainWindow, shouldShowFileMenu}) {
   // If it's Windows, add a 'Check for Updates' menu option
   if (process.platform === 'win32') {
     fileSubmenu.splice(1, 0, {
-      label: '&' + i18n.t('Check for updates'),
+      label: '&' + t('Check for updates'),
       click() {
         checkNewUpdates(true);
       },
@@ -324,7 +445,7 @@ function otherMenuFile({mainWindow, shouldShowFileMenu}) {
   }
 
   return {
-    label: '&' + i18n.t('File'),
+    label: '&' + t('File'),
     submenu: fileSubmenu,
   };
 }
@@ -332,7 +453,7 @@ function otherMenuFile({mainWindow, shouldShowFileMenu}) {
 function otherMenuView({mainWindow}) {
   const submenu = [];
   submenu.push({
-    label: i18n.t('Toggle &Full Screen'),
+    label: t('Toggle &Full Screen'),
     accelerator: 'F11',
     click() {
       mainWindow.setFullScreen(!mainWindow.isFullScreen());
@@ -340,20 +461,20 @@ function otherMenuView({mainWindow}) {
   });
 
   submenu.push({
-    label: i18n.t('Languages'),
+    label: t('Languages'),
     submenu: languageMenu(),
   });
 
   if (process.env.NODE_ENV === 'development') {
     submenu.push({
-      label: '&' + i18n.t('Reload'),
+      label: '&' + t('Reload'),
       accelerator: 'Ctrl+R',
       click() {
         mainWindow.webContents.reload();
       },
     });
     submenu.push({
-      label: i18n.t('Toggle &Developer Tools'),
+      label: t('Toggle &Developer Tools'),
       accelerator: 'Alt+Ctrl+I',
       click() {
         mainWindow.toggleDevTools();
@@ -362,14 +483,14 @@ function otherMenuView({mainWindow}) {
   }
 
   return {
-    label: '&' + i18n.t('View'),
+    label: '&' + t('View'),
     submenu,
   };
 }
 
 function otherMenuHelp() {
   // just the same as mac menus for now since we don't have any hotkeys for this menu
-  return macMenuHelp();
+  return dropdownMacHelp();
 }
 
 menuTemplates.other = ({mainWindow, shouldShowFileMenu}) => [
