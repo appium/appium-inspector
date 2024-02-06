@@ -1,8 +1,9 @@
+import {ReloadOutlined} from '@ant-design/icons';
+import {Button, Card, Col, Form, Row, Select} from 'antd';
 import React from 'react';
-import { Form, Card, Select, Button, Row, Col } from 'antd';
+
+import {ServerTypes} from '../../actions/Session';
 import SessionStyles from './Session.css';
-import { ReloadOutlined } from '@ant-design/icons';
-import { ServerTypes } from '../../actions/Session';
 
 const formatCaps = (caps) => {
   let importantCaps = [caps.app, caps.platformName, caps.deviceName];
@@ -40,34 +41,44 @@ const getSessionInfo = (session, serverType) => {
   }
 };
 
-const AttachToSession = ({ serverType, attachSessId, setAttachSessId, runningAppiumSessions, getRunningSessions, t }) => (
+const AttachToSession = ({
+  serverType,
+  attachSessId,
+  setAttachSessId,
+  runningAppiumSessions,
+  getRunningSessions,
+  t,
+}) => (
   <Form>
     <Form.Item>
       <Card>
         <p className={SessionStyles.localDesc}>
-          {t('connectToExistingSessionInstructions')}<br/>{t('selectSessionIDInDropdown')}
+          {t('connectToExistingSessionInstructions')}
+          <br />
+          {t('selectSessionIDInDropdown')}
         </p>
       </Card>
     </Form.Item>
     <Form.Item>
       <Row>
         <Col span={23}>
-          <Select showSearch
-            mode='AutoComplete'
-            notFoundContent='None found'
+          <Select
+            showSearch
+            notFoundContent={t('noResultsFound')}
             placeholder={t('enterYourSessionId')}
             value={attachSessId || undefined}
-            onChange={(value) => setAttachSessId(value)}>
-            {runningAppiumSessions.map((session) => <Select.Option key={session.id} value={session.id}>
-              <div>{getSessionInfo(session, serverType)}</div>
-            </Select.Option>)}
+            onChange={(value) => setAttachSessId(value)}
+          >
+            {runningAppiumSessions.map((session) => (
+              <Select.Option key={session.id} value={session.id}>
+                <div>{getSessionInfo(session, serverType)}</div>
+              </Select.Option>
+            ))}
           </Select>
         </Col>
         <Col span={1}>
           <div className={SessionStyles.btnReload}>
-            <Button
-              onClick={getRunningSessions}
-              icon={<ReloadOutlined/>} />
+            <Button onClick={getRunningSessions} icon={<ReloadOutlined />} />
           </div>
         </Col>
       </Row>

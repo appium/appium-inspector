@@ -1,12 +1,11 @@
 import Framework from './framework';
 
 class JsWdIoFramework extends Framework {
-
-  get language () {
+  get language() {
     return 'js';
   }
 
-  wrapWithBoilerplate (code) {
+  wrapWithBoilerplate(code) {
     return `// This sample code supports WebdriverIO client >=7
 // (npm i --save webdriverio)
 // Then paste this into a .js file and run with Node:
@@ -33,7 +32,7 @@ main().catch(console.log);`;
     return `// ${comment}`;
   }
 
-  codeFor_findAndAssign (strategy, locator, localVar, isArray) {
+  codeFor_findAndAssign(strategy, locator, localVar, isArray) {
     // wdio allows to specify strategy as a locator prefix
     const validStrategies = [
       'xpath',
@@ -45,7 +44,7 @@ main().catch(console.log);`;
       '-android datamatcher',
       '-android viewtag',
       '-ios predicate string',
-      '-ios class chain'
+      '-ios class chain',
     ];
     if (!validStrategies.includes(strategy)) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
@@ -57,26 +56,26 @@ main().catch(console.log);`;
     }
   }
 
-  codeFor_click (varName, varIndex) {
+  codeFor_click(varName, varIndex) {
     return `await ${this.getVarName(varName, varIndex)}.click();`;
   }
 
-  codeFor_clear (varName, varIndex) {
+  codeFor_clear(varName, varIndex) {
     return `await ${this.getVarName(varName, varIndex)}.clearValue();`;
   }
 
-  codeFor_sendKeys (varName, varIndex, text) {
+  codeFor_sendKeys(varName, varIndex, text) {
     return `await ${this.getVarName(varName, varIndex)}.addValue(${JSON.stringify(text)});`;
   }
 
-  codeFor_tap (varNameIgnore, varIndexIgnore, pointerActions) {
+  codeFor_tap(varNameIgnore, varIndexIgnore, pointerActions) {
     const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
     return `await driver.touchAction({
   action: 'tap', x: ${x}, y: ${y}
 });`;
   }
 
-  codeFor_swipe (varNameIgnore, varIndexIgnore, pointerActions) {
+  codeFor_swipe(varNameIgnore, varIndexIgnore, pointerActions) {
     const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
     return `await driver.touchAction([
   { action: 'press', x: ${x1}, y: ${y1} },
@@ -87,201 +86,212 @@ main().catch(console.log);`;
 
   // Execute Script
 
-  codeFor_executeScriptNoArgs (scriptCmd) {
+  codeFor_executeScriptNoArgs(scriptCmd) {
     return `await driver.executeScript(${JSON.stringify(scriptCmd)});`;
   }
 
-  codeFor_executeScriptWithArgs (scriptCmd, jsonArg) {
+  codeFor_executeScriptWithArgs(scriptCmd, jsonArg) {
     return `await driver.executeScript(${JSON.stringify(scriptCmd)}, ${JSON.stringify(jsonArg)});`;
   }
 
   // App Management
 
-  codeFor_getCurrentActivity () {
+  codeFor_getCurrentActivity() {
     return `let activityName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentActivity')}`;
   }
 
-  codeFor_getCurrentPackage () {
+  codeFor_getCurrentPackage() {
     return `let packageName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
   }
 
-  codeFor_installApp (varNameIgnore, varIndexIgnore, app) {
+  codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
     return `await driver.installApp("${app}");`;
   }
 
-  codeFor_isAppInstalled (varNameIgnore, varIndexIgnore, app) {
+  codeFor_isAppInstalled(varNameIgnore, varIndexIgnore, app) {
     return `let isAppInstalled = await driver.isAppInstalled("${app}");`;
   }
 
-  codeFor_activateApp (varNameIgnore, varIndexIgnore, app) {
+  codeFor_activateApp(varNameIgnore, varIndexIgnore, app) {
     return `await driver.activateApp("${app}");`;
   }
 
-  codeFor_terminateApp (varNameIgnore, varIndexIgnore, app) {
+  codeFor_terminateApp(varNameIgnore, varIndexIgnore, app) {
     return `await driver.terminateApp("${app}");`;
   }
 
-  codeFor_removeApp (varNameIgnore, varIndexIgnore, app) {
+  codeFor_removeApp(varNameIgnore, varIndexIgnore, app) {
     return `await driver.removeApp("${app}")`;
   }
 
-  codeFor_getStrings (varNameIgnore, varIndexIgnore, language, stringFile) {
-    return `let appStrings = await driver.getStrings(${language ? `"${language}", ` : ''}${stringFile ? `"${stringFile}"` : ''});`;
+  codeFor_getStrings(varNameIgnore, varIndexIgnore, language, stringFile) {
+    return `let appStrings = await driver.getStrings(${language ? `"${language}", ` : ''}${
+      stringFile ? `"${stringFile}"` : ''
+    });`;
   }
 
   // Clipboard
 
-  codeFor_getClipboard () {
+  codeFor_getClipboard() {
     return `let clipboardText = await driver.getClipboard();`;
   }
 
-  codeFor_setClipboard (varNameIgnore, varIndexIgnore, clipboardText) {
+  codeFor_setClipboard(varNameIgnore, varIndexIgnore, clipboardText) {
     return `await driver.setClipboard("${clipboardText}")`;
   }
 
   // File Transfer
 
-  codeFor_pushFile (varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
+  codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
     return `await driver.pushFile("${pathToInstallTo}", "${fileContentString}");`;
   }
 
-  codeFor_pullFile (varNameIgnore, varIndexIgnore, pathToPullFrom) {
+  codeFor_pullFile(varNameIgnore, varIndexIgnore, pathToPullFrom) {
     return `let fileBase64 = await driver.pullFile("${pathToPullFrom}");`;
   }
 
-  codeFor_pullFolder (varNameIgnore, varIndexIgnore, folderToPullFrom) {
+  codeFor_pullFolder(varNameIgnore, varIndexIgnore, folderToPullFrom) {
     return `let folderBase64 = await driver.pullFolder("${folderToPullFrom}");`;
   }
 
   // Device Interaction
 
-  codeFor_isLocked () {
+  codeFor_isLocked() {
     return `let isLocked = ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
   }
 
-  codeFor_rotateDevice (varNameIgnore, varIndexIgnore, x, y, radius, rotation, touchCount, duration) {
+  codeFor_rotateDevice(
+    varNameIgnore,
+    varIndexIgnore,
+    x,
+    y,
+    radius,
+    rotation,
+    touchCount,
+    duration,
+  ) {
     return `await driver.rotateDevice(${x}, ${y}, ${radius}, ${rotation}, ${touchCount}, ${duration});`;
   }
 
-  codeFor_touchId (varNameIgnore, varIndexIgnore, match) {
+  codeFor_touchId(varNameIgnore, varIndexIgnore, match) {
     return `await driver.touchId(${match});`;
   }
 
-  codeFor_toggleEnrollTouchId (varNameIgnore, varIndexIgnore, enroll) {
+  codeFor_toggleEnrollTouchId(varNameIgnore, varIndexIgnore, enroll) {
     return `await driver.toggleEnrollTouchId(${enroll});`;
   }
 
   // Keyboard
 
-  codeFor_isKeyboardShown () {
+  codeFor_isKeyboardShown() {
     return `let isKeyboardShown = await driver.isKeyboardShown();`;
   }
 
   // Connectivity
 
-  codeFor_toggleAirplaneMode () {
+  codeFor_toggleAirplaneMode() {
     return `await driver.toggleAirplaneMode();`;
   }
 
-  codeFor_toggleData () {
+  codeFor_toggleData() {
     return `await driver.toggleData();`;
   }
 
-  codeFor_toggleWiFi () {
+  codeFor_toggleWiFi() {
     return `await driver.toggleWiFi();`;
   }
 
-  codeFor_sendSMS (varNameIgnore, varIndexIgnore, phoneNumber, text) {
+  codeFor_sendSMS(varNameIgnore, varIndexIgnore, phoneNumber, text) {
     return `await driver.sendSms("${phoneNumber}", "${text}");`;
   }
 
-  codeFor_gsmCall (varNameIgnore, varIndexIgnore, phoneNumber, action) {
+  codeFor_gsmCall(varNameIgnore, varIndexIgnore, phoneNumber, action) {
     return `await driver.gsmCall("${phoneNumber}", "${action}");`;
   }
 
-  codeFor_gsmSignal (varNameIgnore, varIndexIgnore, signalStrength) {
+  codeFor_gsmSignal(varNameIgnore, varIndexIgnore, signalStrength) {
     return `await driver.gsmSignal("${signalStrength}");`;
   }
 
-  codeFor_gsmVoice (varNameIgnore, varIndexIgnore, state) {
+  codeFor_gsmVoice(varNameIgnore, varIndexIgnore, state) {
     return `await driver.gsmVoice("${state}");`;
   }
 
   // Session
 
-  codeFor_getSession () {
+  codeFor_getSession() {
     return `let sessionDetails = await driver.getSession();`;
   }
 
-  codeFor_setTimeouts (/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
+  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
     return '/* TODO implement setTimeouts */';
   }
 
-  codeFor_getOrientation () {
+  codeFor_getOrientation() {
     return `let orientation = await driver.getOrientation();`;
   }
 
-  codeFor_setOrientation (varNameIgnore, varIndexIgnore, orientation) {
+  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
     return `await driver.setOrientation("${orientation}");`;
   }
 
-  codeFor_getGeoLocation () {
+  codeFor_getGeoLocation() {
     return `let location = await driver.getGeoLocation();`;
   }
 
-  codeFor_setGeoLocation (varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
+  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
     return `await driver.setGeoLocation({latitude: ${latitude}, longitude: ${longitude}, altitude: ${altitude}});`;
   }
 
-  codeFor_getLogTypes () {
+  codeFor_getLogTypes() {
     return `let logTypes = await driver.getLogTypes();`;
   }
 
-  codeFor_getLogs (varNameIgnore, varIndexIgnore, logType) {
+  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
     return `let logs = await driver.getLogs("${logType}");`;
   }
 
-  codeFor_updateSettings (varNameIgnore, varIndexIgnore, settingsJson) {
+  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
     return `await driver.updateSettings(${JSON.stringify(settingsJson)});`;
   }
 
-  codeFor_getSettings () {
+  codeFor_getSettings() {
     return `let settings = await driver.getSettings();`;
   }
 
   // Web
 
-  codeFor_navigateTo (varNameIgnore, varIndexIgnore, url) {
+  codeFor_navigateTo(varNameIgnore, varIndexIgnore, url) {
     return `await driver.navigateTo('${url}');`;
   }
 
-  codeFor_getUrl () {
+  codeFor_getUrl() {
     return `let current_url = await driver.getUrl();`;
   }
 
-  codeFor_back () {
+  codeFor_back() {
     return `await driver.back();`;
   }
 
-  codeFor_forward () {
+  codeFor_forward() {
     return `await driver.forward();`;
   }
 
-  codeFor_refresh () {
+  codeFor_refresh() {
     return `await driver.refresh();`;
   }
 
   // Context
 
-  codeFor_getContext () {
+  codeFor_getContext() {
     return `let context = await driver.getContext();`;
   }
 
-  codeFor_getContexts () {
+  codeFor_getContexts() {
     return `let contexts = await driver.getContexts();`;
   }
 
-  codeFor_switchContext (varNameIgnore, varIndexIgnore, name) {
+  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
     return `await driver.switchContext("${name}");`;
   }
 }

@@ -1,8 +1,7 @@
 import JavaFramework from './java-common';
 
 class JavaJUnit5Framework extends JavaFramework {
-
-  wrapWithBoilerplate (code) {
+  wrapWithBoilerplate(code) {
     const [pkg, cls, capStr] = this.getBoilerplateParams();
     // Import everything from Selenium in order to use WebElement, Point and other classes.
     return `// This sample code supports Appium Java client >=9
@@ -49,7 +48,6 @@ ${this.indent(code, 4)}
 }
 `;
   }
-
 }
 
 JavaJUnit5Framework.readableName = 'Java - JUnit5';

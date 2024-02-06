@@ -1,44 +1,34 @@
-import XPath from 'xpath';
-import { withTranslation as wt } from 'react-i18next';
+import {DOMParser} from '@xmldom/xmldom';
 import _ from 'lodash';
-import { log } from './polyfills';
+import {withTranslation as wt} from 'react-i18next';
+import XPath from 'xpath';
+
 import config from '../configs/app.config';
-import { DOMParser } from '@xmldom/xmldom';
+import {log} from './polyfills';
 
-const VALID_W3C_CAPS = ['platformName', 'browserName', 'browserVersion', 'acceptInsecureCerts',
-  'pageLoadStrategy', 'proxy', 'setWindowRect', 'timeouts', 'unhandledPromptBehavior'];
-
+const VALID_W3C_CAPS = [
+  'platformName',
+  'browserName',
+  'browserVersion',
+  'acceptInsecureCerts',
+  'pageLoadStrategy',
+  'proxy',
+  'setWindowRect',
+  'timeouts',
+  'unhandledPromptBehavior',
+];
 
 // Attributes on nodes that are likely to be unique to the node so we should consider first when
 // suggesting xpath locators. These are considered IN ORDER.
-const UNIQUE_XPATH_ATTRIBUTES = [
-  'name',
-  'content-desc',
-  'id',
-  'resource-id',
-  'accessibility-id',
-];
+const UNIQUE_XPATH_ATTRIBUTES = ['name', 'content-desc', 'id', 'resource-id', 'accessibility-id'];
 
 // Attributes that we should recommend as a fallback but ideally only in conjunction with other
 // attributes
-const MAYBE_UNIQUE_XPATH_ATTRIBUTES = [
-  'label',
-  'text',
-  'value',
-];
+const MAYBE_UNIQUE_XPATH_ATTRIBUTES = ['label', 'text', 'value'];
 
-const UNIQUE_CLASS_CHAIN_ATTRIBUTES = [
-  'name',
-  'label',
-  'value',
-];
+const UNIQUE_CLASS_CHAIN_ATTRIBUTES = ['name', 'label', 'value'];
 
-const UNIQUE_PREDICATE_ATTRIBUTES = [
-  'name',
-  'label',
-  'value',
-  'type',
-];
+const UNIQUE_PREDICATE_ATTRIBUTES = ['name', 'label', 'value', 'type'];
 
 /**
  * Translates sourceXML to JSON
@@ -46,7 +36,7 @@ const UNIQUE_PREDICATE_ATTRIBUTES = [
  * @param {string} source
  * @returns {Object}
  */
-export function xmlToJSON (source) {
+export function xmlToJSON(source) {
   const childNodesOf = (xmlNode) => {
     if (!xmlNode || !xmlNode.hasChildNodes()) {
       return [];
@@ -70,12 +60,17 @@ export function xmlToJSON (source) {
 
     // Dot Separated path of indices
     const path = _.isNil(index) ? '' : `${!parentPath ? '' : parentPath + '.'}${index}`;
-    const classChainSelector = isIOS ? getOptimalClassChain(xmlDoc, xmlNode, UNIQUE_CLASS_CHAIN_ATTRIBUTES) : '';
-    const predicateStringSelector = isIOS ? getOptimalPredicateString(xmlDoc, xmlNode, UNIQUE_PREDICATE_ATTRIBUTES) : '';
+    const classChainSelector = isIOS
+      ? getOptimalClassChain(xmlDoc, xmlNode, UNIQUE_CLASS_CHAIN_ATTRIBUTES)
+      : '';
+    const predicateStringSelector = isIOS
+      ? getOptimalPredicateString(xmlDoc, xmlNode, UNIQUE_PREDICATE_ATTRIBUTES)
+      : '';
 
     return {
-      children: childNodesOf(xmlNode)
-        .map((childNode, childIndex) => translateRecursively(childNode, path, childIndex)),
+      children: childNodesOf(xmlNode).map((childNode, childIndex) =>
+        translateRecursively(childNode, path, childIndex),
+      ),
       tagName: xmlNode.tagName,
       attributes,
       xpath: getOptimalXPath(xmlDoc, xmlNode, UNIQUE_XPATH_ATTRIBUTES),
@@ -201,7 +196,7 @@ function getUniqueXPath(doc, domNode, attrs) {
  * @param {DOMNode} domNode
  * @returns {string|null}
  */
-export function getOptimalXPath (doc, domNode) {
+export function getOptimalXPath(doc, domNode) {
   try {
     // BASE CASE #1: If this isn't an element, we're above the root, return empty string
     if (!domNode.tagName || domNode.nodeType !== 1) {
@@ -210,7 +205,8 @@ export function getOptimalXPath (doc, domNode) {
 
     const attrsForPairs = [...UNIQUE_XPATH_ATTRIBUTES, ...MAYBE_UNIQUE_XPATH_ATTRIBUTES];
     const attrPairsPermutations = attrsForPairs.flatMap((v1, i) =>
-      attrsForPairs.slice(i + 1).map((v2) => [v1, v2]));
+      attrsForPairs.slice(i + 1).map((v2) => [v1, v2]),
+    );
 
     const cases = [
       // BASE CASE #2: If this node has a unique attribute or content attribute, return an absolute
@@ -263,9 +259,9 @@ export function getOptimalXPath (doc, domNode) {
     // If this node has siblings of the same tagName, get the index of this node
     if (domNode.parentNode) {
       // Get the siblings
-      const childNodes = Array.prototype.slice.call(domNode.parentNode.childNodes, 0).filter((childNode) => (
-        childNode.nodeType === 1 && childNode.tagName === domNode.tagName
-      ));
+      const childNodes = Array.prototype.slice
+        .call(domNode.parentNode.childNodes, 0)
+        .filter((childNode) => childNode.nodeType === 1 && childNode.tagName === domNode.tagName);
 
       // If there's more than one sibling, append the index
       if (childNodes.length > 1) {
@@ -278,7 +274,10 @@ export function getOptimalXPath (doc, domNode) {
     return getOptimalXPath(doc, domNode.parentNode) + xpath;
   } catch (error) {
     // If there's an unexpected exception, abort and don't get an XPath
-    log.error(`The most optimal XPATH could not be determined because an error was thrown: '${JSON.stringify(error, null, 2)}'`);
+    log.error(
+      `The most optimal XPATH could not be determined ` +
+        `because an error was thrown: '${JSON.stringify(error, null, 2)}'`,
+    );
 
     return null;
   }
@@ -292,11 +291,15 @@ export function getOptimalXPath (doc, domNode) {
  * @param {Array<String>} uniqueAttributes Attributes we know are unique
  * @returns {string|null}
  */
-function getOptimalClassChain (doc, domNode, uniqueAttributes) {
+function getOptimalClassChain(doc, domNode, uniqueAttributes) {
   try {
     // BASE CASE #1: If this isn't an element, we're above the root, or this is `XCUIElementTypeApplication`,
     // which is not an official XCUITest element, return empty string
-    if (!domNode.tagName || domNode.nodeType !== 1 || domNode.tagName === 'XCUIElementTypeApplication') {
+    if (
+      !domNode.tagName ||
+      domNode.nodeType !== 1 ||
+      domNode.tagName === 'XCUIElementTypeApplication'
+    ) {
       return '';
     }
 
@@ -330,9 +333,9 @@ function getOptimalClassChain (doc, domNode, uniqueAttributes) {
     // If this node has siblings of the same tagName, get the index of this node
     if (domNode.parentNode) {
       // Get the siblings
-      const childNodes = Array.prototype.slice.call(domNode.parentNode.childNodes, 0).filter((childNode) => (
-        childNode.nodeType === 1 && childNode.tagName === domNode.tagName
-      ));
+      const childNodes = Array.prototype.slice
+        .call(domNode.parentNode.childNodes, 0)
+        .filter((childNode) => childNode.nodeType === 1 && childNode.tagName === domNode.tagName);
 
       // If there's more than one sibling, append the index
       if (childNodes.length > 1) {
@@ -345,7 +348,10 @@ function getOptimalClassChain (doc, domNode, uniqueAttributes) {
     return getOptimalClassChain(doc, domNode.parentNode, uniqueAttributes) + classChain;
   } catch (error) {
     // If there's an unexpected exception, abort and don't get an XPath
-    log.error(`The most optimal '-ios class chain' could not be determined because an error was thrown: '${JSON.stringify(error, null, 2)}'`);
+    log.error(
+      `The most optimal '-ios class chain' could not be determined ` +
+        `because an error was thrown: '${JSON.stringify(error, null, 2)}'`,
+    );
 
     return null;
   }
@@ -360,11 +366,15 @@ function getOptimalClassChain (doc, domNode, uniqueAttributes) {
  * @param {Array<String>} uniqueAttributes Attributes we know are unique
  * @returns {string|null}
  */
-function getOptimalPredicateString (doc, domNode, uniqueAttributes) {
+function getOptimalPredicateString(doc, domNode, uniqueAttributes) {
   try {
     // BASE CASE #1: If this isn't an element, we're above the root, or this is `XCUIElementTypeApplication`,
     // which is not an official XCUITest element, return empty string
-    if (!domNode.tagName || domNode.nodeType !== 1 || domNode.tagName === 'XCUIElementTypeApplication') {
+    if (
+      !domNode.tagName ||
+      domNode.nodeType !== 1 ||
+      domNode.tagName === 'XCUIElementTypeApplication'
+    ) {
       return '';
     }
 
@@ -375,7 +385,7 @@ function getOptimalPredicateString (doc, domNode, uniqueAttributes) {
     for (let attrName of uniqueAttributes) {
       const attrValue = domNode.getAttribute(attrName);
 
-      if (_.isNil(attrValue) || _.isString(attrValue) && attrValue.length === 0) {
+      if (_.isNil(attrValue) || (_.isString(attrValue) && attrValue.length === 0)) {
         continue;
       }
 
@@ -398,20 +408,20 @@ function getOptimalPredicateString (doc, domNode, uniqueAttributes) {
     }
   } catch (error) {
     // If there's an unexpected exception, abort and don't get an XPath
-    log.error(`The most optimal '-ios predicate string' could not be determined because an error was thrown: '${JSON.stringify(error, null, 2)}'`);
+    log.error(
+      `The most optimal '-ios predicate string' could not be determined ` +
+        `because an error was thrown: '${JSON.stringify(error, null, 2)}'`,
+    );
 
     return null;
   }
 }
 
-export function withTranslation (componentCls, ...hocs) {
-  return _.flow(
-    ...hocs,
-    wt(config.namespace),
-  )(componentCls);
+export function withTranslation(componentCls, ...hocs) {
+  return _.flow(...hocs, wt(config.namespace))(componentCls);
 }
 
-export function addVendorPrefixes (caps) {
+export function addVendorPrefixes(caps) {
   return caps.map((cap) => {
     // if we don't have a valid unprefixed cap or a cap with an existing prefix, update it
     if (!VALID_W3C_CAPS.includes(cap.name) && !_.includes(cap.name, ':')) {

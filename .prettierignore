@@ -1,0 +1,5 @@
+# Prettier ignore extends .gitignore
+**/*.log
+**/*.xml
+**/*.html
+!app/**/*.html

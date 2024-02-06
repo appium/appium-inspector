@@ -132,7 +132,7 @@
   "Start this Kind of Session with Code": "Start this Kind of Session with Code",
   "Clear Actions": "एक्शन्स साफ करे",
   "Close Recorder": "रिकॉर्डर बंद करें",
-  "Perform some actions to see code show up here": "यहां कोड दिखाने के लिए कुछ क्रियाएं करें",
+  "enableRecordingAndPerformActions": "Enable recording in the application header, then perform some actions to see code show up here",
   "Recorder": "रिकॉर्डर",
   "Attribute": "गुण",
   "Value": "मूल्य",

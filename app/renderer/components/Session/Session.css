@@ -17,11 +17,6 @@
   margin-left: 10px;
 }
 
-.sessionContainer :global(.anticon:hover) {
-  background-color: #F08080;
-  color: white;
-}
-
 .sessionContainer :global(.addCloudProviderTab) {
   font-style: italic;
 }
@@ -179,7 +174,6 @@
   word-wrap: break-word;
 }
 
-
 .start-session-button {
   margin-left: 1em;
 }
@@ -265,7 +259,7 @@
   margin: -1px;
   resize: none;
   border-color: lightgray;
-  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
 }
 
 .capsEditorBodyFull {
