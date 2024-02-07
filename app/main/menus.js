@@ -227,6 +227,13 @@ function optionMinimize() {
   };
 }
 
+function optionZoom() {
+  return {
+    label: t('Zoom'),
+    role: 'zoom',
+  };
+}
+
 function optionCloseWindow() {
   return {
     label: t('Close Window'),
@@ -341,6 +348,7 @@ function dropdownMacWindow() {
     label: t('Window'),
     submenu: [
       optionMinimize(),
+      optionZoom(),
       separator(),
       optionBringAllToFront(),
     ],
