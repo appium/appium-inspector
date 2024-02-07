@@ -84,48 +84,36 @@ function optionNewWindow() {
   };
 }
 
-async function openFileCallback(mainWindow) {
-  const {canceled, filePaths} = await dialog.showOpenDialog({
-    properties: ['openFile'],
-    filters: [{name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}],
-  });
-  if (!canceled) {
-    const filePath = filePaths[0];
-    mainWindow.webContents.send('open-file', filePath);
-  }
-}
-
 function optionOpen(mainWindow) {
   return {
     label: t('Open'),
     accelerator: 'CmdOrCtrl+O',
-    click: () => openFileCallback(mainWindow),
+    click: async () => {
+      const {canceled, filePaths} = await dialog.showOpenDialog({
+        properties: ['openFile'],
+        filters: [{name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}],
+      });
+      if (!canceled) {
+        const filePath = filePaths[0];
+        mainWindow.webContents.send('open-file', filePath);
+      }
+    },
   };
-}
-
-function optionSave(mainWindow) {
-  return {
-    label: t('Save'),
-    accelerator: 'CmdOrCtrl+S',
-    click: () => mainWindow.webContents.send('save-file'),
-  };
-}
-
-async function saveAsCallback(mainWindow) {
-  const {canceled, filePath} = await dialog.showSaveDialog({
-    title: t('saveAs'),
-    filters: [{name: 'Appium', extensions: [APPIUM_SESSION_EXTENSION]}],
-  });
-  if (!canceled) {
-    mainWindow.webContents.send('save-file', filePath);
-  }
 }
 
 function optionSaveAs(mainWindow) {
   return {
     label: t('saveAs'),
-    accelerator: 'CmdOrCtrl+Shift+S',
-    click: () => saveAsCallback(mainWindow),
+    accelerator: 'CmdOrCtrl+S',
+    click: async () => {
+      const {canceled, filePath} = await dialog.showSaveDialog({
+        title: t('saveAs'),
+        filters: [{name: 'Appium', extensions: [APPIUM_SESSION_EXTENSION]}],
+      });
+      if (!canceled) {
+        mainWindow.webContents.send('save-file', filePath);
+      }
+    },
   };
 }
 
@@ -303,7 +291,6 @@ function dropdownMacFile(mainWindow) {
     submenu: [
       optionNewWindow(),
       optionOpen(mainWindow),
-      optionSave(mainWindow),
       optionSaveAs(mainWindow),
     ],
   };
@@ -367,7 +354,6 @@ function dropdownOtherFile(mainWindow) {
   let fileSubmenu = [
     optionNewWindow(),
     optionOpen(mainWindow),
-    optionSave(mainWindow),
     optionSaveAs(mainWindow),
     optionAbout(),
     separator(),
