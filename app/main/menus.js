@@ -27,7 +27,7 @@ const optionAbout = () => ({
 });
 
 const optionCheckForUpdates = () => ({
-  label: isMac ? t('Check for Updates…') : '&' + t('Check for Updates…'),
+  label: t('Check for Updates…'),
   click: () => checkNewUpdates(true),
 });
 
@@ -58,7 +58,7 @@ const optionNewWindow = () => ({
 });
 
 const optionCloseWindow = () => ({
-  label: isMac ? t('Close Window') : '&' + t('Close Window'),
+  label: t('Close Window'),
   role: 'close',
 });
 
@@ -127,7 +127,7 @@ const optionSelectAll = () => ({
 });
 
 const optionToggleFullscreen = () => ({
-  label: isMac ? t('Toggle Full Screen') : t('Toggle &Full Screen'),
+  label: t('Toggle Full Screen'),
   role: 'togglefullscreen',
 });
 
@@ -157,12 +157,12 @@ const optionLanguages = () => ({
 });
 
 const optionReload = () => ({
-  label: isMac ? t('Reload') : '&' + t('Reload'),
+  label: t('Reload'),
   role: 'reload',
 });
 
 const optionToggleDevTools = () => ({
-  label: isMac ? t('Toggle Developer Tools') : t('Toggle &Developer Tools'),
+  label: t('Toggle Developer Tools'),
   role: 'toggleDevTools',
 });
 
@@ -232,7 +232,7 @@ const dropdownFile = () => {
   }
 
   return {
-    label: isMac ? t('File') : '&' + t('File'),
+    label: t('File'),
     submenu,
   };
 };
@@ -266,7 +266,7 @@ const dropdownView = () => {
   }
 
   return {
-    label: isMac ? t('View') : '&' + t('View'),
+    label: t('View'),
     submenu,
   };
 };
