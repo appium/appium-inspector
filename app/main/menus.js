@@ -220,14 +220,14 @@ function optionMinimize() {
   };
 }
 
-function optionClose() {
+function optionCloseWindow() {
   return {
     label: t('Close Window'),
     role: 'close',
   };
 }
 
-function optionCloseOther() {
+function optionCloseWindowOther() {
   return {
     label: '&' + t('Close Window'),
     role: 'close',
@@ -269,7 +269,7 @@ function optionImproveTranslations() {
   };
 }
 
-function dropdownMacAppiumInspector() {
+function dropdownMacApp() {
   return {
     label: t('appiumInspector'),
     submenu: [
@@ -290,6 +290,8 @@ function dropdownMacFile(mainWindow) {
     label: t('File'),
     submenu: [
       optionNewWindow(),
+      optionCloseWindow(),
+      separator(),
       optionOpen(mainWindow),
       optionSaveAs(mainWindow),
     ],
@@ -331,7 +333,6 @@ function dropdownMacWindow() {
     label: t('Window'),
     submenu: [
       optionMinimize(),
-      optionClose(),
       separator(),
       optionBringAllToFront(),
     ],
@@ -351,23 +352,24 @@ function dropdownMacHelp() {
 }
 
 function dropdownOtherFile(mainWindow) {
-  let fileSubmenu = [
+  let submenu = [
     optionNewWindow(),
+    optionCloseWindowOther(),
+    separator(),
     optionOpen(mainWindow),
     optionSaveAs(mainWindow),
-    optionAbout(),
     separator(),
-    optionCloseOther(),
+    optionAbout(),
   ];
 
   // If it's Windows, add a 'Check for Updates' menu option
   if (process.platform === 'win32') {
-    fileSubmenu.splice(1, 0, optionCheckForUpdatesOther());
+    submenu.push(optionCheckForUpdatesOther());
   }
 
   return {
     label: '&' + t('File'),
-    submenu: fileSubmenu,
+    submenu,
   };
 }
 
@@ -393,7 +395,7 @@ function dropdownOtherHelp() {
 }
 
 menuTemplates.mac = (mainWindow) => [
-  dropdownMacAppiumInspector(),
+  dropdownMacApp(),
   dropdownMacFile(mainWindow),
   dropdownMacEdit(),
   dropdownMacView(),
