@@ -8,6 +8,8 @@ import {launchNewSessionWindow} from './windows';
 
 let menuTemplates = {mac: {}, other: {}};
 
+let mainWindow, isDev;
+
 function t(string, params = null) {
   return i18n.t(string, params);
 }
@@ -98,7 +100,7 @@ function optionCloseWindowOther() {
   };
 }
 
-function optionOpen(mainWindow) {
+function optionOpen() {
   return {
     label: t('Open'),
     accelerator: 'CmdOrCtrl+O',
@@ -115,7 +117,7 @@ function optionOpen(mainWindow) {
   };
 }
 
-function optionSaveAs(mainWindow) {
+function optionSaveAs() {
   return {
     label: t('saveAs'),
     accelerator: 'CmdOrCtrl+S',
@@ -327,15 +329,15 @@ function dropdownMacApp() {
   };
 }
 
-function dropdownMacFile(mainWindow) {
+function dropdownMacFile() {
   return {
     label: t('File'),
     submenu: [
       optionNewWindow(),
       optionCloseWindow(),
       separator(),
-      optionOpen(mainWindow),
-      optionSaveAs(mainWindow),
+      optionOpen(),
+      optionSaveAs(),
     ],
   };
 }
@@ -356,7 +358,7 @@ function dropdownEdit() {
   };
 }
 
-function dropdownMacView(isDev) {
+function dropdownMacView() {
   const submenu = [
     optionToggleFullscreen(),
     optionResetZoom(),
@@ -397,13 +399,13 @@ function dropdownHelp() {
   };
 }
 
-function dropdownOtherFile(mainWindow) {
+function dropdownOtherFile() {
   const submenu = [
     optionNewWindow(),
     optionCloseWindowOther(),
     separator(),
-    optionOpen(mainWindow),
-    optionSaveAs(mainWindow),
+    optionOpen(),
+    optionSaveAs(),
     separator(),
     optionAbout(),
   ];
@@ -419,7 +421,7 @@ function dropdownOtherFile(mainWindow) {
   };
 }
 
-function dropdownOtherView(isDev) {
+function dropdownOtherView() {
   const submenu = [
     optionToggleFullscreenOther(),
     optionResetZoom(),
@@ -439,33 +441,36 @@ function dropdownOtherView(isDev) {
   };
 }
 
-menuTemplates.mac = (mainWindow, isDev) => [
+menuTemplates.mac = () => [
   dropdownMacApp(),
-  dropdownMacFile(mainWindow),
+  dropdownMacFile(),
   dropdownEdit(),
-  dropdownMacView(isDev),
+  dropdownMacView(),
   dropdownMacWindow(),
   dropdownHelp(),
 ];
 
-menuTemplates.other = (mainWindow, isDev) => [
-  dropdownOtherFile(mainWindow),
+menuTemplates.other = () => [
+  dropdownOtherFile(),
   dropdownEdit(),
-  dropdownOtherView(isDev),
+  dropdownOtherView(),
   dropdownHelp(),
 ];
 
-export function rebuildMenus(mainWindow, isDev) {
-  if (!mainWindow) {
+export function rebuildMenus(localMainWindow, localIsDev) {
+  if (!localMainWindow) {
     return;
   }
 
+  mainWindow = localMainWindow;
+  isDev = localIsDev;
+
   if (process.platform === 'darwin') {
-    const template = menuTemplates.mac(mainWindow, isDev);
+    const template = menuTemplates.mac();
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
   } else {
-    const template = menuTemplates.other(mainWindow, isDev);
+    const template = menuTemplates.other();
     const menu = Menu.buildFromTemplate(template);
     mainWindow.setMenu(menu);
   }
