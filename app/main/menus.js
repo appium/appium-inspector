@@ -83,15 +83,7 @@ function optionQuit() {
 function optionNewWindow() {
   return {
     label: t('New Session Window…'),
-    accelerator: 'Command+N',
-    click: launchNewSessionWindow,
-  };
-}
-
-function optionNewWindowOther() {
-  return {
-    label: t('New Session Window…'),
-    accelerator: 'Ctrl+N',
+    accelerator: 'CmdOrCtrl+N',
     click: launchNewSessionWindow,
   };
 }
@@ -110,15 +102,7 @@ async function openFileCallback(mainWindow) {
 function optionOpen(mainWindow) {
   return {
     label: t('Open'),
-    accelerator: 'Command+O',
-    click: () => openFileCallback(mainWindow),
-  };
-}
-
-function optionOpenOther(mainWindow) {
-  return {
-    label: t('Open'),
-    accelerator: 'Ctrl+O',
+    accelerator: 'CmdOrCtrl+O',
     click: () => openFileCallback(mainWindow),
   };
 }
@@ -126,15 +110,7 @@ function optionOpenOther(mainWindow) {
 function optionSave(mainWindow) {
   return {
     label: t('Save'),
-    accelerator: 'Command+S',
-    click: () => mainWindow.webContents.send('save-file'),
-  };
-}
-
-function optionSaveOther(mainWindow) {
-  return {
-    label: t('Save'),
-    accelerator: 'Ctrl+S',
+    accelerator: 'CmdOrCtrl+S',
     click: () => mainWindow.webContents.send('save-file'),
   };
 }
@@ -152,15 +128,7 @@ async function saveAsCallback(mainWindow) {
 function optionSaveAs(mainWindow) {
   return {
     label: t('saveAs'),
-    accelerator: 'Command+Shift+S',
-    click: () => saveAsCallback(mainWindow),
-  };
-}
-
-function optionSaveAsOther(mainWindow) {
-  return {
-    label: t('saveAs'),
-    accelerator: 'Ctrl+Shift+S',
+    accelerator: 'CmdOrCtrl+Shift+S',
     click: () => saveAsCallback(mainWindow),
   };
 }
@@ -409,10 +377,10 @@ function dropdownMacHelp() {
 
 function dropdownOtherFile(mainWindow) {
   let fileSubmenu = [
-    optionNewWindowOther(),
-    optionOpenOther(mainWindow),
-    optionSaveOther(mainWindow),
-    optionSaveAsOther(mainWindow),
+    optionNewWindow(),
+    optionOpen(mainWindow),
+    optionSave(mainWindow),
+    optionSaveAs(mainWindow),
     optionAbout(),
     separator(),
     optionCloseOther(),
