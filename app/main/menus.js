@@ -6,9 +6,7 @@ import {checkNewUpdates} from './auto-updater';
 import {APPIUM_SESSION_EXTENSION} from './helpers';
 import {launchNewSessionWindow} from './windows';
 
-let menuTemplates = {mac: {}, other: {}};
-
-let mainWindow, isDev;
+let mainWindow, isMac, isDev;
 
 function t(string, params = null) {
   return i18n.t(string, params);
@@ -38,14 +36,7 @@ function optionAbout() {
 
 function optionCheckForUpdates() {
   return {
-    label: t('Check for Updates…'),
-    click: () => checkNewUpdates(true),
-  };
-}
-
-function optionCheckForUpdatesOther() {
-  return {
-    label: '&' + t('Check for Updates…'),
+    label: isMac ? t('Check for Updates…') : '&' + t('Check for Updates…'),
     click: () => checkNewUpdates(true),
   };
 }
@@ -88,14 +79,7 @@ function optionNewWindow() {
 
 function optionCloseWindow() {
   return {
-    label: t('Close Window'),
-    role: 'close',
-  };
-}
-
-function optionCloseWindowOther() {
-  return {
-    label: '&' + t('Close Window'),
+    label: isMac ? t('Close Window') : '&' + t('Close Window'),
     role: 'close',
   };
 }
@@ -184,14 +168,7 @@ function optionSelectAll() {
 
 function optionToggleFullscreen() {
   return {
-    label: t('Toggle Full Screen'),
-    role: 'togglefullscreen',
-  };
-}
-
-function optionToggleFullscreenOther() {
-  return {
-    label: t('Toggle &Full Screen'),
+    label: isMac ? t('Toggle Full Screen') : t('Toggle &Full Screen'),
     role: 'togglefullscreen',
   };
 }
@@ -231,28 +208,14 @@ function optionLanguages() {
 
 function optionReload() {
   return {
-    label: t('Reload'),
-    role: 'reload',
-  };
-}
-
-function optionReloadOther() {
-  return {
-    label: '&' + t('Reload'),
+    label: isMac ? t('Reload') : '&' + t('Reload'),
     role: 'reload',
   };
 }
 
 function optionToggleDevTools() {
   return {
-    label: t('Toggle Developer Tools'),
-    role: 'toggleDevTools',
-  };
-}
-
-function optionToggleDevToolsOther() {
-  return {
-    label: t('Toggle &Developer Tools'),
+    label: isMac ? t('Toggle Developer Tools') : t('Toggle &Developer Tools'),
     role: 'toggleDevTools',
   };
 }
@@ -313,7 +276,10 @@ function optionImproveTranslations() {
   };
 }
 
-function dropdownMacApp() {
+function dropdownApp() {
+  if (!isMac) {
+    return; // macOS only
+  }
   return {
     label: t('appiumInspector'),
     submenu: [
@@ -329,16 +295,26 @@ function dropdownMacApp() {
   };
 }
 
-function dropdownMacFile() {
+function dropdownFile() {
+  const submenu = [
+    optionNewWindow(),
+    optionCloseWindow(),
+    separator(),
+    optionOpen(),
+    optionSaveAs(),
+  ];
+
+  if (!isMac) {
+    submenu.push(...[separator(), optionAbout()]);
+    // If it's Windows, add a 'Check for Updates' menu option
+    if (process.platform === 'win32') {
+      submenu.push(optionCheckForUpdates());
+    }
+  }
+
   return {
-    label: t('File'),
-    submenu: [
-      optionNewWindow(),
-      optionCloseWindow(),
-      separator(),
-      optionOpen(),
-      optionSaveAs(),
-    ],
+    label: isMac ? t('File') : '&' + t('File'),
+    submenu,
   };
 }
 
@@ -358,7 +334,7 @@ function dropdownEdit() {
   };
 }
 
-function dropdownMacView() {
+function dropdownView() {
   const submenu = [
     optionToggleFullscreen(),
     optionResetZoom(),
@@ -373,12 +349,15 @@ function dropdownMacView() {
   }
 
   return {
-    label: t('View'),
+    label: isMac ? t('View') : '&' + t('View'),
     submenu,
   };
 }
 
-function dropdownMacWindow() {
+function dropdownWindow() {
+  if (!isMac) {
+    return; // macOS only
+  }
   return {
     label: t('Window'),
     submenu: [optionMinimize(), optionZoom(), separator(), optionBringAllToFront()],
@@ -399,63 +378,16 @@ function dropdownHelp() {
   };
 }
 
-function dropdownOtherFile() {
-  const submenu = [
-    optionNewWindow(),
-    optionCloseWindowOther(),
-    separator(),
-    optionOpen(),
-    optionSaveAs(),
-    separator(),
-    optionAbout(),
+function buildMenuTemplate() {
+  return [
+    dropdownApp(),
+    dropdownFile(),
+    dropdownEdit(),
+    dropdownView(),
+    dropdownWindow(),
+    dropdownHelp(),
   ];
-
-  // If it's Windows, add a 'Check for Updates' menu option
-  if (process.platform === 'win32') {
-    submenu.push(optionCheckForUpdatesOther());
-  }
-
-  return {
-    label: '&' + t('File'),
-    submenu,
-  };
-}
-
-function dropdownOtherView() {
-  const submenu = [
-    optionToggleFullscreenOther(),
-    optionResetZoom(),
-    optionZoomIn(),
-    optionZoomOut(),
-    separator(),
-    optionLanguages(),
-  ];
-
-  if (isDev) {
-    submenu.push(...[separator(), optionReloadOther(), optionToggleDevToolsOther()]);
-  }
-
-  return {
-    label: '&' + t('View'),
-    submenu,
-  };
-}
-
-menuTemplates.mac = () => [
-  dropdownMacApp(),
-  dropdownMacFile(),
-  dropdownEdit(),
-  dropdownMacView(),
-  dropdownMacWindow(),
-  dropdownHelp(),
-];
-
-menuTemplates.other = () => [
-  dropdownOtherFile(),
-  dropdownEdit(),
-  dropdownOtherView(),
-  dropdownHelp(),
-];
+};
 
 export function rebuildMenus(localMainWindow, localIsDev) {
   if (!localMainWindow) {
@@ -463,15 +395,14 @@ export function rebuildMenus(localMainWindow, localIsDev) {
   }
 
   mainWindow = localMainWindow;
+  isMac = process.platform === 'darwin';
   isDev = localIsDev;
 
-  if (process.platform === 'darwin') {
-    const template = menuTemplates.mac();
-    const menu = Menu.buildFromTemplate(template);
+  const menu = Menu.buildFromTemplate(buildMenuTemplate());
+
+  if (isMac) {
     Menu.setApplicationMenu(menu);
   } else {
-    const template = menuTemplates.other();
-    const menu = Menu.buildFromTemplate(template);
     mainWindow.setMenu(menu);
   }
 }
