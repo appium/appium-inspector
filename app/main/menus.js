@@ -1,6 +1,6 @@
 import {Menu, app, dialog, shell} from 'electron';
 
-import config, {languageList} from '../configs/app.config';
+import {languageList} from '../configs/app.config';
 import i18n from '../configs/i18next.config';
 import {checkNewUpdates} from './auto-updater';
 import {APPIUM_SESSION_EXTENSION} from './helpers';
@@ -349,7 +349,7 @@ function dropdownEdit() {
   };
 }
 
-function dropdownMacView() {
+function dropdownMacView(isDev) {
   const submenu = [
     optionToggleFullscreen(),
     optionResetZoom(),
@@ -359,10 +359,12 @@ function dropdownMacView() {
     optionLanguages(),
   ];
 
-  if (process.env.NODE_ENV === 'development') {
-    submenu.push(separator()),
-    submenu.push(optionReload());
-    submenu.push(optionToggleDevTools());
+  if (isDev) {
+    submenu.push(...[
+      separator(),
+      optionReload(),
+      optionToggleDevTools(),
+    ]);
   }
 
   return {
@@ -417,7 +419,7 @@ function dropdownOtherFile(mainWindow) {
   };
 }
 
-function dropdownOtherView() {
+function dropdownOtherView(isDev) {
   const submenu = [
     optionToggleFullscreenOther(),
     optionResetZoom(),
@@ -427,10 +429,12 @@ function dropdownOtherView() {
     optionLanguages(),
   ];
 
-  if (process.env.NODE_ENV === 'development') {
-    submenu.push(separator()),
-    submenu.push(optionReloadOther());
-    submenu.push(optionToggleDevToolsOther());
+  if (isDev) {
+    submenu.push(...[
+      separator(),
+      optionReloadOther(),
+      optionToggleDevToolsOther(),
+    ]);
   }
 
   return {
@@ -444,33 +448,33 @@ function dropdownOtherHelp() {
   return dropdownMacHelp();
 }
 
-menuTemplates.mac = (mainWindow) => [
+menuTemplates.mac = (mainWindow, isDev) => [
   dropdownMacApp(),
   dropdownMacFile(mainWindow),
   dropdownEdit(),
-  dropdownMacView(),
+  dropdownMacView(isDev),
   dropdownMacWindow(),
   dropdownMacHelp(),
 ];
 
-menuTemplates.other = (mainWindow) => [
+menuTemplates.other = (mainWindow, isDev) => [
   dropdownOtherFile(mainWindow),
   dropdownEdit(),
-  dropdownOtherView(),
+  dropdownOtherView(isDev),
   dropdownOtherHelp(),
 ];
 
-export function rebuildMenus(mainWindow) {
+export function rebuildMenus(mainWindow, isDev) {
   if (!mainWindow) {
     return;
   }
 
-  if (config.platform === 'darwin') {
-    const template = menuTemplates.mac(mainWindow);
+  if (process.platform === 'darwin') {
+    const template = menuTemplates.mac(mainWindow, isDev);
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
   } else {
-    const template = menuTemplates.other(mainWindow);
+    const template = menuTemplates.other(mainWindow, isDev);
     const menu = Menu.buildFromTemplate(template);
     mainWindow.setMenu(menu);
   }
