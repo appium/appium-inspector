@@ -63,7 +63,7 @@ const optionCloseWindow = () => ({
 });
 
 const optionOpen = () => ({
-  label: t('Open'),
+  label: t('Open Session File…'),
   accelerator: 'CmdOrCtrl+O',
   click: async () => {
     const {canceled, filePaths} = await dialog.showOpenDialog({
