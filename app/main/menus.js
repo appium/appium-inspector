@@ -43,6 +43,15 @@ function optionCheckForUpdates() {
   };
 }
 
+function optionCheckForUpdatesOther() {
+  return {
+    label: '&' + t('Check for updates'),
+    click() {
+      checkNewUpdates(true);
+    },
+  };
+}
+
 function optionHide() {
   return {
     label: t('Hide Appium'),
@@ -84,10 +93,37 @@ function optionNewWindow() {
   };
 }
 
+function optionNewWindowOther() {
+  return {
+    label: t('New Session Window…'),
+    accelerator: 'Ctrl+N',
+    click: launchNewSessionWindow,
+  };
+}
+
+async function openFileCallback(mainWindow) {
+  const {canceled, filePaths} = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: [{name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}],
+  });
+  if (!canceled) {
+    const filePath = filePaths[0];
+    mainWindow.webContents.send('open-file', filePath);
+  }
+}
+
 function optionOpen(mainWindow) {
   return {
     label: t('Open'),
     accelerator: 'Command+O',
+    click: () => openFileCallback(mainWindow),
+  };
+}
+
+function optionOpenOther(mainWindow) {
+  return {
+    label: t('Open'),
+    accelerator: 'Ctrl+O',
     click: () => openFileCallback(mainWindow),
   };
 }
@@ -100,10 +136,36 @@ function optionSave(mainWindow) {
   };
 }
 
+function optionSaveOther(mainWindow) {
+  return {
+    label: t('Save'),
+    accelerator: 'Ctrl+S',
+    click: () => mainWindow.webContents.send('save-file'),
+  };
+}
+
+async function saveAsCallback(mainWindow) {
+  const {canceled, filePath} = await dialog.showSaveDialog({
+    title: t('saveAs'),
+    filters: [{name: 'Appium', extensions: [APPIUM_SESSION_EXTENSION]}],
+  });
+  if (!canceled) {
+    mainWindow.webContents.send('save-file', filePath);
+  }
+}
+
 function optionSaveAs(mainWindow) {
   return {
     label: t('saveAs'),
     accelerator: 'Command+Shift+S',
+    click: () => saveAsCallback(mainWindow),
+  };
+}
+
+function optionSaveAsOther(mainWindow) {
+  return {
+    label: t('saveAs'),
+    accelerator: 'Ctrl+Shift+S',
     click: () => saveAsCallback(mainWindow),
   };
 }
@@ -166,6 +228,16 @@ function optionReload(mainWindow) {
   };
 }
 
+function optionReloadOther(mainWindow) {
+  return {
+    label: '&' + t('Reload'),
+    accelerator: 'Ctrl+R',
+    click() {
+      mainWindow.webContents.reload();
+    },
+  };
+}
+
 function optionToggleDevTools(mainWindow) {
   return {
     label: t('Toggle Developer Tools'),
@@ -176,10 +248,30 @@ function optionToggleDevTools(mainWindow) {
   };
 }
 
+function optionToggleDevToolsOther(mainWindow) {
+  return {
+    label: t('Toggle &Developer Tools'),
+    accelerator: 'Alt+Ctrl+I',
+    click() {
+      mainWindow.toggleDevTools();
+    },
+  };
+}
+
 function optionToggleFullscreen(mainWindow) {
   return {
     label: t('Toggle Full Screen'),
     accelerator: 'Ctrl+Command+F',
+    click() {
+      mainWindow.setFullScreen(!mainWindow.isFullScreen());
+    },
+  };
+}
+
+function optionToggleFullscreenOther(mainWindow) {
+  return {
+    label: t('Toggle &Full Screen'),
+    accelerator: 'F11',
     click() {
       mainWindow.setFullScreen(!mainWindow.isFullScreen());
     },
@@ -211,6 +303,16 @@ function optionClose() {
     label: t('Close'),
     accelerator: 'Command+W',
     selector: 'performClose:',
+  };
+}
+
+function optionCloseOther(mainWindow) {
+  return {
+    label: '&' + t('Close'),
+    accelerator: 'Ctrl+W',
+    click() {
+      mainWindow.close();
+    },
   };
 }
 
@@ -339,27 +441,47 @@ function dropdownMacHelp() {
   };
 }
 
+function dropdownOtherFile(mainWindow) {
+  let fileSubmenu = [
+    optionNewWindowOther(),
+    optionOpenOther(mainWindow),
+    optionSaveOther(mainWindow),
+    optionSaveAsOther(mainWindow),
+    optionAbout(),
+    separator(),
+    optionCloseOther(mainWindow),
+  ];
 
-function languageMenu() {
-  return languageList.map((language) => ({
-    label: `${language.name} (${language.original})`,
-    type: 'radio',
-    checked: i18n.language === language.code,
-    click: () => i18n.changeLanguage(language.code),
-  }));
+  // If it's Windows, add a 'Check for Updates' menu option
+  if (process.platform === 'win32') {
+    fileSubmenu.splice(1, 0, optionCheckForUpdatesOther());
+  }
+
+  return {
+    label: '&' + t('File'),
+    submenu: fileSubmenu,
+  };
 }
 
-function getShowAppInfoClickAction() {
-  return () => {
-    dialog.showMessageBox({
-      title: t('appiumInspector'),
-      message: t('showAppInfo', {
-        appVersion: app.getVersion(),
-        electronVersion: process.versions.electron,
-        nodejsVersion: process.versions.node,
-      }),
-    });
+function dropdownOtherView(mainWindow) {
+  const submenu = [];
+  submenu.push(optionToggleFullscreenOther(mainWindow));
+  submenu.push(optionLanguages());
+
+  if (process.env.NODE_ENV === 'development') {
+    submenu.push(optionReloadOther(mainWindow));
+    submenu.push(optionToggleDevToolsOther(mainWindow));
+  }
+
+  return {
+    label: '&' + t('View'),
+    submenu,
   };
+}
+
+function dropdownOtherHelp() {
+  // just the same as mac menus for now since we don't have any hotkeys for this menu
+  return dropdownMacHelp();
 }
 
 menuTemplates.mac = (mainWindow) => [
@@ -371,128 +493,10 @@ menuTemplates.mac = (mainWindow) => [
   dropdownMacHelp(),
 ];
 
-async function openFileCallback(mainWindow) {
-  const {canceled, filePaths} = await dialog.showOpenDialog({
-    properties: ['openFile'],
-    filters: [{name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}],
-  });
-  if (!canceled) {
-    const filePath = filePaths[0];
-    mainWindow.webContents.send('open-file', filePath);
-  }
-}
-
-async function saveAsCallback(mainWindow) {
-  const {canceled, filePath} = await dialog.showSaveDialog({
-    title: t('saveAs'),
-    filters: [{name: 'Appium', extensions: [APPIUM_SESSION_EXTENSION]}],
-  });
-  if (!canceled) {
-    mainWindow.webContents.send('save-file', filePath);
-  }
-}
-
-function otherMenuFile(mainWindow) {
-  let fileSubmenu = [
-    {
-      label: t('New Session Window…'),
-      accelerator: 'Ctrl+N',
-      click: launchNewSessionWindow,
-    },
-    {
-      label: t('Open'),
-      accelerator: 'Ctrl+O',
-      click: () => openFileCallback(mainWindow),
-    },
-    {
-      label: t('Save'),
-      accelerator: 'Ctrl+S',
-      click: () => mainWindow.webContents.send('save-file'),
-    },
-    {
-      label: t('saveAs'),
-      accelerator: 'Ctrl+Shift+S',
-      click: () => saveAsCallback(mainWindow),
-    },
-    {
-      label: '&' + t('About Appium'),
-      click: getShowAppInfoClickAction(),
-    },
-    {
-      type: 'separator',
-    },
-    {
-      label: '&' + t('Close'),
-      accelerator: 'Ctrl+W',
-      click() {
-        mainWindow.close();
-      },
-    },
-  ];
-
-  // If it's Windows, add a 'Check for Updates' menu option
-  if (process.platform === 'win32') {
-    fileSubmenu.splice(1, 0, {
-      label: '&' + t('Check for updates'),
-      click() {
-        checkNewUpdates(true);
-      },
-    });
-  }
-
-  return {
-    label: '&' + t('File'),
-    submenu: fileSubmenu,
-  };
-}
-
-function otherMenuView(mainWindow) {
-  const submenu = [];
-  submenu.push({
-    label: t('Toggle &Full Screen'),
-    accelerator: 'F11',
-    click() {
-      mainWindow.setFullScreen(!mainWindow.isFullScreen());
-    },
-  });
-
-  submenu.push({
-    label: t('Languages'),
-    submenu: languageMenu(),
-  });
-
-  if (process.env.NODE_ENV === 'development') {
-    submenu.push({
-      label: '&' + t('Reload'),
-      accelerator: 'Ctrl+R',
-      click() {
-        mainWindow.webContents.reload();
-      },
-    });
-    submenu.push({
-      label: t('Toggle &Developer Tools'),
-      accelerator: 'Alt+Ctrl+I',
-      click() {
-        mainWindow.toggleDevTools();
-      },
-    });
-  }
-
-  return {
-    label: '&' + t('View'),
-    submenu,
-  };
-}
-
-function otherMenuHelp() {
-  // just the same as mac menus for now since we don't have any hotkeys for this menu
-  return dropdownMacHelp();
-}
-
 menuTemplates.other = (mainWindow) => [
-  otherMenuFile(mainWindow),
-  otherMenuView(mainWindow),
-  otherMenuHelp(),
+  dropdownOtherFile(mainWindow),
+  dropdownOtherView(mainWindow),
+  dropdownOtherHelp(),
 ];
 
 export function rebuildMenus(mainWindow) {
