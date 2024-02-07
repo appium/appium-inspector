@@ -166,6 +166,53 @@ function optionSelectAll() {
   };
 }
 
+function optionToggleFullscreen() {
+  return {
+    label: t('Toggle Full Screen'),
+    role: 'togglefullscreen',
+  };
+}
+
+function optionToggleFullscreenOther() {
+  return {
+    label: t('Toggle &Full Screen'),
+    role: 'togglefullscreen',
+  };
+}
+
+function optionResetZoom() {
+  return {
+    label: t('Reset Zoom Level'),
+    role: 'resetZoom',
+  };
+}
+
+function optionZoomIn() {
+  return {
+    label: t('Zoom In'),
+    role: 'zoomIn',
+  };
+}
+
+function optionZoomOut() {
+  return {
+    label: t('Zoom Out'),
+    role: 'zoomOut',
+  };
+}
+
+function optionLanguages() {
+  return {
+    label: t('Languages'),
+    submenu: languageList.map((language) => ({
+      label: `${language.name} (${language.original})`,
+      type: 'radio',
+      checked: i18n.language === language.code,
+      click: () => i18n.changeLanguage(language.code),
+    })),
+  };
+}
+
 function optionReload() {
   return {
     label: t('Reload'),
@@ -191,32 +238,6 @@ function optionToggleDevToolsOther() {
   return {
     label: t('Toggle &Developer Tools'),
     role: 'toggleDevTools',
-  };
-}
-
-function optionToggleFullscreen() {
-  return {
-    label: t('Toggle Full Screen'),
-    role: 'togglefullscreen',
-  };
-}
-
-function optionToggleFullscreenOther() {
-  return {
-    label: t('Toggle &Full Screen'),
-    role: 'togglefullscreen',
-  };
-}
-
-function optionLanguages() {
-  return {
-    label: t('Languages'),
-    submenu: languageList.map((language) => ({
-      label: `${language.name} (${language.original})`,
-      type: 'radio',
-      checked: i18n.language === language.code,
-      click: () => i18n.changeLanguage(language.code),
-    })),
   };
 }
 
@@ -329,13 +350,20 @@ function dropdownEdit() {
 }
 
 function dropdownMacView() {
-  const submenu = [];
+  const submenu = [
+    optionToggleFullscreen(),
+    optionResetZoom(),
+    optionZoomIn(),
+    optionZoomOut(),
+    separator(),
+    optionLanguages(),
+  ];
+
   if (process.env.NODE_ENV === 'development') {
+    submenu.push(separator()),
     submenu.push(optionReload());
     submenu.push(optionToggleDevTools());
   }
-  submenu.push(optionToggleFullscreen());
-  submenu.push(optionLanguages());
 
   return {
     label: t('View'),
@@ -368,7 +396,7 @@ function dropdownMacHelp() {
 }
 
 function dropdownOtherFile(mainWindow) {
-  let submenu = [
+  const submenu = [
     optionNewWindow(),
     optionCloseWindowOther(),
     separator(),
@@ -390,11 +418,17 @@ function dropdownOtherFile(mainWindow) {
 }
 
 function dropdownOtherView() {
-  const submenu = [];
-  submenu.push(optionToggleFullscreenOther());
-  submenu.push(optionLanguages());
+  const submenu = [
+    optionToggleFullscreenOther(),
+    optionResetZoom(),
+    optionZoomIn(),
+    optionZoomOut(),
+    separator(),
+    optionLanguages(),
+  ];
 
   if (process.env.NODE_ENV === 'development') {
+    submenu.push(separator()),
     submenu.push(optionReloadOther());
     submenu.push(optionToggleDevToolsOther());
   }
