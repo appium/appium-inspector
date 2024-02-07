@@ -1,6 +1,6 @@
 import {Menu, app, dialog, shell} from 'electron';
 
-import config from '../configs/app.config';
+import config, {languageList} from '../configs/app.config';
 import i18n from '../configs/i18next.config';
 import {checkNewUpdates} from './auto-updater';
 import {APPIUM_SESSION_EXTENSION} from './helpers';
@@ -189,11 +189,11 @@ function optionToggleFullscreen(mainWindow) {
 function optionLanguages() {
   return {
     label: t('Languages'),
-    submenu: config.languages.map((languageCode) => ({
-      label: t(languageCode),
+    submenu: languageList.map((language) => ({
+      label: `${language.name} (${language.original})`,
       type: 'radio',
-      checked: i18n.language === languageCode,
-      click: () => i18n.changeLanguage(languageCode),
+      checked: i18n.language === language.code,
+      click: () => i18n.changeLanguage(language.code),
     })),
   };
 }
@@ -341,11 +341,11 @@ function dropdownMacHelp() {
 
 
 function languageMenu() {
-  return config.languages.map((languageCode) => ({
-    label: t(languageCode),
+  return languageList.map((language) => ({
+    label: `${language.name} (${language.original})`,
     type: 'radio',
-    checked: i18n.language === languageCode,
-    click: () => i18n.changeLanguage(languageCode),
+    checked: i18n.language === language.code,
+    click: () => i18n.changeLanguage(language.code),
   }));
 }
 
