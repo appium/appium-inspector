@@ -152,6 +152,13 @@ function optionPaste() {
   };
 }
 
+function optionDelete() {
+  return {
+    label: t('Delete'),
+    role: 'delete',
+  };
+}
+
 function optionSelectAll() {
   return {
     label: t('Select All'),
@@ -308,6 +315,7 @@ function dropdownEdit() {
       optionCut(),
       optionCopy(),
       optionPaste(),
+      optionDelete(),
       optionSelectAll(),
     ],
   };
