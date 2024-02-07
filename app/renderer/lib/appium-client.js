@@ -1,28 +1,30 @@
-import _ from 'lodash';
 import Bluebird from 'bluebird';
-import { parseSource, setHtmlElementAttributes } from './webview-helpers';
-import { SCREENSHOT_INTERACTION_MODE, APP_MODE } from '../components/Inspector/shared';
+import _ from 'lodash';
 
-const { TAP, SWIPE, GESTURE } = SCREENSHOT_INTERACTION_MODE;
+import {APP_MODE, SCREENSHOT_INTERACTION_MODE} from '../components/Inspector/shared';
+import {parseSource, setHtmlElementAttributes} from './webview-helpers';
+
+const {TAP, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
 
 // Selector for the Android webview - includes the correct top and bottom boundaries
 const ANDROID_WEBVIEW_SELECTOR = 'android.webkit.WebView';
 // Selector for the iOS status bar and Safari address bar - not always present
-const IOS_TOP_CONTROLS_SELECTOR = '**/XCUIElementTypeOther[`name CONTAINS "SafariWindow"`]' +
+const IOS_TOP_CONTROLS_SELECTOR =
+  '**/XCUIElementTypeOther[`name CONTAINS "SafariWindow"`]' +
   '/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[1]';
 
 export const NATIVE_APP = 'NATIVE_APP';
 let _instance = null;
 
 export default class AppiumClient {
-  constructor (driver) {
+  constructor(driver) {
     this.driver = driver;
     this.elementCache = {};
     this.elVarCount = 0;
     this.elArrayVarCount = 0;
   }
 
-  async run (params) {
+  async run(params) {
     const {
       methodName, // Optional. Name of method being provided
       strategy, // Optional. Element locator strategy
@@ -38,8 +40,7 @@ export default class AppiumClient {
     if (methodName === 'quit') {
       try {
         await this.driver.quit();
-      } catch (ign) {
-      }
+      } catch (ign) {}
 
       _instance = null;
 
@@ -49,25 +50,42 @@ export default class AppiumClient {
         source: null,
         screenshot: null,
         windowSize: null,
-        result: null
+        result: null,
       };
     }
 
     let res = {};
     if (methodName) {
       if (elementId) {
-        console.log(`Handling client method request with method '${methodName}', args ${JSON.stringify(args)} and elementId ${elementId}`); // eslint-disable-line no-console
-        res = await this.executeMethod({elementId, methodName, args, skipRefresh, skipScreenshot, appMode});
+        // eslint-disable-next-line no-console
+        console.log(
+          `Handling client method request with method '${methodName}', ` +
+            `args ${JSON.stringify(args)} and elementId ${elementId}`,
+        );
+        res = await this.executeMethod({
+          elementId,
+          methodName,
+          args,
+          skipRefresh,
+          skipScreenshot,
+          appMode,
+        });
       } else {
-        console.log(`Handling client method request with method '${methodName}' and args ${JSON.stringify(args)}`); // eslint-disable-line no-console
+        // eslint-disable-next-line no-console
+        console.log(
+          `Handling client method request with method '${methodName}' ` +
+            `and args ${JSON.stringify(args)}`,
+        );
         res = await this.executeMethod({methodName, args, skipRefresh, skipScreenshot, appMode});
       }
     } else if (strategy && selector) {
       if (fetchArray) {
-        console.log(`Fetching elements with selector '${selector}' and strategy ${strategy}`); // eslint-disable-line no-console
+        // eslint-disable-next-line no-console
+        console.log(`Fetching elements with selector '${selector}' and strategy ${strategy}`);
         res = await this.fetchElements({strategy, selector});
       } else {
-        console.log(`Fetching an element with selector '${selector}' and strategy ${strategy}`); // eslint-disable-line no-console
+        // eslint-disable-next-line no-console
+        console.log(`Fetching an element with selector '${selector}' and strategy ${strategy}`);
         res = await this.fetchElement({strategy, selector});
       }
     }
@@ -75,7 +93,7 @@ export default class AppiumClient {
     return res;
   }
 
-  async executeMethod ({elementId, methodName, args, skipRefresh, skipScreenshot, appMode}) {
+  async executeMethod({elementId, methodName, args, skipRefresh, skipScreenshot, appMode}) {
     let cachedEl;
     let res = {};
     if (!_.isArray(args) && !_.isUndefined(args)) {
@@ -98,21 +116,22 @@ export default class AppiumClient {
     } else {
       // Specially handle the tap and swipe method
       if ([TAP, SWIPE, GESTURE].includes(methodName)) {
-        const actions = Object.keys(args[0]).map((key) => (
-          {
-            type: 'pointer',
-            id: key,
-            parameters: {pointerType: 'touch'},
-            actions: args[0][key]
-          }));
+        const actions = Object.keys(args[0]).map((key) => ({
+          type: 'pointer',
+          id: key,
+          parameters: {pointerType: 'touch'},
+          actions: args[0][key],
+        }));
         res = await this.driver.performActions(actions);
       } else if (methodName !== 'getPageSource' && methodName !== 'takeScreenshot') {
         res = await this.driver[methodName].apply(this.driver, args);
       }
     }
 
-
-    let contextUpdate = {}, sourceUpdate = {}, screenshotUpdate = {}, windowSizeUpdate = {};
+    let contextUpdate = {},
+      sourceUpdate = {},
+      screenshotUpdate = {},
+      windowSizeUpdate = {};
     if (!skipRefresh) {
       // Give the source/screenshot time to change before taking the screenshot
       await Bluebird.delay(500);
@@ -136,7 +155,7 @@ export default class AppiumClient {
     };
   }
 
-  async fetchElements ({strategy, selector}) {
+  async fetchElements({strategy, selector}) {
     const start = Date.now();
     const els = await this.driver.findElements(strategy, selector);
     const executionTime = Date.now() - start;
@@ -173,7 +192,7 @@ export default class AppiumClient {
     };
   }
 
-  async fetchElement ({strategy, selector}) {
+  async fetchElement({strategy, selector}) {
     const start = Date.now();
     let element = null;
     try {
@@ -203,21 +222,26 @@ export default class AppiumClient {
     };
   }
 
-  async getWindowUpdate () {
+  async getWindowUpdate() {
     let windowSize, windowSizeError;
-    const {client: {capabilities: {deviceScreenSize, platformName, automationName}}} = this.driver;
+    const {
+      client: {
+        capabilities: {deviceScreenSize, platformName, automationName},
+      },
+    } = this.driver;
     try {
       windowSize = await this.driver.getWindowRect();
       if (_.toLower(platformName) === 'android' && _.toLower(automationName) === 'uiautomator2') {
         // returned Android height and width can both be affected by UiAutomator2 calculations
         // we stick with device dimensions, but swap them depending on detected orientation
         // deviceScreenSize value fits portrait mode for phones, but landscape mode for tablets
-        const [width, height] = deviceScreenSize.split('x');
+        const [width, height] = deviceScreenSize.split('x').map((param) => parseInt(param, 10));
         // check if the orientation for windowSize matches orientation for deviceScreenSize
-        if ((windowSize.height >= windowSize.width) === (height >= width)) {
+        if (windowSize.height >= windowSize.width === height >= width) {
           windowSize.height = height;
           windowSize.width = width;
-        } else { // orientations do not match - swap dimensions
+        } else {
+          // orientations do not match - swap dimensions
           windowSize.height = width;
           windowSize.width = height;
         }
@@ -233,11 +257,11 @@ export default class AppiumClient {
   // If retrieval of either one fails, return the error(s)
   // Additionally, if webview is used, adjust the found element positions to fit screenshot
   // Only called while in hybrid mode
-  async getContextUpdate ({ windowSize }) {
+  async getContextUpdate({windowSize}) {
     let contexts, contextsError, currentContext, currentContextError, webviewTopOffset;
     let webviewLeftOffset = 0;
 
-    if (!await this.hasContextsCommand()) {
+    if (!(await this.hasContextsCommand())) {
       return {currentContext: null, contexts: []};
     }
 
@@ -269,9 +293,12 @@ export default class AppiumClient {
     if (currentContext !== NATIVE_APP) {
       if (isAndroid) {
         // on Android, find the root webview element and use its X and Y startpoints
-        const webview = await this.fetchElement({strategy: 'class name', selector: ANDROID_WEBVIEW_SELECTOR});
+        const webview = await this.fetchElement({
+          strategy: 'class name',
+          selector: ANDROID_WEBVIEW_SELECTOR,
+        });
         if (webview.el) {
-          const { x, y } = await webview.el.getRect();
+          const {x, y} = await webview.el.getRect();
           webviewTopOffset = y;
           webviewLeftOffset = x;
         } else {
@@ -286,9 +313,12 @@ export default class AppiumClient {
         }
       } else if (this.driver.client.isIOS) {
         // on iOS, find the top status bar and address bar and use its Y endpoint
-        const topBar = await this.fetchElement({strategy: '-ios class chain', selector: IOS_TOP_CONTROLS_SELECTOR});
+        const topBar = await this.fetchElement({
+          strategy: '-ios class chain',
+          selector: IOS_TOP_CONTROLS_SELECTOR,
+        });
         if (topBar.el) {
-          const { y, height } = await topBar.el.getRect();
+          const {y, height} = await topBar.el.getRect();
           webviewTopOffset = y + height;
         }
         // in landscape mode, there is empty space on both sides (at default zoom level), so add offset for that too
@@ -322,7 +352,7 @@ export default class AppiumClient {
     return {contexts, contextsError, currentContext, currentContextError};
   }
 
-  async getSourceUpdate () {
+  async getSourceUpdate() {
     try {
       const source = parseSource(await this.driver.getPageSource());
       return {source};
@@ -331,7 +361,7 @@ export default class AppiumClient {
     }
   }
 
-  async getScreenshotUpdate () {
+  async getScreenshotUpdate() {
     try {
       const screenshot = await this.driver.takeScreenshot();
       return {screenshot};
@@ -346,12 +376,11 @@ export default class AppiumClient {
    * @returns {boolean} True if the app under test supports contexts command.
    *
    */
-  async hasContextsCommand () {
+  async hasContextsCommand() {
     try {
       await this.driver.getContexts();
       return true;
-    } catch (ign) {
-    }
+    } catch (ign) {}
 
     // If the app under test returns non JSON format response
     return false;
@@ -370,7 +399,7 @@ export default class AppiumClient {
    *   handle?: string;        // the id of the active page in the webview of Android
    * }[];
    */
-  parseAndroidContexts (contexts) {
+  parseAndroidContexts(contexts) {
     const parsedWebviews = [];
 
     // Walk over every context and add all webviews into the parsedWebviews array
@@ -388,28 +417,31 @@ export default class AppiumClient {
           return;
         }
 
-        pages.filter((page) => {
-          // The description is a string and:
-          // 1. can contain a JSON string for webviews which can contain
-          //    an `attached`-value telling if the webview is active
-          // 2. can be an empty string, this is most of the times for tabs
-          //    in Chrome
-          const description = _.has(page, 'description') ? page.description : '';
-          let descriptionJSON = {attached: false};
-          try {
-            descriptionJSON = JSON.parse(page.description);
-          } catch (ign) {}
+        pages
+          .filter((page) => {
+            // The description is a string and:
+            // 1. can contain a JSON string for webviews which can contain
+            //    an `attached`-value telling if the webview is active
+            // 2. can be an empty string, this is most of the times for tabs
+            //    in Chrome
+            const description = _.has(page, 'description') ? page.description : '';
+            let descriptionJSON = {attached: false};
+            try {
+              descriptionJSON = JSON.parse(page.description);
+            } catch (ign) {}
 
-          // You can have multiple `type` of pages, like service workers
-          // We need to have pages with or 1. an attached view or 2. with an empty description
-          return page.type === 'page' && (description === '' || descriptionJSON.attached);
-        })
+            // You can have multiple `type` of pages, like service workers
+            // We need to have pages with or 1. an attached view or 2. with an empty description
+            return page.type === 'page' && (description === '' || descriptionJSON.attached);
+          })
           .map((page) => {
             parsedWebviews.push({
               id: webviewName,
               ...(page && _.has(page, 'title') ? {title: page.title} : {}),
               ...(page && _.has(page, 'url') ? {url: page.url} : {}),
-              ...(page && _.has(info, 'Android-Package') ? {packageName: info['Android-Package']} : {}),
+              ...(page && _.has(info, 'Android-Package')
+                ? {packageName: info['Android-Package']}
+                : {}),
               ...(page && _.has(page, 'id') ? {handle: page.id} : {}),
             });
           });

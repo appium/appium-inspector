@@ -1,4 +1,4 @@
-function makeBabelConfig (electronVersion) {
+function makeBabelConfig(electronVersion) {
   return (api) => {
     api.cache(true);
     return {
@@ -12,10 +12,10 @@ function makeBabelConfig (electronVersion) {
         [
           '@babel/preset-env',
           {
-            targets: { electron: electronVersion },
+            targets: {electron: electronVersion},
             useBuiltIns: 'usage',
             corejs: 2,
-          }
+          },
         ],
         ['@babel/preset-react'],
       ],

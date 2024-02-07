@@ -132,7 +132,7 @@
   "Start this Kind of Session with Code": "Запуск цього сеансу за допомогою коду",
   "Clear Actions": "Очистити дії",
   "Close Recorder": "Закрити записувач",
-  "Perform some actions to see code show up here": "Виконайте деякі дії, щоб побачити тут зʼявився код",
+  "enableRecordingAndPerformActions": "Увімкніть запис у заголовку програми, а потім виконайте деякі дії, щоб тут з’явився код",
   "Recorder": "Записувач",
   "Attribute": "Атрибут",
   "Value": "Значення",

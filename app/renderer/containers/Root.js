@@ -1,12 +1,13 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
-import Routes from '../routes';
+import {Provider} from 'react-redux';
+import {MemoryRouter} from 'react-router-dom';
 
-const Root = ({ store }) => (
+import AllRoutes from '../routes';
+
+const Root = ({store}) => (
   <Provider store={store}>
     <MemoryRouter initialEntries={['/']}>
-      <Routes />
+      <AllRoutes />
     </MemoryRouter>
   </Provider>
 );
