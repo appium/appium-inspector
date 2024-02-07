@@ -37,18 +37,14 @@ function optionAbout() {
 function optionCheckForUpdates() {
   return {
     label: t('Check for updates'),
-    click() {
-      checkNewUpdates(true);
-    },
+    click: () => checkNewUpdates(true),
   };
 }
 
 function optionCheckForUpdatesOther() {
   return {
     label: '&' + t('Check for updates'),
-    click() {
-      checkNewUpdates(true);
-    },
+    click: () => checkNewUpdates(true),
   };
 }
 
@@ -260,36 +256,28 @@ function optionBringAllToFront() {
 function optionInspectorDocumentation() {
   return {
     label: t('Inspector Documentation'),
-    click() {
-      shell.openExternal('https://github.com/appium/appium-inspector');
-    },
+    click: () => shell.openExternal('https://github.com/appium/appium-inspector'),
   };
 }
 
 function optionAppiumDocumentation() {
   return {
     label: t('Appium Documentation'),
-    click() {
-      shell.openExternal('https://appium.io');
-    },
+    click: () => shell.openExternal('https://appium.io'),
   };
 }
 
 function optionOpenIssues() {
   return {
     label: t('Search Issues'),
-    click() {
-      shell.openExternal('https://github.com/appium/appium-inspector/issues');
-    },
+    click: () => shell.openExternal('https://github.com/appium/appium-inspector/issues'),
   };
 }
 
 function optionImproveTranslations() {
   return {
     label: t('Add Or Improve Translations'),
-    click() {
-      shell.openExternal('https://crowdin.com/project/appium-desktop');
-    },
+    click: () => shell.openExternal('https://crowdin.com/project/appium-desktop'),
   };
 }
 
