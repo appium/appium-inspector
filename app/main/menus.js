@@ -36,14 +36,14 @@ function optionAbout() {
 
 function optionCheckForUpdates() {
   return {
-    label: t('Check for updates'),
+    label: t('Check for Updates…'),
     click: () => checkNewUpdates(true),
   };
 }
 
 function optionCheckForUpdatesOther() {
   return {
-    label: '&' + t('Check for updates'),
+    label: '&' + t('Check for Updates…'),
     click: () => checkNewUpdates(true),
   };
 }
@@ -78,9 +78,23 @@ function optionQuit() {
 
 function optionNewWindow() {
   return {
-    label: t('New Session Window…'),
+    label: t('New Window'),
     accelerator: 'CmdOrCtrl+N',
     click: launchNewSessionWindow,
+  };
+}
+
+function optionCloseWindow() {
+  return {
+    label: t('Close Window'),
+    role: 'close',
+  };
+}
+
+function optionCloseWindowOther() {
+  return {
+    label: '&' + t('Close Window'),
+    role: 'close',
   };
 }
 
@@ -255,20 +269,6 @@ function optionZoom() {
   };
 }
 
-function optionCloseWindow() {
-  return {
-    label: t('Close Window'),
-    role: 'close',
-  };
-}
-
-function optionCloseWindowOther() {
-  return {
-    label: '&' + t('Close Window'),
-    role: 'close',
-  };
-}
-
 function optionBringAllToFront() {
   return {
     label: t('Bring All to Front'),
@@ -279,7 +279,7 @@ function optionBringAllToFront() {
 function optionInspectorDocumentation() {
   return {
     label: t('Inspector Documentation'),
-    click: () => shell.openExternal('https://github.com/appium/appium-inspector'),
+    click: () => shell.openExternal('https://appium.github.io/appium-inspector'),
   };
 }
 
@@ -290,16 +290,23 @@ function optionAppiumDocumentation() {
   };
 }
 
-function optionOpenIssues() {
+function optionAppiumForum() {
   return {
-    label: t('Search Issues'),
+    label: t('Appium Discussion Forum'),
+    click: () => shell.openExternal('https://discuss.appium.io'),
+  };
+}
+
+function optionReportIssues() {
+  return {
+    label: t('Report Issues'),
     click: () => shell.openExternal('https://github.com/appium/appium-inspector/issues'),
   };
 }
 
 function optionImproveTranslations() {
   return {
-    label: t('Add Or Improve Translations'),
+    label: t('Improve Translations'),
     click: () => shell.openExternal('https://crowdin.com/project/appium-desktop'),
   };
 }
@@ -376,13 +383,15 @@ function dropdownMacWindow() {
   };
 }
 
-function dropdownMacHelp() {
+function dropdownHelp() {
   return {
     label: t('Help'),
     submenu: [
       optionInspectorDocumentation(),
       optionAppiumDocumentation(),
-      optionOpenIssues(),
+      optionAppiumForum(),
+      separator(),
+      optionReportIssues(),
       optionImproveTranslations(),
     ],
   };
@@ -430,25 +439,20 @@ function dropdownOtherView(isDev) {
   };
 }
 
-function dropdownOtherHelp() {
-  // just the same as mac menus for now since we don't have any hotkeys for this menu
-  return dropdownMacHelp();
-}
-
 menuTemplates.mac = (mainWindow, isDev) => [
   dropdownMacApp(),
   dropdownMacFile(mainWindow),
   dropdownEdit(),
   dropdownMacView(isDev),
   dropdownMacWindow(),
-  dropdownMacHelp(),
+  dropdownHelp(),
 ];
 
 menuTemplates.other = (mainWindow, isDev) => [
   dropdownOtherFile(mainWindow),
   dropdownEdit(),
   dropdownOtherView(isDev),
-  dropdownOtherHelp(),
+  dropdownHelp(),
 ];
 
 export function rebuildMenus(mainWindow, isDev) {
