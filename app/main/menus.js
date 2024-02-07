@@ -298,10 +298,6 @@ const buildMenuTemplate = () => [
 ];
 
 export function rebuildMenus(localMainWindow, localIsDev) {
-  if (!localMainWindow) {
-    return;
-  }
-
   mainWindow = localMainWindow;
   isMac = process.platform === 'darwin';
   isDev = localIsDev;
