@@ -84,7 +84,7 @@ export function setupMainWindow({splashUrl, mainUrl, isDev}) {
   });
 
   i18n.on('languageChanged', async (languageCode) => {
-    rebuildMenus(null, isDev);
+    rebuildMenus(mainWindow, isDev);
     await settings.set('PREFERRED_LANGUAGE', languageCode);
     webContents.getAllWebContents().forEach((wc) => {
       wc.send('appium-language-changed', {
