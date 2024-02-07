@@ -362,11 +362,11 @@ function getShowAppInfoClickAction() {
   };
 }
 
-menuTemplates.mac = ({mainWindow, shouldShowFileMenu}) => [
+menuTemplates.mac = (mainWindow) => [
   dropdownMacAppiumInspector(),
-  ...(shouldShowFileMenu ? [dropdownMacFile({mainWindow})] : []),
+  dropdownMacFile(mainWindow),
   dropdownMacEdit(),
-  dropdownMacView({mainWindow}),
+  dropdownMacView(mainWindow),
   dropdownMacWindow(),
   dropdownMacHelp(),
 ];
@@ -392,8 +392,8 @@ async function saveAsCallback(mainWindow) {
   }
 }
 
-function otherMenuFile({mainWindow, shouldShowFileMenu}) {
-  const fileSavingOperations = [
+function otherMenuFile(mainWindow) {
+  let fileSubmenu = [
     {
       label: t('New Session Window…'),
       accelerator: 'Ctrl+N',
@@ -414,10 +414,6 @@ function otherMenuFile({mainWindow, shouldShowFileMenu}) {
       accelerator: 'Ctrl+Shift+S',
       click: () => saveAsCallback(mainWindow),
     },
-  ];
-
-  let fileSubmenu = [
-    ...(shouldShowFileMenu ? fileSavingOperations : []),
     {
       label: '&' + t('About Appium'),
       click: getShowAppInfoClickAction(),
@@ -450,7 +446,7 @@ function otherMenuFile({mainWindow, shouldShowFileMenu}) {
   };
 }
 
-function otherMenuView({mainWindow}) {
+function otherMenuView(mainWindow) {
   const submenu = [];
   submenu.push({
     label: t('Toggle &Full Screen'),
@@ -493,23 +489,23 @@ function otherMenuHelp() {
   return dropdownMacHelp();
 }
 
-menuTemplates.other = ({mainWindow, shouldShowFileMenu}) => [
-  otherMenuFile({mainWindow, shouldShowFileMenu}),
-  otherMenuView({mainWindow}),
+menuTemplates.other = (mainWindow) => [
+  otherMenuFile(mainWindow),
+  otherMenuView(mainWindow),
   otherMenuHelp(),
 ];
 
-export function rebuildMenus(mainWindow, shouldShowFileMenu) {
+export function rebuildMenus(mainWindow) {
   if (!mainWindow) {
     return;
   }
 
   if (config.platform === 'darwin') {
-    const template = menuTemplates.mac({mainWindow, shouldShowFileMenu});
+    const template = menuTemplates.mac(mainWindow);
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
   } else {
-    const template = menuTemplates.other({mainWindow, shouldShowFileMenu});
+    const template = menuTemplates.other(mainWindow);
     const menu = Menu.buildFromTemplate(template);
     mainWindow.setMenu(menu);
   }
