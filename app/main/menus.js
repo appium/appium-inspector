@@ -206,24 +206,19 @@ const optionImproveTranslations = () => ({
   click: () => shell.openExternal('https://crowdin.com/project/appium-desktop'),
 });
 
-const dropdownApp = () => {
-  if (!isMac) {
-    return; // macOS only
-  }
-  return {
-    label: t('appiumInspector'),
-    submenu: [
-      optionAbout(),
-      optionCheckForUpdates(),
-      separator,
-      optionHide(),
-      optionHideOthers(),
-      optionShowAll(),
-      separator,
-      optionQuit(),
-    ],
-  };
-};
+const dropdownApp = () => ({
+  label: t('appiumInspector'),
+  submenu: [
+    optionAbout(),
+    optionCheckForUpdates(),
+    separator,
+    optionHide(),
+    optionHideOthers(),
+    optionShowAll(),
+    separator,
+    optionQuit(),
+  ],
+});
 
 const dropdownFile = () => {
   const submenu = [optionNewWindow(), optionCloseWindow(), separator, optionOpen(), optionSaveAs()];
@@ -276,15 +271,10 @@ const dropdownView = () => {
   };
 };
 
-const dropdownWindow = () => {
-  if (!isMac) {
-    return; // macOS only
-  }
-  return {
-    label: t('Window'),
-    submenu: [optionMinimize(), optionZoom(), separator, optionBringAllToFront()],
-  };
-};
+const dropdownWindow = () => ({
+  label: t('Window'),
+  submenu: [optionMinimize(), optionZoom(), separator, optionBringAllToFront()],
+});
 
 const dropdownHelp = () => ({
   label: t('Help'),
@@ -299,11 +289,11 @@ const dropdownHelp = () => ({
 });
 
 const buildMenuTemplate = () => [
-  dropdownApp(),
+  ... isMac ? [dropdownApp()] : [],
   dropdownFile(),
   dropdownEdit(),
   dropdownView(),
-  dropdownWindow(),
+  ... isMac ? [dropdownWindow()] : [],
   dropdownHelp(),
 ];
 
