@@ -20,7 +20,7 @@ function separator() {
 
 function optionAbout() {
   return {
-    label: t('About Appium'),
+    label: t('About Appium Inspector'),
     click: () => {
       dialog.showMessageBox({
         title: t('appiumInspector'),
@@ -54,34 +54,29 @@ function optionCheckForUpdatesOther() {
 
 function optionHide() {
   return {
-    label: t('Hide Appium'),
-    accelerator: 'Command+H',
-    selector: 'hide:',
+    label: t('Hide Appium Inspector'),
+    role: 'hide',
   };
 }
 
 function optionHideOthers() {
   return {
     label: t('Hide Others'),
-    accelerator: 'Command+Shift+H',
-    selector: 'hideOtherApplications:',
+    role: 'hideOthers',
   };
 }
 
 function optionShowAll() {
   return {
     label: t('Show All'),
-    selector: 'unhideAllApplications:',
+    role: 'unhide',
   };
 }
 
 function optionQuit() {
   return {
-    label: t('Quit'),
-    accelerator: 'Command+Q',
-    click() {
-      app.quit();
-    },
+    label: t('Quit Appium Inspector'),
+    role: 'quit',
   };
 }
 
@@ -173,108 +168,84 @@ function optionSaveAsOther(mainWindow) {
 function optionUndo() {
   return {
     label: t('Undo'),
-    accelerator: 'Command+Z',
-    selector: 'undo:',
+    role: 'undo',
   };
 }
 
 function optionRedo() {
   return {
     label: t('Redo'),
-    accelerator: 'Shift+Command+Z',
-    selector: 'redo:',
+    role: 'redo',
   };
 }
 
 function optionCut() {
   return {
     label: t('Cut'),
-    accelerator: 'Command+X',
-    selector: 'cut:',
+    role: 'cut',
   };
 }
 
 function optionCopy() {
   return {
     label: t('Copy'),
-    accelerator: 'Command+C',
-    selector: 'copy:',
+    role: 'copy',
   };
 }
 
 function optionPaste() {
   return {
     label: t('Paste'),
-    accelerator: 'Command+V',
-    selector: 'paste:',
+    role: 'paste',
   };
 }
 
 function optionSelectAll() {
   return {
     label: t('Select All'),
-    accelerator: 'Command+A',
-    selector: 'selectAll:',
+    role: 'selectAll',
   };
 }
 
-function optionReload(mainWindow) {
+function optionReload() {
   return {
     label: t('Reload'),
-    accelerator: 'Command+R',
-    click() {
-      mainWindow.webContents.reload();
-    },
+    role: 'reload',
   };
 }
 
-function optionReloadOther(mainWindow) {
+function optionReloadOther() {
   return {
     label: '&' + t('Reload'),
-    accelerator: 'Ctrl+R',
-    click() {
-      mainWindow.webContents.reload();
-    },
+    role: 'reload',
   };
 }
 
-function optionToggleDevTools(mainWindow) {
+function optionToggleDevTools() {
   return {
     label: t('Toggle Developer Tools'),
-    accelerator: 'Alt+Command+I',
-    click() {
-      mainWindow.toggleDevTools();
-    },
+    role: 'toggleDevTools',
   };
 }
 
-function optionToggleDevToolsOther(mainWindow) {
+function optionToggleDevToolsOther() {
   return {
     label: t('Toggle &Developer Tools'),
-    accelerator: 'Alt+Ctrl+I',
-    click() {
-      mainWindow.toggleDevTools();
-    },
+    role: 'toggleDevTools',
   };
 }
 
-function optionToggleFullscreen(mainWindow) {
+function optionToggleFullscreen() {
   return {
     label: t('Toggle Full Screen'),
-    accelerator: 'Ctrl+Command+F',
-    click() {
-      mainWindow.setFullScreen(!mainWindow.isFullScreen());
-    },
+    role: 'togglefullscreen',
   };
 }
 
-function optionToggleFullscreenOther(mainWindow) {
+function optionToggleFullscreenOther() {
   return {
     label: t('Toggle &Full Screen'),
-    accelerator: 'F11',
-    click() {
-      mainWindow.setFullScreen(!mainWindow.isFullScreen());
-    },
+    role: 'togglefullscreen',
   };
 }
 
@@ -293,33 +264,28 @@ function optionLanguages() {
 function optionMinimize() {
   return {
     label: t('Minimize'),
-    accelerator: 'Command+M',
-    selector: 'performMiniaturize:',
+    role: 'minimize',
   };
 }
 
 function optionClose() {
   return {
-    label: t('Close'),
-    accelerator: 'Command+W',
-    selector: 'performClose:',
+    label: t('Close Window'),
+    role: 'close',
   };
 }
 
-function optionCloseOther(mainWindow) {
+function optionCloseOther() {
   return {
-    label: '&' + t('Close'),
-    accelerator: 'Ctrl+W',
-    click() {
-      mainWindow.close();
-    },
+    label: '&' + t('Close Window'),
+    role: 'close',
   };
 }
 
 function optionBringAllToFront() {
   return {
     label: t('Bring All to Front'),
-    selector: 'arrangeInFront:',
+    role: 'front',
   };
 }
 
@@ -402,13 +368,13 @@ function dropdownMacEdit() {
   };
 }
 
-function dropdownMacView(mainWindow) {
+function dropdownMacView() {
   const submenu = [];
   if (process.env.NODE_ENV === 'development') {
-    submenu.push(optionReload(mainWindow));
-    submenu.push(optionToggleDevTools(mainWindow));
+    submenu.push(optionReload());
+    submenu.push(optionToggleDevTools());
   }
-  submenu.push(optionToggleFullscreen(mainWindow));
+  submenu.push(optionToggleFullscreen());
   submenu.push(optionLanguages());
 
   return {
@@ -449,7 +415,7 @@ function dropdownOtherFile(mainWindow) {
     optionSaveAsOther(mainWindow),
     optionAbout(),
     separator(),
-    optionCloseOther(mainWindow),
+    optionCloseOther(),
   ];
 
   // If it's Windows, add a 'Check for Updates' menu option
@@ -463,14 +429,14 @@ function dropdownOtherFile(mainWindow) {
   };
 }
 
-function dropdownOtherView(mainWindow) {
+function dropdownOtherView() {
   const submenu = [];
-  submenu.push(optionToggleFullscreenOther(mainWindow));
+  submenu.push(optionToggleFullscreenOther());
   submenu.push(optionLanguages());
 
   if (process.env.NODE_ENV === 'development') {
-    submenu.push(optionReloadOther(mainWindow));
-    submenu.push(optionToggleDevToolsOther(mainWindow));
+    submenu.push(optionReloadOther());
+    submenu.push(optionToggleDevToolsOther());
   }
 
   return {
@@ -488,14 +454,14 @@ menuTemplates.mac = (mainWindow) => [
   dropdownMacAppiumInspector(),
   dropdownMacFile(mainWindow),
   dropdownMacEdit(),
-  dropdownMacView(mainWindow),
+  dropdownMacView(),
   dropdownMacWindow(),
   dropdownMacHelp(),
 ];
 
 menuTemplates.other = (mainWindow) => [
   dropdownOtherFile(mainWindow),
-  dropdownOtherView(mainWindow),
+  dropdownOtherView(),
   dropdownOtherHelp(),
 ];
 
