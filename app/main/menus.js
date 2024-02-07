@@ -298,7 +298,7 @@ function dropdownMacFile(mainWindow) {
   };
 }
 
-function dropdownMacEdit() {
+function dropdownEdit() {
   return {
     label: t('Edit'),
     submenu: [
@@ -397,7 +397,7 @@ function dropdownOtherHelp() {
 menuTemplates.mac = (mainWindow) => [
   dropdownMacApp(),
   dropdownMacFile(mainWindow),
-  dropdownMacEdit(),
+  dropdownEdit(),
   dropdownMacView(),
   dropdownMacWindow(),
   dropdownMacHelp(),
@@ -405,6 +405,7 @@ menuTemplates.mac = (mainWindow) => [
 
 menuTemplates.other = (mainWindow) => [
   dropdownOtherFile(mainWindow),
+  dropdownEdit(),
   dropdownOtherView(),
   dropdownOtherHelp(),
 ];
