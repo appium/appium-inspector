@@ -360,11 +360,7 @@ function dropdownMacView(isDev) {
   ];
 
   if (isDev) {
-    submenu.push(...[
-      separator(),
-      optionReload(),
-      optionToggleDevTools(),
-    ]);
+    submenu.push(...[separator(), optionReload(), optionToggleDevTools()]);
   }
 
   return {
@@ -376,12 +372,7 @@ function dropdownMacView(isDev) {
 function dropdownMacWindow() {
   return {
     label: t('Window'),
-    submenu: [
-      optionMinimize(),
-      optionZoom(),
-      separator(),
-      optionBringAllToFront(),
-    ],
+    submenu: [optionMinimize(), optionZoom(), separator(), optionBringAllToFront()],
   };
 }
 
@@ -430,11 +421,7 @@ function dropdownOtherView(isDev) {
   ];
 
   if (isDev) {
-    submenu.push(...[
-      separator(),
-      optionReloadOther(),
-      optionToggleDevToolsOther(),
-    ]);
+    submenu.push(...[separator(), optionReloadOther(), optionToggleDevToolsOther()]);
   }
 
   return {
