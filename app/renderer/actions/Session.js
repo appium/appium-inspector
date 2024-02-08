@@ -347,7 +347,7 @@ export function newSession(caps, attachSessId = null) {
         username = session.server.lambdatest.username || process.env.LAMBDATEST_USERNAME;
         if (desiredCapabilities.hasOwnProperty.call(desiredCapabilities, 'lt:options')) {
           desiredCapabilities['lt:options'].source = 'appiumdesktop';
-          if (desiredCapabilities['lt:options'].isRealMobile === undefined || desiredCapabilities['lt:options'].isRealMobile){
+          if (desiredCapabilities['lt:options'].isRealMobile === undefined || desiredCapabilities['lt:options'].isRealMobile) {
             desiredCapabilities['lt:options'].isRealMobile = true;
           }
           if (session.server.advanced.useProxy) {
@@ -357,7 +357,7 @@ export function newSession(caps, attachSessId = null) {
           }
         } else {
           desiredCapabilities['lambdatest:source'] = 'appiumdesktop';
-          if (desiredCapabilities['lambdatest:isRealMobile'] === undefined || desiredCapabilities['lambdatest:isRealMobile']){
+          if (desiredCapabilities['lambdatest:isRealMobile'] === undefined || desiredCapabilities['lambdatest:isRealMobile']) {
             desiredCapabilities['lambdatest:isRealMobile'] = true;
           }
           if (session.server.advanced.useProxy) {
