@@ -1,38 +1,50 @@
-import React, { Component } from 'react';
-import { Form, Input, Row, Col } from 'antd';
-import { INPUT } from '../../../../gui-common/components/AntdTypes';
+import {Col, Form, Input, Row} from 'antd';
+import React from 'react';
 
-const FormItem = Form.Item;
+import {INPUT} from '../AntdTypes';
 
-export default class ServerTabBrowserstack extends Component {
-
-  render () {
-
-    const {server, setServerParam, t} = this.props;
-
-    const browserstackUsernamePlaceholder = process.env.BROWSERSTACK_USERNAME ?
-      t('usingDataFoundIn', {environmentVariable: 'BROWSERSTACK_USERNAME'}) : t('yourUsername');
-
-    const browserstackAccessKeyPlaceholder = process.env.BROWSERSTACK_ACCESS_KEY ?
-      t('usingDataFoundIn', {environmentVariable: 'BROWSERSTACK_ACCESS_KEY'}) : t('yourAccessKey');
-
-    return <Form>
-      <Row gutter={8}>
-        <Col span={12}>
-          <FormItem>
-            <Input id='browserstackUsername' placeholder={browserstackUsernamePlaceholder} addonBefore={t('BrowserStack Username')} value={server.browserstack.username}
-              onChange={(e) => setServerParam('username', e.target.value)} />
-          </FormItem>
-        </Col>
-      </Row>
-      <Row gutter={8}>
-        <Col span={12}>
-          <FormItem>
-            <Input id='browserstackPassword' type={INPUT.PASSWORD} placeholder={browserstackAccessKeyPlaceholder} addonBefore={t('BrowserStack Access Key')}
-              value={server.browserstack.accessKey} onChange={(e) => setServerParam('accessKey', e.target.value)} />
-          </FormItem>
-        </Col>
-      </Row>
-    </Form>;
+const browserstackUsernamePlaceholder = (t) => {
+  if (process.env.BROWSERSTACK_USERNAME) {
+    return t('usingDataFoundIn', {environmentVariable: 'BROWSERSTACK_USERNAME'});
   }
-}
+  return t('yourUsername');
+};
+
+const browserstackAccessKeyPlaceholder = (t) => {
+  if (process.env.BROWSERSTACK_ACCESS_KEY) {
+    return t('usingDataFoundIn', {environmentVariable: 'BROWSERSTACK_ACCESS_KEY'});
+  }
+  return t('yourAccessKey');
+};
+
+const ServerTabBrowserstack = ({server, setServerParam, t}) => (
+  <Form>
+    <Row gutter={8}>
+      <Col span={12}>
+        <Form.Item>
+          <Input
+            id="browserstackUsername"
+            placeholder={browserstackUsernamePlaceholder(t)}
+            addonBefore={t('BrowserStack Username')}
+            value={server.browserstack.username}
+            onChange={(e) => setServerParam('username', e.target.value)}
+          />
+        </Form.Item>
+      </Col>
+      <Col span={12}>
+        <Form.Item>
+          <Input
+            id="browserstackPassword"
+            type={INPUT.PASSWORD}
+            placeholder={browserstackAccessKeyPlaceholder(t)}
+            addonBefore={t('BrowserStack Access Key')}
+            value={server.browserstack.accessKey}
+            onChange={(e) => setServerParam('accessKey', e.target.value)}
+          />
+        </Form.Item>
+      </Col>
+    </Row>
+  </Form>
+);
+
+export default ServerTabBrowserstack;

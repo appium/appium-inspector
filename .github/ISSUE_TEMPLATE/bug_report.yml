@@ -1,0 +1,64 @@
+name: 🐞 Bug Report
+description: Create a new bug report
+title: 'bug: <title>'
+labels: [bug]
+body:
+  - type: checkboxes
+    attributes:
+      label: Is this an issue specifically with Appium Inspector?
+      description: Appium Inspector is a wrapper around Appium. If you are having trouble running tests, it is much more likely that your problem is caused by Appium, not Appium Inspector, and should be reported in [the Appium repository](https://github.com/appium/appium/issues) instead.
+      options:
+        - label: I have verified that my issue does _not_ occur with Appium, and should be investigated as an Appium Inspector issue
+          required: true
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: 'Please [search :mag: the issues](https://github.com/appium/appium-inspector/issues) to check if this bug has already been reported.'
+      options:
+        - label: I have searched the existing issues
+          required: true
+  - type: textarea
+    attributes:
+      label: Current Behavior
+      description: Describe the problem you are experiencing. Screenshots are welcome.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: Describe what you expect to happen instead.
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Operating System
+      description: What operating system are you using?
+      options:
+        - Mac
+        - Windows
+        - Linux
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Appium Inspector Version
+      description: What version of Appium Inspector are you using?
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Appium Version
+      description: |
+        What version of Appium are you using?
+        Note that this may not be relevant, depending on your issue.
+      placeholder: Output of `appium --version`
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Further Information
+      description: |
+        Add Appium logs, links, references, or anything else that will give us more context about the issue you are encountering!
+        _Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in._
+    validations:
+      required: false

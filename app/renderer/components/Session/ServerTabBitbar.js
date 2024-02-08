@@ -1,26 +1,32 @@
-import React, { Component } from 'react';
-import { Form, Input, Row, Col } from 'antd';
-import { INPUT } from '../../../../gui-common/components/AntdTypes';
+import {Col, Form, Input, Row} from 'antd';
+import React from 'react';
 
-const FormItem = Form.Item;
+import {INPUT} from '../AntdTypes';
 
-export default class ServerTabBitbar extends Component {
-
-  render () {
-    const { server, setServerParam, t } = this.props;
-
-    const bitbarApiKeyPlaceholder = process.env.BITBAR_API_KEY ?
-      t('usingDataFoundIn', {environmentVariable: 'BITBAR_API_KEY'}) : t('yourApiKey');
-
-    return <Form>
-      <Row gutter={8}>
-        <Col span={12}>
-          <FormItem>
-            <Input id='bitbarApiKey' type={INPUT.PASSWORD} placeholder={bitbarApiKeyPlaceholder} addonBefore={t('Bitbar API Key')}
-              value={server.bitbar.apiKey} onChange={(e) => setServerParam('apiKey', e.target.value)} />
-          </FormItem>
-        </Col>
-      </Row>
-    </Form>;
+const bitbarApiKeyPlaceholder = (t) => {
+  if (process.env.BITBAR_API_KEY) {
+    return t('usingDataFoundIn', {environmentVariable: 'BITBAR_API_KEY'});
   }
-}
+  return t('yourApiKey');
+};
+
+const ServerTabBitbar = ({server, setServerParam, t}) => (
+  <Form>
+    <Row gutter={8}>
+      <Col span={24}>
+        <Form.Item>
+          <Input
+            id="bitbarApiKey"
+            type={INPUT.PASSWORD}
+            placeholder={bitbarApiKeyPlaceholder(t)}
+            addonBefore={t('Bitbar API Key')}
+            value={server.bitbar.apiKey}
+            onChange={(e) => setServerParam('apiKey', e.target.value)}
+          />
+        </Form.Item>
+      </Col>
+    </Row>
+  </Form>
+);
+
+export default ServerTabBitbar;

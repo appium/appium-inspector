@@ -1,0 +1,51 @@
+INHERIT: ./node_modules/@appium/docutils/base-mkdocs.yml
+site_name: Appium Inspector
+repo_url: https://github.com/appium/appium-inspector
+repo_name: appium/appium-inspector
+copyright: Copyright &copy; 2012 OpenJS Foundation - <a href="#__consent">Change cookie settings</a>
+site_url: https://appium.github.io/appium-inspector
+edit_uri: edit/main/docs
+site_description: Appium Inspector Documentation
+docs_dir: docs
+site_dir: site
+
+theme:
+  logo: assets/images/icon.png
+  favicon: assets/images/icon.png
+  custom_dir: docs/overrides
+extra_css:
+  - assets/stylesheets/extra.css
+
+extra:
+  homepage: /appium-inspector
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/AppiumDevs
+
+nav:
+  - index.md
+  - overview.md
+  - Quickstart:
+      - quickstart/index.md
+      - quickstart/requirements.md
+      - quickstart/installation.md
+      - quickstart/starting-a-session.md
+  - Session Builder:
+      - session-builder/index.md
+      - session-builder/server-details.md
+      - session-builder/capability-builder.md
+      - session-builder/saved-capability-sets.md
+      - session-builder/attach-to-session.md
+  - Session Inspector:
+      - session-inspector/index.md
+      - session-inspector/header.md
+      - session-inspector/screenshot.md
+      - session-inspector/source.md
+      - session-inspector/commands.md
+      - session-inspector/gestures.md
+      - session-inspector/recorder.md
+      - session-inspector/session-info.md
+  - troubleshooting.md
+  - contributing.md

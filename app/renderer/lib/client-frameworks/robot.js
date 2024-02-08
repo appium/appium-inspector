@@ -1,333 +1,311 @@
-/* eslint no-useless-escape: 0 */
+import _ from 'lodash';
 
 import Framework from './framework';
 
 class RobotFramework extends Framework {
-
-  get language () {
-    //TODO: Make https://highlightjs.org/ use robot syntax
+  get language() {
+    // Robot highlighting requires highlightjs-robot package
     return 'python';
   }
 
-  get getCapsVariables () {
-    return Object.keys(this.caps).map((k) => `\$\{${k}\}    ${this.getPythonVal(this.caps[k])}`).join('\n');
-  }
-
-  getPythonVal (jsonVal) {
+  getRobotVal(jsonVal) {
     if (typeof jsonVal === 'boolean') {
-      return jsonVal ? 'True' : 'False';
+      return jsonVal ? '${True}' : '${False}';
+    } else if (typeof jsonVal === 'number') {
+      return `$\{${jsonVal}}`;
     }
     return jsonVal;
   }
 
-  wrapWithBoilerplate (code) {
-    return `# This sample code uses the Appium robot client
+  wrapWithBoilerplate(code) {
+    const capsParams = _.map(this.caps, (v, k) => `${k}=${this.getRobotVal(v)}`);
+    return `# This sample code supports Appium Robot client >=2
 # pip install robotframework-appiumlibrary
-# Then you can paste this into a file and simply run with robot
+# Then you can paste this into a file and simply run with Robot
 #
-#  more keywords on: http://serhatbolsu.github.io/robotframework-appiumlibrary/AppiumLibrary.html
+# Find keywords at: http://serhatbolsu.github.io/robotframework-appiumlibrary/AppiumLibrary.html
+#
+# If your tests fails saying 'did not match any elements' consider using 'wait activity' or
+# 'wait until page contains element' before a click command
 
 *** Settings ***
 Library           AppiumLibrary
-
-*** Variables ***
-$\{REMOTE_URL\}   ${this.serverUrl}
-${this.getCapsVariables}
+Test Teardown     Close Application
 
 *** Test Cases ***
-Test case name
-${this.indent(this.getApplicationInitialization(), 4)}
+Test Case Name
+    Open Application    ${this.serverUrl}    ${capsParams.join('    ')}
 ${this.indent(code, 4)}
-
-*** Test Teardown ***
-    Quit Application
-
-*** Suite Teardown ***
-    Close Application`;
+`;
   }
 
-  codeFor_findAndAssign (strategy, locator/*, localVar, isArray*/) {
+  addComment(comment) {
+    return `# ${comment}`;
+  }
+
+  codeFor_findAndAssign(strategy, locator, localVar /*, isArray*/) {
     let suffixMap = {
       xpath: 'xpath',
       'accessibility id': 'accessibility_id',
-      'id': 'id',
-      'name': 'name', // TODO: How does Python use name selector
-      'class name': 'class_name',
-      '-android uiautomator': 'unsupported',
-      '-android datamatcher': 'unsupported',
-      '-android viewtag': 'unsupported',
-      '-ios predicate string': 'ios_predicate',
-      '-ios class chain': 'ios_uiautomation', // TODO: Could not find iOS UIAutomation
+      id: 'id',
+      'class name': 'class',
+      name: 'name',
+      '-android uiautomator': 'android',
+      // '-android datamatcher': 'unsupported',
+      // '-android viewtag': 'unsupported',
+      '-ios predicate string': 'nsp',
+      '-ios class chain': 'chain',
     };
     if (!suffixMap[strategy]) {
-      throw new Error(`Strategy ${strategy} can't be code-gened`);
+      return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
-    //TODO: in the robot case, we need the ID on the codeFor_ for execution
-    this.lastID = `${strategy}=${locator}`;
-    return `# ${this.lastID}`;
+
+    return `$\{${localVar}} =    Set Variable     ${suffixMap[strategy]}=${locator}`;
   }
 
-  getApplicationInitialization () {
-    let varString = Object.keys(this.caps).map((k) => `${k}=\$\{${k}\}`).join('  ');
-    return `Open Application    \$\{REMOTE_URL\}   ${varString}`;
+  codeFor_click(varName, varIndex) {
+    return `Click Element    $\{${this.getVarName(varName, varIndex)}}`;
   }
 
-  codeFor_executeScript (/*varNameIgnore, varIndexIgnore, args*/) {
-    return `TODO implement executeScript`;
+  codeFor_clear(varName, varIndex) {
+    return `Clear Text    $\{${this.getVarName(varName, varIndex)}}`;
   }
 
-
-  codeFor_click (/*varName, varIndex*/) {
-    return `Click Element    ${this.lastID}`;
+  codeFor_sendKeys(varName, varIndex, text) {
+    return `Input Text    $\{${this.getVarName(varName, varIndex)}}    ${text}`;
   }
 
-  codeFor_clear (/*varName, varIndex*/) {
-    return `Clear Text    ${this.lastID}`;
+  codeFor_tap(varNameIgnore, varIndexIgnore, pointerActions) {
+    const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
+    return `@{finger} =    Create List    $\{${x}}    $\{${y}}
+@{positions} =    Create List    $\{finger}
+Tap With Positions    $\{100}    $\{positions}`;
   }
 
-  codeFor_sendKeys (varName, varIndex, text) {
-    return `Input Text    ${this.lastID}    ${text}`;
+  codeFor_swipe(varNameIgnore, varIndexIgnore, pointerActions) {
+    const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
+    return `Swipe    $\{${x1}}    $\{${y1}}    $\{${x2}}    $\{${y2}}`;
   }
 
-  codeFor_back () {
-    return `Go Back`;
+  // Execute Script
+
+  codeFor_executeScriptNoArgs(scriptCmd) {
+    return `Execute Script    ${scriptCmd}`;
   }
 
-  codeFor_tap (varNameIgnore, varIndexIgnore, x, y) {
-    return `Tap    ${this.lastID}    ${x}    ${y}`;
+  codeFor_executeScriptWithArgs(scriptCmd, jsonArg, varAssignment = '') {
+    // change the JSON object into a format accepted by Create Dictionary: a sequence of key=value
+    const cleanedJson = _.omitBy(jsonArg[0], _.isUndefined);
+    const argsValuesStrings = _.map(cleanedJson, (v, k) => `${k}=${this.getRobotVal(v)}`);
+    return `&{scriptArgument}    Create Dictionary    ${argsValuesStrings.join('    ')}
+${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
   }
 
-  codeFor_swipe (varNameIgnore, varIndexIgnore, x1, y1, x2, y2) {
-    return `Swipe    ${x1}    ${y1}    ${x2}    ${y2}`;
+  // App Management
+
+  codeFor_getCurrentActivity() {
+    return `$\{activity_name} =    ${this.codeFor_executeScriptNoArgs(
+      'mobile: getCurrentActivity',
+    )}`;
   }
 
-  // TODO: Add these robot framework commands
-  codeFor_getCurrentActivity () {
-    return '';
+  codeFor_getCurrentPackage() {
+    return `$\{package_name} =    ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
   }
 
-  codeFor_getCurrentPackage () {
-    return '';
+  codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
+    return `Install App    ${app}`;
   }
 
-  codeFor_installApp () {
-    return ``;
+  codeFor_isAppInstalled() {
+    return '# Not supported: isAppInstalled';
   }
 
-  codeFor_isAppInstalled () {
-    return ``;
+  codeFor_activateApp(varNameIgnore, varIndexIgnore, app) {
+    return `Activate Application    ${app}`;
   }
 
-  codeFor_launchApp () {
-    return ``;
+  codeFor_terminateApp(varNameIgnore, varIndexIgnore, app) {
+    return `Terminate Application    ${app}`;
   }
 
-  codeFor_background () {
-    return ``;
+  codeFor_removeApp(varNameIgnore, varIndexIgnore, app) {
+    return `Remove Application    ${app}`;
   }
 
-  codeFor_closeApp () {
-    return ``;
+  codeFor_getStrings(varNameIgnore, varIndexIgnore, language) {
+    if (language === undefined) {
+      return `$\{app_strings} =    ${this.codeFor_executeScriptNoArgs('mobile: getAppStrings')}`;
+    } else {
+      return this.codeFor_executeScriptWithArgs(
+        'mobile: getAppStrings',
+        [{language}],
+        `$\{app_strings} =    `,
+      );
+    }
   }
 
-  codeFor_reset () {
-    return ``;
+  // Clipboard
+
+  codeFor_getClipboard() {
+    return '# Not supported: getClipboard';
   }
 
-  codeFor_removeApp () {
-    return ``;
+  codeFor_setClipboard() {
+    return '# Not supported: setClipboard';
   }
 
-  codeFor_getStrings () {
-    return ``;
+  // File Transfer
+
+  codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
+    return `Push File    ${pathToInstallTo}    ${fileContentString}`;
   }
 
-  codeFor_getClipboard () {
-    return ``;
+  codeFor_pullFile(varNameIgnore, varIndexIgnore, pathToPullFrom) {
+    return `$\{file_base64} =    Pull File    ${pathToPullFrom}`;
   }
 
-  codeFor_setClipboard () {
-    return ``;
+  codeFor_pullFolder(varNameIgnore, varIndexIgnore, folderToPullFrom) {
+    return `$\{folder_base64} =    Pull Folder    ${folderToPullFrom}`;
   }
 
-  codeFor_pressKeyCode () {
-    return ``;
+  // Device Interaction
+
+  codeFor_isLocked() {
+    return `$\{is_locked} =    ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
   }
 
-  codeFor_longPressKeyCode () {
-    return ``;
+  codeFor_rotateDevice() {
+    return '# Not supported: rotateDevice';
   }
 
-  codeFor_hideKeyboard () {
-    return ``;
+  codeFor_touchId(varNameIgnore, varIndexIgnore, match) {
+    return `Touch Id    $\{${match}}`;
   }
 
-  codeFor_isKeyboardShown () {
-    return ``;
+  codeFor_toggleEnrollTouchId() {
+    return 'Toggle Touch Id Enrollment';
   }
 
-  codeFor_pushFile () {
-    return ``;
+  // Keyboard
+
+  codeFor_isKeyboardShown() {
+    return `$\{is_keyboard_shown} =    ${this.codeFor_executeScriptNoArgs(
+      'mobile: isKeyboardShown',
+    )}`;
   }
 
-  codeFor_pullFile () {
-    return ``;
+  // Connectivity
+
+  codeFor_toggleAirplaneMode() {
+    return '# Not supported: toggleAirplaneMode';
   }
 
-  codeFor_pullFolder () {
-    return ``;
+  codeFor_toggleData() {
+    return '# Not supported: toggleData';
   }
 
-  codeFor_toggleAirplaneMode () {
-    return ``;
+  codeFor_toggleWiFi() {
+    return '# Not supported: toggleWifi';
   }
 
-  codeFor_toggleData () {
-    return ``;
+  codeFor_sendSMS() {
+    return '# Not supported: sendSMS';
   }
 
-  codeFor_toggleWiFi () {
-    return ``;
+  codeFor_gsmCall() {
+    return '# Not supported: gsmCall';
   }
 
-  codeFor_toggleLocationServices () {
-    return ``;
+  codeFor_gsmSignal() {
+    return '# Not supported: gsmSignal';
   }
 
-  codeFor_sendSMS () {
-    return ``;
+  codeFor_gsmVoice() {
+    return '# Not supported: gsmVoice';
   }
 
-  codeFor_gsmCall () {
-    return ``;
+  // Session
+
+  codeFor_getSession() {
+    return '# Not supported: getSession';
   }
 
-  codeFor_gsmSignal () {
-    return ``;
+  codeFor_setTimeouts() {
+    // There is 'Set Appium Timeout' which may be different
+    return '# Not supported: setTimeouts';
   }
 
-  codeFor_gsmVoice () {
-    return ``;
+  codeFor_getOrientation() {
+    return '# Not supported: getOrientation';
   }
 
-  codeFor_shake () {
-    return ``;
+  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
+    if (orientation === 'LANDSCAPE') {
+      return 'Landscape';
+    } else if (orientation === 'PORTRAIT') {
+      return 'Portrait';
+    }
   }
 
-  codeFor_lock () {
-    return ``;
+  codeFor_getGeoLocation() {
+    return '# Not supported: getGeoLocation';
   }
 
-  codeFor_unlock () {
-    return ``;
+  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
+    return `Set Location    $\{${latitude}}    $\{${longitude}}    $\{${altitude}}`;
   }
 
-  codeFor_isLocked () {
-    return ``;
+  codeFor_getLogTypes() {
+    return '# Not supported: getLogTypes';
   }
 
-  codeFor_rotateDevice () {
-    return ``;
+  codeFor_getLogs() {
+    return '# Not supported: getLogs';
   }
 
-  codeFor_getPerformanceData () {
-    return ``;
+  codeFor_updateSettings() {
+    return '# Not supported: updateSettings';
   }
 
-  codeFor_getPerformanceDataTypes () {
-    return ``;
-  }
-
-  codeFor_touchId () {
-    return ``;
-  }
-
-  codeFor_toggleEnrollTouchId () {
-    return ``;
-  }
-
-  codeFor_openNotifications () {
-    return ``;
-  }
-
-  codeFor_getDeviceTime () {
-    return ``;
-  }
-
-  codeFor_fingerprint () {
-    return ``;
-  }
-
-  codeFor_getSession () {
-    return ``;
-  }
-
-  codeFor_setTimeouts () {
-    return ``;
-  }
-
-  codeFor_getOrientation () {
-    return ``;
-  }
-
-  codeFor_setOrientation () {
-    return ``;
-  }
-
-  codeFor_getGeoLocation () {
-    return ``;
-  }
-
-  codeFor_setGeoLocation () {
-    return ``;
-  }
-
-  codeFor_getLogTypes () {
-    return ``;
-  }
-
-  codeFor_getLogs () {
-    return ``;
-  }
-
-  codeFor_updateSettings () {
-    return ``;
-  }
-
-  codeFor_getSettings () {
-    return ``;
+  codeFor_getSettings() {
+    return '# Not supported: getSettings';
   }
 
   // Web
 
-  codeFor_navigateTo () {
-    return ``;
+  codeFor_navigateTo(varNameIgnore, varIndexIgnore, url) {
+    return `Go To Url    ${url}`;
   }
 
-  codeFor_getUrl () {
-    return ``;
+  codeFor_getUrl() {
+    return '${current_url} =    Get Window Url';
   }
 
-  codeFor_forward () {
-    return ``;
+  codeFor_back() {
+    return `Go Back`;
   }
 
-  codeFor_refresh () {
-    return ``;
+  codeFor_forward() {
+    return '# Not supported: forward';
+  }
+
+  codeFor_refresh() {
+    return '# Not supported: refresh';
   }
 
   // Context
 
-  codeFor_getContext () {
-    return ``;
+  codeFor_getContext() {
+    return '${context} =    Get Current Context';
   }
 
-  codeFor_getContexts () {
-    return ``;
+  codeFor_getContexts() {
+    return '${contexts} =    Get Contexts';
   }
 
-  codeFor_switchContext () {
-    return ``;
+  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+    return `Switch To Context    ${name}`;
   }
 }
 

@@ -1,15 +1,11 @@
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { withTranslation } from '../util';
+import {connect} from 'react-redux';
+
 import * as InspectorActions from '../actions/Inspector';
 import InspectorPage from '../components/Inspector/Inspector';
+import {withTranslation} from '../util';
 
-function mapStateToProps (state) {
+function mapStateToProps(state) {
   return state.inspector;
 }
 
-function mapDispatchToProps (dispatch) {
-  return bindActionCreators(InspectorActions, dispatch);
-}
-
-export default withTranslation(InspectorPage, connect(mapStateToProps, mapDispatchToProps));
+export default withTranslation(InspectorPage, connect(mapStateToProps, InspectorActions));

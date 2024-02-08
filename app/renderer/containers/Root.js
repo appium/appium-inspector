@@ -1,17 +1,15 @@
-import React, { Component } from 'react';
-import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
-import Routes from '../routes';
+import React from 'react';
+import {Provider} from 'react-redux';
+import {MemoryRouter} from 'react-router-dom';
 
-export default class Root extends Component {
-  render () {
-    const { store, history } = this.props;
-    return (
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <Routes />
-        </ConnectedRouter>
-      </Provider>
-    );
-  }
-}
+import AllRoutes from '../routes';
+
+const Root = ({store}) => (
+  <Provider store={store}>
+    <MemoryRouter initialEntries={['/']}>
+      <AllRoutes />
+    </MemoryRouter>
+  </Provider>
+);
+
+export default Root;
