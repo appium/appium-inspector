@@ -6,6 +6,12 @@ import {checkNewUpdates} from './auto-updater';
 import {APPIUM_SESSION_EXTENSION} from './helpers';
 import {launchNewSessionWindow} from './windows';
 
+const INSPECTOR_DOCS_URL = 'https://appium.github.io/appium-inspector';
+const APPIUM_DOCS_URL = 'https://appium.io';
+const APPIUM_FORUM_URL = 'https://discuss.appium.io';
+const GITHUB_ISSUES_URL = 'https://github.com/appium/appium-inspector/issues';
+const CROWDIN_URL = 'https://crowdin.com/project/appium-desktop';
+
 let mainWindow, isMac, isDev;
 
 const t = (string, params = null) => i18n.t(string, params);
@@ -183,27 +189,27 @@ const optionBringAllToFront = () => ({
 
 const optionInspectorDocumentation = () => ({
   label: t('Inspector Documentation'),
-  click: () => shell.openExternal('https://appium.github.io/appium-inspector'),
+  click: () => shell.openExternal(INSPECTOR_DOCS_URL),
 });
 
 const optionAppiumDocumentation = () => ({
   label: t('Appium Documentation'),
-  click: () => shell.openExternal('https://appium.io'),
+  click: () => shell.openExternal(APPIUM_DOCS_URL),
 });
 
 const optionAppiumForum = () => ({
   label: t('Appium Discussion Forum'),
-  click: () => shell.openExternal('https://discuss.appium.io'),
+  click: () => shell.openExternal(APPIUM_FORUM_URL),
 });
 
 const optionReportIssues = () => ({
   label: t('Report Issues'),
-  click: () => shell.openExternal('https://github.com/appium/appium-inspector/issues'),
+  click: () => shell.openExternal(GITHUB_ISSUES_URL),
 });
 
 const optionImproveTranslations = () => ({
   label: t('Improve Translations'),
-  click: () => shell.openExternal('https://crowdin.com/project/appium-desktop'),
+  click: () => shell.openExternal(CROWDIN_URL),
 });
 
 const dropdownApp = () => ({
@@ -289,11 +295,11 @@ const dropdownHelp = () => ({
 });
 
 const buildMenuTemplate = () => [
-  ... isMac ? [dropdownApp()] : [],
+  ...(isMac ? [dropdownApp()] : []),
   dropdownFile(),
   dropdownEdit(),
   dropdownView(),
-  ... isMac ? [dropdownWindow()] : [],
+  ...(isMac ? [dropdownWindow()] : []),
   dropdownHelp(),
 ];
 
