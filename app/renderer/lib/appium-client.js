@@ -277,7 +277,6 @@ export default class AppiumClient {
       await this.driver.switchContext(NATIVE_APP);
     }
 
-    const sessionDetails = await this.driver.getSession();
     const isAndroid = this.driver.client.isAndroid;
 
     // Get all available contexts (or the error, if one appears)
@@ -307,8 +306,12 @@ export default class AppiumClient {
             const systemBars = await this.driver.executeScript('mobile:getSystemBars', []);
             webviewTopOffset = systemBars.statusBar.height;
           } catch (e) {
-            // in case driver does not support mobile:getSystemBars
-            webviewTopOffset = sessionDetails.viewportRect.top;
+            try {
+              // to minimize the endpoint call which gets error in newer chromedriver.
+              const sessionDetails = await this.driver.getSession();
+              // in case driver does not support mobile:getSystemBars
+              webviewTopOffset = sessionDetails.viewportRect.top;
+            } catch (ign) {}
           }
         }
       } else if (this.driver.client.isIOS) {
@@ -327,8 +330,11 @@ export default class AppiumClient {
             const deviceScreenInfo = await this.driver.executeScript('mobile:deviceScreenInfo', []);
             webviewLeftOffset = deviceScreenInfo.statusBarSize.height;
           } catch (e) {
-            // in case driver does not support mobile:deviceScreenInfo
-            webviewLeftOffset = sessionDetails.statBarHeight;
+            try {
+              const sessionDetails = await this.driver.getSession();
+              // in case driver does not support mobile:deviceScreenInfo
+              webviewLeftOffset = sessionDetails.statBarHeight;
+            } catch (ign) {}
           }
         }
       }

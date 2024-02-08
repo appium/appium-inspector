@@ -172,7 +172,7 @@
     "moment": "2.30.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-i18next": "14.0.3",
+    "react-i18next": "14.0.5",
     "react-icons": "5.0.1",
     "react-redux": "9.1.0",
     "react-router-dom": "6.22.0",
@@ -194,10 +194,10 @@
     "spectron": "Deprecated. Newer V16 also requires Electron 14"
   },
   "devDependencies": {
-    "@appium/docutils": "1.0.2",
+    "@appium/docutils": "1.0.3",
     "@appium/eslint-config-appium": "8.0.5",
-    "@appium/fake-driver": "5.4.0",
-    "@appium/support": "4.2.0",
+    "@appium/fake-driver": "5.5.0",
+    "@appium/support": "4.2.1",
     "@babel/core": "7.23.9",
     "@babel/eslint-parser": "7.23.10",
     "@babel/eslint-plugin": "7.23.5",
