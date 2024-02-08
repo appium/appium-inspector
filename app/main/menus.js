@@ -29,6 +29,35 @@ const showAppInfoPopup = () => {
   });
 };
 
+const openFileCallback = async () => {
+  const {canceled, filePaths} = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: [{name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}],
+  });
+  if (!canceled) {
+    const filePath = filePaths[0];
+    mainWindow.webContents.send('open-file', filePath);
+  }
+};
+
+const saveAsCallback = async () => {
+  const {canceled, filePath} = await dialog.showSaveDialog({
+    title: i18n.t('saveAs'),
+    filters: [{name: 'Appium', extensions: [APPIUM_SESSION_EXTENSION]}],
+  });
+  if (!canceled) {
+    mainWindow.webContents.send('save-file', filePath);
+  }
+};
+
+const getLanguagesMenu = () =>
+  languageList.map((language) => ({
+    label: `${language.name} (${language.original})`,
+    type: 'radio',
+    checked: i18n.language === language.code,
+    click: () => i18n.changeLanguage(language.code),
+  }));
+
 const optionAbout = () => ({
   label: t('About Appium Inspector'),
   click: () => showAppInfoPopup(),
@@ -39,204 +68,28 @@ const optionCheckForUpdates = () => ({
   click: () => checkNewUpdates(true),
 });
 
-const optionHide = () => ({
-  label: t('Hide Appium Inspector'),
-  role: 'hide',
-});
-
-const optionHideOthers = () => ({
-  label: t('Hide Others'),
-  role: 'hideOthers',
-});
-
-const optionShowAll = () => ({
-  label: t('Show All'),
-  role: 'unhide',
-});
-
-const optionQuit = () => ({
-  label: t('Quit Appium Inspector'),
-  role: 'quit',
-});
-
-const optionNewWindow = () => ({
-  label: t('New Window'),
-  accelerator: 'CmdOrCtrl+N',
-  click: launchNewSessionWindow,
-});
-
-const optionCloseWindow = () => ({
-  label: t('Close Window'),
-  role: 'close',
-});
-
-async function openFileCallback() {
-  const {canceled, filePaths} = await dialog.showOpenDialog({
-    properties: ['openFile'],
-    filters: [{name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}],
-  });
-  if (!canceled) {
-    const filePath = filePaths[0];
-    mainWindow.webContents.send('open-file', filePath);
-  }
-}
-
-const optionOpen = () => ({
-  label: t('Open Session File…'),
-  accelerator: 'CmdOrCtrl+O',
-  click: () => openFileCallback(),
-});
-
-async function saveAsCallback() {
-  const {canceled, filePath} = await dialog.showSaveDialog({
-    title: i18n.t('saveAs'),
-    filters: [{name: 'Appium', extensions: [APPIUM_SESSION_EXTENSION]}],
-  });
-  if (!canceled) {
-    mainWindow.webContents.send('save-file', filePath);
-  }
-}
-
-const optionSaveAs = () => ({
-  label: t('saveAs'),
-  accelerator: 'CmdOrCtrl+S',
-  click: () => saveAsCallback(),
-});
-
-const optionUndo = () => ({
-  label: t('Undo'),
-  role: 'undo',
-});
-
-const optionRedo = () => ({
-  label: t('Redo'),
-  role: 'redo',
-});
-
-const optionCut = () => ({
-  label: t('Cut'),
-  role: 'cut',
-});
-
-const optionCopy = () => ({
-  label: t('Copy'),
-  role: 'copy',
-});
-
-const optionPaste = () => ({
-  label: t('Paste'),
-  role: 'paste',
-});
-
-const optionDelete = () => ({
-  label: t('Delete'),
-  role: 'delete',
-});
-
-const optionSelectAll = () => ({
-  label: t('Select All'),
-  role: 'selectAll',
-});
-
-const optionToggleFullscreen = () => ({
-  label: t('Toggle Full Screen'),
-  role: 'togglefullscreen',
-});
-
-const optionResetZoom = () => ({
-  label: t('Reset Zoom Level'),
-  role: 'resetZoom',
-});
-
-const optionZoomIn = () => ({
-  label: t('Zoom In'),
-  role: 'zoomIn',
-});
-
-const optionZoomOut = () => ({
-  label: t('Zoom Out'),
-  role: 'zoomOut',
-});
-
-const getLanguagesMenu = () =>
-  languageList.map((language) => ({
-    label: `${language.name} (${language.original})`,
-    type: 'radio',
-    checked: i18n.language === language.code,
-    click: () => i18n.changeLanguage(language.code),
-  }));
-
-const optionLanguages = () => ({
-  label: t('Languages'),
-  submenu: getLanguagesMenu(),
-});
-
-const optionReload = () => ({
-  label: t('Reload'),
-  role: 'reload',
-});
-
-const optionToggleDevTools = () => ({
-  label: t('Toggle Developer Tools'),
-  role: 'toggleDevTools',
-});
-
-const optionMinimize = () => ({
-  label: t('Minimize'),
-  role: 'minimize',
-});
-
-const optionZoom = () => ({
-  label: t('Zoom'),
-  role: 'zoom',
-});
-
-const optionBringAllToFront = () => ({
-  label: t('Bring All to Front'),
-  role: 'front',
-});
-
-const optionInspectorDocumentation = () => ({
-  label: t('Inspector Documentation'),
-  click: () => shell.openExternal(INSPECTOR_DOCS_URL),
-});
-
-const optionAppiumDocumentation = () => ({
-  label: t('Appium Documentation'),
-  click: () => shell.openExternal(APPIUM_DOCS_URL),
-});
-
-const optionAppiumForum = () => ({
-  label: t('Appium Discussion Forum'),
-  click: () => shell.openExternal(APPIUM_FORUM_URL),
-});
-
-const optionReportIssues = () => ({
-  label: t('Report Issues'),
-  click: () => shell.openExternal(GITHUB_ISSUES_URL),
-});
-
-const optionImproveTranslations = () => ({
-  label: t('Improve Translations'),
-  click: () => shell.openExternal(CROWDIN_URL),
-});
-
 const dropdownApp = () => ({
   label: t('appiumInspector'),
   submenu: [
     optionAbout(),
     optionCheckForUpdates(),
     separator,
-    optionHide(),
-    optionHideOthers(),
-    optionShowAll(),
+    {label: t('Hide Appium Inspector'), role: 'hide'},
+    {label: t('Hide Others'), role: 'hideOthers'},
+    {label: t('Show All'), role: 'unhide'},
     separator,
-    optionQuit(),
+    {label: t('Quit Appium Inspector'), role: 'quit'},
   ],
 });
 
 const dropdownFile = () => {
-  const submenu = [optionNewWindow(), optionCloseWindow(), separator, optionOpen(), optionSaveAs()];
+  const submenu = [
+    {label: t('New Window'), accelerator: 'CmdOrCtrl+N', click: launchNewSessionWindow},
+    {label: t('Close Window'), role: 'close'},
+    separator,
+    {label: t('Open Session File…'), accelerator: 'CmdOrCtrl+O', click: () => openFileCallback()},
+    {label: t('saveAs'), accelerator: 'CmdOrCtrl+S', click: () => saveAsCallback()},
+  ];
 
   if (!isMac) {
     submenu.push(...[separator, optionAbout()]);
@@ -255,29 +108,35 @@ const dropdownFile = () => {
 const dropdownEdit = () => ({
   label: t('Edit'),
   submenu: [
-    optionUndo(),
-    optionRedo(),
+    {label: t('Undo'), role: 'undo'},
+    {label: t('Redo'), role: 'redo'},
     separator,
-    optionCut(),
-    optionCopy(),
-    optionPaste(),
-    optionDelete(),
-    optionSelectAll(),
+    {label: t('Cut'), role: 'cut'},
+    {label: t('Copy'), role: 'copy'},
+    {label: t('Paste'), role: 'paste'},
+    {label: t('Delete'), role: 'delete'},
+    {label: t('Select All'), role: 'selectAll'},
   ],
 });
 
 const dropdownView = () => {
   const submenu = [
-    optionToggleFullscreen(),
-    optionResetZoom(),
-    optionZoomIn(),
-    optionZoomOut(),
+    {label: t('Toggle Full Screen'), role: 'togglefullscreen'},
+    {label: t('Reset Zoom Level'), role: 'resetZoom'},
+    {label: t('Zoom In'), role: 'zoomIn'},
+    {label: t('Zoom Out'), role: 'zoomOut'},
     separator,
-    optionLanguages(),
+    {label: t('Languages'), submenu: getLanguagesMenu()},
   ];
 
   if (isDev) {
-    submenu.push(...[separator, optionReload(), optionToggleDevTools()]);
+    submenu.push(
+      ...[
+        separator,
+        {label: t('Reload'), role: 'reload'},
+        {label: t('Toggle Developer Tools'), role: 'toggleDevTools'},
+      ],
+    );
   }
 
   return {
@@ -288,18 +147,23 @@ const dropdownView = () => {
 
 const dropdownWindow = () => ({
   label: t('Window'),
-  submenu: [optionMinimize(), optionZoom(), separator, optionBringAllToFront()],
+  submenu: [
+    {label: t('Minimize'), role: 'minimize'},
+    {label: t('Zoom'), role: 'zoom'},
+    separator,
+    {label: t('Bring All to Front'), role: 'front'},
+  ],
 });
 
 const dropdownHelp = () => ({
   label: t('Help'),
   submenu: [
-    optionInspectorDocumentation(),
-    optionAppiumDocumentation(),
-    optionAppiumForum(),
+    {label: t('Inspector Documentation'), click: () => shell.openExternal(INSPECTOR_DOCS_URL)},
+    {label: t('Appium Documentation'), click: () => shell.openExternal(APPIUM_DOCS_URL)},
+    {label: t('Appium Discussion Forum'), click: () => shell.openExternal(APPIUM_FORUM_URL)},
     separator,
-    optionReportIssues(),
-    optionImproveTranslations(),
+    {label: t('Report Issues'), click: () => shell.openExternal(GITHUB_ISSUES_URL)},
+    {label: t('Improve Translations'), click: () => shell.openExternal(CROWDIN_URL)},
   ],
 });
 
