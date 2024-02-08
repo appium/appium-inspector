@@ -1,0 +1,29 @@
+version: v1
+
+labels:
+  - label: 'enhancement'
+    sync: true
+    matcher:
+      title: '^feat.*?:'
+
+  - label: 'fix'
+    sync: true
+    matcher:
+      title: '^fix.*?:'
+
+  - label: 'documentation'
+    sync: true
+    matcher:
+      title: '^docs.*?:'
+
+  - label: 'chore'
+    sync: true
+    matcher:
+      title: '^chore.*?:'
+      files:
+        all: ['!package-lock.json']
+
+  - label: 'i18n'
+    sync: true
+    matcher:
+      files: ['assets/locales/**']
