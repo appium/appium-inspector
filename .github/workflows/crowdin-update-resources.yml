@@ -5,6 +5,8 @@ name: Update Crowdin English Resources
 on:
   push:
     branches: [main]
+    paths:
+      - 'assets/locales/en/translation.json'
 
 jobs:
   build:
