@@ -167,7 +167,7 @@
   "allowUnauthorizedCerts": "Allow Unauthorized Certificates",
   "Use Proxy": "Use Proxy",
   "JSON Representation": "JSON Representation",
-  "Desired Capabilities": "Desired Capabilities",
+  "Capability Builder": "Capability Builder",
   "Saved Capability Sets": "Saved Capability Sets",
   "Attach to Session": "Attach to Session…",
   "localhost": "localhost",

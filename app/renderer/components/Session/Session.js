@@ -125,7 +125,7 @@ const Session = (props) => {
           className={SessionStyles.scrollingTabCont}
           items={[
             {
-              label: t('Desired Capabilities'),
+              label: t('Capability Builder'),
               key: 'new',
               className: SessionStyles.scrollingTab,
               children: <CapabilityEditor {...props} />,
