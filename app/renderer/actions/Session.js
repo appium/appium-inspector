@@ -591,7 +591,7 @@ export function newSession(caps, attachSessId = null) {
           }
         }
         // Chrome MJSONWP mode returns "platform" instead of "platformName"
-        const platformName = attachedSessionCaps.platformName || attachedSessionCaps.platform
+        const platformName = attachedSessionCaps.platformName || attachedSessionCaps.platform;
         serverOpts.isIOS = Boolean(platformName.match(/iOS/i));
         serverOpts.isAndroid = Boolean(platformName.match(/Android/i));
         driver = await Web2Driver.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
