@@ -12,8 +12,6 @@ const APPIUM_FORUM_URL = 'https://discuss.appium.io';
 const GITHUB_ISSUES_URL = 'https://github.com/appium/appium-inspector/issues';
 const CROWDIN_URL = 'https://crowdin.com/project/appium-desktop';
 
-let mainWindow, isMac, isDev;
-
 const t = (string, params = null) => i18n.t(string, params);
 
 const separator = {type: 'separator'};
@@ -29,7 +27,7 @@ const showAppInfoPopup = () => {
   });
 };
 
-const openFileCallback = async () => {
+const openFile = async (mainWindow) => {
   const {canceled, filePaths} = await dialog.showOpenDialog({
     properties: ['openFile'],
     filters: [{name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}],
@@ -40,7 +38,7 @@ const openFileCallback = async () => {
   }
 };
 
-const saveAsCallback = async () => {
+const saveAs = async (mainWindow) => {
   const {canceled, filePath} = await dialog.showSaveDialog({
     title: i18n.t('saveAs'),
     filters: [{name: 'Appium', extensions: [APPIUM_SESSION_EXTENSION]}],
@@ -82,13 +80,13 @@ const dropdownApp = () => ({
   ],
 });
 
-const dropdownFile = () => {
+const dropdownFile = (mainWindow, isMac) => {
   const submenu = [
     {label: t('New Window'), accelerator: 'CmdOrCtrl+N', click: launchNewSessionWindow},
     {label: t('Close Window'), role: 'close'},
     separator,
-    {label: t('Open Session File…'), accelerator: 'CmdOrCtrl+O', click: () => openFileCallback()},
-    {label: t('saveAs'), accelerator: 'CmdOrCtrl+S', click: () => saveAsCallback()},
+    {label: t('Open Session File…'), accelerator: 'CmdOrCtrl+O', click: () => openFile(mainWindow)},
+    {label: t('saveAs'), accelerator: 'CmdOrCtrl+S', click: () => saveAs(mainWindow)},
   ];
 
   if (!isMac) {
@@ -119,7 +117,7 @@ const dropdownEdit = () => ({
   ],
 });
 
-const dropdownView = () => {
+const dropdownView = (isDev) => {
   const submenu = [
     {label: t('Toggle Full Screen'), role: 'togglefullscreen'},
     {label: t('Reset Zoom Level'), role: 'resetZoom'},
@@ -167,21 +165,19 @@ const dropdownHelp = () => ({
   ],
 });
 
-const buildMenuTemplate = () => [
+const menuTemplate = (mainWindow, isMac, isDev) => [
   ...(isMac ? [dropdownApp()] : []),
-  dropdownFile(),
+  dropdownFile(mainWindow, isMac),
   dropdownEdit(),
-  dropdownView(),
+  dropdownView(isDev),
   ...(isMac ? [dropdownWindow()] : []),
   dropdownHelp(),
 ];
 
-export function rebuildMenus(localMainWindow, localIsDev) {
-  mainWindow = localMainWindow;
-  isMac = process.platform === 'darwin';
-  isDev = localIsDev;
+export function rebuildMenus(mainWindow, isDev) {
+  const isMac = process.platform === 'darwin';
 
-  const menu = Menu.buildFromTemplate(buildMenuTemplate());
+  const menu = Menu.buildFromTemplate(menuTemplate(mainWindow, isMac, isDev));
 
   if (isMac) {
     Menu.setApplicationMenu(menu);
