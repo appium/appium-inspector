@@ -1,0 +1,57 @@
+# Code validation job, executed on pull request
+# Builds the app, and runs lint, unit and integration tests
+
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - '.github/ISSUE_TEMPLATE/**'
+      - 'assets/locales/**'
+      - 'docs/**'
+      - 'sample-session-files/**'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'README.md'
+      - 'renovate.json'
+
+jobs:
+  build:
+    name: Build & Test
+    strategy:
+      matrix:
+        image: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.image }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build --if-present
+      - name: Test
+        run: npm run test:unit && npm run test:integration
+
+  lint:
+    name: Lint & Format
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run test:lint
+      - name: Format
+        run: npm run test:format

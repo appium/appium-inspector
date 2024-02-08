@@ -1,47 +1,68 @@
-import React, { Component } from 'react';
-import { Form, Row, Col, Input, Checkbox } from 'antd';
+import {Checkbox, Col, Form, Input, Row} from 'antd';
+import React from 'react';
+
 import SessionStyles from './Session.css';
 
-const FormItem = Form.Item;
+const cloudPerfectoUrl = 'cloud.Perfectomobile.com';
 
-export default class ServerTabPerfecto extends Component {
+const portPlaceholder = (server) => (server.perfecto.ssl ? '443' : '80');
 
-  render () {
-
-    const {server, setServerParam, t} = this.props;
-
-    const cloudPerfectoUrl = 'cloud.Perfectomobile.com';
-
-    const perfectoTokenPlaceholder = process.env.PERFECTO_TOKEN ?
-      t('usingDataFoundIn', {environmentVariable: 'PERFECTO_TOKEN'}) : t('Add your token');
-
-    const portPlaceholder = server.perfecto.ssl ? '443' : '80';
-
-    return <Form>
-      <Row gutter={8}>
-        <Col span={12}>
-          <FormItem>
-            <Input className={SessionStyles.customServerInputLeft} id='PerfectoServerHost' placeholder={cloudPerfectoUrl} addonBefore={t('Perfecto Host')}
-              value={server.perfecto.hostname} onChange={(e) => setServerParam('hostname', e.target.value)} />
-          </FormItem>
-        </Col>
-        <Col span={12}>
-          <FormItem>
-            <Input id='PerfectoPort' placeholder={portPlaceholder} addonBefore={t('Perfecto Port')} value={server.perfecto.port}
-              onChange={(e) => setServerParam('port', e.target.value)} />
-          </FormItem>
-        </Col>
-        <Col span={24}>
-          <FormItem>
-            <Input id='token' placeholder={perfectoTokenPlaceholder} addonBefore={t('Perfecto Token')} value={server.perfecto.token} onChange={(e) => setServerParam('token', e.target.value)} />
-          </FormItem>
-        </Col>
-        <Col span={12}>
-          <FormItem>
-            <Checkbox checked={!!server.perfecto.ssl} onChange={(e) => setServerParam('ssl', e.target.checked)}> {'SSL'}</Checkbox>
-          </FormItem>
-        </Col>
-      </Row>
-    </Form>;
+const perfectoTokenPlaceholder = (t) => {
+  if (process.env.PERFECTO_TOKEN) {
+    return t('usingDataFoundIn', {environmentVariable: 'PERFECTO_TOKEN'});
   }
-}
+  return t('Add your token');
+};
+
+const ServerTabPerfecto = ({server, setServerParam, t}) => (
+  <Form>
+    <Row gutter={8}>
+      <Col span={9}>
+        <Form.Item>
+          <Input
+            className={SessionStyles.customServerInputLeft}
+            id="PerfectoServerHost"
+            placeholder={cloudPerfectoUrl}
+            addonBefore={t('Perfecto Host')}
+            value={server.perfecto.hostname}
+            onChange={(e) => setServerParam('hostname', e.target.value)}
+          />
+        </Form.Item>
+      </Col>
+      <Col span={4}>
+        <Form.Item>
+          <Input
+            id="PerfectoPort"
+            placeholder={portPlaceholder(server)}
+            addonBefore={t('Perfecto Port')}
+            value={server.perfecto.port}
+            onChange={(e) => setServerParam('port', e.target.value)}
+          />
+        </Form.Item>
+      </Col>
+      <Col span={9}>
+        <Form.Item>
+          <Input
+            id="token"
+            placeholder={perfectoTokenPlaceholder(t)}
+            addonBefore={t('Perfecto Token')}
+            value={server.perfecto.token}
+            onChange={(e) => setServerParam('token', e.target.value)}
+          />
+        </Form.Item>
+      </Col>
+      <Col span={2}>
+        <Form.Item>
+          <Checkbox
+            checked={!!server.perfecto.ssl}
+            onChange={(e) => setServerParam('ssl', e.target.checked)}
+          >
+            {t('SSL')}
+          </Checkbox>
+        </Form.Item>
+      </Col>
+    </Row>
+  </Form>
+);
+
+export default ServerTabPerfecto;

@@ -1,9 +1,6 @@
 {
-  "extends": [
-    "config:base",
-    ":semanticCommitTypeAll(chore)",
-    ":pinAllExceptPeerDependencies"
-  ],
+  "extends": ["config:base", ":semanticCommitTypeAll(chore)", ":pinAllExceptPeerDependencies"],
+  "labels": ["dependencies"],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
@@ -17,7 +14,7 @@
     }
   ],
   "baseBranches": ["main"],
-  "ignorePaths": ["gui-common", "assets", "build", "release", "sample-session-files"],
+  "ignorePaths": ["assets", "build", "release", "sample-session-files"],
   "semanticCommits": "enabled",
   "schedule": ["after 10pm and before 5:00am"],
   "timezone": "America/Vancouver",

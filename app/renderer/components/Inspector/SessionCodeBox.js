@@ -1,63 +1,57 @@
-import React, { Component } from 'react';
-import { Card, Tooltip, Button, Select } from 'antd';
-import { CopyOutlined, CodeOutlined } from '@ant-design/icons';
-import { withTranslation } from '../../util';
-import InspectorStyles from './Inspector.css';
+import {CodeOutlined, CopyOutlined} from '@ant-design/icons';
+import {Button, Card, Select, Space, Tooltip} from 'antd';
+import hljs from 'highlight.js';
+import React from 'react';
+
 import frameworks from '../../lib/client-frameworks';
-import { highlight } from 'highlight.js';
-import { clipboard } from '../../polyfills';
+import {clipboard} from '../../polyfills';
+import InspectorStyles from './Inspector.css';
 
-const Option = Select.Option;
+const SessionCodeBox = ({actionFramework, setActionFramework, sessionDetails, t}) => {
+  const code = (raw = true) => {
+    const {host, port, path, https, desiredCapabilities} = sessionDetails;
+    const framework = new frameworks[actionFramework](host, port, path, https, desiredCapabilities);
+    const rawCode = framework.getCodeString(true);
+    if (raw) {
+      return rawCode;
+    }
 
-class SessionCodeBox extends Component {
+    return hljs.highlight(rawCode, {language: framework.language}).value;
+  };
 
-  code () {
-    let { sessionDetails, actionFramework } = this.props;
-    let {host, port, path, https, desiredCapabilities} = sessionDetails;
-
-    let framework = new frameworks[actionFramework](host, port, path,
-      https, desiredCapabilities);
-    let rawCode = framework.getCodeString(true);
-
-    return highlight(framework.language, rawCode, true).value;
-  }
-
-  actionBar () {
-    const { setActionFramework, actionFramework, t } = this.props;
-
-    let frameworkOpts = Object.keys(frameworks).map(
-      (f) => <Option value={f} key={f}>
-        {frameworks[f].readableName}
-      </Option>);
-
-    return <div>
-      <Select defaultValue={actionFramework} onChange={setActionFramework}
-        className={InspectorStyles['framework-dropdown']} size="small">
-        {frameworkOpts}
-      </Select>
-      <Tooltip title={t('Copy Code to Clipboard')}>
-        <Button
-          icon={<CopyOutlined/>}
-          onClick={() => clipboard.writeText(this.code())}
-          type='text'
-        />
+  const actionBar = () => (
+    <Space size="middle">
+      <Tooltip title={t('Copy code to clipboard')}>
+        <Button icon={<CopyOutlined />} onClick={() => clipboard.writeText(code())} />
       </Tooltip>
-    </div>;
-  }
+      <Select
+        defaultValue={actionFramework}
+        onChange={setActionFramework}
+        className={InspectorStyles['framework-dropdown']}
+      >
+        {Object.keys(frameworks).map((f) => (
+          <Select.Option value={f} key={f}>
+            {frameworks[f].readableName}
+          </Select.Option>
+        ))}
+      </Select>
+    </Space>
+  );
 
-  render () {
-    const { t } = this.props;
-
-    return <Card title={<span><CodeOutlined /> {t('Start this Kind of Session with Code')}</span>}
-      className={InspectorStyles['recorded-actions']}
-      extra={this.actionBar()}
+  return (
+    <Card
+      title={
+        <span>
+          <CodeOutlined /> {t('Start this Kind of Session with Code')}
+        </span>
+      }
+      extra={actionBar()}
     >
-      <div
-        className={InspectorStyles['recorded-code']}
-        dangerouslySetInnerHTML={{__html: this.code()}} />
+      <pre className={InspectorStyles['recorded-code']}>
+        <code dangerouslySetInnerHTML={{__html: code(false)}} />
+      </pre>
+    </Card>
+  );
+};
 
-    </Card>;
-  }
-}
-
-export default withTranslation(SessionCodeBox);
+export default SessionCodeBox;

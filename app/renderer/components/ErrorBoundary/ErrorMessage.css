@@ -1,0 +1,8 @@
+.errorMessage {
+  padding: 3em;
+}
+
+.copyTraceBtn {
+  position: absolute;
+  left: 24px;
+}

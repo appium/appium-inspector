@@ -1,7 +1,15 @@
-let log, settings, clipboard, shell, remote, ipcRenderer,
-    i18NextBackend, i18NextBackendOptions, fs, util;
+let log,
+  settings,
+  clipboard,
+  shell,
+  remote,
+  ipcRenderer,
+  i18NextBackend,
+  i18NextBackendOptions,
+  fs,
+  util;
 
-function buildForBrowser () {
+function buildForBrowser() {
   if (process.env.BUILD_BROWSER) {
     return true;
   }
@@ -14,13 +22,31 @@ function buildForBrowser () {
 }
 
 if (buildForBrowser()) {
-  ({log, settings, clipboard, shell, remote,
-    ipcRenderer, i18NextBackend,
-    i18NextBackendOptions, fs, util} = require('./browser'));
+  ({
+    log,
+    settings,
+    clipboard,
+    shell,
+    remote,
+    ipcRenderer,
+    i18NextBackend,
+    i18NextBackendOptions,
+    fs,
+    util,
+  } = require('./browser'));
 } else {
-  ({log, settings, clipboard, shell, remote,
-    ipcRenderer, i18NextBackend,
-    i18NextBackendOptions, fs, util} = require('./electron'));
+  ({
+    log,
+    settings,
+    clipboard,
+    shell,
+    remote,
+    ipcRenderer,
+    i18NextBackend,
+    i18NextBackendOptions,
+    fs,
+    util,
+  } = require('./electron'));
 }
 
 export {

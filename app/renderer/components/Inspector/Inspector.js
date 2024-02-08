@@ -1,102 +1,126 @@
-import React, { Component } from 'react';
-import { debounce } from 'lodash';
-import { SCREENSHOT_INTERACTION_MODE, INTERACTION_MODE, APP_MODE } from './shared';
-import { Card, Button, Spin, Tooltip, Modal, Tabs, Switch } from 'antd';
-import Screenshot from './Screenshot';
-import SelectedElement from './SelectedElement';
-import Source from './Source';
-import InspectorStyles from './Inspector.css';
-import RecordedActions from './RecordedActions';
-import Actions from './Actions';
-import SessionInfo from './SessionInfo';
-import { clipboard } from '../../polyfills';
 import {
-  SelectOutlined,
-  ScanOutlined,
-  SwapRightOutlined,
-  ArrowLeftOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
-  ReloadOutlined,
-  EyeOutlined,
-  PauseOutlined,
-  SearchOutlined,
+  CodeOutlined,
   CopyOutlined,
   DownloadOutlined,
-  CloseOutlined,
   FileTextOutlined,
-  TagOutlined,
+  HighlightOutlined,
   InfoCircleOutlined,
+  PlusSquareOutlined,
+  SelectOutlined,
+  TagOutlined,
   ThunderboltOutlined,
-  AppstoreOutlined,
-  GlobalOutlined,
 } from '@ant-design/icons';
-import { BUTTON } from '../../../../gui-common/components/AntdTypes';
+import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip} from 'antd';
+import {debounce} from 'lodash';
+import React, {useEffect, useRef, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
-const {SELECT, SWIPE, TAP} = SCREENSHOT_INTERACTION_MODE;
+import {clipboard} from '../../polyfills';
+import {BUTTON} from '../AntdTypes';
+import Commands from './Commands';
+import GestureEditor from './GestureEditor';
+import HeaderButtons from './HeaderButtons';
+import InspectorStyles from './Inspector.css';
+import Recorder from './Recorder';
+import SavedGestures from './SavedGestures';
+import Screenshot from './Screenshot';
+import SelectedElement from './SelectedElement';
+import SessionInfo from './SessionInfo';
+import Source from './Source';
+import {INTERACTION_MODE, SCREENSHOT_INTERACTION_MODE} from './shared';
 
-const { TabPane } = Tabs;
+const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 
-const ButtonGroup = Button.Group;
-
-const MIN_WIDTH = 1080;
-const MIN_HEIGHT = 570;
-const MAX_SCREENSHOT_WIDTH = 500;
+const MIN_WIDTH = 870;
+const MIN_HEIGHT = 610;
+const MAX_IMAGE_WIDTH_WINDOW_FRACTION = 0.4;
 
 const MJPEG_STREAM_CHECK_INTERVAL = 1000;
+const SESSION_EXPIRY_PROMPT_TIMEOUT = 60 * 60 * 1000; // Give user 1 hour to reply
 
-function downloadXML (sourceXML) {
+const downloadFile = (href, filename) => {
   let element = document.createElement('a');
-  element.setAttribute('href', 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML));
-  element.setAttribute('download', 'source.xml');
-
+  element.setAttribute('href', href);
+  element.setAttribute('download', filename);
   element.style.display = 'none';
-  document.body.appendChild(element);
 
+  document.body.appendChild(element);
   element.click();
 
   document.body.removeChild(element);
-}
+};
 
-export default class Inspector extends Component {
+const downloadXML = (sourceXML) => {
+  const href = 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML);
+  const filename = `app-source-${new Date().toJSON()}.xml`;
+  downloadFile(href, filename);
+};
 
-  constructor () {
-    super();
-    this.didInitialResize = false;
-    this.state = {
-      scaleRatio: 1,
-    };
-    this.screenAndSourceEl = null;
-    this.lastScreenshot = null;
-    this.screenshotEl = null;
-    this.updateSourceTreeWidth = debounce(this.updateSourceTreeWidth.bind(this), 50);
-    this.updateScaleRatio = debounce(this.updateScaleRatio.bind(this), 500);
-    this.mjpegStreamCheckInterval = null;
-  }
+const downloadScreenshot = (screenshot) => {
+  const href = `data:image/png;base64,${screenshot}`;
+  const filename = `appium-inspector-${new Date().toJSON()}.png`;
+  downloadFile(href, filename);
+};
 
-  /**
-   * Calculates the ratio that the image is being scaled by
-   */
-  updateScaleRatio () {
-    const screenshotImg = this.screenshotEl.querySelector('img');
+const Inspector = (props) => {
+  const {
+    screenshot,
+    screenshotError,
+    selectedElement = {},
+    quitSession,
+    screenshotInteractionMode,
+    visibleCommandMethod,
+    selectedInteractionMode,
+    selectInteractionMode,
+    setVisibleCommandResult,
+    setUserWaitTimeout,
+    showKeepAlivePrompt,
+    keepSessionAlive,
+    sourceXML,
+    visibleCommandResult,
+    mjpegScreenshotUrl,
+    isAwaitingMjpegStream,
+    toggleShowCentroids,
+    showCentroids,
+    isGestureEditorVisible,
+    toggleShowAttributes,
+    isSourceRefreshOn,
+    windowSize,
+    t,
+  } = props;
 
-    // now update scale ratio
-    this.setState({
-      scaleRatio: (this.props.windowSize.width / screenshotImg.offsetWidth)
-    });
-  }
+  const didInitialResize = useRef(false);
+  const screenAndSourceEl = useRef(null);
+  const screenshotEl = useRef(null);
+  const mjpegStreamCheckInterval = useRef(null);
 
-  updateSourceTreeWidth () {
+  const [scaleRatio, setScaleRatio] = useState(1);
+
+  const navigate = useNavigate();
+
+  const showScreenshot =
+    (screenshot && !screenshotError) ||
+    (mjpegScreenshotUrl && (!isSourceRefreshOn || !isAwaitingMjpegStream));
+
+  // Calculate the ratio for scaling items overlaid on the screenshot
+  // (highlighter rectangles/circles, gestures, etc.)
+  const updateScaleRatio = (imgWidth) => setScaleRatio(windowSize.width / imgWidth);
+
+  const updateScaleRatioDebounced = debounce(updateScaleRatio, 500);
+
+  const updateSourceTreeWidth = () => {
     // the idea here is to keep track of the screenshot image width. if it has
     // too much space to the right or bottom, adjust the max-width of the
     // screenshot container so the source tree flex adjusts to always fill the
     // remaining space. This keeps everything looking tight.
-    if (!this.screenAndSourceEl) {
+    if (!screenAndSourceEl.current) {
       return;
     }
 
-    const screenshotBox = this.screenAndSourceEl.querySelector('#screenshotContainer');
-    const img = this.screenAndSourceEl.querySelector('#screenshotContainer img#screenshot');
+    const screenshotBox = screenAndSourceEl.current.querySelector('#screenshotContainer');
+    const img = screenAndSourceEl.current.querySelector('#screenshotContainer img#screenshot');
 
     if (!img) {
       return;
@@ -104,45 +128,24 @@ export default class Inspector extends Component {
 
     const imgRect = img.getBoundingClientRect();
     const screenshotRect = screenshotBox.getBoundingClientRect();
-    screenshotBox.style.flexBasis = `${imgRect.width}px`;
     if (imgRect.height < screenshotRect.height) {
-      // get what the img width would be if it fills screenshot box height
-      const attemptedWidth = (screenshotRect.height / imgRect.height) * imgRect.width;
-      screenshotBox.style.maxWidth = attemptedWidth > MAX_SCREENSHOT_WIDTH ?
-        `${MAX_SCREENSHOT_WIDTH}px` :
-        `${attemptedWidth}px`;
+      // get the expected image width if the image would fill the screenshot box height
+      const attemptedImgWidth = (screenshotRect.height / imgRect.height) * imgRect.width;
+      // get the maximum image width as a fraction of the current window width
+      const maxImgWidth = window.innerWidth * MAX_IMAGE_WIDTH_WINDOW_FRACTION;
+      const curMaxImgWidth = Math.min(maxImgWidth, attemptedImgWidth);
+      screenshotBox.style.maxWidth = `${curMaxImgWidth}px`;
     } else if (imgRect.width < screenshotRect.width) {
       screenshotBox.style.maxWidth = `${imgRect.width}px`;
     }
 
-    this.updateScaleRatio();
-  }
+    updateScaleRatioDebounced(imgRect.width);
+  };
 
-  componentDidMount () {
-    const curHeight = window.innerHeight;
-    const curWidth = window.innerWidth;
-    const needsResize = (curHeight < MIN_HEIGHT) || (curWidth < MIN_WIDTH);
-    if (!this.didInitialResize && needsResize) {
-      const newWidth = curWidth < MIN_WIDTH ? MIN_WIDTH : curWidth;
-      const newHeight = curHeight < MIN_HEIGHT ? MIN_HEIGHT : curHeight;
-      // resize width to something sensible for using the inspector on first run
-      window.resizeTo(newWidth, newHeight);
-    }
-    this.didInitialResize = true;
-    this.props.applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
-    this.props.getSavedActionFramework();
-    this.props.runKeepAliveLoop();
-    window.addEventListener('resize', this.updateSourceTreeWidth);
-    this.props.setSessionTime(Date.now());
+  const updateSourceTreeWidthDebounced = debounce(updateSourceTreeWidth, 50);
 
-    if (this.props.mjpegScreenshotUrl) {
-      this.mjpegStreamCheckInterval = setInterval(this.checkMjpegStream.bind(this),
-        MJPEG_STREAM_CHECK_INTERVAL);
-    }
-  }
-
-  async checkMjpegStream () {
-    const {mjpegScreenshotUrl, isAwaitingMjpegStream, setAwaitingMjpegStream} = this.props;
+  const checkMjpegStream = async () => {
+    const {setAwaitingMjpegStream} = props;
     const img = new Image();
     img.src = mjpegScreenshotUrl;
     let imgReady = false;
@@ -152,211 +155,309 @@ export default class Inspector extends Component {
     } catch (ign) {}
     if (imgReady && isAwaitingMjpegStream) {
       setAwaitingMjpegStream(false);
-      this.updateSourceTreeWidth();
+      updateSourceTreeWidthDebounced();
+      // stream obtained - can clear the refresh interval
+      clearInterval(mjpegStreamCheckInterval.current);
+      mjpegStreamCheckInterval.current = null;
     } else if (!imgReady && !isAwaitingMjpegStream) {
       setAwaitingMjpegStream(true);
     }
-  }
+  };
 
-  componentDidUpdate () {
-    const {screenshot} = this.props;
-    // only update when the screenshot changed, not for any other kind of
-    // update
-    if (screenshot !== this.lastScreenshot) {
-      this.updateSourceTreeWidth();
-      this.lastScreenshot = screenshot;
-    }
-  }
-
-  componentWillUnmount () {
-    if (this.mjpegStreamCheckInterval) {
-      clearInterval(this.mjpegStreamCheckInterval);
-      this.mjpegStreamCheckInterval = null;
-    }
-  }
-
-  screenshotInteractionChange (mode) {
-    const {selectScreenshotInteractionMode, clearSwipeAction} = this.props;
-    clearSwipeAction(); // When the action changes, reset the swipe action
+  const screenshotInteractionChange = (mode) => {
+    const {selectScreenshotInteractionMode, clearCoordAction} = props;
+    clearCoordAction(); // When the action changes, reset the swipe action
     selectScreenshotInteractionMode(mode);
-  }
+  };
 
-  render () {
-    const {screenshot, screenshotError, selectedElement = {},
-           applyClientMethod, quitSession, isRecording, showRecord, startRecording,
-           pauseRecording, showLocatorTestModal, appMode,
-           screenshotInteractionMode, isFindingElementsTimes, visibleCommandMethod,
-           selectedInteractionMode, selectInteractionMode, selectAppMode, setVisibleCommandResult,
-           showKeepAlivePrompt, keepSessionAlive, sourceXML, t, visibleCommandResult,
-           mjpegScreenshotUrl, isAwaitingMjpegStream, toggleShowCentroids, showCentroids} = this.props;
-    const {path} = selectedElement;
+  const quitCurrentSession = async (reason, killedByUser = true) => {
+    await quitSession(reason, killedByUser);
+    navigate('/session', {replace: true});
+  };
 
-    const showScreenshot = ((screenshot && !screenshotError) ||
-                            (mjpegScreenshotUrl && !isAwaitingMjpegStream));
+  useEffect(() => {
+    const {applyClientMethod, getSavedActionFramework, runKeepAliveLoop, setSessionTime} = props;
+    const curHeight = window.innerHeight;
+    const curWidth = window.innerWidth;
+    const needsResize = curHeight < MIN_HEIGHT || curWidth < MIN_WIDTH;
+    if (!didInitialResize.current && needsResize) {
+      const newWidth = curWidth < MIN_WIDTH ? MIN_WIDTH : curWidth;
+      const newHeight = curHeight < MIN_HEIGHT ? MIN_HEIGHT : curHeight;
+      // resize width to something sensible for using the inspector on first run
+      window.resizeTo(newWidth, newHeight);
+    }
+    didInitialResize.current = true;
+    applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
+    getSavedActionFramework();
+    runKeepAliveLoop();
+    setSessionTime(Date.now());
+  }, []);
 
-    let screenShotControls = <div className={InspectorStyles['screenshot-controls']}>
-      <div className={InspectorStyles['action-controls']}>
-        <Tooltip title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')} placement="topRight">
+  /**
+   * Ensures component dimensions are adjusted only once windowSize exists.
+   * Cannot be combined with the other useEffect hook, since inside it,
+   * windowSize is set to 'undefined', and the event listener and MJPEG checker
+   * would not update this value when invoked
+   */
+  useEffect(() => {
+    if (windowSize) {
+      updateSourceTreeWidthDebounced();
+      window.addEventListener('resize', updateSourceTreeWidthDebounced);
+      if (mjpegScreenshotUrl) {
+        mjpegStreamCheckInterval.current = setInterval(
+          checkMjpegStream,
+          MJPEG_STREAM_CHECK_INTERVAL,
+        );
+      }
+    }
+    return () => {
+      if (windowSize) {
+        window.removeEventListener('resize', updateSourceTreeWidthDebounced);
+        if (mjpegStreamCheckInterval.current) {
+          clearInterval(mjpegStreamCheckInterval.current);
+          mjpegStreamCheckInterval.current = null;
+        }
+      }
+    };
+  }, [JSON.stringify(windowSize)]);
+
+  // If session expiry prompt is shown, start timeout until session is automatically quit
+  // Timeout is canceled if user selects either action in prompt (keep session alive or quit)
+  useEffect(() => {
+    if (showKeepAlivePrompt) {
+      const userWaitTimeout = setTimeout(() => {
+        quitCurrentSession(t('Session closed due to inactivity'), false);
+      }, SESSION_EXPIRY_PROMPT_TIMEOUT);
+      setUserWaitTimeout(userWaitTimeout);
+    }
+  }, [showKeepAlivePrompt]);
+
+  const screenShotControls = (
+    <div className={InspectorStyles['screenshot-controls']}>
+      <Space size="middle">
+        <Tooltip
+          title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')}
+          placement="topRight"
+        >
           <Switch
             checkedChildren={<CheckCircleOutlined />}
             unCheckedChildren={<CloseCircleOutlined />}
             defaultChecked={false}
             onChange={() => toggleShowCentroids()}
+            disabled={isGestureEditorVisible}
           />
         </Tooltip>
-      </div>
-      <div className={InspectorStyles['action-controls']}>
-        <ButtonGroup value={screenshotInteractionMode}>
+        <Button.Group value={screenshotInteractionMode}>
           <Tooltip title={t('Select Elements')}>
-            <Button icon={<SelectOutlined/>} onClick={() => {this.screenshotInteractionChange(SELECT);}}
+            <Button
+              icon={<SelectOutlined />}
+              onClick={() => screenshotInteractionChange(SELECT)}
               type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+              disabled={isGestureEditorVisible}
             />
           </Tooltip>
-          <Tooltip title={t('Swipe By Coordinates')}>
-            <Button icon={<SwapRightOutlined/>} onClick={() => {this.screenshotInteractionChange(SWIPE);}}
-              type={screenshotInteractionMode === SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+          <Tooltip title={t('Tap/Swipe By Coordinates')}>
+            <Button
+              icon={<PlusSquareOutlined />}
+              onClick={() => screenshotInteractionChange(TAP_SWIPE)}
+              type={screenshotInteractionMode === TAP_SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+              disabled={isGestureEditorVisible}
             />
           </Tooltip>
-          <Tooltip title={t('Tap By Coordinates')}>
-            <Button icon={<ScanOutlined/>} onClick={() => {this.screenshotInteractionChange(TAP);}}
-              type={screenshotInteractionMode === TAP ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-            />
+        </Button.Group>
+        {showScreenshot && !mjpegScreenshotUrl && (
+          <Tooltip title={t('Download Screenshot')}>
+            <Button icon={<DownloadOutlined />} onClick={() => downloadScreenshot(screenshot)} />
           </Tooltip>
-        </ButtonGroup>
-      </div>
-    </div>;
+        )}
+      </Space>
+    </div>
+  );
 
-    let main = <div className={InspectorStyles['inspector-main']} ref={(el) => {this.screenAndSourceEl = el;}}>
-      <div id='screenshotContainer' className={InspectorStyles['screenshot-container']} ref={(el) => {this.screenshotEl = el;}}>
+  const main = (
+    <div
+      className={InspectorStyles['inspector-main']}
+      ref={(el) => (screenAndSourceEl.current = el)}
+    >
+      <div
+        id="screenshotContainer"
+        className={InspectorStyles['screenshot-container']}
+        ref={(el) => (screenshotEl.current = el)}
+      >
         {screenShotControls}
-        {showScreenshot && <Screenshot {...this.props} scaleRatio={this.state.scaleRatio}/>}
+        {showScreenshot && <Screenshot {...props} scaleRatio={scaleRatio} />}
         {screenshotError && t('couldNotObtainScreenshot', {screenshotError})}
-        {!showScreenshot &&
+        {!showScreenshot && (
           <Spin size="large" spinning={true}>
             <div className={InspectorStyles.screenshotBox} />
           </Spin>
-        }
+        )}
       </div>
-      <div id='sourceTreeContainer' className={InspectorStyles['interaction-tab-container']} >
-        {showRecord &&
-          <RecordedActions {...this.props} />
-        }
-        <Tabs activeKey={selectedInteractionMode}
+      <div id="sourceTreeContainer" className={InspectorStyles['interaction-tab-container']}>
+        <Tabs
+          activeKey={selectedInteractionMode}
           size="small"
-          onChange={(tab) => selectInteractionMode(tab)}>
-          <TabPane tab={t('Source')} key={INTERACTION_MODE.SOURCE}>
-            <div className='action-row'>
-              <div className='action-col'>
-                <Card title={<span><FileTextOutlined /> {t('App Source')} </span>}
-                  extra={
+          onChange={(tab) => selectInteractionMode(tab)}
+          items={[
+            {
+              label: t('Source'),
+              key: INTERACTION_MODE.SOURCE,
+              children: (
+                <div className="action-row">
+                  <div className="action-col">
+                    <Card
+                      title={
+                        <span>
+                          <FileTextOutlined /> {t('App Source')}{' '}
+                        </span>
+                      }
+                      extra={
+                        <span>
+                          <Tooltip title={t('Toggle Attributes')}>
+                            <Button
+                              type="text"
+                              id="btnToggleAttrs"
+                              icon={<CodeOutlined />}
+                              onClick={toggleShowAttributes}
+                            />
+                          </Tooltip>
+                          <Tooltip title={t('Copy XML Source to Clipboard')}>
+                            <Button
+                              type="text"
+                              id="btnSourceXML"
+                              icon={<CopyOutlined />}
+                              onClick={() => clipboard.writeText(sourceXML)}
+                            />
+                          </Tooltip>
+                          <Tooltip title={t('Download Source as .XML File')}>
+                            <Button
+                              type="text"
+                              id="btnDownloadSourceXML"
+                              icon={<DownloadOutlined />}
+                              onClick={() => downloadXML(sourceXML)}
+                            />
+                          </Tooltip>
+                        </span>
+                      }
+                    >
+                      <Source {...props} />
+                    </Card>
+                  </div>
+                  <div
+                    id="selectedElementContainer"
+                    className={`${InspectorStyles['interaction-tab-container']} ${InspectorStyles['element-detail-container']} action-col`}
+                  >
+                    <Card
+                      title={
+                        <span>
+                          <TagOutlined /> {t('selectedElement')}
+                        </span>
+                      }
+                      className={InspectorStyles['selected-element-card']}
+                    >
+                      {selectedElement.path && <SelectedElement {...props} />}
+                      {!selectedElement.path && <i>{t('selectElementInSource')}</i>}
+                    </Card>
+                  </div>
+                </div>
+              ),
+            },
+            {
+              label: t('Commands'),
+              key: INTERACTION_MODE.COMMANDS,
+              children: (
+                <Card
+                  title={
                     <span>
-                      <Tooltip title={t('Copy XML Source to Clipboard')}>
-                        <Button type='text' id='btnSourceXML' icon={<CopyOutlined/>} onClick={() => clipboard.writeText(sourceXML)} />
-                      </Tooltip>
-                      <Tooltip title={t('Download Source as .XML File')}>
-                        <Button type='text' id='btnDownloadSourceXML' icon={<DownloadOutlined/>} onClick={() => downloadXML(sourceXML)}/>
-                      </Tooltip>
+                      <ThunderboltOutlined /> {t('Execute Commands')}
                     </span>
-                  }>
-                  <Source {...this.props} />
+                  }
+                  className={InspectorStyles['interaction-tab-card']}
+                >
+                  <Commands {...props} />
                 </Card>
-              </div>
-              <div id='selectedElementContainer'
-                className={`${InspectorStyles['interaction-tab-container']} ${InspectorStyles['element-detail-container']} action-col`}>
-                <Card title={<span><TagOutlined /> {t('selectedElement')}</span>}
-                  className={InspectorStyles['selected-element-card']}>
-                  {path && <SelectedElement {...this.props}/>}
-                  {!path && <i>{t('selectElementInSource')}</i>}
+              ),
+            },
+            {
+              label: t('Gestures'),
+              key: INTERACTION_MODE.GESTURES,
+              children: isGestureEditorVisible ? (
+                <Card
+                  title={
+                    <span>
+                      <HighlightOutlined /> {t('Gesture Builder')}
+                    </span>
+                  }
+                  className={InspectorStyles['interaction-tab-card']}
+                >
+                  <GestureEditor {...props} />
                 </Card>
-              </div>
-            </div>
-          </TabPane>
-          <TabPane tab={t('Actions')} key={INTERACTION_MODE.ACTIONS}>
-            <Card
-              title={<span><ThunderboltOutlined /> {t('Actions')}</span>}
-              className={InspectorStyles['interaction-tab-card']}>
-              <Actions {...this.props} />
-            </Card>
-          </TabPane>
-          <TabPane tab={t('Session Information')} key={INTERACTION_MODE.SESSION_INFO}>
-            <Card
-              title={<span><InfoCircleOutlined /> {t('Session Information')}</span>}
-              className={InspectorStyles['interaction-tab-card']}>
-              <SessionInfo {...this.props} />
-            </Card>
-          </TabPane>
-        </Tabs>
+              ) : (
+                <Card
+                  title={
+                    <span>
+                      <HighlightOutlined /> {t('Saved Gestures')}
+                    </span>
+                  }
+                  className={InspectorStyles['interaction-tab-card']}
+                >
+                  <SavedGestures {...props} />
+                </Card>
+              ),
+            },
+            {
+              label: t('Recorder'),
+              key: INTERACTION_MODE.RECORDER,
+              children: <Recorder {...props} />,
+            },
+            {
+              label: t('Session Information'),
+              key: INTERACTION_MODE.SESSION_INFO,
+              children: (
+                <Card
+                  title={
+                    <span>
+                      <InfoCircleOutlined /> {t('Session Information')}
+                    </span>
+                  }
+                  className={InspectorStyles['interaction-tab-card']}
+                >
+                  <SessionInfo {...props} />
+                </Card>
+              ),
+            },
+          ]}
+        />
       </div>
-    </div>;
+    </div>
+  );
 
-    const appModeControls = <div className={InspectorStyles['action-controls']}>
-      <ButtonGroup value={appMode}>
-        <Tooltip title={t('Native App Mode')}>
-          <Button icon={<AppstoreOutlined/>} onClick={() => {selectAppMode(APP_MODE.NATIVE);}}
-            type={appMode === APP_MODE.NATIVE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          />
-        </Tooltip>
-        <Tooltip title={t('Web/Hybrid App Mode')}>
-          <Button icon={<GlobalOutlined/>} onClick={() => {selectAppMode(APP_MODE.WEB_HYBRID);}}
-            type={appMode === APP_MODE.WEB_HYBRID ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          />
-        </Tooltip>
-      </ButtonGroup>
-    </div>;
+  return (
+    <div className={InspectorStyles['inspector-container']}>
+      <HeaderButtons quitCurrentSession={quitCurrentSession} {...props} />
+      {main}
+      <Modal
+        title={t('Session Inactive')}
+        open={showKeepAlivePrompt}
+        onOk={() => keepSessionAlive()}
+        onCancel={() => quitCurrentSession()}
+        okText={t('Keep Session Running')}
+        cancelText={t('Quit Session')}
+      >
+        <p>{t('Your session is about to expire')}</p>
+      </Modal>
+      <Modal
+        title={t('methodCallResult', {methodName: visibleCommandMethod})}
+        open={!!visibleCommandResult}
+        onOk={() => setVisibleCommandResult(null)}
+        onCancel={() => setVisibleCommandResult(null)}
+      >
+        <pre>
+          <code>{visibleCommandResult}</code>
+        </pre>
+      </Modal>
+    </div>
+  );
+};
 
-    const generalControls = <ButtonGroup>
-      <Tooltip title={t('Back')}>
-        <Button id='btnGoBack' icon={<ArrowLeftOutlined/>} onClick={() => applyClientMethod({methodName: 'back'})}/>
-      </Tooltip>
-      <Tooltip title={t('refreshSource')}>
-        <Button id='btnReload' icon={<ReloadOutlined/>} onClick={() => applyClientMethod({methodName: 'getPageSource'})}/>
-      </Tooltip>
-      {!isRecording &&
-        <Tooltip title={t('Start Recording')}>
-          <Button id='btnStartRecording' icon={<EyeOutlined/>} onClick={startRecording}/>
-        </Tooltip>
-      }
-      {isRecording &&
-        <Tooltip title={t('Pause Recording')}>
-          <Button id='btnPause' icon={<PauseOutlined/>} type={BUTTON.DANGER} onClick={pauseRecording}/>
-        </Tooltip>
-      }
-      <Tooltip title={t('Search for element')}>
-        <Button id='searchForElement' icon={<SearchOutlined/>} onClick={showLocatorTestModal}/>
-      </Tooltip>
-      <Tooltip title={t('quitSessionAndClose')}>
-        <Button id='btnClose' icon={<CloseOutlined/>} onClick={() => quitSession()}/>
-      </Tooltip>
-    </ButtonGroup>;
-
-    let controls = <div className={InspectorStyles['inspector-toolbar']}>
-      {appModeControls}
-      {generalControls}
-    </div>;
-
-    return (<Spin spinning={isFindingElementsTimes} key="main">
-      <div className={InspectorStyles['inspector-container']}>
-        {controls}
-        {main}
-        <Modal
-          title={t('Session Inactive')}
-          visible={showKeepAlivePrompt}
-          onOk={() => keepSessionAlive()}
-          onCancel={() => quitSession()}
-          okText={t('Keep Session Running')}
-          cancelText={t('Quit Session')}
-        >
-          <p>{t('Your session is about to expire')}</p>
-        </Modal>
-        <Modal
-          title={t('methodCallResult', {methodName: visibleCommandMethod})}
-          visible={!!visibleCommandResult}
-          onOk={() => setVisibleCommandResult(null)}
-          onCancel={() => setVisibleCommandResult(null)}
-        >
-          <pre><code>{visibleCommandResult}</code></pre>
-        </Modal>
-      </div>
-    </Spin>);
-  }
-}
+export default Inspector;

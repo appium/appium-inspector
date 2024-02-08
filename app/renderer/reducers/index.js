@@ -1,13 +1,12 @@
-import { combineReducers } from 'redux';
-import { connectRouter } from 'connected-react-router';
-import session from './Session';
+import {combineReducers} from '@reduxjs/toolkit';
+
 import inspector from './Inspector';
-import updater from '../../../gui-common/reducers/Updater';
+import session from './Session';
+import updater from './Updater';
 
 // create our root reducer
-export default function createRootReducer (history) {
+export default function createRootReducer() {
   return combineReducers({
-    router: connectRouter(history),
     session,
     inspector,
     updater,
