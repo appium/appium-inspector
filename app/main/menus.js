@@ -18,18 +18,20 @@ const t = (string, params = null) => i18n.t(string, params);
 
 const separator = {type: 'separator'};
 
+const showAppInfoPopup = () => {
+  dialog.showMessageBox({
+    title: t('appiumInspector'),
+    message: t('showAppInfo', {
+      appVersion: app.getVersion(),
+      electronVersion: process.versions.electron,
+      nodejsVersion: process.versions.node,
+    }),
+  });
+};
+
 const optionAbout = () => ({
   label: t('About Appium Inspector'),
-  click: () => {
-    dialog.showMessageBox({
-      title: t('appiumInspector'),
-      message: t('showAppInfo', {
-        appVersion: app.getVersion(),
-        electronVersion: process.versions.electron,
-        nodejsVersion: process.versions.node,
-      }),
-    });
-  },
+  click: () => showAppInfoPopup(),
 });
 
 const optionCheckForUpdates = () => ({
@@ -68,33 +70,37 @@ const optionCloseWindow = () => ({
   role: 'close',
 });
 
+async function openFileCallback() {
+  const {canceled, filePaths} = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: [{name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}],
+  });
+  if (!canceled) {
+    const filePath = filePaths[0];
+    mainWindow.webContents.send('open-file', filePath);
+  }
+}
+
 const optionOpen = () => ({
   label: t('Open Session File…'),
   accelerator: 'CmdOrCtrl+O',
-  click: async () => {
-    const {canceled, filePaths} = await dialog.showOpenDialog({
-      properties: ['openFile'],
-      filters: [{name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}],
-    });
-    if (!canceled) {
-      const filePath = filePaths[0];
-      mainWindow.webContents.send('open-file', filePath);
-    }
-  },
+  click: () => openFileCallback(),
 });
+
+async function saveAsCallback() {
+  const {canceled, filePath} = await dialog.showSaveDialog({
+    title: i18n.t('saveAs'),
+    filters: [{name: 'Appium', extensions: [APPIUM_SESSION_EXTENSION]}],
+  });
+  if (!canceled) {
+    mainWindow.webContents.send('save-file', filePath);
+  }
+}
 
 const optionSaveAs = () => ({
   label: t('saveAs'),
   accelerator: 'CmdOrCtrl+S',
-  click: async () => {
-    const {canceled, filePath} = await dialog.showSaveDialog({
-      title: t('saveAs'),
-      filters: [{name: 'Appium', extensions: [APPIUM_SESSION_EXTENSION]}],
-    });
-    if (!canceled) {
-      mainWindow.webContents.send('save-file', filePath);
-    }
-  },
+  click: () => saveAsCallback(),
 });
 
 const optionUndo = () => ({
@@ -152,14 +158,17 @@ const optionZoomOut = () => ({
   role: 'zoomOut',
 });
 
-const optionLanguages = () => ({
-  label: t('Languages'),
-  submenu: languageList.map((language) => ({
+const getLanguagesMenu = () =>
+  languageList.map((language) => ({
     label: `${language.name} (${language.original})`,
     type: 'radio',
     checked: i18n.language === language.code,
     click: () => i18n.changeLanguage(language.code),
-  })),
+  }));
+
+const optionLanguages = () => ({
+  label: t('Languages'),
+  submenu: getLanguagesMenu(),
 });
 
 const optionReload = () => ({
