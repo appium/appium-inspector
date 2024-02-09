@@ -20,8 +20,11 @@ labels:
     sync: true
     matcher:
       title: '^chore.*?:'
-      files:
-        all: ['!package-lock.json']
+
+  - label: 'dependencies'
+    sync: true
+    matcher:
+      files: ['package-lock.json']
 
   - label: 'i18n'
     sync: true
