@@ -224,7 +224,7 @@
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-native": "4.1.0",
     "less": "4.2.0",
-    "mocha": "10.2.0",
+    "mocha": "10.3.0",
     "mocha-junit-reporter": "2.2.1",
     "mocha-multi-reporters": "1.5.1",
     "node-libs-browser": "2.2.1",
