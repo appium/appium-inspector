@@ -21,7 +21,7 @@ However, there are a few specific options as well:
 
 !!! warning
 
-    [This functionality is not currently working.](./troubleshooting.md#auto-updater-not-working)
+    [This functionality is currently unavailable.](./troubleshooting.md#auto-updater-not-working)
 
 The update checker is available under the _File_ menu (Windows/Linux) or the application menu
 (macOS). It can be used to check if there is a newer version of the Inspector available, and if so,

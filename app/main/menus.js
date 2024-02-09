@@ -16,7 +16,7 @@ const t = (string, params = null) => i18n.t(string, params);
 
 const separator = {type: 'separator'};
 
-const showAppInfoPopup = () => {
+function showAppInfoPopup() {
   dialog.showMessageBox({
     title: t('appiumInspector'),
     message: t('showAppInfo', {
@@ -25,9 +25,9 @@ const showAppInfoPopup = () => {
       nodejsVersion: process.versions.node,
     }),
   });
-};
+}
 
-const openFile = async (mainWindow) => {
+async function openFile(mainWindow) {
   const {canceled, filePaths} = await dialog.showOpenDialog({
     properties: ['openFile'],
     filters: [{name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}],
@@ -36,9 +36,9 @@ const openFile = async (mainWindow) => {
     const filePath = filePaths[0];
     mainWindow.webContents.send('open-file', filePath);
   }
-};
+}
 
-const saveAs = async (mainWindow) => {
+async function saveAs(mainWindow) {
   const {canceled, filePath} = await dialog.showSaveDialog({
     title: i18n.t('saveAs'),
     filters: [{name: 'Appium', extensions: [APPIUM_SESSION_EXTENSION]}],
@@ -46,41 +46,48 @@ const saveAs = async (mainWindow) => {
   if (!canceled) {
     mainWindow.webContents.send('save-file', filePath);
   }
-};
+}
 
-const getLanguagesMenu = () =>
-  languageList.map((language) => ({
+function getLanguagesMenu() {
+  return languageList.map((language) => ({
     label: `${language.name} (${language.original})`,
     type: 'radio',
     checked: i18n.language === language.code,
     click: () => i18n.changeLanguage(language.code),
   }));
+}
 
-const optionAbout = () => ({
-  label: t('About Appium Inspector'),
-  click: () => showAppInfoPopup(),
-});
+function optionAbout() {
+  return {
+    label: t('About Appium Inspector'),
+    click: () => showAppInfoPopup(),
+  };
+}
 
-const optionCheckForUpdates = () => ({
-  label: t('Check for Updates…'),
-  click: () => checkNewUpdates(true),
-});
+function optionCheckForUpdates() {
+  return {
+    label: t('Check for Updates…'),
+    click: () => checkNewUpdates(true),
+  };
+}
 
-const dropdownApp = () => ({
-  label: t('appiumInspector'),
-  submenu: [
-    optionAbout(),
-    optionCheckForUpdates(),
-    separator,
-    {label: t('Hide Appium Inspector'), role: 'hide'},
-    {label: t('Hide Others'), role: 'hideOthers'},
-    {label: t('Show All'), role: 'unhide'},
-    separator,
-    {label: t('Quit Appium Inspector'), role: 'quit'},
-  ],
-});
+function dropdownApp() {
+  return {
+    label: t('appiumInspector'),
+    submenu: [
+      optionAbout(),
+      optionCheckForUpdates(),
+      separator,
+      {label: t('Hide Appium Inspector'), role: 'hide'},
+      {label: t('Hide Others'), role: 'hideOthers'},
+      {label: t('Show All'), role: 'unhide'},
+      separator,
+      {label: t('Quit Appium Inspector'), role: 'quit'},
+    ],
+  };
+}
 
-const dropdownFile = (mainWindow, isMac) => {
+function dropdownFile(mainWindow, isMac) {
   const submenu = [
     {label: t('New Window'), accelerator: 'CmdOrCtrl+N', click: launchNewSessionWindow},
     {label: t('Close Window'), role: 'close'},
@@ -97,23 +104,25 @@ const dropdownFile = (mainWindow, isMac) => {
     label: t('File'),
     submenu,
   };
-};
+}
 
-const dropdownEdit = () => ({
-  label: t('Edit'),
-  submenu: [
-    {label: t('Undo'), role: 'undo'},
-    {label: t('Redo'), role: 'redo'},
-    separator,
-    {label: t('Cut'), role: 'cut'},
-    {label: t('Copy'), role: 'copy'},
-    {label: t('Paste'), role: 'paste'},
-    {label: t('Delete'), role: 'delete'},
-    {label: t('Select All'), role: 'selectAll'},
-  ],
-});
+function dropdownEdit() {
+  return {
+    label: t('Edit'),
+    submenu: [
+      {label: t('Undo'), role: 'undo'},
+      {label: t('Redo'), role: 'redo'},
+      separator,
+      {label: t('Cut'), role: 'cut'},
+      {label: t('Copy'), role: 'copy'},
+      {label: t('Paste'), role: 'paste'},
+      {label: t('Delete'), role: 'delete'},
+      {label: t('Select All'), role: 'selectAll'},
+    ],
+  };
+}
 
-const dropdownView = (isDev) => {
+function dropdownView(isDev) {
   const submenu = [
     {label: t('Toggle Full Screen'), role: 'togglefullscreen'},
     {label: t('Reset Zoom Level'), role: 'resetZoom'},
@@ -137,38 +146,44 @@ const dropdownView = (isDev) => {
     label: t('View'),
     submenu,
   };
-};
+}
 
-const dropdownWindow = () => ({
-  label: t('Window'),
-  submenu: [
-    {label: t('Minimize'), role: 'minimize'},
-    {label: t('Zoom'), role: 'zoom'},
-    separator,
-    {label: t('Bring All to Front'), role: 'front'},
-  ],
-});
+function dropdownWindow() {
+  return {
+    label: t('Window'),
+    submenu: [
+      {label: t('Minimize'), role: 'minimize'},
+      {label: t('Zoom'), role: 'zoom'},
+      separator,
+      {label: t('Bring All to Front'), role: 'front'},
+    ],
+  };
+}
 
-const dropdownHelp = () => ({
-  label: t('Help'),
-  submenu: [
-    {label: t('Inspector Documentation'), click: () => shell.openExternal(INSPECTOR_DOCS_URL)},
-    {label: t('Appium Documentation'), click: () => shell.openExternal(APPIUM_DOCS_URL)},
-    {label: t('Appium Discussion Forum'), click: () => shell.openExternal(APPIUM_FORUM_URL)},
-    separator,
-    {label: t('Report Issues'), click: () => shell.openExternal(GITHUB_ISSUES_URL)},
-    {label: t('Improve Translations'), click: () => shell.openExternal(CROWDIN_URL)},
-  ],
-});
+function dropdownHelp() {
+  return {
+    label: t('Help'),
+    submenu: [
+      {label: t('Inspector Documentation'), click: () => shell.openExternal(INSPECTOR_DOCS_URL)},
+      {label: t('Appium Documentation'), click: () => shell.openExternal(APPIUM_DOCS_URL)},
+      {label: t('Appium Discussion Forum'), click: () => shell.openExternal(APPIUM_FORUM_URL)},
+      separator,
+      {label: t('Report Issues'), click: () => shell.openExternal(GITHUB_ISSUES_URL)},
+      {label: t('Improve Translations'), click: () => shell.openExternal(CROWDIN_URL)},
+    ],
+  };
+}
 
-const menuTemplate = (mainWindow, isMac, isDev) => [
-  ...(isMac ? [dropdownApp()] : []),
-  dropdownFile(mainWindow, isMac),
-  dropdownEdit(),
-  dropdownView(isDev),
-  ...(isMac ? [dropdownWindow()] : []),
-  dropdownHelp(),
-];
+function menuTemplate(mainWindow, isMac, isDev) {
+  return [
+    ...(isMac ? [dropdownApp()] : []),
+    dropdownFile(mainWindow, isMac),
+    dropdownEdit(),
+    dropdownView(isDev),
+    ...(isMac ? [dropdownWindow()] : []),
+    dropdownHelp(),
+  ];
+}
 
 export function rebuildMenus(mainWindow, isDev) {
   const isMac = process.platform === 'darwin';
