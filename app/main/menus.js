@@ -90,11 +90,7 @@ const dropdownFile = (mainWindow, isMac) => {
   ];
 
   if (!isMac) {
-    submenu.push(...[separator, optionAbout()]);
-    // If it's Windows, add a 'Check for Updates' menu option
-    if (process.platform === 'win32') {
-      submenu.push(optionCheckForUpdates());
-    }
+    submenu.push(...[separator, optionAbout(), optionCheckForUpdates()]);
   }
 
   return {
