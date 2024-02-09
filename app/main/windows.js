@@ -47,7 +47,7 @@ function buildSessionWindow() {
   return window;
 }
 
-export function setupMainWindow({splashUrl, mainUrl, isDev, shouldShowFileMenu = false}) {
+export function setupMainWindow({splashUrl, mainUrl, isDev}) {
   const splashWindow = buildSplashWindow();
   mainWindow = buildSessionWindow();
 
@@ -84,7 +84,7 @@ export function setupMainWindow({splashUrl, mainUrl, isDev, shouldShowFileMenu =
   });
 
   i18n.on('languageChanged', async (languageCode) => {
-    rebuildMenus(null, shouldShowFileMenu);
+    rebuildMenus(mainWindow, isDev);
     await settings.set('PREFERRED_LANGUAGE', languageCode);
     webContents.getAllWebContents().forEach((wc) => {
       wc.send('appium-language-changed', {
@@ -93,7 +93,7 @@ export function setupMainWindow({splashUrl, mainUrl, isDev, shouldShowFileMenu =
     });
   });
 
-  rebuildMenus(mainWindow, shouldShowFileMenu);
+  rebuildMenus(mainWindow, isDev);
 }
 
 export function launchNewSessionWindow() {
