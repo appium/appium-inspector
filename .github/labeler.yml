@@ -2,31 +2,26 @@ version: v1
 
 labels:
   - label: 'enhancement'
-    sync: true
     matcher:
       title: '^feat.*?:'
 
   - label: 'fix'
-    sync: true
     matcher:
       title: '^fix.*?:'
 
   - label: 'documentation'
-    sync: true
     matcher:
       title: '^docs.*?:'
+      files: ['README.md', 'docs/**']
 
   - label: 'chore'
-    sync: true
     matcher:
       title: '^chore.*?:'
 
   - label: 'dependencies'
-    sync: true
     matcher:
       files: ['package-lock.json']
 
   - label: 'i18n'
-    sync: true
     matcher:
       files: ['assets/locales/**']
