@@ -347,7 +347,12 @@ export function newSession(caps, attachSessId = null) {
         username = session.server.lambdatest.username || process.env.LAMBDATEST_USERNAME;
         if (desiredCapabilities.hasOwnProperty.call(desiredCapabilities, 'lt:options')) {
           desiredCapabilities['lt:options'].source = 'appiumdesktop';
-          desiredCapabilities['lt:options'].isRealMobile = true;
+          if (
+            desiredCapabilities['lt:options'].isRealMobile === undefined ||
+            desiredCapabilities['lt:options'].isRealMobile
+          ) {
+            desiredCapabilities['lt:options'].isRealMobile = true;
+          }
           if (session.server.advanced.useProxy) {
             desiredCapabilities['lt:options'].proxyUrl = isUndefined(session.server.advanced.proxy)
               ? ''
@@ -355,7 +360,12 @@ export function newSession(caps, attachSessId = null) {
           }
         } else {
           desiredCapabilities['lambdatest:source'] = 'appiumdesktop';
-          desiredCapabilities['lambdatest:isRealMobile'] = true;
+          if (
+            desiredCapabilities['lambdatest:isRealMobile'] === undefined ||
+            desiredCapabilities['lambdatest:isRealMobile']
+          ) {
+            desiredCapabilities['lambdatest:isRealMobile'] = true;
+          }
           if (session.server.advanced.useProxy) {
             desiredCapabilities['lambdatest:proxyUrl'] = isUndefined(session.server.advanced.proxy)
               ? ''
@@ -572,6 +582,9 @@ export function newSession(caps, attachSessId = null) {
         let attachedSessionCaps = {};
         if (attachedSession) {
           attachedSessionCaps = attachedSession.capabilities;
+          if (attachedSessionCaps.platformName === undefined) {
+            attachedSessionCaps = attachedSession.capabilities.capabilities;
+          }
         } else {
           const {protocol, hostname, port, path} = serverOpts;
           try {
