@@ -1,9 +1,14 @@
 [
   {
-    "version": "2023.12",
-    "title": "2023.12",
+    "version": "2024.2",
+    "title": "2024.2",
     "aliases": [
       "latest"
     ]
+  },
+  {
+    "version": "2023.12",
+    "title": "2023.12",
+    "aliases": []
   }
 ]
