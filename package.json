@@ -152,7 +152,7 @@
     "uuid": "Obsolete: can be replaced with crypto.randomUUID in Electron 14+"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "2.2.0",
+    "@reduxjs/toolkit": "2.2.1",
     "@xmldom/xmldom": "0.8.10",
     "antd": "4.24.15",
     "axios": "1.6.7",
