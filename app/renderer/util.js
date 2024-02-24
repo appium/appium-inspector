@@ -189,6 +189,8 @@ function getUniqueXPath(doc, domNode, attrs) {
   return [];
 }
 
+
+// TODO: change this to take doc and path, then use findElementByPath
 /**
  * Get an optimal XPath for a DOMNode
  *
