@@ -13,7 +13,6 @@ import React, {useRef} from 'react';
 import {clipboard, shell} from '../../polyfills';
 import {ALERT, ROW} from '../AntdTypes';
 import styles from './Inspector.css';
-import {getLocators} from './shared';
 
 const NATIVE_APP = 'NATIVE_APP';
 const CLASS_CHAIN_DOCS_URL =
@@ -42,7 +41,7 @@ const SelectedElement = (props) => {
 
   const sendKeys = useRef();
 
-  const {attributes, classChain, predicateString, xpath} = selectedElement;
+  const {attributes, strategyMap, classChain, predicateString} = selectedElement;
   const isDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
 
   const selectedElementTableCell = (text, copyToClipBoard) => {
@@ -116,17 +115,11 @@ const SelectedElement = (props) => {
   }
 
   // Get the data for the strategies table
-  let findDataSource = _.toPairs(getLocators(attributes, sourceXML)).map(([key, selector]) => ({
+  let findDataSource = strategyMap.map(([key, selector]) => ({
     key,
     selector,
     find: key,
   }));
-
-  // If XPath is the only provided data source, warn the user about it's brittleness
-  let showXpathWarning = false;
-  if (findDataSource.length === 0) {
-    showXpathWarning = true;
-  }
 
   // Add class chain to the data source as well
   if (classChain && currentContext === NATIVE_APP) {
@@ -168,13 +161,10 @@ const SelectedElement = (props) => {
     });
   }
 
-  // Add XPath to the data source as well
-  if (xpath) {
-    findDataSource.push({
-      key: 'xpath',
-      find: 'xpath',
-      selector: xpath,
-    });
+  // If XPath is the only optimal selector, warn the user about its brittleness
+  let showXpathWarning = false;
+  if (findDataSource.length === 1) {
+    showXpathWarning = true;
   }
 
   // Replace table data with table data that has the times

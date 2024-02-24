@@ -49,6 +49,7 @@ import {
   SET_COORD_END,
   SET_COORD_START,
   SET_EXPANDED_PATHS,
+  SET_OPTIMAL_LOCATORS,
   SET_GESTURE_TAP_COORDS_MODE,
   SET_INTERACTIONS_NOT_AVAILABLE,
   SET_KEEP_ALIVE_INTERVAL,
@@ -189,6 +190,15 @@ export default function inspector(state = INITIAL_STATE, action) {
         selectedElementSearchInProgress: true,
         elementInteractionsNotAvailable: false,
         findElementsExecutionTimes: [],
+      };
+
+    case SET_OPTIMAL_LOCATORS:
+      return {
+        ...state,
+        selectedElement:  {
+          ...state.selectedElement,
+          strategyMap: action.strategyMap,
+        },
       };
 
     case UNSELECT_ELEMENT:

@@ -19,6 +19,7 @@ export const SET_INTERACTIONS_NOT_AVAILABLE = 'SET_INTERACTIONS_NOT_AVAILABLE';
 export const METHOD_CALL_REQUESTED = 'METHOD_CALL_REQUESTED';
 export const METHOD_CALL_DONE = 'METHOD_CALL_DONE';
 export const SET_EXPANDED_PATHS = 'SET_EXPANDED_PATHS';
+export const SET_OPTIMAL_LOCATORS = 'SET_OPTIMAL_LOCATORS';
 export const SELECT_HOVERED_ELEMENT = 'SELECT_HOVERED_ELEMENT';
 export const UNSELECT_HOVERED_ELEMENT = 'UNSELECT_HOVERED_ELEMENT';
 
@@ -149,6 +150,7 @@ export function selectElement(path) {
     // Find the optimal selection strategy. If none found, fall back to XPath.
     const strategyMap = _.toPairs(getLocators(selectedElement.attributes, sourceXML));
     strategyMap.push(['xpath', selectedElement.xpath]);
+    dispatch({type: SET_OPTIMAL_LOCATORS, strategyMap});
 
     // Debounce find element so that if another element is selected shortly after, cancel the previous search
     await findElement(strategyMap, dispatch, getState, path);
