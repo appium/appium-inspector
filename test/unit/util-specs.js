@@ -670,7 +670,7 @@ describe('util.js', function () {
             <grandchild id='hello'></grandchild>
           </child>
         </node>`);
-        getOptimalXPath(doc, doc.getElementById('hello'), ['id']).should.equal(
+        getOptimalXPath(doc, doc.getElementById('hello')).should.equal(
           '/node/child[2]/grandchild',
         );
         xpathSelectStub.restore();
@@ -687,7 +687,7 @@ describe('util.js', function () {
         node.getAttribute = () => {
           throw new Error('Some unexpected error');
         };
-        should.not.exist(getOptimalXPath(doc, node, ['id']));
+        should.not.exist(getOptimalXPath(doc, node));
       });
     });
   });

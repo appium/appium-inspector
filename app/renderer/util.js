@@ -73,7 +73,7 @@ export function xmlToJSON(source) {
       ),
       tagName: xmlNode.tagName,
       attributes,
-      xpath: getOptimalXPath(xmlDoc, xmlNode, UNIQUE_XPATH_ATTRIBUTES),
+      xpath: getOptimalXPath(xmlDoc, xmlNode),
       ...(isIOS ? {classChain: classChainSelector ? `**${classChainSelector}` : ''} : {}),
       ...(isIOS ? {predicateString: predicateStringSelector ? predicateStringSelector : ''} : {}),
       path,
