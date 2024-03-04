@@ -315,26 +315,50 @@ export default class AppiumClient {
           }
         }
       } else if (this.driver.client.isIOS) {
-        // on iOS, find the top status bar and address bar and use its Y endpoint
-        const topBar = await this.fetchElement({
-          strategy: '-ios class chain',
-          selector: IOS_TOP_CONTROLS_SELECTOR,
-        });
-        if (topBar.el) {
-          const {y, height} = await topBar.el.getRect();
-          webviewTopOffset = y + height;
-        }
-        // in landscape mode, there is empty space on both sides (at default zoom level), so add offset for that too
-        if (windowSize.height < windowSize.width) {
-          try {
-            const deviceScreenInfo = await this.driver.executeScript('mobile:deviceScreenInfo', []);
-            webviewLeftOffset = deviceScreenInfo.statusBarSize.height;
-          } catch (e) {
+        let browserName = '';
+        try {
+          // emulate optional chaining of deeply embedded property which might not exist using
+          // a try catch
+          browserName = this.driver.client.capabilities.browserName.toLowerCase();
+        } catch (ign) {}
+        const isSafari = browserName === 'safari';
+        if (isSafari) {
+          // on iOS, if we're in Safari simply find the top status bar and address bar and use its Y endpoint
+          const topBar = await this.fetchElement({
+            strategy: '-ios class chain',
+            selector: IOS_TOP_CONTROLS_SELECTOR,
+          });
+          if (topBar.el) {
+            const {y, height} = await topBar.el.getRect();
+            webviewTopOffset = y + height;
+          }
+          // in landscape mode, there is empty space on both sides (at default zoom level), so add offset for that too
+          if (windowSize.height < windowSize.width) {
             try {
-              const sessionDetails = await this.driver.getSession();
-              // in case driver does not support mobile:deviceScreenInfo
-              webviewLeftOffset = sessionDetails.statBarHeight;
-            } catch (ign) {}
+              const deviceScreenInfo = await this.driver.executeScript(
+                'mobile:deviceScreenInfo',
+                [],
+              );
+              webviewLeftOffset = deviceScreenInfo.statusBarSize.height;
+            } catch (e) {
+              try {
+                const sessionDetails = await this.driver.getSession();
+                // in case driver does not support mobile:deviceScreenInfo
+                webviewLeftOffset = sessionDetails.statBarHeight;
+              } catch (ign) {}
+            }
+          }
+        } else {
+          // if we have a hybrid view, just find the first WebView element and use its position as
+          // the offset. Unfortunately this strategy doesn't work for Safari
+          const wv = await this.fetchElement({
+            strategy: 'class name',
+            selector: 'XCUIElementTypeWebView',
+          });
+          if (wv.el) {
+            const {x, y} = await wv.el.getRect();
+            webviewTopOffset = y;
+            webviewLeftOffset = x;
           }
         }
       }
