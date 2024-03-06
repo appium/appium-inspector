@@ -1,6 +1,8 @@
 import {DOMParser} from '@xmldom/xmldom';
 import xpath from 'xpath';
 
+import {getOptimalXPath} from '../../util';
+
 export function pixelsToPercentage(px, maxPixels) {
   if (!isNaN(px)) {
     return parseFloat(((px / maxPixels) * 100).toFixed(1), 10);
@@ -54,14 +56,17 @@ const STRATEGY_MAPPINGS = [
   ['type', 'class name'],
 ];
 
-export function getLocators(attributes, sourceXML) {
-  const res = {};
+export function getLocators(element, sourceXML) {
+  const res = [];
+  // Start with the optimal strategies
   for (let [strategyAlias, strategy] of STRATEGY_MAPPINGS) {
-    const value = attributes[strategyAlias];
+    const value = element.attributes[strategyAlias];
     if (value && isUnique(strategyAlias, value, sourceXML)) {
-      res[strategy] = attributes[strategyAlias];
+      res.push([strategy, value]);
     }
   }
+  // Finally add xpath
+  res.push(['xpath', getOptimalXPath(element.path, sourceXML)]);
   return res;
 }
 

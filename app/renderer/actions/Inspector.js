@@ -147,9 +147,8 @@ export function selectElement(path) {
     }
     dispatch({type: SET_EXPANDED_PATHS, paths: copiedExpandedPaths});
 
-    // Find the optimal selection strategy. If none found, fall back to XPath.
-    const strategyMap = _.toPairs(getLocators(selectedElement.attributes, sourceXML));
-    strategyMap.push(['xpath', selectedElement.xpath]);
+    // Calculate the recommended locator strategies
+    const strategyMap = getLocators(selectedElement, sourceXML);
     dispatch({type: SET_OPTIMAL_LOCATORS, strategyMap});
 
     // Debounce find element so that if another element is selected shortly after, cancel the previous search
