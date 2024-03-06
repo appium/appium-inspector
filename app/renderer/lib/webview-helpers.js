@@ -24,8 +24,14 @@ export function setHtmlElementAttributes(obj) {
 
     el.setAttribute('data-appium-inspector-width', Math.round(rect.width * dpr));
     el.setAttribute('data-appium-inspector-height', Math.round(rect.height * dpr));
-    el.setAttribute('data-appium-inspector-x', Math.round(webviewLeftOffset + rect.left * dpr));
-    el.setAttribute('data-appium-inspector-y', Math.round(webviewTopOffset + rect.top * dpr));
+    el.setAttribute(
+      'data-appium-inspector-x',
+      Math.round(webviewLeftOffset + (rect.left - window.scrollX) * dpr),
+    );
+    el.setAttribute(
+      'data-appium-inspector-y',
+      Math.round(webviewTopOffset + (rect.top - window.scrollY) * dpr),
+    );
   });
 }
 
