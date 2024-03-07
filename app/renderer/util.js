@@ -31,6 +31,21 @@ const UNIQUE_CLASS_CHAIN_ATTRIBUTES = ['name', 'label', 'value'];
 const UNIQUE_PREDICATE_ATTRIBUTES = ['name', 'label', 'value', 'type'];
 
 /**
+ * Look up an element in the source using the provided path
+ *
+ * @param {string} path a dot-separated string of indices
+ * @param {Object} source app source in JSON format
+ * @returns {Object} element details in JSON format
+ */
+export function findElementByPath(path, source) {
+  let selectedElement = source;
+  for (let index of path.split('.')) {
+    selectedElement = selectedElement.children[index];
+  }
+  return {...selectedElement};
+}
+
+/**
  * Translates sourceXML to JSON
  *
  * @param {string} source

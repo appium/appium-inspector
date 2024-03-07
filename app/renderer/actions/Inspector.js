@@ -6,7 +6,7 @@ import {SAVED_FRAMEWORK, SET_SAVED_GESTURES, getSetting, setSetting} from '../..
 import {APP_MODE, getLocators} from '../components/Inspector/shared';
 import AppiumClient, {NATIVE_APP} from '../lib/appium-client';
 import frameworks from '../lib/client-frameworks';
-import {xmlToJSON} from '../util';
+import {findElementByPath, xmlToJSON} from '../util';
 import {showError} from './Session';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
@@ -130,9 +130,10 @@ const findElement = _.debounce(async function (strategyMap, dispatch, getState, 
 
 export function selectElement(path) {
   return async (dispatch, getState) => {
+    const {source, sourceXML, expandedPaths} = getState().inspector;
     // Set the selected element in the source tree
-    dispatch({type: SELECT_ELEMENT, path});
-    const {selectedElement, sourceXML, expandedPaths} = getState().inspector;
+    const selectedElement = findElementByPath(path, source);
+    dispatch({type: SELECT_ELEMENT, selectedElement});
 
     // Expand all of this element's ancestors so that it's visible in the source tree
     // Make a copy of the array to avoid state mutation
@@ -187,8 +188,10 @@ export function unselectHoveredCentroid() {
 }
 
 export function selectHoveredElement(path) {
-  return (dispatch) => {
-    dispatch({type: SELECT_HOVERED_ELEMENT, path});
+  return (dispatch, getState) => {
+    const {source} = getState().inspector;
+    const hoveredElement = findElementByPath(path, source);
+    dispatch({type: SELECT_HOVERED_ELEMENT, hoveredElement});
   };
 }
 

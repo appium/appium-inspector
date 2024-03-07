@@ -133,17 +133,6 @@ const INITIAL_STATE = {
 
 let nextState;
 
-/**
- * Look up an element in the source with the provided path
- */
-function findElementByPath(path, source) {
-  let selectedElement = source;
-  for (let index of path.split('.')) {
-    selectedElement = selectedElement.children[index];
-  }
-  return {...selectedElement};
-}
-
 export default function inspector(state = INITIAL_STATE, action) {
   switch (action.type) {
     case SET_SOURCE_AND_SCREENSHOT:
@@ -185,8 +174,8 @@ export default function inspector(state = INITIAL_STATE, action) {
     case SELECT_ELEMENT:
       return {
         ...state,
-        selectedElement: findElementByPath(action.path, state.source),
-        selectedElementPath: action.path,
+        selectedElement: action.selectedElement,
+        selectedElementPath: action.selectedElement.path,
         selectedElementSearchInProgress: true,
         elementInteractionsNotAvailable: false,
         findElementsExecutionTimes: [],
@@ -195,7 +184,7 @@ export default function inspector(state = INITIAL_STATE, action) {
     case SET_OPTIMAL_LOCATORS:
       return {
         ...state,
-        selectedElement:  {
+        selectedElement: {
           ...state.selectedElement,
           strategyMap: action.strategyMap,
         },
@@ -241,7 +230,7 @@ export default function inspector(state = INITIAL_STATE, action) {
     case SELECT_HOVERED_ELEMENT:
       return {
         ...state,
-        hoveredElement: findElementByPath(action.path, state.source),
+        hoveredElement: action.hoveredElement,
       };
 
     case UNSELECT_HOVERED_ELEMENT:
