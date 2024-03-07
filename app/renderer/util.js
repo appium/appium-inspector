@@ -77,6 +77,18 @@ export function getSimpleSuggestedLocators(attributes, sourceXML) {
 }
 
 /**
+ * Get suggested selectors for complex locator strategies (multiple attributes, axes, etc.)
+ *
+ * @param {Object} selectedElement
+ * @param {Object} source
+ * @returns {Object} mapping of strategies to selectors
+ */
+export function getComplexSuggestedLocators(selectedElement, source) {
+  return null;
+  // return {'xpath': getOptimalXPath(selectedElement, source)};
+}
+
+/**
  * Look up an element in the source using the provided path
  *
  * @param {string} path a dot-separated string of indices
@@ -250,8 +262,6 @@ function getUniqueXPath(doc, domNode, attrs) {
   return [];
 }
 
-
-// TODO: change this to take doc and path, then use findElementByPath
 /**
  * Get an optimal XPath for a DOMNode
  *
