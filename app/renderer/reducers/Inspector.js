@@ -196,8 +196,6 @@ export default function inspector(state = INITIAL_STATE, action) {
         selectedElement: undefined,
         selectedElementPath: null,
         selectedElementId: null,
-        selectedElementVariableName: null,
-        selectedElementVariableType: null,
         selectedElementSearchInProgress: false,
       };
 
@@ -214,8 +212,6 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         selectedElementId: action.elementId,
-        selectedElementVariableName: action.variableName,
-        selectedElementVariableType: action.variableType,
         selectedElementSearchInProgress: false,
         findElementsExecutionTimes: [],
       };

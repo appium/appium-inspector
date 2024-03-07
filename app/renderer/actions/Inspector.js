@@ -116,12 +116,12 @@ const findElement = _.debounce(async function (strategyMap, dispatch, getState, 
       strategy,
       selector,
     });
-    let {elementId, variableName, variableType} = await action(dispatch, getState);
+    let {elementId} = await action(dispatch, getState);
 
-    // Set the elementId, variableName and variableType for the selected element
+    // Set the elementId for the selected element
     // (check first that the selectedElementPath didn't change, to avoid race conditions)
     if (elementId && getState().inspector.selectedElementPath === path) {
-      return dispatch({type: SET_SELECTED_ELEMENT_ID, elementId, variableName, variableType});
+      return dispatch({type: SET_SELECTED_ELEMENT_ID, elementId});
     }
   }
 
