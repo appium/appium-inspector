@@ -113,7 +113,7 @@ const SelectedElement = (props) => {
   }
 
   // Get the data for the strategies table
-  let findDataSource = _.toPairs(strategyMap).map(([key, selector]) => ({
+  let findDataSource = strategyMap.map(([key, selector]) => ({
     key,
     selector,
     find: key,

@@ -30,6 +30,52 @@ const UNIQUE_CLASS_CHAIN_ATTRIBUTES = ['name', 'label', 'value'];
 
 const UNIQUE_PREDICATE_ATTRIBUTES = ['name', 'label', 'value', 'type'];
 
+// Map of element attributes to their matching simple (optimal) locator strategies
+const SIMPLE_STRATEGY_MAPPINGS = [
+  ['name', 'accessibility id'],
+  ['content-desc', 'accessibility id'],
+  ['id', 'id'],
+  ['rntestid', 'id'],
+  ['resource-id', 'id'],
+  ['class', 'class name'],
+  ['type', 'class name'],
+];
+
+/**
+ * Check whether the provided attribute & value are unique in the source
+ *
+ * @param {string} attrName
+ * @param {string} attrValue
+ * @param {string} sourceXML
+ * @returns {boolean}
+ */
+export function areAttrAndValueUnique(attrName, attrValue, sourceXML) {
+  // If no sourceXML provided, assume it's unique
+  if (!sourceXML) {
+    return true;
+  }
+  const doc = new DOMParser().parseFromString(sourceXML);
+  return XPath.select(`//*[@${attrName}="${attrValue.replace(/"/g, '')}"]`, doc).length < 2;
+}
+
+/**
+ * Get suggested selectors for simple locator strategies (which match a specific attribute)
+ *
+ * @param {Object} attributes element attributes
+ * @param {string} sourceXML
+ * @returns {Object} mapping of strategies to selectors
+ */
+export function getSimpleSuggestedLocators(attributes, sourceXML) {
+  const res = {};
+  for (let [strategyAlias, strategy] of SIMPLE_STRATEGY_MAPPINGS) {
+    const value = attributes[strategyAlias];
+    if (value && areAttrAndValueUnique(strategyAlias, value, sourceXML)) {
+      res[strategy] = value;
+    }
+  }
+  return res;
+}
+
 /**
  * Look up an element in the source using the provided path
  *

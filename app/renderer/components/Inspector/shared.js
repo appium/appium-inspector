@@ -1,8 +1,3 @@
-import {DOMParser} from '@xmldom/xmldom';
-import xpath from 'xpath';
-
-import {getOptimalXPath} from '../../util';
-
 export function pixelsToPercentage(px, maxPixels) {
   if (!isNaN(px)) {
     return parseFloat(((px / maxPixels) * 100).toFixed(1), 10);
@@ -34,37 +29,6 @@ export function parseCoordinates(element) {
   } else {
     return {};
   }
-}
-
-export function isUnique(attrName, attrValue, sourceXML) {
-  // If no sourceXML provided, assume it's unique
-  if (!sourceXML) {
-    return true;
-  }
-  const doc = new DOMParser().parseFromString(sourceXML);
-  return xpath.select(`//*[@${attrName}="${attrValue.replace(/"/g, '')}"]`, doc).length < 2;
-}
-
-// Map of the optimal strategies.
-const STRATEGY_MAPPINGS = [
-  ['name', 'accessibility id'],
-  ['content-desc', 'accessibility id'],
-  ['id', 'id'],
-  ['rntestid', 'id'],
-  ['resource-id', 'id'],
-  ['class', 'class name'],
-  ['type', 'class name'],
-];
-
-export function getLocators(attributes, sourceXML) {
-  const res = {};
-  for (let [strategyAlias, strategy] of STRATEGY_MAPPINGS) {
-    const value = attributes[strategyAlias];
-    if (value && isUnique(strategyAlias, value, sourceXML)) {
-      res[strategy] = attributes[strategyAlias];
-    }
-  }
-  return res;
 }
 
 export const POINTER_TYPES = {
