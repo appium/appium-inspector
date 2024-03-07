@@ -33,7 +33,6 @@ const SelectedElement = (props) => {
     isFindingElementsTimes,
     selectedElement,
     selectedElementId,
-    sourceXML,
     elementInteractionsNotAvailable,
     selectedElementSearchInProgress,
     t,
@@ -114,7 +113,7 @@ const SelectedElement = (props) => {
   }
 
   // Get the data for the strategies table
-  let findDataSource = strategyMap.map(([key, selector]) => ({
+  let findDataSource = _.toPairs(strategyMap).map(([key, selector]) => ({
     key,
     selector,
     find: key,

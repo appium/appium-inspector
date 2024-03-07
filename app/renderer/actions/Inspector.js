@@ -149,7 +149,7 @@ export function selectElement(path) {
     dispatch({type: SET_EXPANDED_PATHS, paths: copiedExpandedPaths});
 
     // Calculate the recommended locator strategies
-    const strategyMap = getLocators(selectedElement, sourceXML);
+    const strategyMap = _.toPairs(getLocators(selectedElement, sourceXML));
     dispatch({type: SET_OPTIMAL_LOCATORS, strategyMap});
 
     // Debounce find element so that if another element is selected shortly after, cancel the previous search

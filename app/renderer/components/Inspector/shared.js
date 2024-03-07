@@ -56,17 +56,14 @@ const STRATEGY_MAPPINGS = [
   ['type', 'class name'],
 ];
 
-export function getLocators(element, sourceXML) {
-  const res = [];
-  // Start with the optimal strategies
+export function getLocators(attributes, sourceXML) {
+  const res = {};
   for (let [strategyAlias, strategy] of STRATEGY_MAPPINGS) {
-    const value = element.attributes[strategyAlias];
+    const value = attributes[strategyAlias];
     if (value && isUnique(strategyAlias, value, sourceXML)) {
-      res.push([strategy, value]);
+      res[strategy] = attributes[strategyAlias];
     }
   }
-  // Finally add xpath
-  res.push(['xpath', getOptimalXPath(element.path, sourceXML)]);
   return res;
 }
 
