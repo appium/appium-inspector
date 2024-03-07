@@ -78,8 +78,7 @@ const SelectedElement = (props) => {
   ];
 
   // Get the data for the attributes table
-  let attrArray = _.toPairs(attributes).filter(([key]) => key !== 'path');
-  let dataSource = attrArray.map(([key, value]) => ({
+  let dataSource = _.toPairs(attributes).map(([key, value]) => ({
     key,
     value,
     name: key,
