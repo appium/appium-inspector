@@ -12,7 +12,7 @@ const {CENTROID, OVERLAP, EXPAND} = RENDER_CENTROID_AS;
  */
 const HighlighterRects = (props) => {
   const {
-    source,
+    sourceJSON,
     containerEl,
     searchedForElementBounds,
     scaleRatio,
@@ -26,8 +26,8 @@ const HighlighterRects = (props) => {
   let highlighterXOffset = 0;
   let screenshotEl = null;
 
-  const getElements = (source) => {
-    const elementsByOverlap = buildElementsWithProps(source, null, [], {});
+  const getElements = (sourceJSON) => {
+    const elementsByOverlap = buildElementsWithProps(sourceJSON, null, [], {});
     let elements = [];
 
     // Adjust overlapping elements
@@ -68,16 +68,16 @@ const HighlighterRects = (props) => {
   // This func creates a new object for each element and determines its properties
   // 'elements' is an array that stores all prev elements
   // 'overlaps' is an object which organzies elements by their positions
-  const buildElementsWithProps = (source, prevElement, elements, overlaps) => {
-    if (!source) {
+  const buildElementsWithProps = (sourceJSON, prevElement, elements, overlaps) => {
+    if (!sourceJSON) {
       return {};
     }
-    const {x1, y1, x2, y2} = parseCoordinates(source);
+    const {x1, y1, x2, y2} = parseCoordinates(sourceJSON);
     const xOffset = highlighterXOffset || 0;
     const centerPoint = (v1, v2) => Math.round(v1 + (v2 - v1) / 2) / scaleRatio;
     const obj = {
       type: CENTROID,
-      element: source,
+      element: sourceJSON,
       parent: prevElement,
       properties: {
         left: x1 / scaleRatio + xOffset,
@@ -88,10 +88,10 @@ const HighlighterRects = (props) => {
         centerY: centerPoint(y1, y2),
         angleX: null,
         angleY: null,
-        path: source.path,
+        path: sourceJSON.path,
         keyCode: null,
         container: false,
-        accessible: source.attributes ? source.attributes.accessible : null,
+        accessible: sourceJSON.attributes ? sourceJSON.attributes.accessible : null,
       },
     };
     const coordinates = `${obj.properties.centerX},${obj.properties.centerY}`;
@@ -99,7 +99,7 @@ const HighlighterRects = (props) => {
 
     elements.push(obj);
 
-    if (source.path) {
+    if (sourceJSON.path) {
       if (overlaps[coordinates]) {
         overlaps[coordinates].push(obj);
       } else {
@@ -107,9 +107,9 @@ const HighlighterRects = (props) => {
       }
     }
 
-    if (source.children) {
-      for (const childEl of source.children) {
-        buildElementsWithProps(childEl, source, elements, overlaps);
+    if (sourceJSON.children) {
+      for (const childEl of sourceJSON.children) {
+        buildElementsWithProps(childEl, sourceJSON, elements, overlaps);
       }
     }
 
@@ -167,8 +167,8 @@ const HighlighterRects = (props) => {
   };
 
   // Displays element rectangles only
-  const renderElements = (source) => {
-    for (const elem of source) {
+  const renderElements = (elements) => {
+    for (const elem of elements) {
       // only render elements with non-zero height and width
       if (!elem.properties.width || !elem.properties.height) {
         continue;
@@ -200,7 +200,7 @@ const HighlighterRects = (props) => {
   };
 
   // Array of all element objects with properties to draw rectangles and/or centroids
-  const elements = getElements(source);
+  const elements = getElements(sourceJSON);
 
   if (containerEl) {
     screenshotEl = containerEl.querySelector('img');

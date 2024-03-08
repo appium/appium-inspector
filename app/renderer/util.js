@@ -80,23 +80,23 @@ export function getSimpleSuggestedLocators(attributes, sourceXML) {
  * Get suggested selectors for complex locator strategies (multiple attributes, axes, etc.)
  *
  * @param {Object} selectedElement
- * @param {Object} source
+ * @param {Object} sourceJSON
  * @returns {Object} mapping of strategies to selectors
  */
-export function getComplexSuggestedLocators(selectedElement, source) {
+export function getComplexSuggestedLocators(selectedElement, sourceJSON) {
   return null;
-  // return {'xpath': getOptimalXPath(selectedElement, source)};
+  // return {'xpath': getOptimalXPath(selectedElement, sourceJSON)};
 }
 
 /**
  * Look up an element in the source using the provided path
  *
  * @param {string} path a dot-separated string of indices
- * @param {Object} source app source in JSON format
+ * @param {Object} sourceJSON app source in JSON format
  * @returns {Object} element details in JSON format
  */
-export function findElementByPath(path, source) {
-  let selectedElement = source;
+export function findElementByPath(path, sourceJSON) {
+  let selectedElement = sourceJSON;
   for (let index of path.split('.')) {
     selectedElement = selectedElement.children[index];
   }
@@ -106,10 +106,10 @@ export function findElementByPath(path, source) {
 /**
  * Translates sourceXML to JSON
  *
- * @param {string} source
+ * @param {string} sourceXML
  * @returns {Object}
  */
-export function xmlToJSON(source) {
+export function xmlToJSON(sourceXML) {
   const childNodesOf = (xmlNode) => {
     if (!xmlNode || !xmlNode.hasChildNodes()) {
       return [];
@@ -152,8 +152,8 @@ export function xmlToJSON(source) {
       path,
     };
   };
-  const isIOS = source.includes('XCUIElement');
-  const xmlDoc = new DOMParser().parseFromString(source);
+  const isIOS = sourceXML.includes('XCUIElement');
+  const xmlDoc = new DOMParser().parseFromString(sourceXML);
   // get the first child element node in the doc. some drivers write their xml differently so we
   // first try to find an element as a direct descendend of the doc, then look for one in
   // documentElement

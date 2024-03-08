@@ -142,7 +142,7 @@ export default function inspector(state = INITIAL_STATE, action) {
         contextsError: action.contextsError,
         currentContext: action.currentContext || NATIVE_APP,
         currentContextError: action.currentContextError,
-        source: action.source,
+        sourceJSON: action.sourceJSON,
         sourceXML: action.sourceXML,
         sourceError: action.sourceError,
         screenshot: action.screenshot,

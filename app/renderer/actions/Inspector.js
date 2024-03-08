@@ -135,9 +135,9 @@ const findElement = _.debounce(async function (strategyMap, dispatch, getState, 
 
 export function selectElement(path) {
   return async (dispatch, getState) => {
-    const {source, sourceXML, expandedPaths} = getState().inspector;
+    const {sourceJSON, sourceXML, expandedPaths} = getState().inspector;
     // Set the selected element in the source tree
-    const selectedElement = findElementByPath(path, source);
+    const selectedElement = findElementByPath(path, sourceJSON);
     dispatch({type: SELECT_ELEMENT, selectedElement});
 
     // Expand all of this element's ancestors so that it's visible in the source tree
@@ -155,7 +155,7 @@ export function selectElement(path) {
 
     // Calculate the recommended locator strategies
     const simpleLocators = getSimpleSuggestedLocators(selectedElement.attributes, sourceXML);
-    const complexLocators = getComplexSuggestedLocators(selectedElement, source);
+    const complexLocators = getComplexSuggestedLocators(selectedElement, sourceJSON);
     const strategyMap = _.toPairs({...simpleLocators, ...complexLocators});
     dispatch({type: SET_OPTIMAL_LOCATORS, strategyMap});
 
@@ -196,8 +196,8 @@ export function unselectHoveredCentroid() {
 
 export function selectHoveredElement(path) {
   return (dispatch, getState) => {
-    const {source} = getState().inspector;
-    const hoveredElement = findElementByPath(path, source);
+    const {sourceJSON} = getState().inspector;
+    const hoveredElement = findElementByPath(path, sourceJSON);
     dispatch({type: SELECT_HOVERED_ELEMENT, hoveredElement});
   };
 }
@@ -260,7 +260,7 @@ export function applyClientMethod(params) {
           type: SET_SOURCE_AND_SCREENSHOT,
           contexts,
           currentContext,
-          source: source && xmlToJSON(source),
+          sourceJSON: xmlToJSON(source),
           sourceXML: source,
           screenshot,
           windowSize,
@@ -500,30 +500,30 @@ export function setLocatorTestElement(elementId) {
  * Given an element ID found through search, and its bounds,
  * attempt to find and select this element in the source tree
  */
-export function selectLocatedElement(source, bounds, id) {
+export function selectLocatedElement(sourceJSON, bounds, id) {
   const UPPER_FILTER_LIMIT = 10;
 
   // Parse the source tree and find all nodes whose bounds match the expected bounds
   // Return the path + xpath of each node
   function findPathsMatchingBounds() {
-    if (!bounds || !source.children || !source.children[0].attributes) {
+    if (!bounds || !sourceJSON.children || !sourceJSON.children[0].attributes) {
       return null;
     }
-    if (source.children[0].attributes.bounds) {
+    if (sourceJSON.children[0].attributes.bounds) {
       const [endX, endY] = [
         bounds.location.x + bounds.size.width,
         bounds.location.y + bounds.size.height,
       ];
       const coords = `[${bounds.location.x},${bounds.location.y}][${endX},${endY}]`;
-      return findPathsFromCoords(source.children, coords);
-    } else if (source.children[0].attributes.x) {
+      return findPathsFromCoords(sourceJSON.children, coords);
+    } else if (sourceJSON.children[0].attributes.x) {
       const combinedBounds = {
         x: String(bounds.location.x),
         y: String(bounds.location.y),
         height: String(bounds.size.height),
         width: String(bounds.size.width),
       };
-      return findPathsFromBounds(source.children, combinedBounds);
+      return findPathsFromBounds(sourceJSON.children, combinedBounds);
     }
     return null;
   }
