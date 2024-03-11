@@ -6,12 +6,7 @@ import {SAVED_FRAMEWORK, SET_SAVED_GESTURES, getSetting, setSetting} from '../..
 import {APP_MODE} from '../components/Inspector/shared';
 import AppiumClient, {NATIVE_APP} from '../lib/appium-client';
 import frameworks from '../lib/client-frameworks';
-import {
-  findElementByPath,
-  getComplexSuggestedLocators,
-  getSimpleSuggestedLocators,
-  xmlToJSON,
-} from '../util';
+import {findElementByPath, getSuggestedLocators, xmlToJSON} from '../util';
 import {showError} from './Session';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
@@ -154,9 +149,7 @@ export function selectElement(path) {
     dispatch({type: SET_EXPANDED_PATHS, paths: copiedExpandedPaths});
 
     // Calculate the recommended locator strategies
-    const simpleLocators = getSimpleSuggestedLocators(selectedElement.attributes, sourceXML);
-    const complexLocators = getComplexSuggestedLocators(selectedElement, sourceJSON);
-    const strategyMap = _.toPairs({...simpleLocators, ...complexLocators});
+    const strategyMap = getSuggestedLocators(selectedElement, sourceXML);
     dispatch({type: SET_OPTIMAL_LOCATORS, strategyMap});
 
     // Debounce find element so that if another element is selected shortly after, cancel the previous search

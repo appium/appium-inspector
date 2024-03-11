@@ -46,30 +46,29 @@ const SIMPLE_STRATEGY_MAPPINGS = [
  *
  * @param {string} attrName
  * @param {string} attrValue
- * @param {string} sourceXML
+ * @param {DOMDocument} sourceDoc
  * @returns {boolean}
  */
-export function areAttrAndValueUnique(attrName, attrValue, sourceXML) {
-  // If no sourceXML provided, assume it's unique
-  if (!sourceXML) {
+export function areAttrAndValueUnique(attrName, attrValue, sourceDoc) {
+  // If no sourceDoc provided, assume it's unique
+  if (!sourceDoc || _.isEmpty(sourceDoc)) {
     return true;
   }
-  const doc = new DOMParser().parseFromString(sourceXML);
-  return XPath.select(`//*[@${attrName}="${attrValue.replace(/"/g, '')}"]`, doc).length < 2;
+  return XPath.select(`//*[@${attrName}="${attrValue.replace(/"/g, '')}"]`, sourceDoc).length < 2;
 }
 
 /**
  * Get suggested selectors for simple locator strategies (which match a specific attribute)
  *
  * @param {Object} attributes element attributes
- * @param {string} sourceXML
+ * @param {DOMDocument} sourceDoc
  * @returns {Object} mapping of strategies to selectors
  */
-export function getSimpleSuggestedLocators(attributes, sourceXML) {
+export function getSimpleSuggestedLocators(attributes, sourceDoc) {
   const res = {};
   for (let [strategyAlias, strategy] of SIMPLE_STRATEGY_MAPPINGS) {
     const value = attributes[strategyAlias];
-    if (value && areAttrAndValueUnique(strategyAlias, value, sourceXML)) {
+    if (value && areAttrAndValueUnique(strategyAlias, value, sourceDoc)) {
       res[strategy] = value;
     }
   }
@@ -79,13 +78,27 @@ export function getSimpleSuggestedLocators(attributes, sourceXML) {
 /**
  * Get suggested selectors for complex locator strategies (multiple attributes, axes, etc.)
  *
- * @param {Object} selectedElement
- * @param {Object} sourceJSON
+ * @param {string} selectedElement
+ * @param {DOMDocument} sourceDoc
  * @returns {Object} mapping of strategies to selectors
  */
-export function getComplexSuggestedLocators(selectedElement, sourceJSON) {
-  return null;
-  // return {'xpath': getOptimalXPath(selectedElement, sourceJSON)};
+export function getComplexSuggestedLocators(selectedElement, sourceDoc) {
+  return {};
+  // return {'xpath': getOptimalXPath(sourceDoc, elementDoc)};
+}
+
+/**
+ * Get suggested selectors for all locator strategies
+ *
+ * @param {string} selectedElement element in JSON format
+ * @param {string} sourceXML
+ * @returns {Object} mapping of strategies to selectors
+ */
+export function getSuggestedLocators(selectedElement, sourceXML) {
+  const sourceDoc = new DOMParser().parseFromString(sourceXML);
+  const simpleLocators = getSimpleSuggestedLocators(selectedElement.attributes, sourceDoc);
+  const complexLocators = getComplexSuggestedLocators(selectedElement, sourceDoc);
+  return _.toPairs({...simpleLocators, ...complexLocators});
 }
 
 /**
