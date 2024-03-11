@@ -78,37 +78,74 @@ export function getSimpleSuggestedLocators(attributes, sourceDoc) {
 /**
  * Get suggested selectors for complex locator strategies (multiple attributes, axes, etc.)
  *
- * @param {string} selectedElement
+ * @param {string} path a dot-separated string of indices
  * @param {DOMDocument} sourceDoc
  * @returns {Object} mapping of strategies to selectors
  */
-export function getComplexSuggestedLocators(selectedElement, sourceDoc) {
+export function getComplexSuggestedLocators(path, sourceDoc) {
+  const domNode = findDOMNodeByPath(path, sourceDoc);
   return {};
-  // return {'xpath': getOptimalXPath(sourceDoc, elementDoc)};
+  // return {'xpath': getOptimalXPath(sourceDoc, domNode)};
 }
 
 /**
  * Get suggested selectors for all locator strategies
  *
- * @param {string} selectedElement element in JSON format
+ * @param {string} selectedElement element node in JSON format
  * @param {string} sourceXML
  * @returns {Object} mapping of strategies to selectors
  */
 export function getSuggestedLocators(selectedElement, sourceXML) {
   const sourceDoc = new DOMParser().parseFromString(sourceXML);
   const simpleLocators = getSimpleSuggestedLocators(selectedElement.attributes, sourceDoc);
-  const complexLocators = getComplexSuggestedLocators(selectedElement, sourceDoc);
+  const complexLocators = getComplexSuggestedLocators(selectedElement.path, sourceDoc);
   return _.toPairs({...simpleLocators, ...complexLocators});
 }
 
 /**
- * Look up an element in the source using the provided path
+ * Get the child nodes of a Document object
+ *
+ * @param {Document} docNode
+ * @returns {Array<Document | null>} list of Documents
+ */
+function childNodesOf(docNode) {
+  if (!docNode || !docNode.hasChildNodes()) {
+    return [];
+  }
+
+  const result = [];
+  for (let childIdx = 0; childIdx < docNode.childNodes.length; ++childIdx) {
+    const childNode = docNode.childNodes.item(childIdx);
+    if (childNode.nodeType === 1) {
+      result.push(childNode);
+    }
+  }
+  return result;
+}
+
+/**
+ * Look up an element in the Document source using the provided path
+ *
+ * @param {string} path a dot-separated string of indices
+ * @param {Document} sourceDoc app source in Document format
+ * @returns {Document} element node
+ */
+export function findDOMNodeByPath(path, sourceDoc) {
+  let selectedElement = childNodesOf(sourceDoc)[0] || childNodesOf(sourceDoc.documentElement)[0];
+  for (let index of path.split('.')) {
+    selectedElement = childNodesOf(selectedElement)[index];
+  }
+  return selectedElement;
+}
+
+/**
+ * Look up an element in the JSON source using the provided path
  *
  * @param {string} path a dot-separated string of indices
  * @param {Object} sourceJSON app source in JSON format
  * @returns {Object} element details in JSON format
  */
-export function findElementByPath(path, sourceJSON) {
+export function findJSONElementByPath(path, sourceJSON) {
   let selectedElement = sourceJSON;
   for (let index of path.split('.')) {
     selectedElement = selectedElement.children[index];
@@ -123,20 +160,6 @@ export function findElementByPath(path, sourceJSON) {
  * @returns {Object}
  */
 export function xmlToJSON(sourceXML) {
-  const childNodesOf = (xmlNode) => {
-    if (!xmlNode || !xmlNode.hasChildNodes()) {
-      return [];
-    }
-
-    const result = [];
-    for (let childIdx = 0; childIdx < xmlNode.childNodes.length; ++childIdx) {
-      const childNode = xmlNode.childNodes.item(childIdx);
-      if (childNode.nodeType === 1) {
-        result.push(childNode);
-      }
-    }
-    return result;
-  };
   const translateRecursively = (xmlNode, parentPath = '', index = null) => {
     const attributes = {};
     for (let attrIdx = 0; attrIdx < xmlNode.attributes.length; ++attrIdx) {

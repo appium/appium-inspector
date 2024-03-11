@@ -6,7 +6,7 @@ import {SAVED_FRAMEWORK, SET_SAVED_GESTURES, getSetting, setSetting} from '../..
 import {APP_MODE} from '../components/Inspector/shared';
 import AppiumClient, {NATIVE_APP} from '../lib/appium-client';
 import frameworks from '../lib/client-frameworks';
-import {findElementByPath, getSuggestedLocators, xmlToJSON} from '../util';
+import {findJSONElementByPath, getSuggestedLocators, xmlToJSON} from '../util';
 import {showError} from './Session';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
@@ -132,7 +132,7 @@ export function selectElement(path) {
   return async (dispatch, getState) => {
     const {sourceJSON, sourceXML, expandedPaths} = getState().inspector;
     // Set the selected element in the source tree
-    const selectedElement = findElementByPath(path, sourceJSON);
+    const selectedElement = findJSONElementByPath(path, sourceJSON);
     dispatch({type: SELECT_ELEMENT, selectedElement});
 
     // Expand all of this element's ancestors so that it's visible in the source tree
@@ -190,7 +190,7 @@ export function unselectHoveredCentroid() {
 export function selectHoveredElement(path) {
   return (dispatch, getState) => {
     const {sourceJSON} = getState().inspector;
-    const hoveredElement = findElementByPath(path, sourceJSON);
+    const hoveredElement = findJSONElementByPath(path, sourceJSON);
     dispatch({type: SELECT_HOVERED_ELEMENT, hoveredElement});
   };
 }
