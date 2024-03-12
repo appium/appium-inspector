@@ -170,12 +170,8 @@ export function xmlToJSON(sourceXML) {
 
     // Dot Separated path of indices
     const path = _.isNil(index) ? '' : `${!parentPath ? '' : parentPath + '.'}${index}`;
-    const classChainSelector = isIOS
-      ? getOptimalClassChain(xmlDoc, xmlNode, UNIQUE_CLASS_CHAIN_ATTRIBUTES)
-      : '';
-    const predicateStringSelector = isIOS
-      ? getOptimalPredicateString(xmlDoc, xmlNode, UNIQUE_PREDICATE_ATTRIBUTES)
-      : '';
+    const classChainSelector = isIOS ? getOptimalClassChain(xmlDoc, xmlNode) : '';
+    const predicateStringSelector = isIOS ? getOptimalPredicateString(xmlDoc, xmlNode) : '';
 
     return {
       children: childNodesOf(xmlNode).map((childNode, childIndex) =>
@@ -397,10 +393,9 @@ export function getOptimalXPath(doc, domNode) {
  *
  * @param {Document} doc
  * @param {Node} domNode
- * @param {Array<String>} uniqueAttributes Attributes we know are unique
  * @returns {string|null}
  */
-function getOptimalClassChain(doc, domNode, uniqueAttributes) {
+function getOptimalClassChain(doc, domNode) {
   try {
     // BASE CASE #1: If this isn't an element, we're above the root, or this is `XCUIElementTypeApplication`,
     // which is not an official XCUITest element, return empty string
@@ -413,7 +408,7 @@ function getOptimalClassChain(doc, domNode, uniqueAttributes) {
     }
 
     // BASE CASE #2: If this node has a unique class chain based on attributes then return it
-    for (let attrName of uniqueAttributes) {
+    for (let attrName of UNIQUE_CLASS_CHAIN_ATTRIBUTES) {
       const attrValue = domNode.getAttribute(attrName);
       if (attrValue) {
         let xpath = `//${domNode.tagName || '*'}[@${attrName}="${attrValue}"]`;
@@ -454,7 +449,7 @@ function getOptimalClassChain(doc, domNode, uniqueAttributes) {
     }
 
     // Make a recursive call to this nodes parents and prepend it to this xpath
-    return getOptimalClassChain(doc, domNode.parentNode, uniqueAttributes) + classChain;
+    return getOptimalClassChain(doc, domNode.parentNode) + classChain;
   } catch (error) {
     // If there's an unexpected exception, abort and don't get an XPath
     log.error(
@@ -472,10 +467,9 @@ function getOptimalClassChain(doc, domNode, uniqueAttributes) {
  *
  * @param {Document} doc
  * @param {Node} domNode
- * @param {Array<String>} uniqueAttributes Attributes we know are unique
  * @returns {string|null}
  */
-function getOptimalPredicateString(doc, domNode, uniqueAttributes) {
+function getOptimalPredicateString(doc, domNode) {
   try {
     // BASE CASE #1: If this isn't an element, we're above the root, or this is `XCUIElementTypeApplication`,
     // which is not an official XCUITest element, return empty string
@@ -491,7 +485,7 @@ function getOptimalPredicateString(doc, domNode, uniqueAttributes) {
     let xpathAttributes = [];
     let predicateString = [];
 
-    for (let attrName of uniqueAttributes) {
+    for (let attrName of UNIQUE_PREDICATE_ATTRIBUTES) {
       const attrValue = domNode.getAttribute(attrName);
 
       if (_.isNil(attrValue) || (_.isString(attrValue) && attrValue.length === 0)) {
