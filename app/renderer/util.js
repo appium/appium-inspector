@@ -127,15 +127,7 @@ function childNodesOf(domNode) {
   if (!domNode || !domNode.hasChildNodes()) {
     return [];
   }
-
-  const result = [];
-  for (let childIdx = 0; childIdx < domNode.childNodes.length; ++childIdx) {
-    const childNode = domNode.childNodes.item(childIdx);
-    if (childNode.nodeType === 1) {
-      result.push(childNode);
-    }
-  }
-  return result;
+  return _.filter(domNode.childNodes, ['nodeType', domNode.ELEMENT_NODE]);
 }
 
 /**
