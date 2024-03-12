@@ -115,19 +115,19 @@ export function getSuggestedLocators(selectedElement, sourceXML) {
 }
 
 /**
- * Get the child nodes of a Document object
+ * Get the child nodes of a Node object
  *
- * @param {Document} docNode
+ * @param {Node} domNode
  * @returns {Array<Document|null>} list of Documents
  */
-function childNodesOf(docNode) {
-  if (!docNode || !docNode.hasChildNodes()) {
+function childNodesOf(domNode) {
+  if (!domNode || !domNode.hasChildNodes()) {
     return [];
   }
 
   const result = [];
-  for (let childIdx = 0; childIdx < docNode.childNodes.length; ++childIdx) {
-    const childNode = docNode.childNodes.item(childIdx);
+  for (let childIdx = 0; childIdx < domNode.childNodes.length; ++childIdx) {
+    const childNode = domNode.childNodes.item(childIdx);
     if (childNode.nodeType === 1) {
       result.push(childNode);
     }
@@ -172,10 +172,10 @@ export function findJSONElementByPath(path, sourceJSON) {
  * @returns {Object} source in JSON format
  */
 export function xmlToJSON(sourceXML) {
-  const translateRecursively = (xmlNode, parentPath = '', index = null) => {
+  const translateRecursively = (domNode, parentPath = '', index = null) => {
     const attributes = {};
-    for (let attrIdx = 0; attrIdx < xmlNode.attributes.length; ++attrIdx) {
-      const attr = xmlNode.attributes.item(attrIdx);
+    for (let attrIdx = 0; attrIdx < domNode.attributes.length; ++attrIdx) {
+      const attr = domNode.attributes.item(attrIdx);
       attributes[attr.name] = attr.value;
     }
 
@@ -183,19 +183,19 @@ export function xmlToJSON(sourceXML) {
     const path = _.isNil(index) ? '' : `${!parentPath ? '' : parentPath + '.'}${index}`;
 
     return {
-      children: childNodesOf(xmlNode).map((childNode, childIndex) =>
+      children: childNodesOf(domNode).map((childNode, childIndex) =>
         translateRecursively(childNode, path, childIndex),
       ),
-      tagName: xmlNode.tagName,
+      tagName: domNode.tagName,
       attributes,
       path,
     };
   };
-  const xmlDoc = domParser.parseFromString(sourceXML);
+  const sourceDoc = domParser.parseFromString(sourceXML);
   // get the first child element node in the doc. some drivers write their xml differently so we
   // first try to find an element as a direct descendend of the doc, then look for one in
   // documentElement
-  const firstChild = childNodesOf(xmlDoc)[0] || childNodesOf(xmlDoc.documentElement)[0];
+  const firstChild = childNodesOf(sourceDoc)[0] || childNodesOf(sourceDoc.documentElement)[0];
 
   return firstChild ? translateRecursively(firstChild) : {};
 }
