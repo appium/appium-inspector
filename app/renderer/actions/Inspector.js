@@ -137,7 +137,8 @@ const findElement = _.debounce(async function (strategyMap, dispatch, getState, 
 
 export function selectElement(path) {
   return async (dispatch, getState) => {
-    const {sourceJSON, sourceXML, expandedPaths} = getState().inspector;
+    const {sourceJSON, sourceXML, expandedPaths, currentContext} = getState().inspector;
+    const isNative = currentContext === NATIVE_APP;
     // Set the selected element in the source tree
     const selectedElement = findJSONElementByPath(path, sourceJSON);
     dispatch({type: SELECT_ELEMENT, selectedElement});
@@ -156,7 +157,7 @@ export function selectElement(path) {
     dispatch({type: SET_EXPANDED_PATHS, paths: copiedExpandedPaths});
 
     // Calculate the recommended locator strategies
-    const strategyMap = getSuggestedLocators(selectedElement, sourceXML);
+    const strategyMap = getSuggestedLocators(selectedElement, sourceXML, isNative);
     dispatch({type: SET_OPTIMAL_LOCATORS, strategyMap});
 
     // Debounce find element so that if another element is selected shortly after, cancel the previous search

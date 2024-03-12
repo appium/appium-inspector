@@ -64,14 +64,18 @@ export function areAttrAndValueUnique(attrName, attrValue, sourceDoc) {
  *
  * @param {Object} attributes element attributes
  * @param {Document} sourceDoc
+ * @param {boolean} isNative whether native context is active
  * @returns {Object} mapping of strategies to selectors
  */
-export function getSimpleSuggestedLocators(attributes, sourceDoc) {
+export function getSimpleSuggestedLocators(attributes, sourceDoc, isNative) {
   const res = {};
   for (let [strategyAlias, strategy] of SIMPLE_STRATEGY_MAPPINGS) {
-    const value = attributes[strategyAlias];
-    if (value && areAttrAndValueUnique(strategyAlias, value, sourceDoc)) {
-      res[strategy] = value;
+    // accessibility id is only supported in native context
+    if (!(strategy === 'accessibility id' && !isNative)) {
+      const value = attributes[strategyAlias];
+      if (value && areAttrAndValueUnique(strategyAlias, value, sourceDoc)) {
+        res[strategy] = value;
+      }
     }
   }
   return res;
@@ -87,7 +91,7 @@ export function getSimpleSuggestedLocators(attributes, sourceDoc) {
 export function getComplexSuggestedLocators(path, sourceDoc) {
   let complexLocators = {};
   const domNode = findDOMNodeByPath(path, sourceDoc);
-  if (domNode.tagName.includes('XCUIElement')) {
+  if (domNode.tagName.includes('XCUIElement')) { // XCUI native context
     const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);
     complexLocators['-ios class chain'] = optimalClassChain ? '**' + optimalClassChain : null;
     complexLocators['-ios predicate string'] = getOptimalPredicateString(sourceDoc, domNode);
@@ -103,11 +107,12 @@ export function getComplexSuggestedLocators(path, sourceDoc) {
  *
  * @param {string} selectedElement element node in JSON format
  * @param {string} sourceXML
+ * @param {boolean} isNative whether native context is active
  * @returns {Object} mapping of strategies to selectors
  */
-export function getSuggestedLocators(selectedElement, sourceXML) {
+export function getSuggestedLocators(selectedElement, sourceXML, isNative) {
   const sourceDoc = domParser.parseFromString(sourceXML);
-  const simpleLocators = getSimpleSuggestedLocators(selectedElement.attributes, sourceDoc);
+  const simpleLocators = getSimpleSuggestedLocators(selectedElement.attributes, sourceDoc, isNative);
   const complexLocators = getComplexSuggestedLocators(selectedElement.path, sourceDoc);
   return _.toPairs({...simpleLocators, ...complexLocators});
 }
