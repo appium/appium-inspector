@@ -86,8 +86,7 @@ export function getSimpleSuggestedLocators(attributes, sourceDoc) {
  */
 export function getComplexSuggestedLocators(path, sourceDoc) {
   const domNode = findDOMNodeByPath(path, sourceDoc);
-  return {};
-  // return {'xpath': getOptimalXPath(sourceDoc, domNode)};
+  return {xpath: getOptimalXPath(sourceDoc, domNode)};
 }
 
 /**
@@ -184,7 +183,6 @@ export function xmlToJSON(sourceXML) {
       ),
       tagName: xmlNode.tagName,
       attributes,
-      xpath: getOptimalXPath(xmlDoc, xmlNode),
       ...(isIOS ? {classChain: classChainSelector ? `**${classChainSelector}` : ''} : {}),
       ...(isIOS ? {predicateString: predicateStringSelector ? predicateStringSelector : ''} : {}),
       path,

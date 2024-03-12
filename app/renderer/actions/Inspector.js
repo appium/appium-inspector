@@ -6,7 +6,14 @@ import {SAVED_FRAMEWORK, SET_SAVED_GESTURES, getSetting, setSetting} from '../..
 import {APP_MODE} from '../components/Inspector/shared';
 import AppiumClient, {NATIVE_APP} from '../lib/appium-client';
 import frameworks from '../lib/client-frameworks';
-import {findJSONElementByPath, getSuggestedLocators, xmlToJSON} from '../util';
+import {
+  domParser,
+  findDOMNodeByPath,
+  findJSONElementByPath,
+  getOptimalXPath,
+  getSuggestedLocators,
+  xmlToJSON,
+} from '../util';
 import {showError} from './Session';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
@@ -493,11 +500,11 @@ export function setLocatorTestElement(elementId) {
  * Given an element ID found through search, and its bounds,
  * attempt to find and select this element in the source tree
  */
-export function selectLocatedElement(sourceJSON, bounds, id) {
+export function selectLocatedElement(sourceJSON, sourceXML, bounds, id) {
   const UPPER_FILTER_LIMIT = 10;
 
   // Parse the source tree and find all nodes whose bounds match the expected bounds
-  // Return the path + xpath of each node
+  // Return the path of each node
   function findPathsMatchingBounds() {
     if (!bounds || !sourceJSON.children || !sourceJSON.children[0].attributes) {
       return null;
@@ -526,7 +533,7 @@ export function selectLocatedElement(sourceJSON, bounds, id) {
     let collectedPaths = [];
     for (const tree of trees) {
       if (tree.attributes.bounds === coords) {
-        collectedPaths.push([tree.path, tree.xpath]);
+        collectedPaths.push(tree.path);
       }
       if (tree.children.length) {
         collectedPaths.push(...findPathsFromCoords(tree.children, coords));
@@ -545,7 +552,7 @@ export function selectLocatedElement(sourceJSON, bounds, id) {
         tree.attributes.height === bounds.height &&
         tree.attributes.width === bounds.width
       ) {
-        collectedPaths.push([tree.path, tree.xpath]);
+        collectedPaths.push(tree.path);
       }
       if (tree.children.length) {
         collectedPaths.push(...findPathsFromBounds(tree.children, bounds));
@@ -561,21 +568,24 @@ export function selectLocatedElement(sourceJSON, bounds, id) {
       return null;
     }
     if (foundPaths.length === 1) {
-      return foundPaths[0][0];
+      return foundPaths[0];
     } else if (foundPaths.length !== 0 && foundPaths.length <= UPPER_FILTER_LIMIT) {
       return await findElementWithMatchingId(foundPaths, dispatch, getState);
     }
     return null;
   }
 
-  // Calls Appium findElement for each provided xpath, and returns the path
-  // of the element whose ID matches the expected ID
+  // For each provided path, get its xpath and call Appium findElement
+  // Return the path of the element whose ID matches the expected ID
   async function findElementWithMatchingId(foundPaths, dispatch, getState) {
+    const sourceDoc = domParser.parseFromString(sourceXML);
     for (const path of foundPaths) {
-      const action = callClientMethod({strategy: 'xpath', selector: path[1]});
+      const domNode = findDOMNodeByPath(path, sourceDoc);
+      const xpath = getOptimalXPath(sourceDoc, domNode);
+      const action = callClientMethod({strategy: 'xpath', selector: xpath});
       const {el} = await action(dispatch, getState);
       if (el && el.elementId === id) {
-        return path[0];
+        return path;
       }
     }
     return null;
