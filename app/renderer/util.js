@@ -397,8 +397,8 @@ export function getOptimalXPath(doc, domNode) {
  */
 function getOptimalClassChain(doc, domNode) {
   try {
-    // BASE CASE #1: If this isn't an element, we're above the root, or this is `XCUIElementTypeApplication`,
-    // which is not an official XCUITest element, return empty string
+    // BASE CASE #1: If this isn't an element, we're above the root, return empty string
+    // Also return empty for 'XCUIElementTypeApplication', which cannot be found via class chain
     if (
       !domNode.tagName ||
       domNode.nodeType !== 1 ||
@@ -422,7 +422,7 @@ function getOptimalClassChain(doc, domNode) {
           continue;
         }
 
-        // If the attribute isn't actually unique, get it's index too
+        // If the attribute isn't actually unique, get its index too
         if (othersWithAttr.length > 1) {
           let index = othersWithAttr.indexOf(domNode);
           classChain = `${classChain}[${index + 1}]`;
