@@ -82,13 +82,12 @@ export function getSimpleSuggestedLocators(attributes, sourceDoc) {
  *
  * @param {string} path a dot-separated string of indices
  * @param {Document} sourceDoc
- * @param {boolean} isIOS
  * @returns {Object} mapping of strategies to selectors
  */
-export function getComplexSuggestedLocators(path, sourceDoc, isIOS) {
+export function getComplexSuggestedLocators(path, sourceDoc) {
   let complexLocators = {};
   const domNode = findDOMNodeByPath(path, sourceDoc);
-  if (isIOS) {
+  if (domNode.tagName.includes('XCUIElement')) {
     const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);
     complexLocators['-ios class chain'] = optimalClassChain ? '**' + optimalClassChain : null;
     complexLocators['-ios predicate string'] = getOptimalPredicateString(sourceDoc, domNode);
@@ -107,10 +106,9 @@ export function getComplexSuggestedLocators(path, sourceDoc, isIOS) {
  * @returns {Object} mapping of strategies to selectors
  */
 export function getSuggestedLocators(selectedElement, sourceXML) {
-  const isIOS = sourceXML.includes('XCUIElement');
   const sourceDoc = domParser.parseFromString(sourceXML);
   const simpleLocators = getSimpleSuggestedLocators(selectedElement.attributes, sourceDoc);
-  const complexLocators = getComplexSuggestedLocators(selectedElement.path, sourceDoc, isIOS);
+  const complexLocators = getComplexSuggestedLocators(selectedElement.path, sourceDoc);
   return _.toPairs({...simpleLocators, ...complexLocators});
 }
 
@@ -118,7 +116,7 @@ export function getSuggestedLocators(selectedElement, sourceXML) {
  * Get the child nodes of a Node object
  *
  * @param {Node} domNode
- * @returns {Array<Document|null>} list of Documents
+ * @returns {Array<Node|null>} list of Nodes
  */
 function childNodesOf(domNode) {
   if (!domNode || !domNode.hasChildNodes()) {
