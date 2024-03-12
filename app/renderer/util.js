@@ -471,13 +471,8 @@ function getOptimalClassChain(doc, domNode) {
  */
 function getOptimalPredicateString(doc, domNode) {
   try {
-    // BASE CASE #1: If this isn't an element, we're above the root, or this is `XCUIElementTypeApplication`,
-    // which is not an official XCUITest element, return empty string
-    if (
-      !domNode.tagName ||
-      domNode.nodeType !== 1 ||
-      domNode.tagName === 'XCUIElementTypeApplication'
-    ) {
+    // BASE CASE #1: If this isn't an element, or we're above the root, return empty string
+    if (!domNode.tagName || domNode.nodeType !== 1) {
       return '';
     }
 
