@@ -82,11 +82,21 @@ export function getSimpleSuggestedLocators(attributes, sourceDoc) {
  *
  * @param {string} path a dot-separated string of indices
  * @param {Document} sourceDoc
+ * @param {boolean} isIOS
  * @returns {Object} mapping of strategies to selectors
  */
-export function getComplexSuggestedLocators(path, sourceDoc) {
+export function getComplexSuggestedLocators(path, sourceDoc, isIOS) {
+  let complexLocators = {};
   const domNode = findDOMNodeByPath(path, sourceDoc);
-  return {xpath: getOptimalXPath(sourceDoc, domNode)};
+  if (isIOS) {
+    const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);
+    complexLocators['-ios class chain'] = optimalClassChain ? '**' + optimalClassChain : null;
+    complexLocators['-ios predicate string'] = getOptimalPredicateString(sourceDoc, domNode);
+  }
+  complexLocators.xpath = getOptimalXPath(sourceDoc, domNode);
+
+  // Remove entries for locators where the optimal selector could not be found
+  return _.omitBy(complexLocators, _.isNil);
 }
 
 /**
@@ -97,9 +107,10 @@ export function getComplexSuggestedLocators(path, sourceDoc) {
  * @returns {Object} mapping of strategies to selectors
  */
 export function getSuggestedLocators(selectedElement, sourceXML) {
+  const isIOS = sourceXML.includes('XCUIElement');
   const sourceDoc = domParser.parseFromString(sourceXML);
   const simpleLocators = getSimpleSuggestedLocators(selectedElement.attributes, sourceDoc);
-  const complexLocators = getComplexSuggestedLocators(selectedElement.path, sourceDoc);
+  const complexLocators = getComplexSuggestedLocators(selectedElement.path, sourceDoc, isIOS);
   return _.toPairs({...simpleLocators, ...complexLocators});
 }
 
@@ -170,8 +181,6 @@ export function xmlToJSON(sourceXML) {
 
     // Dot Separated path of indices
     const path = _.isNil(index) ? '' : `${!parentPath ? '' : parentPath + '.'}${index}`;
-    const classChainSelector = isIOS ? getOptimalClassChain(xmlDoc, xmlNode) : '';
-    const predicateStringSelector = isIOS ? getOptimalPredicateString(xmlDoc, xmlNode) : '';
 
     return {
       children: childNodesOf(xmlNode).map((childNode, childIndex) =>
@@ -179,12 +188,9 @@ export function xmlToJSON(sourceXML) {
       ),
       tagName: xmlNode.tagName,
       attributes,
-      ...(isIOS ? {classChain: classChainSelector ? `**${classChainSelector}` : ''} : {}),
-      ...(isIOS ? {predicateString: predicateStringSelector ? predicateStringSelector : ''} : {}),
       path,
     };
   };
-  const isIOS = sourceXML.includes('XCUIElement');
   const xmlDoc = domParser.parseFromString(sourceXML);
   // get the first child element node in the doc. some drivers write their xml differently so we
   // first try to find an element as a direct descendend of the doc, then look for one in

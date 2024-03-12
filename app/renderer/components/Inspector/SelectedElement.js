@@ -40,7 +40,6 @@ const SelectedElement = (props) => {
 
   const sendKeys = useRef();
 
-  const {attributes, strategyMap, classChain, predicateString} = selectedElement;
   const isDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
 
   const selectedElementTableCell = (text, copyToClipBoard) => {
@@ -58,6 +57,17 @@ const SelectedElement = (props) => {
       return <div className={styles['selected-element-table-cells']}>{text}</div>;
     }
   };
+
+  const locatorStrategyDocsLink = (name, docsLink) => (
+    <span>
+      {name}
+      <strong>
+        <a onClick={(e) => e.preventDefault() || shell.openExternal(docsLink)}>
+          &nbsp;(docs)
+        </a>
+      </strong>
+    </span>
+  );
 
   // Get the columns for the attributes table
   let attributeColumns = [
@@ -77,7 +87,7 @@ const SelectedElement = (props) => {
   ];
 
   // Get the data for the attributes table
-  let dataSource = _.toPairs(attributes).map(([key, value]) => ({
+  let dataSource = _.toPairs(selectedElement.attributes).map(([key, value]) => ({
     key,
     value,
     name: key,
@@ -113,50 +123,22 @@ const SelectedElement = (props) => {
   }
 
   // Get the data for the strategies table
-  let findDataSource = strategyMap.map(([key, selector]) => ({
+  let findDataSource = selectedElement.strategyMap.map(([key, selector]) => ({
     key,
     selector,
     find: key,
   }));
 
-  // Add class chain to the data source as well
-  if (classChain && currentContext === NATIVE_APP) {
-    const classChainText = (
-      <span>
-        -ios class chain
-        <strong>
-          <a onClick={(e) => e.preventDefault() || shell.openExternal(CLASS_CHAIN_DOCS_URL)}>
-            &nbsp;(docs)
-          </a>
-        </strong>
-      </span>
-    );
-
-    findDataSource.push({
-      key: '-ios class chain',
-      find: classChainText,
-      selector: classChain,
-    });
-  }
-
-  // Add predicate string to the data source as well
-  if (predicateString && currentContext === NATIVE_APP) {
-    const predicateStringText = (
-      <span>
-        -ios predicate string
-        <strong>
-          <a onClick={(e) => e.preventDefault() || shell.openExternal(PREDICATE_DOCS_URL)}>
-            &nbsp;(docs)
-          </a>
-        </strong>
-      </span>
-    );
-
-    findDataSource.push({
-      key: '-ios predicate string',
-      find: predicateStringText,
-      selector: predicateString,
-    });
+  // Add documentation links to supported strategies
+  for (const locator of findDataSource) {
+    switch (locator.key) {
+      case '-ios class chain':
+        locator.find = locatorStrategyDocsLink(locator.key, CLASS_CHAIN_DOCS_URL);
+        break;
+      case '-ios predicate string':
+        locator.find = locatorStrategyDocsLink(locator.key, PREDICATE_DOCS_URL);
+        break;
+    }
   }
 
   // If XPath is the only optimal selector, warn the user about its brittleness
