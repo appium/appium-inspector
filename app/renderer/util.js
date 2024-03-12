@@ -41,6 +41,8 @@ const SIMPLE_STRATEGY_MAPPINGS = [
   ['type', 'class name'],
 ];
 
+export const domParser = new DOMParser();
+
 /**
  * Check whether the provided attribute & value are unique in the source
  *
@@ -96,7 +98,7 @@ export function getComplexSuggestedLocators(path, sourceDoc) {
  * @returns {Object} mapping of strategies to selectors
  */
 export function getSuggestedLocators(selectedElement, sourceXML) {
-  const sourceDoc = new DOMParser().parseFromString(sourceXML);
+  const sourceDoc = domParser.parseFromString(sourceXML);
   const simpleLocators = getSimpleSuggestedLocators(selectedElement.attributes, sourceDoc);
   const complexLocators = getComplexSuggestedLocators(selectedElement.path, sourceDoc);
   return _.toPairs({...simpleLocators, ...complexLocators});
@@ -189,7 +191,7 @@ export function xmlToJSON(sourceXML) {
     };
   };
   const isIOS = sourceXML.includes('XCUIElement');
-  const xmlDoc = new DOMParser().parseFromString(sourceXML);
+  const xmlDoc = domParser.parseFromString(sourceXML);
   // get the first child element node in the doc. some drivers write their xml differently so we
   // first try to find an element as a direct descendend of the doc, then look for one in
   // documentElement
