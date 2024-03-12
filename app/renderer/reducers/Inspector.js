@@ -86,11 +86,11 @@ import {
 import {
   APP_MODE,
   INTERACTION_MODE,
+  NATIVE_APP,
   SCREENSHOT_INTERACTION_MODE,
 } from '../components/Inspector/shared';
 
 const DEFAULT_FRAMEWORK = 'java';
-const NATIVE_APP = 'NATIVE_APP';
 
 const INITIAL_STATE = {
   savedGestures: [],

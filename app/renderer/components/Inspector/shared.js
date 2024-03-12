@@ -71,6 +71,8 @@ export const SCREENSHOT_INTERACTION_MODE = {
   GESTURE: 'gesture',
 };
 
+export const NATIVE_APP = 'NATIVE_APP';
+
 export const APP_MODE = {
   NATIVE: 'native',
   WEB_HYBRID: 'web_hybrid',
