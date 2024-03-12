@@ -46,7 +46,7 @@ const SIMPLE_STRATEGY_MAPPINGS = [
  *
  * @param {string} attrName
  * @param {string} attrValue
- * @param {DOMDocument} sourceDoc
+ * @param {Document} sourceDoc
  * @returns {boolean}
  */
 export function areAttrAndValueUnique(attrName, attrValue, sourceDoc) {
@@ -61,7 +61,7 @@ export function areAttrAndValueUnique(attrName, attrValue, sourceDoc) {
  * Get suggested selectors for simple locator strategies (which match a specific attribute)
  *
  * @param {Object} attributes element attributes
- * @param {DOMDocument} sourceDoc
+ * @param {Document} sourceDoc
  * @returns {Object} mapping of strategies to selectors
  */
 export function getSimpleSuggestedLocators(attributes, sourceDoc) {
@@ -79,7 +79,7 @@ export function getSimpleSuggestedLocators(attributes, sourceDoc) {
  * Get suggested selectors for complex locator strategies (multiple attributes, axes, etc.)
  *
  * @param {string} path a dot-separated string of indices
- * @param {DOMDocument} sourceDoc
+ * @param {Document} sourceDoc
  * @returns {Object} mapping of strategies to selectors
  */
 export function getComplexSuggestedLocators(path, sourceDoc) {
@@ -106,7 +106,7 @@ export function getSuggestedLocators(selectedElement, sourceXML) {
  * Get the child nodes of a Document object
  *
  * @param {Document} docNode
- * @returns {Array<Document | null>} list of Documents
+ * @returns {Array<Document|null>} list of Documents
  */
 function childNodesOf(docNode) {
   if (!docNode || !docNode.hasChildNodes()) {
@@ -128,7 +128,7 @@ function childNodesOf(docNode) {
  *
  * @param {string} path a dot-separated string of indices
  * @param {Document} sourceDoc app source in Document format
- * @returns {Document} element node
+ * @returns {Node} element node
  */
 export function findDOMNodeByPath(path, sourceDoc) {
   let selectedElement = childNodesOf(sourceDoc)[0] || childNodesOf(sourceDoc.documentElement)[0];
@@ -157,7 +157,7 @@ export function findJSONElementByPath(path, sourceJSON) {
  * Translates sourceXML to JSON
  *
  * @param {string} sourceXML
- * @returns {Object}
+ * @returns {Object} source in JSON format
  */
 export function xmlToJSON(sourceXML) {
   const translateRecursively = (xmlNode, parentPath = '', index = null) => {
@@ -203,8 +203,8 @@ export function xmlToJSON(sourceXML) {
  * index of the element in the document if not unique
  *
  * @param {string} xpath
- * @param {DOMDocument} doc
- * @param {DOMNode} domNode - the current node
+ * @param {Document} doc
+ * @param {Node} domNode - the current node
  * @returns {[boolean, number?]} tuple consisting of (1) whether the xpath is unique and (2) its index in
  * the set of other similar nodes if not unique
  */
@@ -230,7 +230,7 @@ function determineXpathUniqueness(xpath, doc, domNode) {
  * key attributes, which is unique in the document (or unique plus index).
  *
  * @param {string} xpath
- * @param {DOMDocument} doc
+ * @param {Document} doc
  * @param {Array<string>|Array<[string, string]>} attrs - a list of attributes to consider, or
  * a list of pairs of attributes to consider in conjunction
  *
@@ -299,10 +299,10 @@ function getUniqueXPath(doc, domNode, attrs) {
 }
 
 /**
- * Get an optimal XPath for a DOMNode
+ * Get an optimal XPath for a Node
  *
- * @param {DOMDocument} doc
- * @param {DOMNode} domNode
+ * @param {Document} doc
+ * @param {Node} domNode
  * @returns {string|null}
  */
 export function getOptimalXPath(doc, domNode) {
@@ -393,10 +393,10 @@ export function getOptimalXPath(doc, domNode) {
 }
 
 /**
- * Get an optimal Class Chain for a DOMNode based on the getOptimalXPath method
+ * Get an optimal class chain for a Node based on the getOptimalXPath method
  *
- * @param {DOMDocument} doc
- * @param {DOMNode} domNode
+ * @param {Document} doc
+ * @param {Node} domNode
  * @param {Array<String>} uniqueAttributes Attributes we know are unique
  * @returns {string|null}
  */
@@ -467,11 +467,11 @@ function getOptimalClassChain(doc, domNode, uniqueAttributes) {
 }
 
 /**
- * Get an optimal Predicate String for a DOMNode based on the getOptimalXPath method
+ * Get an optimal predicate string for a Node based on the getOptimalXPath method
  * The `ios predicate string` can only search a single element, no parent child scope
  *
- * @param {DOMDocument} doc
- * @param {DOMNode} domNode
+ * @param {Document} doc
+ * @param {Node} domNode
  * @param {Array<String>} uniqueAttributes Attributes we know are unique
  * @returns {string|null}
  */
