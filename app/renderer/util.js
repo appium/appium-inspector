@@ -67,7 +67,7 @@ export function areAttrAndValueUnique(attrName, attrValue, sourceDoc) {
  * @param {boolean} isNative whether native context is active
  * @returns {Object} mapping of strategies to selectors
  */
-export function getSimpleSuggestedLocators(attributes, sourceDoc, isNative) {
+export function getSimpleSuggestedLocators(attributes, sourceDoc, isNative = true) {
   const res = {};
   for (let [strategyAlias, strategy] of SIMPLE_STRATEGY_MAPPINGS) {
     // accessibility id is only supported in native context
