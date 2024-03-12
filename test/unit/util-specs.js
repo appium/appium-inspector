@@ -103,12 +103,51 @@ describe('util.js', function () {
     it('should not find accessibility ID if accessibility ID is not unique', function () {
       should.not.exist(
         getSimpleSuggestedLocators(
-          {'content-desc': 'CD'},
+          {'content-desc': 'Content Desc'},
           xmlToDoc(`<root>
-            <node content-desc='ID'></node>
-            <node content-desc='ID'></node>
+            <node content-desc='Content Desc'></node>
+            <node content-desc='Content Desc'></node>
           </root>`),
-        ).id,
+        )['accessibility id'],
+      );
+    });
+
+    it('should not find accessibility ID in non-native context', function () {
+      should.not.exist(
+        getSimpleSuggestedLocators(
+          {'content-desc': 'Content Desc 1'},
+          xmlToDoc(`<root>
+            <node content-desc='Content Desc 1'></node>
+            <node content-desc='Content Desc 2'></node>
+          </root>`),
+          false,
+        )['accessibility id'],
+      );
+    });
+
+    it('should find class name', function () {
+      getSimpleSuggestedLocators({class: 'The Class'})['class name'].should.equal('The Class');
+      getSimpleSuggestedLocators({type: 'The Type'})['class name'].should.equal('The Type');
+      getSimpleSuggestedLocators(
+        {class: 'The Class'},
+        xmlToDoc(`<root>
+          <node type='The Class'></node>
+        </root>`),
+      )['class name'].should.equal('The Class');
+      getSimpleSuggestedLocators({class: 'The Class', type: 'The Type'})['class name'].should.equal(
+        'The Type',
+      );
+    });
+
+    it('should not find class name if class name is not unique', function () {
+      should.not.exist(
+        getSimpleSuggestedLocators(
+          {class: 'The Class'},
+          xmlToDoc(`<root>
+            <node class='The Class'></node>
+            <node class='The Class'></node>
+          </root>`),
+        )['class name'],
       );
     });
   });
