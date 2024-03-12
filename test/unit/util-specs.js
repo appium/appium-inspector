@@ -7,6 +7,8 @@ import {
   addVendorPrefixes,
   areAttrAndValueUnique,
   domParser,
+  findDOMNodeByPath,
+  findJSONElementByPath,
   getOptimalXPath,
   getSimpleSuggestedLocators,
   xmlToJSON,
@@ -149,6 +151,54 @@ describe('util.js', function () {
           </root>`),
         )['class name'],
       );
+    });
+  });
+
+  describe('#findDOMNodeByPath', function () {
+    it('should find a Document node using the provided path', function () {
+      findDOMNodeByPath('0.1.1', xmlToDoc(`<hierarchy>
+        <root>
+          <firstA>
+            <secondA/>
+            <secondB/>
+          </firstA>
+          <firstB>
+            <secondC/>
+            <secondD/>
+          </firstB>
+          <firstC>
+            <secondE/>
+            <secondF/>
+          </firstC>
+        </root>
+      </hierarchy>`)).tagName.should.equal('secondD');
+    });
+  });
+
+  describe('#findJSONElementByPath', function () {
+    it('should find a JSON element using the provided path', function () {
+      const foundElement = findJSONElementByPath('0.1.1', xmlToJSON(`<hierarchy>
+        <root>
+          <firstA>
+            <secondA/>
+            <secondB/>
+          </firstA>
+          <firstB>
+            <secondC/>
+            <secondD/>
+          </firstB>
+          <firstC>
+            <secondE/>
+            <secondF/>
+          </firstC>
+        </root>
+      </hierarchy>`));
+      foundElement.should.eql({
+        children: [],
+        tagName: 'secondD',
+        attributes: {},
+        path: '0.1.1',
+      },);
     });
   });
 
