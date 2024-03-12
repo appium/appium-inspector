@@ -670,9 +670,7 @@ describe('util.js', function () {
             <grandchild id='hello'></grandchild>
           </child>
         </node>`);
-        getOptimalXPath(doc, doc.getElementById('hello')).should.equal(
-          '/node/child[2]/grandchild',
-        );
+        getOptimalXPath(doc, doc.getElementById('hello')).should.equal('/node/child[2]/grandchild');
         xpathSelectStub.restore();
       });
 

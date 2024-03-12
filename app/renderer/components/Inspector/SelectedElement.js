@@ -62,9 +62,7 @@ const SelectedElement = (props) => {
     <span>
       {name}
       <strong>
-        <a onClick={(e) => e.preventDefault() || shell.openExternal(docsLink)}>
-          &nbsp;(docs)
-        </a>
+        <a onClick={(e) => e.preventDefault() || shell.openExternal(docsLink)}>&nbsp;(docs)</a>
       </strong>
     </span>
   );

@@ -91,7 +91,8 @@ export function getSimpleSuggestedLocators(attributes, sourceDoc, isNative) {
 export function getComplexSuggestedLocators(path, sourceDoc) {
   let complexLocators = {};
   const domNode = findDOMNodeByPath(path, sourceDoc);
-  if (domNode.tagName.includes('XCUIElement')) { // XCUI native context
+  if (domNode.tagName.includes('XCUIElement')) {
+    // XCUI native context
     const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);
     complexLocators['-ios class chain'] = optimalClassChain ? '**' + optimalClassChain : null;
     complexLocators['-ios predicate string'] = getOptimalPredicateString(sourceDoc, domNode);
@@ -112,7 +113,11 @@ export function getComplexSuggestedLocators(path, sourceDoc) {
  */
 export function getSuggestedLocators(selectedElement, sourceXML, isNative) {
   const sourceDoc = domParser.parseFromString(sourceXML);
-  const simpleLocators = getSimpleSuggestedLocators(selectedElement.attributes, sourceDoc, isNative);
+  const simpleLocators = getSimpleSuggestedLocators(
+    selectedElement.attributes,
+    sourceDoc,
+    isNative,
+  );
   const complexLocators = getComplexSuggestedLocators(selectedElement.path, sourceDoc);
   return _.toPairs({...simpleLocators, ...complexLocators});
 }
