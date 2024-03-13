@@ -401,7 +401,7 @@ export function getOptimalXPath(doc, domNode) {
  * @param {Node} domNode
  * @returns {string|null}
  */
-function getOptimalClassChain(doc, domNode) {
+export function getOptimalClassChain(doc, domNode) {
   try {
     // BASE CASE #1: If this isn't an element, we're above the root, return empty string
     // Also return empty for 'XCUIElementTypeApplication', which cannot be found via class chain
@@ -475,7 +475,7 @@ function getOptimalClassChain(doc, domNode) {
  * @param {Node} domNode
  * @returns {string|null}
  */
-function getOptimalPredicateString(doc, domNode) {
+export function getOptimalPredicateString(doc, domNode) {
   try {
     // BASE CASE #1: If this isn't an element, or we're above the root, return empty string
     if (!domNode.tagName || domNode.nodeType !== 1) {

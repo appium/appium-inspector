@@ -9,6 +9,8 @@ import {
   domParser,
   findDOMNodeByPath,
   findJSONElementByPath,
+  getOptimalClassChain,
+  getOptimalPredicateString,
   getOptimalXPath,
   getSimpleSuggestedLocators,
   xmlToJSON,
@@ -156,49 +158,55 @@ describe('util.js', function () {
 
   describe('#findDOMNodeByPath', function () {
     it('should find a Document node using the provided path', function () {
-      findDOMNodeByPath('0.1.1', xmlToDoc(`<hierarchy>
-        <root>
-          <firstA>
-            <secondA/>
-            <secondB/>
-          </firstA>
-          <firstB>
-            <secondC/>
-            <secondD/>
-          </firstB>
-          <firstC>
-            <secondE/>
-            <secondF/>
-          </firstC>
-        </root>
-      </hierarchy>`)).tagName.should.equal('secondD');
+      findDOMNodeByPath(
+        '0.1.1',
+        xmlToDoc(`<hierarchy>
+          <root>
+            <firstA>
+              <secondA/>
+              <secondB/>
+            </firstA>
+            <firstB>
+              <secondC/>
+              <secondD/>
+            </firstB>
+            <firstC>
+              <secondE/>
+              <secondF/>
+            </firstC>
+          </root>
+        </hierarchy>`),
+      ).tagName.should.equal('secondD');
     });
   });
 
   describe('#findJSONElementByPath', function () {
     it('should find a JSON element using the provided path', function () {
-      const foundElement = findJSONElementByPath('0.1.1', xmlToJSON(`<hierarchy>
-        <root>
-          <firstA>
-            <secondA/>
-            <secondB/>
-          </firstA>
-          <firstB>
-            <secondC/>
-            <secondD/>
-          </firstB>
-          <firstC>
-            <secondE/>
-            <secondF/>
-          </firstC>
-        </root>
-      </hierarchy>`));
+      const foundElement = findJSONElementByPath(
+        '0.1.1',
+        xmlToJSON(`<hierarchy>
+          <root>
+            <firstA>
+              <secondA/>
+              <secondB/>
+            </firstA>
+            <firstB>
+              <secondC/>
+              <secondD/>
+            </firstB>
+            <firstC>
+              <secondE/>
+              <secondF/>
+            </firstC>
+          </root>
+        </hierarchy>`),
+      );
       foundElement.should.eql({
         children: [],
         tagName: 'secondD',
         attributes: {},
         path: '0.1.1',
-      },);
+      });
     });
   });
 
@@ -817,6 +825,73 @@ describe('util.js', function () {
         };
         should.not.exist(getOptimalXPath(doc, node));
       });
+    });
+  });
+
+  describe('#getOptimalClassChain', function () {
+    let doc;
+
+    it('should use unique class chain attributes if the node has them', function () {
+      doc = xmlToDoc(`<xml>
+        <child-node label='hello'>Hello</child-node>
+        <child-node label='world'>World</child-node>
+      </xml>`);
+      getOptimalClassChain(doc, doc.getElementsByTagName('child-node')[0]).should.equal(
+        '/child-node[`label == "hello"`]',
+      );
+    });
+
+    it('should use unique class chain attributes of parent if the node does not have them', function () {
+      doc = xmlToDoc(`<root>
+        <child name='foo'>
+          <grandchild>Hello</grandchild>
+          <grandchild>World</grandchild>
+        </child>
+      </root>`);
+      getOptimalClassChain(doc, doc.getElementsByTagName('grandchild')[0]).should.equal(
+        '/child[`name == "foo"`]/grandchild[1]',
+      );
+    });
+
+    it('should use indices if neither the node nor its ancestors have any unique class chain attributes', function () {
+      doc = xmlToDoc(`<root>
+        <child>
+          <grandchild>Hello</grandchild>
+          <grandchild>World</grandchild>
+        </child>
+        <irrelevant-child></irrelevant-child>
+        <child>
+          <grandchild>Foo</grandchild>
+          <grandchild>Bar</grandchild>
+        </child>
+      </root>`);
+      getOptimalClassChain(doc, doc.getElementsByTagName('grandchild')[0]).should.equal(
+        '/root/child[1]/grandchild[1]',
+      );
+    });
+  });
+
+  describe('#getOptimalPredicateString', function () {
+    let doc;
+
+    it('should exist if the node has unique predicate string attributes', function () {
+      doc = xmlToDoc(`<xml>
+        <child-node label='hello'>Hello</child-node>
+        <child-node label='world'>World</child-node>
+      </xml>`);
+      getOptimalPredicateString(doc, doc.getElementsByTagName('child-node')[0]).should.equal(
+        'label == "hello"',
+      );
+    });
+
+    it('should not exist if the node does not have unique predicate string attributes', function () {
+      doc = xmlToDoc(`<root>
+        <child name='foo'>
+          <grandchild>Hello</grandchild>
+          <grandchild>World</grandchild>
+        </child>
+      </root>`);
+      should.not.exist(getOptimalPredicateString(doc, doc.getElementsByTagName('grandchild')[0]));
     });
   });
 
