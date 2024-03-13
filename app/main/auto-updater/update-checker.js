@@ -20,7 +20,8 @@ export async function checkUpdate(currentVersion) {
 }
 
 export function setUpAutoUpdater({autoUpdater, app, moment, i18n, env, dialog, B}) {
-  autoUpdater.setFeedURL(getFeedUrl(app.getVersion()));
+  const url = getFeedUrl(app.getVersion());
+  autoUpdater.setFeedURL({url});
 
   /**
    * Check for new updates
@@ -96,21 +97,18 @@ export function setUpAutoUpdater({autoUpdater, app, moment, i18n, env, dialog, B
   });
 
   // When it's done, ask if user want to restart now or later
-  autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-    dialog.showMessageBox(
-      {
-        type: 'info',
-        buttons: [i18n.t('Restart Now'), i18n.t('Later')],
-        message: i18n.t('Update Downloaded'),
-        detail: i18n.t('updateIsDownloaded', {releaseName}),
-      },
-      (response) => {
-        // If they say yes, restart now
-        if (response === 0) {
-          autoUpdater.quitAndInstall();
-        }
-      },
-    );
+  autoUpdater.on('update-downloaded', async (_event, _releaseNotes, releaseName) => {
+    const dialogOpts = {
+      type: 'info',
+      buttons: [i18n.t('Restart Now'), i18n.t('Later')],
+      message: i18n.t('Update Downloaded'),
+      detail: i18n.t('updateIsDownloaded', {releaseName}),
+    };
+    const returnValue = await dialog.showMessageBox(dialogOpts);
+    // If they say yes, restart now
+    if (returnValue.response === 0) {
+      autoUpdater.quitAndInstall();
+    }
   });
 
   // Handle error case
