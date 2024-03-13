@@ -411,7 +411,7 @@ export function newSession(caps, attachSessId = null) {
         desiredCapabilities['pcloudy:options'] = {
           source: 'appiumdesktop',
           pCloudy_Username: username,
-          pCloudy_ApiKey: accessKey
+          pCloudy_ApiKey: accessKey,
         };
         https = session.server.pcloudy.ssl = true;
         break;
