@@ -46,10 +46,10 @@ export function areAttrAndValueUnique(attrName, attrValue, sourceDoc) {
 /**
  * Get suggested selectors for simple locator strategies (which match a specific attribute)
  *
- * @param {Object} attributes element attributes
+ * @param {Object.<string, string|number>} attributes element attributes
  * @param {Document} sourceDoc
  * @param {boolean} isNative whether native context is active
- * @returns {Object} mapping of strategies to selectors
+ * @returns {Object.<string, string>} mapping of strategies to selectors
  */
 export function getSimpleSuggestedLocators(attributes, sourceDoc, isNative = true) {
   const res = {};
@@ -70,7 +70,7 @@ export function getSimpleSuggestedLocators(attributes, sourceDoc, isNative = tru
  *
  * @param {string} path a dot-separated string of indices
  * @param {Document} sourceDoc
- * @returns {Object} mapping of strategies to selectors
+ * @returns {Object.<string, string>} mapping of strategies to selectors
  */
 export function getComplexSuggestedLocators(path, sourceDoc) {
   let complexLocators = {};
@@ -93,7 +93,7 @@ export function getComplexSuggestedLocators(path, sourceDoc) {
  * @param {string} selectedElement element node in JSON format
  * @param {string} sourceXML
  * @param {boolean} isNative whether native context is active
- * @returns {Object} mapping of strategies to selectors
+ * @returns {[string, string]} tuples consisting of the locator strategy and selector
  */
 export function getSuggestedLocators(selectedElement, sourceXML, isNative) {
   const sourceDoc = domParser.parseFromString(sourceXML);
