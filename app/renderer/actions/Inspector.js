@@ -6,14 +6,13 @@ import {SAVED_FRAMEWORK, SET_SAVED_GESTURES, getSetting, setSetting} from '../..
 import {APP_MODE, NATIVE_APP} from '../components/Inspector/shared';
 import AppiumClient from '../lib/appium-client';
 import frameworks from '../lib/client-frameworks';
+import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation';
 import {
   domParser,
   findDOMNodeByPath,
   findJSONElementByPath,
-  getOptimalXPath,
-  getSuggestedLocators,
   xmlToJSON,
-} from '../util';
+} from '../utils/source-parsing';
 import {showError} from './Session';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
