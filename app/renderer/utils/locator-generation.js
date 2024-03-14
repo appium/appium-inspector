@@ -93,7 +93,7 @@ export function getComplexSuggestedLocators(path, sourceDoc) {
  * @param {string} selectedElement element node in JSON format
  * @param {string} sourceXML
  * @param {boolean} isNative whether native context is active
- * @returns {[string, string]} tuples consisting of the locator strategy and selector
+ * @returns {Array<[string, string]>} array of tuples, consisting of the locator strategy and selector
  */
 export function getSuggestedLocators(selectedElement, sourceXML, isNative) {
   const sourceDoc = domParser.parseFromString(sourceXML);
