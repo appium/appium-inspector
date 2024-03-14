@@ -1,22 +1,8 @@
-import {DOMParser} from '@xmldom/xmldom';
 import _ from 'lodash';
-import {withTranslation as wt} from 'react-i18next';
 import XPath from 'xpath';
 
-import config from '../configs/app.config';
-import {log} from './polyfills';
-
-const VALID_W3C_CAPS = [
-  'platformName',
-  'browserName',
-  'browserVersion',
-  'acceptInsecureCerts',
-  'pageLoadStrategy',
-  'proxy',
-  'setWindowRect',
-  'timeouts',
-  'unhandledPromptBehavior',
-];
+import {log} from '../polyfills';
+import {domParser, findDOMNodeByPath} from './source-parsing';
 
 // Attributes on nodes that are likely to be unique to the node so we should consider first when
 // suggesting xpath locators. These are considered IN ORDER.
@@ -30,63 +16,94 @@ const UNIQUE_CLASS_CHAIN_ATTRIBUTES = ['name', 'label', 'value'];
 
 const UNIQUE_PREDICATE_ATTRIBUTES = ['name', 'label', 'value', 'type'];
 
-/**
- * Translates sourceXML to JSON
- *
- * @param {string} source
- * @returns {Object}
- */
-export function xmlToJSON(source) {
-  const childNodesOf = (xmlNode) => {
-    if (!xmlNode || !xmlNode.hasChildNodes()) {
-      return [];
-    }
+// Map of element attributes to their matching simple (optimal) locator strategies
+const SIMPLE_STRATEGY_MAPPINGS = [
+  ['name', 'accessibility id'],
+  ['content-desc', 'accessibility id'],
+  ['id', 'id'],
+  ['rntestid', 'id'],
+  ['resource-id', 'id'],
+  ['class', 'class name'],
+  ['type', 'class name'],
+];
 
-    const result = [];
-    for (let childIdx = 0; childIdx < xmlNode.childNodes.length; ++childIdx) {
-      const childNode = xmlNode.childNodes.item(childIdx);
-      if (childNode.nodeType === 1) {
-        result.push(childNode);
+/**
+ * Check whether the provided attribute & value are unique in the source
+ *
+ * @param {string} attrName
+ * @param {string} attrValue
+ * @param {Document} sourceDoc
+ * @returns {boolean}
+ */
+export function areAttrAndValueUnique(attrName, attrValue, sourceDoc) {
+  // If no sourceDoc provided, assume it's unique
+  if (!sourceDoc || _.isEmpty(sourceDoc)) {
+    return true;
+  }
+  return XPath.select(`//*[@${attrName}="${attrValue.replace(/"/g, '')}"]`, sourceDoc).length < 2;
+}
+
+/**
+ * Get suggested selectors for simple locator strategies (which match a specific attribute)
+ *
+ * @param {Object.<string, string|number>} attributes element attributes
+ * @param {Document} sourceDoc
+ * @param {boolean} isNative whether native context is active
+ * @returns {Object.<string, string>} mapping of strategies to selectors
+ */
+export function getSimpleSuggestedLocators(attributes, sourceDoc, isNative = true) {
+  const res = {};
+  for (let [strategyAlias, strategy] of SIMPLE_STRATEGY_MAPPINGS) {
+    // accessibility id is only supported in native context
+    if (!(strategy === 'accessibility id' && !isNative)) {
+      const value = attributes[strategyAlias];
+      if (value && areAttrAndValueUnique(strategyAlias, value, sourceDoc)) {
+        res[strategy] = value;
       }
     }
-    return result;
-  };
-  const translateRecursively = (xmlNode, parentPath = '', index = null) => {
-    const attributes = {};
-    for (let attrIdx = 0; attrIdx < xmlNode.attributes.length; ++attrIdx) {
-      const attr = xmlNode.attributes.item(attrIdx);
-      attributes[attr.name] = attr.value;
-    }
+  }
+  return res;
+}
 
-    // Dot Separated path of indices
-    const path = _.isNil(index) ? '' : `${!parentPath ? '' : parentPath + '.'}${index}`;
-    const classChainSelector = isIOS
-      ? getOptimalClassChain(xmlDoc, xmlNode, UNIQUE_CLASS_CHAIN_ATTRIBUTES)
-      : '';
-    const predicateStringSelector = isIOS
-      ? getOptimalPredicateString(xmlDoc, xmlNode, UNIQUE_PREDICATE_ATTRIBUTES)
-      : '';
+/**
+ * Get suggested selectors for complex locator strategies (multiple attributes, axes, etc.)
+ *
+ * @param {string} path a dot-separated string of indices
+ * @param {Document} sourceDoc
+ * @returns {Object.<string, string>} mapping of strategies to selectors
+ */
+export function getComplexSuggestedLocators(path, sourceDoc) {
+  let complexLocators = {};
+  const domNode = findDOMNodeByPath(path, sourceDoc);
+  if (domNode.tagName.includes('XCUIElement')) {
+    // XCUI native context
+    const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);
+    complexLocators['-ios class chain'] = optimalClassChain ? '**' + optimalClassChain : null;
+    complexLocators['-ios predicate string'] = getOptimalPredicateString(sourceDoc, domNode);
+  }
+  complexLocators.xpath = getOptimalXPath(sourceDoc, domNode);
 
-    return {
-      children: childNodesOf(xmlNode).map((childNode, childIndex) =>
-        translateRecursively(childNode, path, childIndex),
-      ),
-      tagName: xmlNode.tagName,
-      attributes,
-      xpath: getOptimalXPath(xmlDoc, xmlNode, UNIQUE_XPATH_ATTRIBUTES),
-      ...(isIOS ? {classChain: classChainSelector ? `**${classChainSelector}` : ''} : {}),
-      ...(isIOS ? {predicateString: predicateStringSelector ? predicateStringSelector : ''} : {}),
-      path,
-    };
-  };
-  const isIOS = source.includes('XCUIElement');
-  const xmlDoc = new DOMParser().parseFromString(source);
-  // get the first child element node in the doc. some drivers write their xml differently so we
-  // first try to find an element as a direct descendend of the doc, then look for one in
-  // documentElement
-  const firstChild = childNodesOf(xmlDoc)[0] || childNodesOf(xmlDoc.documentElement)[0];
+  // Remove entries for locators where the optimal selector could not be found
+  return _.omitBy(complexLocators, _.isNil);
+}
 
-  return firstChild ? translateRecursively(firstChild) : {};
+/**
+ * Get suggested selectors for all locator strategies
+ *
+ * @param {string} selectedElement element node in JSON format
+ * @param {string} sourceXML
+ * @param {boolean} isNative whether native context is active
+ * @returns {Array<[string, string]>} array of tuples, consisting of the locator strategy and selector
+ */
+export function getSuggestedLocators(selectedElement, sourceXML, isNative) {
+  const sourceDoc = domParser.parseFromString(sourceXML);
+  const simpleLocators = getSimpleSuggestedLocators(
+    selectedElement.attributes,
+    sourceDoc,
+    isNative,
+  );
+  const complexLocators = getComplexSuggestedLocators(selectedElement.path, sourceDoc);
+  return _.toPairs({...simpleLocators, ...complexLocators});
 }
 
 /**
@@ -94,8 +111,8 @@ export function xmlToJSON(source) {
  * index of the element in the document if not unique
  *
  * @param {string} xpath
- * @param {DOMDocument} doc
- * @param {DOMNode} domNode - the current node
+ * @param {Document} doc
+ * @param {Node} domNode - the current node
  * @returns {[boolean, number?]} tuple consisting of (1) whether the xpath is unique and (2) its index in
  * the set of other similar nodes if not unique
  */
@@ -121,7 +138,7 @@ function determineXpathUniqueness(xpath, doc, domNode) {
  * key attributes, which is unique in the document (or unique plus index).
  *
  * @param {string} xpath
- * @param {DOMDocument} doc
+ * @param {Document} doc
  * @param {Array<string>|Array<[string, string]>} attrs - a list of attributes to consider, or
  * a list of pairs of attributes to consider in conjunction
  *
@@ -190,10 +207,10 @@ function getUniqueXPath(doc, domNode, attrs) {
 }
 
 /**
- * Get an optimal XPath for a DOMNode
+ * Get an optimal XPath for a Node
  *
- * @param {DOMDocument} doc
- * @param {DOMNode} domNode
+ * @param {Document} doc
+ * @param {Node} domNode
  * @returns {string|null}
  */
 export function getOptimalXPath(doc, domNode) {
@@ -284,17 +301,16 @@ export function getOptimalXPath(doc, domNode) {
 }
 
 /**
- * Get an optimal Class Chain for a DOMNode based on the getOptimalXPath method
+ * Get an optimal class chain for a Node based on the getOptimalXPath method
  *
- * @param {DOMDocument} doc
- * @param {DOMNode} domNode
- * @param {Array<String>} uniqueAttributes Attributes we know are unique
+ * @param {Document} doc
+ * @param {Node} domNode
  * @returns {string|null}
  */
-function getOptimalClassChain(doc, domNode, uniqueAttributes) {
+export function getOptimalClassChain(doc, domNode) {
   try {
-    // BASE CASE #1: If this isn't an element, we're above the root, or this is `XCUIElementTypeApplication`,
-    // which is not an official XCUITest element, return empty string
+    // BASE CASE #1: If this isn't an element, we're above the root, return empty string
+    // Also return empty for 'XCUIElementTypeApplication', which cannot be found via class chain
     if (
       !domNode.tagName ||
       domNode.nodeType !== 1 ||
@@ -304,7 +320,7 @@ function getOptimalClassChain(doc, domNode, uniqueAttributes) {
     }
 
     // BASE CASE #2: If this node has a unique class chain based on attributes then return it
-    for (let attrName of uniqueAttributes) {
+    for (let attrName of UNIQUE_CLASS_CHAIN_ATTRIBUTES) {
       const attrValue = domNode.getAttribute(attrName);
       if (attrValue) {
         let xpath = `//${domNode.tagName || '*'}[@${attrName}="${attrValue}"]`;
@@ -318,7 +334,7 @@ function getOptimalClassChain(doc, domNode, uniqueAttributes) {
           continue;
         }
 
-        // If the attribute isn't actually unique, get it's index too
+        // If the attribute isn't actually unique, get its index too
         if (othersWithAttr.length > 1) {
           let index = othersWithAttr.indexOf(domNode);
           classChain = `${classChain}[${index + 1}]`;
@@ -345,7 +361,7 @@ function getOptimalClassChain(doc, domNode, uniqueAttributes) {
     }
 
     // Make a recursive call to this nodes parents and prepend it to this xpath
-    return getOptimalClassChain(doc, domNode.parentNode, uniqueAttributes) + classChain;
+    return getOptimalClassChain(doc, domNode.parentNode) + classChain;
   } catch (error) {
     // If there's an unexpected exception, abort and don't get an XPath
     log.error(
@@ -358,23 +374,17 @@ function getOptimalClassChain(doc, domNode, uniqueAttributes) {
 }
 
 /**
- * Get an optimal Predicate String for a DOMNode based on the getOptimalXPath method
+ * Get an optimal predicate string for a Node based on the getOptimalXPath method
  * The `ios predicate string` can only search a single element, no parent child scope
  *
- * @param {DOMDocument} doc
- * @param {DOMNode} domNode
- * @param {Array<String>} uniqueAttributes Attributes we know are unique
+ * @param {Document} doc
+ * @param {Node} domNode
  * @returns {string|null}
  */
-function getOptimalPredicateString(doc, domNode, uniqueAttributes) {
+export function getOptimalPredicateString(doc, domNode) {
   try {
-    // BASE CASE #1: If this isn't an element, we're above the root, or this is `XCUIElementTypeApplication`,
-    // which is not an official XCUITest element, return empty string
-    if (
-      !domNode.tagName ||
-      domNode.nodeType !== 1 ||
-      domNode.tagName === 'XCUIElementTypeApplication'
-    ) {
+    // BASE CASE #1: If this isn't an element, or we're above the root, return empty string
+    if (!domNode.tagName || domNode.nodeType !== 1) {
       return '';
     }
 
@@ -382,7 +392,7 @@ function getOptimalPredicateString(doc, domNode, uniqueAttributes) {
     let xpathAttributes = [];
     let predicateString = [];
 
-    for (let attrName of uniqueAttributes) {
+    for (let attrName of UNIQUE_PREDICATE_ATTRIBUTES) {
       const attrValue = domNode.getAttribute(attrName);
 
       if (_.isNil(attrValue) || (_.isString(attrValue) && attrValue.length === 0)) {
@@ -415,18 +425,4 @@ function getOptimalPredicateString(doc, domNode, uniqueAttributes) {
 
     return null;
   }
-}
-
-export function withTranslation(componentCls, ...hocs) {
-  return _.flow(...hocs, wt(config.namespace))(componentCls);
-}
-
-export function addVendorPrefixes(caps) {
-  return caps.map((cap) => {
-    // if we don't have a valid unprefixed cap or a cap with an existing prefix, update it
-    if (!VALID_W3C_CAPS.includes(cap.name) && !_.includes(cap.name, ':')) {
-      cap.name = `appium:${cap.name}`;
-    }
-    return cap;
-  });
 }

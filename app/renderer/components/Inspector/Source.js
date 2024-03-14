@@ -22,7 +22,7 @@ const IMPORTANT_ATTRS = [
  */
 const Source = (props) => {
   const {
-    source,
+    sourceJSON,
     sourceError,
     setExpandedPaths,
     expandedPaths,
@@ -84,11 +84,11 @@ const Source = (props) => {
     }));
   };
 
-  const treeData = source && recursive(source);
+  const treeData = sourceJSON && recursive(sourceJSON);
 
   return (
     <div id="sourceContainer" className={InspectorStyles['tree-container']} tabIndex="0">
-      {!source && !sourceError && <i>{t('Gathering initial app source…')}</i>}
+      {!sourceJSON && !sourceError && <i>{t('Gathering initial app source…')}</i>}
       {sourceError && t('couldNotObtainSource', {errorMsg: JSON.stringify(sourceError)})}
       {/* Show loading indicator in MJPEG mode if a method call is in progress and source refresh is on */}
       <Spin

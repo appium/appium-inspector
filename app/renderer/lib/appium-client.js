@@ -1,7 +1,7 @@
 import Bluebird from 'bluebird';
 import _ from 'lodash';
 
-import {APP_MODE, SCREENSHOT_INTERACTION_MODE} from '../components/Inspector/shared';
+import {APP_MODE, NATIVE_APP, SCREENSHOT_INTERACTION_MODE} from '../components/Inspector/shared';
 import {parseSource, setHtmlElementAttributes} from './webview-helpers';
 
 const {TAP, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
@@ -13,7 +13,6 @@ const IOS_TOP_CONTROLS_SELECTOR =
   '**/XCUIElementTypeOther[`name CONTAINS "SafariWindow"`]' +
   '/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[1]';
 
-export const NATIVE_APP = 'NATIVE_APP';
 let _instance = null;
 
 export default class AppiumClient {

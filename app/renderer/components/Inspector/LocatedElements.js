@@ -15,7 +15,8 @@ const LocatedElements = (props) => {
     isFindingLocatedElementInSource,
     searchedForElementBounds,
     selectLocatedElement,
-    source,
+    sourceJSON,
+    sourceXML,
     driver,
     t,
   } = props;
@@ -93,7 +94,12 @@ const LocatedElements = (props) => {
                     disabled={!locatorTestElement}
                     icon={<MenuUnfoldOutlined />}
                     onClick={() =>
-                      selectLocatedElement(source, searchedForElementBounds, locatorTestElement)
+                      selectLocatedElement(
+                        sourceJSON,
+                        sourceXML,
+                        searchedForElementBounds,
+                        locatorTestElement,
+                      )
                     }
                   />
                 </Tooltip>
