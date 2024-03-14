@@ -140,10 +140,7 @@ const SelectedElement = (props) => {
   }
 
   // If XPath is the only optimal selector, warn the user about its brittleness
-  let showXpathWarning = false;
-  if (findDataSource.length === 1) {
-    showXpathWarning = true;
-  }
+  const showXpathWarning = findDataSource.length === 1;
 
   // Replace table data with table data that has the times
   if (findElementsExecutionTimes.length > 0) {

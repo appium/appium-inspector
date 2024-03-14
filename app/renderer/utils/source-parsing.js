@@ -25,7 +25,7 @@ function childNodesOf(domNode) {
  */
 export function findDOMNodeByPath(path, sourceDoc) {
   let selectedElement = childNodesOf(sourceDoc)[0] || childNodesOf(sourceDoc.documentElement)[0];
-  for (let index of path.split('.')) {
+  for (const index of path.split('.')) {
     selectedElement = childNodesOf(selectedElement)[index];
   }
   return selectedElement;
@@ -40,7 +40,7 @@ export function findDOMNodeByPath(path, sourceDoc) {
  */
 export function findJSONElementByPath(path, sourceJSON) {
   let selectedElement = sourceJSON;
-  for (let index of path.split('.')) {
+  for (const index of path.split('.')) {
     selectedElement = selectedElement.children[index];
   }
   return {...selectedElement};
