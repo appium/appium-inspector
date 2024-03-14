@@ -402,17 +402,17 @@ export function newSession(caps, attachSessId = null) {
         host = session.server.pcloudy.hostname;
         port = session.server.pcloudy.port = 443;
         path = session.server.pcloudy.path = '/objectspy/wd/hub';
-        desiredCapabilities.pCloudy_Username =
-          session.server.pcloudy.username || process.env.PCLOUDY_USERNAME;
-        desiredCapabilities.pCloudy_ApiKey =
-          session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
-        if (
-          !(session.server.pcloudy.username || process.env.PCLOUDY_USERNAME) ||
-          !(session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY)
-        ) {
-          showError(new Error('PCLOUDY username and api key are required!'));
+        username = session.server.pcloudy.username || process.env.PCLOUDY_USERNAME;
+        accessKey = session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
+        if (!username || !accessKey) {
+          showError(new Error(i18n.t('pcloudyCredentialsRequired')));
           return false;
         }
+        desiredCapabilities['pcloudy:options'] = {
+          source: 'appiumdesktop',
+          pCloudy_Username: username,
+          pCloudy_ApiKey: accessKey,
+        };
         https = session.server.pcloudy.ssl = true;
         break;
       case ServerTypes.testingbot:
