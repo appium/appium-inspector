@@ -12,9 +12,17 @@ const UNIQUE_XPATH_ATTRIBUTES = ['name', 'content-desc', 'id', 'resource-id', 'a
 // attributes
 const MAYBE_UNIQUE_XPATH_ATTRIBUTES = ['label', 'text', 'value'];
 
-const UNIQUE_CLASS_CHAIN_ATTRIBUTES = ['name', 'label', 'value'];
+const CHECKED_CLASS_CHAIN_ATTRIBUTES = ['name', 'label', 'value'];
 
-const UNIQUE_PREDICATE_ATTRIBUTES = ['name', 'label', 'value', 'type'];
+const CHECKED_PREDICATE_ATTRIBUTES = ['name', 'label', 'value', 'type'];
+
+// Map of element attributes to their UiAutomator syntax, ordered by (likely) decreasing uniqueness
+const CHECKED_UIAUTOMATOR_ATTRIBUTES = [
+  ['resource-id', 'resourceId'],
+  ['text', 'text'],
+  ['content-desc', 'description'],
+  ['class', 'className'],
+];
 
 // Map of element attributes to their matching simple (optimal) locator strategies
 const SIMPLE_STRATEGY_MAPPINGS = [
@@ -70,9 +78,10 @@ export function getSimpleSuggestedLocators(attributes, sourceDoc, isNative = tru
  *
  * @param {string} path a dot-separated string of indices
  * @param {Document} sourceDoc
+ * @param {string} automationName
  * @returns {Object.<string, string>} mapping of strategies to selectors
  */
-export function getComplexSuggestedLocators(path, sourceDoc) {
+export function getComplexSuggestedLocators(path, sourceDoc, automationName) {
   let complexLocators = {};
   const domNode = findDOMNodeByPath(path, sourceDoc);
   if (domNode.tagName.includes('XCUIElement')) {
@@ -80,6 +89,8 @@ export function getComplexSuggestedLocators(path, sourceDoc) {
     const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);
     complexLocators['-ios class chain'] = optimalClassChain ? '**' + optimalClassChain : null;
     complexLocators['-ios predicate string'] = getOptimalPredicateString(sourceDoc, domNode);
+  } else if (automationName.toLowerCase() === 'uiautomator2') {
+    complexLocators['-android uiautomator'] = getOptimalUiAutomatorSelector(sourceDoc, domNode);
   }
   complexLocators.xpath = getOptimalXPath(sourceDoc, domNode);
 
@@ -93,16 +104,17 @@ export function getComplexSuggestedLocators(path, sourceDoc) {
  * @param {string} selectedElement element node in JSON format
  * @param {string} sourceXML
  * @param {boolean} isNative whether native context is active
+ * @param {string} automationName
  * @returns {Array<[string, string]>} array of tuples, consisting of the locator strategy and selector
  */
-export function getSuggestedLocators(selectedElement, sourceXML, isNative) {
+export function getSuggestedLocators(selectedElement, sourceXML, isNative, automationName) {
   const sourceDoc = domParser.parseFromString(sourceXML);
   const simpleLocators = getSimpleSuggestedLocators(
     selectedElement.attributes,
     sourceDoc,
     isNative,
   );
-  const complexLocators = getComplexSuggestedLocators(selectedElement.path, sourceDoc);
+  const complexLocators = getComplexSuggestedLocators(selectedElement.path, sourceDoc, automationName);
   return _.toPairs({...simpleLocators, ...complexLocators});
 }
 
@@ -320,7 +332,7 @@ export function getOptimalClassChain(doc, domNode) {
     }
 
     // BASE CASE #2: If this node has a unique class chain based on attributes then return it
-    for (let attrName of UNIQUE_CLASS_CHAIN_ATTRIBUTES) {
+    for (let attrName of CHECKED_CLASS_CHAIN_ATTRIBUTES) {
       const attrValue = domNode.getAttribute(attrName);
       if (attrValue) {
         let xpath = `//${domNode.tagName || '*'}[@${attrName}="${attrValue}"]`;
@@ -392,7 +404,7 @@ export function getOptimalPredicateString(doc, domNode) {
     let xpathAttributes = [];
     let predicateString = [];
 
-    for (let attrName of UNIQUE_PREDICATE_ATTRIBUTES) {
+    for (let attrName of CHECKED_PREDICATE_ATTRIBUTES) {
       const attrValue = domNode.getAttribute(attrName);
 
       if (_.isNil(attrValue) || (_.isString(attrValue) && attrValue.length === 0)) {
@@ -420,6 +432,67 @@ export function getOptimalPredicateString(doc, domNode) {
     // If there's an unexpected exception, abort and don't get an XPath
     log.error(
       `The most optimal '-ios predicate string' could not be determined ` +
+        `because an error was thrown: '${JSON.stringify(error, null, 2)}'`,
+    );
+
+    return null;
+  }
+}
+
+/**
+ * Get an optimal UiAutomator selector for a Node
+ * The `ios predicate string` can only search a single element, no parent child scope
+ *
+ * @param {Document} doc
+ * @param {Node} domNode
+ * @returns {string|null}
+ */
+export function getOptimalUiAutomatorSelector(doc, domNode) {
+  try {
+    // BASE CASE #1: If this isn't an element, or we're above the root, return empty string
+    if (!domNode.tagName || domNode.nodeType !== 1) {
+      return '';
+    }
+
+    // BASE CASE #2: Check all attributes and try to find unique ones
+    let uiSelector, othersWithAttr, mostUniqueSelector;
+    let othersWithAttrMinCount = 99;
+
+    for (const [attrName, attrTranslation] of CHECKED_UIAUTOMATOR_ATTRIBUTES) {
+      const attrValue = domNode.getAttribute(attrName);
+      if (_.isNil(attrValue) || (_.isString(attrValue) && attrValue.length === 0)) {
+        continue;
+      }
+
+      const xpath = `//${domNode.tagName}[@${attrName}="${attrValue}"]`;
+      uiSelector = `new UiSelector().${attrTranslation}("${attrValue}")`;
+
+      // If the XPath does not parse, move to the next unique attribute
+      try {
+        othersWithAttr = XPath.select(xpath, doc);
+      } catch (ign) {
+        continue;
+      }
+
+      // If the attribute is unique, return it
+      // else save it and add an index, if it returns the least number of elements
+      if (othersWithAttr.length === 1) {
+        return uiSelector;
+      } else if (othersWithAttr.length < othersWithAttrMinCount) {
+        othersWithAttrMinCount = othersWithAttr.length;
+        mostUniqueSelector = `${uiSelector}.instance(${othersWithAttr.indexOf(domNode)})`;
+      }
+    }
+
+    // BASE CASE #3: Did not find any unique attributes - use the 'most unique' selector
+    if (mostUniqueSelector) {
+      return mostUniqueSelector;
+    }
+
+  } catch (error) {
+    // If there's an unexpected exception, abort
+    log.error(
+      `The most optimal '-android uiautomator' could not be determined ` +
         `because an error was thrown: '${JSON.stringify(error, null, 2)}'`,
     );
 

@@ -19,6 +19,8 @@ const CLASS_CHAIN_DOCS_URL =
   'https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules';
 const PREDICATE_DOCS_URL =
   'https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules';
+const UIAUTOMATOR_DOCS_URL =
+  'https://github.com/appium/appium-uiautomator2-driver/blob/master/docs/uiautomator-uiselector.md';
 
 /**
  * Shows details of the currently selected element and shows methods that can
@@ -135,6 +137,9 @@ const SelectedElement = (props) => {
         break;
       case '-ios predicate string':
         locator.find = locatorStrategyDocsLink(locator.key, PREDICATE_DOCS_URL);
+        break;
+      case '-android uiautomator':
+        locator.find = locatorStrategyDocsLink(locator.key, UIAUTOMATOR_DOCS_URL);
         break;
     }
   }
