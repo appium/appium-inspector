@@ -176,6 +176,7 @@ export default function inspector(state = INITIAL_STATE, action) {
         ...state,
         selectedElement: action.selectedElement,
         selectedElementPath: action.selectedElement.path,
+        selectedElementId: null,
         selectedElementSearchInProgress: true,
         elementInteractionsNotAvailable: false,
         findElementsExecutionTimes: [],
