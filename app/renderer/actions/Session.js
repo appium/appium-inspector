@@ -27,7 +27,7 @@ import {
 import {APP_MODE} from '../components/Inspector/shared';
 import CloudProviders from '../components/Session/CloudProviders';
 import {fs, ipcRenderer, util} from '../polyfills';
-import {addVendorPrefixes} from '../util';
+import {addVendorPrefixes} from '../utils/other';
 import {quitSession, setSessionDetails} from './Inspector';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
