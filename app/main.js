@@ -26,6 +26,5 @@ app.on('ready', async () => {
     mainUrl: `file://${__dirname}/index.html`,
     splashUrl: `file://${__dirname}/splash.html`,
     isDev,
-    shouldShowFileMenu: true,
   });
 });

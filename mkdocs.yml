@@ -32,6 +32,7 @@ nav:
       - quickstart/requirements.md
       - quickstart/installation.md
       - quickstart/starting-a-session.md
+  - menu-bar.md
   - Session Builder:
       - session-builder/index.md
       - session-builder/server-details.md

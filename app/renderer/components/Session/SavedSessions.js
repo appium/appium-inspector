@@ -42,7 +42,7 @@ const SavedSessions = (props) => {
       isEditingDesiredCaps,
       abortDesiredCapsEditor,
     } = props;
-    const session = getSessionById(savedSessions, uuid);
+    const session = getSessionById(savedSessions, uuid, t);
 
     // Disable any editors before changing the selected caps
     if (isEditingDesiredCapsName) {
@@ -108,7 +108,7 @@ const SavedSessions = (props) => {
         <Table
           pagination={false}
           sticky={true}
-          dataSource={dataSource(savedSessions)}
+          dataSource={dataSource(savedSessions, t)}
           columns={columns}
           onRow={(row) => ({onClick: () => handleCapsAndServer(row.key)})}
           rowClassName={(row) => (capsUUID === row.key ? SessionStyles.selected : '')}
@@ -117,7 +117,7 @@ const SavedSessions = (props) => {
       <Col span={12} className={SessionStyles.capsFormattedCol}>
         <FormattedCaps
           {...props}
-          title={capsUUID ? getSessionById(savedSessions, capsUUID).name : null}
+          title={capsUUID ? getSessionById(savedSessions, capsUUID, t).name : null}
         />
       </Col>
     </Row>
