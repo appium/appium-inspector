@@ -3,7 +3,7 @@ import {Alert, Button, Tooltip} from 'antd';
 import React from 'react';
 
 import {shell} from '../../polyfills';
-import {withTranslation} from '../../util';
+import {withTranslation} from '../../utils/other';
 import {ALERT} from '../AntdTypes';
 import styles from './ErrorMessage.css';
 

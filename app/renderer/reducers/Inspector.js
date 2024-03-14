@@ -49,6 +49,7 @@ import {
   SET_COORD_END,
   SET_COORD_START,
   SET_EXPANDED_PATHS,
+  SET_OPTIMAL_LOCATORS,
   SET_GESTURE_TAP_COORDS_MODE,
   SET_INTERACTIONS_NOT_AVAILABLE,
   SET_KEEP_ALIVE_INTERVAL,
@@ -85,11 +86,11 @@ import {
 import {
   APP_MODE,
   INTERACTION_MODE,
+  NATIVE_APP,
   SCREENSHOT_INTERACTION_MODE,
 } from '../components/Inspector/shared';
 
 const DEFAULT_FRAMEWORK = 'java';
-const NATIVE_APP = 'NATIVE_APP';
 
 const INITIAL_STATE = {
   savedGestures: [],
@@ -132,17 +133,6 @@ const INITIAL_STATE = {
 
 let nextState;
 
-/**
- * Look up an element in the source with the provided path
- */
-function findElementByPath(path, source) {
-  let selectedElement = source;
-  for (let index of path.split('.')) {
-    selectedElement = selectedElement.children[index];
-  }
-  return {...selectedElement};
-}
-
 export default function inspector(state = INITIAL_STATE, action) {
   switch (action.type) {
     case SET_SOURCE_AND_SCREENSHOT:
@@ -152,7 +142,7 @@ export default function inspector(state = INITIAL_STATE, action) {
         contextsError: action.contextsError,
         currentContext: action.currentContext || NATIVE_APP,
         currentContextError: action.currentContextError,
-        source: action.source,
+        sourceJSON: action.sourceJSON,
         sourceXML: action.sourceXML,
         sourceError: action.sourceError,
         screenshot: action.screenshot,
@@ -184,11 +174,21 @@ export default function inspector(state = INITIAL_STATE, action) {
     case SELECT_ELEMENT:
       return {
         ...state,
-        selectedElement: findElementByPath(action.path, state.source),
-        selectedElementPath: action.path,
+        selectedElement: action.selectedElement,
+        selectedElementPath: action.selectedElement.path,
+        selectedElementId: null,
         selectedElementSearchInProgress: true,
         elementInteractionsNotAvailable: false,
         findElementsExecutionTimes: [],
+      };
+
+    case SET_OPTIMAL_LOCATORS:
+      return {
+        ...state,
+        selectedElement: {
+          ...state.selectedElement,
+          strategyMap: action.strategyMap,
+        },
       };
 
     case UNSELECT_ELEMENT:
@@ -197,8 +197,6 @@ export default function inspector(state = INITIAL_STATE, action) {
         selectedElement: undefined,
         selectedElementPath: null,
         selectedElementId: null,
-        selectedElementVariableName: null,
-        selectedElementVariableType: null,
         selectedElementSearchInProgress: false,
       };
 
@@ -215,8 +213,6 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         selectedElementId: action.elementId,
-        selectedElementVariableName: action.variableName,
-        selectedElementVariableType: action.variableType,
         selectedElementSearchInProgress: false,
         findElementsExecutionTimes: [],
       };
@@ -231,7 +227,7 @@ export default function inspector(state = INITIAL_STATE, action) {
     case SELECT_HOVERED_ELEMENT:
       return {
         ...state,
-        hoveredElement: findElementByPath(action.path, state.source),
+        hoveredElement: action.hoveredElement,
       };
 
     case UNSELECT_HOVERED_ELEMENT:
