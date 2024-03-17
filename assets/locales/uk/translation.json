@@ -281,5 +281,6 @@
   "Error Fetching Session URL": "Помилка отримання URL-адреси сесії",
   "noResultsFound": "Результатів не знайдено",
   "invalidCapType": "Недійсний тип можливості: {{type}}",
-  "whitespaceDetected": "Текст починається та/або закінчується пробілом"
+  "whitespaceDetected": "Текст починається та/або закінчується пробілом",
+  "pcloudyCredentialsRequired": "Необхідні ім'я користувача та API ключ від pCloudy!"
 }

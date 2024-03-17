@@ -281,5 +281,6 @@
   "Error Fetching Session URL": "Error Fetching Session URL",
   "noResultsFound": "No results found",
   "invalidCapType": "Invalid capability type: {{type}}",
-  "whitespaceDetected": "Text Starts and/or Ends With Whitespace"
+  "whitespaceDetected": "Text Starts and/or Ends With Whitespace",
+  "pcloudyCredentialsRequired": "pCloudy username and api key are required!"
 }
