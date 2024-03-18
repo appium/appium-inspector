@@ -64,7 +64,7 @@ const SelectedElement = (props) => {
     <span>
       {name}
       <strong>
-        <a onClick={(e) => e.preventDefault() || shell.openExternal(docsLink)}>&nbsp;(docs)</a>
+        <a onClick={(e) => e.preventDefault() || shell.openExternal(docsLink)}><br/>(docs)</a>
       </strong>
     </span>
   );
@@ -75,7 +75,7 @@ const SelectedElement = (props) => {
       title: t('Attribute'),
       dataIndex: 'name',
       key: 'name',
-      width: 100,
+      fixed: 'left',
       render: (text) => selectedElementTableCell(text, false),
     },
     {
@@ -100,7 +100,7 @@ const SelectedElement = (props) => {
       title: t('Find By'),
       dataIndex: 'find',
       key: 'find',
-      width: 100,
+      fixed: 'left',
       render: (text) => selectedElementTableCell(text, false),
     },
     {
@@ -116,8 +116,7 @@ const SelectedElement = (props) => {
       title: t('Time'),
       dataIndex: 'time',
       key: 'time',
-      align: 'right',
-      width: 100,
+      fixed: 'right',
       render: (text) => selectedElementTableCell(text, false),
     });
   }
@@ -226,13 +225,13 @@ const SelectedElement = (props) => {
         </Button.Group>
       </Row>
       {findDataSource.length > 0 && (
-        <Row>
+        <Row className={styles.selectedElemContentRow}>
           <Spin spinning={isFindingElementsTimes}>
             <Table
               columns={findColumns}
               dataSource={findDataSource}
               size="small"
-              tableLayout="fixed"
+              scroll={{ x: 'max-content' }}
               pagination={false}
             />
           </Spin>
@@ -246,11 +245,12 @@ const SelectedElement = (props) => {
         </div>
       )}
       {dataSource.length > 0 && (
-        <Row>
+        <Row className={styles.selectedElemContentRow}>
           <Table
             columns={attributeColumns}
             dataSource={dataSource}
             size="small"
+            scroll={{ x: 'max-content' }}
             pagination={false}
           />
         </Row>
