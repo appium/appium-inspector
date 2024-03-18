@@ -95,7 +95,11 @@ const SelectedElement = (props) => {
     value,
     name: key,
   }));
-  dataSource.unshift({key: 'elementId', value: selectedElementId, name: 'elementId'});
+  dataSource.unshift({
+    key: 'elementId',
+    value: selectedElementSearchInProgress ? <Spin /> : selectedElementId,
+    name: 'elementId',
+  });
 
   // Get the columns for the strategies table
   let findColumns = [

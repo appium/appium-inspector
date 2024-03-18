@@ -1,6 +1,6 @@
 {
   "name": "appium-inspector",
-  "version": "2024.3.1",
+  "version": "2024.3.3",
   "description": "An app inspector for use with an Appium server",
   "repository": {
     "type": "git",
@@ -155,7 +155,7 @@
     "@reduxjs/toolkit": "2.2.1",
     "@xmldom/xmldom": "0.8.10",
     "antd": "4.24.15",
-    "axios": "1.6.7",
+    "axios": "1.6.8",
     "bluebird": "3.7.2",
     "cheerio": "1.0.0-rc.10",
     "electron-log": "4.4.8",
@@ -221,7 +221,7 @@
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-mocha": "10.4.1",
     "eslint-plugin-promise": "6.1.1",
-    "eslint-plugin-react": "7.34.0",
+    "eslint-plugin-react": "7.34.1",
     "eslint-plugin-react-native": "4.1.0",
     "less": "4.2.0",
     "mocha": "10.3.0",

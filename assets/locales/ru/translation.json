@@ -281,5 +281,6 @@
   "Error Fetching Session URL": "Ошибка извлечения URL сессии",
   "noResultsFound": "Результатов не найдено",
   "invalidCapType": "Неверный тип возможности: {{type}}",
-  "whitespaceDetected": "Текст начинается и/или заканчивается с пробелом"
+  "whitespaceDetected": "Текст начинается и/или заканчивается с пробелом",
+  "pcloudyCredentialsRequired": "pCloudy username and api key are required!"
 }

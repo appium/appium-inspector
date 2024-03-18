@@ -5,11 +5,11 @@
   "Cut": "Wytnij",
   "Copy": "Kopiuj",
   "Paste": "Wklej",
-  "Delete": "Delete",
+  "Delete": "Usuń",
   "Select All": "Zaznacz wszystko",
   "Window": "Okno",
   "Minimize": "Minimalizuj",
-  "Zoom": "Zoom",
+  "Zoom": "",
   "Zoom In": "Zoom In",
   "Zoom Out": "Zoom Out",
   "Reset Zoom Level": "Reset Zoom Level",
@@ -281,5 +281,6 @@
   "Error Fetching Session URL": "Error Fetching Session URL",
   "noResultsFound": "No results found",
   "invalidCapType": "Invalid capability type: {{type}}",
-  "whitespaceDetected": "Text Starts and/or Ends With Whitespace"
+  "whitespaceDetected": "Text Starts and/or Ends With Whitespace",
+  "pcloudyCredentialsRequired": "pCloudy username and api key are required!"
 }
