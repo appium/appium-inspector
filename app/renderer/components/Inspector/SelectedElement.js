@@ -64,7 +64,10 @@ const SelectedElement = (props) => {
     <span>
       {name}
       <strong>
-        <a onClick={(e) => e.preventDefault() || shell.openExternal(docsLink)}><br/>(docs)</a>
+        <a onClick={(e) => e.preventDefault() || shell.openExternal(docsLink)}>
+          <br />
+          (docs)
+        </a>
       </strong>
     </span>
   );
@@ -231,7 +234,7 @@ const SelectedElement = (props) => {
               columns={findColumns}
               dataSource={findDataSource}
               size="small"
-              scroll={{ x: 'max-content' }}
+              scroll={{x: 'max-content'}}
               pagination={false}
             />
           </Spin>
@@ -250,7 +253,7 @@ const SelectedElement = (props) => {
             columns={attributeColumns}
             dataSource={dataSource}
             size="small"
-            scroll={{ x: 'max-content' }}
+            scroll={{x: 'max-content'}}
             pagination={false}
           />
         </Row>
