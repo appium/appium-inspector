@@ -312,12 +312,8 @@ export function getOptimalXPath(doc, domNode) {
     // Make a recursive call to this nodes parents and prepend it to this xpath
     return getOptimalXPath(doc, domNode.parentNode) + xpath;
   } catch (error) {
-    // If there's an unexpected exception, abort and don't get an XPath
-    log.error(
-      `The most optimal XPATH could not be determined ` +
-        `because an error was thrown: '${JSON.stringify(error, null, 2)}'`,
-    );
-
+    // If there's an unexpected exception, abort
+    logLocatorError('XPath', error);
     return null;
   }
 }
@@ -385,12 +381,8 @@ export function getOptimalClassChain(doc, domNode) {
     // Make a recursive call to this nodes parents and prepend it to this xpath
     return getOptimalClassChain(doc, domNode.parentNode) + classChain;
   } catch (error) {
-    // If there's an unexpected exception, abort and don't get an XPath
-    log.error(
-      `The most optimal '-ios class chain' could not be determined ` +
-        `because an error was thrown: '${JSON.stringify(error, null, 2)}'`,
-    );
-
+    // If there's an unexpected exception, abort
+    logLocatorError('class chain', error);
     return null;
   }
 }
@@ -439,12 +431,8 @@ export function getOptimalPredicateString(doc, domNode) {
       }
     }
   } catch (error) {
-    // If there's an unexpected exception, abort and don't get an XPath
-    log.error(
-      `The most optimal '-ios predicate string' could not be determined ` +
-        `because an error was thrown: '${JSON.stringify(error, null, 2)}'`,
-    );
-
+    // If there's an unexpected exception, abort
+    logLocatorError('predicate string', error);
     return null;
   }
 }
@@ -526,11 +514,13 @@ export function getOptimalUiAutomatorSelector(doc, domNode, path) {
     }
   } catch (error) {
     // If there's an unexpected exception, abort
-    log.error(
-      `The most optimal '-android uiautomator' could not be determined ` +
-        `because an error was thrown: '${JSON.stringify(error, null, 2)}'`,
-    );
-
+    logLocatorError('uiautomator selector', error);
     return null;
   }
+}
+
+function logLocatorError(strategy, error) {
+  log.error(
+    `The most optimal ${strategy} could not be determined because an error was thrown: '${error}'`,
+  );
 }
