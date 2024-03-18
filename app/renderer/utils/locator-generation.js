@@ -78,10 +78,11 @@ export function getSimpleSuggestedLocators(attributes, sourceDoc, isNative = tru
  *
  * @param {string} path a dot-separated string of indices
  * @param {Document} sourceDoc
+ * @param {boolean} isNative whether native context is active
  * @param {string} automationName
  * @returns {Object.<string, string>} mapping of strategies to selectors
  */
-export function getComplexSuggestedLocators(path, sourceDoc, automationName) {
+export function getComplexSuggestedLocators(path, sourceDoc, isNative, automationName) {
   let complexLocators = {};
   const domNode = findDOMNodeByPath(path, sourceDoc);
   if (domNode.tagName.includes('XCUIElement')) {
@@ -89,7 +90,7 @@ export function getComplexSuggestedLocators(path, sourceDoc, automationName) {
     const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);
     complexLocators['-ios class chain'] = optimalClassChain ? '**' + optimalClassChain : null;
     complexLocators['-ios predicate string'] = getOptimalPredicateString(sourceDoc, domNode);
-  } else if (automationName.toLowerCase() === 'uiautomator2') {
+  } else if (automationName.toLowerCase() === 'uiautomator2' && isNative) {
     complexLocators['-android uiautomator'] = getOptimalUiAutomatorSelector(
       sourceDoc,
       domNode,
@@ -121,6 +122,7 @@ export function getSuggestedLocators(selectedElement, sourceXML, isNative, autom
   const complexLocators = getComplexSuggestedLocators(
     selectedElement.path,
     sourceDoc,
+    isNative,
     automationName,
   );
   return _.toPairs({...simpleLocators, ...complexLocators});
