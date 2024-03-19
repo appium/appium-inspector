@@ -54,10 +54,10 @@ export function areAttrAndValueUnique(attrName, attrValue, sourceDoc) {
 /**
  * Get suggested selectors for simple locator strategies (which match a specific attribute)
  *
- * @param {Object.<string, string|number>} attributes element attributes
+ * @param {Record<string, string|number>} attributes element attributes
  * @param {Document} sourceDoc
  * @param {boolean} isNative whether native context is active
- * @returns {Object.<string, string>} mapping of strategies to selectors
+ * @returns {Record<string, string>} mapping of strategies to selectors
  */
 export function getSimpleSuggestedLocators(attributes, sourceDoc, isNative = true) {
   const res = {};
@@ -80,22 +80,29 @@ export function getSimpleSuggestedLocators(attributes, sourceDoc, isNative = tru
  * @param {Document} sourceDoc
  * @param {boolean} isNative whether native context is active
  * @param {string} automationName
- * @returns {Object.<string, string>} mapping of strategies to selectors
+ * @returns {Record<string, string>} mapping of strategies to selectors
  */
 export function getComplexSuggestedLocators(path, sourceDoc, isNative, automationName) {
   let complexLocators = {};
   const domNode = findDOMNodeByPath(path, sourceDoc);
-  if (domNode.tagName.includes('XCUIElement')) {
-    // XCUI native context
-    const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);
-    complexLocators['-ios class chain'] = optimalClassChain ? '**' + optimalClassChain : null;
-    complexLocators['-ios predicate string'] = getOptimalPredicateString(sourceDoc, domNode);
-  } else if (automationName.toLowerCase() === 'uiautomator2' && isNative) {
-    complexLocators['-android uiautomator'] = getOptimalUiAutomatorSelector(
-      sourceDoc,
-      domNode,
-      path,
-    );
+  if (isNative) {
+    switch (automationName.toLowerCase()) {
+      case 'xcuitest':
+      case 'mac2': {
+        const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);
+        complexLocators['-ios class chain'] = optimalClassChain ? '**' + optimalClassChain : null;
+        complexLocators['-ios predicate string'] = getOptimalPredicateString(sourceDoc, domNode);
+        break;
+      }
+      case 'uiautomator2': {
+        complexLocators['-android uiautomator'] = getOptimalUiAutomatorSelector(
+          sourceDoc,
+          domNode,
+          path,
+        );
+        break;
+      }
+    }
   }
   complexLocators.xpath = getOptimalXPath(sourceDoc, domNode);
 
@@ -337,32 +344,35 @@ export function getOptimalClassChain(doc, domNode) {
       return '';
     }
 
-    // BASE CASE #2: If this node has a unique class chain based on attributes then return it
+    // BASE CASE #2: If this node has a unique class chain based on attributes, return it
+    let classChain, othersWithAttr;
+
     for (let attrName of CHECKED_CLASS_CHAIN_ATTRIBUTES) {
       const attrValue = domNode.getAttribute(attrName);
-      if (attrValue) {
-        let xpath = `//${domNode.tagName || '*'}[@${attrName}="${attrValue}"]`;
-        let classChain = `/${domNode.tagName || '*'}[\`${attrName} == "${attrValue}"\`]`;
-        let othersWithAttr;
-
-        // If the XPath does not parse, move to the next unique attribute
-        try {
-          othersWithAttr = XPath.select(xpath, doc);
-        } catch (ign) {
-          continue;
-        }
-
-        // If the attribute isn't actually unique, get its index too
-        if (othersWithAttr.length > 1) {
-          let index = othersWithAttr.indexOf(domNode);
-          classChain = `${classChain}[${index + 1}]`;
-        }
-        return classChain;
+      if (_.isEmpty(attrValue)) {
+        continue;
       }
+      const xpath = `//${domNode.tagName || '*'}[@${attrName}="${attrValue}"]`;
+      classChain = `/${domNode.tagName || '*'}[\`${attrName} == "${attrValue}"\`]`;
+
+      // If the XPath does not parse, move to the next unique attribute
+      try {
+        othersWithAttr = XPath.select(xpath, doc);
+      } catch (ign) {
+        continue;
+      }
+
+      // If the attribute isn't actually unique, get its index too
+      if (othersWithAttr.length > 1) {
+        let index = othersWithAttr.indexOf(domNode);
+        classChain = `${classChain}[${index + 1}]`;
+      }
+      return classChain;
     }
 
+    // BASE CASE #3: If this node has no unique attributes, repeat checks for its parent
     // Get the relative xpath of this node using tagName
-    let classChain = `/${domNode.tagName}`;
+    classChain = `/${domNode.tagName}`;
 
     // If this node has siblings of the same tagName, get the index of this node
     if (domNode.parentNode) {
@@ -389,7 +399,7 @@ export function getOptimalClassChain(doc, domNode) {
 
 /**
  * Get an optimal predicate string for a Node based on the getOptimalXPath method
- * The `ios predicate string` can only search a single element, no parent child scope
+ * Only works for a single element - no parent/child scope
  *
  * @param {Document} doc
  * @param {Node} domNode
@@ -405,27 +415,26 @@ export function getOptimalPredicateString(doc, domNode) {
     // BASE CASE #2: Check all attributes and try to find the best way
     let xpathAttributes = [];
     let predicateString = [];
+    let othersWithAttr;
 
     for (let attrName of CHECKED_PREDICATE_ATTRIBUTES) {
       const attrValue = domNode.getAttribute(attrName);
-
-      if (_.isNil(attrValue) || (_.isString(attrValue) && attrValue.length === 0)) {
+      if (_.isEmpty(attrValue)) {
         continue;
       }
 
       xpathAttributes.push(`@${attrName}="${attrValue}"`);
       const xpath = `//*[${xpathAttributes.join(' and ')}]`;
       predicateString.push(`${attrName} == "${attrValue}"`);
-      let othersWithAttr;
 
-      // If the XPath does not parse, move to the next unique attribute
+      // If the XPath does not parse, move to the next attribute
       try {
         othersWithAttr = XPath.select(xpath, doc);
       } catch (ign) {
         continue;
       }
 
-      // If the attribute isn't actually unique, get it's index too
+      // Return as soon as the accumulated attribute combination is unique
       if (othersWithAttr.length === 1) {
         return predicateString.join(' AND ');
       }
@@ -455,9 +464,14 @@ export function getOptimalUiAutomatorSelector(doc, domNode, path) {
 
     // UiAutomator can only find elements inside the last direct child of the hierarchy.
     // hierarchy is the child of doc (which is <xml/>), so need to get the children of its child
-    const hierarchyChildren = childNodesOf(childNodesOf(doc)[0]);
+    // BASE CASE #2: If there is no hierarchy or its children, return null
+    const docChildren = childNodesOf(doc);
+    const hierarchyChildren = _.isEmpty(docChildren) ? [] : childNodesOf(docChildren[0]);
+    if (_.isEmpty(hierarchyChildren)) {
+      return null;
+    }
 
-    // BASE CASE #2: If looking for an element that is not inside
+    // BASE CASE #3: If looking for an element that is not inside
     // the last direct child of the hierarchy, return null
     const lastHierarchyChildIndex = (hierarchyChildren.length - 1).toString();
     let pathArray = path.split('.');
@@ -478,13 +492,13 @@ export function getOptimalUiAutomatorSelector(doc, domNode, path) {
     const newPath = pathArray.join('.');
     const newDomNode = findDOMNodeByPath(newPath, newDoc);
 
-    // BASE CASE #3: Check all attributes and try to find unique ones
+    // BASE CASE #4: Check all attributes and try to find unique ones
     let uiSelector, othersWithAttr, mostUniqueSelector;
     let othersWithAttrMinCount = 99;
 
     for (const [attrName, attrTranslation] of CHECKED_UIAUTOMATOR_ATTRIBUTES) {
       const attrValue = newDomNode.getAttribute(attrName);
-      if (_.isNil(attrValue) || (_.isString(attrValue) && attrValue.length === 0)) {
+      if (_.isEmpty(attrValue)) {
         continue;
       }
 
@@ -508,7 +522,7 @@ export function getOptimalUiAutomatorSelector(doc, domNode, path) {
       }
     }
 
-    // BASE CASE #4: Did not find any unique attributes - use the 'most unique' selector
+    // BASE CASE #5: Did not find any unique attributes - use the 'most unique' selector
     if (mostUniqueSelector) {
       return mostUniqueSelector;
     }
