@@ -1065,8 +1065,12 @@ export function addVisibleProvider(provider) {
 
 export function removeVisibleProvider(provider) {
   return async (dispatch, getState) => {
-    let currentProviders = getState().session.visibleProviders;
-    const providers = without(currentProviders, provider);
+    const {serverType, visibleProviders} = getState().session;
+    if (serverType === provider) {
+      const action = changeServerType('remote');
+      await action(dispatch, getState);
+    }
+    const providers = without(visibleProviders, provider);
     await setSetting(VISIBLE_PROVIDERS, providers);
     dispatch({type: SET_PROVIDERS, providers});
   };
