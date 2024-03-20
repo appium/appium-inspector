@@ -1,7 +1,7 @@
 import React from 'react';
 
 import InspectorCSS from './Inspector.css';
-import {RENDER_CENTROID_AS} from './shared';
+import {RENDER_CENTROID_AS} from '../../constants/SCREENSHOT';
 
 const {CENTROID, OVERLAP, EXPAND} = RENDER_CENTROID_AS;
 const CENTROID_STYLES = {

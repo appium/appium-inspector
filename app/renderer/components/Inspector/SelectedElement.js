@@ -13,7 +13,7 @@ import React, {useRef} from 'react';
 import {clipboard, shell} from '../../polyfills';
 import {ALERT, ROW} from '../AntdTypes';
 import styles from './Inspector.css';
-import {NATIVE_APP} from './shared';
+import {NATIVE_APP} from '../../constants/COMMON';
 
 const CLASS_CHAIN_DOCS_URL =
   'https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules';

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import {DEFAULT_SWIPE, DEFAULT_TAP} from '../../components/Inspector/shared';
+import {DEFAULT_SWIPE, DEFAULT_TAP} from '../../constants/SCREENSHOT';
 
 export default class Framework {
   constructor(host, port, path, https, caps) {

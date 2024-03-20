@@ -5,7 +5,9 @@ import moment from 'moment';
 import React, {useEffect, useRef} from 'react';
 
 import InspectorStyles from './Inspector.css';
-import {POINTER_TYPES, SCREENSHOT_INTERACTION_MODE, percentageToPixels} from './shared';
+import {POINTER_TYPES} from '../../constants/GESTURES';
+import {SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
+import {percentageToPixels} from '../../utils/other';
 
 const SAVED_ACTIONS_OBJ = {
   NAME: 'Name',

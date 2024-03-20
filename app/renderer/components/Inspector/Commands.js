@@ -16,7 +16,7 @@ import React from 'react';
 
 import {ALERT, INPUT} from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
-import {COMMAND_ARG_TYPES, COMMAND_DEFINITIONS} from './shared';
+import {COMMAND_ARG_TYPES, COMMAND_DEFINITIONS} from '../../constants/COMMANDS';
 
 const Commands = (props) => {
   const {

@@ -29,7 +29,8 @@ import Screenshot from './Screenshot';
 import SelectedElement from './SelectedElement';
 import SessionInfo from './SessionInfo';
 import Source from './Source';
-import {INTERACTION_MODE, SCREENSHOT_INTERACTION_MODE} from './shared';
+import {INTERACTION_MODE} from '../../constants/COMMON';
+import {SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 

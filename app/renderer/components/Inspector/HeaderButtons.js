@@ -19,7 +19,7 @@ import {IoChevronBackOutline} from 'react-icons/io5';
 import {shell} from '../../polyfills';
 import {BUTTON} from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
-import {APP_MODE} from './shared';
+import {APP_MODE} from '../../constants/COMMON';
 
 const HYBRID_MODE_DOCS_URL =
   'https://appium.github.io/appium.io/docs/en/writing-running-appium/web/hybrid/';
