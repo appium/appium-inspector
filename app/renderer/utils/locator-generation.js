@@ -2,7 +2,7 @@ import _ from 'lodash';
 import XPath from 'xpath';
 
 import {log} from '../polyfills';
-import {domParser, findDOMNodeByPath} from './source-parsing';
+import {childNodesOf, domParser, findDOMNodeByPath, xmlSerializer} from './source-parsing';
 
 // Attributes on nodes that are likely to be unique to the node so we should consider first when
 // suggesting xpath locators. These are considered IN ORDER.
@@ -12,9 +12,17 @@ const UNIQUE_XPATH_ATTRIBUTES = ['name', 'content-desc', 'id', 'resource-id', 'a
 // attributes
 const MAYBE_UNIQUE_XPATH_ATTRIBUTES = ['label', 'text', 'value'];
 
-const UNIQUE_CLASS_CHAIN_ATTRIBUTES = ['name', 'label', 'value'];
+const CHECKED_CLASS_CHAIN_ATTRIBUTES = ['name', 'label', 'value'];
 
-const UNIQUE_PREDICATE_ATTRIBUTES = ['name', 'label', 'value', 'type'];
+const CHECKED_PREDICATE_ATTRIBUTES = ['name', 'label', 'value', 'type'];
+
+// Map of element attributes to their UiAutomator syntax, ordered by (likely) decreasing uniqueness
+const CHECKED_UIAUTOMATOR_ATTRIBUTES = [
+  ['resource-id', 'resourceId'],
+  ['text', 'text'],
+  ['content-desc', 'description'],
+  ['class', 'className'],
+];
 
 // Map of element attributes to their matching simple (optimal) locator strategies
 const SIMPLE_STRATEGY_MAPPINGS = [
@@ -46,10 +54,10 @@ export function areAttrAndValueUnique(attrName, attrValue, sourceDoc) {
 /**
  * Get suggested selectors for simple locator strategies (which match a specific attribute)
  *
- * @param {Object.<string, string|number>} attributes element attributes
+ * @param {Record<string, string|number>} attributes element attributes
  * @param {Document} sourceDoc
  * @param {boolean} isNative whether native context is active
- * @returns {Object.<string, string>} mapping of strategies to selectors
+ * @returns {Record<string, string>} mapping of strategies to selectors
  */
 export function getSimpleSuggestedLocators(attributes, sourceDoc, isNative = true) {
   const res = {};
@@ -70,16 +78,31 @@ export function getSimpleSuggestedLocators(attributes, sourceDoc, isNative = tru
  *
  * @param {string} path a dot-separated string of indices
  * @param {Document} sourceDoc
- * @returns {Object.<string, string>} mapping of strategies to selectors
+ * @param {boolean} isNative whether native context is active
+ * @param {string} automationName
+ * @returns {Record<string, string>} mapping of strategies to selectors
  */
-export function getComplexSuggestedLocators(path, sourceDoc) {
+export function getComplexSuggestedLocators(path, sourceDoc, isNative, automationName) {
   let complexLocators = {};
   const domNode = findDOMNodeByPath(path, sourceDoc);
-  if (domNode.tagName.includes('XCUIElement')) {
-    // XCUI native context
-    const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);
-    complexLocators['-ios class chain'] = optimalClassChain ? '**' + optimalClassChain : null;
-    complexLocators['-ios predicate string'] = getOptimalPredicateString(sourceDoc, domNode);
+  if (isNative) {
+    switch (automationName.toLowerCase()) {
+      case 'xcuitest':
+      case 'mac2': {
+        const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);
+        complexLocators['-ios class chain'] = optimalClassChain ? '**' + optimalClassChain : null;
+        complexLocators['-ios predicate string'] = getOptimalPredicateString(sourceDoc, domNode);
+        break;
+      }
+      case 'uiautomator2': {
+        complexLocators['-android uiautomator'] = getOptimalUiAutomatorSelector(
+          sourceDoc,
+          domNode,
+          path,
+        );
+        break;
+      }
+    }
   }
   complexLocators.xpath = getOptimalXPath(sourceDoc, domNode);
 
@@ -93,16 +116,22 @@ export function getComplexSuggestedLocators(path, sourceDoc) {
  * @param {string} selectedElement element node in JSON format
  * @param {string} sourceXML
  * @param {boolean} isNative whether native context is active
+ * @param {string} automationName
  * @returns {Array<[string, string]>} array of tuples, consisting of the locator strategy and selector
  */
-export function getSuggestedLocators(selectedElement, sourceXML, isNative) {
+export function getSuggestedLocators(selectedElement, sourceXML, isNative, automationName) {
   const sourceDoc = domParser.parseFromString(sourceXML);
   const simpleLocators = getSimpleSuggestedLocators(
     selectedElement.attributes,
     sourceDoc,
     isNative,
   );
-  const complexLocators = getComplexSuggestedLocators(selectedElement.path, sourceDoc);
+  const complexLocators = getComplexSuggestedLocators(
+    selectedElement.path,
+    sourceDoc,
+    isNative,
+    automationName,
+  );
   return _.toPairs({...simpleLocators, ...complexLocators});
 }
 
@@ -290,12 +319,8 @@ export function getOptimalXPath(doc, domNode) {
     // Make a recursive call to this nodes parents and prepend it to this xpath
     return getOptimalXPath(doc, domNode.parentNode) + xpath;
   } catch (error) {
-    // If there's an unexpected exception, abort and don't get an XPath
-    log.error(
-      `The most optimal XPATH could not be determined ` +
-        `because an error was thrown: '${JSON.stringify(error, null, 2)}'`,
-    );
-
+    // If there's an unexpected exception, abort
+    logLocatorError('XPath', error);
     return null;
   }
 }
@@ -319,32 +344,35 @@ export function getOptimalClassChain(doc, domNode) {
       return '';
     }
 
-    // BASE CASE #2: If this node has a unique class chain based on attributes then return it
-    for (let attrName of UNIQUE_CLASS_CHAIN_ATTRIBUTES) {
+    // BASE CASE #2: If this node has a unique class chain based on attributes, return it
+    let classChain, othersWithAttr;
+
+    for (let attrName of CHECKED_CLASS_CHAIN_ATTRIBUTES) {
       const attrValue = domNode.getAttribute(attrName);
-      if (attrValue) {
-        let xpath = `//${domNode.tagName || '*'}[@${attrName}="${attrValue}"]`;
-        let classChain = `/${domNode.tagName || '*'}[\`${attrName} == "${attrValue}"\`]`;
-        let othersWithAttr;
-
-        // If the XPath does not parse, move to the next unique attribute
-        try {
-          othersWithAttr = XPath.select(xpath, doc);
-        } catch (ign) {
-          continue;
-        }
-
-        // If the attribute isn't actually unique, get its index too
-        if (othersWithAttr.length > 1) {
-          let index = othersWithAttr.indexOf(domNode);
-          classChain = `${classChain}[${index + 1}]`;
-        }
-        return classChain;
+      if (_.isEmpty(attrValue)) {
+        continue;
       }
+      const xpath = `//${domNode.tagName || '*'}[@${attrName}="${attrValue}"]`;
+      classChain = `/${domNode.tagName || '*'}[\`${attrName} == "${attrValue}"\`]`;
+
+      // If the XPath does not parse, move to the next unique attribute
+      try {
+        othersWithAttr = XPath.select(xpath, doc);
+      } catch (ign) {
+        continue;
+      }
+
+      // If the attribute isn't actually unique, get its index too
+      if (othersWithAttr.length > 1) {
+        let index = othersWithAttr.indexOf(domNode);
+        classChain = `${classChain}[${index + 1}]`;
+      }
+      return classChain;
     }
 
+    // BASE CASE #3: If this node has no unique attributes, repeat checks for its parent
     // Get the relative xpath of this node using tagName
-    let classChain = `/${domNode.tagName}`;
+    classChain = `/${domNode.tagName}`;
 
     // If this node has siblings of the same tagName, get the index of this node
     if (domNode.parentNode) {
@@ -363,19 +391,15 @@ export function getOptimalClassChain(doc, domNode) {
     // Make a recursive call to this nodes parents and prepend it to this xpath
     return getOptimalClassChain(doc, domNode.parentNode) + classChain;
   } catch (error) {
-    // If there's an unexpected exception, abort and don't get an XPath
-    log.error(
-      `The most optimal '-ios class chain' could not be determined ` +
-        `because an error was thrown: '${JSON.stringify(error, null, 2)}'`,
-    );
-
+    // If there's an unexpected exception, abort
+    logLocatorError('class chain', error);
     return null;
   }
 }
 
 /**
  * Get an optimal predicate string for a Node based on the getOptimalXPath method
- * The `ios predicate string` can only search a single element, no parent child scope
+ * Only works for a single element - no parent/child scope
  *
  * @param {Document} doc
  * @param {Node} domNode
@@ -391,38 +415,125 @@ export function getOptimalPredicateString(doc, domNode) {
     // BASE CASE #2: Check all attributes and try to find the best way
     let xpathAttributes = [];
     let predicateString = [];
+    let othersWithAttr;
 
-    for (let attrName of UNIQUE_PREDICATE_ATTRIBUTES) {
+    for (let attrName of CHECKED_PREDICATE_ATTRIBUTES) {
       const attrValue = domNode.getAttribute(attrName);
-
-      if (_.isNil(attrValue) || (_.isString(attrValue) && attrValue.length === 0)) {
+      if (_.isEmpty(attrValue)) {
         continue;
       }
 
       xpathAttributes.push(`@${attrName}="${attrValue}"`);
       const xpath = `//*[${xpathAttributes.join(' and ')}]`;
       predicateString.push(`${attrName} == "${attrValue}"`);
-      let othersWithAttr;
 
-      // If the XPath does not parse, move to the next unique attribute
+      // If the XPath does not parse, move to the next attribute
       try {
         othersWithAttr = XPath.select(xpath, doc);
       } catch (ign) {
         continue;
       }
 
-      // If the attribute isn't actually unique, get it's index too
+      // Return as soon as the accumulated attribute combination is unique
       if (othersWithAttr.length === 1) {
         return predicateString.join(' AND ');
       }
     }
   } catch (error) {
-    // If there's an unexpected exception, abort and don't get an XPath
-    log.error(
-      `The most optimal '-ios predicate string' could not be determined ` +
-        `because an error was thrown: '${JSON.stringify(error, null, 2)}'`,
-    );
-
+    // If there's an unexpected exception, abort
+    logLocatorError('predicate string', error);
     return null;
   }
+}
+
+/**
+ * Get an optimal UiAutomator selector for a Node
+ * Only works for elements inside the last direct child of the hierarchy (xpath: /hierarchy/*[last()] )
+ *
+ * @param {Document} doc
+ * @param {Node} domNode
+ * @param {string} path a dot-separated string of indices
+ * @returns {string|null}
+ */
+export function getOptimalUiAutomatorSelector(doc, domNode, path) {
+  try {
+    // BASE CASE #1: If this isn't an element, or we're above the root, return empty string
+    if (!domNode.tagName || domNode.nodeType !== 1) {
+      return '';
+    }
+
+    // UiAutomator can only find elements inside the last direct child of the hierarchy.
+    // hierarchy is the child of doc (which is <xml/>), so need to get the children of its child
+    // BASE CASE #2: If there is no hierarchy or its children, return null
+    const docChildren = childNodesOf(doc);
+    const hierarchyChildren = _.isEmpty(docChildren) ? [] : childNodesOf(docChildren[0]);
+    if (_.isEmpty(hierarchyChildren)) {
+      return null;
+    }
+
+    // BASE CASE #3: If looking for an element that is not inside
+    // the last direct child of the hierarchy, return null
+    const lastHierarchyChildIndex = (hierarchyChildren.length - 1).toString();
+    let pathArray = path.split('.');
+    const requestedHierarchyChildIndex = pathArray[0];
+    if (requestedHierarchyChildIndex !== lastHierarchyChildIndex) {
+      return null;
+    }
+
+    // In order to use only the last direct child of the hierarchy as the new scope,
+    // need to recreate it as a Document (Node -> XML -> Document),
+    // then modify the path by changing the first index,
+    // and finally recreate the domNode, since it still references the original parent
+    const lastHierarchyChild = hierarchyChildren[lastHierarchyChildIndex];
+    const newXml = xmlSerializer.serializeToString(lastHierarchyChild);
+    // wrap the new XML in a dummy tag which will have the node type Document
+    const newDoc = domParser.parseFromString(`<dummy>${newXml}</dummy>`);
+    pathArray[0] = '0';
+    const newPath = pathArray.join('.');
+    const newDomNode = findDOMNodeByPath(newPath, newDoc);
+
+    // BASE CASE #4: Check all attributes and try to find unique ones
+    let uiSelector, othersWithAttr, othersWithAttrMinCount, mostUniqueSelector;
+
+    for (const [attrName, attrTranslation] of CHECKED_UIAUTOMATOR_ATTRIBUTES) {
+      const attrValue = newDomNode.getAttribute(attrName);
+      if (_.isEmpty(attrValue)) {
+        continue;
+      }
+
+      const xpath = `//${newDomNode.tagName}[@${attrName}="${attrValue}"]`;
+      uiSelector = `new UiSelector().${attrTranslation}("${attrValue}")`;
+
+      // If the XPath does not parse, move to the next unique attribute
+      try {
+        othersWithAttr = XPath.select(xpath, newDoc);
+      } catch (ign) {
+        continue;
+      }
+
+      // If the attribute is unique, return it, otherwise save it and add an index,
+      // but only if it returns the least number of elements
+      if (othersWithAttr.length === 1) {
+        return uiSelector;
+      } else if (!othersWithAttrMinCount || othersWithAttr.length < othersWithAttrMinCount) {
+        othersWithAttrMinCount = othersWithAttr.length;
+        mostUniqueSelector = `${uiSelector}.instance(${othersWithAttr.indexOf(newDomNode)})`;
+      }
+    }
+
+    // BASE CASE #5: Did not find any unique attributes - use the 'most unique' selector
+    if (mostUniqueSelector) {
+      return mostUniqueSelector;
+    }
+  } catch (error) {
+    // If there's an unexpected exception, abort
+    logLocatorError('uiautomator selector', error);
+    return null;
+  }
+}
+
+function logLocatorError(strategy, error) {
+  log.error(
+    `The most optimal ${strategy} could not be determined because an error was thrown: '${error}'`,
+  );
 }

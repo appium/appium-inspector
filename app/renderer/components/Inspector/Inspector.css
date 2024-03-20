@@ -427,6 +427,10 @@
   justify-content: center;
 }
 
+.selectedElemContentRow {
+  display: block;
+}
+
 .sourceTag {
   color: #7d2020;
   font-weight: normal;

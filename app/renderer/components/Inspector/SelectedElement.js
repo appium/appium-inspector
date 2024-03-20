@@ -19,6 +19,8 @@ const CLASS_CHAIN_DOCS_URL =
   'https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules';
 const PREDICATE_DOCS_URL =
   'https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules';
+const UIAUTOMATOR_DOCS_URL =
+  'https://github.com/appium/appium-uiautomator2-driver/blob/master/docs/uiautomator-uiselector.md';
 
 /**
  * Shows details of the currently selected element and shows methods that can
@@ -62,7 +64,10 @@ const SelectedElement = (props) => {
     <span>
       {name}
       <strong>
-        <a onClick={(e) => e.preventDefault() || shell.openExternal(docsLink)}>&nbsp;(docs)</a>
+        <a onClick={(e) => e.preventDefault() || shell.openExternal(docsLink)}>
+          <br />
+          (docs)
+        </a>
       </strong>
     </span>
   );
@@ -73,7 +78,7 @@ const SelectedElement = (props) => {
       title: t('Attribute'),
       dataIndex: 'name',
       key: 'name',
-      width: 100,
+      fixed: 'left',
       render: (text) => selectedElementTableCell(text, false),
     },
     {
@@ -102,7 +107,7 @@ const SelectedElement = (props) => {
       title: t('Find By'),
       dataIndex: 'find',
       key: 'find',
-      width: 100,
+      fixed: 'left',
       render: (text) => selectedElementTableCell(text, false),
     },
     {
@@ -118,8 +123,7 @@ const SelectedElement = (props) => {
       title: t('Time'),
       dataIndex: 'time',
       key: 'time',
-      align: 'right',
-      width: 100,
+      fixed: 'right',
       render: (text) => selectedElementTableCell(text, false),
     });
   }
@@ -139,6 +143,9 @@ const SelectedElement = (props) => {
         break;
       case '-ios predicate string':
         locator.find = locatorStrategyDocsLink(locator.key, PREDICATE_DOCS_URL);
+        break;
+      case '-android uiautomator':
+        locator.find = locatorStrategyDocsLink(locator.key, UIAUTOMATOR_DOCS_URL);
         break;
     }
   }
@@ -225,13 +232,13 @@ const SelectedElement = (props) => {
         </Button.Group>
       </Row>
       {findDataSource.length > 0 && (
-        <Row>
+        <Row className={styles.selectedElemContentRow}>
           <Spin spinning={isFindingElementsTimes}>
             <Table
               columns={findColumns}
               dataSource={findDataSource}
               size="small"
-              tableLayout="fixed"
+              scroll={{x: 'max-content'}}
               pagination={false}
             />
           </Spin>
@@ -245,11 +252,12 @@ const SelectedElement = (props) => {
         </div>
       )}
       {dataSource.length > 0 && (
-        <Row>
+        <Row className={styles.selectedElemContentRow}>
           <Table
             columns={attributeColumns}
             dataSource={dataSource}
             size="small"
+            scroll={{x: 'max-content'}}
             pagination={false}
           />
         </Row>
