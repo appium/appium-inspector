@@ -1,7 +1,8 @@
-import {DOMParser} from '@xmldom/xmldom';
+import {DOMParser, XMLSerializer} from '@xmldom/xmldom';
 import _ from 'lodash';
 
 export const domParser = new DOMParser();
+export const xmlSerializer = new XMLSerializer();
 
 /**
  * Get the child nodes of a Node object
@@ -9,7 +10,7 @@ export const domParser = new DOMParser();
  * @param {Node} domNode
  * @returns {Array<Node|null>} list of Nodes
  */
-function childNodesOf(domNode) {
+export function childNodesOf(domNode) {
   if (!domNode || !domNode.hasChildNodes()) {
     return [];
   }

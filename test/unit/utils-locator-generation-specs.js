@@ -6,6 +6,7 @@ import {
   areAttrAndValueUnique,
   getOptimalClassChain,
   getOptimalPredicateString,
+  getOptimalUiAutomatorSelector,
   getOptimalXPath,
   getSimpleSuggestedLocators,
 } from '../../app/renderer/utils/locator-generation';
@@ -424,6 +425,54 @@ describe('utils/locator-generation.js', function () {
         </child>
       </root>`);
       should.not.exist(getOptimalPredicateString(doc, doc.getElementsByTagName('grandchild')[0]));
+    });
+  });
+
+  describe('#getOptimalUiAutomatorSelector', function () {
+    let doc;
+
+    it('should use unique UiAutomator attributes if the node has them', function () {
+      doc = xmlToDoc(`<xml>
+        <parent-node>
+          <child-node resource-id='hello'>Hello</child-node>
+          <child-node resource-id='world'>World</child-node>
+        </parent-node>
+      </xml>`);
+      getOptimalUiAutomatorSelector(
+        doc,
+        doc.getElementsByTagName('child-node')[0],
+        '0.0',
+      ).should.equal('new UiSelector().resourceId("hello")');
+    });
+
+    it('should use indices if the valid node attributes are not unique', function () {
+      doc = xmlToDoc(`<root>
+        <child>
+          <grandchild class='grandchild'>Hello</grandchild>
+          <grandchild class='grandchild'>World</grandchild>
+        </child>
+      </root>`);
+      getOptimalUiAutomatorSelector(
+        doc,
+        doc.getElementsByTagName('grandchild')[0],
+        '0.0',
+      ).should.equal('new UiSelector().className("grandchild").instance(0)');
+    });
+
+    it('should not exist if looking for element outside the last direct child of the hierarchy', function () {
+      doc = xmlToDoc(`<root>
+        <child>
+          <grandchild resource-id='hello'>Hello</grandchild>
+          <grandchild resource-id='world'>World</grandchild>
+        </child>
+        <child>
+          <grandchild resource-id='foo'>Foo</grandchild>
+          <grandchild resource-id='bar'>Bar</grandchild>
+        </child>
+      </root>`);
+      should.not.exist(
+        getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('grandchild')[0], '0.0'),
+      );
     });
   });
 });
