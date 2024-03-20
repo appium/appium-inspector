@@ -493,8 +493,7 @@ export function getOptimalUiAutomatorSelector(doc, domNode, path) {
     const newDomNode = findDOMNodeByPath(newPath, newDoc);
 
     // BASE CASE #4: Check all attributes and try to find unique ones
-    let uiSelector, othersWithAttr, mostUniqueSelector;
-    let othersWithAttrMinCount = 99;
+    let uiSelector, othersWithAttr, othersWithAttrMinCount, mostUniqueSelector;
 
     for (const [attrName, attrTranslation] of CHECKED_UIAUTOMATOR_ATTRIBUTES) {
       const attrValue = newDomNode.getAttribute(attrName);
@@ -516,7 +515,7 @@ export function getOptimalUiAutomatorSelector(doc, domNode, path) {
       // but only if it returns the least number of elements
       if (othersWithAttr.length === 1) {
         return uiSelector;
-      } else if (othersWithAttr.length < othersWithAttrMinCount) {
+      } else if (!othersWithAttrMinCount || othersWithAttr.length < othersWithAttrMinCount) {
         othersWithAttrMinCount = othersWithAttr.length;
         mostUniqueSelector = `${uiSelector}.instance(${othersWithAttr.indexOf(newDomNode)})`;
       }
