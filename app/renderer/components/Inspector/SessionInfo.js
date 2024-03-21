@@ -3,28 +3,17 @@ import React, {useEffect, useRef, useState} from 'react';
 
 import InspectorStyles from './Inspector.css';
 import SessionCodeBox from './SessionCodeBox';
+import {SESSION_INFO_PROPS, SESSION_INFO_TABLE_PARAMS} from '../../constants/SESSION_INFO';
 
-const SESSION_OBJ = {
-  session_id: 'Session ID',
-  session_url: 'Session URL',
-  server_details: 'Server Details',
-  session_length: 'Session Length',
-  session_details: 'Session Details',
-  active_appId: 'Currently Active App ID',
-};
-
-const OUTER_TABLE_KEY = 'sessionInfo';
-const SESSION_TABLE_KEY = 'sessionDetails';
-const SERVER_TABLE_KEY = 'serverDetails';
-
-const SCROLL_DISTANCE_Y = 104;
-const COLUMN_WIDTH = 200;
-let SESSION_DETAILS;
+let getSessionData;
 
 const SessionInfo = (props) => {
   const {driver, t} = props;
 
-  const sessionArray = Object.keys(SESSION_OBJ).map((key) => [key, String(SESSION_OBJ[key])]);
+  const sessionArray = Object.keys(SESSION_INFO_PROPS).map((key) => [
+    key,
+    String(SESSION_INFO_PROPS[key]),
+  ]);
 
   const generateSessionTime = () => {
     const {sessionStartTime} = props;
@@ -55,7 +44,7 @@ const SessionInfo = (props) => {
       {
         dataIndex: keyName,
         key: keyName,
-        ...(outerTable && {width: COLUMN_WIDTH}),
+        ...(outerTable && {width: SESSION_INFO_TABLE_PARAMS.COLUMN_WIDTH}),
       },
       {
         dataIndex: keyValue,
@@ -93,7 +82,7 @@ const SessionInfo = (props) => {
         pagination={false}
         showHeader={false}
         size="small"
-        scroll={{y: SCROLL_DISTANCE_Y}}
+        scroll={{y: SESSION_INFO_TABLE_PARAMS.SCROLL_DISTANCE_Y}}
       />
     );
   };
@@ -109,8 +98,8 @@ const SessionInfo = (props) => {
       ['port', port],
     ];
     const sessionArray =
-      SESSION_DETAILS != null
-        ? Object.keys(SESSION_DETAILS).map((key) => [key, SESSION_DETAILS[key]])
+      getSessionData != null
+        ? Object.keys(getSessionData).map((key) => [key, getSessionData[key]])
         : [];
     const serverStatusArray =
       status != null ? Object.keys(status).map((key) => [key, String(status[key])]) : [];
@@ -127,11 +116,15 @@ const SessionInfo = (props) => {
       case 'Session URL':
         return sessionUrl;
       case 'Server Details':
-        return getTable([...serverDetailsArray, ...serverStatusArray], SERVER_TABLE_KEY, false);
+        return getTable(
+          [...serverDetailsArray, ...serverStatusArray],
+          SESSION_INFO_TABLE_PARAMS.SERVER_KEY,
+          false,
+        );
       case 'Session Length':
         return time;
       case 'Session Details':
-        return getTable(sessionArray, SESSION_TABLE_KEY, false);
+        return getTable(sessionArray, SESSION_INFO_TABLE_PARAMS.SESSION_KEY, false);
       case 'Currently Active App ID':
         return appId;
       default:
@@ -146,7 +139,7 @@ const SessionInfo = (props) => {
     getActiveAppId(isIOS, isAndroid);
     getServerStatus();
 
-    (async () => (SESSION_DETAILS = await applyClientMethod({methodName: 'getSession'})))();
+    (async () => (getSessionData = await applyClientMethod({methodName: 'getSession'})))();
     interval.current = setInterval(() => {
       setTime(generateSessionTime());
     }, 1000);
@@ -154,7 +147,7 @@ const SessionInfo = (props) => {
     return () => clearInterval(interval.current);
   }, []);
 
-  return getTable(sessionArray, OUTER_TABLE_KEY, true);
+  return getTable(sessionArray, SESSION_INFO_TABLE_PARAMS.OUTER_KEY, true);
 };
 
 export default SessionInfo;

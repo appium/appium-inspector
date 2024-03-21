@@ -29,42 +29,24 @@ import _ from 'lodash';
 import React, {useEffect, useState} from 'react';
 
 import InspectorCSS from './Inspector.css';
-import {POINTER_TYPES} from '../../constants/GESTURES';
+import {
+  ACTION_TYPES,
+  CURSOR,
+  DEFAULT_POINTER,
+  FILLER_TICK,
+  MSG_TYPES,
+  POINTER_COLORS,
+  POINTER_DOWN_BTNS,
+  POINTER_MOVE_COORDS_TYPE,
+  POINTER_MOVE_DEFAULT_DURATION,
+  POINTER_TYPES,
+  POINTER_TYPES_MAP,
+  TICK_PROPS,
+} from '../../constants/GESTURES';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
 import {percentageToPixels, pixelsToPercentage} from '../../utils/other';
 
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
-
-const DEFAULT_DURATION_TIME = 2500;
-const COLORS = ['#FF3333', '#FF8F00', '#B65FF4', '#6CFF00', '#00FFDC'];
-const BUTTONS = {LEFT: 0, RIGHT: 1};
-const ACTION_TYPES = {ADD: 'add', REMOVE: 'remove'};
-const MSG_TYPES = {ERROR: 'error', SUCCESS: 'success'};
-const COORD_TYPE = {PERCENTAGES: 'percentages', PIXELS: 'pixels'};
-const TICK_PROPS = {
-  POINTER_TYPE: 'pointerType',
-  DURATION: 'duration',
-  BUTTON: 'button',
-  X: 'x',
-  Y: 'y',
-};
-const CURSOR = {POINTER: 'pointer', TEXT: 'text'};
-const STATUS = {WAIT: 'wait', FINISH: 'finish', COLOR: '#FFFFFF', FILLER: 'filler'};
-const DISPLAY = {
-  [POINTER_UP]: 'Pointer Up',
-  [POINTER_DOWN]: 'Pointer Down',
-  [PAUSE]: 'Pause',
-  [POINTER_MOVE]: 'Move',
-};
-
-const DEFAULT_POINTERS = () => [
-  {
-    name: 'pointer1',
-    ticks: [{id: '1.1'}],
-    color: COLORS[0],
-    id: '1',
-  },
-];
 
 /**
  * Shows the gesture editor interface
@@ -81,20 +63,18 @@ const GestureEditor = (props) => {
     t,
   } = props;
 
-  const [pointers, setPointers] = useState(
-    loadedGesture ? loadedGesture.actions : DEFAULT_POINTERS(),
-  );
+  const [pointers, setPointers] = useState(loadedGesture ? loadedGesture.actions : DEFAULT_POINTER);
   const [name, setName] = useState(loadedGesture ? loadedGesture.name : t('Untitled Gesture'));
   const [description, setDescription] = useState(
     loadedGesture ? loadedGesture.description : t('Add Description'),
   );
-  const [coordType, setCoordType] = useState(COORD_TYPE.PERCENTAGES);
+  const [coordType, setCoordType] = useState(POINTER_MOVE_COORDS_TYPE.PERCENTAGES);
   const [activePointerId, setActivePointerId] = useState('1');
 
   // Draw gesture whenever pointers change
   useEffect(() => {
     const {displayGesture} = props;
-    const convertedPointers = getConvertedPointers(COORD_TYPE.PIXELS);
+    const convertedPointers = getConvertedPointers(POINTER_MOVE_COORDS_TYPE.PIXELS);
     displayGesture(convertedPointers);
   }, [pointers]);
 
@@ -115,7 +95,7 @@ const GestureEditor = (props) => {
       description,
       id,
       date,
-      actions: getConvertedPointers(COORD_TYPE.PERCENTAGES),
+      actions: getConvertedPointers(POINTER_MOVE_COORDS_TYPE.PERCENTAGES),
     };
     saveGesture(gesture);
     displayNotificationMsg(MSG_TYPES.SUCCESS, t('Gesture saved'));
@@ -125,7 +105,11 @@ const GestureEditor = (props) => {
     if (duplicatePointerNames(pointers)) {
       return null;
     }
-    const gesture = {name, description, actions: getConvertedPointers(COORD_TYPE.PERCENTAGES)};
+    const gesture = {
+      name,
+      description,
+      actions: getConvertedPointers(POINTER_MOVE_COORDS_TYPE.PERCENTAGES),
+    };
     saveGesture(gesture);
     displayNotificationMsg(MSG_TYPES.SUCCESS, t('Gesture saved as', {gestureName: name}));
     onBack();
@@ -172,7 +156,7 @@ const GestureEditor = (props) => {
   // Change gesture datastructure to fit Webdriver spec
   const getW3CPointers = () => {
     const newPointers = {};
-    const currentPointers = getConvertedPointers(COORD_TYPE.PIXELS);
+    const currentPointers = getConvertedPointers(POINTER_MOVE_COORDS_TYPE.PIXELS);
     for (const pointer of currentPointers) {
       newPointers[pointer.name] = pointer.ticks.map((tick) => _.omit(tick, 'id'));
     }
@@ -189,7 +173,7 @@ const GestureEditor = (props) => {
     for (const pointer of newPointers) {
       for (const tick of pointer.ticks) {
         if (tick.type === POINTER_TYPES.POINTER_MOVE) {
-          if (type === COORD_TYPE.PIXELS) {
+          if (type === POINTER_MOVE_COORDS_TYPE.PIXELS) {
             tick.x = percentageToPixels(tick.x, width);
             tick.y = percentageToPixels(tick.y, height);
           } else {
@@ -216,7 +200,7 @@ const GestureEditor = (props) => {
       return 0;
     }
     const obj = {x1: prevPointerMoves[len - 1].x, y1: prevPointerMoves[len - 1].y, x2, y2};
-    if (coordType === COORD_TYPE.PERCENTAGES) {
+    if (coordType === POINTER_MOVE_COORDS_TYPE.PERCENTAGES) {
       obj.x1 = percentageToPixels(obj.x1, width);
       obj.y1 = percentageToPixels(obj.y1, height);
       // No need to convert coordinates from tap since they are in px
@@ -232,7 +216,7 @@ const GestureEditor = (props) => {
     const maxScreenLength = calcLength(width, height);
     const lineLength = calcLength(xDiff, yDiff);
     const lineLengthPct = lineLength / maxScreenLength;
-    return Math.round(lineLengthPct * DEFAULT_DURATION_TIME);
+    return Math.round(lineLengthPct * POINTER_MOVE_DEFAULT_DURATION);
   };
 
   // Update tapped coordinates within local state
@@ -246,7 +230,7 @@ const GestureEditor = (props) => {
     const currentTick = currentPointer.ticks.find((tick) => tick.id === tickKey);
     const x = parseFloat(updateX, 10);
     const y = parseFloat(updateY, 10);
-    if (coordType === COORD_TYPE.PERCENTAGES) {
+    if (coordType === POINTER_MOVE_COORDS_TYPE.PERCENTAGES) {
       currentTick.x = pixelsToPercentage(x, width);
       currentTick.y = pixelsToPercentage(y, height);
     } else {
@@ -274,7 +258,7 @@ const GestureEditor = (props) => {
       name: `pointer${key}`,
       ticks: [{id: `${key}.1`}],
       id: pointerId,
-      color: COLORS[key - 1],
+      color: POINTER_COLORS[key - 1],
     });
     setPointers(copiedPointers);
     setActivePointerId(pointerId);
@@ -289,7 +273,7 @@ const GestureEditor = (props) => {
       const id = String(index + 1);
       if (id !== pointer.id) {
         pointer.id = id;
-        pointer.color = COLORS[index];
+        pointer.color = POINTER_COLORS[index];
         pointer.ticks = pointer.ticks.map((tick) => {
           tick.id = `${id}.${tick.id[2]}`;
           return tick;
@@ -344,7 +328,7 @@ const GestureEditor = (props) => {
       currentTick = {
         id: tick.id,
         type: value,
-        ...([POINTER_DOWN, POINTER_UP].includes(value) && {button: BUTTONS.LEFT}),
+        ...([POINTER_DOWN, POINTER_UP].includes(value) && {button: POINTER_DOWN_BTNS.LEFT}),
         ...(value === PAUSE && {duration: 0}),
       };
     } else {
@@ -380,11 +364,11 @@ const GestureEditor = (props) => {
     return copiedPointers.map((pointer) => {
       const currentLength = pointer.ticks.length;
       if (currentLength > 0) {
-        pointer.ticks[currentLength - 1].customStep = STATUS.WAIT;
+        pointer.ticks[currentLength - 1].customStep = FILLER_TICK.WAIT;
         if (currentLength < maxTickLength) {
           const fillers = Array.from({length: maxTickLength - currentLength}, () => ({
-            type: STATUS.FILLER,
-            color: STATUS.COLOR,
+            type: FILLER_TICK.TYPE,
+            color: FILLER_TICK.COLOR,
           }));
           pointer.ticks.push(...fillers);
         }
@@ -415,10 +399,10 @@ const GestureEditor = (props) => {
       <Button.Group>
         <Button
           className={InspectorCSS['gesture-header-coord-btn']}
-          type={coordType === COORD_TYPE.PERCENTAGES ? 'primary' : 'default'}
+          type={coordType === POINTER_MOVE_COORDS_TYPE.PERCENTAGES ? 'primary' : 'default'}
           onClick={() => {
-            setPointers(getConvertedPointers(COORD_TYPE.PERCENTAGES));
-            setCoordType(COORD_TYPE.PERCENTAGES);
+            setPointers(getConvertedPointers(POINTER_MOVE_COORDS_TYPE.PERCENTAGES));
+            setCoordType(POINTER_MOVE_COORDS_TYPE.PERCENTAGES);
           }}
           size="small"
         >
@@ -426,10 +410,10 @@ const GestureEditor = (props) => {
         </Button>
         <Button
           className={InspectorCSS['gesture-header-coord-btn']}
-          type={coordType === COORD_TYPE.PIXELS ? 'primary' : 'default'}
+          type={coordType === POINTER_MOVE_COORDS_TYPE.PIXELS ? 'primary' : 'default'}
           onClick={() => {
-            setPointers(getConvertedPointers(COORD_TYPE.PIXELS));
-            setCoordType(COORD_TYPE.PIXELS);
+            setPointers(getConvertedPointers(POINTER_MOVE_COORDS_TYPE.PIXELS));
+            setCoordType(POINTER_MOVE_COORDS_TYPE.PIXELS);
           }}
           size="small"
         >
@@ -463,7 +447,7 @@ const GestureEditor = (props) => {
     return (
       <Popover
         placement="bottom"
-        title={<center>{t(DISPLAY[type])}</center>}
+        title={<center>{t(POINTER_TYPES_MAP[type])}</center>}
         content={
           <div className={InspectorCSS['timeline-tick-title']}>
             {duration !== undefined && (
@@ -473,19 +457,19 @@ const GestureEditor = (props) => {
             )}
             {button !== undefined && (
               <p>
-                {t('Button')}: {button === BUTTONS.LEFT ? t('Left') : t('Right')}
+                {t('Button')}: {button === POINTER_DOWN_BTNS.LEFT ? t('Left') : t('Right')}
               </p>
             )}
             {x !== undefined && (
               <p>
                 X: {x}
-                {coordType === COORD_TYPE.PIXELS ? 'px' : '%'}
+                {coordType === POINTER_MOVE_COORDS_TYPE.PIXELS ? 'px' : '%'}
               </p>
             )}
             {y !== undefined && (
               <p>
                 Y: {y}
-                {coordType === COORD_TYPE.PIXELS ? 'px' : '%'}
+                {coordType === POINTER_MOVE_COORDS_TYPE.PIXELS ? 'px' : '%'}
               </p>
             )}
             {type === undefined && <p>{t('Action Type Not Defined')}</p>}
@@ -520,16 +504,16 @@ const GestureEditor = (props) => {
         className={InspectorCSS['gesture-header-timeline']}
         style={{'--timelineColor': pointer.color}}
         items={pointer.ticks.map((tick) => {
-          if (tick.type !== STATUS.FILLER) {
+          if (tick.type !== FILLER_TICK.TYPE) {
             return {
               key: 'timeline-steps',
-              status: tick.customStep || STATUS.FINISH,
+              status: tick.customStep || FILLER_TICK.FINISH,
               icon: regularTimelineIcon(pointer, tick),
             };
           } else {
             return {
               key: 'transparent-steps',
-              status: STATUS.WAIT,
+              status: FILLER_TICK.WAIT,
               icon: (
                 <RightCircleOutlined
                   className={InspectorCSS['gesture-header-icon']}
@@ -547,16 +531,16 @@ const GestureEditor = (props) => {
     <center>
       <Button.Group className={InspectorCSS['tick-button-group']}>
         <Button
-          type={tick.button === BUTTONS.LEFT ? 'primary' : 'default'}
+          type={tick.button === POINTER_DOWN_BTNS.LEFT ? 'primary' : 'default'}
           className={InspectorCSS['tick-button-input']}
-          onClick={() => updateTick(tick, TICK_PROPS.BUTTON, BUTTONS.LEFT)}
+          onClick={() => updateTick(tick, TICK_PROPS.BUTTON, POINTER_DOWN_BTNS.LEFT)}
         >
           {t('Left')}
         </Button>
         <Button
-          type={tick.button === BUTTONS.RIGHT ? 'primary' : 'default'}
+          type={tick.button === POINTER_DOWN_BTNS.RIGHT ? 'primary' : 'default'}
           className={InspectorCSS['tick-button-input']}
-          onClick={() => updateTick(tick, TICK_PROPS.BUTTON, BUTTONS.RIGHT)}
+          onClick={() => updateTick(tick, TICK_PROPS.BUTTON, POINTER_DOWN_BTNS.RIGHT)}
         >
           {t('Right')}
         </Button>
@@ -610,16 +594,16 @@ const GestureEditor = (props) => {
         onChange={(e) => updateTick(tick, TICK_PROPS.POINTER_TYPE, e)}
       >
         <Select.Option className={InspectorCSS['option-inpt']} value={POINTER_MOVE}>
-          {t(DISPLAY.pointerMove)}
+          {t(POINTER_TYPES_MAP.pointerMove)}
         </Select.Option>
         <Select.Option className={InspectorCSS['option-inpt']} value={POINTER_DOWN}>
-          {t(DISPLAY.pointerDown)}
+          {t(POINTER_TYPES_MAP.pointerDown)}
         </Select.Option>
         <Select.Option className={InspectorCSS['option-inpt']} value={POINTER_UP}>
-          {t(DISPLAY.pointerUp)}
+          {t(POINTER_TYPES_MAP.pointerUp)}
         </Select.Option>
         <Select.Option className={InspectorCSS['option-inpt']} value={PAUSE}>
-          {t(DISPLAY.pause)}
+          {t(POINTER_TYPES_MAP.pause)}
         </Select.Option>
       </Select>
     </center>

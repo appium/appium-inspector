@@ -19,10 +19,7 @@ import {IoChevronBackOutline} from 'react-icons/io5';
 import {shell} from '../../polyfills';
 import {BUTTON} from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
-import {APP_MODE} from '../../constants/COMMON';
-
-const HYBRID_MODE_DOCS_URL =
-  'https://appium.github.io/appium.io/docs/en/writing-running-appium/web/hybrid/';
+import {APP_MODE, DOCS_URLS} from '../../constants/COMMON';
 
 const HeaderButtons = (props) => {
   const {
@@ -147,8 +144,8 @@ const HeaderButtons = (props) => {
             title={
               <>
                 {t('contextDropdownInfo')}{' '}
-                <a onClick={(e) => e.preventDefault() || shell.openExternal(HYBRID_MODE_DOCS_URL)}>
-                  {HYBRID_MODE_DOCS_URL}
+                <a onClick={(e) => e.preventDefault() || shell.openExternal(DOCS_URLS.HYBRID_MODE)}>
+                  {DOCS_URLS.HYBRID_MODE}
                 </a>
               </>
             }

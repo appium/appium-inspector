@@ -1,15 +1,9 @@
 import React from 'react';
 
 import InspectorCSS from './Inspector.css';
-import {RENDER_CENTROID_AS} from '../../constants/SCREENSHOT';
+import {CENTROID_STYLES, RENDER_CENTROID_AS} from '../../constants/SCREENSHOT';
 
 const {CENTROID, OVERLAP, EXPAND} = RENDER_CENTROID_AS;
-const CENTROID_STYLES = {
-  VISIBLE: 'visible',
-  HIDDEN: 'hidden',
-  CONTAINER: '50%',
-  NON_CONTAINER: '0%',
-};
 
 // Generate new coordinates along a circlular trajectory
 // for overlapping elements only

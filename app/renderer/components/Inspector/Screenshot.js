@@ -4,12 +4,11 @@ import React, {useRef, useState} from 'react';
 import HighlighterRects from './HighlighterRects';
 import styles from './Inspector.css';
 import {INSPECTOR_TABS} from '../../constants/COMMON';
-import {POINTER_TYPES} from '../../constants/GESTURES';
+import {GESTURE_ITEM_STYLES, POINTER_TYPES} from '../../constants/GESTURES';
 import {DEFAULT_SWIPE, DEFAULT_TAP, SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
 
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
 const {TAP, SELECT, SWIPE, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
-const TYPES = {FILLED: 'filled', NEW_DASHED: 'newDashed', WHOLE: 'whole', DASHED: 'dashed'};
 
 /**
  * Shows screenshot of running application and divs that highlight the elements' bounding boxes
@@ -112,7 +111,7 @@ const Screenshot = (props) => {
   // retrieve and format gesture for svg drawings
   const getGestureCoordinates = () => {
     const {showGesture} = props;
-    const {FILLED, NEW_DASHED, WHOLE, DASHED} = TYPES;
+    const {FILLED, NEW_DASHED, WHOLE, DASHED} = GESTURE_ITEM_STYLES;
     const defaultTypes = {pointerDown: WHOLE, pointerUp: DASHED};
 
     if (!showGesture) {
@@ -226,7 +225,11 @@ const Screenshot = (props) => {
                       key={`${tick.id}.circle`}
                       cx={tick.x / scaleRatio}
                       cy={tick.y / scaleRatio}
-                      style={tick.type === TYPES.FILLED ? {fill: tick.color} : {stroke: tick.color}}
+                      style={
+                        tick.type === GESTURE_ITEM_STYLES.FILLED
+                          ? {fill: tick.color}
+                          : {stroke: tick.color}
+                      }
                     />
                   </React.Fragment>
                 )),

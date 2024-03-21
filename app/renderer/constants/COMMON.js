@@ -1,9 +1,18 @@
-export const APP_MODE = {
-  NATIVE: 'native',
-  WEB_HYBRID: 'web_hybrid',
+export const WINDOW_DIMENSIONS = {
+  MIN_WIDTH: 870,
+  MIN_HEIGHT: 610,
+  MAX_IMAGE_WIDTH_FRACTION: 0.4,
 };
 
-export const NATIVE_APP = 'NATIVE_APP';
+export const DOCS_URLS = {
+  HYBRID_MODE: 'https://appium.github.io/appium.io/docs/en/writing-running-appium/web/hybrid/',
+  CLASS_CHAIN:
+    'https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules',
+  PREDICATE:
+    'https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules',
+  UIAUTOMATOR:
+    'https://github.com/appium/appium-uiautomator2-driver/blob/master/docs/uiautomator-uiselector.md',
+};
 
 export const DRIVERS = {
   UIAUTOMATOR2: 'uiautomator2',
@@ -16,6 +25,16 @@ export const DRIVERS = {
   SAFARI: 'safari',
   GECKO: 'gecko',
 };
+
+export const MJPEG_STREAM_CHECK_INTERVAL = 1000;
+export const SESSION_EXPIRY_PROMPT_TIMEOUT = 60 * 60 * 1000; // Give user 1 hour to reply
+
+export const APP_MODE = {
+  NATIVE: 'native',
+  WEB_HYBRID: 'web_hybrid',
+};
+
+export const NATIVE_APP = 'NATIVE_APP';
 
 export const LOCATOR_STRATEGIES = {
   ID: 'id',

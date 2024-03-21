@@ -5,16 +5,9 @@ import moment from 'moment';
 import React, {useEffect, useRef} from 'react';
 
 import InspectorStyles from './Inspector.css';
-import {POINTER_TYPES} from '../../constants/GESTURES';
+import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/GESTURES';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
 import {percentageToPixels} from '../../utils/other';
-
-const SAVED_ACTIONS_OBJ = {
-  NAME: 'Name',
-  DESCRIPTION: 'Description',
-  CREATED: 'Created',
-  ACTIONS: 'Actions',
-};
 
 const dataSource = (savedGestures, t) => {
   if (!savedGestures) {
@@ -102,11 +95,11 @@ const SavedGestures = (props) => {
     return newPointers;
   };
 
-  const columns = Object.keys(SAVED_ACTIONS_OBJ).map((key) => {
-    if (SAVED_ACTIONS_OBJ[key] === SAVED_ACTIONS_OBJ.ACTIONS) {
+  const columns = Object.keys(SAVED_GESTURE_PROPS).map((key) => {
+    if (SAVED_GESTURE_PROPS[key] === SAVED_GESTURE_PROPS.ACTIONS) {
       return {
-        title: t(SAVED_ACTIONS_OBJ[key]),
-        key: SAVED_ACTIONS_OBJ[key],
+        title: t(SAVED_GESTURE_PROPS[key]),
+        key: SAVED_GESTURE_PROPS[key],
         render: (_, record) => {
           const gesture = getGestureByID(savedGestures, record.key, t);
           return (
@@ -127,9 +120,9 @@ const SavedGestures = (props) => {
       };
     } else {
       return {
-        title: t(SAVED_ACTIONS_OBJ[key]),
-        dataIndex: SAVED_ACTIONS_OBJ[key],
-        key: SAVED_ACTIONS_OBJ[key],
+        title: t(SAVED_GESTURE_PROPS[key]),
+        dataIndex: SAVED_GESTURE_PROPS[key],
+        key: SAVED_GESTURE_PROPS[key],
       };
     }
   });

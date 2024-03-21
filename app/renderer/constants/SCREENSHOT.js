@@ -35,3 +35,10 @@ export const RENDER_CENTROID_AS = {
   EXPAND: 'expand',
   OVERLAP: 'overlap',
 };
+
+export const CENTROID_STYLES = {
+  VISIBLE: 'visible',
+  HIDDEN: 'hidden',
+  CONTAINER: '50%',
+  NON_CONTAINER: '0%',
+};

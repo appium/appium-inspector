@@ -29,17 +29,15 @@ import Screenshot from './Screenshot';
 import SelectedElement from './SelectedElement';
 import SessionInfo from './SessionInfo';
 import Source from './Source';
-import {INSPECTOR_TABS} from '../../constants/COMMON';
+import {
+  INSPECTOR_TABS,
+  MJPEG_STREAM_CHECK_INTERVAL,
+  SESSION_EXPIRY_PROMPT_TIMEOUT,
+  WINDOW_DIMENSIONS,
+} from '../../constants/COMMON';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
-
-const MIN_WIDTH = 870;
-const MIN_HEIGHT = 610;
-const MAX_IMAGE_WIDTH_WINDOW_FRACTION = 0.4;
-
-const MJPEG_STREAM_CHECK_INTERVAL = 1000;
-const SESSION_EXPIRY_PROMPT_TIMEOUT = 60 * 60 * 1000; // Give user 1 hour to reply
 
 const downloadFile = (href, filename) => {
   let element = document.createElement('a');
@@ -133,7 +131,7 @@ const Inspector = (props) => {
       // get the expected image width if the image would fill the screenshot box height
       const attemptedImgWidth = (screenshotRect.height / imgRect.height) * imgRect.width;
       // get the maximum image width as a fraction of the current window width
-      const maxImgWidth = window.innerWidth * MAX_IMAGE_WIDTH_WINDOW_FRACTION;
+      const maxImgWidth = window.innerWidth * WINDOW_DIMENSIONS.MAX_IMAGE_WIDTH_FRACTION;
       const curMaxImgWidth = Math.min(maxImgWidth, attemptedImgWidth);
       screenshotBox.style.maxWidth = `${curMaxImgWidth}px`;
     } else if (imgRect.width < screenshotRect.width) {
@@ -180,10 +178,13 @@ const Inspector = (props) => {
     const {applyClientMethod, getSavedActionFramework, runKeepAliveLoop, setSessionTime} = props;
     const curHeight = window.innerHeight;
     const curWidth = window.innerWidth;
-    const needsResize = curHeight < MIN_HEIGHT || curWidth < MIN_WIDTH;
+    const needsResize =
+      curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT || curWidth < WINDOW_DIMENSIONS.MIN_WIDTH;
     if (!didInitialResize.current && needsResize) {
-      const newWidth = curWidth < MIN_WIDTH ? MIN_WIDTH : curWidth;
-      const newHeight = curHeight < MIN_HEIGHT ? MIN_HEIGHT : curHeight;
+      const newWidth =
+        curWidth < WINDOW_DIMENSIONS.MIN_WIDTH ? WINDOW_DIMENSIONS.MIN_WIDTH : curWidth;
+      const newHeight =
+        curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT ? WINDOW_DIMENSIONS.MIN_HEIGHT : curHeight;
       // resize width to something sensible for using the inspector on first run
       window.resizeTo(newWidth, newHeight);
     }

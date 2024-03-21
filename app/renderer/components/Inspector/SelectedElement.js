@@ -13,14 +13,7 @@ import React, {useRef} from 'react';
 import {clipboard, shell} from '../../polyfills';
 import {ALERT, ROW} from '../AntdTypes';
 import styles from './Inspector.css';
-import {NATIVE_APP} from '../../constants/COMMON';
-
-const CLASS_CHAIN_DOCS_URL =
-  'https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules';
-const PREDICATE_DOCS_URL =
-  'https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules';
-const UIAUTOMATOR_DOCS_URL =
-  'https://github.com/appium/appium-uiautomator2-driver/blob/master/docs/uiautomator-uiselector.md';
+import {DOCS_URLS, NATIVE_APP} from '../../constants/COMMON';
 
 /**
  * Shows details of the currently selected element and shows methods that can
@@ -139,13 +132,13 @@ const SelectedElement = (props) => {
   for (const locator of findDataSource) {
     switch (locator.key) {
       case '-ios class chain':
-        locator.find = locatorStrategyDocsLink(locator.key, CLASS_CHAIN_DOCS_URL);
+        locator.find = locatorStrategyDocsLink(locator.key, DOCS_URLS.CLASS_CHAIN);
         break;
       case '-ios predicate string':
-        locator.find = locatorStrategyDocsLink(locator.key, PREDICATE_DOCS_URL);
+        locator.find = locatorStrategyDocsLink(locator.key, DOCS_URLS.PREDICATE);
         break;
       case '-android uiautomator':
-        locator.find = locatorStrategyDocsLink(locator.key, UIAUTOMATOR_DOCS_URL);
+        locator.find = locatorStrategyDocsLink(locator.key, DOCS_URLS.UIAUTOMATOR);
         break;
     }
   }
