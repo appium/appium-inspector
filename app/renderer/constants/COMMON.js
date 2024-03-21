@@ -17,8 +17,7 @@ export const DRIVERS = {
   GECKO: 'gecko',
 };
 
-// Selected tab in the Session Inspector
-export const INTERACTION_MODE = {
+export const INSPECTOR_TAB = {
   SOURCE: 'source',
   COMMANDS: 'commands',
   GESTURES: 'gestures',

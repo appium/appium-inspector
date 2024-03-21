@@ -37,7 +37,7 @@ import {
   SELECT_ELEMENT,
   SELECT_HOVERED_CENTROID,
   SELECT_HOVERED_ELEMENT,
-  SELECT_INTERACTION_MODE,
+  SELECT_INSPECTOR_TAB,
   SELECT_TICK_ELEMENT,
   SESSION_DONE,
   SET_ACTION_FRAMEWORK,
@@ -83,7 +83,7 @@ import {
   UNSELECT_HOVERED_ELEMENT,
   UNSELECT_TICK_ELEMENT,
 } from '../actions/Inspector';
-import {APP_MODE, INTERACTION_MODE, NATIVE_APP} from '../constants/COMMON';
+import {APP_MODE, INSPECTOR_TAB, NATIVE_APP} from '../constants/COMMON';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/SCREENSHOT';
 
 const DEFAULT_FRAMEWORK = 'java';
@@ -114,7 +114,7 @@ const INITIAL_STATE = {
   assignedVarCache: {},
   screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
   searchedForElementBounds: null,
-  selectedInteractionMode: INTERACTION_MODE.SOURCE,
+  selectedInspectorTab: INSPECTOR_TAB.SOURCE,
   appMode: APP_MODE.NATIVE,
   mjpegScreenshotUrl: null,
   pendingCommand: null,
@@ -470,10 +470,10 @@ export default function inspector(state = INITIAL_STATE, action) {
         showKeepAlivePrompt: false,
       };
 
-    case SELECT_INTERACTION_MODE:
+    case SELECT_INSPECTOR_TAB:
       return {
         ...state,
-        selectedInteractionMode: action.interaction,
+        selectedInspectorTab: action.interaction,
       };
 
     case SET_APP_MODE:

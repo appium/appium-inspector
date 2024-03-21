@@ -29,7 +29,7 @@ import Screenshot from './Screenshot';
 import SelectedElement from './SelectedElement';
 import SessionInfo from './SessionInfo';
 import Source from './Source';
-import {INTERACTION_MODE} from '../../constants/COMMON';
+import {INSPECTOR_TAB} from '../../constants/COMMON';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
@@ -73,8 +73,8 @@ const Inspector = (props) => {
     quitSession,
     screenshotInteractionMode,
     visibleCommandMethod,
-    selectedInteractionMode,
-    selectInteractionMode,
+    selectedInspectorTab,
+    selectInspectorTab,
     setVisibleCommandResult,
     setUserWaitTimeout,
     showKeepAlivePrompt,
@@ -296,13 +296,13 @@ const Inspector = (props) => {
       </div>
       <div id="sourceTreeContainer" className={InspectorStyles['interaction-tab-container']}>
         <Tabs
-          activeKey={selectedInteractionMode}
+          activeKey={selectedInspectorTab}
           size="small"
-          onChange={(tab) => selectInteractionMode(tab)}
+          onChange={(tab) => selectInspectorTab(tab)}
           items={[
             {
               label: t('Source'),
-              key: INTERACTION_MODE.SOURCE,
+              key: INSPECTOR_TAB.SOURCE,
               children: (
                 <div className="action-row">
                   <div className="action-col">
@@ -365,7 +365,7 @@ const Inspector = (props) => {
             },
             {
               label: t('Commands'),
-              key: INTERACTION_MODE.COMMANDS,
+              key: INSPECTOR_TAB.COMMANDS,
               children: (
                 <Card
                   title={
@@ -381,7 +381,7 @@ const Inspector = (props) => {
             },
             {
               label: t('Gestures'),
-              key: INTERACTION_MODE.GESTURES,
+              key: INSPECTOR_TAB.GESTURES,
               children: isGestureEditorVisible ? (
                 <Card
                   title={
@@ -408,12 +408,12 @@ const Inspector = (props) => {
             },
             {
               label: t('Recorder'),
-              key: INTERACTION_MODE.RECORDER,
+              key: INSPECTOR_TAB.RECORDER,
               children: <Recorder {...props} />,
             },
             {
               label: t('Session Information'),
-              key: INTERACTION_MODE.SESSION_INFO,
+              key: INSPECTOR_TAB.SESSION_INFO,
               children: (
                 <Card
                   title={
