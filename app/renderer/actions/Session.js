@@ -24,7 +24,7 @@ import {
   getSetting,
   setSetting,
 } from '../../shared/settings';
-import {APP_MODE} from '../constants/COMMON';
+import {APP_MODE} from '../constants/SESSION_INSPECTOR';
 import CloudProviders from '../components/Session/CloudProviders';
 import {fs, ipcRenderer, util} from '../polyfills';
 import {addVendorPrefixes} from '../utils/other';

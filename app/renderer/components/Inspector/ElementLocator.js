@@ -1,7 +1,7 @@
 import {Alert, Input, Radio, Row, Space} from 'antd';
 import React from 'react';
 
-import {LOCATOR_STRATEGY_MAP as STRAT} from '../../constants/COMMON';
+import {LOCATOR_STRATEGY_MAP as STRAT} from '../../constants/SESSION_INSPECTOR';
 import {ALERT} from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
 

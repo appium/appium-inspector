@@ -10,7 +10,8 @@ import {Alert, Button, Col, Input, Row, Spin, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import React, {useRef} from 'react';
 
-import {LINKS, NATIVE_APP} from '../../constants/COMMON';
+import {LINKS} from '../../constants/COMMON';
+import {NATIVE_APP} from '../../constants/SESSION_INSPECTOR';
 import {clipboard, shell} from '../../polyfills';
 import {ALERT, ROW} from '../AntdTypes';
 import styles from './Inspector.css';

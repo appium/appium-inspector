@@ -16,7 +16,8 @@ import {BiCircle, BiSquare} from 'react-icons/bi';
 import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
 import {IoChevronBackOutline} from 'react-icons/io5';
 
-import {APP_MODE, LINKS} from '../../constants/COMMON';
+import {LINKS} from '../../constants/COMMON';
+import {APP_MODE} from '../../constants/SESSION_INSPECTOR';
 import {shell} from '../../polyfills';
 import {BUTTON} from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
@@ -144,7 +145,9 @@ const HeaderButtons = (props) => {
             title={
               <>
                 {t('contextDropdownInfo')}{' '}
-                <a onClick={(e) => e.preventDefault() || shell.openExternal(LINKS.HYBRID_MODE_DOCS)}>
+                <a
+                  onClick={(e) => e.preventDefault() || shell.openExternal(LINKS.HYBRID_MODE_DOCS)}
+                >
                   {LINKS.HYBRID_MODE_DOCS}
                 </a>
               </>
