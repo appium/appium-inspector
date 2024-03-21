@@ -1,9 +1,8 @@
 import {Checkbox, Col, Form, Input, Row} from 'antd';
 import React from 'react';
 
+import {PROVIDER_VALUES} from '../../constants/SESSION_BUILDER';
 import SessionStyles from './Session.css';
-
-const cloudPerfectoUrl = 'cloud.Perfectomobile.com';
 
 const portPlaceholder = (server) => (server.perfecto.ssl ? '443' : '80');
 
@@ -22,7 +21,7 @@ const ServerTabPerfecto = ({server, setServerParam, t}) => (
           <Input
             className={SessionStyles.customServerInputLeft}
             id="PerfectoServerHost"
-            placeholder={cloudPerfectoUrl}
+            placeholder={PROVIDER_VALUES.PERFECTO_URL}
             addonBefore={t('Perfecto Host')}
             value={server.perfecto.hostname}
             onChange={(e) => setServerParam('hostname', e.target.value)}

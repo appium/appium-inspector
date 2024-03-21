@@ -6,6 +6,7 @@ export const WINDOW_DIMENSIONS = {
 
 export const LINKS = {
   CREATE_ISSUE: 'https://github.com/appium/appium-inspector/issues/new/choose',
+  CAPS_DOCS: 'https://appium.io/docs/en/latest/guides/caps/',
   HYBRID_MODE_DOCS: 'https://appium.github.io/appium.io/docs/en/writing-running-appium/web/hybrid/',
   CLASS_CHAIN_DOCS:
     'https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules',

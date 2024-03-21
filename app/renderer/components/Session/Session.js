@@ -4,6 +4,8 @@ import _ from 'lodash';
 import React, {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 
+import {LINKS} from '../../constants/COMMON';
+import {ADD_CLOUD_PROVIDER_TAB_KEY} from '../../constants/SESSION_BUILDER';
 import {ipcRenderer, shell} from '../../polyfills';
 import {BUTTON} from '../AntdTypes';
 import AdvancedServerParams from './AdvancedServerParams';
@@ -14,9 +16,6 @@ import CloudProviders from './CloudProviders';
 import SavedSessions from './SavedSessions';
 import ServerTabCustom from './ServerTabCustom';
 import SessionStyles from './Session.css';
-
-const ADD_CLOUD_PROVIDER = 'addCloudProvider';
-const CAPS_DOCS_LINK = 'https://appium.io/docs/en/latest/guides/caps/';
 
 const Session = (props) => {
   const {
@@ -45,7 +44,7 @@ const Session = (props) => {
 
   const handleSelectServerTab = async (tab) => {
     const {changeServerType, addCloudProvider} = props;
-    if (tab === ADD_CLOUD_PROVIDER) {
+    if (tab === ADD_CLOUD_PROVIDER_TAB_KEY) {
       addCloudProvider();
       return;
     }
@@ -112,7 +111,7 @@ const Session = (props) => {
               }),
               {
                 label: <span className="addCloudProviderTab">{t('Select Cloud Providers')}</span>,
-                key: ADD_CLOUD_PROVIDER,
+                key: ADD_CLOUD_PROVIDER_TAB_KEY,
               },
             ]}
           />
@@ -153,7 +152,7 @@ const Session = (props) => {
 
         <div className={SessionStyles.sessionFooter}>
           <div className={SessionStyles.desiredCapsLink}>
-            <a href="#" onClick={(e) => e.preventDefault() || shell.openExternal(CAPS_DOCS_LINK)}>
+            <a href="#" onClick={(e) => e.preventDefault() || shell.openExternal(LINKS.CAPS_DOCS)}>
               <LinkOutlined />
               &nbsp;
               {t('desiredCapabilitiesDocumentation')}

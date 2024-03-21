@@ -1,9 +1,8 @@
 import {Col, Form, Input, Row} from 'antd';
 import React from 'react';
 
+import {PROVIDER_VALUES} from '../../constants/SESSION_BUILDER';
 import SessionStyles from './Session.css';
-
-const headspinUrl = 'https://xxxx.headspin.io:4723/v0/your-api-token/wd/hub';
 
 const ServerTabHeadspin = ({server, setServerParam, t}) => (
   <Form>
@@ -13,7 +12,7 @@ const ServerTabHeadspin = ({server, setServerParam, t}) => (
           <Input
             className={SessionStyles.customServerInputLeft}
             id="headspinServerHost"
-            placeholder={headspinUrl}
+            placeholder={PROVIDER_VALUES.HEADSPIN_URL}
             addonBefore={t('serverTabHeasdpinWebDriverURL')}
             value={server.headspin.webDriverUrl}
             onChange={(e) => setServerParam('webDriverUrl', e.target.value)}

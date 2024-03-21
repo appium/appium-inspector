@@ -1,12 +1,9 @@
 import {Col, Form, Input, Row} from 'antd';
 import React from 'react';
 
+import {PROVIDER_VALUES} from '../../constants/SESSION_BUILDER';
 import {INPUT} from '../AntdTypes';
 import SessionStyles from './Session.css';
-
-const pcloudyUsernamePlaceholder = 'username@pcloudy.com';
-const pcloudyHostPlaceholder = 'cloud.pcloudy.com';
-const pcloudyAccessKeyExample = 'kjdgtdwn65fdasd78uy6y';
 
 const ServerTabPcloudy = ({server, setServerParam, t}) => (
   <Form>
@@ -16,7 +13,7 @@ const ServerTabPcloudy = ({server, setServerParam, t}) => (
           <Input
             className={SessionStyles.customServerInputLeft}
             id="PcloudyServerHost"
-            placeholder={pcloudyHostPlaceholder}
+            placeholder={PROVIDER_VALUES.PCLOUDY_HOST}
             addonBefore={t('Pcloudy Host')}
             value={server.pcloudy.hostname}
             onChange={(e) => setServerParam('hostname', e.target.value)}
@@ -28,7 +25,7 @@ const ServerTabPcloudy = ({server, setServerParam, t}) => (
           <Input
             id="username"
             type={INPUT.TEXT}
-            placeholder={pcloudyUsernamePlaceholder}
+            placeholder={PROVIDER_VALUES.PCLOUDY_USERNAME}
             addonBefore={t('Pcloudy User Name')}
             value={server.pcloudy.username}
             onChange={(e) => setServerParam('username', e.target.value)}
@@ -40,7 +37,7 @@ const ServerTabPcloudy = ({server, setServerParam, t}) => (
           <Input
             id="accessKey"
             type={INPUT.PASSWORD}
-            placeholder={pcloudyAccessKeyExample}
+            placeholder={PROVIDER_VALUES.PCLOUDY_ACCESS_KEY}
             addonBefore={t('Pcloudy API Key')}
             value={server.pcloudy.accessKey}
             onChange={(e) => setServerParam('accessKey', e.target.value)}
