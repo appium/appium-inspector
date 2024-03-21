@@ -305,15 +305,17 @@ export default function inspector(state = INITIAL_STATE, action) {
     case SET_SHOW_BOILERPLATE:
       return {...state, showBoilerplate: action.show};
 
-    case SET_SESSION_DETAILS:
+    case SET_SESSION_DETAILS: {
+      const automationName = action.driver.client.capabilities.automationName;
       return {
         ...state,
         sessionDetails: action.sessionDetails,
         driver: action.driver,
-        automationName: action.driver.client.capabilities.automationName,
+        automationName: automationName && automationName.toLowerCase(),
         appMode: action.mode,
         mjpegScreenshotUrl: action.mjpegScreenshotUrl,
       };
+    }
 
     case SHOW_LOCATOR_TEST_MODAL:
       return {

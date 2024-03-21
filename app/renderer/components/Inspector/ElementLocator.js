@@ -17,10 +17,7 @@ const STRAT_VIEWTAG = ['-android viewtag', 'View Tag'];
 
 const locatorStrategies = (automationName) => {
   let strategies = [STRAT_ID, STRAT_XPATH, STRAT_NAME, STRAT_CLASS_NAME, STRAT_ACCESSIBILITY_ID];
-  if (!automationName) {
-    return strategies;
-  }
-  switch (automationName.toLowerCase()) {
+  switch (automationName) {
     case 'xcuitest':
     case 'mac2':
       strategies.push(STRAT_PREDICATE, STRAT_CLASS_CHAIN);
