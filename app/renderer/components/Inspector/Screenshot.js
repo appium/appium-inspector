@@ -3,7 +3,7 @@ import React, {useRef, useState} from 'react';
 
 import HighlighterRects from './HighlighterRects';
 import styles from './Inspector.css';
-import {INSPECTOR_TAB} from '../../constants/COMMON';
+import {INSPECTOR_TABS} from '../../constants/COMMON';
 import {POINTER_TYPES} from '../../constants/GESTURES';
 import {DEFAULT_SWIPE, DEFAULT_TAP, SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
 
@@ -205,7 +205,7 @@ const Screenshot = (props) => {
               )}
             </svg>
           )}
-          {selectedInspectorTab === INSPECTOR_TAB.GESTURES && points && (
+          {selectedInspectorTab === INSPECTOR_TABS.GESTURES && points && (
             <svg key="gestureSVG" className={styles.gestureSvg}>
               {points.map((pointer) =>
                 pointer.map((tick, index) => (

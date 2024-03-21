@@ -83,7 +83,7 @@ import {
   UNSELECT_HOVERED_ELEMENT,
   UNSELECT_TICK_ELEMENT,
 } from '../actions/Inspector';
-import {APP_MODE, INSPECTOR_TAB, NATIVE_APP} from '../constants/COMMON';
+import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/COMMON';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/SCREENSHOT';
 
 const DEFAULT_FRAMEWORK = 'java';
@@ -114,7 +114,7 @@ const INITIAL_STATE = {
   assignedVarCache: {},
   screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
   searchedForElementBounds: null,
-  selectedInspectorTab: INSPECTOR_TAB.SOURCE,
+  selectedInspectorTab: INSPECTOR_TABS.SOURCE,
   appMode: APP_MODE.NATIVE,
   mjpegScreenshotUrl: null,
   pendingCommand: null,

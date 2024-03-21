@@ -17,7 +17,7 @@ export const DRIVERS = {
   GECKO: 'gecko',
 };
 
-export const INSPECTOR_TAB = {
+export const INSPECTOR_TABS = {
   SOURCE: 'source',
   COMMANDS: 'commands',
   GESTURES: 'gestures',

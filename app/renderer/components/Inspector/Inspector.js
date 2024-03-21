@@ -29,7 +29,7 @@ import Screenshot from './Screenshot';
 import SelectedElement from './SelectedElement';
 import SessionInfo from './SessionInfo';
 import Source from './Source';
-import {INSPECTOR_TAB} from '../../constants/COMMON';
+import {INSPECTOR_TABS} from '../../constants/COMMON';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
@@ -302,7 +302,7 @@ const Inspector = (props) => {
           items={[
             {
               label: t('Source'),
-              key: INSPECTOR_TAB.SOURCE,
+              key: INSPECTOR_TABS.SOURCE,
               children: (
                 <div className="action-row">
                   <div className="action-col">
@@ -365,7 +365,7 @@ const Inspector = (props) => {
             },
             {
               label: t('Commands'),
-              key: INSPECTOR_TAB.COMMANDS,
+              key: INSPECTOR_TABS.COMMANDS,
               children: (
                 <Card
                   title={
@@ -381,7 +381,7 @@ const Inspector = (props) => {
             },
             {
               label: t('Gestures'),
-              key: INSPECTOR_TAB.GESTURES,
+              key: INSPECTOR_TABS.GESTURES,
               children: isGestureEditorVisible ? (
                 <Card
                   title={
@@ -408,12 +408,12 @@ const Inspector = (props) => {
             },
             {
               label: t('Recorder'),
-              key: INSPECTOR_TAB.RECORDER,
+              key: INSPECTOR_TABS.RECORDER,
               children: <Recorder {...props} />,
             },
             {
               label: t('Session Information'),
-              key: INSPECTOR_TAB.SESSION_INFO,
+              key: INSPECTOR_TABS.SESSION_INFO,
               children: (
                 <Card
                   title={
