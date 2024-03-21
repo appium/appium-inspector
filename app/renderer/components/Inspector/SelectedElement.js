@@ -10,10 +10,10 @@ import {Alert, Button, Col, Input, Row, Spin, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import React, {useRef} from 'react';
 
+import {LINKS, NATIVE_APP} from '../../constants/COMMON';
 import {clipboard, shell} from '../../polyfills';
 import {ALERT, ROW} from '../AntdTypes';
 import styles from './Inspector.css';
-import {DOCS_URLS, NATIVE_APP} from '../../constants/COMMON';
 
 /**
  * Shows details of the currently selected element and shows methods that can
@@ -132,13 +132,13 @@ const SelectedElement = (props) => {
   for (const locator of findDataSource) {
     switch (locator.key) {
       case '-ios class chain':
-        locator.find = locatorStrategyDocsLink(locator.key, DOCS_URLS.CLASS_CHAIN);
+        locator.find = locatorStrategyDocsLink(locator.key, LINKS.CLASS_CHAIN_DOCS);
         break;
       case '-ios predicate string':
-        locator.find = locatorStrategyDocsLink(locator.key, DOCS_URLS.PREDICATE);
+        locator.find = locatorStrategyDocsLink(locator.key, LINKS.PREDICATE_DOCS);
         break;
       case '-android uiautomator':
-        locator.find = locatorStrategyDocsLink(locator.key, DOCS_URLS.UIAUTOMATOR);
+        locator.find = locatorStrategyDocsLink(locator.key, LINKS.UIAUTOMATOR_DOCS);
         break;
     }
   }

@@ -1,10 +1,10 @@
 import React from 'react';
 
+import {RENDER_CENTROID_AS} from '../../constants/SCREENSHOT';
+import {parseCoordinates} from '../../utils/other';
 import HighlighterCentroid from './HighlighterCentroid';
 import HighlighterRectForBounds from './HighlighterRectForBounds';
 import HighlighterRectForElem from './HighlighterRectForElem';
-import {RENDER_CENTROID_AS} from '../../constants/SCREENSHOT';
-import {parseCoordinates} from '../../utils/other';
 
 const {CENTROID, OVERLAP, EXPAND} = RENDER_CENTROID_AS;
 

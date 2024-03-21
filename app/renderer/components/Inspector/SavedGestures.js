@@ -4,10 +4,10 @@ import _ from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useRef} from 'react';
 
-import InspectorStyles from './Inspector.css';
 import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/GESTURES';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
 import {percentageToPixels} from '../../utils/other';
+import InspectorStyles from './Inspector.css';
 
 const dataSource = (savedGestures, t) => {
   if (!savedGestures) {

@@ -17,6 +17,13 @@ import {debounce} from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
+import {
+  INSPECTOR_TABS,
+  MJPEG_STREAM_CHECK_INTERVAL,
+  SESSION_EXPIRY_PROMPT_TIMEOUT,
+  WINDOW_DIMENSIONS,
+} from '../../constants/COMMON';
+import {SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
 import {clipboard} from '../../polyfills';
 import {BUTTON} from '../AntdTypes';
 import Commands from './Commands';
@@ -29,13 +36,6 @@ import Screenshot from './Screenshot';
 import SelectedElement from './SelectedElement';
 import SessionInfo from './SessionInfo';
 import Source from './Source';
-import {
-  INSPECTOR_TABS,
-  MJPEG_STREAM_CHECK_INTERVAL,
-  SESSION_EXPIRY_PROMPT_TIMEOUT,
-  WINDOW_DIMENSIONS,
-} from '../../constants/COMMON';
-import {SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 

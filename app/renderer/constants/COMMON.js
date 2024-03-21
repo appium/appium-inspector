@@ -4,13 +4,14 @@ export const WINDOW_DIMENSIONS = {
   MAX_IMAGE_WIDTH_FRACTION: 0.4,
 };
 
-export const DOCS_URLS = {
-  HYBRID_MODE: 'https://appium.github.io/appium.io/docs/en/writing-running-appium/web/hybrid/',
-  CLASS_CHAIN:
+export const LINKS = {
+  CREATE_ISSUE: 'https://github.com/appium/appium-inspector/issues/new/choose',
+  HYBRID_MODE_DOCS: 'https://appium.github.io/appium.io/docs/en/writing-running-appium/web/hybrid/',
+  CLASS_CHAIN_DOCS:
     'https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules',
-  PREDICATE:
+  PREDICATE_DOCS:
     'https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules',
-  UIAUTOMATOR:
+  UIAUTOMATOR_DOCS:
     'https://github.com/appium/appium-uiautomator2-driver/blob/master/docs/uiautomator-uiselector.md',
 };
 

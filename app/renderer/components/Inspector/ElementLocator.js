@@ -1,9 +1,9 @@
 import {Alert, Input, Radio, Row, Space} from 'antd';
 import React from 'react';
 
+import {LOCATOR_STRATEGY_MAP as STRAT} from '../../constants/COMMON';
 import {ALERT} from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
-import {LOCATOR_STRATEGY_MAP as STRAT} from '../../constants/COMMON';
 
 const locatorStrategies = (automationName) => {
   let strategies = [STRAT.ID, STRAT.XPATH, STRAT.NAME, STRAT.CLASS_NAME, STRAT.ACCESSIBILITY_ID];

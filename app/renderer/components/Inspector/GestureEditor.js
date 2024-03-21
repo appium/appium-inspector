@@ -28,7 +28,6 @@ import {
 import _ from 'lodash';
 import React, {useEffect, useState} from 'react';
 
-import InspectorCSS from './Inspector.css';
 import {
   ACTION_TYPES,
   CURSOR,
@@ -45,6 +44,7 @@ import {
 } from '../../constants/GESTURES';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
 import {percentageToPixels, pixelsToPercentage} from '../../utils/other';
+import InspectorCSS from './Inspector.css';
 
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
 

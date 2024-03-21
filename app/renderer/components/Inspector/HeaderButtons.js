@@ -16,10 +16,10 @@ import {BiCircle, BiSquare} from 'react-icons/bi';
 import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
 import {IoChevronBackOutline} from 'react-icons/io5';
 
+import {APP_MODE, LINKS} from '../../constants/COMMON';
 import {shell} from '../../polyfills';
 import {BUTTON} from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
-import {APP_MODE, DOCS_URLS} from '../../constants/COMMON';
 
 const HeaderButtons = (props) => {
   const {
@@ -144,8 +144,8 @@ const HeaderButtons = (props) => {
             title={
               <>
                 {t('contextDropdownInfo')}{' '}
-                <a onClick={(e) => e.preventDefault() || shell.openExternal(DOCS_URLS.HYBRID_MODE)}>
-                  {DOCS_URLS.HYBRID_MODE}
+                <a onClick={(e) => e.preventDefault() || shell.openExternal(LINKS.HYBRID_MODE_DOCS)}>
+                  {LINKS.HYBRID_MODE_DOCS}
                 </a>
               </>
             }
