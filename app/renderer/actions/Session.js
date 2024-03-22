@@ -422,13 +422,12 @@ export function newSession(caps, attachSessId = null) {
         if (!desiredCapabilities['tb:options']) {
           desiredCapabilities['tb:options'] = {};
         }
-        desiredCapabilities['tb:options'].key = session.server.testingbot.key || process.env.TB_KEY;
-        desiredCapabilities['tb:options'].secret =
-          session.server.testingbot.secret || process.env.TB_SECRET;
-        if (
-          !(session.server.testingbot.key || process.env.TB_KEY) ||
-          !(session.server.testingbot.secret || process.env.TB_SECRET)
-        ) {
+        username = session.server.testingbot.username || process.env.TB_KEY;
+        accessKey = session.server.testingbot.accessKey || process.env.TB_SECRET;
+        desiredCapabilities['tb:options'].key = username;
+        desiredCapabilities['tb:options'].secret = accessKey;
+        desiredCapabilities['tb:options'].source = 'appiumdesktop';
+        if (!username || !accessKey) {
           showError(new Error(i18n.t('testingbotCredentialsRequired')));
           return false;
         }
