@@ -58,13 +58,8 @@ export const POINTER_DOWN_BTNS = {
   RIGHT: 1,
 };
 
-// Details for 'filler' ticks used to ensure timelines for all pointers are consistent
+// Details for 'filler' ticks used to ensure timelines for all pointers have consistent length
 export const FILLER_TICK = {TYPE: 'filler', WAIT: 'wait', FINISH: 'finish', COLOR: '#FFFFFF'};
-
-// Antd Table tab actions
-export const ACTION_TYPES = {ADD: 'add', REMOVE: 'remove'};
-// Antd notification types
-export const MSG_TYPES = {ERROR: 'error', SUCCESS: 'success'};
 
 // Style for dots and lines drawn over the app screenshot
 export const GESTURE_ITEM_STYLES = {

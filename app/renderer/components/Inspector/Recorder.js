@@ -3,9 +3,9 @@ import {Button, Card, Select, Space, Tooltip} from 'antd';
 import hljs from 'highlight.js';
 import React from 'react';
 
+import {BUTTON} from '../../constants/ANTD_TYPES';
 import frameworks from '../../lib/client-frameworks';
 import {clipboard} from '../../polyfills';
-import {BUTTON} from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
 
 const Recorder = (props) => {

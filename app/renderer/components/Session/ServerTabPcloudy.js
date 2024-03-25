@@ -1,8 +1,8 @@
 import {Col, Form, Input, Row} from 'antd';
 import React from 'react';
 
+import {INPUT} from '../../constants/ANTD_TYPES';
 import {PROVIDER_VALUES} from '../../constants/SESSION_BUILDER';
-import {INPUT} from '../AntdTypes';
 import SessionStyles from './Session.css';
 
 const ServerTabPcloudy = ({server, setServerParam, t}) => (

@@ -4,10 +4,10 @@ import _ from 'lodash';
 import React, {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 
+import {BUTTON} from '../../constants/ANTD_TYPES';
 import {LINKS} from '../../constants/COMMON';
 import {ADD_CLOUD_PROVIDER_TAB_KEY} from '../../constants/SESSION_BUILDER';
 import {ipcRenderer, shell} from '../../polyfills';
-import {BUTTON} from '../AntdTypes';
 import AdvancedServerParams from './AdvancedServerParams';
 import AttachToSession from './AttachToSession';
 import CapabilityEditor from './CapabilityEditor';

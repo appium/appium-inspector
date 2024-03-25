@@ -1,8 +1,8 @@
 import {Alert, Input, Radio, Row, Space} from 'antd';
 import React from 'react';
 
+import {ALERT} from '../../constants/ANTD_TYPES';
 import {LOCATOR_STRATEGY_MAP as STRAT} from '../../constants/SESSION_INSPECTOR';
-import {ALERT} from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
 
 const locatorStrategies = (automationName) => {

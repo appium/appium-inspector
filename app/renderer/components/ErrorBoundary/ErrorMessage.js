@@ -2,10 +2,10 @@ import {CopyOutlined} from '@ant-design/icons';
 import {Alert, Button, Tooltip} from 'antd';
 import React from 'react';
 
+import {ALERT} from '../../constants/ANTD_TYPES';
 import {LINKS} from '../../constants/COMMON';
 import {shell} from '../../polyfills';
 import {withTranslation} from '../../utils/other';
-import {ALERT} from '../AntdTypes';
 import styles from './ErrorMessage.css';
 
 const ErrorMessage = ({error, copyTrace, t}) => (

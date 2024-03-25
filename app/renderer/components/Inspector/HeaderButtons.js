@@ -16,10 +16,10 @@ import {BiCircle, BiSquare} from 'react-icons/bi';
 import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
 import {IoChevronBackOutline} from 'react-icons/io5';
 
+import {BUTTON} from '../../constants/ANTD_TYPES';
 import {LINKS} from '../../constants/COMMON';
 import {APP_MODE} from '../../constants/SESSION_INSPECTOR';
 import {shell} from '../../polyfills';
-import {BUTTON} from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
 
 const HeaderButtons = (props) => {

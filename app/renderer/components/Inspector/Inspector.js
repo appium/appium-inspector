@@ -17,6 +17,7 @@ import {debounce} from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
+import {BUTTON} from '../../constants/ANTD_TYPES';
 import {WINDOW_DIMENSIONS} from '../../constants/COMMON';
 import {
   INSPECTOR_TABS,
@@ -25,7 +26,6 @@ import {
 } from '../../constants/SESSION_INSPECTOR';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
 import {clipboard} from '../../polyfills';
-import {BUTTON} from '../AntdTypes';
 import Commands from './Commands';
 import GestureEditor from './GestureEditor';
 import HeaderButtons from './HeaderButtons';

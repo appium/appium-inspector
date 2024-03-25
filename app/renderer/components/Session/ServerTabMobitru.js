@@ -1,7 +1,7 @@
 import {Col, Form, Input, Row} from 'antd';
 import React from 'react';
 
-import {INPUT} from '../AntdTypes';
+import {INPUT} from '../../constants/ANTD_TYPES';
 
 const mobitrWebDriverUrlPlaceholder = (t) => {
   if (process.env.MOBITRU_WEBDRIVER_URL) {

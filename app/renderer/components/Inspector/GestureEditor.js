@@ -28,12 +28,11 @@ import {
 import _ from 'lodash';
 import React, {useEffect, useState} from 'react';
 
+import {NOTIF, TABLE_TAB} from '../../constants/ANTD_TYPES';
 import {
-  ACTION_TYPES,
   CURSOR,
   DEFAULT_POINTER,
   FILLER_TICK,
-  MSG_TYPES,
   POINTER_COLORS,
   POINTER_DOWN_BTNS,
   POINTER_MOVE_COORDS_TYPE,
@@ -98,7 +97,7 @@ const GestureEditor = (props) => {
       actions: getConvertedPointers(POINTER_MOVE_COORDS_TYPE.PERCENTAGES),
     };
     saveGesture(gesture);
-    displayNotificationMsg(MSG_TYPES.SUCCESS, t('Gesture saved'));
+    displayNotificationMsg(NOTIF.SUCCESS, t('Gesture saved'));
   };
 
   const onSaveAs = () => {
@@ -111,7 +110,7 @@ const GestureEditor = (props) => {
       actions: getConvertedPointers(POINTER_MOVE_COORDS_TYPE.PERCENTAGES),
     };
     saveGesture(gesture);
-    displayNotificationMsg(MSG_TYPES.SUCCESS, t('Gesture saved as', {gestureName: name}));
+    displayNotificationMsg(NOTIF.SUCCESS, t('Gesture saved as', {gestureName: name}));
     onBack();
   };
 
@@ -137,7 +136,7 @@ const GestureEditor = (props) => {
     const duplicates = {};
     for (const pointer of localPointers) {
       if (duplicates[pointer.name]) {
-        displayNotificationMsg(MSG_TYPES.ERROR, t('Duplicate pointer names are not allowed'));
+        displayNotificationMsg(NOTIF.ERROR, t('Duplicate pointer names are not allowed'));
         return true;
       } else {
         duplicates[pointer.name] = pointer;
@@ -711,7 +710,7 @@ const GestureEditor = (props) => {
         onChange={(pointerId) => setActivePointerId(pointerId)}
         activeKey={activePointerId}
         onEdit={(targetKey, action) =>
-          action === ACTION_TYPES.ADD ? addPointer() : deletePointer(targetKey)
+          action === TABLE_TAB.ADD ? addPointer() : deletePointer(targetKey)
         }
         hideAdd={pointers.length === 5}
         centered={true}
