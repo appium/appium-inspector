@@ -3,7 +3,7 @@ import {Button, Card, Select, Space, Tooltip} from 'antd';
 import hljs from 'highlight.js';
 import React from 'react';
 
-import {BUTTON} from '../../constants/ANTD_TYPES';
+import {BUTTON} from '../../constants/antd-types';
 import frameworks from '../../lib/client-frameworks';
 import {clipboard} from '../../polyfills';
 import InspectorStyles from './Inspector.css';

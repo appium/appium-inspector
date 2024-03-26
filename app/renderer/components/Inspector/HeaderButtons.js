@@ -16,9 +16,9 @@ import {BiCircle, BiSquare} from 'react-icons/bi';
 import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
 import {IoChevronBackOutline} from 'react-icons/io5';
 
-import {BUTTON} from '../../constants/ANTD_TYPES';
-import {LINKS} from '../../constants/COMMON';
-import {APP_MODE} from '../../constants/SESSION_INSPECTOR';
+import {BUTTON} from '../../constants/antd-types';
+import {LINKS} from '../../constants/common';
+import {APP_MODE} from '../../constants/session-inspector';
 import {shell} from '../../polyfills';
 import InspectorStyles from './Inspector.css';
 

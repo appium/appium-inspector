@@ -83,8 +83,8 @@ import {
   UNSELECT_HOVERED_ELEMENT,
   UNSELECT_TICK_ELEMENT,
 } from '../actions/Inspector';
-import {SCREENSHOT_INTERACTION_MODE} from '../constants/SCREENSHOT';
-import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/SESSION_INSPECTOR';
+import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
+import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
 
 const DEFAULT_FRAMEWORK = 'java';
 

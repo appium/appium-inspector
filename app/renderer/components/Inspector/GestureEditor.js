@@ -28,7 +28,7 @@ import {
 import _ from 'lodash';
 import React, {useEffect, useState} from 'react';
 
-import {NOTIF, TABLE_TAB} from '../../constants/ANTD_TYPES';
+import {NOTIF, TABLE_TAB} from '../../constants/antd-types';
 import {
   CURSOR,
   DEFAULT_POINTER,
@@ -40,8 +40,8 @@ import {
   POINTER_TYPES,
   POINTER_TYPES_MAP,
   TICK_PROPS,
-} from '../../constants/GESTURES';
-import {SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
+} from '../../constants/gestures';
+import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {percentageToPixels, pixelsToPercentage} from '../../utils/other';
 import InspectorCSS from './Inspector.css';
 

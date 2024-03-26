@@ -1,7 +1,7 @@
 import {Col, Form, Input, Row} from 'antd';
 import React from 'react';
 
-import {PROVIDER_VALUES} from '../../constants/SESSION_BUILDER';
+import {PROVIDER_VALUES} from '../../constants/session-builder';
 import SessionStyles from './Session.css';
 
 const ServerTabHeadspin = ({server, setServerParam, t}) => (

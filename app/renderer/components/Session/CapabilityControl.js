@@ -3,7 +3,7 @@ import {Input, Switch} from 'antd';
 import _ from 'lodash';
 import React from 'react';
 
-import {INPUT} from '../../constants/ANTD_TYPES';
+import {INPUT} from '../../constants/antd-types';
 import {log, remote} from '../../polyfills';
 import SessionStyles from './Session.css';
 

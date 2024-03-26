@@ -1,9 +1,9 @@
 import {Spin} from 'antd';
 import React, {useRef, useState} from 'react';
 
-import {GESTURE_ITEM_STYLES, POINTER_TYPES} from '../../constants/GESTURES';
-import {DEFAULT_SWIPE, DEFAULT_TAP, SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
-import {INSPECTOR_TABS} from '../../constants/SESSION_INSPECTOR';
+import {GESTURE_ITEM_STYLES, POINTER_TYPES} from '../../constants/gestures';
+import {DEFAULT_SWIPE, DEFAULT_TAP, SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
+import {INSPECTOR_TABS} from '../../constants/session-inspector';
 import HighlighterRects from './HighlighterRects';
 import styles from './Inspector.css';
 

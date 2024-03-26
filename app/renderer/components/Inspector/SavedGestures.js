@@ -4,8 +4,8 @@ import _ from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useRef} from 'react';
 
-import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/GESTURES';
-import {SCREENSHOT_INTERACTION_MODE} from '../../constants/SCREENSHOT';
+import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/gestures';
+import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {percentageToPixels} from '../../utils/other';
 import InspectorStyles from './Inspector.css';
 

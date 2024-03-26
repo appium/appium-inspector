@@ -2,7 +2,7 @@ import {AimOutlined, ClearOutlined, MenuUnfoldOutlined, SendOutlined} from '@ant
 import {Alert, Badge, Button, Input, List, Row, Space, Spin, Tooltip} from 'antd';
 import React, {useRef} from 'react';
 
-import {ALERT} from '../../constants/ANTD_TYPES';
+import {ALERT} from '../../constants/antd-types';
 import InspectorStyles from './Inspector.css';
 
 const LocatedElements = (props) => {

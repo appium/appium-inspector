@@ -1,4 +1,4 @@
-import {DRIVERS} from './COMMON';
+import {DRIVERS} from './common';
 
 export const COMMAND_ARG_TYPES = {
   STRING: 'string',

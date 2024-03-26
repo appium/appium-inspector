@@ -2,8 +2,8 @@ import {CopyOutlined} from '@ant-design/icons';
 import {Alert, Button, Tooltip} from 'antd';
 import React from 'react';
 
-import {ALERT} from '../../constants/ANTD_TYPES';
-import {LINKS} from '../../constants/COMMON';
+import {ALERT} from '../../constants/antd-types';
+import {LINKS} from '../../constants/common';
 import {shell} from '../../polyfills';
 import {withTranslation} from '../../utils/other';
 import styles from './ErrorMessage.css';

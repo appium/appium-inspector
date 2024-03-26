@@ -3,7 +3,7 @@ import {Button, Col, Row, Table} from 'antd';
 import moment from 'moment';
 import React from 'react';
 
-import {SAVED_SESSIONS_TABLE_VALUES} from '../../constants/SESSION_BUILDER';
+import {SAVED_SESSIONS_TABLE_VALUES} from '../../constants/session-builder';
 import FormattedCaps from './FormattedCaps';
 import SessionStyles from './Session.css';
 

@@ -14,8 +14,8 @@ import {
 import _ from 'lodash';
 import React from 'react';
 
-import {ALERT, INPUT} from '../../constants/ANTD_TYPES';
-import {COMMAND_ARG_TYPES, COMMAND_DEFINITIONS} from '../../constants/COMMANDS';
+import {ALERT, INPUT} from '../../constants/antd-types';
+import {COMMAND_ARG_TYPES, COMMAND_DEFINITIONS} from '../../constants/commands';
 import InspectorStyles from './Inspector.css';
 
 const Commands = (props) => {

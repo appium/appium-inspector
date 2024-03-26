@@ -1,7 +1,7 @@
 import {Spin, Tree} from 'antd';
 import React from 'react';
 
-import {IMPORTANT_SOURCE_ATTRS} from '../../constants/SOURCE';
+import {IMPORTANT_SOURCE_ATTRS} from '../../constants/source';
 import InspectorStyles from './Inspector.css';
 import LocatorTestModal from './LocatorTestModal';
 import SiriCommandModal from './SiriCommandModal';

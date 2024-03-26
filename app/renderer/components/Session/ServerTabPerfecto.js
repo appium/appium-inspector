@@ -1,7 +1,7 @@
 import {Checkbox, Col, Form, Input, Row} from 'antd';
 import React from 'react';
 
-import {PROVIDER_VALUES} from '../../constants/SESSION_BUILDER';
+import {PROVIDER_VALUES} from '../../constants/session-builder';
 import SessionStyles from './Session.css';
 
 const portPlaceholder = (server) => (server.perfecto.ssl ? '443' : '80');

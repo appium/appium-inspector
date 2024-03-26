@@ -1,7 +1,7 @@
 import {Col, Row, Table} from 'antd';
 import React, {useEffect, useRef, useState} from 'react';
 
-import {SESSION_INFO_PROPS, SESSION_INFO_TABLE_PARAMS} from '../../constants/SESSION_INFO';
+import {SESSION_INFO_PROPS, SESSION_INFO_TABLE_PARAMS} from '../../constants/session-info';
 import InspectorStyles from './Inspector.css';
 import SessionCodeBox from './SessionCodeBox';
 
