@@ -8,16 +8,16 @@ jobs:
   - template: templates/package.yml
     parameters:
       pool:
-        vmImage: 'macOS-12'
-      name: 'osx_package'
+        vmImage: 'macOS-latest'
+      name: 'macos_package'
   - template: templates/package.yml
     parameters:
       pool:
-        vmImage: 'windows-2022'
+        vmImage: 'windows-latest'
       name: 'windows_package'
       buildScript: 'npx electron-builder build -w --ia32 --x64 --publish always'
   - template: templates/package.yml
     parameters:
       pool:
-        vmImage: 'ubuntu-22.04'
+        vmImage: 'ubuntu-latest'
       name: 'linux_package'
