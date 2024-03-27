@@ -28,3 +28,34 @@ export function addVendorPrefixes(caps) {
     return cap;
   });
 }
+
+export function pixelsToPercentage(px, maxPixels) {
+  if (!isNaN(px)) {
+    return parseFloat(((px / maxPixels) * 100).toFixed(1), 10);
+  }
+}
+
+export function percentageToPixels(pct, maxPixels) {
+  if (!isNaN(pct)) {
+    return Math.round(maxPixels * (pct / 100));
+  }
+}
+
+// Extracts element coordinates from its properties.
+// Depending on the platform, this is contained either in the 'bounds' property,
+// or the 'x'/'y'/'width'/'height' properties
+export function parseCoordinates(element) {
+  const {bounds, x, y, width, height} = element.attributes || {};
+
+  if (bounds) {
+    const boundsArray = bounds.split(/\[|\]|,/).filter((str) => str !== '');
+    const [x1, y1, x2, y2] = boundsArray.map((val) => parseInt(val, 10));
+    return {x1, y1, x2, y2};
+  } else if (x) {
+    const originsArray = [x, y, width, height];
+    const [xInt, yInt, widthInt, heightInt] = originsArray.map((val) => parseInt(val, 10));
+    return {x1: xInt, y1: yInt, x2: xInt + widthInt, y2: yInt + heightInt};
+  } else {
+    return {};
+  }
+}

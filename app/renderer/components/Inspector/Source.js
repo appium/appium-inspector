@@ -1,21 +1,10 @@
 import {Spin, Tree} from 'antd';
 import React from 'react';
 
+import {IMPORTANT_SOURCE_ATTRS} from '../../constants/source';
 import InspectorStyles from './Inspector.css';
 import LocatorTestModal from './LocatorTestModal';
 import SiriCommandModal from './SiriCommandModal';
-
-const IMPORTANT_ATTRS = [
-  'name',
-  'content-desc',
-  'resource-id',
-  'AXDescription',
-  'AXIdentifier',
-  'text',
-  'label',
-  'value',
-  'id',
-];
 
 /**
  * Shows the 'source' of the app as a Tree
@@ -39,7 +28,7 @@ const Source = (props) => {
     let attrs = [];
 
     for (let attr of Object.keys(attributes)) {
-      if ((IMPORTANT_ATTRS.includes(attr) && attributes[attr]) || showAllAttrs) {
+      if ((IMPORTANT_SOURCE_ATTRS.includes(attr) && attributes[attr]) || showAllAttrs) {
         attrs.push(
           <span key={attr}>
             &nbsp;

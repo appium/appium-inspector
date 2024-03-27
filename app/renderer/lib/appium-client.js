@@ -1,7 +1,8 @@
 import Bluebird from 'bluebird';
 import _ from 'lodash';
 
-import {APP_MODE, NATIVE_APP, SCREENSHOT_INTERACTION_MODE} from '../components/Inspector/shared';
+import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
+import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import {parseSource, setHtmlElementAttributes} from './webview-helpers';
 
 const {TAP, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
@@ -480,7 +481,7 @@ export default class AppiumClient {
 
     return [
       // The Android contexts dont have the `NATIVE_APP` context so add it here
-      {id: 'NATIVE_APP'},
+      {id: NATIVE_APP},
       // Add the parsedWebviews, but make sure to filter out all undefined webviews
       ...parsedWebviews.filter(Boolean),
     ];

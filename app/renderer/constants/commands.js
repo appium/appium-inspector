@@ -1,82 +1,4 @@
-export function pixelsToPercentage(px, maxPixels) {
-  if (!isNaN(px)) {
-    return parseFloat(((px / maxPixels) * 100).toFixed(1), 10);
-  }
-}
-
-export function percentageToPixels(pct, maxPixels) {
-  if (!isNaN(pct)) {
-    return Math.round(maxPixels * (pct / 100));
-  }
-}
-
-export function parseCoordinates(element) {
-  let {bounds, x, y, width, height} = element.attributes || {};
-
-  if (bounds) {
-    let boundsArray = bounds.split(/\[|\]|,/).filter((str) => str !== '');
-    const x1 = parseInt(boundsArray[0], 10);
-    const x2 = parseInt(boundsArray[2], 10);
-    const y1 = parseInt(boundsArray[1], 10);
-    const y2 = parseInt(boundsArray[3], 10);
-    return {x1, y1, x2, y2};
-  } else if (x) {
-    x = parseInt(x, 10);
-    y = parseInt(y, 10);
-    width = parseInt(width, 10);
-    height = parseInt(height, 10);
-    return {x1: x, y1: y, x2: x + width, y2: y + height};
-  } else {
-    return {};
-  }
-}
-
-export const POINTER_TYPES = {
-  POINTER_UP: 'pointerUp',
-  POINTER_DOWN: 'pointerDown',
-  PAUSE: 'pause',
-  POINTER_MOVE: 'pointerMove',
-};
-
-export const DEFAULT_SWIPE = {
-  POINTER_NAME: 'finger1',
-  DURATION_1: 0,
-  DURATION_2: 750,
-  BUTTON: 0,
-  ORIGIN: 'viewport',
-};
-
-export const DEFAULT_TAP = {
-  POINTER_NAME: 'finger1',
-  DURATION_1: 0,
-  DURATION_2: 100,
-  BUTTON: 0,
-};
-
-// 3 Types of Centroids:
-// CENTROID is the circle/square displayed on the screen
-// EXPAND is the +/- circle displayed on the screen
-// OVERLAP is the same as CENTROID but is only visible when clicked on +/- circle
-export const RENDER_CENTROID_AS = {
-  CENTROID: 'centroid',
-  EXPAND: 'expand',
-  OVERLAP: 'overlap',
-};
-
-export const SCREENSHOT_INTERACTION_MODE = {
-  SELECT: 'select',
-  SWIPE: 'swipe',
-  TAP: 'tap',
-  TAP_SWIPE: 'tap_swipe',
-  GESTURE: 'gesture',
-};
-
-export const NATIVE_APP = 'NATIVE_APP';
-
-export const APP_MODE = {
-  NATIVE: 'native',
-  WEB_HYBRID: 'web_hybrid',
-};
+import {DRIVERS} from './common';
 
 export const COMMAND_ARG_TYPES = {
   STRING: 'string',
@@ -85,19 +7,6 @@ export const COMMAND_ARG_TYPES = {
 };
 
 const {STRING, NUMBER, BOOLEAN} = COMMAND_ARG_TYPES;
-
-export const DRIVERS = {
-  UIAUTOMATOR2: 'uiautomator2',
-  ESPRESSO: 'espresso',
-  XCUITEST: 'xcuitest',
-  FLUTTER: 'flutter',
-  MAC2: 'mac2',
-  WINDOWS: 'windows',
-  CHROMIUM: 'chromium',
-  SAFARI: 'safari',
-  GECKO: 'gecko',
-};
-
 const {UIAUTOMATOR2, ESPRESSO, XCUITEST} = DRIVERS;
 
 // Note: When changing COMMAND_DEFINITIONS categories, or 'notes' for any command, update `en/translation.json`
@@ -355,12 +264,4 @@ export const COMMAND_DEFINITIONS = {
       refresh: true,
     },
   },
-};
-
-export const INTERACTION_MODE = {
-  SOURCE: 'source',
-  COMMANDS: 'commands',
-  GESTURES: 'gestures',
-  RECORDER: 'recorder',
-  SESSION_INFO: 'sessionInfo',
 };

@@ -3,7 +3,7 @@ import {v4 as UUID} from 'uuid';
 
 import i18n from '../../configs/i18next.config.renderer';
 import {SAVED_FRAMEWORK, SET_SAVED_GESTURES, getSetting, setSetting} from '../../shared/settings';
-import {APP_MODE, NATIVE_APP} from '../components/Inspector/shared';
+import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import AppiumClient from '../lib/appium-client';
 import frameworks from '../lib/client-frameworks';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation';
@@ -74,7 +74,7 @@ export const CLEAR_COORD_ACTION = 'CLEAR_COORD_ACTION';
 export const PROMPT_KEEP_ALIVE = 'PROMPT_KEEP_ALIVE';
 export const HIDE_PROMPT_KEEP_ALIVE = 'HIDE_PROMPT_KEEP_ALIVE';
 
-export const SELECT_INTERACTION_MODE = 'SELECT_INTERACTION_MODE';
+export const SELECT_INSPECTOR_TAB = 'SELECT_INSPECTOR_TAB';
 
 export const ENTERING_COMMAND_ARGS = 'ENTERING_COMMAND_ARGS';
 export const CANCEL_PENDING_COMMAND = 'CANCEL_PENDING_COMMAND';
@@ -705,9 +705,9 @@ export function clearCoordAction() {
   };
 }
 
-export function selectInteractionMode(interaction) {
+export function selectInspectorTab(interaction) {
   return (dispatch) => {
-    dispatch({type: SELECT_INTERACTION_MODE, interaction});
+    dispatch({type: SELECT_INSPECTOR_TAB, interaction});
   };
 }
 
