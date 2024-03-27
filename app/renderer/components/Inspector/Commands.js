@@ -14,9 +14,9 @@ import {
 import _ from 'lodash';
 import React from 'react';
 
-import {ALERT, INPUT} from '../AntdTypes';
+import {ALERT, INPUT} from '../../constants/antd-types';
+import {COMMAND_ARG_TYPES, COMMAND_DEFINITIONS} from '../../constants/commands';
 import InspectorStyles from './Inspector.css';
-import {COMMAND_ARG_TYPES, COMMAND_DEFINITIONS} from './shared';
 
 const Commands = (props) => {
   const {
@@ -133,9 +133,7 @@ const Commands = (props) => {
               <Row>
                 {_.toPairs(commands).map(
                   ([commandName, command], index) =>
-                    (!automationName ||
-                      !command.drivers ||
-                      command.drivers.includes(_.toLower(automationName))) && (
+                    (!command.drivers || command.drivers.includes(automationName)) && (
                       <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
                         <div className={InspectorStyles['btn-container']}>
                           <Tooltip

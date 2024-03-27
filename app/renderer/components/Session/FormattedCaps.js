@@ -4,7 +4,7 @@ import hljs from 'highlight.js';
 import React from 'react';
 
 import {getCapsObject} from '../../actions/Session.js';
-import {ALERT} from '../AntdTypes';
+import {ALERT} from '../../constants/antd-types.js';
 import SessionStyles from './Session.css';
 
 const FormattedCaps = (props) => {

@@ -1,7 +1,7 @@
 import {Col, Form, Input, Row} from 'antd';
 import React from 'react';
 
-import {INPUT} from '../AntdTypes';
+import {INPUT} from '../../constants/antd-types';
 
 const lambdatestUsernamePlaceholder = (t) => {
   if (process.env.LAMBDATEST_USERNAME) {

@@ -86,7 +86,7 @@ export function getComplexSuggestedLocators(path, sourceDoc, isNative, automatio
   let complexLocators = {};
   const domNode = findDOMNodeByPath(path, sourceDoc);
   if (isNative) {
-    switch (automationName.toLowerCase()) {
+    switch (automationName) {
       case 'xcuitest':
       case 'mac2': {
         const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);

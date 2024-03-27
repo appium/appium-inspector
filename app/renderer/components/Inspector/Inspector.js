@@ -17,8 +17,15 @@ import {debounce} from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
+import {BUTTON} from '../../constants/antd-types';
+import {WINDOW_DIMENSIONS} from '../../constants/common';
+import {
+  INSPECTOR_TABS,
+  MJPEG_STREAM_CHECK_INTERVAL,
+  SESSION_EXPIRY_PROMPT_TIMEOUT,
+} from '../../constants/session-inspector';
+import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {clipboard} from '../../polyfills';
-import {BUTTON} from '../AntdTypes';
 import Commands from './Commands';
 import GestureEditor from './GestureEditor';
 import HeaderButtons from './HeaderButtons';
@@ -29,16 +36,8 @@ import Screenshot from './Screenshot';
 import SelectedElement from './SelectedElement';
 import SessionInfo from './SessionInfo';
 import Source from './Source';
-import {INTERACTION_MODE, SCREENSHOT_INTERACTION_MODE} from './shared';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
-
-const MIN_WIDTH = 870;
-const MIN_HEIGHT = 610;
-const MAX_IMAGE_WIDTH_WINDOW_FRACTION = 0.4;
-
-const MJPEG_STREAM_CHECK_INTERVAL = 1000;
-const SESSION_EXPIRY_PROMPT_TIMEOUT = 60 * 60 * 1000; // Give user 1 hour to reply
 
 const downloadFile = (href, filename) => {
   let element = document.createElement('a');
@@ -72,8 +71,8 @@ const Inspector = (props) => {
     quitSession,
     screenshotInteractionMode,
     visibleCommandMethod,
-    selectedInteractionMode,
-    selectInteractionMode,
+    selectedInspectorTab,
+    selectInspectorTab,
     setVisibleCommandResult,
     setUserWaitTimeout,
     showKeepAlivePrompt,
@@ -132,7 +131,7 @@ const Inspector = (props) => {
       // get the expected image width if the image would fill the screenshot box height
       const attemptedImgWidth = (screenshotRect.height / imgRect.height) * imgRect.width;
       // get the maximum image width as a fraction of the current window width
-      const maxImgWidth = window.innerWidth * MAX_IMAGE_WIDTH_WINDOW_FRACTION;
+      const maxImgWidth = window.innerWidth * WINDOW_DIMENSIONS.MAX_IMAGE_WIDTH_FRACTION;
       const curMaxImgWidth = Math.min(maxImgWidth, attemptedImgWidth);
       screenshotBox.style.maxWidth = `${curMaxImgWidth}px`;
     } else if (imgRect.width < screenshotRect.width) {
@@ -179,10 +178,13 @@ const Inspector = (props) => {
     const {applyClientMethod, getSavedActionFramework, runKeepAliveLoop, setSessionTime} = props;
     const curHeight = window.innerHeight;
     const curWidth = window.innerWidth;
-    const needsResize = curHeight < MIN_HEIGHT || curWidth < MIN_WIDTH;
+    const needsResize =
+      curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT || curWidth < WINDOW_DIMENSIONS.MIN_WIDTH;
     if (!didInitialResize.current && needsResize) {
-      const newWidth = curWidth < MIN_WIDTH ? MIN_WIDTH : curWidth;
-      const newHeight = curHeight < MIN_HEIGHT ? MIN_HEIGHT : curHeight;
+      const newWidth =
+        curWidth < WINDOW_DIMENSIONS.MIN_WIDTH ? WINDOW_DIMENSIONS.MIN_WIDTH : curWidth;
+      const newHeight =
+        curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT ? WINDOW_DIMENSIONS.MIN_HEIGHT : curHeight;
       // resize width to something sensible for using the inspector on first run
       window.resizeTo(newWidth, newHeight);
     }
@@ -295,13 +297,13 @@ const Inspector = (props) => {
       </div>
       <div id="sourceTreeContainer" className={InspectorStyles['interaction-tab-container']}>
         <Tabs
-          activeKey={selectedInteractionMode}
+          activeKey={selectedInspectorTab}
           size="small"
-          onChange={(tab) => selectInteractionMode(tab)}
+          onChange={(tab) => selectInspectorTab(tab)}
           items={[
             {
               label: t('Source'),
-              key: INTERACTION_MODE.SOURCE,
+              key: INSPECTOR_TABS.SOURCE,
               children: (
                 <div className="action-row">
                   <div className="action-col">
@@ -364,7 +366,7 @@ const Inspector = (props) => {
             },
             {
               label: t('Commands'),
-              key: INTERACTION_MODE.COMMANDS,
+              key: INSPECTOR_TABS.COMMANDS,
               children: (
                 <Card
                   title={
@@ -380,7 +382,7 @@ const Inspector = (props) => {
             },
             {
               label: t('Gestures'),
-              key: INTERACTION_MODE.GESTURES,
+              key: INSPECTOR_TABS.GESTURES,
               children: isGestureEditorVisible ? (
                 <Card
                   title={
@@ -407,12 +409,12 @@ const Inspector = (props) => {
             },
             {
               label: t('Recorder'),
-              key: INTERACTION_MODE.RECORDER,
+              key: INSPECTOR_TABS.RECORDER,
               children: <Recorder {...props} />,
             },
             {
               label: t('Session Information'),
-              key: INTERACTION_MODE.SESSION_INFO,
+              key: INSPECTOR_TABS.SESSION_INFO,
               children: (
                 <Card
                   title={

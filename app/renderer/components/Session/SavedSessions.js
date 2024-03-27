@@ -3,11 +3,9 @@ import {Button, Col, Row, Table} from 'antd';
 import moment from 'moment';
 import React from 'react';
 
+import {SAVED_SESSIONS_TABLE_VALUES} from '../../constants/session-builder';
 import FormattedCaps from './FormattedCaps';
 import SessionStyles from './Session.css';
-
-const DATE_COLUMN_WIDTH = '25%';
-const ACTIONS_COLUMN_WIDTH = '106px';
 
 const dataSource = (savedSessions, t) => {
   if (!savedSessions) {
@@ -80,12 +78,12 @@ const SavedSessions = (props) => {
       title: t('Created'),
       dataIndex: 'date',
       key: 'date',
-      width: DATE_COLUMN_WIDTH,
+      width: SAVED_SESSIONS_TABLE_VALUES.DATE_COLUMN_WIDTH,
     },
     {
       title: t('Actions'),
       key: 'action',
-      width: ACTIONS_COLUMN_WIDTH,
+      width: SAVED_SESSIONS_TABLE_VALUES.ACTIONS_COLUMN_WIDTH,
       render: (_, record) => (
         <div>
           <Button
