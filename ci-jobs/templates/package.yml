@@ -23,7 +23,7 @@ jobs:
         persistCredentials: true
       - task: UseNode@1
         inputs:
-          versionSpec: '20.x'
+          version: '20.x'
       - script: npm ci
         displayName: Install dependencies
       - script: npm run build
