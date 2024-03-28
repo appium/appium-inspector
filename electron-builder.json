@@ -48,9 +48,6 @@
     "target": ["nsis", "zip"],
     "icon": "build/icon.ico"
   },
-  "nsisWeb": {
-    "oneClick": false
-  },
   "nsis": {
     "oneClick": false
   },
