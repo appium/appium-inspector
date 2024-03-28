@@ -6,6 +6,7 @@
     "output": "release"
   },
   "files": ["dist/", "main.js", "main.js.map"],
+  "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
   "fileAssociations": [
     {
       "ext": "appiumsession",
@@ -28,7 +29,6 @@
     ]
   },
   "dmg": {
-    "artifactName": "${productName}-mac-${version}.${ext}",
     "contents": [
       {
         "x": 410,
@@ -44,7 +44,6 @@
     ]
   },
   "win": {
-    "artifactName": "${productName}-windows-${version}-${arch}.${ext}",
     "target": ["nsis", "zip"],
     "icon": "build/icon.ico"
   },
@@ -52,7 +51,6 @@
     "oneClick": false
   },
   "linux": {
-    "artifactName": "${productName}-linux-${version}.${ext}",
     "target": ["AppImage"],
     "category": "Development"
   },
