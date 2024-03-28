@@ -39,7 +39,7 @@
     "oneClick": false
   },
   "linux": {
-    "target": ["AppImage"],
+    "target": ["AppImage", "tar.gz"],
     "category": "Development"
   },
   "publish": {
