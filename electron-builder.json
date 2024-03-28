@@ -5,7 +5,7 @@
   "directories": {
     "output": "release"
   },
-  "files": ["dist/", "node_modules/**/*", "main.js", "main.js.map", "package.json"],
+  "files": ["dist/", "main.js", "main.js.map"],
   "fileAssociations": [
     {
       "ext": "appiumsession",
