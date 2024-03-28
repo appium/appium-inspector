@@ -5,10 +5,11 @@
   "directories": {
     "output": "release"
   },
+  "files": ["dist/", "node_modules/**/*", "main.js", "main.js.map", "package.json"],
   "fileAssociations": [
     {
       "ext": "appiumsession",
-      "name": "Appium",
+      "name": "Appium Session",
       "role": "Editor",
       "icon": "./build/icon.ico"
     }
@@ -42,7 +43,6 @@
       }
     ]
   },
-  "files": ["dist/", "node_modules/**/*", "main.js", "main.js.map", "package.json"],
   "win": {
     "artifactName": "${productName}-windows-${version}-${arch}.${ext}",
     "target": ["nsis", "zip"],
