@@ -7,7 +7,7 @@ parameters:
   pool: ''
   xvfb: false
   target: ''
-  buildScript: 'npx electron-builder build --publish always'
+  buildScript: 'npx electron-builder build --x64 --arm64 --publish always'
 jobs:
   - job: ${{parameters.name}}
     pool: ${{parameters.pool}}
@@ -21,9 +21,9 @@ jobs:
     steps:
       - checkout: self
         persistCredentials: true
-      - task: NodeTool@0
+      - task: UseNode@1
         inputs:
-          versionSpec: '16.x'
+          version: '20.x'
       - script: npm ci
         displayName: Install dependencies
       - script: npm run build
