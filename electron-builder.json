@@ -11,8 +11,7 @@
     {
       "ext": "appiumsession",
       "name": "Appium Session",
-      "role": "Editor",
-      "icon": "./build/icon.ico"
+      "role": "Editor"
     }
   ],
   "mac": {
@@ -44,8 +43,7 @@
     ]
   },
   "win": {
-    "target": ["nsis", "zip"],
-    "icon": "build/icon.ico"
+    "target": ["nsis", "zip"]
   },
   "nsis": {
     "oneClick": false
