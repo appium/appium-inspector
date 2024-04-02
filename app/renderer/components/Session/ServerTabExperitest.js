@@ -1,10 +1,8 @@
 import {Col, Form, Input, Row} from 'antd';
 import React from 'react';
 
+import {PROVIDER_VALUES} from '../../constants/session-builder';
 import SessionStyles from './Session.css';
-
-const accessKeyPlaceholder = 'accessKey';
-const placeholderUrl = 'https://example.experitest.com';
 
 const ServerTabExperitest = ({server, setServerParam, t}) => (
   <Form>
@@ -14,7 +12,7 @@ const ServerTabExperitest = ({server, setServerParam, t}) => (
           <Input
             className={SessionStyles.customServerInputLeft}
             id="ExperitestServerUrl"
-            placeholder={placeholderUrl}
+            placeholder={PROVIDER_VALUES.EXPERITEST_URL}
             addonBefore={t('experitestUrl')}
             value={server.experitest.url}
             onChange={(evt) => setServerParam('url', evt.target.value)}
@@ -26,7 +24,7 @@ const ServerTabExperitest = ({server, setServerParam, t}) => (
           <Input
             className={SessionStyles.customServerInputLeft}
             id="ExperitestServerAccessKey"
-            placeholder={accessKeyPlaceholder}
+            placeholder={PROVIDER_VALUES.EXPERITEST_ACCESS_KEY}
             addonBefore={t('experitestAccessKey')}
             value={server.experitest.accessKey}
             onChange={(evt) => setServerParam('accessKey', evt.target.value)}

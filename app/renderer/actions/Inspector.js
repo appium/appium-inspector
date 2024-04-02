@@ -3,10 +3,16 @@ import {v4 as UUID} from 'uuid';
 
 import i18n from '../../configs/i18next.config.renderer';
 import {SAVED_FRAMEWORK, SET_SAVED_GESTURES, getSetting, setSetting} from '../../shared/settings';
-import {APP_MODE, getLocators} from '../components/Inspector/shared';
-import AppiumClient, {NATIVE_APP} from '../lib/appium-client';
+import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
+import AppiumClient from '../lib/appium-client';
 import frameworks from '../lib/client-frameworks';
-import {xmlToJSON} from '../util';
+import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation';
+import {
+  domParser,
+  findDOMNodeByPath,
+  findJSONElementByPath,
+  xmlToJSON,
+} from '../utils/source-parsing';
 import {showError} from './Session';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
@@ -19,6 +25,7 @@ export const SET_INTERACTIONS_NOT_AVAILABLE = 'SET_INTERACTIONS_NOT_AVAILABLE';
 export const METHOD_CALL_REQUESTED = 'METHOD_CALL_REQUESTED';
 export const METHOD_CALL_DONE = 'METHOD_CALL_DONE';
 export const SET_EXPANDED_PATHS = 'SET_EXPANDED_PATHS';
+export const SET_OPTIMAL_LOCATORS = 'SET_OPTIMAL_LOCATORS';
 export const SELECT_HOVERED_ELEMENT = 'SELECT_HOVERED_ELEMENT';
 export const UNSELECT_HOVERED_ELEMENT = 'UNSELECT_HOVERED_ELEMENT';
 
@@ -67,7 +74,7 @@ export const CLEAR_COORD_ACTION = 'CLEAR_COORD_ACTION';
 export const PROMPT_KEEP_ALIVE = 'PROMPT_KEEP_ALIVE';
 export const HIDE_PROMPT_KEEP_ALIVE = 'HIDE_PROMPT_KEEP_ALIVE';
 
-export const SELECT_INTERACTION_MODE = 'SELECT_INTERACTION_MODE';
+export const SELECT_INSPECTOR_TAB = 'SELECT_INSPECTOR_TAB';
 
 export const ENTERING_COMMAND_ARGS = 'ENTERING_COMMAND_ARGS';
 export const CANCEL_PENDING_COMMAND = 'CANCEL_PENDING_COMMAND';
@@ -115,12 +122,12 @@ const findElement = _.debounce(async function (strategyMap, dispatch, getState, 
       strategy,
       selector,
     });
-    let {elementId, variableName, variableType} = await action(dispatch, getState);
+    let {elementId} = await action(dispatch, getState);
 
-    // Set the elementId, variableName and variableType for the selected element
+    // Set the elementId for the selected element
     // (check first that the selectedElementPath didn't change, to avoid race conditions)
     if (elementId && getState().inspector.selectedElementPath === path) {
-      return dispatch({type: SET_SELECTED_ELEMENT_ID, elementId, variableName, variableType});
+      return dispatch({type: SET_SELECTED_ELEMENT_ID, elementId});
     }
   }
 
@@ -129,9 +136,12 @@ const findElement = _.debounce(async function (strategyMap, dispatch, getState, 
 
 export function selectElement(path) {
   return async (dispatch, getState) => {
+    const {sourceJSON, sourceXML, expandedPaths, currentContext, automationName} =
+      getState().inspector;
+    const isNative = currentContext === NATIVE_APP;
     // Set the selected element in the source tree
-    dispatch({type: SELECT_ELEMENT, path});
-    const {selectedElement, sourceXML, expandedPaths} = getState().inspector;
+    const selectedElement = findJSONElementByPath(path, sourceJSON);
+    dispatch({type: SELECT_ELEMENT, selectedElement});
 
     // Expand all of this element's ancestors so that it's visible in the source tree
     // Make a copy of the array to avoid state mutation
@@ -146,9 +156,9 @@ export function selectElement(path) {
     }
     dispatch({type: SET_EXPANDED_PATHS, paths: copiedExpandedPaths});
 
-    // Find the optimal selection strategy. If none found, fall back to XPath.
-    const strategyMap = _.toPairs(getLocators(selectedElement.attributes, sourceXML));
-    strategyMap.push(['xpath', selectedElement.xpath]);
+    // Calculate the recommended locator strategies
+    const strategyMap = getSuggestedLocators(selectedElement, sourceXML, isNative, automationName);
+    dispatch({type: SET_OPTIMAL_LOCATORS, strategyMap});
 
     // Debounce find element so that if another element is selected shortly after, cancel the previous search
     await findElement(strategyMap, dispatch, getState, path);
@@ -186,8 +196,10 @@ export function unselectHoveredCentroid() {
 }
 
 export function selectHoveredElement(path) {
-  return (dispatch) => {
-    dispatch({type: SELECT_HOVERED_ELEMENT, path});
+  return (dispatch, getState) => {
+    const {sourceJSON} = getState().inspector;
+    const hoveredElement = findJSONElementByPath(path, sourceJSON);
+    dispatch({type: SELECT_HOVERED_ELEMENT, hoveredElement});
   };
 }
 
@@ -249,7 +261,7 @@ export function applyClientMethod(params) {
           type: SET_SOURCE_AND_SCREENSHOT,
           contexts,
           currentContext,
-          source: source && xmlToJSON(source),
+          sourceJSON: xmlToJSON(source),
           sourceXML: source,
           screenshot,
           windowSize,
@@ -489,30 +501,30 @@ export function setLocatorTestElement(elementId) {
  * Given an element ID found through search, and its bounds,
  * attempt to find and select this element in the source tree
  */
-export function selectLocatedElement(source, bounds, id) {
+export function selectLocatedElement(sourceJSON, sourceXML, bounds, id) {
   const UPPER_FILTER_LIMIT = 10;
 
   // Parse the source tree and find all nodes whose bounds match the expected bounds
-  // Return the path + xpath of each node
+  // Return the path of each node
   function findPathsMatchingBounds() {
-    if (!bounds || !source.children || !source.children[0].attributes) {
+    if (!bounds || !sourceJSON.children || !sourceJSON.children[0].attributes) {
       return null;
     }
-    if (source.children[0].attributes.bounds) {
+    if (sourceJSON.children[0].attributes.bounds) {
       const [endX, endY] = [
         bounds.location.x + bounds.size.width,
         bounds.location.y + bounds.size.height,
       ];
       const coords = `[${bounds.location.x},${bounds.location.y}][${endX},${endY}]`;
-      return findPathsFromCoords(source.children, coords);
-    } else if (source.children[0].attributes.x) {
+      return findPathsFromCoords(sourceJSON.children, coords);
+    } else if (sourceJSON.children[0].attributes.x) {
       const combinedBounds = {
         x: String(bounds.location.x),
         y: String(bounds.location.y),
         height: String(bounds.size.height),
         width: String(bounds.size.width),
       };
-      return findPathsFromBounds(source.children, combinedBounds);
+      return findPathsFromBounds(sourceJSON.children, combinedBounds);
     }
     return null;
   }
@@ -522,7 +534,7 @@ export function selectLocatedElement(source, bounds, id) {
     let collectedPaths = [];
     for (const tree of trees) {
       if (tree.attributes.bounds === coords) {
-        collectedPaths.push([tree.path, tree.xpath]);
+        collectedPaths.push(tree.path);
       }
       if (tree.children.length) {
         collectedPaths.push(...findPathsFromCoords(tree.children, coords));
@@ -541,7 +553,7 @@ export function selectLocatedElement(source, bounds, id) {
         tree.attributes.height === bounds.height &&
         tree.attributes.width === bounds.width
       ) {
-        collectedPaths.push([tree.path, tree.xpath]);
+        collectedPaths.push(tree.path);
       }
       if (tree.children.length) {
         collectedPaths.push(...findPathsFromBounds(tree.children, bounds));
@@ -557,21 +569,24 @@ export function selectLocatedElement(source, bounds, id) {
       return null;
     }
     if (foundPaths.length === 1) {
-      return foundPaths[0][0];
+      return foundPaths[0];
     } else if (foundPaths.length !== 0 && foundPaths.length <= UPPER_FILTER_LIMIT) {
       return await findElementWithMatchingId(foundPaths, dispatch, getState);
     }
     return null;
   }
 
-  // Calls Appium findElement for each provided xpath, and returns the path
-  // of the element whose ID matches the expected ID
+  // For each provided path, get its xpath and call Appium findElement
+  // Return the path of the element whose ID matches the expected ID
   async function findElementWithMatchingId(foundPaths, dispatch, getState) {
+    const sourceDoc = domParser.parseFromString(sourceXML);
     for (const path of foundPaths) {
-      const action = callClientMethod({strategy: 'xpath', selector: path[1]});
+      const domNode = findDOMNodeByPath(path, sourceDoc);
+      const xpath = getOptimalXPath(sourceDoc, domNode);
+      const action = callClientMethod({strategy: 'xpath', selector: xpath});
       const {el} = await action(dispatch, getState);
       if (el && el.elementId === id) {
-        return path[0];
+        return path;
       }
     }
     return null;
@@ -690,9 +705,9 @@ export function clearCoordAction() {
   };
 }
 
-export function selectInteractionMode(interaction) {
+export function selectInspectorTab(interaction) {
   return (dispatch) => {
-    dispatch({type: SELECT_INTERACTION_MODE, interaction});
+    dispatch({type: SELECT_INSPECTOR_TAB, interaction});
   };
 }
 

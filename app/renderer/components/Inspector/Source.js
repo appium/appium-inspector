@@ -1,28 +1,17 @@
 import {Spin, Tree} from 'antd';
 import React from 'react';
 
+import {IMPORTANT_SOURCE_ATTRS} from '../../constants/source';
 import InspectorStyles from './Inspector.css';
 import LocatorTestModal from './LocatorTestModal';
 import SiriCommandModal from './SiriCommandModal';
-
-const IMPORTANT_ATTRS = [
-  'name',
-  'content-desc',
-  'resource-id',
-  'AXDescription',
-  'AXIdentifier',
-  'text',
-  'label',
-  'value',
-  'id',
-];
 
 /**
  * Shows the 'source' of the app as a Tree
  */
 const Source = (props) => {
   const {
-    source,
+    sourceJSON,
     sourceError,
     setExpandedPaths,
     expandedPaths,
@@ -39,7 +28,7 @@ const Source = (props) => {
     let attrs = [];
 
     for (let attr of Object.keys(attributes)) {
-      if ((IMPORTANT_ATTRS.includes(attr) && attributes[attr]) || showAllAttrs) {
+      if ((IMPORTANT_SOURCE_ATTRS.includes(attr) && attributes[attr]) || showAllAttrs) {
         attrs.push(
           <span key={attr}>
             &nbsp;
@@ -84,11 +73,11 @@ const Source = (props) => {
     }));
   };
 
-  const treeData = source && recursive(source);
+  const treeData = sourceJSON && recursive(sourceJSON);
 
   return (
     <div id="sourceContainer" className={InspectorStyles['tree-container']} tabIndex="0">
-      {!source && !sourceError && <i>{t('Gathering initial app source…')}</i>}
+      {!sourceJSON && !sourceError && <i>{t('Gathering initial app source…')}</i>}
       {sourceError && t('couldNotObtainSource', {errorMsg: JSON.stringify(sourceError)})}
       {/* Show loading indicator in MJPEG mode if a method call is in progress and source refresh is on */}
       <Spin

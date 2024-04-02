@@ -2,7 +2,7 @@ import {AimOutlined, ClearOutlined, MenuUnfoldOutlined, SendOutlined} from '@ant
 import {Alert, Badge, Button, Input, List, Row, Space, Spin, Tooltip} from 'antd';
 import React, {useRef} from 'react';
 
-import {ALERT} from '../AntdTypes';
+import {ALERT} from '../../constants/antd-types';
 import InspectorStyles from './Inspector.css';
 
 const LocatedElements = (props) => {
@@ -15,7 +15,8 @@ const LocatedElements = (props) => {
     isFindingLocatedElementInSource,
     searchedForElementBounds,
     selectLocatedElement,
-    source,
+    sourceJSON,
+    sourceXML,
     driver,
     t,
   } = props;
@@ -27,8 +28,7 @@ const LocatedElements = (props) => {
     const idLocatorAutocompletionDisabled =
       driver.client.capabilities.disableIdLocatorAutocompletion;
     if (
-      automationName &&
-      automationName.toLowerCase() === 'uiautomator2' &&
+      automationName === 'uiautomator2' &&
       locatorTestStrategy === 'id' &&
       !locatorTestValue.includes(':id/') &&
       !idLocatorAutocompletionDisabled
@@ -93,7 +93,12 @@ const LocatedElements = (props) => {
                     disabled={!locatorTestElement}
                     icon={<MenuUnfoldOutlined />}
                     onClick={() =>
-                      selectLocatedElement(source, searchedForElementBounds, locatorTestElement)
+                      selectLocatedElement(
+                        sourceJSON,
+                        sourceXML,
+                        searchedForElementBounds,
+                        locatorTestElement,
+                      )
                     }
                   />
                 </Tooltip>

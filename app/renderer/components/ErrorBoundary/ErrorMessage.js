@@ -2,12 +2,11 @@ import {CopyOutlined} from '@ant-design/icons';
 import {Alert, Button, Tooltip} from 'antd';
 import React from 'react';
 
+import {ALERT} from '../../constants/antd-types';
+import {LINKS} from '../../constants/common';
 import {shell} from '../../polyfills';
-import {withTranslation} from '../../util';
-import {ALERT} from '../AntdTypes';
+import {withTranslation} from '../../utils/other';
 import styles from './ErrorMessage.css';
-
-const CREATE_ISSUE_URL = 'https://github.com/appium/appium-inspector/issues/new/choose';
 
 const ErrorMessage = ({error, copyTrace, t}) => (
   <div className={styles.errorMessage}>
@@ -22,8 +21,8 @@ const ErrorMessage = ({error, copyTrace, t}) => (
       description={
         <>
           {t('Please report this issue at:')}&nbsp;
-          <a onClick={(e) => e.preventDefault() || shell.openExternal(CREATE_ISSUE_URL)}>
-            {CREATE_ISSUE_URL}
+          <a onClick={(e) => e.preventDefault() || shell.openExternal(LINKS.CREATE_ISSUE)}>
+            {LINKS.CREATE_ISSUE}
           </a>
           <br />
           {t('Full error trace:')}

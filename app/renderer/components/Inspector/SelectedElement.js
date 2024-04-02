@@ -10,16 +10,11 @@ import {Alert, Button, Col, Input, Row, Spin, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import React, {useRef} from 'react';
 
+import {ALERT, ROW} from '../../constants/antd-types';
+import {LINKS} from '../../constants/common';
+import {NATIVE_APP} from '../../constants/session-inspector';
 import {clipboard, shell} from '../../polyfills';
-import {ALERT, ROW} from '../AntdTypes';
 import styles from './Inspector.css';
-import {getLocators} from './shared';
-
-const NATIVE_APP = 'NATIVE_APP';
-const CLASS_CHAIN_DOCS_URL =
-  'https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules';
-const PREDICATE_DOCS_URL =
-  'https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules';
 
 /**
  * Shows details of the currently selected element and shows methods that can
@@ -34,7 +29,6 @@ const SelectedElement = (props) => {
     isFindingElementsTimes,
     selectedElement,
     selectedElementId,
-    sourceXML,
     elementInteractionsNotAvailable,
     selectedElementSearchInProgress,
     t,
@@ -42,7 +36,6 @@ const SelectedElement = (props) => {
 
   const sendKeys = useRef();
 
-  const {attributes, classChain, predicateString, xpath} = selectedElement;
   const isDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
 
   const selectedElementTableCell = (text, copyToClipBoard) => {
@@ -61,13 +54,25 @@ const SelectedElement = (props) => {
     }
   };
 
+  const locatorStrategyDocsLink = (name, docsLink) => (
+    <span>
+      {name}
+      <strong>
+        <a onClick={(e) => e.preventDefault() || shell.openExternal(docsLink)}>
+          <br />
+          (docs)
+        </a>
+      </strong>
+    </span>
+  );
+
   // Get the columns for the attributes table
   let attributeColumns = [
     {
       title: t('Attribute'),
       dataIndex: 'name',
       key: 'name',
-      width: 100,
+      fixed: 'left',
       render: (text) => selectedElementTableCell(text, false),
     },
     {
@@ -79,13 +84,16 @@ const SelectedElement = (props) => {
   ];
 
   // Get the data for the attributes table
-  let attrArray = _.toPairs(attributes).filter(([key]) => key !== 'path');
-  let dataSource = attrArray.map(([key, value]) => ({
+  let dataSource = _.toPairs(selectedElement.attributes).map(([key, value]) => ({
     key,
     value,
     name: key,
   }));
-  dataSource.unshift({key: 'elementId', value: selectedElementId, name: 'elementId'});
+  dataSource.unshift({
+    key: 'elementId',
+    value: selectedElementSearchInProgress ? <Spin /> : selectedElementId,
+    name: 'elementId',
+  });
 
   // Get the columns for the strategies table
   let findColumns = [
@@ -93,7 +101,7 @@ const SelectedElement = (props) => {
       title: t('Find By'),
       dataIndex: 'find',
       key: 'find',
-      width: 100,
+      fixed: 'left',
       render: (text) => selectedElementTableCell(text, false),
     },
     {
@@ -109,73 +117,35 @@ const SelectedElement = (props) => {
       title: t('Time'),
       dataIndex: 'time',
       key: 'time',
-      align: 'right',
-      width: 100,
+      fixed: 'right',
       render: (text) => selectedElementTableCell(text, false),
     });
   }
 
   // Get the data for the strategies table
-  let findDataSource = _.toPairs(getLocators(attributes, sourceXML)).map(([key, selector]) => ({
+  let findDataSource = selectedElement.strategyMap.map(([key, selector]) => ({
     key,
     selector,
     find: key,
   }));
 
-  // If XPath is the only provided data source, warn the user about it's brittleness
-  let showXpathWarning = false;
-  if (findDataSource.length === 0) {
-    showXpathWarning = true;
+  // Add documentation links to supported strategies
+  for (const locator of findDataSource) {
+    switch (locator.key) {
+      case '-ios class chain':
+        locator.find = locatorStrategyDocsLink(locator.key, LINKS.CLASS_CHAIN_DOCS);
+        break;
+      case '-ios predicate string':
+        locator.find = locatorStrategyDocsLink(locator.key, LINKS.PREDICATE_DOCS);
+        break;
+      case '-android uiautomator':
+        locator.find = locatorStrategyDocsLink(locator.key, LINKS.UIAUTOMATOR_DOCS);
+        break;
+    }
   }
 
-  // Add class chain to the data source as well
-  if (classChain && currentContext === NATIVE_APP) {
-    const classChainText = (
-      <span>
-        -ios class chain
-        <strong>
-          <a onClick={(e) => e.preventDefault() || shell.openExternal(CLASS_CHAIN_DOCS_URL)}>
-            &nbsp;(docs)
-          </a>
-        </strong>
-      </span>
-    );
-
-    findDataSource.push({
-      key: '-ios class chain',
-      find: classChainText,
-      selector: classChain,
-    });
-  }
-
-  // Add predicate string to the data source as well
-  if (predicateString && currentContext === NATIVE_APP) {
-    const predicateStringText = (
-      <span>
-        -ios predicate string
-        <strong>
-          <a onClick={(e) => e.preventDefault() || shell.openExternal(PREDICATE_DOCS_URL)}>
-            &nbsp;(docs)
-          </a>
-        </strong>
-      </span>
-    );
-
-    findDataSource.push({
-      key: '-ios predicate string',
-      find: predicateStringText,
-      selector: predicateString,
-    });
-  }
-
-  // Add XPath to the data source as well
-  if (xpath) {
-    findDataSource.push({
-      key: 'xpath',
-      find: 'xpath',
-      selector: xpath,
-    });
-  }
+  // If XPath is the only optimal selector, warn the user about its brittleness
+  const showXpathWarning = findDataSource.length === 1;
 
   // Replace table data with table data that has the times
   if (findElementsExecutionTimes.length > 0) {
@@ -256,13 +226,13 @@ const SelectedElement = (props) => {
         </Button.Group>
       </Row>
       {findDataSource.length > 0 && (
-        <Row>
+        <Row className={styles.selectedElemContentRow}>
           <Spin spinning={isFindingElementsTimes}>
             <Table
               columns={findColumns}
               dataSource={findDataSource}
               size="small"
-              tableLayout="fixed"
+              scroll={{x: 'max-content'}}
               pagination={false}
             />
           </Spin>
@@ -276,11 +246,12 @@ const SelectedElement = (props) => {
         </div>
       )}
       {dataSource.length > 0 && (
-        <Row>
+        <Row className={styles.selectedElemContentRow}>
           <Table
             columns={attributeColumns}
             dataSource={dataSource}
             size="small"
+            scroll={{x: 'max-content'}}
             pagination={false}
           />
         </Row>

@@ -2,7 +2,7 @@ import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 import {Button, Checkbox, Col, Form, Input, Modal, Row, Select, Tooltip} from 'antd';
 import React, {useEffect, useRef} from 'react';
 
-import {ROW} from '../AntdTypes';
+import {ROW} from '../../constants/antd-types';
 import CapabilityControl from './CapabilityControl';
 import FormattedCaps from './FormattedCaps';
 import SessionStyles from './Session.css';

@@ -1,6 +1,6 @@
 {
   "name": "appium-inspector",
-  "version": "2024.3.1",
+  "version": "2024.3.4",
   "description": "An app inspector for use with an Appium server",
   "repository": {
     "type": "git",
@@ -62,84 +62,6 @@
     "printWidth": 100,
     "singleQuote": true
   },
-  "build": {
-    "productName": "Appium Inspector",
-    "appId": "io.appium.inspector",
-    "asar": true,
-    "directories": {
-      "output": "release"
-    },
-    "fileAssociations": [
-      {
-        "ext": "appiumsession",
-        "name": "Appium",
-        "role": "Editor",
-        "icon": "./build/icon.ico"
-      }
-    ],
-    "mac": {
-      "category": "public.app-category.developer-tools",
-      "target": [
-        {
-          "target": "dmg",
-          "arch": "universal"
-        },
-        {
-          "target": "zip",
-          "arch": "universal"
-        }
-      ]
-    },
-    "dmg": {
-      "artifactName": "${productName}-mac-${version}.${ext}",
-      "contents": [
-        {
-          "x": 410,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
-        },
-        {
-          "x": 130,
-          "y": 150,
-          "type": "file"
-        }
-      ]
-    },
-    "files": [
-      "dist/",
-      "node_modules/**/*",
-      "main.js",
-      "main.js.map",
-      "package.json"
-    ],
-    "win": {
-      "artifactName": "${productName}-windows-${version}-${arch}.${ext}",
-      "target": [
-        "nsis",
-        "zip"
-      ],
-      "icon": "build/icon.ico"
-    },
-    "nsisWeb": {
-      "oneClick": false
-    },
-    "nsis": {
-      "oneClick": false
-    },
-    "linux": {
-      "artifactName": "${productName}-linux-${version}.${ext}",
-      "target": [
-        "AppImage"
-      ],
-      "category": "Development"
-    },
-    "publish": {
-      "provider": "github",
-      "owner": "appium",
-      "vPrefixedTagName": true
-    }
-  },
   "bin": {
     "electron": "./node_modules/.bin/electron"
   },
@@ -152,10 +74,10 @@
     "uuid": "Obsolete: can be replaced with crypto.randomUUID in Electron 14+"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "2.2.1",
+    "@reduxjs/toolkit": "2.2.2",
     "@xmldom/xmldom": "0.8.10",
     "antd": "4.24.15",
-    "axios": "1.6.7",
+    "axios": "1.6.8",
     "bluebird": "3.7.2",
     "cheerio": "1.0.0-rc.10",
     "electron-log": "4.4.8",
@@ -198,13 +120,13 @@
     "@appium/eslint-config-appium": "8.0.5",
     "@appium/fake-driver": "5.5.1",
     "@appium/support": "4.2.2",
-    "@babel/core": "7.24.0",
-    "@babel/eslint-parser": "7.23.10",
+    "@babel/core": "7.24.3",
+    "@babel/eslint-parser": "7.24.1",
     "@babel/eslint-plugin": "7.23.5",
     "@babel/plugin-proposal-class-properties": "7.18.6",
-    "@babel/plugin-transform-runtime": "7.24.0",
-    "@babel/preset-env": "7.24.0",
-    "@babel/preset-react": "7.23.3",
+    "@babel/plugin-transform-runtime": "7.24.3",
+    "@babel/preset-env": "7.24.3",
+    "@babel/preset-react": "7.24.1",
     "@babel/register": "7.23.7",
     "asyncbox": "3.0.0",
     "chai": "4.4.1",
@@ -221,10 +143,10 @@
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-mocha": "10.4.1",
     "eslint-plugin-promise": "6.1.1",
-    "eslint-plugin-react": "7.34.0",
+    "eslint-plugin-react": "7.34.1",
     "eslint-plugin-react-native": "4.1.0",
     "less": "4.2.0",
-    "mocha": "10.3.0",
+    "mocha": "10.4.0",
     "mocha-junit-reporter": "2.2.1",
     "mocha-multi-reporters": "1.5.1",
     "node-libs-browser": "2.2.1",

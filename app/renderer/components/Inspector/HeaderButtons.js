@@ -16,13 +16,11 @@ import {BiCircle, BiSquare} from 'react-icons/bi';
 import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
 import {IoChevronBackOutline} from 'react-icons/io5';
 
+import {BUTTON} from '../../constants/antd-types';
+import {LINKS} from '../../constants/common';
+import {APP_MODE} from '../../constants/session-inspector';
 import {shell} from '../../polyfills';
-import {BUTTON} from '../AntdTypes';
 import InspectorStyles from './Inspector.css';
-import {APP_MODE} from './shared';
-
-const HYBRID_MODE_DOCS_URL =
-  'https://appium.github.io/appium.io/docs/en/writing-running-appium/web/hybrid/';
 
 const HeaderButtons = (props) => {
   const {
@@ -147,8 +145,10 @@ const HeaderButtons = (props) => {
             title={
               <>
                 {t('contextDropdownInfo')}{' '}
-                <a onClick={(e) => e.preventDefault() || shell.openExternal(HYBRID_MODE_DOCS_URL)}>
-                  {HYBRID_MODE_DOCS_URL}
+                <a
+                  onClick={(e) => e.preventDefault() || shell.openExternal(LINKS.HYBRID_MODE_DOCS)}
+                >
+                  {LINKS.HYBRID_MODE_DOCS}
                 </a>
               </>
             }

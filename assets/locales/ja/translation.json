@@ -281,5 +281,6 @@
   "Error Fetching Session URL": "セッションURLの取得に失敗しました",
   "noResultsFound": "一致する結果が見つかりませんでした",
   "invalidCapType": "無効な Capability: {{type}}",
-  "whitespaceDetected": "空白文字で開始または終了します"
+  "whitespaceDetected": "空白文字で開始または終了します",
+  "pcloudyCredentialsRequired": "pCloudy username and api key are required!"
 }

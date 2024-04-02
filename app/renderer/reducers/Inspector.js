@@ -37,7 +37,7 @@ import {
   SELECT_ELEMENT,
   SELECT_HOVERED_CENTROID,
   SELECT_HOVERED_ELEMENT,
-  SELECT_INTERACTION_MODE,
+  SELECT_INSPECTOR_TAB,
   SELECT_TICK_ELEMENT,
   SESSION_DONE,
   SET_ACTION_FRAMEWORK,
@@ -49,6 +49,7 @@ import {
   SET_COORD_END,
   SET_COORD_START,
   SET_EXPANDED_PATHS,
+  SET_OPTIMAL_LOCATORS,
   SET_GESTURE_TAP_COORDS_MODE,
   SET_INTERACTIONS_NOT_AVAILABLE,
   SET_KEEP_ALIVE_INTERVAL,
@@ -82,14 +83,10 @@ import {
   UNSELECT_HOVERED_ELEMENT,
   UNSELECT_TICK_ELEMENT,
 } from '../actions/Inspector';
-import {
-  APP_MODE,
-  INTERACTION_MODE,
-  SCREENSHOT_INTERACTION_MODE,
-} from '../components/Inspector/shared';
+import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
+import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
 
 const DEFAULT_FRAMEWORK = 'java';
-const NATIVE_APP = 'NATIVE_APP';
 
 const INITIAL_STATE = {
   savedGestures: [],
@@ -117,7 +114,7 @@ const INITIAL_STATE = {
   assignedVarCache: {},
   screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
   searchedForElementBounds: null,
-  selectedInteractionMode: INTERACTION_MODE.SOURCE,
+  selectedInspectorTab: INSPECTOR_TABS.SOURCE,
   appMode: APP_MODE.NATIVE,
   mjpegScreenshotUrl: null,
   pendingCommand: null,
@@ -132,17 +129,6 @@ const INITIAL_STATE = {
 
 let nextState;
 
-/**
- * Look up an element in the source with the provided path
- */
-function findElementByPath(path, source) {
-  let selectedElement = source;
-  for (let index of path.split('.')) {
-    selectedElement = selectedElement.children[index];
-  }
-  return {...selectedElement};
-}
-
 export default function inspector(state = INITIAL_STATE, action) {
   switch (action.type) {
     case SET_SOURCE_AND_SCREENSHOT:
@@ -152,7 +138,7 @@ export default function inspector(state = INITIAL_STATE, action) {
         contextsError: action.contextsError,
         currentContext: action.currentContext || NATIVE_APP,
         currentContextError: action.currentContextError,
-        source: action.source,
+        sourceJSON: action.sourceJSON,
         sourceXML: action.sourceXML,
         sourceError: action.sourceError,
         screenshot: action.screenshot,
@@ -184,11 +170,21 @@ export default function inspector(state = INITIAL_STATE, action) {
     case SELECT_ELEMENT:
       return {
         ...state,
-        selectedElement: findElementByPath(action.path, state.source),
-        selectedElementPath: action.path,
+        selectedElement: action.selectedElement,
+        selectedElementPath: action.selectedElement.path,
+        selectedElementId: null,
         selectedElementSearchInProgress: true,
         elementInteractionsNotAvailable: false,
         findElementsExecutionTimes: [],
+      };
+
+    case SET_OPTIMAL_LOCATORS:
+      return {
+        ...state,
+        selectedElement: {
+          ...state.selectedElement,
+          strategyMap: action.strategyMap,
+        },
       };
 
     case UNSELECT_ELEMENT:
@@ -197,8 +193,6 @@ export default function inspector(state = INITIAL_STATE, action) {
         selectedElement: undefined,
         selectedElementPath: null,
         selectedElementId: null,
-        selectedElementVariableName: null,
-        selectedElementVariableType: null,
         selectedElementSearchInProgress: false,
       };
 
@@ -215,8 +209,6 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         selectedElementId: action.elementId,
-        selectedElementVariableName: action.variableName,
-        selectedElementVariableType: action.variableType,
         selectedElementSearchInProgress: false,
         findElementsExecutionTimes: [],
       };
@@ -231,7 +223,7 @@ export default function inspector(state = INITIAL_STATE, action) {
     case SELECT_HOVERED_ELEMENT:
       return {
         ...state,
-        hoveredElement: findElementByPath(action.path, state.source),
+        hoveredElement: action.hoveredElement,
       };
 
     case UNSELECT_HOVERED_ELEMENT:
@@ -313,15 +305,17 @@ export default function inspector(state = INITIAL_STATE, action) {
     case SET_SHOW_BOILERPLATE:
       return {...state, showBoilerplate: action.show};
 
-    case SET_SESSION_DETAILS:
+    case SET_SESSION_DETAILS: {
+      const automationName = action.driver.client.capabilities.automationName;
       return {
         ...state,
         sessionDetails: action.sessionDetails,
         driver: action.driver,
-        automationName: action.driver.client.capabilities.automationName,
+        automationName: automationName && automationName.toLowerCase(),
         appMode: action.mode,
         mjpegScreenshotUrl: action.mjpegScreenshotUrl,
       };
+    }
 
     case SHOW_LOCATOR_TEST_MODAL:
       return {
@@ -478,10 +472,10 @@ export default function inspector(state = INITIAL_STATE, action) {
         showKeepAlivePrompt: false,
       };
 
-    case SELECT_INTERACTION_MODE:
+    case SELECT_INSPECTOR_TAB:
       return {
         ...state,
-        selectedInteractionMode: action.interaction,
+        selectedInspectorTab: action.interaction,
       };
 
     case SET_APP_MODE:

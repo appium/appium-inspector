@@ -24,10 +24,10 @@ import {
   getSetting,
   setSetting,
 } from '../../shared/settings';
-import {APP_MODE} from '../components/Inspector/shared';
+import {APP_MODE} from '../constants/session-inspector';
 import CloudProviders from '../components/Session/CloudProviders';
 import {fs, ipcRenderer, util} from '../polyfills';
-import {addVendorPrefixes} from '../util';
+import {addVendorPrefixes} from '../utils/other';
 import {quitSession, setSessionDetails} from './Inspector';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
@@ -402,17 +402,17 @@ export function newSession(caps, attachSessId = null) {
         host = session.server.pcloudy.hostname;
         port = session.server.pcloudy.port = 443;
         path = session.server.pcloudy.path = '/objectspy/wd/hub';
-        desiredCapabilities.pCloudy_Username =
-          session.server.pcloudy.username || process.env.PCLOUDY_USERNAME;
-        desiredCapabilities.pCloudy_ApiKey =
-          session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
-        if (
-          !(session.server.pcloudy.username || process.env.PCLOUDY_USERNAME) ||
-          !(session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY)
-        ) {
-          showError(new Error('PCLOUDY username and api key are required!'));
+        username = session.server.pcloudy.username || process.env.PCLOUDY_USERNAME;
+        accessKey = session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
+        if (!username || !accessKey) {
+          showError(new Error(i18n.t('pcloudyCredentialsRequired')));
           return false;
         }
+        desiredCapabilities['pcloudy:options'] = {
+          source: 'appiumdesktop',
+          pCloudy_Username: username,
+          pCloudy_ApiKey: accessKey,
+        };
         https = session.server.pcloudy.ssl = true;
         break;
       case ServerTypes.testingbot:
@@ -422,13 +422,12 @@ export function newSession(caps, attachSessId = null) {
         if (!desiredCapabilities['tb:options']) {
           desiredCapabilities['tb:options'] = {};
         }
-        desiredCapabilities['tb:options'].key = session.server.testingbot.key || process.env.TB_KEY;
-        desiredCapabilities['tb:options'].secret =
-          session.server.testingbot.secret || process.env.TB_SECRET;
-        if (
-          !(session.server.testingbot.key || process.env.TB_KEY) ||
-          !(session.server.testingbot.secret || process.env.TB_SECRET)
-        ) {
+        username = session.server.testingbot.username || process.env.TB_KEY;
+        accessKey = session.server.testingbot.accessKey || process.env.TB_SECRET;
+        desiredCapabilities['tb:options'].key = username;
+        desiredCapabilities['tb:options'].secret = accessKey;
+        desiredCapabilities['tb:options'].source = 'appiumdesktop';
+        if (!username || !accessKey) {
           showError(new Error(i18n.t('testingbotCredentialsRequired')));
           return false;
         }
@@ -1065,8 +1064,12 @@ export function addVisibleProvider(provider) {
 
 export function removeVisibleProvider(provider) {
   return async (dispatch, getState) => {
-    let currentProviders = getState().session.visibleProviders;
-    const providers = without(currentProviders, provider);
+    const {serverType, visibleProviders} = getState().session;
+    if (serverType === provider) {
+      const action = changeServerType('remote');
+      await action(dispatch, getState);
+    }
+    const providers = without(visibleProviders, provider);
     await setSetting(VISIBLE_PROVIDERS, providers);
     dispatch({type: SET_PROVIDERS, providers});
   };

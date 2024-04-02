@@ -2,7 +2,7 @@ import {Button, Col, Modal, Row} from 'antd';
 import _ from 'lodash';
 import React from 'react';
 
-import {BUTTON} from '../AntdTypes';
+import {BUTTON} from '../../constants/antd-types';
 import CloudProviders from './CloudProviders';
 import SessionStyles from './Session.css';
 

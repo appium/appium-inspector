@@ -1,16 +1,16 @@
 import {Col, Form, Input, Row} from 'antd';
 import React from 'react';
 
-import {INPUT} from '../AntdTypes';
+import {INPUT} from '../../constants/antd-types';
 
-const testingbotKeyPlaceholder = (t) => {
+const testingbotUsernamePlaceholder = (t) => {
   if (process.env.TB_KEY) {
     return t('usingDataFoundIn', {environmentVariable: 'TB_KEY'});
   }
   return t('yourUsername');
 };
 
-const testingbotSecretPlaceholder = (t) => {
+const testingbotAccessKeyPlaceholder = (t) => {
   if (process.env.TB_SECRET) {
     return t('usingDataFoundIn', {environmentVariable: 'TB_SECRET'});
   }
@@ -24,10 +24,10 @@ const ServerTabTestingbot = ({server, setServerParam, t}) => (
         <Form.Item>
           <Input
             id="testingbotKey"
-            placeholder={testingbotKeyPlaceholder(t)}
+            placeholder={testingbotUsernamePlaceholder(t)}
             addonBefore={t('TestingBot Key')}
-            value={server.testingbot.key}
-            onChange={(e) => setServerParam('key', e.target.value)}
+            value={server.testingbot.username}
+            onChange={(e) => setServerParam('username', e.target.value)}
           />
         </Form.Item>
       </Col>
@@ -36,10 +36,10 @@ const ServerTabTestingbot = ({server, setServerParam, t}) => (
           <Input
             id="testingbotSecret"
             type={INPUT.PASSWORD}
-            placeholder={testingbotSecretPlaceholder(t)}
+            placeholder={testingbotAccessKeyPlaceholder(t)}
             addonBefore={t('TestingBot Secret')}
-            value={server.testingbot.secret}
-            onChange={(e) => setServerParam('secret', e.target.value)}
+            value={server.testingbot.accessKey}
+            onChange={(e) => setServerParam('accessKey', e.target.value)}
           />
         </Form.Item>
       </Col>
