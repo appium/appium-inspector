@@ -2,7 +2,7 @@ import {Menu, app, dialog, shell} from 'electron';
 
 import {languageList} from '../configs/app.config';
 import i18n from '../configs/i18next.config';
-import {checkNewUpdates} from './auto-updater';
+import {checkForUpdates} from './updater';
 import {APPIUM_SESSION_EXTENSION} from './helpers';
 import {launchNewSessionWindow} from './windows';
 
@@ -67,7 +67,7 @@ function optionAbout() {
 function optionCheckForUpdates() {
   return {
     label: t('Check for Updates…'),
-    click: () => checkNewUpdates(true),
+    click: () => checkForUpdates(),
   };
 }
 
