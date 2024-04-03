@@ -1,9 +1,7 @@
 import {dialog} from 'electron';
 import {autoUpdater} from 'electron-updater';
 
-import i18n from '../configs/i18next.config';
-
-const t = (string, params = null) => i18n.t(string, params);
+import {t} from './helpers';
 
 autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = false;
