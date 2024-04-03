@@ -11,11 +11,6 @@ This page aims to act as a reference for issues that may be encountered when usi
 
 Please refer to the [Installation guide](./quickstart/installation.md).
 
-## Auto-updater not working
-
-This is [a known issue](https://github.com/appium/appium-inspector/issues/733) and is planned to be
-fixed in future versions.
-
 ## Cannot start a session using browser Inspector
 
 The reason for this issue is [cross-origin resource sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
