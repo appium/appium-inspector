@@ -3,14 +3,13 @@ import {autoUpdater} from 'electron-updater';
 
 import {t} from './helpers';
 
+const RELEASES_LINK = 'https://github.com/appium/appium-inspector/releases';
+
 autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = false;
 
 autoUpdater.on('error', (error) => {
-  dialog.showErrorBox({
-    title: t('Could not download update'),
-    content: t('updateDownloadFailed', {message: error})
-  });
+  dialog.showErrorBox(t('Could not download update'), t('updateDownloadFailed', {message: error}));
 });
 
 autoUpdater.on('update-not-available', () => {
@@ -22,14 +21,20 @@ autoUpdater.on('update-not-available', () => {
   });
 });
 
-autoUpdater.on('update-available', async ({version, releaseNotes}) => {
+autoUpdater.on('update-available', async ({version, releaseDate}) => {
+  const pubDate = new Date(releaseDate).toDateString();
   const {response} = await dialog.showMessageBox({
     type: 'info',
     message: t('appiumIsAvailable', {name: version}),
     buttons: [t('Install Now'), t('Install Later')],
-    detail: releaseNotes,
+    detail: t('updateDetails', {pubDate, notes: RELEASES_LINK}),
   });
   if (response === 0) {
+    dialog.showMessageBox({
+      type: 'info',
+      buttons: [t('OK')],
+      message: t('updateIsBeingDownloaded'),
+    });
     autoUpdater.downloadUpdate();
   }
 });
