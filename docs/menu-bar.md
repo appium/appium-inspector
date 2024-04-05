@@ -19,13 +19,15 @@ However, there are a few specific options as well:
 
 ## Update Checker
 
-!!! warning
-
-    [This functionality is currently unavailable.](./troubleshooting.md#auto-updater-not-working)
-
 The update checker is available under the _File_ menu (Windows/Linux) or the application menu
 (macOS). It can be used to check if there is a newer version of the Inspector available, and if so,
 it is possible to automatically download and install the latest version.
+
+Updating is supported for the following application formats:
+
+-   macOS: `.dmg`
+-   Windows: `.exe` installer
+-   Linux: `.AppImage`
 
 ## Open/Save Session
 
