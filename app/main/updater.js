@@ -30,6 +30,7 @@ autoUpdater.on('update-available', async ({version, releaseDate}) => {
     detail: t('updateDetails', {pubDate, notes: RELEASES_LINK}),
   });
   if (response === 0) {
+    // download is started without waiting for the dialog box to be dismissed
     dialog.showMessageBox({
       type: 'info',
       buttons: [t('OK')],
