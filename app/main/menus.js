@@ -2,8 +2,8 @@ import {Menu, app, dialog, shell} from 'electron';
 
 import {languageList} from '../configs/app.config';
 import i18n from '../configs/i18next.config';
-import {checkNewUpdates} from './auto-updater';
-import {APPIUM_SESSION_EXTENSION} from './helpers';
+import {checkForUpdates} from './updater';
+import {APPIUM_SESSION_EXTENSION, t} from './helpers';
 import {launchNewSessionWindow} from './windows';
 
 const INSPECTOR_DOCS_URL = 'https://appium.github.io/appium-inspector';
@@ -11,8 +11,6 @@ const APPIUM_DOCS_URL = 'https://appium.io';
 const APPIUM_FORUM_URL = 'https://discuss.appium.io';
 const GITHUB_ISSUES_URL = 'https://github.com/appium/appium-inspector/issues';
 const CROWDIN_URL = 'https://crowdin.com/project/appium-desktop';
-
-const t = (string, params = null) => i18n.t(string, params);
 
 const separator = {type: 'separator'};
 
@@ -40,7 +38,7 @@ async function openFile(mainWindow) {
 
 async function saveAs(mainWindow) {
   const {canceled, filePath} = await dialog.showSaveDialog({
-    title: i18n.t('saveAs'),
+    title: t('saveAs'),
     filters: [{name: 'Appium', extensions: [APPIUM_SESSION_EXTENSION]}],
   });
   if (!canceled) {
@@ -67,7 +65,7 @@ function optionAbout() {
 function optionCheckForUpdates() {
   return {
     label: t('Check for Updates…'),
-    click: () => checkNewUpdates(true),
+    click: () => checkForUpdates(),
   };
 }
 
