@@ -41,7 +41,6 @@
   "Save Server Arguments Preset": "ಸರ್ವರ್ ಆರ್ಗ್ಯುಮೆಂಟ್ಸ್ ಪ್ರಿಸೆಟ್ನ ಸಂಗ್ರಹಿಸಿ",
   "Save": "ಸಂಗ್ರಹಿಸಿ",
   "Cancel": "ರದ್ದು ಮಾಡಿ",
-  "datetimeFormat": "MMM Do YYYY, h:mma",
   "updateDetails": "ಬಿಡುಗಡೆ ದಿನಾಂಕ: {{pubDate}}\n\nಬಿಡುಗಡೆ ಕೈಪತ್ರ: {{notes}}",
   "appiumIsAvailable": "Appium Inspector {{name}} is available",
   "updateIsBeingDownloaded": "ನವೀಕರಣಗಳು ಡೌನ್ಲೋಡ್ ಆಗುತ್ತಿವೆ. ಡೌನ್ಲೋಡ್ ಮುಗಿದ ನಂತರ ನಿಮಗೆ ತಿಳಿಸಲಾಗುವುದು.",

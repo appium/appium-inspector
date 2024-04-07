@@ -41,7 +41,6 @@
   "Save Server Arguments Preset": "पूर्व निर्धारित सर्वर आर्गुमेंट सहेजें",
   "Save": "सहेजें",
   "Cancel": "रद्द करें",
-  "datetimeFormat": "MMM Do YYYY, h:mma",
   "updateDetails": "रिलीज़ की तारीख: {{pubDate}}\n\nरिलीज़ नोट्स: {{notes}}",
   "appiumIsAvailable": "Appium Inspector {{name}} is available",
   "updateIsBeingDownloaded": "अपडेट अब डाउनलोड किया जा रहा है। पूरा होने पर आपको फिर से सूचित किया जाएगा",

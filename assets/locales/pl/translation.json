@@ -41,7 +41,6 @@
   "Save Server Arguments Preset": "Zapisz ustawienia argumentów serwera",
   "Save": "Zapisz",
   "Cancel": "Anuluj",
-  "datetimeFormat": "D MMM YYYY h:mm",
   "updateDetails": "Data wydania: {{pubDate}}\n\nInformacje o wydaniu: {{notes}}",
   "appiumIsAvailable": "Dostępny jest Inspektor Appium {{name}}",
   "updateIsBeingDownloaded": "Aktualizacja jest teraz pobierana. Zostaniesz powiadomiony ponownie po jej zakończeniu",
