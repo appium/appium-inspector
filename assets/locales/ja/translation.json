@@ -41,7 +41,6 @@
   "Save Server Arguments Preset": "サーバー構成を事前設定として保存する",
   "Save": "保存",
   "Cancel": "キャンセル",
-  "datetimeFormat": "YYYY MMM Do, h:mma",
   "updateDetails": "リリース日: {{pubDate}}\n\nリリースノート: {{notes}}",
   "appiumIsAvailable": "Appium Inspector {{name}} が入手可能です",
   "updateIsBeingDownloaded": "更新をダウンロードし始めました。完了し次第、お知らせします。",

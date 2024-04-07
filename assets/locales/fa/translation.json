@@ -41,7 +41,6 @@
   "Save Server Arguments Preset": "ذخیره آرگومان های از پیش تعیین شده سرور",
   "Save": "ذخیره سازی",
   "Cancel": "انصراف",
-  "datetimeFormat": "MMM یا YYYY و یا h:mma",
   "updateDetails": "تاریخ انتشار: {{pubDate}}\n\nیادداشت انتشار: {{notes}}",
   "appiumIsAvailable": "نرم‌افزار Appium Inspector {{name}} در دسترس است",
   "updateIsBeingDownloaded": "بروزرسانی دانلود شده است. هنگام تکمیل به شما اطلاع داده خواهد شد",

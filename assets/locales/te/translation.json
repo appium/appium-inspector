@@ -41,7 +41,6 @@
   "Save Server Arguments Preset": "సేవ్ సర్వర్ ఆర్గ్యుమెంట్స్ ప్రీసెట్",
   "Save": "సేవ్ చేయండి",
   "Cancel": "రద్దు చేయండి",
-  "datetimeFormat": "నెల తేదీ సంవత్సరం,గంట:నిమిషం> MMM Do YYYY, h:mma",
   "updateDetails": "విడుదల తారీఖు: {{pubDate}}\nవిడుదల గమనికలు: {{notes}}",
   "appiumIsAvailable": "Appium Inspector {{name}} అందుబాటులో ఉంది",
   "updateIsBeingDownloaded": "అప్‌డేట్ ఇప్పుడు డౌన్‌లోడ్ చేయబడుతోంది. ఇది పూర్తయిన తర్వాత మీకు మళ్లీ తెలియజేయబడుతుంది",

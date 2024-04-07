@@ -41,7 +41,6 @@
   "Save Server Arguments Preset": "Salvar predefinição de argumentos do servidor",
   "Save": "Salvar",
   "Cancel": "Cancelar",
-  "datetimeFormat": "D MMM YYYY, h:m",
   "updateDetails": "Data de Lançamento: {{pubDate}}\n\nNotas de Lançamento: {{notes}}",
   "appiumIsAvailable": "Inspetor Appium {{name}} está disponível",
   "updateIsBeingDownloaded": "A atualização está sendo baixada agora. Você será notificado novamente quando estiver concluída",
