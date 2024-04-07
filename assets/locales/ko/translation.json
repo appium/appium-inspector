@@ -41,7 +41,6 @@
   "Save Server Arguments Preset": "서버 인수 프리셋 저장",
   "Save": "저장",
   "Cancel": "취소",
-  "datetimeFormat": "MMM Do YYYY, h:mma",
   "updateDetails": "출시일: {{pubDate}}\n\n릴리즈 정보: {{notes}}",
   "appiumIsAvailable": "Appium Inspector {{name}} 사용이 가능합니다",
   "updateIsBeingDownloaded": "업데이트를 다운로드 중 입니다. 다운로드가 완료되면 다시 알려드립니다.",

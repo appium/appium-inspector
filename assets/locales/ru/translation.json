@@ -41,7 +41,6 @@
   "Save Server Arguments Preset": "Сохранить пресет аргументов сервера",
   "Save": "Сохранить",
   "Cancel": "Отмена",
-  "datetimeFormat": "MMM Do YYYY, h:mma",
   "updateDetails": "Дата релиза: {{pubDate}}\n\nПримечания к релизу: {{notes}}",
   "appiumIsAvailable": "Доступен инспектор Appium {{name}}",
   "updateIsBeingDownloaded": "Обновление загружается. Вы будете уведомлены сразу по завершению",

@@ -41,7 +41,6 @@
   "Save Server Arguments Preset": "保存服务器预设参数",
   "Save": "保存",
   "Cancel": "取消",
-  "datetimeFormat": "YYYY-MM-DD HH:mm",
   "updateDetails": "发布日期: {{pubDate}}\n\n版本注释: {{notes}}",
   "appiumIsAvailable": "Appium Inspector {{name}} 可用",
   "updateIsBeingDownloaded": "更新正在下载。完成后将再次通知您",

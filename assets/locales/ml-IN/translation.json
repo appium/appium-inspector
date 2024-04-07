@@ -41,7 +41,6 @@
   "Save Server Arguments Preset": "Save Server Arguments Preset",
   "Save": "Save",
   "Cancel": "Cancel",
-  "datetimeFormat": "MMM Do YYYY, h:mma",
   "updateDetails": "Release Date: {{pubDate}}\n\nRelease Notes: {{notes}}",
   "appiumIsAvailable": "Appium Inspector {{name}} is available",
   "updateIsBeingDownloaded": "Update is being downloaded now. You will be notified again when it is complete",
