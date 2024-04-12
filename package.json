@@ -81,7 +81,7 @@
     "bluebird": "3.7.2",
     "cheerio": "1.0.0-rc.10",
     "electron-log": "4.4.8",
-    "electron-settings": "4.0.2",
+    "electron-settings": "4.0.3",
     "electron-updater": "6.1.8",
     "highlight.js": "11.9.0",
     "htmlparser2": "7.2.0",
