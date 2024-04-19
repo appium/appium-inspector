@@ -4,11 +4,20 @@
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "matchDepTypes": ["dependencies", "devDependencies"],
+      "matchCurrentVersion": "!/^0/",
       "automerge": true
     },
     {
-      "matchPackageNames": [],
+      "matchPackageNames": [
+        "antd",
+        "chai",
+        "electron",
+        "electron-log",
+        "eslint",
+        "htmlparser2",
+        "postcss-modules",
+        "spectron"
+      ],
       "matchUpdateTypes": ["major"],
       "enabled": false
     }
