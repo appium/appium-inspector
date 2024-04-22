@@ -115,7 +115,7 @@
     "spectron": "Deprecated. Newer V16 also requires Electron 14"
   },
   "devDependencies": {
-    "@appium/docutils": "1.0.6",
+    "@appium/docutils": "1.0.7",
     "@appium/eslint-config-appium": "8.0.5",
     "@appium/fake-driver": "5.5.1",
     "@appium/support": "4.2.4",
