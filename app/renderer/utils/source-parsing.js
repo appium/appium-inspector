@@ -75,7 +75,6 @@ export function xmlToJSON(sourceXML) {
     };
   };
   const sourceDoc = domParser.parseFromString(sourceXML);
-
   // get the first child element node in the doc. some drivers write their xml differently so we
   // first try to find an element as a direct descendend of the doc, then look for one in
   // documentElement
