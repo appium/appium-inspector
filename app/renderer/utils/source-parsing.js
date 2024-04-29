@@ -1,4 +1,4 @@
-import {DOMParser, XMLSerializer} from '@xmldom/xmldom';
+import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
 import _ from 'lodash';
 
 export const domParser = new DOMParser();
@@ -44,7 +44,7 @@ export function findJSONElementByPath(path, sourceJSON) {
   for (const index of path.split('.')) {
     selectedElement = selectedElement.children[index];
   }
-  return {...selectedElement};
+  return { ...selectedElement };
 }
 
 /**
@@ -58,7 +58,8 @@ export function xmlToJSON(sourceXML) {
     const attributes = {};
     for (let attrIdx = 0; attrIdx < domNode.attributes.length; ++attrIdx) {
       const attr = domNode.attributes.item(attrIdx);
-      attributes[attr.name] = attr.value;
+      // Replace newline characters in attribute values
+      attributes[attr.name] = attr.value.replace(/(\r\n|\n|\r)/gm, '\\n');
     }
 
     // Dot Separated path of indices
@@ -74,9 +75,6 @@ export function xmlToJSON(sourceXML) {
     };
   };
   const sourceDoc = domParser.parseFromString(sourceXML);
-  // get the first child element node in the doc. some drivers write their xml differently so we
-  // first try to find an element as a direct descendend of the doc, then look for one in
-  // documentElement
   const firstChild = childNodesOf(sourceDoc)[0] || childNodesOf(sourceDoc.documentElement)[0];
 
   return firstChild ? translateRecursively(firstChild) : {};

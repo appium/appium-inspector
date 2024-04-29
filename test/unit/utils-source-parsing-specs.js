@@ -470,5 +470,111 @@ describe('utils/source-parsing.js', function () {
         path: '',
       });
     });
+
+    it('should convert xml to json for Newline', function () {
+      const json =
+        xmlToJSON(`<hierarchy index="0" class="hierarchy" rotation="0" width="1080" height="2028">
+        <android.widget.FrameLayout
+            index="0"
+            package="com.appiuminspector"
+            class="android.widget.FrameLayout"
+            content-desc="Dashboard&#10;Tab 1 of 2" 
+            text=""
+            checkable="false"
+            checked="false"
+            clickable="false"
+            enabled="true"
+            focusable="false"
+            focused="false"
+            long-clickable="false"
+            password="false"
+            scrollable="false"
+            selected="false"
+            bounds="[0,0][1080,2028]"
+            displayed="true">
+          <android.widget.LinearLayout
+            index="0"
+            package="com.appiuminspector"
+            class="android.widget.LinearLayout"
+            content-desc="Setting&#10;Tab 2 of 2"
+            text=""
+            checkable="false"
+            checked="false"
+            clickable="false"
+            enabled="true"
+            focusable="false"
+            focused="false"
+            long-clickable="false"
+            password="false"
+            scrollable="false"
+            selected="false"
+            bounds="[0,0][1080,2028]"
+            displayed="true">
+          </android.widget.LinearLayout>
+        </android.widget.FrameLayout>
+      </hierarchy>`);
+      json.should.eql({
+        children: [
+          {
+            children: [
+              {
+                children: [],
+                tagName: 'android.widget.LinearLayout',
+                attributes: {
+                  index: '0',
+                  package: 'com.appiuminspector',
+                  class: 'android.widget.LinearLayout',
+                  'content-desc': 'Setting\\nTab 2 of 2',
+                  text: '',
+                  checkable: 'false',
+                  checked: 'false',
+                  clickable: 'false',
+                  enabled: 'true',
+                  focusable: 'false',
+                  focused: 'false',
+                  'long-clickable': 'false',
+                  password: 'false',
+                  scrollable: 'false',
+                  selected: 'false',
+                  bounds: '[0,0][1080,2028]',
+                  displayed: 'true',
+                },
+                path: '0.0',
+              },
+            ],
+            tagName: 'android.widget.FrameLayout',
+            attributes: {
+              index: '0',
+              package: 'com.appiuminspector',
+              class: 'android.widget.FrameLayout',
+              'content-desc': 'Dashboard\\nTab 1 of 2',
+              text: '',
+              checkable: 'false',
+              checked: 'false',
+              clickable: 'false',
+              enabled: 'true',
+              focusable: 'false',
+              focused: 'false',
+              'long-clickable': 'false',
+              password: 'false',
+              scrollable: 'false',
+              selected: 'false',
+              bounds: '[0,0][1080,2028]',
+              displayed: 'true',
+            },
+            path: '0',
+          },
+        ],
+        attributes: {
+          class: 'hierarchy',
+          height: '2028',
+          rotation: '0',
+          width: '1080',
+          index: '0',
+        },
+        tagName: 'hierarchy',
+        path: '',
+      });
+    });
   });
 });
