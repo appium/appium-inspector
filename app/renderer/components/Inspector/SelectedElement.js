@@ -39,18 +39,19 @@ const SelectedElement = (props) => {
   const isDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
 
   const selectedElementTableCell = (text, copyToClipBoard) => {
+    const textString = String(text);
     if (copyToClipBoard) {
       return (
         <div className={styles['selected-element-table-cells']}>
           <Tooltip title={t('Copied!')} trigger="click">
-            <span className={styles['element-cell-copy']} onClick={() => clipboard.writeText(text)}>
-              {text}
+            <span className={styles['element-cell-copy']} onClick={() => clipboard.writeText(textString.replace(/(?:\r\n|\r|\n)/g, '\\n'))}>
+              {!textString ? textString : textString.replace(/(?:\r\n|\r|\n)/g, '\\n')}
             </span>
           </Tooltip>
         </div>
       );
     } else {
-      return <div className={styles['selected-element-table-cells']}>{text}</div>;
+      return <div className={styles['selected-element-table-cells']}>{textString}</div>;
     }
   };
 
