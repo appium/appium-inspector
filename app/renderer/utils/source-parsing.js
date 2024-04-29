@@ -59,7 +59,7 @@ export function xmlToJSON(sourceXML) {
     for (let attrIdx = 0; attrIdx < domNode.attributes.length; ++attrIdx) {
       const attr = domNode.attributes.item(attrIdx);
       // it should be show new line character(\n) in GUI
-      attributes[attr.name] = attr.value.replace(/(\r\n|\n|\r)/gm, '\\n');
+      attributes[attr.name] = attr.value.replace(/(\n)/gm, '\\n');
     }
 
     // Dot Separated path of indices
