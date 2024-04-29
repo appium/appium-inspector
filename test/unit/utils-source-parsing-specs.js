@@ -472,8 +472,7 @@ describe('utils/source-parsing.js', function () {
     });
 
     it('should convert xml to json for Newline', function () {
-      const json =
-        xmlToJSON(`<hierarchy index="0" class="hierarchy" rotation="0" width="1080" height="2028">
+      const json = xmlToJSON(`<hierarchy>
         <android.widget.FrameLayout
             index="0"
             class="android.widget.FrameLayout"
@@ -509,13 +508,7 @@ describe('utils/source-parsing.js', function () {
             path: '0',
           },
         ],
-        attributes: {
-          class: 'hierarchy',
-          height: '2028',
-          rotation: '0',
-          width: '1080',
-          index: '0',
-        },
+        attributes: {},
         tagName: 'hierarchy',
         path: '',
       });
