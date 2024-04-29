@@ -1,4 +1,4 @@
-import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
+import {DOMParser, XMLSerializer} from '@xmldom/xmldom';
 import _ from 'lodash';
 
 export const domParser = new DOMParser();
@@ -44,7 +44,7 @@ export function findJSONElementByPath(path, sourceJSON) {
   for (const index of path.split('.')) {
     selectedElement = selectedElement.children[index];
   }
-  return { ...selectedElement };
+  return {...selectedElement};
 }
 
 /**
