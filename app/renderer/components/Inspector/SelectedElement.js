@@ -40,15 +40,18 @@ const SelectedElement = (props) => {
 
   const selectedElementTableCell = (text, copyToClipBoard) => {
     const textString = String(text);
+    const newlineRegex = /(?:\r\n|\r|\n)/g;
+    const showText = !textString ? textString : textString.replace(newlineRegex, '\\n');
+
     if (copyToClipBoard) {
       return (
         <div className={styles['selected-element-table-cells']}>
           <Tooltip title={t('Copied!')} trigger="click">
             <span
               className={styles['element-cell-copy']}
-              onClick={() => clipboard.writeText(textString.replace(/(?:\r\n|\r|\n)/g, '\\n'))}
+              onClick={() => clipboard.writeText(showText)}
             >
-              {!textString ? textString : textString.replace(/(?:\r\n|\r|\n)/g, '\\n')}
+              {showText}
             </span>
           </Tooltip>
         </div>
