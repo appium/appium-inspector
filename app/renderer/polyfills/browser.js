@@ -45,10 +45,7 @@ const log = console;
 const settings = new BrowserSettings();
 const {clipboard, shell, remote, ipcRenderer} = browser;
 const i18NextBackendOptions = {
-  backends: [
-    LocalStorageBackend,
-    HttpApi,
-  ],
+  backends: [LocalStorageBackend, HttpApi],
   backendOptions: [
     {},
     {
