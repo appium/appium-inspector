@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 
 import * as SessionActions from '../actions/Session';
-import Session from '../components/Session/Session';
+import Session from '../components/Session/Session.jsx';
 import {withTranslation} from '../utils/other';
 
 function mapStateToProps(state) {
