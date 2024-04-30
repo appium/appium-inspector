@@ -470,5 +470,48 @@ describe('utils/source-parsing.js', function () {
         path: '',
       });
     });
+
+    it('should convert xml to json for Newline', function () {
+      const json = xmlToJSON(`<hierarchy>
+        <android.widget.FrameLayout
+            index="0"
+            class="android.widget.FrameLayout"
+            content-desc="Dashboard&#10;Tab 1 of 2" >
+          <android.widget.LinearLayout
+            index="0"
+            class="android.widget.LinearLayout"
+            content-desc="Setting&#10;Tab 2 of 2">
+          </android.widget.LinearLayout>
+        </android.widget.FrameLayout>
+      </hierarchy>`);
+      json.should.eql({
+        children: [
+          {
+            children: [
+              {
+                children: [],
+                tagName: 'android.widget.LinearLayout',
+                attributes: {
+                  index: '0',
+                  class: 'android.widget.LinearLayout',
+                  'content-desc': 'Setting\\nTab 2 of 2',
+                },
+                path: '0.0',
+              },
+            ],
+            tagName: 'android.widget.FrameLayout',
+            attributes: {
+              index: '0',
+              class: 'android.widget.FrameLayout',
+              'content-desc': 'Dashboard\\nTab 1 of 2',
+            },
+            path: '0',
+          },
+        ],
+        attributes: {},
+        tagName: 'hierarchy',
+        path: '',
+      });
+    });
   });
 });
