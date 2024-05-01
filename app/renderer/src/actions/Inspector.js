@@ -6,7 +6,7 @@ import {
   SAVED_FRAMEWORK,
   SET_SAVED_GESTURES,
   getSetting,
-  setSetting
+  setSetting,
 } from '../../../shared/settings';
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import AppiumClient from '../lib/appium-client';
