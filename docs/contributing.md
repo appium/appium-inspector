@@ -87,6 +87,6 @@ synchronized with [Crowdin](https://crowdin.com/project/appium-desktop). If you 
 contribute translations, please leave your suggestions on Crowdin.
 
 If you find yourself needing to add completely new strings, first you need to make code changes that
-add the strings in the [English translation file](https://github.com/appium/appium-inspector/blob/main/assets/locales/en/translation.json).
+add the strings in the [English translation file](https://github.com/appium/appium-inspector/blob/main/app/renderer/assets/locales/en/translation.json).
 After your changes are merged, the new strings will be automatically added to Crowdin, and become
 available for translation into other languages.

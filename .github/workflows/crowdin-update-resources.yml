@@ -1,4 +1,4 @@
-# Updates Crowdin with any changes in the English translation file (/assets/locales/en/translation.json)
+# Updates Crowdin with any changes in the English translation file (/app/renderer/assets/locales/en/translation.json)
 
 name: Update Crowdin English Resources
 
@@ -6,7 +6,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'assets/locales/en/translation.json'
+      - 'app/renderer/assets/locales/en/translation.json'
       - '.github/workflows/crowdin-update-resources.yml' # this file
 
 jobs:
