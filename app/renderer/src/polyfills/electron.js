@@ -7,8 +7,8 @@ import path from 'path';
 import util from 'util';
 
 const i18NextBackendOptions = {
-  loadPath: path.join(__dirname, 'locales/{{lng}}/{{ns}}.json'),
-  addPath: path.join(__dirname, 'locales/{{lng}}/{{ns}}.json'),
+  loadPath: path.join(__dirname, '{{lng}}/{{ns}}.json'),
+  addPath: path.join(__dirname, '{{lng}}/{{ns}}.json'),
   jsonIndent: 2,
 };
 

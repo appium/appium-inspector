@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {withTranslation as wt} from 'react-i18next';
 
-import config from '../../configs/app.config';
+import config from '../../../configs/app.config';
 
 const VALID_W3C_CAPS = [
   'platformName',

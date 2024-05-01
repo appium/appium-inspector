@@ -9,8 +9,8 @@ import {
   getOptimalUiAutomatorSelector,
   getOptimalXPath,
   getSimpleSuggestedLocators,
-} from '../../app/renderer/utils/locator-generation';
-import {domParser} from '../../app/renderer/utils/source-parsing';
+} from '../../app/renderer/src/utils/locator-generation';
+import {domParser} from '../../app/renderer/src/utils/source-parsing';
 
 const should = chai.should();
 
