@@ -65,73 +65,73 @@ The Inspector has built-in integrations with various cloud service provider plat
   <tr>
     <td align="center" valign="center">
       <a href="https://docs.saucelabs.com/mobile-apps/automated-testing/appium/">
-        <img width="200" height="50" alt="SauceLabs" src="app/renderer/src/images/sauce_logo.svg">
+        <img width="200" height="50" alt="SauceLabs" src="app/renderer/src/assets/images/sauce_logo.svg">
       </a>
     </td>
     <td align="center" valign="center">
       <a href="https://www.headspin.io/docs/appium-inspector-integration">
-        <img width="200" height="50" alt="HeadSpin" src="app/renderer/src/images/headspin_logo.svg">
+        <img width="200" height="50" alt="HeadSpin" src="app/renderer/src/assets/images/headspin_logo.svg">
       </a>
     </td>
     <td align="center" valign="center">
       <a href="https://www.browserstack.com/docs/app-automate/appium/integrations/appium-desktop">
-        <img width="200" height="50" alt="BrowserStack" src="app/renderer/src/images/browserstack_logo.svg">
+        <img width="200" height="50" alt="BrowserStack" src="app/renderer/src/assets/images/browserstack_logo.svg">
       </a>
     </td>
     <td align="center" valign="center">
       <a href="https://www.lambdatest.com/support/docs/appium-inspector-integration">
-        <img width="200" height="50" alt="LambdaTest" src="app/renderer/src/images/lambdatest_logo.svg">
+        <img width="200" height="50" alt="LambdaTest" src="app/renderer/src/assets/images/lambdatest_logo.svg">
       </a>
     </td>
   </tr>
   <tr>
     <td align="center" valign="center">
       <a href="https://testingbot.com/support/getting-started/appium.html">
-        <img width="200" height="50" alt="TestingBot" src="app/renderer/src/images/testingbot_logo.svg">
+        <img width="200" height="50" alt="TestingBot" src="app/renderer/src/assets/images/testingbot_logo.svg">
       </a>
     </td>
     <td align="center" valign="center">
       <a href="https://docs.digital.ai/bundle/TE/page/appium.html">
-        <img width="200" height="50" alt="ExperiTest" src="app/renderer/src/images/experitest_logo.svg">
+        <img width="200" height="50" alt="ExperiTest" src="app/renderer/src/assets/images/experitest_logo.svg">
       </a>
     </td>
     <td align="center" valign="center">
       <a href="https://robotqa.com/appium-remote">
-        <img width="200" height="50" alt="RobotQA" src="app/renderer/src/images/robotqa_logo.svg">
+        <img width="200" height="50" alt="RobotQA" src="app/renderer/src/assets/images/robotqa_logo.svg">
       </a>
     </td>
     <td align="center" valign="center">
       <a href="https://appkitbox.com/en/support/automation/appium/">
-        <img width="200" height="50" alt="Remote TestKit" src="app/renderer/src/images/remotetestkit_logo.svg">
+        <img width="200" height="50" alt="Remote TestKit" src="app/renderer/src/assets/images/remotetestkit_logo.svg">
       </a>
     </td>
   </tr>
   <tr>
     <td align="center" valign="center">
       <a href="https://support.smartbear.com/bitbar/docs/en/mobile-app-tests/automated-testing/appium-support.html">
-        <img width="200" height="50" alt="BitBar" src="app/renderer/src/images/bitbar_logo.svg">
+        <img width="200" height="50" alt="BitBar" src="app/renderer/src/assets/images/bitbar_logo.svg">
       </a>
     </td>
     <td align="center" valign="center">
       <a href="https://docs.kobiton.com/automation-testing/basic-appium-server/launch-a-basic-appium-2-session">
-        <img width="200" height="50" alt="Kobiton" src="app/renderer/src/images/kobiton_logo.svg">
+        <img width="200" height="50" alt="Kobiton" src="app/renderer/src/assets/images/kobiton_logo.svg">
       </a>
     </td>
     <td align="center" valign="center">
       <a href="https://help.perfecto.io/perfecto-help/content/perfecto/automation-testing/appium.htm">
-        <img width="200" height="50" alt="Perfecto" src="app/renderer/src/images/perfecto_logo.svg">
+        <img width="200" height="50" alt="Perfecto" src="app/renderer/src/assets/images/perfecto_logo.svg">
       </a>
     </td>
     <td align="center" valign="center">
       <a href="https://www.pcloudy.com/docs/inspect-element-using-appium-desktop">
-        <img width="200" height="50" alt="Pcloudy" src="app/renderer/src/images/pcloudy_logo.svg">
+        <img width="200" height="50" alt="Pcloudy" src="app/renderer/src/assets/images/pcloudy_logo.svg">
       </a>
     </td>
   </tr>
   <tr>
     <td align="center" valign="center">
       <a href="https://mobitru.com/docs/automation/">
-        <img width="200" height="50" alt="Mobitru" src="app/renderer/src/images/mobitru_logo.svg">
+        <img width="200" height="50" alt="Mobitru" src="app/renderer/src/assets/images/mobitru_logo.svg">
       </a>
     </td>
   </tr>
