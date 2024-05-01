@@ -1,3 +1,7 @@
+import i18NextBackend from 'i18next-chained-backend';
+import LocalStorageBackend from 'i18next-localstorage-backend';
+import HttpApi from 'i18next-http-backend';
+
 const browser = {
   clipboard: {
     writeText: (text) => navigator.clipboard.writeText(text),
@@ -40,12 +44,8 @@ class BrowserSettings {
 const log = console;
 const settings = new BrowserSettings();
 const {clipboard, shell, remote, ipcRenderer} = browser;
-const i18NextBackend = require('i18next-chained-backend').default;
 const i18NextBackendOptions = {
-  backends: [
-    require('i18next-localstorage-backend').default,
-    require('i18next-http-backend').default,
-  ],
+  backends: [LocalStorageBackend, HttpApi],
   backendOptions: [
     {},
     {

@@ -25,7 +25,7 @@ import {
   setSetting,
 } from '../../shared/settings';
 import {APP_MODE} from '../constants/session-inspector';
-import CloudProviders from '../components/Session/CloudProviders';
+import CloudProviders from '../components/Session/CloudProviders.jsx';
 import {fs, ipcRenderer, util} from '../polyfills';
 import {addVendorPrefixes} from '../utils/other';
 import {quitSession, setSessionDetails} from './Inspector';

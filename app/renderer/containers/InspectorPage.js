@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 
 import * as InspectorActions from '../actions/Inspector';
-import InspectorPage from '../components/Inspector/Inspector';
+import InspectorPage from '../components/Inspector/Inspector.jsx';
 import {withTranslation} from '../utils/other';
 
 function mapStateToProps(state) {
