@@ -16,19 +16,19 @@ import ServerTabTestingbot from './ServerTabTestingbot.jsx';
 import SessionStyles from './Session.module.css';
 
 // ParcelJS handles image loading by exporting a path to the image
-import BitBarLogo from '../../images/bitbar_logo.svg';
-import BrowserStackLogo from '../../images/browserstack_logo.svg';
-import ExperitestLogo from '../../images/experitest_logo.svg';
-import HeadSpinLogo from '../../images/headspin_logo.svg';
-import KobitonLogo from '../../images/kobiton_logo.svg';
-import LambdaTestLogo from '../../images/lambdatest_logo.svg';
-import MobitruLogo from '../../images/mobitru_logo.svg';
-import PcloudyLogo from '../../images/pcloudy_logo.svg';
-import PerfectoLogo from '../../images/perfecto_logo.svg';
-import RemoteTestKitLogo from '../../images/remotetestkit_logo.svg';
-import RobotQALogo from '../../images/robotqa_logo.svg';
-import SauceLogo from '../../images/sauce_logo.svg';
-import TestingBotLogo from '../../images/testingbot_logo.svg';
+import BitBarLogo from '../../assets/images/bitbar_logo.svg';
+import BrowserStackLogo from '../../assets/images/browserstack_logo.svg';
+import ExperitestLogo from '../../assets/images/experitest_logo.svg';
+import HeadSpinLogo from '../../assets/images/headspin_logo.svg';
+import KobitonLogo from '../../assets/images/kobiton_logo.svg';
+import LambdaTestLogo from '../../assets/images/lambdatest_logo.svg';
+import MobitruLogo from '../../assets/images/mobitru_logo.svg';
+import PcloudyLogo from '../../assets/images/pcloudy_logo.svg';
+import PerfectoLogo from '../../assets/images/perfecto_logo.svg';
+import RemoteTestKitLogo from '../../assets/images/remotetestkit_logo.svg';
+import RobotQALogo from '../../assets/images/robotqa_logo.svg';
+import SauceLogo from '../../assets/images/sauce_logo.svg';
+import TestingBotLogo from '../../assets/images/testingbot_logo.svg';
 
 const CloudProviders = {
   sauce: {
