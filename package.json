@@ -155,7 +155,7 @@
     "prettier": "3.2.5",
     "redux-logger": "3.0.6",
     "rimraf": "5.0.5",
-    "sinon": "17.0.1",
+    "sinon": "17.0.2",
     "spectron": "15.0.0"
   },
   "devEngines": {
