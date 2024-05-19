@@ -281,5 +281,5 @@
   "noResultsFound": "Результатов не найдено",
   "invalidCapType": "Неверный тип возможности: {{type}}",
   "whitespaceDetected": "Текст начинается и/или заканчивается с пробелом",
-  "pcloudyCredentialsRequired": "pCloudy username and api key are required!"
+  "pcloudyCredentialsRequired": "Требуется имя пользователя и ключ API pCloudy!"
 }
