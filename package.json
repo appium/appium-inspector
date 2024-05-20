@@ -77,7 +77,7 @@
     "@reduxjs/toolkit": "2.2.5",
     "@xmldom/xmldom": "0.8.10",
     "antd": "4.24.15",
-    "axios": "1.6.8",
+    "axios": "1.7.1",
     "bluebird": "3.7.2",
     "cheerio": "1.0.0-rc.10",
     "electron-log": "4.4.8",
