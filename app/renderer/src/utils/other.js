@@ -22,7 +22,11 @@ export function withTranslation(componentCls, ...hocs) {
 export function addVendorPrefixes(caps) {
   return caps.map((cap) => {
     // if we don't have a valid unprefixed cap or a cap with an existing prefix, update it
-    if (!VALID_W3C_CAPS.includes(cap.name) && !_.includes(cap.name, ':')) {
+    if (
+      !_.isUndefined(cap.name) &&
+      !VALID_W3C_CAPS.includes(cap.name) &&
+      !_.includes(cap.name, ':')
+    ) {
       cap.name = `appium:${cap.name}`;
     }
     return cap;
