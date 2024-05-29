@@ -30,7 +30,7 @@ class PythonFramework extends Framework {
       (v, k) => `${JSON.stringify(k)}: ${this.getPythonVal(v)}`,
     ).join(',\n\t');
     optionsStr = `{\n\t${optionsStr}\n}`;
-    return `# This sample code supports Appium Python client >=2.3.0
+    return `# This sample code supports Appium Python client >=4.0.0
 # pip install Appium-Python-Client
 # Then you can paste this into a file and simply run with Python
 
