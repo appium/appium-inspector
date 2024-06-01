@@ -149,7 +149,7 @@
 .formattedCapsBody {
   height: 100%;
 }
-.formattedCaps :global(.ant-row){
+.formattedCaps :global(.ant-row) {
   width: 100%;
 }
 

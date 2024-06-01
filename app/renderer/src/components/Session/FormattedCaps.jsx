@@ -40,13 +40,15 @@ const FormattedCaps = (props) => {
       return (
         <Row>
           <Input
-          onChange={(e) => setDesiredCapsName(e.target.value)}
-          value={desiredCapsName}
-          className={SessionStyles.capsEditorTitle}
-          onPressEnter={saveDesiredCapsName}
-          status={isDuplicateCapsName ? 'error' : ''}
-        />
-        {isDuplicateCapsName && <p className={SessionStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>}
+            onChange={(e) => setDesiredCapsName(e.target.value)}
+            value={desiredCapsName}
+            className={SessionStyles.capsEditorTitle}
+            onPressEnter={saveDesiredCapsName}
+            status={isDuplicateCapsName ? 'error' : ''}
+          />
+          {isDuplicateCapsName && (
+            <p className={SessionStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>
+          )}
         </Row>
       );
     }
