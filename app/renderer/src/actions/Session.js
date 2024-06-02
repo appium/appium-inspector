@@ -664,10 +664,10 @@ export function saveSession(server, serverType, caps, params) {
   return async (dispatch) => {
     let {name, uuid} = params;
     let savedSessions = (await getSetting(SAVED_SESSIONS)) || [];
-    let isDuplicateName = savedSessions.find(
+    let duplicateSession = savedSessions.find(
       (session) => session.name?.toLowerCase() === name?.toLowerCase(),
     );
-    if (isDuplicateName) {
+    if (duplicateSession && (!uuid || duplicateSession.uuid !== uuid)) {
       return dispatch({type: SET_CAPABILITY_NAME_ERROR});
     }
     dispatch({type: SAVE_SESSION_REQUESTED});
