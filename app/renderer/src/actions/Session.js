@@ -665,7 +665,7 @@ export function saveSession(server, serverType, caps, params) {
     let {name, uuid} = params;
     let savedSessions = (await getSetting(SAVED_SESSIONS)) || [];
     let duplicateSessions = savedSessions.filter((session) => session.name === name);
-    // We need to save the details if user is updating an already saved capability set
+    // Ignore the check if the user is updating an existing capability set with duplicate names
     let isEditingExistingCapability = duplicateSessions.find((session) => session.uuid === uuid);
     if (duplicateSessions.length > 0 && !isEditingExistingCapability) {
       return dispatch({type: SET_CAPABILITY_NAME_ERROR});
