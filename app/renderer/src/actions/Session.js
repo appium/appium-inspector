@@ -664,10 +664,10 @@ export function saveSession(server, serverType, caps, params) {
   return async (dispatch) => {
     let {name, uuid} = params;
     let savedSessions = (await getSetting(SAVED_SESSIONS)) || [];
-    let duplicateSession = savedSessions.find(
-      (session) => session.name?.toLowerCase() === name?.toLowerCase(),
-    );
-    if (duplicateSession && (!uuid || duplicateSession.uuid !== uuid)) {
+    let duplicateSessions = savedSessions.filter((session) => session.name === name);
+    // We need to save the details if user is updating an already saved capability set
+    let isEditingExistingCapability = duplicateSessions.find((session) => session.uuid === uuid);
+    if (duplicateSessions.length > 0 && !isEditingExistingCapability) {
       return dispatch({type: SET_CAPABILITY_NAME_ERROR});
     }
     dispatch({type: SAVE_SESSION_REQUESTED});

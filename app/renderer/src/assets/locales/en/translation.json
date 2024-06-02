@@ -282,5 +282,5 @@
   "invalidCapType": "Invalid capability type: {{type}}",
   "whitespaceDetected": "Text Starts and/or Ends With Whitespace",
   "pcloudyCredentialsRequired": "pCloudy username and api key are required!",
-  "duplicateCapabilityNameError": "Capability Set with the same name already present"
+  "duplicateCapabilityNameError": "A capability set with the same name already exists"
 }
