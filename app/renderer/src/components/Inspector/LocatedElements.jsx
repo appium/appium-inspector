@@ -26,7 +26,7 @@ const LocatedElements = (props) => {
   const sendKeys = useRef(null);
 
   const showIdAutocompleteInfo = () => {
-    const { automationName} = props;
+    const {automationName} = props;
     const idLocatorAutocompletionDisabled =
       driver.client.capabilities.disableIdLocatorAutocompletion;
     if (
@@ -48,7 +48,8 @@ const LocatedElements = (props) => {
       {locatedElements.length === 0 && (
         <Space className={InspectorStyles.spaceContainer} direction="vertical" size="small">
           <Row>
-            <i>{`${t('couldNotFindAnyElements')} with locator ` }</i><b>{`[${locatorTestStrategy} = ${locatorTestValue}]`}</b>
+            <i>{`${t('couldNotFindAnyElements')} with locator `}</i>
+            <b>{`[${locatorTestStrategy} = ${locatorTestValue}]`}</b>
           </Row>
           {showIdAutocompleteInfo()}
         </Space>
