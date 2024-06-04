@@ -68,6 +68,7 @@ const CapabilityEditor = (props) => {
     addVendorPrefixes,
     server,
     serverType,
+    isDuplicateCapsName,
   } = props;
 
   const onSaveAsOk = () => saveSession(server, serverType, caps, {name: saveAsText});
@@ -189,7 +190,11 @@ const CapabilityEditor = (props) => {
             addonBefore={t('Name')}
             value={saveAsText}
             onPressEnter={onSaveAsOk}
+            status={isDuplicateCapsName ? 'error' : ''}
           />
+          {isDuplicateCapsName && (
+            <p className={SessionStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>
+          )}
         </Modal>
       </Col>
     </Row>

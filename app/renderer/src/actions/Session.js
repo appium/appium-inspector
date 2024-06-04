@@ -76,6 +76,7 @@ export const SET_PROVIDERS = 'SET_PROVIDERS';
 
 export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
 
+export const SET_CAPABILITY_NAME_ERROR = 'SET_CAPABILITY_NAME_ERROR';
 export const SET_STATE_FROM_URL = 'SET_STATE_FROM_URL';
 export const SET_STATE_FROM_SAVED = 'SET_STATE_FROM_SAVED';
 
@@ -662,8 +663,15 @@ export function newSession(caps, attachSessId = null) {
 export function saveSession(server, serverType, caps, params) {
   return async (dispatch) => {
     let {name, uuid} = params;
-    dispatch({type: SAVE_SESSION_REQUESTED});
     let savedSessions = (await getSetting(SAVED_SESSIONS)) || [];
+    let duplicateSessions = savedSessions.filter((session) => session.name === name);
+    // Ignore the check if the user is updating an existing capability set with duplicate names
+    let isEditingExistingCapability = duplicateSessions.find((session) => session.uuid === uuid);
+    if (duplicateSessions.length > 0 && !isEditingExistingCapability) {
+      return dispatch({type: SET_CAPABILITY_NAME_ERROR});
+    }
+    dispatch({type: SAVE_SESSION_REQUESTED});
+
     if (!uuid) {
       // If it's a new session, add it to the list
       uuid = UUID();
