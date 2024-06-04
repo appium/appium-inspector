@@ -48,11 +48,11 @@ const LocatedElements = (props) => {
       {locatedElements.length === 0 && (
         <Space className={InspectorStyles.spaceContainer} direction="vertical" size="small">
           <Row>
-          <i>{t('couldNotFindAnyElements')}</i>
+            <i>{t('couldNotFindAnyElements')}</i>
           </Row>
           <Row>
             {t('locatorStrategy')} {locatorTestStrategy}
-            <br/>
+            <br />
             {t('selector')} {locatorTestValue}
           </Row>
           {showIdAutocompleteInfo()}
