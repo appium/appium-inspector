@@ -708,6 +708,7 @@
 
 .spaceContainer {
   display: flex;
+  word-break: break-word;
 }
 
 .tick-pointer-input {

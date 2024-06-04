@@ -146,7 +146,7 @@
   "unnamed": "(Unnamed)",
   "No Description": "No Description",
   "couldNotFindEntryWithId": "Could not find an entry with ID {{id}}",
-  "couldNotFindAnyElements": "The locator [{{locatorTestStrategy}} = {{locatorTestValue}}] did not match any elements",
+  "couldNotFindAnyElements": "Could not find any elements",
   "elementsCount": "Elements found:",
   "xCoordinate": "X: {{x}}",
   "yCoordinate": "Y: {{y}}",
