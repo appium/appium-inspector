@@ -149,10 +149,16 @@
 .formattedCapsBody {
   height: 100%;
 }
+.formattedCaps :global(.ant-row) {
+  width: 100%;
+}
 
 .formattedCaps :global(.ant-card-head-title) {
-  height: 54px;
   padding-right: 10px;
+  height: 65px;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .formattedCaps :global(.ant-card-body) {
@@ -308,4 +314,10 @@
   display: table-cell;
   padding-top: 4px;
   padding-left: 11px;
+}
+
+.errorMessage {
+  padding-top: 1px;
+  color: #ff4d4f;
+  font-size: 12px;
 }

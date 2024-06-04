@@ -27,6 +27,7 @@ import {
   SAVE_SESSION_REQUESTED,
   SET_ADD_VENDOR_PREFIXES,
   SET_ATTACH_SESS_ID,
+  SET_CAPABILITY_NAME_ERROR,
   SET_CAPABILITY_PARAM,
   SET_CAPS_AND_SERVER,
   SET_DESIRED_CAPS_NAME,
@@ -89,6 +90,7 @@ const INITIAL_STATE = {
   ],
 
   isCapsDirty: true,
+  isDuplicateCapsName: false,
   gettingSessions: false,
   runningAppiumSessions: [],
   isEditingDesiredCapsName: false,
@@ -178,7 +180,12 @@ export default function session(state = INITIAL_STATE, action) {
       return omit(nextState, 'showSaveAsModal');
 
     case SAVE_SESSION_DONE:
-      return omit(state, ['saveSessionRequested', 'saveAsText']);
+      nextState = {
+        ...state,
+        isEditingDesiredCapsName: false,
+        isDuplicateCapsName: false,
+      };
+      return omit(nextState, ['saveSessionRequested', 'saveAsText']);
 
     case GET_SAVED_SESSIONS_REQUESTED:
       return {
@@ -220,7 +227,11 @@ export default function session(state = INITIAL_STATE, action) {
       };
 
     case HIDE_SAVE_AS_MODAL_REQUESTED:
-      return omit(state, ['saveAsText', 'showSaveAsModal']);
+      nextState = {
+        ...state,
+        isDuplicateCapsName: false,
+      };
+      return omit(nextState, ['saveAsText', 'showSaveAsModal']);
 
     case SET_SAVE_AS_TEXT:
       return {
@@ -308,13 +319,13 @@ export default function session(state = INITIAL_STATE, action) {
       return {
         ...state,
         isEditingDesiredCapsName: false,
+        isDuplicateCapsName: false,
         desiredCapsName: null,
       };
 
     case SAVE_DESIRED_CAPS_NAME:
       return {
         ...state,
-        isEditingDesiredCapsName: false,
         capsName: action.name,
       };
 
@@ -403,7 +414,11 @@ export default function session(state = INITIAL_STATE, action) {
         },
         ...omit(action.state, ['server']),
       };
-
+    case SET_CAPABILITY_NAME_ERROR:
+      return {
+        ...state,
+        isDuplicateCapsName: true,
+      };
     case SET_STATE_FROM_SAVED:
       if (!Object.keys(ServerTypes).includes(action.state.serverType)) {
         notification.error({

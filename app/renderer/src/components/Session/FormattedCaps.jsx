@@ -1,5 +1,5 @@
 import {CloseOutlined, EditOutlined, SaveOutlined} from '@ant-design/icons';
-import {Alert, Button, Card, Tooltip} from 'antd';
+import {Alert, Button, Card, Input, Row, Tooltip} from 'antd';
 import hljs from 'highlight.js';
 import React from 'react';
 
@@ -21,6 +21,7 @@ const FormattedCaps = (props) => {
     rawDesiredCaps,
     isValidCapsJson,
     invalidCapsJsonReason,
+    isDuplicateCapsName,
     t,
   } = props;
 
@@ -30,18 +31,25 @@ const FormattedCaps = (props) => {
   };
 
   const setCapsTitle = () => {
-    const {setDesiredCapsName} = props;
+    const {setDesiredCapsName, saveDesiredCapsName} = props;
     if (!title) {
       return t('JSON Representation');
     } else if (!isEditingDesiredCapsName) {
       return title;
     } else {
       return (
-        <input
-          onChange={(e) => setDesiredCapsName(e.target.value)}
-          value={desiredCapsName}
-          className={SessionStyles.capsEditorTitle}
-        />
+        <Row>
+          <Input
+            onChange={(e) => setDesiredCapsName(e.target.value)}
+            value={desiredCapsName}
+            className={SessionStyles.capsEditorTitle}
+            onPressEnter={saveDesiredCapsName}
+            status={isDuplicateCapsName ? 'error' : ''}
+          />
+          {isDuplicateCapsName && (
+            <p className={SessionStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>
+          )}
+        </Row>
       );
     }
   };
