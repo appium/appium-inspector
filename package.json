@@ -69,6 +69,7 @@
     "antd": "V5: significant rewrite required",
     "bluebird": "Deprecated: recommended to replace with native promises",
     "cheerio": "1.0.0-rc.11: errors with export namespace",
+    "electron-log": "V5: rewrite required to only call in main process",
     "electron-settings": "V5: need to rewrite to IPC while keeping browser version working",
     "htmlparser2": "8.0.0: errors with export namespace",
     "uuid": "Obsolete: can be replaced with crypto.randomUUID in Electron 14+"
@@ -103,10 +104,12 @@
     "xpath": "0.0.34"
   },
   "//devDependencies": {
-    "chai-as-promised": "Abandoned",
+    "chai": "V5: ESM-only with changed imports",
     "cross-env": "Maintenance mode",
     "devtron": "Abandoned",
     "electron": "V14: breaks electron-settings",
+    "electron-debug": "V4: requires Electron 30",
+    "eslint": "V9: need to move to flat config",
     "mocha-multi-reporters": "Appears to be abandoned",
     "node-libs-browser": "Deprecated",
     "parcel-bundler": "V2: significant rewrite required",
