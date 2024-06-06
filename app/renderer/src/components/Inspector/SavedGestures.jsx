@@ -1,5 +1,11 @@
-import {DeleteOutlined, EditOutlined, PlayCircleOutlined, PlusOutlined} from '@ant-design/icons';
-import {Button, Space, Table, Tooltip} from 'antd';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlayCircleOutlined,
+  PlusOutlined,
+  DownloadOutlined,
+} from '@ant-design/icons';
+import {Button, Row, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useRef} from 'react';
@@ -8,6 +14,8 @@ import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/gestures';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {percentageToPixels} from '../../utils/other';
 import InspectorStyles from './Inspector.module.css';
+import FileUploader from '../Common/FileUploader.jsx';
+import FileSaver from 'file-saver';
 
 const dataSource = (savedGestures, t) => {
   if (!savedGestures) {
@@ -31,7 +39,14 @@ const getGestureByID = (savedGestures, id, t) => {
 };
 
 const SavedGestures = (props) => {
-  const {savedGestures, showGestureEditor, removeGestureDisplay, t} = props;
+  const {
+    savedGestures,
+    showGestureEditor,
+    removeGestureDisplay,
+    getSavedGestures,
+    uploadGesturesFromFile,
+    t,
+  } = props;
 
   const drawnGestureRef = useRef(null);
 
@@ -58,6 +73,13 @@ const SavedGestures = (props) => {
     if (window.confirm(t('confirmDeletion'))) {
       deleteSavedGesture(id);
     }
+  };
+
+  const handleDownload = (gesture) => {
+    const blob = new Blob([JSON.stringify(gesture, null, 2)], {
+      type: 'text/plain;charset=utf-8',
+    });
+    FileSaver.saveAs(blob, `${gesture.name}.json`);
   };
 
   const onDraw = (gesture) => {
@@ -114,6 +136,7 @@ const SavedGestures = (props) => {
               </Tooltip>
               <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
               <Button icon={<DeleteOutlined />} onClick={() => handleDelete(gesture.id)} />
+              <Button icon={<DownloadOutlined />} onClick={() => handleDownload(gesture)} />
             </Button.Group>
           );
         },
@@ -128,11 +151,9 @@ const SavedGestures = (props) => {
   });
 
   useEffect(() => {
-    const {getSavedGestures} = props;
     getSavedGestures();
     return () => (drawnGestureRef.current = null);
   }, []);
-
   return (
     <Space className={InspectorStyles.spaceContainer} direction="vertical" size="middle">
       {t('gesturesDescription')}
@@ -141,7 +162,16 @@ const SavedGestures = (props) => {
         pagination={false}
         dataSource={dataSource(savedGestures, t)}
         columns={columns}
-        footer={() => <Button onClick={showGestureEditor} icon={<PlusOutlined />} />}
+        footer={() => (
+          <Row>
+            <Button onClick={showGestureEditor} icon={<PlusOutlined />} />
+            <FileUploader
+              onUpload={uploadGesturesFromFile}
+              multiple={true}
+              type="application/json"
+            />
+          </Row>
+        )}
       />
     </Space>
   );
