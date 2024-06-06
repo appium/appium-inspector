@@ -56,3 +56,15 @@ export function parseCoordinates(element) {
     return {};
   }
 }
+
+export function downloadFile(href, filename) {
+  let element = document.createElement('a');
+  element.setAttribute('href', href);
+  element.setAttribute('download', filename);
+  element.style.display = 'none';
+
+  document.body.appendChild(element);
+  element.click();
+
+  document.body.removeChild(element);
+}
