@@ -12,10 +12,9 @@ import React, {useEffect, useRef} from 'react';
 
 import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/gestures';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
-import {percentageToPixels} from '../../utils/other';
+import {downloadFile, percentageToPixels} from '../../utils/other';
 import InspectorStyles from './Inspector.module.css';
 import FileUploader from '../Common/FileUploader.jsx';
-import FileSaver from 'file-saver';
 
 const dataSource = (savedGestures, t) => {
   if (!savedGestures) {
@@ -69,10 +68,10 @@ const SavedGestures = (props) => {
   };
 
   const handleDownload = (gesture) => {
-    const blob = new Blob([JSON.stringify(gesture, null, 2)], {
-      type: 'text/plain;charset=utf-8',
-    });
-    FileSaver.saveAs(blob, `${gesture.name}.json`);
+    const href = `data:text/json;charset=utf-8,${encodeURIComponent(
+      JSON.stringify(gesture, null, 2),
+    )}`;
+    downloadFile(href, `${gesture.name}.json`);
   };
 
   const onDraw = (gesture) => {

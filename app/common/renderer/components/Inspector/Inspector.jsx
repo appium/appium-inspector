@@ -36,20 +36,9 @@ import Screenshot from './Screenshot.jsx';
 import SelectedElement from './SelectedElement.jsx';
 import SessionInfo from './SessionInfo.jsx';
 import Source from './Source.jsx';
+import {downloadFile} from '../../utils/other';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
-
-const downloadFile = (href, filename) => {
-  let element = document.createElement('a');
-  element.setAttribute('href', href);
-  element.setAttribute('download', filename);
-  element.style.display = 'none';
-
-  document.body.appendChild(element);
-  element.click();
-
-  document.body.removeChild(element);
-};
 
 const downloadXML = (sourceXML) => {
   const href = 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML);
