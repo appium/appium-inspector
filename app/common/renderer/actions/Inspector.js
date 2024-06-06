@@ -1,6 +1,6 @@
-import _ from 'lodash';
+import _, {isArray, omit} from 'lodash';
 import {v4 as UUID} from 'uuid';
-
+import {Promise} from 'bluebird';
 import {SAVED_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs';
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import i18n from '../i18next';
@@ -16,6 +16,8 @@ import {
 } from '../utils/source-parsing';
 import {log} from '../utils/logger';
 import {showError} from './Session';
+import {POINTER_TYPES} from '../constants/gestures';
+import {notification} from 'antd';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
 export const SET_SOURCE_AND_SCREENSHOT = 'SET_SOURCE_AND_SCREENSHOT';
@@ -136,6 +138,33 @@ const findElement = _.debounce(async function (strategyMap, dispatch, getState, 
 
   return dispatch({type: SET_INTERACTIONS_NOT_AVAILABLE});
 }, 1000);
+
+const isValidGesture = (action) => {
+  if (!action.ticks) {
+    return true;
+  }
+
+  for (const tick of action.ticks) {
+    if (!tick.type || Object.values(POINTER_TYPES).indexOf(tick.type) <= 0) {
+      return false;
+    } else if (
+      tick.type === POINTER_TYPES.POINTER_MOVE &&
+      typeof tick.button == 'undefined' &&
+      !tick.x &&
+      !tick.y
+    ) {
+      return false;
+    } else if (
+      [POINTER_TYPES.POINTER_DOWN, POINTER_TYPES.POINTER_UP].indexOf(tick.type) >= 0 &&
+      typeof tick.button == 'undefined'
+    ) {
+      return false;
+    } else if (tick.type === POINTER_TYPES.PAUSE && !tick.duration) {
+      return false;
+    }
+    return true;
+  }
+};
 
 export function selectElement(path) {
   return async (dispatch, getState) => {
@@ -864,22 +893,74 @@ export function setAwaitingMjpegStream(isAwaiting) {
   };
 }
 
+export function uploadGesturesFromFile(fileList) {
+  return async (dispatch) => {
+    const fileReaderPromise = fileList.map((file) => {
+      const reader = new FileReader();
+      return new Promise((resolve) => {
+        reader.onload = (event) =>
+          resolve({
+            name: file.name,
+            content: event.target.result,
+          });
+        reader.readAsText(file);
+      });
+    });
+    const gestures = await Promise.all(fileReaderPromise);
+    const invalidGestures = [];
+    const parsedGestures = [];
+    gestures.forEach((gestureFile) => {
+      try {
+        const gesture = JSON.parse(gestureFile.content);
+        const isValid = gesture.actions.map(isValidGesture).every(Boolean);
+        if (!isValid) {
+          invalidGestures.push(gestureFile.name);
+        } else {
+          gesture.name = gesture.name || gestureFile.name;
+          gesture.description = gesture.description || '';
+          parsedGestures.push(omit(gesture, ['id']));
+        }
+      } catch (e) {
+        invalidGestures.push(gestureFile.name);
+      }
+    });
+
+    if (invalidGestures.length) {
+      notification.error({
+        message: `Unable to upload files ${invalidGestures.join(',')} due to invalid gesture format`,
+      });
+    }
+
+    if (parsedGestures.length) {
+      await saveGesture(parsedGestures)(dispatch);
+      await getSavedGestures()(dispatch);
+    }
+  };
+}
+
 export function saveGesture(params) {
   return async (dispatch) => {
+    if (!isArray(params)) {
+      params = [params];
+    }
     let savedGestures = (await getSetting(SET_SAVED_GESTURES)) || [];
-    if (!params.id) {
-      params.id = UUID();
-      params.date = Date.now();
-      savedGestures.push(params);
-    } else {
-      for (const gesture of savedGestures) {
-        if (gesture.id === params.id) {
-          gesture.name = params.name;
-          gesture.description = params.description;
-          gesture.actions = params.actions;
+
+    for (const param of params) {
+      if (!param.id) {
+        param.id = UUID();
+        param.date = Date.now();
+        savedGestures.push(param);
+      } else {
+        for (const gesture of savedGestures) {
+          if (gesture.id === param.id) {
+            gesture.name = param.name;
+            gesture.description = param.description;
+            gesture.actions = param.actions;
+          }
         }
       }
     }
+
     await setSetting(SET_SAVED_GESTURES, savedGestures);
     const action = getSavedGestures();
     await action(dispatch);
