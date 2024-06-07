@@ -49,6 +49,7 @@ import {
   SET_COORD_END,
   SET_COORD_START,
   SET_EXPANDED_PATHS,
+  SET_PAGE_SOURCE_SEARCH_TEXT,
   SET_OPTIMAL_LOCATORS,
   SET_GESTURE_TAP_COORDS_MODE,
   SET_INTERACTIONS_NOT_AVAILABLE,
@@ -127,6 +128,7 @@ const INITIAL_STATE = {
   visibleCommandMethod: null,
   isAwaitingMjpegStream: true,
   showSourceAttrs: false,
+  pageSourceSearchText: '',
 };
 
 let nextState;
@@ -258,7 +260,11 @@ export default function inspector(state = INITIAL_STATE, action) {
         expandedPaths: action.paths,
         findElementsExecutionTimes: [],
       };
-
+    case SET_PAGE_SOURCE_SEARCH_TEXT:
+      return {
+        ...state,
+        pageSourceSearchText: action.text,
+      };
     case START_RECORDING:
       return {
         ...state,

@@ -11,8 +11,9 @@ import {
   SelectOutlined,
   TagOutlined,
   ThunderboltOutlined,
+  SearchOutlined,
 } from '@ant-design/icons';
-import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip} from 'antd';
+import {Button, Card, Modal, Row, Space, Spin, Switch, Tabs, Tooltip, Input} from 'antd';
 import {debounce} from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
@@ -87,6 +88,7 @@ const Inspector = (props) => {
     toggleShowAttributes,
     isSourceRefreshOn,
     windowSize,
+    setPageSourceSearchText,
     t,
   } = props;
 
@@ -322,7 +324,14 @@ const Inspector = (props) => {
                         </span>
                       }
                       extra={
-                        <span>
+                        <Row>
+                          <Input
+                            size="middle"
+                            allowClear
+                            placeholder="Search in page source"
+                            onChange={(e) => setPageSourceSearchText(e.target.value)}
+                            prefix={<SearchOutlined />}
+                          />
                           <Tooltip title={t('Toggle Attributes')}>
                             <Button
                               type="text"
@@ -347,7 +356,7 @@ const Inspector = (props) => {
                               onClick={() => downloadXML(sourceXML)}
                             />
                           </Tooltip>
-                        </span>
+                        </Row>
                       }
                     >
                       <Source {...props} />
