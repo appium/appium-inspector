@@ -1,10 +1,11 @@
 import {Spin, Tree} from 'antd';
-import React from 'react';
-
+import React, {useEffect} from 'react';
+import {renderToString} from 'react-dom/server';
 import {IMPORTANT_SOURCE_ATTRS} from '../../constants/source';
 import InspectorStyles from './Inspector.module.css';
 import LocatorTestModal from './LocatorTestModal.jsx';
 import SiriCommandModal from './SiriCommandModal.jsx';
+import {uniq} from 'lodash';
 
 /**
  * Shows the 'source' of the app as a Tree
@@ -20,8 +21,72 @@ const Source = (props) => {
     methodCallInProgress,
     mjpegScreenshotUrl,
     isSourceRefreshOn,
+    pageSourceSearchText,
     t,
   } = props;
+
+  /**
+   * Highlights the part of the node text in source tree that matches the search term.
+   */
+  const higlightNodeMatchingSearchTerm = (nodeText, searchText) => {
+    if (!searchText) {
+      return nodeText;
+    }
+
+    const index = nodeText.indexOf(searchText);
+    if (index < 0) {
+      return nodeText;
+    }
+    const prefix = nodeText.substring(0, index);
+    const suffix = nodeText.slice(index + searchText.length);
+    //Matched word will be wrapped in a separate span for custom highlighting
+    const matchedWord = nodeText.slice(index, index + searchText.length);
+
+    return (
+      <>
+        {prefix}
+        <span className={InspectorStyles['tree-search-value']} data-match={searchText}>
+          {matchedWord}
+        </span>
+        {suffix}
+      </>
+    );
+  };
+
+  useEffect(() => {
+    if (!treeData || !pageSourceSearchText) {
+      return;
+    }
+
+    const nodesMatchingSearchTerm = [];
+
+    /**
+     * If any search text is entered, we will try to find matching nodes in the tree.
+     * and expand their parents to make the nodes visible that matches the
+     * search text.
+     *
+     * hierarchy is an array of node keys representing the path from the root to the
+     * current node.
+     */
+    const findNodesToExpand = (node, hierarchy) => {
+      /* Node title will an object representing a react element.
+       * renderToString method will construct a HTML DOM string
+       * which can be used to match against the search text.
+       *
+       * If any node that matches the search text is found, we will add all its
+       * parents to the 'nodesMatchingSearchTerm' array to make them automatically expand.
+       */
+      const nodeText = renderToString(node.title);
+      if (nodeText.indexOf(pageSourceSearchText) > -1) {
+        nodesMatchingSearchTerm.push(...hierarchy);
+      }
+      if (node.children) {
+        node.children.forEach((c) => findNodesToExpand(c, [...hierarchy, node.key]));
+      }
+    };
+    treeData.forEach((node) => findNodesToExpand(node, [node.key]));
+    setExpandedPaths(uniq(nodesMatchingSearchTerm));
+  }, [treeData, pageSourceSearchText]);
 
   const getFormattedTag = (el, showAllAttrs) => {
     const {tagName, attributes} = el;
@@ -29,18 +94,25 @@ const Source = (props) => {
 
     for (let attr of Object.keys(attributes)) {
       if ((IMPORTANT_SOURCE_ATTRS.includes(attr) && attributes[attr]) || showAllAttrs) {
+        const keyNode = higlightNodeMatchingSearchTerm(attr, pageSourceSearchText);
+        const valueNode = higlightNodeMatchingSearchTerm(attributes[attr], pageSourceSearchText);
+
         attrs.push(
           <span key={attr}>
             &nbsp;
-            <i className={InspectorStyles.sourceAttrName}>{attr}</i>=
-            <span className={InspectorStyles.sourceAttrValue}>&quot;{attributes[attr]}&quot;</span>
+            <i className={InspectorStyles.sourceAttrName}>{keyNode}</i>=
+            <span className={InspectorStyles.sourceAttrValue}>&quot;{valueNode}&quot;</span>
           </span>,
         );
       }
     }
+
     return (
       <span>
-        &lt;<b className={InspectorStyles.sourceTag}>{tagName}</b>
+        &lt;
+        <b className={InspectorStyles.sourceTag}>
+          {higlightNodeMatchingSearchTerm(tagName, pageSourceSearchText)}
+        </b>
         {attrs}&gt;
       </span>
     );

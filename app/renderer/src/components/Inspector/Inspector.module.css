@@ -73,6 +73,10 @@
   height: 100%;
 }
 
+.inspector-main .interaction-tab-container :global(.ant-input-affix-wrapper) {
+  width: 200px;
+}
+
 .inspector-main .interaction-tab-container {
   position: relative;
   flex-grow: 1;
@@ -124,6 +128,11 @@
 .inspector-main .tree-container {
   height: 100%;
   overflow: auto;
+}
+
+.inspector-main .tree-search-value {
+  color: #272625;
+  background: #b6d932;
 }
 
 .session-info-table {
