@@ -28,12 +28,12 @@ const Source = (props) => {
   /**
    * Highlights the part of the node text in source tree that matches the search term.
    */
-  const higlightNodeMatchingSearchTerm = (nodeText, searchText) => {
+  const highlightNodeMatchingSearchTerm = (nodeText, searchText) => {
     if (!searchText) {
       return nodeText;
     }
 
-    const index = nodeText.indexOf(searchText);
+    const index = nodeText.toLowerCase().indexOf(searchText.toLowerCase());
     if (index < 0) {
       return nodeText;
     }
@@ -76,8 +76,8 @@ const Source = (props) => {
        * If any node that matches the search text is found, we will add all its
        * parents to the 'nodesMatchingSearchTerm' array to make them automatically expand.
        */
-      const nodeText = renderToString(node.title);
-      if (nodeText.indexOf(pageSourceSearchText) > -1) {
+      const nodeText = renderToString(node.title).toLowerCase();
+      if (nodeText.indexOf(pageSourceSearchText.toLowerCase()) > -1) {
         nodesMatchingSearchTerm.push(...hierarchy);
       }
       if (node.children) {
@@ -94,8 +94,8 @@ const Source = (props) => {
 
     for (let attr of Object.keys(attributes)) {
       if ((IMPORTANT_SOURCE_ATTRS.includes(attr) && attributes[attr]) || showAllAttrs) {
-        const keyNode = higlightNodeMatchingSearchTerm(attr, pageSourceSearchText);
-        const valueNode = higlightNodeMatchingSearchTerm(attributes[attr], pageSourceSearchText);
+        const keyNode = highlightNodeMatchingSearchTerm(attr, pageSourceSearchText);
+        const valueNode = highlightNodeMatchingSearchTerm(attributes[attr], pageSourceSearchText);
 
         attrs.push(
           <span key={attr}>
@@ -111,7 +111,7 @@ const Source = (props) => {
       <span>
         &lt;
         <b className={InspectorStyles.sourceTag}>
-          {higlightNodeMatchingSearchTerm(tagName, pageSourceSearchText)}
+          {highlightNodeMatchingSearchTerm(tagName, pageSourceSearchText)}
         </b>
         {attrs}&gt;
       </span>

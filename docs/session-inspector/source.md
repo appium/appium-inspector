@@ -51,6 +51,14 @@ behavior. While the default source refresh behavior in MJPEG mode stays the same
 [automatic source refresh button](./header.md#toggle-automatic-source-refresh) in the application
 header, which allows to disable automatic refreshing.
 
+### Searching the Source
+
+![Search Page Source Input](./assets/images/source/search-page-source.png)
+
+Search page source functionality enables quick and easy navigation through the page source XML tree by searching for nodes based on element tag names or XML attributes. Matches are automatically highlighted and expanded, allowing for immediate identification and access to relevant nodes.
+
+![Search Page Source Shown](./assets/images/source/search-page-source-highlighted.png)
+
 ### Toggle Attributes Button
 
 ![Toggle Attributes Button](./assets/images/source/toggle-attributes-button.png)
