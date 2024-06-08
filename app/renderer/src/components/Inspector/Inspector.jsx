@@ -320,7 +320,7 @@ const Inspector = (props) => {
                           <Input
                             size="middle"
                             allowClear
-                            placeholder="Search in page source"
+                            placeholder={t('searchInPageSource')}
                             onChange={(e) => setPageSourceSearchText(e.target.value)}
                             prefix={<SearchOutlined />}
                           />
