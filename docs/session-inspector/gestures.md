@@ -19,7 +19,14 @@ for each gesture:
 
 -   Execute the gesture
 -   Edit the gesture (will open it in the [Gesture Builder](#gesture-builder))
+-   Download the gesture as json file
 -   Delete the gesture
+
+## Upload Gestures from file
+
+![Upload Gesture](./assets/images/gestures/upload-gesture-icon.png)
+
+Gestures downloaded as JSON files from the saved gestures section can be uploaded on clicking the upload icon. This feature opens a file browser window, allowing multiple gestures to be uploaded simultaneously.
 
 ## Gesture Builder
 

@@ -1,7 +1,6 @@
 import {Button, Upload} from 'antd';
 import React, {useState, useEffect} from 'react';
 import {UploadOutlined} from '@ant-design/icons';
-import {set} from 'lodash';
 
 const FileUploader = (props) => {
   const {multiple, onUpload, type, icon} = props;
@@ -15,7 +14,7 @@ const FileUploader = (props) => {
     }
   }, [fileList]);
 
-  const handleFileUpload = (file, list) => {
+  const handleFileUpload = (_file, list) => {
     if (fileList.length !== list.length) {
       setFileList(list);
     }
