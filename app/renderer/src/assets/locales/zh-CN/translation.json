@@ -281,5 +281,6 @@
   "noResultsFound": "未找到结果",
   "invalidCapType": "无效的capability类型: {{type}}",
   "whitespaceDetected": "文本开始和/或以空格结束",
-  "pcloudyCredentialsRequired": "需要 pCloudy 用户名和 api 密钥！"
+  "pcloudyCredentialsRequired": "需要 pCloudy 用户名和 api 密钥！",
+  "duplicateCapabilityNameError": "A capability set with the same name already exists"
 }

@@ -281,5 +281,6 @@
   "noResultsFound": "No results found",
   "invalidCapType": "Invalid capability type: {{type}}",
   "whitespaceDetected": "Text Starts and/or Ends With Whitespace",
-  "pcloudyCredentialsRequired": "pCloudy username and api key are required!"
+  "pcloudyCredentialsRequired": "pCloudy username and api key are required!",
+  "duplicateCapabilityNameError": "A capability set with the same name already exists"
 }
