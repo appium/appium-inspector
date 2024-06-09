@@ -14,7 +14,7 @@ This can be done by pressing the `+` button in the bottom left, which will open 
 [Gesture Builder](#gesture-builder) screen.
 
 Once a gesture has been created and saved, clicking its entry in the saved gestures list will show
-its expected actions as an overlay over the [screenshot](./screenshot.md). There are also 3 buttons
+its expected actions as an overlay over the [screenshot](./screenshot.md). There are also 4 buttons
 for each gesture:
 
 -   Execute the gesture
