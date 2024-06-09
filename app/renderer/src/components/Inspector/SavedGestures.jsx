@@ -5,7 +5,7 @@ import {
   PlusOutlined,
   DownloadOutlined,
 } from '@ant-design/icons';
-import {Button, Row, Space, Table, Tooltip} from 'antd';
+import {Button, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useRef} from 'react';
@@ -78,7 +78,8 @@ const SavedGestures = (props) => {
     const href = `data:text/json;charset=utf-8,${encodeURIComponent(
       JSON.stringify(gesture, null, 2),
     )}`;
-    downloadFile(href, `${gesture.name}.json`);
+    const fileName = `gesture-${gesture.name.replace(' ', '-')}.json`;
+    downloadFile(href, fileName);
   };
 
   const onDraw = (gesture) => {
@@ -134,8 +135,8 @@ const SavedGestures = (props) => {
                 />
               </Tooltip>
               <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
-              <Button icon={<DeleteOutlined />} onClick={() => handleDelete(gesture.id)} />
               <Button icon={<DownloadOutlined />} onClick={() => handleDownload(gesture)} />
+              <Button icon={<DeleteOutlined />} onClick={() => handleDelete(gesture.id)} />
             </Button.Group>
           );
         },
@@ -162,14 +163,14 @@ const SavedGestures = (props) => {
         dataSource={dataSource(savedGestures, t)}
         columns={columns}
         footer={() => (
-          <Row>
+          <Button.Group>
             <Button onClick={showGestureEditor} icon={<PlusOutlined />} />
             <FileUploader
               onUpload={uploadGesturesFromFile}
               multiple={true}
               type="application/json"
             />
-          </Row>
+          </Button.Group>
         )}
       />
     </Space>
