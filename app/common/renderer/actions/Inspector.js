@@ -1,7 +1,10 @@
-import _, {isArray, omit} from 'lodash';
-import {v4 as UUID} from 'uuid';
+import {notification} from 'antd';
 import {Promise} from 'bluebird';
+import _ from 'lodash';
+import {v4 as UUID} from 'uuid';
+
 import {SAVED_FRAMEWORK, SET_SAVED_GESTURES, getSetting, setSetting} from '../../shared/settings';
+import {POINTER_TYPES} from '../constants/gestures';
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import i18n from '../i18next';
 import AppiumClient from '../lib/appium-client';
@@ -15,8 +18,6 @@ import {
 } from '../utils/source-parsing';
 import {log} from '../utils/logger';
 import {showError} from './Session';
-import {POINTER_TYPES} from '../constants/gestures';
-import {notification} from 'antd';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
 export const SET_SOURCE_AND_SCREENSHOT = 'SET_SOURCE_AND_SCREENSHOT';
@@ -892,13 +893,12 @@ export function uploadGesturesFromFile(fileList) {
     gestures.forEach((gestureFile) => {
       try {
         const gesture = JSON.parse(gestureFile.content);
-        const isValid = gesture.actions.map(isValidGesture).every(Boolean);
+        const isValid = gesture.name && gesture.actions.map(isValidGesture).every(Boolean);
         if (!isValid) {
           invalidGestures.push(gestureFile.name);
         } else {
-          gesture.name = gesture.name || gestureFile.name;
           gesture.description = gesture.description || '';
-          parsedGestures.push(omit(gesture, ['id']));
+          parsedGestures.push(_.omit(gesture, ['id']));
         }
       } catch (e) {
         invalidGestures.push(gestureFile.name);
@@ -907,10 +907,9 @@ export function uploadGesturesFromFile(fileList) {
 
     if (invalidGestures.length) {
       notification.error({
-        message: `Unable to upload files ${invalidGestures.join(',')} due to invalid gesture format`,
+        message: `Unable to upload gesture files ${invalidGestures.join(',')} due to invalid format`,
       });
     }
-
     if (parsedGestures.length) {
       await saveGesture(parsedGestures)(dispatch);
       await getSavedGestures()(dispatch);
@@ -920,7 +919,7 @@ export function uploadGesturesFromFile(fileList) {
 
 export function saveGesture(params) {
   return async (dispatch) => {
-    if (!isArray(params)) {
+    if (!_.isArray(params)) {
       params = [params];
     }
     let savedGestures = (await getSetting(SET_SAVED_GESTURES)) || [];
