@@ -281,5 +281,6 @@
   "noResultsFound": "一致する結果が見つかりませんでした",
   "invalidCapType": "無効な Capability: {{type}}",
   "whitespaceDetected": "空白文字で開始または終了します",
-  "pcloudyCredentialsRequired": "pCloudy username and api key are required!"
+  "pcloudyCredentialsRequired": "pCloudy username and api key are required!",
+  "duplicateCapabilityNameError": "A capability set with the same name already exists"
 }

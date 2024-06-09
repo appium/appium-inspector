@@ -281,5 +281,6 @@
   "noResultsFound": "Nenhum resultado encontrado",
   "invalidCapType": "Tipo de recurso inválido: {{type}}",
   "whitespaceDetected": "Texto começa e/ou termina com espaço em branco",
-  "pcloudyCredentialsRequired": "O nome de usuário e a chave de API do pCloudy são necessários!"
+  "pcloudyCredentialsRequired": "O nome de usuário e a chave de API do pCloudy são necessários!",
+  "duplicateCapabilityNameError": "A capability set with the same name already exists"
 }

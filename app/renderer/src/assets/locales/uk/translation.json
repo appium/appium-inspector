@@ -281,5 +281,6 @@
   "noResultsFound": "Результатів не знайдено",
   "invalidCapType": "Недійсний тип можливості: {{type}}",
   "whitespaceDetected": "Текст починається та/або закінчується пробілом",
-  "pcloudyCredentialsRequired": "Необхідні ім'я користувача та API ключ від pCloudy!"
+  "pcloudyCredentialsRequired": "Необхідні ім'я користувача та API ключ від pCloudy!",
+  "duplicateCapabilityNameError": "Набір можливостей з таким ім'ям вже існує"
 }
