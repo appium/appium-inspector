@@ -130,11 +130,6 @@
   overflow: auto;
 }
 
-.inspector-main .tree-search-value {
-  color: #272625;
-  background: #b6d932;
-}
-
 .session-info-table {
   margin-right: -1em;
 }
