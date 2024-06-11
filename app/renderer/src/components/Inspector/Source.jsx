@@ -8,6 +8,43 @@ import SiriCommandModal from './SiriCommandModal.jsx';
 import {uniq} from 'lodash';
 
 /**
+ * Highlights the part of the node text in source tree that matches the search term.
+ * If HTML element contains a part of search value, then the content will be updated
+ * with a highlighted span. This span will have a class name 'tree-search-value' and
+ * will have a data attribute 'match' which will hold the search value. If no match found
+ * then the original node text will be returned.
+ *
+ * @param {string} nodeText - The text content of the node
+ * @param {string} searchText - The search term to highlight
+ * @returns {ReactNode} - The node text with highlighted search term
+ *
+ */
+export const highlightNodeMatchingSearchTerm = (nodeText, searchText) => {
+  if (!searchText || !nodeText) {
+    return nodeText;
+  }
+
+  const index = nodeText.toLowerCase().indexOf(searchText.toLowerCase());
+  if (index < 0) {
+    return nodeText;
+  }
+  const prefix = nodeText.substring(0, index);
+  const suffix = nodeText.slice(index + searchText.length);
+  //Matched word will be wrapped in a separate span for custom highlighting
+  const matchedWord = nodeText.slice(index, index + searchText.length);
+
+  return (
+    <>
+      {prefix}
+      <span className="search-word-highlighted" data-match={searchText}>
+        {matchedWord}
+      </span>
+      {suffix}
+    </>
+  );
+};
+
+/**
  * Shows the 'source' of the app as a Tree
  */
 const Source = (props) => {
@@ -24,34 +61,6 @@ const Source = (props) => {
     pageSourceSearchText,
     t,
   } = props;
-
-  /**
-   * Highlights the part of the node text in source tree that matches the search term.
-   */
-  const highlightNodeMatchingSearchTerm = (nodeText, searchText) => {
-    if (!searchText) {
-      return nodeText;
-    }
-
-    const index = nodeText.toLowerCase().indexOf(searchText.toLowerCase());
-    if (index < 0) {
-      return nodeText;
-    }
-    const prefix = nodeText.substring(0, index);
-    const suffix = nodeText.slice(index + searchText.length);
-    //Matched word will be wrapped in a separate span for custom highlighting
-    const matchedWord = nodeText.slice(index, index + searchText.length);
-
-    return (
-      <>
-        {prefix}
-        <span className={InspectorStyles['tree-search-value']} data-match={searchText}>
-          {matchedWord}
-        </span>
-        {suffix}
-      </>
-    );
-  };
 
   useEffect(() => {
     if (!treeData || !pageSourceSearchText) {
@@ -77,7 +86,7 @@ const Source = (props) => {
        * parents to the 'nodesMatchingSearchTerm' array to make them automatically expand.
        */
       const nodeText = renderToString(node.title).toLowerCase();
-      if (nodeText.indexOf(pageSourceSearchText.toLowerCase()) > -1) {
+      if (nodeText.includes(pageSourceSearchText.toLowerCase())) {
         nodesMatchingSearchTerm.push(...hierarchy);
       }
       if (node.children) {
