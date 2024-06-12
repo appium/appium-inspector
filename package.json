@@ -121,7 +121,7 @@
     "@appium/docutils": "1.0.11",
     "@appium/eslint-config-appium": "8.0.5",
     "@appium/fake-driver": "5.5.2",
-    "@appium/support": "4.5.0",
+    "@appium/support": "5.0.3",
     "@babel/core": "7.24.7",
     "@babel/eslint-parser": "7.24.7",
     "@babel/eslint-plugin": "7.24.7",
