@@ -8,6 +8,7 @@ import AppiumClient from '../lib/appium-client';
 import frameworks from '../lib/client-frameworks';
 import {getSetting, setSetting} from '../polyfills';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation';
+import {readTextFromUploadedFiles} from '../utils/other';
 import {
   domParser,
   findDOMNodeByPath,
@@ -16,7 +17,6 @@ import {
 } from '../utils/source-parsing';
 import {log} from '../utils/logger';
 import {showError} from './Session';
-import {readTextFromUploadedFiles} from '../utils/other';
 import {SAVED_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
@@ -151,7 +151,7 @@ const checkErrorsInAction = ({ticks}) => {
     if (!Object.values(POINTER_TYPES).includes(tick.type)) {
       errors.push(
         i18n.t('gestureInvalidEventError', {
-          invalidEvent: tick.type || 'None',
+          invalidEvent: tick.type,
           validEvents: Object.values(POINTER_TYPES).join(', '),
         }),
       );
