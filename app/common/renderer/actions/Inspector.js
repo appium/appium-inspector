@@ -907,8 +907,8 @@ export function uploadGesturesFromFile(fileList) {
     const gestures = await readTextFromUploadedFiles(fileList);
     const invalidGestures = {};
     const parsedGestures = [];
-    gestures.forEach((gestureFilePromise) => {
-      const {fileName, content, error} = gestureFilePromise;
+    for (const gesture of gestures) {
+      const {fileName, content, error} = gesture;
       try {
         // Some error occured while reading the uploaded file
         if (error) {
@@ -927,19 +927,20 @@ export function uploadGesturesFromFile(fileList) {
         if (actionErrors.length) {
           invalidGestures[fileName] = actionErrors;
         } else {
-          gesture.description = gesture.description || `Gesture imported from ${fileName}`;
+          gesture.description = gesture.description || i18n.t('gestureImportedFrom', {fileName});
           parsedGestures.push(_.omit(gesture, ['id']));
         }
       } catch (e) {
         invalidGestures[fileName] = [i18n.t('gestureInvalidJsonError')];
       }
-    });
+    }
+
     if (parsedGestures.length) {
       await saveGesture(parsedGestures)(dispatch);
       await getSavedGestures()(dispatch);
     }
 
-    if (Object.keys(invalidGestures).length) {
+    if (!_.isEmpty(invalidGestures)) {
       setGestureUploadErrors(invalidGestures)(dispatch);
     }
   };
@@ -951,11 +952,8 @@ export function saveGesture(params) {
     let savedGestures = (await getSetting(SET_SAVED_GESTURES)) || [];
 
     for (const param of gestureList) {
-      if (!param.id) {
-        param.id = UUID();
-        param.date = Date.now();
-        savedGestures.push(param);
-      } else {
+      if (param.id) {
+        // Editing an already saved gestiure
         for (const gesture of savedGestures) {
           if (gesture.id === param.id) {
             gesture.name = param.name;
@@ -963,7 +961,12 @@ export function saveGesture(params) {
             gesture.actions = param.actions;
           }
         }
+        continue;
       }
+      // Adding a new gesture
+      param.id = UUID();
+      param.date = Date.now();
+      savedGestures.push(param);
     }
 
     await setSetting(SET_SAVED_GESTURES, savedGestures);
