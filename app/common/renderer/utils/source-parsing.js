@@ -82,3 +82,27 @@ export function xmlToJSON(sourceXML) {
 
   return firstChild ? translateRecursively(firstChild) : {};
 }
+
+/**
+ * Finds the text that matches the search term for higlighting
+ *
+ * @param {string} nodeText
+ * @param {string} searchText
+ * @returns {null|Object} details of the highlited information
+ */
+
+export function findNodeMatchingSearchTerm(nodeText, searchText) {
+  if (!searchText || !nodeText) {
+    return null;
+  }
+
+  const index = nodeText.toLowerCase().indexOf(searchText.toLowerCase());
+  if (index < 0) {
+    return null;
+  }
+  const prefix = nodeText.substring(0, index);
+  const suffix = nodeText.slice(index + searchText.length);
+  // Matched word will be wrapped in a separate span for custom highlighting
+  const matchedWord = nodeText.slice(index, index + searchText.length);
+  return {prefix, matchedWord, suffix};
+}

@@ -116,7 +116,6 @@
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-react": "7.35.0",
     "eslint-plugin-react-native": "4.1.0",
-    "ignore-styles": "^5.0.1",
     "less": "4.2.0",
     "prettier": "3.3.3",
     "rimraf": "5.0.10",

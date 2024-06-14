@@ -1,7 +1,9 @@
 import {Spin, Tree} from 'antd';
 import React, {useEffect} from 'react';
 import {renderToString} from 'react-dom/server';
+
 import {IMPORTANT_SOURCE_ATTRS} from '../../constants/source';
+import {findNodeMatchingSearchTerm} from '../../utils/source-parsing';
 import InspectorStyles from './Inspector.module.css';
 import LocatorTestModal from './LocatorTestModal.jsx';
 import SiriCommandModal from './SiriCommandModal.jsx';
@@ -19,24 +21,16 @@ import {uniq} from 'lodash';
  * @returns {ReactNode} - The node text with highlighted search term
  *
  */
-export const highlightNodeMatchingSearchTerm = (nodeText, searchText) => {
-  if (!searchText || !nodeText) {
+const highlightNodeMatchingSearchTerm = (nodeText, searchText) => {
+  const searchResults = findNodeMatchingSearchTerm(nodeText, searchText);
+  if (!searchResults) {
     return nodeText;
   }
-
-  const index = nodeText.toLowerCase().indexOf(searchText.toLowerCase());
-  if (index < 0) {
-    return nodeText;
-  }
-  const prefix = nodeText.substring(0, index);
-  const suffix = nodeText.slice(index + searchText.length);
-  //Matched word will be wrapped in a separate span for custom highlighting
-  const matchedWord = nodeText.slice(index, index + searchText.length);
-
+  const {prefix, matchedWord, suffix} = searchResults;
   return (
     <>
       {prefix}
-      <span className="search-word-highlighted" data-match={searchText}>
+      <span className={InspectorStyles['search-word-highlighted']} data-match={searchText}>
         {matchedWord}
       </span>
       {suffix}
