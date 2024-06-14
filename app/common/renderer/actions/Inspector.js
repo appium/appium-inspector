@@ -973,7 +973,7 @@ export function saveGesture(params) {
 
     for (const param of gestureList) {
       if (param.id) {
-        // Editing an already saved gestiure
+        // Editing an already saved gesture
         for (const gesture of savedGestures) {
           if (gesture.id === param.id) {
             gesture.name = param.name;
