@@ -13,6 +13,7 @@ import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import AppiumClient from '../lib/appium-client';
 import frameworks from '../lib/client-frameworks';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation';
+import {readTextFromUploadedFiles} from '../utils/other';
 import {
   domParser,
   findDOMNodeByPath,
@@ -20,7 +21,6 @@ import {
   xmlToJSON,
 } from '../utils/source-parsing';
 import {showError} from './Session';
-import {readTextFromUploadedFiles} from '../utils/other';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
 export const SET_SOURCE_AND_SCREENSHOT = 'SET_SOURCE_AND_SCREENSHOT';
@@ -153,7 +153,7 @@ const checkErrorsInAction = ({ticks}) => {
     if (!Object.values(POINTER_TYPES).includes(tick.type)) {
       errors.push(
         i18n.t('gestureInvalidEventError', {
-          invalidEvent: tick.type || 'None',
+          invalidEvent: tick.type,
           validEvents: Object.values(POINTER_TYPES).join(', '),
         }),
       );
