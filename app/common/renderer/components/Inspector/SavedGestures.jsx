@@ -183,7 +183,7 @@ const SavedGestures = (props) => {
           title={
             <Row align="start">
               <AiOutlineInfoCircle className={InspectorStyles['error-icon']} />{' '}
-              {t('errorUploadingGesture')}
+              {t('errorLoadingGestures')}
             </Row>
           }
           open={!!gestureUploadErrors}
