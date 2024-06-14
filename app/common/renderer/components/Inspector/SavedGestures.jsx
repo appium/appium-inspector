@@ -5,7 +5,7 @@ import {
   PlusOutlined,
   DownloadOutlined,
 } from '@ant-design/icons';
-import {Button, Popconfirm, Space, Table, Tooltip} from 'antd';
+import {Button, Collapse, Modal, Row, Popconfirm, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useRef} from 'react';
@@ -15,6 +15,7 @@ import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {downloadFile, percentageToPixels} from '../../utils/other';
 import InspectorStyles from './Inspector.module.css';
 import FileUploader from '../Common/FileUploader.jsx';
+import { AiOutlineInfoCircle } from 'react-icons/ai';
 
 const dataSource = (savedGestures, t) => {
   if (!savedGestures) {
@@ -40,10 +41,13 @@ const getGestureByID = (savedGestures, id, t) => {
 const SavedGestures = (props) => {
   const {
     savedGestures,
-    deleteSavedGesture, showGestureEditor,
+    deleteSavedGesture,
+    showGestureEditor,
+    setGestureUploadErrors,
     removeGestureDisplay,
     getSavedGestures,
     uploadGesturesFromFile,
+    gestureUploadErrors,
     t,
   } = props;
 
@@ -174,6 +178,27 @@ const SavedGestures = (props) => {
           </Button.Group>
         )}
       />
+      {gestureUploadErrors && (
+        <Modal
+          title={<Row align='start'><AiOutlineInfoCircle className={InspectorStyles['error-icon']}/> {t('errorUploadingGesture')}</Row>}
+          open={!!gestureUploadErrors}
+          footer={null} // we dont need ok and cancel buttons
+          onCancel={() => setGestureUploadErrors(null)}
+        >
+          <p><i>{t('unableToUploadGestureFiles')}</i></p>
+          <Collapse ghost defaultActiveKey={Object.keys(gestureUploadErrors)}>
+            {Object.keys(gestureUploadErrors).map((errorFile) => (
+              <Collapse.Panel header={<b>{errorFile}</b>} key={errorFile}>
+                <ol>
+                  {gestureUploadErrors[errorFile].map((error) => (
+                    <li key={error}>{error}</li>
+                  ))}
+                </ol>
+              </Collapse.Panel>
+            ))}
+          </Collapse>
+        </Modal>
+      )}
     </Space>
   );
 };

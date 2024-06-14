@@ -10,8 +10,10 @@ tab shows the Saved Gestures screen.
 ## Saved Gestures
 
 The default saved gestures list is empty, but can be populated by creating and saving new gestures.
-This can be done by pressing the `+` button in the bottom left, which will open the
-[Gesture Builder](#gesture-builder) screen.
+New gestures can either be created manually or can be improted from JSON files that are previously downloded from the saved gestures section.
+
+-   New gesture can be created by pressing the `+` button in the bottom left, which will open the [Gesture Builder](#gesture-builder) screen.
+-   Gestures downloaded as JSON files can be uploaded on clicking the ![Upload Gesture](./assets/images/gestures/upload-gesture-icon.png) icon. This opens a file browser window, allowing multiple gestures to be uploaded simultaneously.
 
 Once a gesture has been created and saved, clicking its entry in the saved gestures list will show
 its expected actions as an overlay over the [screenshot](./screenshot.md). There are also 4 buttons
@@ -21,12 +23,6 @@ for each gesture:
 -   Edit the gesture (will open it in the [Gesture Builder](#gesture-builder))
 -   Download the gesture as json file
 -   Delete the gesture
-
-## Upload Gestures from file
-
-![Upload Gesture](./assets/images/gestures/upload-gesture-icon.png)
-
-Gestures downloaded as JSON files from the saved gestures section can be uploaded on clicking the upload icon. This feature opens a file browser window, allowing multiple gestures to be uploaded simultaneously.
 
 ## Gesture Builder
 

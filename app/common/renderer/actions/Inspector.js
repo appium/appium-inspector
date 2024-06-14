@@ -1,5 +1,3 @@
-import {notification} from 'antd';
-import {Promise} from 'bluebird';
 import _ from 'lodash';
 import {v4 as UUID} from 'uuid';
 
@@ -18,6 +16,7 @@ import {
 } from '../utils/source-parsing';
 import {log} from '../utils/logger';
 import {showError} from './Session';
+import {readTextFromUploadedFiles} from '../utils/other';
 import {SAVED_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
@@ -117,6 +116,8 @@ export const CLEAR_TAP_COORDINATES = 'CLEAR_TAP_COORDINATES';
 export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
 export const TOGGLE_REFRESHING_STATE = 'TOGGLE_REFRESHING_STATE';
 
+export const SET_GESTURE_UPLOAD_ERROR = 'SET_GESTURE_UPLOAD_ERROR';
+
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
 
@@ -140,31 +141,52 @@ const findElement = _.debounce(async function (strategyMap, dispatch, getState, 
   return dispatch({type: SET_INTERACTIONS_NOT_AVAILABLE});
 }, 1000);
 
-const isValidGesture = (action) => {
-  if (!action.ticks) {
-    return true;
+const checkErrorsInAction = ({ticks}) => {
+  const errors = [];
+  if (!ticks) {
+    return [i18n.t('gestureEmptyTickError')];
   }
 
-  for (const tick of action.ticks) {
-    if (!tick.type || Object.values(POINTER_TYPES).indexOf(tick.type) <= 0) {
-      return false;
+  for (const tick of ticks) {
+    if (!Object.values(POINTER_TYPES).includes(tick.type)) {
+      errors.push(
+        i18n.t('gestureInvalidEventError', {
+          invalidEvent: tick.type || 'None',
+          validEvents: Object.values(POINTER_TYPES).join(', '),
+        }),
+      );
     } else if (
       tick.type === POINTER_TYPES.POINTER_MOVE &&
-      typeof tick.button == 'undefined' &&
+      typeof tick.button === 'undefined' &&
       !tick.x &&
       !tick.y
     ) {
-      return false;
+      errors.push(
+        i18n.t('gestureRequiredFieldsError', {
+          fields: 'button, x and y',
+          eventType: tick.type,
+        }),
+      );
     } else if (
-      [POINTER_TYPES.POINTER_DOWN, POINTER_TYPES.POINTER_UP].indexOf(tick.type) >= 0 &&
-      typeof tick.button == 'undefined'
+      [POINTER_TYPES.POINTER_DOWN, POINTER_TYPES.POINTER_UP].includes(tick.type) &&
+      typeof tick.button === 'undefined'
     ) {
-      return false;
+      errors.push(
+        i18n.t('gestureRequiredFieldError', {
+          field: 'button',
+          eventType: tick.type,
+        }),
+      );
     } else if (tick.type === POINTER_TYPES.PAUSE && !tick.duration) {
-      return false;
+      errors.push(
+        i18n.t('gestureRequiredFieldError', {
+          field: 'duration',
+          eventType: tick.type,
+        }),
+      );
     }
-    return true;
   }
+  return errors;
 };
 
 export function selectElement(path) {
@@ -894,57 +916,61 @@ export function setAwaitingMjpegStream(isAwaiting) {
   };
 }
 
+export function setGestureUploadErrors(errors) {
+  return (dispatch) => {
+    dispatch({type: SET_GESTURE_UPLOAD_ERROR, errors});
+  };
+}
+
 export function uploadGesturesFromFile(fileList) {
   return async (dispatch) => {
-    const fileReaderPromise = fileList.map((file) => {
-      const reader = new FileReader();
-      return new Promise((resolve) => {
-        reader.onload = (event) =>
-          resolve({
-            name: file.name,
-            content: event.target.result,
-          });
-        reader.readAsText(file);
-      });
-    });
-    const gestures = await Promise.all(fileReaderPromise);
-    const invalidGestures = [];
+    const gestures = await readTextFromUploadedFiles(fileList);
+    const invalidGestures = {};
     const parsedGestures = [];
-    gestures.forEach((gestureFile) => {
+    gestures.forEach((gestureFilePromise) => {
+      const {fileName, content, error} = gestureFilePromise;
       try {
-        const gesture = JSON.parse(gestureFile.content);
-        const isValid = gesture.name && gesture.actions.map(isValidGesture).every(Boolean);
-        if (!isValid) {
-          invalidGestures.push(gestureFile.name);
+        // Some error occured while reading the uploaded file
+        if (error) {
+          invalidGestures[fileName] = [i18n.t('gestureInvalidJsonError')];
+          return;
+        }
+        const gesture = JSON.parse(content);
+        if (!gesture.name) {
+          invalidGestures[fileName] = [i18n.t('gestureNameCannotBeEmptyError')];
+          return;
+        }
+        const actionErrors = gesture.actions
+          .map(checkErrorsInAction)
+          .reduce((acc, error) => (error.length ? acc.concat(error) : acc), []);
+
+        if (actionErrors.length) {
+          invalidGestures[fileName] = actionErrors;
         } else {
-          gesture.description = gesture.description || '';
+          gesture.description = gesture.description || `Gesture imported from ${fileName}`;
           parsedGestures.push(_.omit(gesture, ['id']));
         }
       } catch (e) {
-        invalidGestures.push(gestureFile.name);
+        invalidGestures[fileName] = [i18n.t('gestureInvalidJsonError')];
       }
     });
-
-    if (invalidGestures.length) {
-      notification.error({
-        message: `Unable to upload gesture files ${invalidGestures.join(',')} due to invalid format`,
-      });
-    }
     if (parsedGestures.length) {
       await saveGesture(parsedGestures)(dispatch);
       await getSavedGestures()(dispatch);
+    }
+
+    if (Object.keys(invalidGestures).length) {
+      setGestureUploadErrors(invalidGestures)(dispatch);
     }
   };
 }
 
 export function saveGesture(params) {
   return async (dispatch) => {
-    if (!_.isArray(params)) {
-      params = [params];
-    }
+    const gestureList = _.isArray(params) ? params : [params];
     let savedGestures = (await getSetting(SET_SAVED_GESTURES)) || [];
 
-    for (const param of params) {
+    for (const param of gestureList) {
       if (!param.id) {
         param.id = UUID();
         param.date = Date.now();

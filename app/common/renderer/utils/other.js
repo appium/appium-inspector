@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {Promise} from 'bluebird';
 
 const VALID_W3C_CAPS = [
   'platformName',
@@ -67,4 +68,25 @@ export function downloadFile(href, filename) {
   element.click();
 
   document.body.removeChild(element);
+}
+
+export async function readTextFromUploadedFiles(fileList) {
+  const fileReaderPromise = fileList.map((file) => {
+    const reader = new FileReader();
+    return new Promise((resolve) => {
+      reader.onload = (event) =>
+        resolve({
+          fileName: file.name,
+          content: event.target.result,
+        });
+      reader.onerror = (error) => {
+        resolve({
+          name: file.name,
+          error: error.message,
+        });
+      };
+      reader.readAsText(file);
+    });
+  });
+  return await Promise.all(fileReaderPromise);
 }
