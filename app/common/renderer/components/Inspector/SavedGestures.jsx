@@ -15,7 +15,7 @@ import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {downloadFile, percentageToPixels} from '../../utils/other';
 import InspectorStyles from './Inspector.module.css';
 import FileUploader from '../Common/FileUploader.jsx';
-import { AiOutlineInfoCircle } from 'react-icons/ai';
+import {AiOutlineInfoCircle} from 'react-icons/ai';
 
 const dataSource = (savedGestures, t) => {
   if (!savedGestures) {
@@ -180,12 +180,19 @@ const SavedGestures = (props) => {
       />
       {gestureUploadErrors && (
         <Modal
-          title={<Row align='start'><AiOutlineInfoCircle className={InspectorStyles['error-icon']}/> {t('errorUploadingGesture')}</Row>}
+          title={
+            <Row align="start">
+              <AiOutlineInfoCircle className={InspectorStyles['error-icon']} />{' '}
+              {t('errorUploadingGesture')}
+            </Row>
+          }
           open={!!gestureUploadErrors}
           footer={null} // we dont need ok and cancel buttons
           onCancel={() => setGestureUploadErrors(null)}
         >
-          <p><i>{t('unableToUploadGestureFiles')}</i></p>
+          <p>
+            <i>{t('unableToUploadGestureFiles')}</i>
+          </p>
           <Collapse ghost defaultActiveKey={Object.keys(gestureUploadErrors)}>
             {Object.keys(gestureUploadErrors).map((errorFile) => (
               <Collapse.Panel header={<b>{errorFile}</b>} key={errorFile}>
