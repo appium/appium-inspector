@@ -33,6 +33,7 @@ export const SET_EXPANDED_PATHS = 'SET_EXPANDED_PATHS';
 export const SET_OPTIMAL_LOCATORS = 'SET_OPTIMAL_LOCATORS';
 export const SELECT_HOVERED_ELEMENT = 'SELECT_HOVERED_ELEMENT';
 export const UNSELECT_HOVERED_ELEMENT = 'UNSELECT_HOVERED_ELEMENT';
+export const SET_PAGE_SOURCE_SEARCH_TEXT = 'SET_PAGE_SOURCE_SEARCH_TEXT';
 
 export const SELECT_HOVERED_CENTROID = 'SELECT_HOVERED_CENTROID';
 export const UNSELECT_HOVERED_CENTROID = 'UNSELECT_HOVERED_CENTROID';
@@ -291,6 +292,12 @@ export function applyClientMethod(params) {
 export function addAssignedVarCache(varName) {
   return (dispatch) => {
     dispatch({type: ADD_ASSIGNED_VAR_CACHE, varName});
+  };
+}
+
+export function setPageSourceSearchText(text) {
+  return (dispatch) => {
+    dispatch({type: SET_PAGE_SOURCE_SEARCH_TEXT, text});
   };
 }
 

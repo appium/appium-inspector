@@ -73,6 +73,10 @@
   height: 100%;
 }
 
+.inspector-main .interaction-tab-container :global(.ant-input-affix-wrapper) {
+  width: 200px;
+}
+
 .inspector-main .interaction-tab-container {
   position: relative;
   flex-grow: 1;
@@ -739,4 +743,9 @@
 
 .option-inpt {
   text-align: center;
+}
+
+.search-word-highlighted {
+  color: #272625;
+  background: #b6d932;
 }
