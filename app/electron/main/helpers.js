@@ -1,4 +1,4 @@
-import i18n from '../../common/configs/i18next.config';
+import i18n from './i18next';
 
 export function getAppiumSessionFilePath(argv, isPackaged, isDev) {
   if (isDev) {

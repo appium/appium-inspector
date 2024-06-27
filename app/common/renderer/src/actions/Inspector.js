@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {v4 as UUID} from 'uuid';
 
-import i18n from '../../../configs/i18next.config.renderer';
+import i18n from '../../../configs/i18next.renderer';
 import {
   SAVED_FRAMEWORK,
   SET_SAVED_GESTURES,

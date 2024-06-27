@@ -1,8 +1,8 @@
 import {BrowserWindow, Menu, dialog, ipcMain, webContents} from 'electron';
 
-import i18n from '../../common/configs/i18next.config';
-import {openFilePath} from './main';
 import settings from '../../common/shared/settings';
+import i18n from './i18next';
+import {openFilePath} from './main';
 import {APPIUM_SESSION_EXTENSION} from './helpers';
 import {rebuildMenus} from './menus';
 

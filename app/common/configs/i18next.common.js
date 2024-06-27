@@ -1,6 +1,6 @@
 import settings from '../shared/settings';
 
-const languageList = [
+export const languageList = [
   {name: 'Arabic', code: 'ar', original: 'العربية'},
   {name: 'Chinese Simplified', code: 'zh-CN', original: '中文简体'},
   {name: 'Chinese Traditional', code: 'zh-TW', original: '中文繁體'},
@@ -32,7 +32,7 @@ const config = {
   namespace: 'translation',
 };
 
-function getI18NextOptions(backend) {
+export function getI18NextOptions(backend) {
   return {
     backend,
     // debug: true,
@@ -47,4 +47,3 @@ function getI18NextOptions(backend) {
 }
 
 export default config;
-export {languageList, getI18NextOptions};
