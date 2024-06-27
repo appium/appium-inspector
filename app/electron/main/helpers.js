@@ -1,6 +1,4 @@
-import i18n from '../configs/i18next.config';
-
-const APPIUM_SESSION_FILE_VERSION = '1.0';
+import i18n from '../../common/configs/i18next.config';
 
 export function getAppiumSessionFilePath(argv, isPackaged, isDev) {
   if (isDev) {
@@ -15,17 +13,6 @@ export function getAppiumSessionFilePath(argv, isPackaged, isDev) {
   }
   const argvIndex = isPackaged ? 1 : 2;
   return argv[argvIndex];
-}
-
-// get the slice of the redux state that's needed for the .appiumsession files
-export function getSaveableState(reduxState) {
-  return {
-    version: APPIUM_SESSION_FILE_VERSION,
-    caps: reduxState.caps,
-    server: reduxState.server,
-    serverType: reduxState.serverType,
-    visibleProviders: reduxState.visibleProviders,
-  };
 }
 
 export const t = (string, params = null) => i18n.t(string, params);

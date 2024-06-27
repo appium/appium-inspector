@@ -1,7 +1,7 @@
 import {Menu, app, dialog, shell} from 'electron';
 
-import {languageList} from '../configs/app.config';
-import i18n from '../configs/i18next.config';
+import {languageList} from '../../common/configs/app.config';
+import i18n from '../../common/configs/i18next.config';
 import {checkForUpdates} from './updater';
 import {APPIUM_SESSION_EXTENSION, t} from './helpers';
 import {launchNewSessionWindow} from './windows';

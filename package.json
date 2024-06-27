@@ -17,7 +17,7 @@
   "keywords": [
     "appium"
   ],
-  "assetsPath": "app/renderer/src/assets/locales",
+  "assetsPath": "app/common/renderer/src/assets/locales",
   "homepage": "https://github.com/appium/appium-inspector",
   "main": "dist/main.js",
   "scripts": {
@@ -30,13 +30,13 @@
     "test:integration": "cross-env BUILD_BROWSER=1 E2E_TIMEOUT=600000 NODE_ENV=test RUNNING_IN_SPECTRON=true mocha --reporter mocha-multi-reporters --reporter-options configFile=./test/mochareporters.json ./test/integration",
     "e2e": "cross-env E2E_TIMEOUT=600000 NODE_ENV=test RUNNING_IN_SPECTRON=true mocha --reporter mocha-multi-reporters --reporter-options configFile=./test/mochareporters.json ./test/e2e",
     "build": "npm run build:prod:main && npm run build:prod:renderer && npm run build:prod:browser",
-    "build:main": "parcel build --target node --public-url . --out-dir ./dist --out-file main.js ./app/main/main.js",
-    "build:renderer": "parcel build --no-content-hash --out-dir ./dist --target electron --public-url . ./app/renderer/*.html",
+    "build:main": "parcel build --target node --public-url . --out-dir ./dist --out-file main.js ./app/electron/main/main.js",
+    "build:renderer": "parcel build --no-content-hash --out-dir ./dist --target electron --public-url . ./app/common/renderer/*.html",
     "build:browser": "cross-env PUBLIC_URL=. npm run build:browser:url",
-    "build:browser:url": "cross-env parcel build --no-minify --out-dir ./dist-browser --target browser --public-url $PUBLIC_URL ./app/renderer/index.html",
-    "watch:main": "parcel watch --target node --public-url . --out-dir ./dist --out-file main.js ./app/main/main.js",
-    "watch:renderer": "parcel watch --out-dir ./dist --target electron --public-url . ./app/renderer/*.html",
-    "watch:browser": "cross-env BUILD_BROWSER=1 NODE_ENV=development parcel serve --target browser ./app/renderer/index.html",
+    "build:browser:url": "cross-env parcel build --no-minify --out-dir ./dist-browser --target browser --public-url $PUBLIC_URL ./app/common/renderer/index.html",
+    "watch:main": "parcel watch --target node --public-url . --out-dir ./dist --out-file main.js ./app/electron/main/main.js",
+    "watch:renderer": "parcel watch --out-dir ./dist --target electron --public-url . ./app/common/renderer/*.html",
+    "watch:browser": "cross-env BUILD_BROWSER=1 NODE_ENV=development parcel serve --target browser ./app/common/renderer/index.html",
     "build:prod:main": "cross-env NODE_ENV=production npm run build:main",
     "build:prod:renderer": "cross-env NODE_ENV=production npm run build:renderer",
     "build:prod:browser": "cross-env BUILD_BROWSER=1 NODE_ENV=production npm run build:browser",

@@ -5,7 +5,7 @@ import {
   findDOMNodeByPath,
   findJSONElementByPath,
   xmlToJSON,
-} from '../../app/renderer/src/utils/source-parsing';
+} from '../../app/common/renderer/src/utils/source-parsing';
 
 chai.should();
 

@@ -15,7 +15,6 @@ import {v4 as UUID} from 'uuid';
 import {Web2Driver} from 'web2driver';
 
 import i18n from '../../../configs/i18next.config.renderer';
-import {getSaveableState} from '../../../main/helpers';
 import {
   SAVED_SESSIONS,
   SERVER_ARGS,
@@ -79,6 +78,9 @@ export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
 export const SET_CAPABILITY_NAME_ERROR = 'SET_CAPABILITY_NAME_ERROR';
 export const SET_STATE_FROM_URL = 'SET_STATE_FROM_URL';
 export const SET_STATE_FROM_SAVED = 'SET_STATE_FROM_SAVED';
+
+
+const APPIUM_SESSION_FILE_VERSION = '1.0';
 
 const CAPS_NEW_COMMAND = 'appium:newCommandTimeout';
 const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
@@ -905,6 +907,17 @@ export function saveFile(filepath) {
       // ask the user to save file to a provided path
       ipcRenderer.send('save-file-as');
     }
+  };
+}
+
+// get the slice of the redux state that's needed for the .appiumsession files
+function getSaveableState(reduxState) {
+  return {
+    version: APPIUM_SESSION_FILE_VERSION,
+    caps: reduxState.caps,
+    server: reduxState.server,
+    serverType: reduxState.serverType,
+    visibleProviders: reduxState.visibleProviders,
   };
 }
 

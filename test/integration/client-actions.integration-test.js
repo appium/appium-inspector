@@ -4,7 +4,7 @@ import chaiAsPromised from 'chai-as-promised';
 import path from 'path';
 import {Web2Driver} from 'web2driver/node';
 
-import AppiumClient from '../../app/renderer/src/lib/appium-client';
+import AppiumClient from '../../app/common/renderer/src/lib/appium-client';
 
 const should = chai.should();
 chai.use(chaiAsPromised);
