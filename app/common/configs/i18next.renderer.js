@@ -1,7 +1,7 @@
 import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 
-import {i18NextBackend, i18NextBackendOptions} from '../utils/polyfills';
+import {i18NextBackend, i18NextBackendOptions} from '../shared/polyfills';
 import {getI18NextOptions} from './i18next.common';
 
 const i18nextOptions = getI18NextOptions(i18NextBackendOptions);

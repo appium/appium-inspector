@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {clipboard} from '../../utils/polyfills';
+import {clipboard} from '../../shared/polyfills';
 import ErrorMessage from './ErrorMessage.jsx';
 
 const copyTrace = (trace) => {

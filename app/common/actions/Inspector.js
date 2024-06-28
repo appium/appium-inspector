@@ -5,12 +5,7 @@ import i18n from '../configs/i18next.renderer';
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import AppiumClient from '../lib/appium-client';
 import frameworks from '../lib/client-frameworks';
-import {
-  SAVED_FRAMEWORK,
-  SET_SAVED_GESTURES,
-  getSetting,
-  setSetting,
-} from '../shared/settings';
+import {SAVED_FRAMEWORK, SET_SAVED_GESTURES, getSetting, setSetting} from '../shared/settings';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation';
 import {
   domParser,
