@@ -82,6 +82,7 @@ import {
   UNSELECT_HOVERED_CENTROID,
   UNSELECT_HOVERED_ELEMENT,
   UNSELECT_TICK_ELEMENT,
+  SET_GESTURE_UPLOAD_ERROR,
 } from '../actions/Inspector';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
 import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
@@ -125,6 +126,7 @@ const INITIAL_STATE = {
   visibleCommandMethod: null,
   isAwaitingMjpegStream: true,
   showSourceAttrs: false,
+  gestureUploadErrors: null,
 };
 
 let nextState;
@@ -645,6 +647,9 @@ export default function inspector(state = INITIAL_STATE, action) {
 
     case TOGGLE_REFRESHING_STATE:
       return {...state, isSourceRefreshOn: !state.isSourceRefreshOn};
+
+    case SET_GESTURE_UPLOAD_ERROR:
+      return {...state, gestureUploadErrors: action.errors};
 
     default:
       return {...state};
