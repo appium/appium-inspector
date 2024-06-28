@@ -33,7 +33,7 @@ if (buildForBrowser()) {
     i18NextBackendOptions,
     fs,
     util,
-  } = require('./browser'));
+  } = require('../../web/polyfills'));
 } else {
   ({
     log,
@@ -46,7 +46,7 @@ if (buildForBrowser()) {
     i18NextBackendOptions,
     fs,
     util,
-  } = require('./electron'));
+  } = require('../../electron/renderer/polyfills'));
 }
 
 export {

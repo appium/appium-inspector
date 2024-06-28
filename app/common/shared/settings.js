@@ -1,4 +1,4 @@
-import {settings} from '../polyfills';
+import {settings} from '../utils/polyfills';
 
 export const SAVED_SESSIONS = 'SAVED_SESSIONS';
 export const SET_SAVED_GESTURES = 'SET_SAVED_GESTURES';

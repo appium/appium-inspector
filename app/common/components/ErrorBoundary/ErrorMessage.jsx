@@ -4,8 +4,8 @@ import React from 'react';
 
 import {ALERT} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
-import {shell} from '../../polyfills';
 import {withTranslation} from '../../utils/other';
+import {shell} from '../../utils/polyfills';
 import styles from './ErrorMessage.module.css';
 
 const ErrorMessage = ({error, copyTrace, t}) => (

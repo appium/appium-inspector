@@ -6,7 +6,7 @@ import i18n from './configs/i18next.renderer';
 import Spinner from './components/Spinner/Spinner.jsx';
 import InspectorPage from './containers/InspectorPage';
 import SessionPage from './containers/SessionPage';
-import {ipcRenderer} from './polyfills';
+import {ipcRenderer} from './utils/polyfills';
 
 ipcRenderer.on('appium-language-changed', (event, message) => {
   if (i18n.language !== message.language) {

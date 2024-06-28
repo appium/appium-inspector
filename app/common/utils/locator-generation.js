@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import XPath from 'xpath';
 
-import {log} from '../polyfills';
+import {log} from './polyfills';
 import {childNodesOf, domParser, findDOMNodeByPath, xmlSerializer} from './source-parsing';
 
 // Attributes on nodes that are likely to be unique to the node so we should consider first when
