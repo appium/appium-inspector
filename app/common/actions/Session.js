@@ -14,7 +14,10 @@ import moment from 'moment';
 import {v4 as UUID} from 'uuid';
 import {Web2Driver} from 'web2driver';
 
-import i18n from '../../../configs/i18next.renderer';
+import i18n from '../configs/i18next.renderer';
+import {APP_MODE} from '../constants/session-inspector';
+import CloudProviders from '../components/Session/CloudProviders.jsx';
+import {fs, ipcRenderer, util} from '../polyfills';
 import {
   SAVED_SESSIONS,
   SERVER_ARGS,
@@ -22,10 +25,7 @@ import {
   SESSION_SERVER_TYPE,
   getSetting,
   setSetting,
-} from '../../../shared/settings';
-import {APP_MODE} from '../constants/session-inspector';
-import CloudProviders from '../components/Session/CloudProviders.jsx';
-import {fs, ipcRenderer, util} from '../polyfills';
+} from '../shared/settings';
 import {addVendorPrefixes} from '../utils/other';
 import {quitSession, setSessionDetails} from './Inspector';
 

@@ -24,4 +24,4 @@ labels:
 
   - label: 'i18n'
     matcher:
-      files: ['app/common/renderer/src/assets/locales/**']
+      files: ['app/common/assets/locales/**']

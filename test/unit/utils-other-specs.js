@@ -1,6 +1,6 @@
 import chai from 'chai';
 
-import {addVendorPrefixes} from '../../app/common/renderer/src/utils/other';
+import {addVendorPrefixes} from '../../app/common/utils/other';
 
 chai.should();
 
