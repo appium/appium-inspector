@@ -3,7 +3,7 @@ import chaiAsPromised from 'chai-as-promised';
 import {promises as fs} from 'fs';
 import {join} from 'path';
 
-import {parseSource} from '../../app/renderer/src/lib/webview-helpers';
+import {parseSource} from '../../app/common/lib/webview-helpers';
 
 chai.should();
 chai.use(chaiAsPromised);
