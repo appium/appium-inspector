@@ -84,7 +84,7 @@
     "electron-log": "4.4.8",
     "electron-settings": "4.0.4",
     "electron-updater": "6.2.1",
-    "highlight.js": "11.9.0",
+    "highlight.js": "11.10.0",
     "htmlparser2": "7.2.0",
     "i18next": "23.11.5",
     "i18next-chained-backend": "4.6.2",
