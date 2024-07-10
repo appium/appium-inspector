@@ -1,6 +1,6 @@
 import {app} from 'electron';
 
-import {installExtensions} from './debug';
+// import {installExtensions} from './debug';
 import {getAppiumSessionFilePath} from './helpers';
 import {setupMainWindow} from './windows';
 
@@ -16,10 +16,11 @@ app.on('window-all-closed', () => {
   app.quit();
 });
 
-app.on('ready', async () => {
+app.on('ready', () => {
   if (isDev) {
     require('electron-debug')();
-    await installExtensions();
+    // TODO: uncomment this after upgrading to Electron 15+
+    // await installExtensions();
   }
 
   setupMainWindow({
