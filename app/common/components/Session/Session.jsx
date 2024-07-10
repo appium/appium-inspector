@@ -8,6 +8,7 @@ import {BUTTON} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
 import {ADD_CLOUD_PROVIDER_TAB_KEY} from '../../constants/session-builder';
 import {ipcRenderer, shell} from '../../shared/polyfills';
+import {log} from '../../utils/other';
 import AdvancedServerParams from './AdvancedServerParams.jsx';
 import AttachToSession from './AttachToSession.jsx';
 import CapabilityEditor from './CapabilityEditor.jsx';
@@ -83,7 +84,7 @@ const Session = (props) => {
         ipcRenderer.on('open-file', (_, filePath) => setStateFromAppiumFile(filePath));
         ipcRenderer.on('save-file', (_, filePath) => saveFile(filePath));
       } catch (e) {
-        console.error(e); // eslint-disable-line no-console
+        log.error(e);
       }
     })();
   }, []);

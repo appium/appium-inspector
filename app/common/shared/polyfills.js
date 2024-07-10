@@ -1,5 +1,4 @@
-let log,
-  settings,
+let settings,
   clipboard,
   shell,
   remote,
@@ -23,7 +22,6 @@ function buildForBrowser() {
 
 if (buildForBrowser()) {
   ({
-    log,
     settings,
     clipboard,
     shell,
@@ -36,7 +34,6 @@ if (buildForBrowser()) {
   } = require('../../web/polyfills'));
 } else {
   ({
-    log,
     settings,
     clipboard,
     shell,
@@ -50,7 +47,6 @@ if (buildForBrowser()) {
 }
 
 export {
-  log,
   clipboard,
   shell,
   remote,

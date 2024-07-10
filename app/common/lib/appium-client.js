@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
+import {log} from '../utils/other';
 import {parseSource, setHtmlElementAttributes} from './webview-helpers';
 
 const {TAP, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
@@ -57,8 +58,7 @@ export default class AppiumClient {
     let res = {};
     if (methodName) {
       if (elementId) {
-        // eslint-disable-next-line no-console
-        console.log(
+        log.info(
           `Handling client method request with method '${methodName}', ` +
             `args ${JSON.stringify(args)} and elementId ${elementId}`,
         );
@@ -71,8 +71,7 @@ export default class AppiumClient {
           appMode,
         });
       } else {
-        // eslint-disable-next-line no-console
-        console.log(
+        log.info(
           `Handling client method request with method '${methodName}' ` +
             `and args ${JSON.stringify(args)}`,
         );
@@ -80,12 +79,10 @@ export default class AppiumClient {
       }
     } else if (strategy && selector) {
       if (fetchArray) {
-        // eslint-disable-next-line no-console
-        console.log(`Fetching elements with selector '${selector}' and strategy ${strategy}`);
+        log.info(`Fetching elements with selector '${selector}' and strategy ${strategy}`);
         res = await this.fetchElements({strategy, selector});
       } else {
-        // eslint-disable-next-line no-console
-        console.log(`Fetching an element with selector '${selector}' and strategy ${strategy}`);
+        log.info(`Fetching an element with selector '${selector}' and strategy ${strategy}`);
         res = await this.fetchElement({strategy, selector});
       }
     }

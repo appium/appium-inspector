@@ -15,6 +15,22 @@ const VALID_W3C_CAPS = [
   'unhandledPromptBehavior',
 ];
 
+class Logger {
+  info(...args) {
+    console.info(...args); // eslint-disable-line no-console
+  }
+
+  warn(...args) {
+    console.warn(...args); // eslint-disable-line no-console
+  }
+
+  error(...args) {
+    console.error(...args); // eslint-disable-line no-console
+  }
+}
+
+export const log = new Logger();
+
 export function withTranslation(componentCls, ...hocs) {
   return _.flow(...hocs, wt(config.namespace))(componentCls);
 }
