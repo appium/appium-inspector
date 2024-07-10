@@ -53,12 +53,4 @@ const i18NextBackendOptions = {
   ],
 };
 
-export {
-  settings,
-  clipboard,
-  shell,
-  remote,
-  ipcRenderer,
-  i18NextBackend,
-  i18NextBackendOptions,
-};
+export {settings, clipboard, shell, remote, ipcRenderer, i18NextBackend, i18NextBackendOptions};
