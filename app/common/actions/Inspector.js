@@ -13,6 +13,7 @@ import {
   findJSONElementByPath,
   xmlToJSON,
 } from '../utils/source-parsing';
+import {log} from '../utils/logger';
 import {showError} from './Session';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
@@ -275,7 +276,7 @@ export function applyClientMethod(params) {
       window.dispatchEvent(new Event('resize'));
       return commandRes;
     } catch (error) {
-      console.log(error); // eslint-disable-line no-console
+      log.error(error);
       let methodName = params.methodName === 'click' ? 'tap' : params.methodName;
       showError(error, {methodName, secs: 10});
       dispatch({type: METHOD_CALL_DONE});
@@ -666,8 +667,7 @@ export function getActiveAppId(isIOS, isAndroid) {
         dispatch({type: SET_APP_ID, appId: appPackage});
       }
     } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error(`Could not Retrieve Active App ID: ${err}`);
+      log.error(`Could not Retrieve Active App ID: ${err}`);
     }
   };
 }
@@ -745,7 +745,7 @@ export function runKeepAliveLoop() {
 
     const keepAliveInterval = setInterval(async () => {
       const {lastActiveMoment, showKeepAlivePrompt} = getState().inspector;
-      console.log('Pinging Appium server to keep session active'); // eslint-disable-line no-console
+      log.info('Pinging Appium server to keep session active');
       try {
         await driver.getTimeouts(); // Pings the Appium server to keep it alive
       } catch (ign) {}
@@ -805,8 +805,8 @@ export function callClientMethod(params) {
       params.skipRefresh = true;
     }
 
-    console.log(`Calling client method with params:`); // eslint-disable-line no-console
-    console.log(params); // eslint-disable-line no-console
+    log.info(`Calling client method with params:`);
+    log.info(params);
     const action = keepSessionAlive();
     action(dispatch, getState);
     const client = AppiumClient.instance(driver);
@@ -823,8 +823,8 @@ export function callClientMethod(params) {
       // ability to scroll etc...
       const result = JSON.stringify(commandRes, null, '  ');
       const truncatedResult = _.truncate(result, {length: 2000});
-      console.log(`Result of client command was:`); // eslint-disable-line no-console
-      console.log(truncatedResult); // eslint-disable-line no-console
+      log.info(`Result of client command was:`);
+      log.info(truncatedResult);
       setVisibleCommandResult(result, methodName)(dispatch);
     }
     res.elementId = res.id;

@@ -13,7 +13,6 @@
         "chai",
         "electron",
         "electron-debug",
-        "electron-log",
         "eslint",
         "htmlparser2",
         "postcss-modules",

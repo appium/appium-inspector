@@ -1,4 +1,4 @@
-let log, settings, clipboard, shell, ipcRenderer, i18NextBackend, i18NextBackendOptions, fs, util;
+let settings, clipboard, shell, ipcRenderer, i18NextBackend, i18NextBackendOptions, fs, util;
 
 function buildForBrowser() {
   if (process.env.BUILD_BROWSER) {
@@ -14,7 +14,6 @@ function buildForBrowser() {
 
 if (buildForBrowser()) {
   ({
-    log,
     settings,
     clipboard,
     shell,
@@ -26,7 +25,6 @@ if (buildForBrowser()) {
   } = require('../../web/polyfills'));
 } else {
   ({
-    log,
     settings,
     clipboard,
     shell,
@@ -38,14 +36,4 @@ if (buildForBrowser()) {
   } = require('../../electron/renderer/polyfills'));
 }
 
-export {
-  log,
-  clipboard,
-  shell,
-  ipcRenderer,
-  settings,
-  i18NextBackend,
-  i18NextBackendOptions,
-  fs,
-  util,
-};
+export {settings, clipboard, shell, ipcRenderer, i18NextBackend, i18NextBackendOptions, fs, util};
