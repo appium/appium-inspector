@@ -1,4 +1,4 @@
-import {clipboard, ipcRenderer, remote, shell} from 'electron';
+import {clipboard, ipcRenderer, shell} from 'electron';
 import settings from 'electron-settings';
 import fs from 'fs';
 import i18NextBackend from 'i18next-fs-backend';
@@ -11,14 +11,4 @@ const i18NextBackendOptions = {
   jsonIndent: 2,
 };
 
-export {
-  clipboard,
-  shell,
-  remote,
-  ipcRenderer,
-  settings,
-  i18NextBackend,
-  i18NextBackendOptions,
-  fs,
-  util,
-};
+export {settings, clipboard, shell, ipcRenderer, i18NextBackend, i18NextBackendOptions, fs, util};

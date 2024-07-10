@@ -184,10 +184,6 @@
   margin-left: 1em;
 }
 
-.filepath-button {
-  cursor: pointer;
-}
-
 .capsFormCol {
   min-width: 420px;
   height: 100%;
@@ -214,7 +210,6 @@
   width: 142px;
 }
 
-.fileControlWrapper :global(.ant-input-group),
 .capsValueControl textarea {
   max-width: 142px;
 }

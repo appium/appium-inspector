@@ -1,12 +1,4 @@
-let settings,
-  clipboard,
-  shell,
-  remote,
-  ipcRenderer,
-  i18NextBackend,
-  i18NextBackendOptions,
-  fs,
-  util;
+let settings, clipboard, shell, ipcRenderer, i18NextBackend, i18NextBackendOptions, fs, util;
 
 function buildForBrowser() {
   if (process.env.BUILD_BROWSER) {
@@ -25,7 +17,6 @@ if (buildForBrowser()) {
     settings,
     clipboard,
     shell,
-    remote,
     ipcRenderer,
     i18NextBackend,
     i18NextBackendOptions,
@@ -37,7 +28,6 @@ if (buildForBrowser()) {
     settings,
     clipboard,
     shell,
-    remote,
     ipcRenderer,
     i18NextBackend,
     i18NextBackendOptions,
@@ -46,14 +36,4 @@ if (buildForBrowser()) {
   } = require('../../electron/renderer/polyfills'));
 }
 
-export {
-  clipboard,
-  shell,
-  remote,
-  ipcRenderer,
-  settings,
-  i18NextBackend,
-  i18NextBackendOptions,
-  fs,
-  util,
-};
+export {settings, clipboard, shell, ipcRenderer, i18NextBackend, i18NextBackendOptions, fs, util};

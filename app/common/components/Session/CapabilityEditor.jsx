@@ -42,9 +42,6 @@ const handleSetType = (setCapabilityParam, caps, index, type) => {
     case 'object':
       translatedValue = translatedValue + '';
       break;
-    case 'file':
-      translatedValue = '';
-      break;
     default:
       break;
   }
@@ -120,7 +117,6 @@ const CapabilityEditor = (props) => {
                     <Select.Option value="boolean">{t('boolean')}</Select.Option>
                     <Select.Option value="number">{t('number')}</Select.Option>
                     <Select.Option value="object">{t('JSON object')}</Select.Option>
-                    <Select.Option value="file">{t('filepath')}</Select.Option>
                   </Select>
                 </Form.Item>
               </Col>

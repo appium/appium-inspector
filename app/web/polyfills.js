@@ -9,11 +9,6 @@ const browser = {
   shell: {
     openExternal: (url) => window.open(url, ''),
   },
-  remote: {
-    getCurrentWindow: () => ({
-      getSize: () => [window.innerWidth, window.innerHeight],
-    }),
-  },
   ipcRenderer: {
     on: (evt) => {
       console.warn(`Cannot listen for IPC event ${evt} in browser context`); // eslint-disable-line no-console
@@ -42,7 +37,7 @@ class BrowserSettings {
 }
 
 const settings = new BrowserSettings();
-const {clipboard, shell, remote, ipcRenderer} = browser;
+const {clipboard, shell, ipcRenderer} = browser;
 const i18NextBackendOptions = {
   backends: [LocalStorageBackend, HttpApi],
   backendOptions: [
@@ -53,4 +48,4 @@ const i18NextBackendOptions = {
   ],
 };
 
-export {settings, clipboard, shell, remote, ipcRenderer, i18NextBackend, i18NextBackendOptions};
+export {settings, clipboard, shell, ipcRenderer, i18NextBackend, i18NextBackendOptions};
