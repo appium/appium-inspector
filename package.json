@@ -69,7 +69,6 @@
     "antd": "V5: significant rewrite required",
     "bluebird": "Deprecated: recommended to replace with native promises",
     "cheerio": "1.0.0-rc.11: errors with export namespace",
-    "electron-log": "V5: rewrite required to only call in main process",
     "electron-settings": "V5: need to rewrite to IPC while keeping browser version working",
     "htmlparser2": "8.0.0: errors with export namespace",
     "uuid": "Obsolete: can be replaced with crypto.randomUUID in Electron 14+"
@@ -81,7 +80,6 @@
     "axios": "1.7.2",
     "bluebird": "3.7.2",
     "cheerio": "1.0.0-rc.10",
-    "electron-log": "4.4.8",
     "electron-settings": "4.0.4",
     "electron-updater": "6.2.1",
     "highlight.js": "11.9.0",

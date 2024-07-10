@@ -1,5 +1,4 @@
 import {clipboard, ipcRenderer, remote, shell} from 'electron';
-import log from 'electron-log';
 import settings from 'electron-settings';
 import fs from 'fs';
 import i18NextBackend from 'i18next-fs-backend';
@@ -13,7 +12,6 @@ const i18NextBackendOptions = {
 };
 
 export {
-  log,
   clipboard,
   shell,
   remote,

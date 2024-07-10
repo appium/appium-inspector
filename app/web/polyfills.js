@@ -41,7 +41,6 @@ class BrowserSettings {
   }
 }
 
-const log = console;
 const settings = new BrowserSettings();
 const {clipboard, shell, remote, ipcRenderer} = browser;
 const i18NextBackendOptions = {
@@ -54,13 +53,4 @@ const i18NextBackendOptions = {
   ],
 };
 
-export {
-  log,
-  settings,
-  clipboard,
-  shell,
-  remote,
-  ipcRenderer,
-  i18NextBackend,
-  i18NextBackendOptions,
-};
+export {settings, clipboard, shell, remote, ipcRenderer, i18NextBackend, i18NextBackendOptions};

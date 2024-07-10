@@ -26,6 +26,7 @@ import {
   getSetting,
   setSetting,
 } from '../shared/settings';
+import {log} from '../utils/logger';
 import {addVendorPrefixes} from '../utils/other';
 import {quitSession, setSessionDetails} from './Inspector';
 
@@ -178,7 +179,7 @@ export function showError(e, params = {methodName: null, secs: 5, url: null}) {
     errMessage = i18n.t('couldNotConnect', {url});
   }
 
-  console.error(errMessage); // eslint-disable-line no-console
+  log.error(errMessage);
   notification.error({
     message: methodName ? i18n.t('callToMethodFailed', {methodName}) : i18n.t('Error'),
     description: errMessage,
@@ -585,9 +586,8 @@ export function newSession(caps, attachSessId = null) {
             });
             attachedSessionCaps = res.data.value;
           } catch (err) {
-            // rethrow the error as session not running, but first log the original error to
-            // console
-            console.error(err); // eslint-disable-line no-console
+            // rethrow the error as session not running, but first log the original error to console
+            log.error(err);
             throw new Error(i18n.t('attachSessionNotRunning', {attachSessId}));
           }
         }
@@ -963,7 +963,7 @@ export function getRunningSessions() {
       });
       dispatch({type: GET_SESSIONS_DONE, sessions: res.data.value});
     } catch (err) {
-      console.warn(`Ignoring error in getting list of active sessions: ${err}`); // eslint-disable-line no-console
+      log.warn(`Ignoring error in getting list of active sessions: ${err}`);
       dispatch({type: GET_SESSIONS_DONE});
     }
   };

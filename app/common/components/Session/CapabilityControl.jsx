@@ -4,7 +4,8 @@ import _ from 'lodash';
 import React from 'react';
 
 import {INPUT} from '../../constants/antd-types';
-import {log, remote} from '../../shared/polyfills';
+import {remote} from '../../shared/polyfills';
+import {log} from '../../utils/logger';
 import SessionStyles from './Session.module.css';
 
 const getLocalFilePath = async () => {
