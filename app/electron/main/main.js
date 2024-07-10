@@ -19,7 +19,7 @@ app.on('window-all-closed', () => {
 app.on('ready', () => {
   if (isDev) {
     require('electron-debug')();
-    // TODO: uncomment this after upgrading to newer Electron
+    // TODO: uncomment this after upgrading to Electron 15+
     // await installExtensions();
   }
 
