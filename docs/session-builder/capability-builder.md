@@ -20,13 +20,12 @@ fields for specifying each capability in parts: its name, value type, and the va
 Changing the name or value of any capability will automatically adjust the contents of
 [the JSON structure](#capability-json-structure) on the right side of the Session Builder.
 
-There are 5 options for the value type:
+There are 4 options for the value type:
 
 -   text
 -   boolean
 -   number
 -   JSON object
--   filepath
 
 Selecting a different option may change the value input field.
 
