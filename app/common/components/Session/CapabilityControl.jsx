@@ -5,7 +5,7 @@ import React from 'react';
 
 import {INPUT} from '../../constants/antd-types';
 import {remote} from '../../shared/polyfills';
-import {log} from '../../utils/other';
+import {log} from '../../utils/logger';
 import SessionStyles from './Session.module.css';
 
 const getLocalFilePath = async () => {

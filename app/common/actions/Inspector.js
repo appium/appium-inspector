@@ -13,7 +13,7 @@ import {
   findJSONElementByPath,
   xmlToJSON,
 } from '../utils/source-parsing';
-import {log} from '../utils/other';
+import {log} from '../utils/logger';
 import {showError} from './Session';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';

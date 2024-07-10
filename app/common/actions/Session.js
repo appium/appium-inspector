@@ -26,7 +26,8 @@ import {
   getSetting,
   setSetting,
 } from '../shared/settings';
-import {addVendorPrefixes, log} from '../utils/other';
+import {log} from '../utils/logger';
+import {addVendorPrefixes} from '../utils/other';
 import {quitSession, setSessionDetails} from './Inspector';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';

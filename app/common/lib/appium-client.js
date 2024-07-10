@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
-import {log} from '../utils/other';
+import {log} from '../utils/logger';
 import {parseSource, setHtmlElementAttributes} from './webview-helpers';
 
 const {TAP, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
