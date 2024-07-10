@@ -1,13 +1,4 @@
-let log,
-  settings,
-  clipboard,
-  shell,
-  remote,
-  ipcRenderer,
-  i18NextBackend,
-  i18NextBackendOptions,
-  fs,
-  util;
+let log, settings, clipboard, shell, ipcRenderer, i18NextBackend, i18NextBackendOptions, fs, util;
 
 function buildForBrowser() {
   if (process.env.BUILD_BROWSER) {
@@ -27,7 +18,6 @@ if (buildForBrowser()) {
     settings,
     clipboard,
     shell,
-    remote,
     ipcRenderer,
     i18NextBackend,
     i18NextBackendOptions,
@@ -40,7 +30,6 @@ if (buildForBrowser()) {
     settings,
     clipboard,
     shell,
-    remote,
     ipcRenderer,
     i18NextBackend,
     i18NextBackendOptions,
@@ -53,7 +42,6 @@ export {
   log,
   clipboard,
   shell,
-  remote,
   ipcRenderer,
   settings,
   i18NextBackend,

@@ -1,22 +1,8 @@
-import {FileOutlined} from '@ant-design/icons';
 import {Input, Switch} from 'antd';
-import _ from 'lodash';
 import React from 'react';
 
 import {INPUT} from '../../constants/antd-types';
-import {log, remote} from '../../shared/polyfills';
 import SessionStyles from './Session.module.css';
-
-const getLocalFilePath = async () => {
-  try {
-    const {canceled, filePaths} = await remote.dialog.showOpenDialog({properties: ['openFile']});
-    if (!canceled && !_.isEmpty(filePaths)) {
-      return filePaths[0];
-    }
-  } catch (e) {
-    log.error(e);
-  }
-};
 
 const CapabilityControl = ({
   cap,
@@ -28,6 +14,7 @@ const CapabilityControl = ({
 }) => {
   switch (cap.type) {
     case 'text':
+    case 'file':
       return (
         <Input
           disabled={isEditingDesiredCaps}
@@ -80,26 +67,6 @@ const CapabilityControl = ({
           onChange={(e) => onSetCapabilityParam(e.target.value)}
           className={SessionStyles.capsBoxFont}
         />
-      );
-    case 'file':
-      return (
-        <div className={SessionStyles.fileControlWrapper}>
-          <Input
-            disabled={isEditingDesiredCaps}
-            id={id}
-            placeholder={t('Value')}
-            value={cap.value}
-            onChange={(e) => onSetCapabilityParam(e.target.value)}
-            onPressEnter={onPressEnter}
-            className={SessionStyles.capsBoxFont}
-            addonAfter={
-              <FileOutlined
-                className={SessionStyles['filepath-button']}
-                onClick={async () => onSetCapabilityParam((await getLocalFilePath()) || cap.value)}
-              />
-            }
-          />
-        </div>
       );
     default:
       throw new Error(t('invalidCapType', {type: cap.type}));

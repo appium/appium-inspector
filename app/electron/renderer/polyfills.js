@@ -1,4 +1,4 @@
-import {clipboard, ipcRenderer, remote, shell} from 'electron';
+import {clipboard, ipcRenderer, shell} from 'electron';
 import log from 'electron-log';
 import settings from 'electron-settings';
 import fs from 'fs';
@@ -16,7 +16,6 @@ export {
   log,
   clipboard,
   shell,
-  remote,
   ipcRenderer,
   settings,
   i18NextBackend,
