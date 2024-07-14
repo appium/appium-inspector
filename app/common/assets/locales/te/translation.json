@@ -160,7 +160,6 @@
   "boolean": "బూలియన్",
   "number": "సంఖ్య",
   "JSON object": "JSON వస్తువు",
-  "filepath": "ఫైల్ మార్గం",
   "connectToExistingSessionInstructions": "మీరు పై సర్వర్ రకానికి చెందిన సెషన్‌ను ఇప్పటికే అమలు చేస్తున్నట్లయితే, మీరు నేరుగా దానికి ఇన్‌స్పెక్టర్‌ని జోడించవచ్చు.",
   "selectSessionIDInDropdown": "దిగువ డ్రాప్‌డౌన్‌లో సెషన్ IDని ఎంచుకోండి.",
   "allowUnauthorizedCerts": "అనధికార ధృవపత్రాలను అనుమతించండి",

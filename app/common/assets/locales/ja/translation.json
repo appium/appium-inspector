@@ -160,7 +160,6 @@
   "boolean": "ブール値",
   "number": "数字",
   "JSON object": "JSONオブジェクト",
-  "filepath": "ファイルパス",
   "connectToExistingSessionInstructions": "上記のサーバタイプにおける実行中セッションがある場合、インスペクタを直接接続することができます",
   "selectSessionIDInDropdown": "以下のドロップダウンからセッションIDを選択してください",
   "allowUnauthorizedCerts": "認可されていない証明書を許可する",

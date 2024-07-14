@@ -160,7 +160,6 @@
   "boolean": "مقدار بولین",
   "number": "شماره",
   "JSON object": "شی JSON",
-  "filepath": "آدرس فایل",
   "connectToExistingSessionInstructions": "اگر یک session از نوع سرور بالا در حال حاضر در حال اجرا دارید، می توانید یک inspector را مستقیماً به آن متصل کنید.",
   "selectSessionIDInDropdown": "یک Session ID از انتخابگر زیر انتخاب کنید.",
   "allowUnauthorizedCerts": "اجازه دادن به گواهینامه های غیر مجاز",

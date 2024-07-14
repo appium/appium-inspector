@@ -160,7 +160,6 @@
   "boolean": "booleano",
   "number": "numero",
   "JSON object": "Oggetto JSON",
-  "filepath": "percorso",
   "connectToExistingSessionInstructions": "Se si dispone di una sessione già in esecuzione del tipo di server sopra, è possibile connettere un Inspector ad essa direttamente.",
   "selectSessionIDInDropdown": "Seleziona l'ID di sessione nel menu a tendina qui sotto.",
   "allowUnauthorizedCerts": "Consenti Certificati Non Autorizzati",

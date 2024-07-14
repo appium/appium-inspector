@@ -160,7 +160,6 @@
   "boolean": "логічний тип",
   "number": "число",
   "JSON object": "JSON-об'єкт",
-  "filepath": "шлях до файлу",
   "connectToExistingSessionInstructions": "Якщо у вас вже є сесія вищевказаного типу сервера, ви можете приєднатися інспектором безпосередньо до неї.",
   "selectSessionIDInDropdown": "Виберіть ID сесії у списку нижче.",
   "allowUnauthorizedCerts": "Дозволити не довірені сертифікати",

@@ -160,7 +160,6 @@
   "boolean": "boolean",
   "number": "number",
   "JSON object": "JSON object",
-  "filepath": "filepath",
   "connectToExistingSessionInstructions": "If you have an already-running session of the above server type, you can attach an inspector to it directly.",
   "selectSessionIDInDropdown": "Select the Session ID in the dropdown below.",
   "allowUnauthorizedCerts": "Allow Unauthorized Certificates",
