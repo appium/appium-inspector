@@ -160,7 +160,6 @@
   "boolean": "логическое значение",
   "number": "число",
   "JSON object": "JSON-объект",
-  "filepath": "путь к файлу",
   "connectToExistingSessionInstructions": "Если у вас уже есть выполняемая сессия, можно напрямую подключить к ней инспектор.",
   "selectSessionIDInDropdown": "Выберите идентификатор сессии в выпадающем списке ниже",
   "allowUnauthorizedCerts": "Неавторизованные сертификаты",

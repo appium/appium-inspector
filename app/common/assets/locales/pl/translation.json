@@ -160,7 +160,6 @@
   "boolean": "boolean",
   "number": "numer",
   "JSON object": "Obiekt JSON",
-  "filepath": "ścieżka pliku",
   "connectToExistingSessionInstructions": "Jeśli masz już uruchomioną sesję powyższego typu serwera, możesz do niej bezpośrednio dołączyć inspektora.",
   "selectSessionIDInDropdown": "Wybierz ID sesji z rozwijanej listy poniżej.",
   "allowUnauthorizedCerts": "Zezwalaj na nieautoryzowane certyfikaty",
