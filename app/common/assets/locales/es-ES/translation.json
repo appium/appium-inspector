@@ -160,7 +160,6 @@
   "boolean": "booleano",
   "number": "número",
   "JSON object": "objeto JSON",
-  "filepath": "ruta",
   "connectToExistingSessionInstructions": "Si tiene una sesión ya en ejecución, puedes adjuntar un inspector directamente a él.",
   "selectSessionIDInDropdown": "Seleccione la ID de sesión en el desplegable a continuación.",
   "allowUnauthorizedCerts": "Permitir certificados no autorizados",

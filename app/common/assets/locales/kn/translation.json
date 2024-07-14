@@ -160,7 +160,6 @@
   "boolean": "ಬೂಲಿಯನ್",
   "number": "ನಂಬರ್",
   "JSON object": "JSON ಆಬ್ಜೆಕ್ಟ್",
-  "filepath": "ಫೈಲ್ ಪಥ್",
   "connectToExistingSessionInstructions": "ನಿಮ್ಮ ಬಳಿ ಮೇಲೆ ಆಯ್ಕೆಯಾದ ಸರ್ವರ್ನ ಚಾಲ್ತಿಯಲ್ಲಿರುವ ಸೆಷನ್ ಇದ್ದಾರೆ, ಅದಕ್ಕೆ ಇನ್ಸ್ಪೆಕ್ಟರ್ನ ನೀವು ಲಗತ್ತಿಸಬಹುದು.",
   "selectSessionIDInDropdown": "ಸೆಷನ್ ಸಂಖ್ಯೆಯನ್ನು ಡ್ರಾಪ್ ಡೌನ್ ಬಾಕ್ಸ್ನಿಂದ ಆಯ್ಕೆ ಮಾಡಿ.",
   "allowUnauthorizedCerts": "ಅನಧಿಕೃತ ಸರ್ಟಿಫೀಕೆಟ್ಸ್ನನ್ನು ಅನುಮತಿಸಿ",

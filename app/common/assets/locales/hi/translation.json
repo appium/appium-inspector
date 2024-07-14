@@ -160,7 +160,6 @@
   "boolean": "बूलियन",
   "number": "क्रमांक",
   "JSON object": "JSON ऑब्जेक्ट",
-  "filepath": "फ़ाइल पथ",
   "connectToExistingSessionInstructions": "यदि आपके पास उपरोक्त सर्वर प्रकार का एक पहले से चल रहा सत्र है, तो आप इसे सीधे एक निरीक्षक संलग्न कर सकते हैं।",
   "selectSessionIDInDropdown": "नीचे दिए गए ड्रॉपडाउन में सत्र आईडी का चयन करें।",
   "allowUnauthorizedCerts": "अनधिकृत प्रमाणपत्रों की अनुमति दें",

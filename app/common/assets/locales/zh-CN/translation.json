@@ -160,7 +160,6 @@
   "boolean": "布尔值",
   "number": "数字",
   "JSON object": "JSON 对象",
-  "filepath": "文件路径",
   "connectToExistingSessionInstructions": "如果您有上述服务器类型的已运行会话, 则可以直接将检查器附加到该会话。",
   "selectSessionIDInDropdown": "从以下下拉列表中选择会话 ID。",
   "allowUnauthorizedCerts": "允许未经授权的证书",
