@@ -1,4 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
+import {createLogger} from 'redux-logger';
 
 import actions from './actions';
 import createRootReducer from './reducers';
@@ -13,7 +14,6 @@ const store = configureStore({
     // Additional development tools
     if (process.env.NODE_ENV === 'development') {
       // Logging Middleware
-      const {createLogger} = require('redux-logger');
       const logger = createLogger({
         level: 'info',
         collapsed: true,
