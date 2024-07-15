@@ -129,6 +129,7 @@
     "@babel/register": "7.24.6",
     "@types/chai": "4.3.16",
     "@types/react": "18.3.3",
+    "@types/redux-logger": "3.0.13",
     "@types/sinon": "17.0.3",
     "asyncbox": "3.0.0",
     "chai": "4.4.1",
