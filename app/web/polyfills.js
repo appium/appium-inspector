@@ -37,7 +37,7 @@ class BrowserSettings {
 }
 
 const settings = new BrowserSettings();
-const {clipboard, shell, ipcRenderer} = browser;
+const {clipboard, shell, ipcRenderer, fs, util} = browser;
 const i18NextBackendOptions = {
   backends: [LocalStorageBackend, HttpApi],
   backendOptions: [
@@ -48,4 +48,4 @@ const i18NextBackendOptions = {
   ],
 };
 
-export {settings, clipboard, shell, ipcRenderer, i18NextBackend, i18NextBackendOptions};
+export {settings, clipboard, shell, ipcRenderer, i18NextBackend, i18NextBackendOptions, fs, util};
