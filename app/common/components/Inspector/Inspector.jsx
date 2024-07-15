@@ -304,6 +304,7 @@ const Inspector = (props) => {
             {
               label: t('Source'),
               key: INSPECTOR_TABS.SOURCE,
+              disabled: !showScreenshot,
               children: (
                 <div className="action-row">
                   <div className="action-col">
@@ -367,6 +368,7 @@ const Inspector = (props) => {
             {
               label: t('Commands'),
               key: INSPECTOR_TABS.COMMANDS,
+              disabled: !showScreenshot,
               children: (
                 <Card
                   title={
@@ -383,6 +385,7 @@ const Inspector = (props) => {
             {
               label: t('Gestures'),
               key: INSPECTOR_TABS.GESTURES,
+              disabled: !showScreenshot,
               children: isGestureEditorVisible ? (
                 <Card
                   title={
@@ -410,11 +413,13 @@ const Inspector = (props) => {
             {
               label: t('Recorder'),
               key: INSPECTOR_TABS.RECORDER,
+              disabled: !showScreenshot,
               children: <Recorder {...props} />,
             },
             {
               label: t('Session Information'),
               key: INSPECTOR_TABS.SESSION_INFO,
+              disabled: !showScreenshot,
               children: (
                 <Card
                   title={
