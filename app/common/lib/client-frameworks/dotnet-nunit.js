@@ -44,7 +44,7 @@ class DotNetNUnitFramework extends Framework {
       _.map(
         this.caps,
         (v, k) =>
-          `options.AddAdditionalAppiumOption(${JSON.stringify(k)}, ${this.getCSharpVal(v)})`,
+          `options.AddAdditionalAppiumOption(${JSON.stringify(k)}, ${this.getCSharpVal(v)});`,
       ).join('\n'),
       8,
     );
@@ -144,7 +144,7 @@ tap.AddAction(finger.CreatePointerMove(CoordinateOrigin.Viewport, tapPoint.X, ta
 tap.AddAction(finger.CreatePointerDown(MouseButton.Left));
 tap.AddAction(new PauseInteraction(finger, TimeSpan.FromMilliseconds(50)));
 tap.AddAction(finger.CreatePointerUp(MouseButton.Left));
-driver.PerformActions(new List<ActionSequence> { tap });
+_driver.PerformActions(new List<ActionSequence> { tap });
 `;
   }
 
@@ -159,7 +159,7 @@ swipe.AddAction(finger.CreatePointerMove(CoordinateOrigin.Viewport, start.X, sta
 swipe.AddAction(finger.CreatePointerDown(MouseButton.Left));
 swipe.AddAction(finger.CreatePointerMove(CoordinateOrigin.Viewport, end.X, end.Y, TimeSpan.FromMilliseconds(1000)));
 swipe.AddAction(finger.CreatePointerUp(MouseButton.Left));
-driver.PerformActions(new List<ActionSequence> { swipe });
+_driver.PerformActions(new List<ActionSequence> { swipe });
 `;
   }
 
