@@ -6,7 +6,7 @@ class JsWdIoFramework extends Framework {
   }
 
   wrapWithBoilerplate(code) {
-    return `// This sample code supports WebdriverIO client >=7
+    return `// This sample code supports WebdriverIO client >=8
 // (npm i --save webdriverio)
 // Then paste this into a .js file and run with Node:
 // node <file>.js
@@ -70,18 +70,24 @@ main().catch(console.log);`;
 
   codeFor_tap(varNameIgnore, varIndexIgnore, pointerActions) {
     const {x, y} = this.getTapCoordinatesFromPointerActions(pointerActions);
-    return `await driver.touchAction({
-  action: 'tap', x: ${x}, y: ${y}
-});`;
+    return `await driver.action('pointer')
+  .move({ duration: 0, x: ${x}, y: ${y} })
+  .down({ button: 0 })
+  .pause(50)
+  .up({ button: 0 })
+  .perform();
+`;
   }
 
   codeFor_swipe(varNameIgnore, varIndexIgnore, pointerActions) {
     const {x1, y1, x2, y2} = this.getSwipeCoordinatesFromPointerActions(pointerActions);
-    return `await driver.touchAction([
-  { action: 'press', x: ${x1}, y: ${y1} },
-  { action: 'moveTo', x: ${x2}, y: ${y2} },
-  'release'
-]);`;
+    return `await driver.action('pointer')
+  .move({ duration: 0, x: ${x1}, y: ${y1} })
+  .down({ button: 0 })
+  .move({ duration: 1000, x: ${x2}, y: ${y2} })
+  .up({ button: 0 })
+  .perform();
+`;
   }
 
   // Execute Script
