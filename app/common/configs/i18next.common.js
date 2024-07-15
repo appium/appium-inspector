@@ -25,12 +25,9 @@ export const languageList = [
   {name: 'Ukrainian', code: 'uk', original: 'Українська'},
 ];
 
-const config = {
-  platform: process.platform,
-  languages: languageList.map((language) => language.code),
-  fallbackLng: 'en',
-  namespace: 'translation',
-};
+export const namespace = 'translation';
+
+const fallbackLng = 'en';
 
 export function getI18NextOptions(backend) {
   return {
@@ -40,10 +37,8 @@ export function getI18NextOptions(backend) {
     interpolation: {
       escapeValue: false,
     },
-    lng: (settings && settings.getSync('PREFERRED_LANGUAGE')) || 'en',
-    fallbackLng: config.fallbackLng,
-    whitelist: config.languages,
+    lng: (settings && settings.getSync('PREFERRED_LANGUAGE')) || fallbackLng,
+    fallbackLng,
+    whitelist: languageList.map((language) => language.code),
   };
 }
-
-export default config;
