@@ -1,12 +1,10 @@
 import {app} from 'electron';
 
 // import {installExtensions} from './debug';
-import {getAppiumSessionFilePath} from './helpers';
+import {getAppiumSessionFilePath, isDev} from './helpers';
 import {setupMainWindow} from './windows';
 
-const isDev = process.env.NODE_ENV === 'development';
-
-export let openFilePath = getAppiumSessionFilePath(process.argv, app.isPackaged, isDev);
+export let openFilePath = getAppiumSessionFilePath(process.argv, app.isPackaged);
 
 app.on('open-file', (event, filePath) => {
   openFilePath = filePath;

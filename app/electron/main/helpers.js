@@ -1,6 +1,8 @@
 import i18n from './i18next';
 
-export function getAppiumSessionFilePath(argv, isPackaged, isDev) {
+export const isDev = process.env.NODE_ENV === 'development';
+
+export function getAppiumSessionFilePath(argv, isPackaged) {
   if (isDev) {
     // do not use file launcher in dev mode because argv is different
     // then it is in production

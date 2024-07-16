@@ -3,7 +3,7 @@ import {BrowserWindow, Menu, dialog, ipcMain, webContents} from 'electron';
 import settings from '../../common/shared/settings';
 import i18n from './i18next';
 import {openFilePath} from './main';
-import {APPIUM_SESSION_EXTENSION} from './helpers';
+import {APPIUM_SESSION_EXTENSION, isDev} from './helpers';
 import {rebuildMenus} from './menus';
 
 let mainWindow = null;
@@ -47,7 +47,7 @@ function buildSessionWindow() {
   return window;
 }
 
-export function setupMainWindow({splashUrl, mainUrl, isDev}) {
+export function setupMainWindow({splashUrl, mainUrl}) {
   const splashWindow = buildSplashWindow();
   mainWindow = buildSessionWindow();
 
@@ -84,7 +84,7 @@ export function setupMainWindow({splashUrl, mainUrl, isDev}) {
   });
 
   i18n.on('languageChanged', async (languageCode) => {
-    rebuildMenus(mainWindow, isDev);
+    rebuildMenus(mainWindow);
     await settings.set('PREFERRED_LANGUAGE', languageCode);
     webContents.getAllWebContents().forEach((wc) => {
       wc.send('appium-language-changed', {
@@ -93,7 +93,7 @@ export function setupMainWindow({splashUrl, mainUrl, isDev}) {
     });
   });
 
-  rebuildMenus(mainWindow, isDev);
+  rebuildMenus(mainWindow);
 }
 
 export function launchNewSessionWindow() {

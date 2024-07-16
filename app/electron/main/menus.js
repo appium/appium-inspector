@@ -3,7 +3,7 @@ import {Menu, app, dialog, shell} from 'electron';
 import {languageList} from '../../common/configs/i18next.common';
 import i18n from './i18next';
 import {checkForUpdates} from './updater';
-import {APPIUM_SESSION_EXTENSION, t} from './helpers';
+import {APPIUM_SESSION_EXTENSION, isDev, t} from './helpers';
 import {launchNewSessionWindow} from './windows';
 
 const INSPECTOR_DOCS_URL = 'https://appium.github.io/appium-inspector';
@@ -120,7 +120,7 @@ function dropdownEdit() {
   };
 }
 
-function dropdownView(isDev) {
+function dropdownView() {
   const submenu = [
     {label: t('Toggle Full Screen'), role: 'togglefullscreen'},
     {label: t('Reset Zoom Level'), role: 'resetZoom'},
@@ -172,21 +172,21 @@ function dropdownHelp() {
   };
 }
 
-function menuTemplate(mainWindow, isMac, isDev) {
+function menuTemplate(mainWindow, isMac) {
   return [
     ...(isMac ? [dropdownApp()] : []),
     dropdownFile(mainWindow, isMac),
     dropdownEdit(),
-    dropdownView(isDev),
+    dropdownView(),
     ...(isMac ? [dropdownWindow()] : []),
     dropdownHelp(),
   ];
 }
 
-export function rebuildMenus(mainWindow, isDev) {
+export function rebuildMenus(mainWindow) {
   const isMac = process.platform === 'darwin';
 
-  const menu = Menu.buildFromTemplate(menuTemplate(mainWindow, isMac, isDev));
+  const menu = Menu.buildFromTemplate(menuTemplate(mainWindow, isMac));
 
   if (isMac) {
     Menu.setApplicationMenu(menu);
