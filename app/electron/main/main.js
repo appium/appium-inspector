@@ -21,9 +21,5 @@ app.on('ready', () => {
     // await installExtensions();
   }
 
-  setupMainWindow({
-    mainUrl: `file://${__dirname}/index.html`,
-    splashUrl: `file://${__dirname}/splash.html`,
-    isDev,
-  });
+  setupMainWindow();
 });

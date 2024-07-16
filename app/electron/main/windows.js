@@ -6,6 +6,9 @@ import {openFilePath} from './main';
 import {APPIUM_SESSION_EXTENSION, isDev} from './helpers';
 import {rebuildMenus} from './menus';
 
+const mainUrl = `file://${__dirname}/index.html`;
+const splashUrl = `file://${__dirname}/splash.html`;
+
 let mainWindow = null;
 
 function buildSplashWindow() {
@@ -47,7 +50,7 @@ function buildSessionWindow() {
   return window;
 }
 
-export function setupMainWindow({splashUrl, mainUrl}) {
+export function setupMainWindow() {
   const splashWindow = buildSplashWindow();
   mainWindow = buildSessionWindow();
 
@@ -97,8 +100,7 @@ export function setupMainWindow({splashUrl, mainUrl}) {
 }
 
 export function launchNewSessionWindow() {
-  const url = `file://${__dirname}/index.html`;
   const win = buildSessionWindow();
-  win.loadURL(url);
+  win.loadURL(mainUrl);
   win.show();
 }
