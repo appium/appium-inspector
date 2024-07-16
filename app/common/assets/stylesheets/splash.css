@@ -1,4 +1,7 @@
-@import './common.global.less';
+/*
+This file is plain CSS instead of LESS,
+because the splash window does not require any complex CSS
+*/
 
 #root {
   display: flex;
@@ -10,6 +13,7 @@
 #splashImage {
   height: 150px;
   width: 150px;
+  margin-top: 35px;
 }
 
 #loader {
