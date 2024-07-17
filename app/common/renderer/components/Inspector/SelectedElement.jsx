@@ -13,7 +13,7 @@ import React, {useRef} from 'react';
 import {ALERT, ROW} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
 import {NATIVE_APP} from '../../constants/session-inspector';
-import {clipboard, shell} from '../../shared/polyfills';
+import {clipboard, shell} from '../../polyfills';
 import styles from './Inspector.module.css';
 
 /**

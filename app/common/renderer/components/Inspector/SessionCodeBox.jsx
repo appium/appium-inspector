@@ -4,7 +4,7 @@ import hljs from 'highlight.js';
 import React from 'react';
 
 import frameworks from '../../lib/client-frameworks';
-import {clipboard} from '../../shared/polyfills';
+import {clipboard} from '../../polyfills';
 import InspectorStyles from './Inspector.module.css';
 
 const SessionCodeBox = ({actionFramework, setActionFramework, sessionDetails, t}) => {
