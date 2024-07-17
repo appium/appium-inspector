@@ -2,8 +2,8 @@ import i18n from 'i18next';
 import _ from 'lodash';
 import {initReactI18next, withTranslation as wt} from 'react-i18next';
 
-import {i18NextBackend, i18NextBackendOptions} from './polyfills';
 import {getI18NextOptions} from '../shared/i18next.config';
+import {i18NextBackend, i18NextBackendOptions} from './polyfills';
 
 const i18nextOptions = getI18NextOptions(i18NextBackendOptions);
 const namespace = 'translation';
