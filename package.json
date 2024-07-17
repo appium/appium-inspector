@@ -71,6 +71,7 @@
     "cheerio": "1.0.0-rc.11: errors with export namespace",
     "electron-settings": "V5: need to rewrite to IPC while keeping browser version working",
     "htmlparser2": "8.0.0: errors with export namespace",
+    "redux-logger": "Appears to be abandoned",
     "uuid": "Obsolete: can be replaced with crypto.randomUUID in Electron 14+"
   },
   "dependencies": {
@@ -97,6 +98,7 @@
     "react-icons": "5.2.1",
     "react-redux": "9.1.2",
     "react-router-dom": "6.25.0",
+    "redux-logger": "3.0.6",
     "uuid": "9.0.1",
     "web2driver": "3.0.4",
     "xpath": "0.0.34"
@@ -112,7 +114,6 @@
     "node-libs-browser": "Deprecated",
     "parcel-bundler": "V2: significant rewrite required",
     "postcss-modules": "V4: requires updating to Parcel v2",
-    "redux-logger": "Appears to be abandoned",
     "spectron": "Deprecated. Newer V16 also requires Electron 14"
   },
   "devDependencies": {
@@ -157,7 +158,6 @@
     "parcel-plugin-asset-copier": "1.1.1",
     "postcss-modules": "3.2.2",
     "prettier": "3.3.3",
-    "redux-logger": "3.0.6",
     "rimraf": "5.0.9",
     "sinon": "18.0.0",
     "spectron": "15.0.0"
