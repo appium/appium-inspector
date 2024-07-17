@@ -19,7 +19,7 @@ import {IoChevronBackOutline} from 'react-icons/io5';
 import {BUTTON} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
 import {APP_MODE} from '../../constants/session-inspector';
-import {shell} from '../../shared/polyfills';
+import {shell} from '../../polyfills';
 import InspectorStyles from './Inspector.module.css';
 
 const HeaderButtons = (props) => {

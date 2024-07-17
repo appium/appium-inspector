@@ -25,7 +25,7 @@ import {
   SESSION_EXPIRY_PROMPT_TIMEOUT,
 } from '../../constants/session-inspector';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
-import {clipboard} from '../../shared/polyfills';
+import {clipboard} from '../../polyfills';
 import Commands from './Commands.jsx';
 import GestureEditor from './GestureEditor.jsx';
 import HeaderButtons from './HeaderButtons.jsx';

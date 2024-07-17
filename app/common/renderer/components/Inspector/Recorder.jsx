@@ -5,7 +5,7 @@ import React from 'react';
 
 import {BUTTON} from '../../constants/antd-types';
 import frameworks from '../../lib/client-frameworks';
-import {clipboard} from '../../shared/polyfills';
+import {clipboard} from '../../polyfills';
 import InspectorStyles from './Inspector.module.css';
 
 const Recorder = (props) => {
