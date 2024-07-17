@@ -1,6 +1,6 @@
 import {Menu, app, dialog, shell} from 'electron';
 
-import {languageList} from '../../common/configs/i18next.common';
+import {languageList} from '../../common/shared/i18next.config';
 import i18n from './i18next';
 import {checkForUpdates} from './updater';
 import {APPIUM_SESSION_EXTENSION, isDev, t} from './helpers';

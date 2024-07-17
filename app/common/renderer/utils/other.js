@@ -1,7 +1,4 @@
 import _ from 'lodash';
-import {withTranslation as wt} from 'react-i18next';
-
-import {namespace} from '../configs/i18next.common';
 
 const VALID_W3C_CAPS = [
   'platformName',
@@ -14,10 +11,6 @@ const VALID_W3C_CAPS = [
   'timeouts',
   'unhandledPromptBehavior',
 ];
-
-export function withTranslation(componentCls, ...hocs) {
-  return _.flow(...hocs, wt(namespace))(componentCls);
-}
 
 export function addVendorPrefixes(caps) {
   return caps.map((cap) => {

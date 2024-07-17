@@ -8,7 +8,7 @@ on:
     branches: [main]
     paths-ignore:
       - '.github/ISSUE_TEMPLATE/**'
-      - 'app/common/assets/locales/**'
+      - 'app/common/public/locales/**'
       - 'docs/**'
       - 'sample-session-files/**'
       - '.gitignore'

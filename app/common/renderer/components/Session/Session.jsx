@@ -7,7 +7,7 @@ import {useNavigate} from 'react-router-dom';
 import {BUTTON} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
 import {ADD_CLOUD_PROVIDER_TAB_KEY} from '../../constants/session-builder';
-import {ipcRenderer, shell} from '../../shared/polyfills';
+import {ipcRenderer, shell} from '../../polyfills';
 import {log} from '../../utils/logger';
 import AdvancedServerParams from './AdvancedServerParams.jsx';
 import AttachToSession from './AttachToSession.jsx';

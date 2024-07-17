@@ -2,11 +2,10 @@ import i18n from 'i18next';
 import i18NextBackend from 'i18next-fs-backend';
 import path from 'path';
 
-import {getI18NextOptions} from '../../common/configs/i18next.common';
+import {getI18NextOptions} from '../../common/shared/i18next.config';
 
 const i18NextBackendOptions = {
   loadPath: path.join(__dirname, '{{lng}}/{{ns}}.json'),
-  addPath: path.join(__dirname, '{{lng}}/{{ns}}.json'),
   jsonIndent: 2,
 };
 

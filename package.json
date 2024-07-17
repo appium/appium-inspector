@@ -17,7 +17,7 @@
   "keywords": [
     "appium"
   ],
-  "assetsPath": "app/common/assets/locales",
+  "assetsPath": "app/common/public/locales",
   "homepage": "https://github.com/appium/appium-inspector",
   "main": "dist/main.js",
   "scripts": {

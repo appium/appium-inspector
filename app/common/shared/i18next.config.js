@@ -1,4 +1,4 @@
-import settings from '../shared/settings';
+import settings from './settings';
 
 export const languageList = [
   {name: 'Arabic', code: 'ar', original: 'العربية'},
@@ -25,8 +25,6 @@ export const languageList = [
   {name: 'Ukrainian', code: 'uk', original: 'Українська'},
 ];
 
-export const namespace = 'translation';
-
 const fallbackLng = 'en';
 
 export function getI18NextOptions(backend) {
@@ -39,6 +37,6 @@ export function getI18NextOptions(backend) {
     },
     lng: (settings && settings.getSync('PREFERRED_LANGUAGE')) || fallbackLng,
     fallbackLng,
-    whitelist: languageList.map((language) => language.code),
+    supportedLngs: languageList.map((language) => language.code),
   };
 }
