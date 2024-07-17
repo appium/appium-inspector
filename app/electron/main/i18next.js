@@ -6,6 +6,7 @@ import {getI18NextOptions} from '../../common/shared/i18next.config';
 
 const i18NextBackendOptions = {
   loadPath: path.join(__dirname, '{{lng}}/{{ns}}.json'),
+  addPath: path.join(__dirname, '{{lng}}/{{ns}}.json'),
   jsonIndent: 2,
 };
 
