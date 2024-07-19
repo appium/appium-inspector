@@ -25,17 +25,11 @@ npm ci
       - [Python](https://www.python.org/)
       - some C/C++ compiler tools matching your operating system
 
-Watch changes during development:
+Run in development mode:
 
 ```bash
-npm run dev           # desktop app
-npm run watch:browser # browser app
-```
-
-Start the production version of the desktop app:
-
-```bash
-npm run start
+npm run dev:browser
+npm run dev:electron
 ```
 
 Run tests:
@@ -45,26 +39,33 @@ npm run test:lint
 npm run test:format
 npm run test:unit
 npm run test:integration
-npm run e2e
+npm run test:e2e
 
 npm run test # lint, unit & integration
 ```
 
-Build the full app (desktop app into `/dist`, browser app into `/dist-browser`):
+Build the production version (desktop app into `/dist`, browser app into `/dist-browser`):
 
 ```bash
-npm run build # desktop and browser
 npm run build:browser
+npm run build:electron
 ```
 
-Build the app executable package (and other artifacts) for your platform into `/release`:
+Build the production version and run it:
+
+```bash
+npm run preview:browser
+npm run preview:electron
+```
+
+Build the Electron app executable package (and other artifacts) for your platform into `/release`:
 
 !!! note
 
     For macOS, this requires code signing environment variables to be set.
 
 ```bash
-npx electron-builder build --publish never
+npm run pack:electron
 ```
 
 ## Documentation

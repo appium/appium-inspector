@@ -26,7 +26,7 @@ jobs:
           version: '20.x'
       - script: npm ci
         displayName: Install dependencies
-      - script: npm run build
+      - script: npm run build:electron
         displayName: Build
       - script: ${{ parameters.buildScript }}
         displayName: Bundle
