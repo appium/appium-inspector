@@ -1,4 +1,4 @@
-import chai from 'chai';
+import {describe, expect, it} from 'vitest';
 
 import {
   domParser,
@@ -7,12 +7,10 @@ import {
   xmlToJSON,
 } from '../../app/common/renderer/utils/source-parsing';
 
-chai.should();
-
 describe('utils/source-parsing.js', function () {
   describe('#findDOMNodeByPath', function () {
     it('should find a Document node using the provided path', function () {
-      findDOMNodeByPath(
+      expect(findDOMNodeByPath(
         '0.1.1',
         domParser.parseFromString(`<hierarchy>
           <root>
@@ -30,7 +28,7 @@ describe('utils/source-parsing.js', function () {
             </firstC>
           </root>
         </hierarchy>`),
-      ).tagName.should.equal('secondD');
+      ).tagName).toBe('secondD');
     });
   });
 
@@ -55,7 +53,7 @@ describe('utils/source-parsing.js', function () {
           </root>
         </hierarchy>`),
       );
-      foundElement.should.eql({
+      expect(foundElement).toEqual({
         children: [],
         tagName: 'secondD',
         attributes: {},
@@ -82,7 +80,7 @@ describe('utils/source-parsing.js', function () {
             </XCUIElementTypeWindow>
         </XCUIElementTypeApplication>
       </hierarchy>`);
-      json.should.eql({
+      expect(json).toEqual({
         children: [
           {
             children: [
@@ -162,7 +160,7 @@ describe('utils/source-parsing.js', function () {
             </android.widget.LinearLayout>
           </android.widget.FrameLayout>
         </hierarchy>`);
-      json.should.eql({
+      expect(json).toEqual({
         children: [
           {
             children: [
@@ -250,7 +248,7 @@ describe('utils/source-parsing.js', function () {
           </XCUIElementTypeWindow>
         </XCUIElementTypeApplication>
       </hierarchy>`);
-      json.should.eql({
+      expect(json).toEqual({
         children: [
           {
             children: [
@@ -484,7 +482,7 @@ describe('utils/source-parsing.js', function () {
           </android.widget.LinearLayout>
         </android.widget.FrameLayout>
       </hierarchy>`);
-      json.should.eql({
+      expect(json).toEqual({
         children: [
           {
             children: [

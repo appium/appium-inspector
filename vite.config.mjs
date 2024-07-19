@@ -28,4 +28,8 @@ export default defineConfig({
     },
   },
   root: join(__dirname, 'app/common'),
+  test: {
+    restoreMocks: true,
+    root: join(__dirname, 'test'),
+  }
 });
