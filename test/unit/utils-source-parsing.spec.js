@@ -10,9 +10,10 @@ import {
 describe('utils/source-parsing.js', function () {
   describe('#findDOMNodeByPath', function () {
     it('should find a Document node using the provided path', function () {
-      expect(findDOMNodeByPath(
-        '0.1.1',
-        domParser.parseFromString(`<hierarchy>
+      expect(
+        findDOMNodeByPath(
+          '0.1.1',
+          domParser.parseFromString(`<hierarchy>
           <root>
             <firstA>
               <secondA/>
@@ -28,7 +29,8 @@ describe('utils/source-parsing.js', function () {
             </firstC>
           </root>
         </hierarchy>`),
-      ).tagName).toBe('secondD');
+        ).tagName,
+      ).toBe('secondD');
     });
   });
 

@@ -26,32 +26,38 @@ function xmlToDoc(sourceXML) {
 describe('utils/locator-generation.js', function () {
   describe('#areAttrAndValueUnique', function () {
     it('should return false if two nodes have the same attribute value', function () {
-      expect(areAttrAndValueUnique(
-        'id',
-        'ID',
-        xmlToDoc(`<root>
+      expect(
+        areAttrAndValueUnique(
+          'id',
+          'ID',
+          xmlToDoc(`<root>
           <node id='ID'></node>
           <node id='ID'></node>
         </root>`),
-      )).toBe(false);
+        ),
+      ).toBe(false);
     });
 
     it('should return false if two nodes have the same attribute value', function () {
-      expect(areAttrAndValueUnique(
-        'id',
-        'ID',
-        xmlToDoc(`<root>
+      expect(
+        areAttrAndValueUnique(
+          'id',
+          'ID',
+          xmlToDoc(`<root>
           <node id='ID'></node>
         </root>`),
-      )).toBe(true);
-      expect(areAttrAndValueUnique(
-        'id',
-        'ID',
-        xmlToDoc(`<root>
+        ),
+      ).toBe(true);
+      expect(
+        areAttrAndValueUnique(
+          'id',
+          'ID',
+          xmlToDoc(`<root>
           <node></node>
           <node></node>
         </root>`),
-      )).toBe(true);
+        ),
+      ).toBe(true);
     });
 
     it('should return true if no sourceXML was provided', function () {
@@ -76,7 +82,7 @@ describe('utils/locator-generation.js', function () {
             <node id='ID'></node>
             <node id='ID'></node>
           </root>`),
-        ).id
+        ).id,
       ).toBeUndefined();
     });
 
@@ -85,15 +91,19 @@ describe('utils/locator-generation.js', function () {
         'Content Desc',
       );
       expect(getSimpleSuggestedLocators({name: 'Name'})['accessibility id']).toBe('Name');
-      expect(getSimpleSuggestedLocators(
-        {name: 'Name'},
-        xmlToDoc(`<root>
+      expect(
+        getSimpleSuggestedLocators(
+          {name: 'Name'},
+          xmlToDoc(`<root>
           <node content-desc='Name'></node>
         </root>`),
-      )['accessibility id']).toBe('Name');
-      expect(getSimpleSuggestedLocators({'content-desc': 'Content Desc', name: 'Name'})[
-        'accessibility id'
-      ]).toBe('Content Desc');
+        )['accessibility id'],
+      ).toBe('Name');
+      expect(
+        getSimpleSuggestedLocators({'content-desc': 'Content Desc', name: 'Name'})[
+          'accessibility id'
+        ],
+      ).toBe('Content Desc');
     });
 
     it('should not find accessibility ID if accessibility ID is not unique', function () {
@@ -104,7 +114,8 @@ describe('utils/locator-generation.js', function () {
             <node content-desc='Content Desc'></node>
             <node content-desc='Content Desc'></node>
           </root>`),
-        )['accessibility id']).toBeUndefined();
+        )['accessibility id'],
+      ).toBeUndefined();
     });
 
     it('should not find accessibility ID in non-native context', function () {
@@ -116,18 +127,21 @@ describe('utils/locator-generation.js', function () {
             <node content-desc='Content Desc 2'></node>
           </root>`),
           false,
-        )['accessibility id']).toBeUndefined();
+        )['accessibility id'],
+      ).toBeUndefined();
     });
 
     it('should find class name', function () {
       expect(getSimpleSuggestedLocators({class: 'The Class'})['class name']).toBe('The Class');
       expect(getSimpleSuggestedLocators({type: 'The Type'})['class name']).toBe('The Type');
-      expect(getSimpleSuggestedLocators(
-        {class: 'The Class'},
-        xmlToDoc(`<root>
+      expect(
+        getSimpleSuggestedLocators(
+          {class: 'The Class'},
+          xmlToDoc(`<root>
           <node type='The Class'></node>
         </root>`),
-      )['class name']).toBe('The Class');
+        )['class name'],
+      ).toBe('The Class');
       expect(getSimpleSuggestedLocators({class: 'The Class', type: 'The Type'})['class name']).toBe(
         'The Type',
       );
@@ -141,7 +155,8 @@ describe('utils/locator-generation.js', function () {
             <node class='The Class'></node>
             <node class='The Class'></node>
           </root>`),
-        )['class name']).toBeUndefined();
+        )['class name'],
+      ).toBeUndefined();
     });
   });
 
@@ -327,8 +342,8 @@ describe('utils/locator-generation.js', function () {
     describe('when exceptions are thrown', function () {
       it('should keep going if xpath.select throws an exception', function () {
         vi.spyOn(xpath, 'select').mockImplementation(() => {
-            throw new Error('Exception');
-         });
+          throw new Error('Exception');
+        });
         const doc = xmlToDoc(`<node id='foo'>
           <child id='a'></child>
           <child id='b'>
@@ -417,7 +432,9 @@ describe('utils/locator-generation.js', function () {
           <grandchild>World</grandchild>
         </child>
       </root>`);
-      expect(getOptimalPredicateString(doc, doc.getElementsByTagName('grandchild')[0])).toBeUndefined();
+      expect(
+        getOptimalPredicateString(doc, doc.getElementsByTagName('grandchild')[0]),
+      ).toBeUndefined();
     });
   });
 
@@ -431,11 +448,9 @@ describe('utils/locator-generation.js', function () {
           <child-node resource-id='world'>World</child-node>
         </parent-node>
       </xml>`);
-      expect(getOptimalUiAutomatorSelector(
-        doc,
-        doc.getElementsByTagName('child-node')[0],
-        '0.0',
-      )).toBe('new UiSelector().resourceId("hello")');
+      expect(
+        getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('child-node')[0], '0.0'),
+      ).toBe('new UiSelector().resourceId("hello")');
     });
 
     it('should use indices if the valid node attributes are not unique', function () {
@@ -445,11 +460,9 @@ describe('utils/locator-generation.js', function () {
           <grandchild class='grandchild'>World</grandchild>
         </child>
       </root>`);
-      expect(getOptimalUiAutomatorSelector(
-        doc,
-        doc.getElementsByTagName('grandchild')[0],
-        '0.0',
-      )).toBe('new UiSelector().className("grandchild").instance(0)');
+      expect(
+        getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('grandchild')[0], '0.0'),
+      ).toBe('new UiSelector().className("grandchild").instance(0)');
     });
 
     it('should return null if looking for element outside the last direct child of the hierarchy', function () {
@@ -464,7 +477,8 @@ describe('utils/locator-generation.js', function () {
         </child>
       </root>`);
       expect(
-        getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('grandchild')[0], '0.0')).toBeNull();
+        getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('grandchild')[0], '0.0'),
+      ).toBeNull();
     });
   });
 });

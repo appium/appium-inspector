@@ -31,5 +31,5 @@ export default defineConfig({
   test: {
     restoreMocks: true,
     root: join(__dirname, 'test'),
-  }
+  },
 });
