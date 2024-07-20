@@ -146,7 +146,7 @@
     "eslint": "8.57.0",
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-mocha": "10.4.3",
-    "eslint-plugin-promise": "6.4.0",
+    "eslint-plugin-promise": "6.5.0",
     "eslint-plugin-react": "7.34.4",
     "eslint-plugin-react-native": "4.1.0",
     "less": "4.2.0",
