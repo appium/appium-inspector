@@ -1,4 +1,5 @@
 import {BrowserWindow, Menu, dialog, ipcMain, webContents} from 'electron';
+import {join} from 'path';
 
 import settings from '../../common/shared/settings';
 import i18n from './i18next';
@@ -6,8 +7,13 @@ import {openFilePath} from './main';
 import {APPIUM_SESSION_EXTENSION, isDev} from './helpers';
 import {rebuildMenus} from './menus';
 
-const mainUrl = `file://${__dirname}/index.html`;
-const splashUrl = `file://${__dirname}/splash.html`;
+const mainPath = isDev
+  ? process.env.ELECTRON_RENDERER_URL
+  : join(__dirname, '..', 'renderer', 'index.html'); // from 'main' in package.json
+const splashPath = isDev
+  ? `${process.env.ELECTRON_RENDERER_URL}/splash.html`
+  : join(__dirname, '..', 'renderer', 'splash.html'); // from 'main' in package.json
+const pathLoadMethod = isDev ? 'loadURL' : 'loadFile';
 
 let mainWindow = null;
 
@@ -30,6 +36,8 @@ function buildSessionWindow() {
     minHeight: 710,
     titleBarStyle: 'hiddenInset',
     webPreferences: {
+      preload: join(__dirname, '..', 'preload', 'preload.js'), // from 'main' in package.json
+      sandbox: false,
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
@@ -52,12 +60,11 @@ function buildSessionWindow() {
 
 export function setupMainWindow() {
   const splashWindow = buildSplashWindow();
-  mainWindow = buildSessionWindow();
-
-  splashWindow.loadURL(splashUrl);
+  splashWindow[pathLoadMethod](splashPath);
   splashWindow.show();
 
-  mainWindow.loadURL(mainUrl);
+  mainWindow = buildSessionWindow();
+  mainWindow[pathLoadMethod](mainPath);
 
   mainWindow.webContents.on('did-finish-load', () => {
     splashWindow.destroy();
@@ -101,6 +108,6 @@ export function setupMainWindow() {
 
 export function launchNewSessionWindow() {
   const win = buildSessionWindow();
-  win.loadURL(mainUrl);
+  win[pathLoadMethod](mainPath);
   win.show();
 }

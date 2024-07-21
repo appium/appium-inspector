@@ -2,6 +2,11 @@ import i18NextBackend from 'i18next-chained-backend';
 import LocalStorageBackend from 'i18next-localstorage-backend';
 import HttpApi from 'i18next-http-backend';
 
+const localesPath =
+  process.env.NODE_ENV === 'development'
+    ? '/locales' // 'public' folder contents are served at '/'
+    : '../locales'; // from 'dist-browser/assets/'
+
 const browser = {
   clipboard: {
     writeText: (text) => navigator.clipboard.writeText(text),
@@ -43,7 +48,7 @@ const i18NextBackendOptions = {
   backendOptions: [
     {},
     {
-      loadPath: './{{lng}}/{{ns}}.json',
+      loadPath: `${localesPath}/{{lng}}/{{ns}}.json`,
     },
   ],
 };

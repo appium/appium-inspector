@@ -5,7 +5,7 @@
   "directories": {
     "output": "release"
   },
-  "files": ["dist/", "main.js", "main.js.map"],
+  "files": ["dist/"],
   "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
   "fileAssociations": [
     {
