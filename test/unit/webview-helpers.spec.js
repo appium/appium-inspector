@@ -11,10 +11,7 @@ describe('webview-helpers.js', function () {
         join(__dirname, 'mocks', 'appium.page.original.html'),
         'utf8',
       );
-      const parsed = await fs.readFile(
-        join(__dirname, 'mocks', 'appium.page.parsed.html'),
-        'utf8',
-      );
+      const parsed = await fs.readFile(join(__dirname, 'mocks', 'appium.page.parsed.html'), 'utf8');
       expect(parseSource(original)).toEqual(parsed);
     });
   });
