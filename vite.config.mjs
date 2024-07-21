@@ -24,10 +24,10 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '#local-polyfills': join(__dirname, 'app/web/polyfills'),
+      '#local-polyfills': join(__dirname, 'app', 'web', 'polyfills'),
     },
   },
-  root: join(__dirname, 'app/common'),
+  root: join(__dirname, 'app', 'common'),
   test: {
     restoreMocks: true,
     root: join(__dirname, 'test'),
