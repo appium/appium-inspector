@@ -2,12 +2,18 @@ import {clipboard, ipcRenderer, shell} from 'electron';
 import settings from 'electron-settings';
 import fs from 'fs';
 import i18NextBackend from 'i18next-fs-backend';
-import path from 'path';
+import {join} from 'path';
 import util from 'util';
 
+const localesPath =
+  process.env.NODE_ENV === 'development'
+    ? join('app', 'common', 'public', 'locales') // from project root
+    : join(__dirname, '..', 'renderer', 'locales'); // from 'main' in package.json
+const translationFilePath = join(localesPath, '{{lng}}', '{{ns}}.json');
+
 const i18NextBackendOptions = {
-  loadPath: path.join(__dirname, '{{lng}}/{{ns}}.json'),
-  addPath: path.join(__dirname, '{{lng}}/{{ns}}.json'),
+  loadPath: translationFilePath,
+  addPath: translationFilePath,
   jsonIndent: 2,
 };
 

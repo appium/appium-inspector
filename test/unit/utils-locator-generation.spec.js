@@ -1,5 +1,4 @@
-import chai from 'chai';
-import sinon from 'sinon';
+import {describe, expect, it, vi} from 'vitest';
 import xpath from 'xpath';
 
 import {
@@ -12,13 +11,11 @@ import {
 } from '../../app/common/renderer/utils/locator-generation';
 import {domParser} from '../../app/common/renderer/utils/source-parsing';
 
-const should = chai.should();
-
 // Helper that checks that the optimal xpath for a node is the one that we expect and also
 // checks that the XPath successfully locates the node in it's doc
 function testXPath(doc, node, expectedXPath) {
-  getOptimalXPath(doc, node).should.equal(expectedXPath);
-  xpath.select(expectedXPath, doc)[0].should.equal(node);
+  expect(getOptimalXPath(doc, node)).toBe(expectedXPath);
+  expect(xpath.select(expectedXPath, doc)[0]).toEqual(node);
 }
 
 // Helper for converting source from XML to Document format
@@ -29,50 +26,56 @@ function xmlToDoc(sourceXML) {
 describe('utils/locator-generation.js', function () {
   describe('#areAttrAndValueUnique', function () {
     it('should return false if two nodes have the same attribute value', function () {
-      areAttrAndValueUnique(
-        'id',
-        'ID',
-        xmlToDoc(`<root>
+      expect(
+        areAttrAndValueUnique(
+          'id',
+          'ID',
+          xmlToDoc(`<root>
           <node id='ID'></node>
           <node id='ID'></node>
         </root>`),
-      ).should.be.false;
+        ),
+      ).toBe(false);
     });
 
     it('should return false if two nodes have the same attribute value', function () {
-      areAttrAndValueUnique(
-        'id',
-        'ID',
-        xmlToDoc(`<root>
+      expect(
+        areAttrAndValueUnique(
+          'id',
+          'ID',
+          xmlToDoc(`<root>
           <node id='ID'></node>
         </root>`),
-      ).should.be.true;
-      areAttrAndValueUnique(
-        'id',
-        'ID',
-        xmlToDoc(`<root>
+        ),
+      ).toBe(true);
+      expect(
+        areAttrAndValueUnique(
+          'id',
+          'ID',
+          xmlToDoc(`<root>
           <node></node>
           <node></node>
         </root>`),
-      ).should.be.true;
+        ),
+      ).toBe(true);
     });
 
     it('should return true if no sourceXML was provided', function () {
-      areAttrAndValueUnique('hello', 'world').should.be.true;
+      expect(areAttrAndValueUnique('hello', 'world')).toBe(true);
     });
   });
 
   describe('#getSimpleSuggestedLocators', function () {
     it('should find ID', function () {
-      getSimpleSuggestedLocators({'resource-id': 'Resource ID'}).id.should.equal('Resource ID');
-      getSimpleSuggestedLocators({id: 'ID'}).id.should.equal('ID');
-      getSimpleSuggestedLocators({id: 'ID', 'resource-id': 'Resource ID'}).id.should.equal(
+      expect(getSimpleSuggestedLocators({'resource-id': 'Resource ID'}).id).toBe('Resource ID');
+      expect(getSimpleSuggestedLocators({id: 'ID'}).id).toBe('ID');
+      expect(getSimpleSuggestedLocators({id: 'ID', 'resource-id': 'Resource ID'}).id).toBe(
         'Resource ID',
       );
     });
 
     it('should not find ID if ID is not unique', function () {
-      should.not.exist(
+      expect(
         getSimpleSuggestedLocators(
           {id: 'ID'},
           xmlToDoc(`<root>
@@ -80,27 +83,31 @@ describe('utils/locator-generation.js', function () {
             <node id='ID'></node>
           </root>`),
         ).id,
-      );
+      ).toBeUndefined();
     });
 
     it('should find accessibility id', function () {
-      getSimpleSuggestedLocators({'content-desc': 'Content Desc'})['accessibility id'].should.equal(
+      expect(getSimpleSuggestedLocators({'content-desc': 'Content Desc'})['accessibility id']).toBe(
         'Content Desc',
       );
-      getSimpleSuggestedLocators({name: 'Name'})['accessibility id'].should.equal('Name');
-      getSimpleSuggestedLocators(
-        {name: 'Name'},
-        xmlToDoc(`<root>
+      expect(getSimpleSuggestedLocators({name: 'Name'})['accessibility id']).toBe('Name');
+      expect(
+        getSimpleSuggestedLocators(
+          {name: 'Name'},
+          xmlToDoc(`<root>
           <node content-desc='Name'></node>
         </root>`),
-      )['accessibility id'].should.equal('Name');
-      getSimpleSuggestedLocators({'content-desc': 'Content Desc', name: 'Name'})[
-        'accessibility id'
-      ].should.equal('Content Desc');
+        )['accessibility id'],
+      ).toBe('Name');
+      expect(
+        getSimpleSuggestedLocators({'content-desc': 'Content Desc', name: 'Name'})[
+          'accessibility id'
+        ],
+      ).toBe('Content Desc');
     });
 
     it('should not find accessibility ID if accessibility ID is not unique', function () {
-      should.not.exist(
+      expect(
         getSimpleSuggestedLocators(
           {'content-desc': 'Content Desc'},
           xmlToDoc(`<root>
@@ -108,11 +115,11 @@ describe('utils/locator-generation.js', function () {
             <node content-desc='Content Desc'></node>
           </root>`),
         )['accessibility id'],
-      );
+      ).toBeUndefined();
     });
 
     it('should not find accessibility ID in non-native context', function () {
-      should.not.exist(
+      expect(
         getSimpleSuggestedLocators(
           {'content-desc': 'Content Desc 1'},
           xmlToDoc(`<root>
@@ -121,25 +128,27 @@ describe('utils/locator-generation.js', function () {
           </root>`),
           false,
         )['accessibility id'],
-      );
+      ).toBeUndefined();
     });
 
     it('should find class name', function () {
-      getSimpleSuggestedLocators({class: 'The Class'})['class name'].should.equal('The Class');
-      getSimpleSuggestedLocators({type: 'The Type'})['class name'].should.equal('The Type');
-      getSimpleSuggestedLocators(
-        {class: 'The Class'},
-        xmlToDoc(`<root>
+      expect(getSimpleSuggestedLocators({class: 'The Class'})['class name']).toBe('The Class');
+      expect(getSimpleSuggestedLocators({type: 'The Type'})['class name']).toBe('The Type');
+      expect(
+        getSimpleSuggestedLocators(
+          {class: 'The Class'},
+          xmlToDoc(`<root>
           <node type='The Class'></node>
         </root>`),
-      )['class name'].should.equal('The Class');
-      getSimpleSuggestedLocators({class: 'The Class', type: 'The Type'})['class name'].should.equal(
+        )['class name'],
+      ).toBe('The Class');
+      expect(getSimpleSuggestedLocators({class: 'The Class', type: 'The Type'})['class name']).toBe(
         'The Type',
       );
     });
 
     it('should not find class name if class name is not unique', function () {
-      should.not.exist(
+      expect(
         getSimpleSuggestedLocators(
           {class: 'The Class'},
           xmlToDoc(`<root>
@@ -147,7 +156,7 @@ describe('utils/locator-generation.js', function () {
             <node class='The Class'></node>
           </root>`),
         )['class name'],
-      );
+      ).toBeUndefined();
     });
   });
 
@@ -332,7 +341,7 @@ describe('utils/locator-generation.js', function () {
 
     describe('when exceptions are thrown', function () {
       it('should keep going if xpath.select throws an exception', function () {
-        const xpathSelectStub = sinon.stub(xpath, 'select').callsFake(() => {
+        vi.spyOn(xpath, 'select').mockImplementation(() => {
           throw new Error('Exception');
         });
         const doc = xmlToDoc(`<node id='foo'>
@@ -341,11 +350,10 @@ describe('utils/locator-generation.js', function () {
             <grandchild id='hello'></grandchild>
           </child>
         </node>`);
-        getOptimalXPath(doc, doc.getElementById('hello')).should.equal('/node/child[2]/grandchild');
-        xpathSelectStub.restore();
+        expect(getOptimalXPath(doc, doc.getElementById('hello'))).toBe('/node/child[2]/grandchild');
       });
 
-      it('should return undefined if anything else throws an exception', function () {
+      it('should return null if anything else throws an exception', function () {
         const doc = xmlToDoc(`<node id='foo'>
           <child id='a'></child>
           <child id='b'>
@@ -356,7 +364,7 @@ describe('utils/locator-generation.js', function () {
         node.getAttribute = () => {
           throw new Error('Some unexpected error');
         };
-        should.not.exist(getOptimalXPath(doc, node));
+        expect(getOptimalXPath(doc, node)).toBeNull();
       });
     });
   });
@@ -369,7 +377,7 @@ describe('utils/locator-generation.js', function () {
         <child-node label='hello'>Hello</child-node>
         <child-node label='world'>World</child-node>
       </xml>`);
-      getOptimalClassChain(doc, doc.getElementsByTagName('child-node')[0]).should.equal(
+      expect(getOptimalClassChain(doc, doc.getElementsByTagName('child-node')[0])).toBe(
         '/child-node[`label == "hello"`]',
       );
     });
@@ -381,7 +389,7 @@ describe('utils/locator-generation.js', function () {
           <grandchild>World</grandchild>
         </child>
       </root>`);
-      getOptimalClassChain(doc, doc.getElementsByTagName('grandchild')[0]).should.equal(
+      expect(getOptimalClassChain(doc, doc.getElementsByTagName('grandchild')[0])).toBe(
         '/child[`name == "foo"`]/grandchild[1]',
       );
     });
@@ -398,7 +406,7 @@ describe('utils/locator-generation.js', function () {
           <grandchild>Bar</grandchild>
         </child>
       </root>`);
-      getOptimalClassChain(doc, doc.getElementsByTagName('grandchild')[0]).should.equal(
+      expect(getOptimalClassChain(doc, doc.getElementsByTagName('grandchild')[0])).toBe(
         '/root/child[1]/grandchild[1]',
       );
     });
@@ -412,7 +420,7 @@ describe('utils/locator-generation.js', function () {
         <child-node label='hello'>Hello</child-node>
         <child-node label='world'>World</child-node>
       </xml>`);
-      getOptimalPredicateString(doc, doc.getElementsByTagName('child-node')[0]).should.equal(
+      expect(getOptimalPredicateString(doc, doc.getElementsByTagName('child-node')[0])).toBe(
         'label == "hello"',
       );
     });
@@ -424,7 +432,9 @@ describe('utils/locator-generation.js', function () {
           <grandchild>World</grandchild>
         </child>
       </root>`);
-      should.not.exist(getOptimalPredicateString(doc, doc.getElementsByTagName('grandchild')[0]));
+      expect(
+        getOptimalPredicateString(doc, doc.getElementsByTagName('grandchild')[0]),
+      ).toBeUndefined();
     });
   });
 
@@ -438,11 +448,9 @@ describe('utils/locator-generation.js', function () {
           <child-node resource-id='world'>World</child-node>
         </parent-node>
       </xml>`);
-      getOptimalUiAutomatorSelector(
-        doc,
-        doc.getElementsByTagName('child-node')[0],
-        '0.0',
-      ).should.equal('new UiSelector().resourceId("hello")');
+      expect(
+        getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('child-node')[0], '0.0'),
+      ).toBe('new UiSelector().resourceId("hello")');
     });
 
     it('should use indices if the valid node attributes are not unique', function () {
@@ -452,14 +460,12 @@ describe('utils/locator-generation.js', function () {
           <grandchild class='grandchild'>World</grandchild>
         </child>
       </root>`);
-      getOptimalUiAutomatorSelector(
-        doc,
-        doc.getElementsByTagName('grandchild')[0],
-        '0.0',
-      ).should.equal('new UiSelector().className("grandchild").instance(0)');
+      expect(
+        getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('grandchild')[0], '0.0'),
+      ).toBe('new UiSelector().className("grandchild").instance(0)');
     });
 
-    it('should not exist if looking for element outside the last direct child of the hierarchy', function () {
+    it('should return null if looking for element outside the last direct child of the hierarchy', function () {
       doc = xmlToDoc(`<root>
         <child>
           <grandchild resource-id='hello'>Hello</grandchild>
@@ -470,9 +476,9 @@ describe('utils/locator-generation.js', function () {
           <grandchild resource-id='bar'>Bar</grandchild>
         </child>
       </root>`);
-      should.not.exist(
+      expect(
         getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('grandchild')[0], '0.0'),
-      );
+      ).toBeNull();
     });
   });
 });
