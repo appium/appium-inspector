@@ -6,12 +6,13 @@ import {getI18NextOptions} from '../../common/shared/i18next.config';
 
 const localesPath =
   process.env.NODE_ENV === 'development'
-    ? 'app/common/public/locales' // from project root
-    : join(__dirname, '../renderer/locales'); // from 'main' in package.json
+    ? join('app', 'common', 'public', 'locales') // from project root
+    : join(__dirname, '..', 'renderer', 'locales'); // from 'main' in package.json
+const translationFilePath = join(localesPath, '{{lng}}', '{{ns}}.json');
 
 const i18NextBackendOptions = {
-  loadPath: `${localesPath}/{{lng}}/{{ns}}.json`,
-  addPath: `${localesPath}/{{lng}}/{{ns}}.json`,
+  loadPath: translationFilePath,
+  addPath: translationFilePath,
   jsonIndent: 2,
 };
 

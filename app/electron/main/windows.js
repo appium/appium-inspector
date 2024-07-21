@@ -9,10 +9,11 @@ import {rebuildMenus} from './menus';
 
 const mainPath = isDev
   ? process.env.ELECTRON_RENDERER_URL
-  : join(__dirname, '../renderer/index.html'); // from 'main' in package.json
+  : join(__dirname, '..', 'renderer', 'index.html'); // from 'main' in package.json
 const splashPath = isDev
   ? `${process.env.ELECTRON_RENDERER_URL}/splash.html`
-  : join(__dirname, '../renderer/splash.html'); // from 'main' in package.json
+  : join(__dirname, '..', 'renderer', 'splash.html'); // from 'main' in package.json
+const pathLoadMethod = isDev ? 'loadURL' : 'loadFile';
 
 let mainWindow = null;
 
@@ -59,11 +60,11 @@ function buildSessionWindow() {
 
 export function setupMainWindow() {
   const splashWindow = buildSplashWindow();
-  isDev ? splashWindow.loadURL(splashPath) : splashWindow.loadFile(splashPath);
+  splashWindow[pathLoadMethod](splashPath);
   splashWindow.show();
 
   mainWindow = buildSessionWindow();
-  isDev ? mainWindow.loadURL(mainPath) : mainWindow.loadFile(mainPath);
+  mainWindow[pathLoadMethod](mainPath);
 
   mainWindow.webContents.on('did-finish-load', () => {
     splashWindow.destroy();
@@ -107,6 +108,6 @@ export function setupMainWindow() {
 
 export function launchNewSessionWindow() {
   const win = buildSessionWindow();
-  isDev ? win.loadURL(mainPath) : win.loadFile(mainPath);
+  win[pathLoadMethod](mainPath);
   win.show();
 }

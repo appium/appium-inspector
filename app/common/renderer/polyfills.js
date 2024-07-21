@@ -4,7 +4,7 @@
  * they cannot be added to tsconfig and eslint configurations
  */
 
-import {
+export {
   settings,
   clipboard,
   shell,
@@ -14,5 +14,3 @@ import {
   fs,
   util,
 } from '#local-polyfills'; // eslint-disable-line import/no-unresolved
-
-export {settings, clipboard, shell, ipcRenderer, i18NextBackend, i18NextBackendOptions, fs, util};
