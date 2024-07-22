@@ -95,7 +95,6 @@
     "xpath": "0.0.34"
   },
   "//devDependencies": {
-    "cross-env": "Maintenance mode",
     "devtron": "Abandoned",
     "electron": "V14: breaks electron-settings",
     "electron-debug": "V4: requires Electron 30",
@@ -121,7 +120,6 @@
     "asyncbox": "3.0.0",
     "check-engines": "1.6.0",
     "concurrently": "8.2.2",
-    "cross-env": "7.0.3",
     "devtron": "1.4.0",
     "electron": "13.6.9",
     "electron-builder": "24.13.3",
