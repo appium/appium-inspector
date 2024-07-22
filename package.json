@@ -27,7 +27,7 @@
     "test:format": "prettier . -c",
     "test:unit": "vitest run unit",
     "test:integration": "vitest run integration",
-    "test:e2e": "echo 'Currently not functional'",
+    "test:e2e": "echo 'Currently not functional - TODO: fixme'",
     "dev:browser": "vite",
     "dev:electron": "electron-vite -w",
     "build": "npm run build:browser && npm run build:electron",
