@@ -11,12 +11,6 @@
     }
   },
   "rules": {
-    "import/no-unresolved": [
-      2,
-      {
-        "ignore": ["electron"]
-      }
-    ],
     "react/prop-types": 0,
     "react-native/no-inline-styles": 2
   }
