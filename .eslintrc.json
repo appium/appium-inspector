@@ -1,5 +1,5 @@
 {
-  "extends": ["plugin:react/recommended", "@appium/eslint-config-appium"],
+  "extends": ["plugin:react/recommended", "@appium/eslint-config-appium-ts"],
   "plugins": ["import", "react", "react-native"],
   "env": {
     "browser": true,
