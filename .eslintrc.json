@@ -4,7 +4,6 @@
   "plugins": ["import", "react", "react-native", "@babel"],
   "env": {
     "browser": true,
-    "mocha": true,
     "node": true
   },
   "settings": {

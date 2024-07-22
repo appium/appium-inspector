@@ -10,13 +10,11 @@
     {
       "matchPackageNames": [
         "antd",
-        "chai",
         "electron",
         "electron-debug",
         "eslint",
         "htmlparser2",
-        "postcss-modules",
-        "spectron"
+        "postcss-modules"
       ],
       "matchUpdateTypes": ["major"],
       "enabled": false
