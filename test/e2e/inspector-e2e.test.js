@@ -52,12 +52,16 @@ describe('inspector window', function () {
   });
 
   it('shows content in "Selected Element" pane when clicking on an item in the Source inspector', async function () {
-    expect(await (await client.$(inspector.selectedElementBody)).getHTML()).toContain('Select an element');
+    expect(await (await client.$(inspector.selectedElementBody)).getHTML()).toContain(
+      'Select an element',
+    );
     await (await client.$(inspector.sourceTreeNode)).waitForExist({timeout: 3000});
     await (await client.$(inspector.sourceTreeNode)).click();
     await (await client.$(inspector.tapSelectedElementButton)).waitForExist({timeout: 3000});
     await (await client.$(inspector.tapSelectedElementButton)).waitForEnabled({timeout: 4000});
-    expect(await (await client.$(inspector.selectedElementBody)).getHTML()).toContain('btnTapElement');
+    expect(await (await client.$(inspector.selectedElementBody)).getHTML()).toContain(
+      'btnTapElement',
+    );
     await (await client.$(inspector.tapSelectedElementButton)).click();
   });
 

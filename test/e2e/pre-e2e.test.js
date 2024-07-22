@@ -13,15 +13,7 @@ before(async function () {
   // let args = [];
   if (process.env.SPECTRON_TEST_PROD_BINARIES) {
     if (platform === 'linux') {
-      appPath = join(
-        __dirname,
-        '..',
-        '..',
-        appName,
-        'release',
-        'linux-unpacked',
-        'appium-desktop',
-      );
+      appPath = join(__dirname, '..', '..', appName, 'release', 'linux-unpacked', 'appium-desktop');
     } else if (platform === 'darwin') {
       appPath = join(
         __dirname,
@@ -36,15 +28,7 @@ before(async function () {
         'Appium',
       );
     } else if (platform === 'win32') {
-      appPath = join(
-        __dirname,
-        '..',
-        '..',
-        appName,
-        'release',
-        'win-ia32-unpacked',
-        'Appium.exe',
-      );
+      appPath = join(__dirname, '..', '..', appName, 'release', 'win-ia32-unpacked', 'Appium.exe');
     }
   } else {
     appPath = require(join(__dirname, '..', '..', 'node_modules', 'electron'));

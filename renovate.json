@@ -8,13 +8,7 @@
       "automerge": true
     },
     {
-      "matchPackageNames": [
-        "antd",
-        "electron",
-        "electron-debug",
-        "eslint",
-        "htmlparser2"
-      ],
+      "matchPackageNames": ["antd", "electron", "electron-debug", "eslint", "htmlparser2"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     }
