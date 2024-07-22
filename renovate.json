@@ -13,8 +13,7 @@
         "electron",
         "electron-debug",
         "eslint",
-        "htmlparser2",
-        "postcss-modules"
+        "htmlparser2"
       ],
       "matchUpdateTypes": ["major"],
       "enabled": false
