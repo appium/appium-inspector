@@ -116,7 +116,6 @@
     "@types/redux-logger": "3.0.13",
     "@vitejs/plugin-react": "4.3.1",
     "asyncbox": "3.0.0",
-    "check-engines": "1.6.0",
     "concurrently": "8.2.2",
     "electron": "13.6.9",
     "electron-builder": "24.13.3",
