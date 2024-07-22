@@ -97,8 +97,7 @@
   "//devDependencies": {
     "electron": "V14: breaks electron-settings",
     "electron-debug": "V4: requires Electron 30",
-    "eslint": "V9: need to move to flat config",
-    "node-libs-browser": "Deprecated"
+    "eslint": "V9: need to move to flat config"
   },
   "devDependencies": {
     "@appium/docutils": "1.0.18",
@@ -127,7 +126,6 @@
     "eslint-plugin-react": "7.35.0",
     "eslint-plugin-react-native": "4.1.0",
     "less": "4.2.0",
-    "node-libs-browser": "2.2.1",
     "prettier": "3.3.3",
     "rimraf": "5.0.9",
     "vite": "5.3.4",
