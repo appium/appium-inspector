@@ -20,7 +20,6 @@
     }
   ],
   "baseBranches": ["main"],
-  "ignorePaths": ["assets", "build", "release", "sample-session-files"],
   "semanticCommits": "enabled",
   "schedule": ["after 10pm and before 5:00am"],
   "timezone": "America/Vancouver",
