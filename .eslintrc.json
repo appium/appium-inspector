@@ -1,7 +1,6 @@
 {
   "extends": ["plugin:react/recommended", "@appium/eslint-config-appium"],
-  "parser": "@babel/eslint-parser",
-  "plugins": ["import", "react", "react-native", "@babel"],
+  "plugins": ["import", "react", "react-native"],
   "env": {
     "browser": true,
     "node": true
@@ -12,7 +11,6 @@
     }
   },
   "rules": {
-    "@babel/arrow-parens": 0,
     "import/no-unresolved": [
       2,
       {
