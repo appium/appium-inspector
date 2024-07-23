@@ -8,22 +8,12 @@
       "automerge": true
     },
     {
-      "matchPackageNames": [
-        "antd",
-        "chai",
-        "electron",
-        "electron-debug",
-        "eslint",
-        "htmlparser2",
-        "postcss-modules",
-        "spectron"
-      ],
+      "matchPackageNames": ["antd", "electron", "electron-debug", "eslint", "htmlparser2"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     }
   ],
   "baseBranches": ["main"],
-  "ignorePaths": ["assets", "build", "release", "sample-session-files"],
   "semanticCommits": "enabled",
   "schedule": ["after 10pm and before 5:00am"],
   "timezone": "America/Vancouver",
