@@ -1,5 +1,4 @@
 import {load} from 'cheerio';
-import {parseDocument} from 'htmlparser2';
 
 /**
  * JS code that is executed in the webview to set the needed attributes on the DOM so the source can be used for the
@@ -50,8 +49,7 @@ export function parseSource(source) {
     return source;
   }
 
-  const dom = parseDocument(source);
-  const $ = load(dom);
+  const $ = load(source, { _useHtmlParser2: true });
 
   // Remove the head and the scripts
   const head = $('head');
