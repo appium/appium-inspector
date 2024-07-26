@@ -14,8 +14,8 @@ import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/gestures';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {downloadFile, percentageToPixels} from '../../utils/other';
 import InspectorStyles from './Inspector.module.css';
-import FileUploader from '../Common/FileUploader.jsx';
-import {AiOutlineInfoCircle} from 'react-icons/ai';
+import FileUploader from './FileUploader.jsx';
+import {AiOutlineExclamationCircle} from 'react-icons/ai';
 
 const dataSource = (savedGestures, t) => {
   if (!savedGestures) {
@@ -182,7 +182,7 @@ const SavedGestures = (props) => {
         <Modal
           title={
             <Row align="start">
-              <AiOutlineInfoCircle className={InspectorStyles['error-icon']} />{' '}
+              <AiOutlineExclamationCircle className={InspectorStyles['error-icon']} />{' '}
               {t('errorLoadingGestures')}
             </Row>
           }

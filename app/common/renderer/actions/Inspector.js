@@ -157,13 +157,11 @@ const checkErrorsInAction = ({ticks}) => {
       );
     } else if (
       tick.type === POINTER_TYPES.POINTER_MOVE &&
-      typeof tick.button === 'undefined' &&
-      !tick.x &&
-      !tick.y
+      (typeof tick.duration === 'undefined' || !tick.x || !tick.y)
     ) {
       errors.push(
         i18n.t('gestureRequiredFieldsError', {
-          fields: 'button, x and y',
+          fields: 'duration, x and y',
           eventType: tick.type,
         }),
       );
@@ -172,15 +170,15 @@ const checkErrorsInAction = ({ticks}) => {
       typeof tick.button === 'undefined'
     ) {
       errors.push(
-        i18n.t('gestureRequiredFieldError', {
-          field: 'button',
+        i18n.t('gestureRequiredFieldsError', {
+          fields: 'button',
           eventType: tick.type,
         }),
       );
-    } else if (tick.type === POINTER_TYPES.PAUSE && !tick.duration) {
+    } else if (tick.type === POINTER_TYPES.PAUSE && typeof tick.duration === 'undefined') {
       errors.push(
-        i18n.t('gestureRequiredFieldError', {
-          field: 'duration',
+        i18n.t('gestureRequiredFieldsError', {
+          fields: 'duration',
           eventType: tick.type,
         }),
       );
@@ -933,12 +931,12 @@ export function uploadGesturesFromFile(fileList) {
         // Some error occured while reading the uploaded file
         if (error) {
           invalidGestures[fileName] = [i18n.t('gestureInvalidJsonError')];
-          return;
+          continue;
         }
         const gesture = JSON.parse(content);
         if (!gesture.name) {
           invalidGestures[fileName] = [i18n.t('gestureNameCannotBeEmptyError')];
-          return;
+          continue;
         }
         const actionErrors = gesture.actions
           .map(checkErrorsInAction)
@@ -946,10 +944,11 @@ export function uploadGesturesFromFile(fileList) {
 
         if (actionErrors.length) {
           invalidGestures[fileName] = actionErrors;
-        } else {
-          gesture.description = gesture.description || i18n.t('gestureImportedFrom', {fileName});
-          parsedGestures.push(_.omit(gesture, ['id']));
+          continue;
         }
+
+        gesture.description = gesture.description || i18n.t('gestureImportedFrom', {fileName});
+        parsedGestures.push(_.omit(gesture, ['id']));
       } catch (e) {
         invalidGestures[fileName] = [i18n.t('gestureInvalidJsonError')];
       }
