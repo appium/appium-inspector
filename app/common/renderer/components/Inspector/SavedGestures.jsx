@@ -15,7 +15,7 @@ import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {downloadFile, percentageToPixels} from '../../utils/other';
 import InspectorStyles from './Inspector.module.css';
 import FileUploader from './FileUploader.jsx';
-import {ExclamationCircleOutlined,} from '@ant-design/icons';
+import {ExclamationCircleOutlined} from '@ant-design/icons';
 
 const dataSource = (savedGestures, t) => {
   if (!savedGestures) {
