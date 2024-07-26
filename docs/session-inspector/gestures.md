@@ -10,7 +10,7 @@ tab shows the Saved Gestures screen.
 ## Saved Gestures
 
 The default saved gestures list is empty, but can be populated by creating and saving new gestures.
-New gestures can either be created manually or can be imported from JSON files that are previously downloded from the saved gestures section.
+New gestures can either be created manually or can be imported from JSON files that were previously downloaded from the saved gestures section.
 
 -   New gesture can be created by pressing the `+` button in the bottom left, which will open the [Gesture Builder](#gesture-builder) screen.
 -   Gestures downloaded as JSON files can be uploaded on clicking the `upload icon`. This opens a file browser window, allowing multiple gestures to be uploaded simultaneously.
