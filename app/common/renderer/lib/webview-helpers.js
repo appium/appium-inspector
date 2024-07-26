@@ -49,7 +49,7 @@ export function parseSource(source) {
     return source;
   }
 
-  const $ = load(source, { _useHtmlParser2: true });
+  const $ = load(source, {_useHtmlParser2: true});
 
   // Remove the head and the scripts
   const head = $('head');
