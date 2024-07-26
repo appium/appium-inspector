@@ -15,7 +15,7 @@ import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {downloadFile, percentageToPixels} from '../../utils/other';
 import InspectorStyles from './Inspector.module.css';
 import FileUploader from './FileUploader.jsx';
-import {AiOutlineExclamationCircle} from 'react-icons/ai';
+import {ExclamationCircleOutlined,} from '@ant-design/icons';
 
 const dataSource = (savedGestures, t) => {
   if (!savedGestures) {
@@ -182,7 +182,7 @@ const SavedGestures = (props) => {
         <Modal
           title={
             <Row align="start">
-              <AiOutlineExclamationCircle className={InspectorStyles['error-icon']} />{' '}
+              <ExclamationCircleOutlined className={InspectorStyles['error-icon']} />{' '}
               {t('errorLoadingGestures')}
             </Row>
           }
