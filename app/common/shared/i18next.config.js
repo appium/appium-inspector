@@ -36,6 +36,7 @@ export function getI18NextOptions(backend) {
       escapeValue: false,
     },
     lng: (settings && settings.getSync('PREFERRED_LANGUAGE')) || fallbackLng,
+    load: 'currentOnly',
     fallbackLng,
     supportedLngs: languageList.map((language) => language.code),
   };
