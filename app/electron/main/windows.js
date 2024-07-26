@@ -93,7 +93,17 @@ export function setupMainWindow() {
     ]).popup(mainWindow);
   });
 
+  i18n.on('initialized', () => {
+    rebuildMenus(mainWindow);
+    i18n.off('initialized');
+  });
+
   i18n.on('languageChanged', async (languageCode) => {
+    // this event gets called before the i18n initialization event,
+    // so add a guard condition
+    if (!i18n.isInitialized) {
+      return;
+    }
     rebuildMenus(mainWindow);
     await settings.set('PREFERRED_LANGUAGE', languageCode);
     webContents.getAllWebContents().forEach((wc) => {
@@ -102,8 +112,6 @@ export function setupMainWindow() {
       });
     });
   });
-
-  rebuildMenus(mainWindow);
 }
 
 export function launchNewSessionWindow() {
