@@ -116,7 +116,7 @@
     "eslint-plugin-react-native": "4.1.0",
     "less": "4.2.0",
     "prettier": "3.3.3",
-    "rimraf": "5.0.9",
+    "rimraf": "5.0.10",
     "vite": "5.3.5",
     "vite-plugin-electron-renderer": "0.14.5",
     "vitest": "2.0.4"
