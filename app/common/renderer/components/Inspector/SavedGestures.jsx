@@ -2,7 +2,7 @@ import {DeleteOutlined, EditOutlined, PlayCircleOutlined, PlusOutlined} from '@a
 import {Button, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect} from 'react';
 
 import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/gestures';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
@@ -31,24 +31,21 @@ const getGestureByID = (savedGestures, id, t) => {
 };
 
 const SavedGestures = (props) => {
-  const {savedGestures, showGestureEditor, removeGestureDisplay, t} = props;
+  const {savedGestures, showGestureEditor, displayGesture, removeGestureDisplay, t} = props;
 
-  const drawnGestureRef = useRef(null);
-
-  const onRowClick = (rowKey) => {
-    const gesture = getGestureByID(savedGestures, rowKey, t);
-    if (gesture.id === drawnGestureRef.current) {
+  const onRowMouseOver = (rowKey) => ({
+    onMouseEnter: () => {
+      const gesture = getGestureByID(savedGestures, rowKey, t);
+      const pointers = convertCoordinates(gesture.actions);
+      displayGesture(pointers);
+    },
+    onMouseLeave: () => {
       removeGestureDisplay();
-      drawnGestureRef.current = null;
-    } else {
-      onDraw(gesture);
-      drawnGestureRef.current = gesture.id;
-    }
-  };
+    },
+  });
 
   const loadSavedGesture = (gesture) => {
     const {setLoadedGesture} = props;
-    removeGestureDisplay();
     setLoadedGesture(gesture);
     showGestureEditor();
   };
@@ -56,14 +53,9 @@ const SavedGestures = (props) => {
   const handleDelete = (id) => {
     const {deleteSavedGesture} = props;
     if (window.confirm(t('confirmDeletion'))) {
+      removeGestureDisplay();
       deleteSavedGesture(id);
     }
-  };
-
-  const onDraw = (gesture) => {
-    const {displayGesture} = props;
-    const pointers = convertCoordinates(gesture.actions);
-    displayGesture(pointers);
   };
 
   const onPlay = (gesture) => {
@@ -130,14 +122,13 @@ const SavedGestures = (props) => {
   useEffect(() => {
     const {getSavedGestures} = props;
     getSavedGestures();
-    return () => (drawnGestureRef.current = null);
   }, []);
 
   return (
     <Space className={InspectorStyles.spaceContainer} direction="vertical" size="middle">
       {t('gesturesDescription')}
       <Table
-        onRow={(row) => ({onClick: () => onRowClick(row.key)})}
+        onRow={(row) => onRowMouseOver(row.key)}
         pagination={false}
         dataSource={dataSource(savedGestures, t)}
         columns={columns}
