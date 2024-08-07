@@ -1,4 +1,4 @@
-import {settings} from '../renderer/polyfills';
+import {settings} from '../polyfills';
 
 export const SAVED_SESSIONS = 'SAVED_SESSIONS';
 export const SET_SAVED_GESTURES = 'SET_SAVED_GESTURES';
@@ -26,5 +26,3 @@ export async function getSetting(setting) {
 export async function setSetting(setting, value) {
   await settings.set(setting, value);
 }
-
-export default settings;
