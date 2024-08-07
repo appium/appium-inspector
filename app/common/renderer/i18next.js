@@ -7,9 +7,9 @@ import {PREFERRED_LANGUAGE} from '../shared/setting-defs';
 import {i18NextBackend, i18NextBackendOptions, getSettingSync} from './polyfills';
 
 const i18nextOptions = {
+  ...commonI18NextOptions,
   backend: i18NextBackendOptions,
   lng: getSettingSync(PREFERRED_LANGUAGE) || fallbackLng,
-  ...commonI18NextOptions,
 };
 
 const namespace = 'translation';

@@ -19,9 +19,9 @@ const i18NextBackendOptions = {
 };
 
 const i18nextOptions = {
+  ...commonI18NextOptions,
   backend: i18NextBackendOptions,
   lng: settings.getSync(PREFERRED_LANGUAGE) || fallbackLng,
-  ...commonI18NextOptions,
 };
 
 if (!i18n.isInitialized) {
