@@ -1,7 +1,7 @@
 import {BrowserWindow, Menu, dialog, ipcMain, webContents} from 'electron';
+import settings from 'electron-settings';
 import {join} from 'path';
 
-import settings from '../../common/shared/settings';
 import i18n from './i18next';
 import {openFilePath} from './main';
 import {APPIUM_SESSION_EXTENSION, isDev} from './helpers';
