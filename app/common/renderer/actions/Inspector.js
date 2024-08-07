@@ -417,12 +417,15 @@ export function setContext(context) {
 
 export function searchForElement(strategy, selector) {
   return async (dispatch, getState) => {
+    const isRecording = getState().inspector.isRecording;
     dispatch({type: SEARCHING_FOR_ELEMENTS});
     try {
       const callAction = callClientMethod({strategy, selector, fetchArray: true});
       let {elements, variableName, executionTime} = await callAction(dispatch, getState);
-      const findAction = findAndAssign(strategy, selector, variableName, true);
-      findAction(dispatch, getState);
+      if (isRecording) {
+        const findAction = findAndAssign(strategy, selector, variableName, true);
+        findAction(dispatch, getState);
+      }
       elements = elements.map((el) => el.id);
       dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED, elements, executionTime});
     } catch (error) {
