@@ -6,6 +6,7 @@ import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import i18n from '../i18next';
 import AppiumClient from '../lib/appium-client';
 import frameworks from '../lib/client-frameworks';
+import {getSetting, setSetting} from '../polyfills';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation';
 import {
   domParser,
@@ -15,7 +16,6 @@ import {
 } from '../utils/source-parsing';
 import {log} from '../utils/logger';
 import {showError} from './Session';
-import {getSetting, setSetting} from './settings';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
 export const SET_SOURCE_AND_SCREENSHOT = 'SET_SOURCE_AND_SCREENSHOT';

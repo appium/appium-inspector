@@ -3,11 +3,11 @@ import _ from 'lodash';
 import {initReactI18next, withTranslation as wt} from 'react-i18next';
 
 import {commonI18NextOptions, fallbackLng} from '../shared/i18next.config';
-import {i18NextBackend, i18NextBackendOptions, settings} from './polyfills';
+import {i18NextBackend, i18NextBackendOptions, getSettingSync} from './polyfills';
 
 const i18nextOptions = {
   backend: i18NextBackendOptions,
-  lng: (settings && settings.getSync('PREFERRED_LANGUAGE')) || fallbackLng,
+  lng: getSettingSync('PREFERRED_LANGUAGE') || fallbackLng,
   ...commonI18NextOptions,
 };
 
