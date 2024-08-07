@@ -19,13 +19,12 @@ import {
   SERVER_ARGS,
   SESSION_SERVER_PARAMS,
   SESSION_SERVER_TYPE,
-  getSetting,
-  setSetting,
-} from '../../shared/settings';
+  VISIBLE_PROVIDERS,
+} from '../../shared/setting-defs';
 import {APP_MODE} from '../constants/session-inspector';
 import CloudProviders from '../components/Session/CloudProviders.jsx';
 import i18n from '../i18next';
-import {fs, ipcRenderer, util} from '../polyfills';
+import {fs, ipcRenderer, util, getSetting, setSetting} from '../polyfills';
 import {log} from '../utils/logger';
 import {addVendorPrefixes} from '../utils/other';
 import {quitSession, setSessionDetails} from './Inspector';
@@ -51,8 +50,6 @@ export const DELETE_SAVED_SESSION_DONE = 'DELETE_SAVED_SESSION_DONE';
 export const CHANGE_SERVER_TYPE = 'CHANGE_SERVER_TYPE';
 export const SET_SERVER_PARAM = 'SET_SERVER_PARAM';
 export const SET_SERVER = 'SET_SERVER';
-
-export const VISIBLE_PROVIDERS = 'VISIBLE_PROVIDERS';
 
 export const SET_ATTACH_SESS_ID = 'SET_ATTACH_SESS_ID';
 

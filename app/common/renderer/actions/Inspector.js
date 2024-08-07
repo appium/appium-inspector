@@ -1,11 +1,12 @@
 import _ from 'lodash';
 import {v4 as UUID} from 'uuid';
 
-import {SAVED_FRAMEWORK, SET_SAVED_GESTURES, getSetting, setSetting} from '../../shared/settings';
+import {SAVED_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs';
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import i18n from '../i18next';
 import AppiumClient from '../lib/appium-client';
 import frameworks from '../lib/client-frameworks';
+import {getSetting, setSetting} from '../polyfills';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation';
 import {
   domParser,

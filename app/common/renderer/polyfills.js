@@ -4,8 +4,25 @@
  * they cannot be added to tsconfig and eslint configurations
  */
 
+import {settings} from '#local-polyfills'; // eslint-disable-line import/no-unresolved
+import {DEFAULT_SETTINGS} from '../shared/setting-defs';
+
+export async function getSetting(setting) {
+  if (await settings.has(setting)) {
+    return await settings.get(setting);
+  }
+  return DEFAULT_SETTINGS[setting];
+}
+
+export async function setSetting(setting, value) {
+  await settings.set(setting, value);
+}
+
+export function getSettingSync(setting) {
+  return settings.getSync(setting);
+}
+
 export {
-  settings,
   clipboard,
   shell,
   ipcRenderer,
