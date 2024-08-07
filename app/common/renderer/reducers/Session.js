@@ -43,7 +43,7 @@ import {
   ServerTypes,
 } from '../actions/Session';
 
-const visibleProviders = []; // Pull this from "electron-settings"
+const visibleProviders = []; // Pull this from the VISIBLE_PROVIDERS setting
 const server = {
   local: {},
   remote: {},

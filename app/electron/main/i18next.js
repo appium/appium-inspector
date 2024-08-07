@@ -1,8 +1,10 @@
+import settings from 'electron-settings';
 import i18n from 'i18next';
 import i18NextBackend from 'i18next-fs-backend';
 import {join} from 'path';
 
-import {getI18NextOptions} from '../../common/shared/i18next.config';
+import {commonI18NextOptions, fallbackLng} from '../../common/shared/i18next.config';
+import {PREFERRED_LANGUAGE} from '../../common/shared/setting-defs';
 
 const localesPath =
   process.env.NODE_ENV === 'development'
@@ -16,7 +18,11 @@ const i18NextBackendOptions = {
   jsonIndent: 2,
 };
 
-const i18nextOptions = getI18NextOptions(i18NextBackendOptions);
+const i18nextOptions = {
+  ...commonI18NextOptions,
+  backend: i18NextBackendOptions,
+  lng: settings.getSync(PREFERRED_LANGUAGE) || fallbackLng,
+};
 
 if (!i18n.isInitialized) {
   i18n.use(i18NextBackend).init(i18nextOptions);
