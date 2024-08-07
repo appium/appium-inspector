@@ -4,6 +4,7 @@ import i18NextBackend from 'i18next-fs-backend';
 import {join} from 'path';
 
 import {commonI18NextOptions, fallbackLng} from '../../common/shared/i18next.config';
+import {PREFERRED_LANGUAGE} from '../../common/shared/setting-defs';
 
 const localesPath =
   process.env.NODE_ENV === 'development'
@@ -19,7 +20,7 @@ const i18NextBackendOptions = {
 
 const i18nextOptions = {
   backend: i18NextBackendOptions,
-  lng: settings.getSync('PREFERRED_LANGUAGE') || fallbackLng,
+  lng: settings.getSync(PREFERRED_LANGUAGE) || fallbackLng,
   ...commonI18NextOptions,
 };
 
