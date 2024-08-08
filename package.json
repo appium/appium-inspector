@@ -99,7 +99,7 @@
     "eslint": "V9: need to move to flat config"
   },
   "devDependencies": {
-    "@appium/docutils": "1.0.18",
+    "@appium/docutils": "1.0.19",
     "@appium/eslint-config-appium-ts": "0.3.3",
     "@appium/fake-driver": "5.5.2",
     "@appium/support": "5.1.2",
