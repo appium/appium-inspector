@@ -371,16 +371,14 @@ export function setSessionDetails({driver, sessionDetails, mode, mjpegScreenshot
 
 export function storeSessionSettings(updatedSessionSettings = null) {
   return async (dispatch, getState) => {
-    let sessionSettings;
-    if (updatedSessionSettings === null) {
+    let sessionSettings = updatedSessionSettings;
+    if (sessionSettings === null) {
       const action = applyClientMethod({
         methodName: 'getSettings',
         skipRefresh: true,
         ignoreResult: true,
       });
       sessionSettings = await action(dispatch, getState);
-    } else {
-      sessionSettings = updatedSessionSettings;
     }
     dispatch({type: STORE_SESSION_SETTINGS, sessionSettings});
   };
