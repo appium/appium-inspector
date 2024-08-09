@@ -6,7 +6,7 @@ import {
   LoadingOutlined,
   SendOutlined,
 } from '@ant-design/icons';
-import {Alert, Button, Col, Input, Row, Spin, Table, Tooltip} from 'antd';
+import {Alert, Button, Col, Input, Row, Space, Spin, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import React, {useRef} from 'react';
 
@@ -29,14 +29,33 @@ const SelectedElement = (props) => {
     isFindingElementsTimes,
     selectedElement,
     selectedElementId,
+    selectedElementPath,
     elementInteractionsNotAvailable,
     selectedElementSearchInProgress,
+    sessionSettings,
     t,
   } = props;
 
   const sendKeys = useRef();
 
   const isDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
+
+  const showSnapshotMaxDepthReachedMessage = () => {
+    const selectedElementDepth = selectedElementPath.split('.').length;
+    if (selectedElementDepth === sessionSettings.snapshotMaxDepth) {
+      return (
+        <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemInfoMessage}>
+          <Col>
+            <Alert
+              type={ALERT.INFO}
+              message={t('snapshotMaxDepthReached', {selectedElementDepth})}
+              showIcon
+            />
+          </Col>
+        </Row>
+      );
+    }
+  };
 
   const selectedElementTableCell = (text, copyToClipBoard) => {
     if (copyToClipBoard) {
@@ -158,15 +177,16 @@ const SelectedElement = (props) => {
   }
 
   return (
-    <div>
+    <Space className={styles.spaceContainer} direction="vertical" size="middle">
+      {showSnapshotMaxDepthReachedMessage()}
       {elementInteractionsNotAvailable && (
-        <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemNotInteractableAlertRow}>
+        <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemInfoMessage}>
           <Col>
             <Alert type={ALERT.INFO} message={t('interactionsNotAvailable')} showIcon />
           </Col>
         </Row>
       )}
-      <Row justify="center" type={ROW.FLEX} align="middle" className={styles.elementActions}>
+      <Row justify="center" type={ROW.FLEX} align="middle" className={styles.selectedElemActions}>
         <Tooltip title={t('Tap')}>
           <Button
             disabled={isDisabled}
@@ -238,12 +258,8 @@ const SelectedElement = (props) => {
           </Spin>
         </Row>
       )}
-      <br />
       {currentContext === NATIVE_APP && showXpathWarning && (
-        <div>
-          <Alert message={t('usingXPathNotRecommended')} type={ALERT.WARNING} showIcon />
-          <br />
-        </div>
+        <Alert message={t('usingXPathNotRecommended')} type={ALERT.WARNING} showIcon />
       )}
       {dataSource.length > 0 && (
         <Row className={styles.selectedElemContentRow}>
@@ -256,7 +272,7 @@ const SelectedElement = (props) => {
           />
         </Row>
       )}
-    </div>
+    </Space>
   );
 };
 
