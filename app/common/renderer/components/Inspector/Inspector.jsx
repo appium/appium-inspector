@@ -175,7 +175,13 @@ const Inspector = (props) => {
   };
 
   useEffect(() => {
-    const {applyClientMethod, getSavedActionFramework, runKeepAliveLoop, setSessionTime} = props;
+    const {
+      applyClientMethod,
+      getSavedActionFramework,
+      runKeepAliveLoop,
+      setSessionTime,
+      storeSessionSettings,
+    } = props;
     const curHeight = window.innerHeight;
     const curWidth = window.innerWidth;
     const needsResize =
@@ -190,6 +196,7 @@ const Inspector = (props) => {
     }
     didInitialResize.current = true;
     applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
+    storeSessionSettings();
     getSavedActionFramework();
     runKeepAliveLoop();
     setSessionTime(Date.now());

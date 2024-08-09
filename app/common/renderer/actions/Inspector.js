@@ -19,6 +19,7 @@ import {showError} from './Session';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
 export const SET_SOURCE_AND_SCREENSHOT = 'SET_SOURCE_AND_SCREENSHOT';
+export const STORE_SESSION_SETTINGS = 'STORE_SESSION_SETTINGS';
 export const SESSION_DONE = 'SESSION_DONE';
 export const SELECT_ELEMENT = 'SELECT_ELEMENT';
 export const UNSELECT_ELEMENT = 'UNSELECT_ELEMENT';
@@ -365,6 +366,21 @@ export function toggleShowBoilerplate() {
 export function setSessionDetails({driver, sessionDetails, mode, mjpegScreenshotUrl}) {
   return (dispatch) => {
     dispatch({type: SET_SESSION_DETAILS, driver, sessionDetails, mode, mjpegScreenshotUrl});
+  };
+}
+
+export function storeSessionSettings(updatedSessionSettings = null) {
+  return async (dispatch, getState) => {
+    let sessionSettings = updatedSessionSettings;
+    if (sessionSettings === null) {
+      const action = applyClientMethod({
+        methodName: 'getSettings',
+        skipRefresh: true,
+        ignoreResult: true,
+      });
+      sessionSettings = await action(dispatch, getState);
+    }
+    dispatch({type: STORE_SESSION_SETTINGS, sessionSettings});
   };
 }
 
