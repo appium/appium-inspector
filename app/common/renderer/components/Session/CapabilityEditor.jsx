@@ -136,11 +136,13 @@ const CapabilityEditor = (props) => {
               <Col span={2}>
                 <div className={SessionStyles.btnDeleteCap}>
                   <Form.Item>
-                    <Button
-                      {...{disabled: caps.length <= 1 || isEditingDesiredCaps}}
-                      icon={<DeleteOutlined />}
-                      onClick={() => removeCapability(index)}
-                    />
+                    <Tooltip title={t('Delete')}>
+                      <Button
+                        {...{disabled: caps.length <= 1 || isEditingDesiredCaps}}
+                        icon={<DeleteOutlined />}
+                        onClick={() => removeCapability(index)}
+                      />
+                    </Tooltip>
                   </Form.Item>
                 </div>
               </Col>
@@ -159,13 +161,15 @@ const CapabilityEditor = (props) => {
             </Col>
             <Col span={2}>
               <Form.Item>
-                <Button
-                  disabled={isEditingDesiredCaps}
-                  id="btnAddDesiredCapability"
-                  icon={<PlusOutlined />}
-                  onClick={addCapability}
-                  className={SessionStyles['add-desired-capability-button']}
-                />
+                <Tooltip title={t('Add')}>
+                  <Button
+                    disabled={isEditingDesiredCaps}
+                    id="btnAddDesiredCapability"
+                    icon={<PlusOutlined />}
+                    onClick={addCapability}
+                    className={SessionStyles['add-desired-capability-button']}
+                  />
+                </Tooltip>
               </Form.Item>
             </Col>
           </Row>
