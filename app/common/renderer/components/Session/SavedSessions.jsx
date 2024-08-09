@@ -1,5 +1,5 @@
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
-import {Button, Col, Row, Table} from 'antd';
+import {Button, Col, Row, Table, Tooltip} from 'antd';
 import moment from 'moment';
 import React from 'react';
 
@@ -85,17 +85,20 @@ const SavedSessions = (props) => {
       key: 'action',
       width: SAVED_SESSIONS_TABLE_VALUES.ACTIONS_COLUMN_WIDTH,
       render: (_, record) => (
-        <div>
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => {
-              handleCapsAndServer(record.key);
-              switchTabs('new');
-            }}
-            className={SessionStyles.editSession}
-          />
-          <Button icon={<DeleteOutlined />} onClick={() => handleDelete(record.key)} />
-        </div>
+        <Button.Group>
+          <Tooltip title={t('Edit')}>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => {
+                handleCapsAndServer(record.key);
+                switchTabs('new');
+              }}
+            />
+          </Tooltip>
+          <Tooltip title={t('Delete')}>
+            <Button icon={<DeleteOutlined />} onClick={() => handleDelete(record.key)} />
+          </Tooltip>
+        </Button.Group>
       ),
     },
   ];
