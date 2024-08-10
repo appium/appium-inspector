@@ -70,7 +70,7 @@
     "antd": "4.24.16",
     "axios": "1.7.3",
     "bluebird": "3.7.2",
-    "cheerio": "1.0.0-rc.12",
+    "cheerio": "1.0.0",
     "electron-debug": "3.2.0",
     "electron-extension-installer": "1.2.0",
     "electron-settings": "4.0.4",
