@@ -133,6 +133,7 @@
   "contextDropdownInfo": "Multiple contexts detected; certain elements might only be accessible after switching to a different context. Note that webview inspection in Appium Inspector is less accurate than the DevTools of Chrome or Safari. For more information, see:",
   "idAutocompletionCanBeDisabled": "The requested id selector does not have a package name prefix. This Appium session has package name autocompletion enabled, which may be the reason why no elements were found. To disable this behavior, change the 'disableIdLocatorAutocompletion' setting to 'true'.",
   "missingAutomationNameForStrategies": "Additional locator strategies may be available. To view them, add the capability 'appium:automationName' when launching the session. Note that this capability is mandatory in Appium 2.",
+  "snapshotMaxDepthReached": "This element is located at the maximum source depth {{selectedElementDepth}}, therefore its child elements (if any) are not shown. To reveal them, change the 'snapshotMaxDepth' setting to a value greater than {{selectedElementDepth}}. Check your driver documentation for the maximum supported value.",
   "Tap": "Tap",
   "Gathering initial app source…": "Gathering initial app source…",
   "couldNotObtainSource": "Could not obtain source: {{errorMsg}}",
