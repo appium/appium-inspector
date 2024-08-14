@@ -1,5 +1,9 @@
 {
-  "extends": ["config:base", ":semanticCommitTypeAll(chore)", ":pinAllExceptPeerDependencies"],
+  "extends": [
+    "config:recommended",
+    ":semanticCommitTypeAll(chore)",
+    ":pinAllExceptPeerDependencies"
+  ],
   "labels": ["dependencies"],
   "packageRules": [
     {
