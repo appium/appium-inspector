@@ -59,10 +59,11 @@
   "//dependencies": {
     "antd": "V5: significant rewrite required",
     "bluebird": "Deprecated: recommended to replace with native promises",
+    "cheerio": "V1: requires Node 18",
     "electron-debug": "V4: requires Electron 30",
     "electron-settings": "V5: need to rewrite to IPC while keeping browser version working",
     "redux-logger": "Appears to be abandoned",
-    "uuid": "Obsolete: can be replaced with crypto.randomUUID in Electron 14+"
+    "uuid": "V10: requires Node 16. Can also be replaced with crypto.randomUUID in Electron 14+"
   },
   "dependencies": {
     "@reduxjs/toolkit": "2.2.7",
@@ -96,7 +97,8 @@
   },
   "//devDependencies": {
     "electron": "V14: breaks electron-settings",
-    "eslint": "V9: need to move to flat config"
+    "eslint": "V9: need to move to flat config",
+    "rimraf": "V6: requires Node 20"
   },
   "devDependencies": {
     "@appium/docutils": "1.0.19",
