@@ -1,5 +1,5 @@
 import {ReloadOutlined} from '@ant-design/icons';
-import {Button, Card, Col, Form, Row, Select} from 'antd';
+import {Button, Card, Col, Form, Row, Select, Tooltip} from 'antd';
 import React from 'react';
 
 import {ServerTypes} from '../../actions/Session';
@@ -60,7 +60,7 @@ const AttachToSession = ({
       </Card>
     </Form.Item>
     <Form.Item>
-      <Row>
+      <Row gutter={8}>
         <Col span={23}>
           <Select
             showSearch
@@ -77,9 +77,9 @@ const AttachToSession = ({
           </Select>
         </Col>
         <Col span={1}>
-          <div className={SessionStyles.btnReload}>
+          <Tooltip title={t('Reload')}>
             <Button onClick={getRunningSessions} icon={<ReloadOutlined />} />
-          </div>
+          </Tooltip>
         </Col>
       </Row>
     </Form.Item>
