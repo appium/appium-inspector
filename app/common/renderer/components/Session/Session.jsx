@@ -65,7 +65,6 @@ const Session = (props) => {
       setSavedServerParams,
       setStateFromAppiumFile,
       setVisibleProviders,
-      getRunningSessions,
       bindWindowClose,
       initFromQueryString,
       saveFile,
@@ -78,7 +77,6 @@ const Session = (props) => {
         await setSavedServerParams();
         await setLocalServerParams();
         await setVisibleProviders();
-        getRunningSessions();
         initFromQueryString(loadNewSession);
         await setStateFromAppiumFile();
         ipcRenderer.on('open-file', (_, filePath) => setStateFromAppiumFile(filePath));

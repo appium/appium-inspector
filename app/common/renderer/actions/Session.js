@@ -713,11 +713,15 @@ export function getSavedSessions() {
 }
 
 /**
- * Switch to a different tab
+ * Switch to a different Session Builder tab
  */
 export function switchTabs(key) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch({type: SWITCHED_TABS, key});
+    // if switching to Attach to Session tab, also retrieve the running sessions
+    if (key === 'attach') {
+      getRunningSessions()(dispatch, getState);
+    }
   };
 }
 
@@ -775,11 +779,9 @@ export function setAttachSessId(attachSessId) {
  * Change the server type
  */
 export function changeServerType(serverType) {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     await setSetting(SESSION_SERVER_TYPE, serverType);
     dispatch({type: CHANGE_SERVER_TYPE, serverType});
-    const action = getRunningSessions();
-    action(dispatch, getState);
   };
 }
 
@@ -787,12 +789,10 @@ export function changeServerType(serverType) {
  * Set a server parameter (host, port, etc...)
  */
 export function setServerParam(name, value, serverType) {
-  const debounceGetRunningSessions = debounce(getRunningSessions(), 5000);
   return async (dispatch, getState) => {
     serverType = serverType || getState().session.serverType;
     await setSetting(SESSION_SERVER_TYPE, serverType);
     dispatch({type: SET_SERVER_PARAM, serverType, name, value});
-    debounceGetRunningSessions(dispatch, getState);
   };
 }
 
