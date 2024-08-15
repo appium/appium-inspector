@@ -19,10 +19,12 @@ const formatCaps = (caps, serverType) => {
       : actualCaps.deviceName;
   returnedCaps.push(deviceName || actualCaps.avd || actualCaps.udid);
   // add platformName and platformVersion
-  const platformInfo = actualCaps.platformVersion
-    ? `${actualCaps.platformName} ${actualCaps.platformVersion}`
-    : actualCaps.platformName;
-  returnedCaps.push(platformInfo);
+  if (actualCaps.platformName) {
+    const platformInfo = actualCaps.platformVersion
+      ? `${actualCaps.platformName} ${actualCaps.platformVersion}`
+      : actualCaps.platformName;
+    returnedCaps.push(platformInfo);
+  }
   // add automationName
   returnedCaps.push(actualCaps.automationName);
   // add app OR bundleId OR appPackage
