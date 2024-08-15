@@ -1,45 +1,40 @@
 import {ReloadOutlined} from '@ant-design/icons';
 import {Button, Card, Col, Form, Row, Select, Tooltip} from 'antd';
+import _ from 'lodash';
 import React from 'react';
 
 import {ServerTypes} from '../../actions/Session';
 import SessionStyles from './Session.module.css';
 
-const formatCaps = (caps) => {
-  let importantCaps = [caps.app, caps.platformName, caps.deviceName];
-  if (caps.automationName) {
-    importantCaps.push(caps.automationName);
-  }
-  return importantCaps.join(', ').trim();
+const formatCaps = (caps, serverType) => {
+  let returnedCaps = [];
+  const actualCaps =
+    serverType === ServerTypes.lambdatest && 'capabilities' in caps ? caps.capabilities : caps;
+  // add sessionName (BrowserStack and other cloud providers only)
+  returnedCaps.push(actualCaps.sessionName);
+  // add deviceName OR avd OR udid
+  const deviceName =
+    serverType === ServerTypes.lambdatest && 'desired' in actualCaps
+      ? actualCaps.desired.deviceName
+      : actualCaps.deviceName;
+  returnedCaps.push(deviceName || actualCaps.avd || actualCaps.udid);
+  // add platformName and platformVersion
+  const platformInfo = actualCaps.platformVersion
+    ? `${actualCaps.platformName} ${actualCaps.platformVersion}`
+    : actualCaps.platformName;
+  returnedCaps.push(platformInfo);
+  // add automationName
+  returnedCaps.push(actualCaps.automationName);
+  // add app OR bundleId OR appPackage
+  const appIdentifier = actualCaps.app || actualCaps.bundleId || actualCaps.appPackage;
+  returnedCaps.push(appIdentifier);
+  // omit all values that were not found in caps
+  const nonEmptyCaps = _.reject(returnedCaps, _.isNil);
+  return nonEmptyCaps.join(' / ').trim();
 };
 
-const formatCapsBrowserstack = (caps) => {
-  let importantCaps = formatCaps(caps).split(', ');
-  if (caps.sessionName) {
-    importantCaps.push(caps.sessionName);
-  }
-  return importantCaps.join(', ').trim();
-};
-
-const formatCapsLambdaTest = (caps) => {
-  if (caps.hasOwnProperty.call(caps, 'capabilities')) {
-    caps = caps.capabilities;
-  }
-  const deviceName = caps.desired ? caps.desired.deviceName : caps.deviceName;
-  const importantCaps = [deviceName, caps.platformName, caps.platformVersion];
-  return importantCaps.join(', ').trim();
-};
-
-const getSessionInfo = (session, serverType) => {
-  switch (serverType) {
-    case ServerTypes.browserstack:
-      return `${session.id} — ${formatCapsBrowserstack(session.capabilities)}`;
-    case ServerTypes.lambdatest:
-      return `${session.id} - ${formatCapsLambdaTest(session.capabilities)}`;
-    default:
-      return `${session.id} — ${formatCaps(session.capabilities)}`;
-  }
-};
+const getSessionInfo = (session, serverType) =>
+  `${session.id} — ${formatCaps(session.capabilities, serverType)}`;
 
 const AttachToSession = ({
   serverType,
@@ -69,11 +64,16 @@ const AttachToSession = ({
             value={attachSessId || undefined}
             onChange={(value) => setAttachSessId(value)}
           >
-            {runningAppiumSessions.map((session) => (
-              <Select.Option key={session.id} value={session.id}>
-                <div>{getSessionInfo(session, serverType)}</div>
-              </Select.Option>
-            ))}
+            {runningAppiumSessions
+              .slice()
+              .reverse()
+              .map((session) => (
+                // list is reversed in order to place the most recent sessions at the top
+                // slice() is added because reverse() mutates the original array
+                <Select.Option key={session.id} value={session.id}>
+                  <div>{getSessionInfo(session, serverType)}</div>
+                </Select.Option>
+              ))}
           </Select>
         </Col>
         <Col span={1}>
