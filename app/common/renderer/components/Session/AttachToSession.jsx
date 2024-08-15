@@ -55,7 +55,7 @@ const AttachToSession = ({
       </Card>
     </Form.Item>
     <Form.Item>
-      <Row gutter={8}>
+      <Row>
         <Col span={23}>
           <Select
             showSearch
@@ -78,7 +78,11 @@ const AttachToSession = ({
         </Col>
         <Col span={1}>
           <Tooltip title={t('Reload')}>
-            <Button onClick={getRunningSessions} icon={<ReloadOutlined />} />
+            <Button
+              className={SessionStyles.btnReload}
+              onClick={getRunningSessions}
+              icon={<ReloadOutlined />}
+            />
           </Tooltip>
         </Col>
       </Row>
