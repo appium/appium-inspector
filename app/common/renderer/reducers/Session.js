@@ -284,6 +284,7 @@ export default function session(state = INITIAL_STATE, action) {
       return {
         ...state,
         gettingSessions: false,
+        attachSessId: action.sessions ? state.attachSessId : null,
         runningAppiumSessions: action.sessions || [],
       };
     }
