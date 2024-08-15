@@ -6,30 +6,31 @@ import React from 'react';
 import {ServerTypes} from '../../actions/Session';
 import SessionStyles from './Session.module.css';
 
-const formatCaps = (caps, serverType) => {
+const formatCaps = (initialCaps, serverType) => {
   let returnedCaps = [];
-  const actualCaps =
-    serverType === ServerTypes.lambdatest && 'capabilities' in caps ? caps.capabilities : caps;
+  const caps =
+    serverType === ServerTypes.lambdatest && 'capabilities' in initialCaps
+      ? initialCaps.capabilities
+      : initialCaps;
   // add sessionName (BrowserStack and other cloud providers only)
-  returnedCaps.push(actualCaps.sessionName);
+  returnedCaps.push(caps.sessionName);
   // add deviceName OR avd OR udid
   const deviceName =
-    serverType === ServerTypes.lambdatest && 'desired' in actualCaps
-      ? actualCaps.desired.deviceName
-      : actualCaps.deviceName;
-  returnedCaps.push(deviceName || actualCaps.avd || actualCaps.udid);
+    serverType === ServerTypes.lambdatest && 'desired' in caps
+      ? caps.desired.deviceName
+      : caps.deviceName;
+  returnedCaps.push(deviceName || caps.avd || caps.udid);
   // add platformName and platformVersion
-  if (actualCaps.platformName) {
-    const platformInfo = actualCaps.platformVersion
-      ? `${actualCaps.platformName} ${actualCaps.platformVersion}`
-      : actualCaps.platformName;
+  if (caps.platformName) {
+    const platformInfo = caps.platformVersion
+      ? `${caps.platformName} ${caps.platformVersion}`
+      : caps.platformName;
     returnedCaps.push(platformInfo);
   }
   // add automationName
-  returnedCaps.push(actualCaps.automationName);
+  returnedCaps.push(caps.automationName);
   // add app OR bundleId OR appPackage
-  const appIdentifier = actualCaps.app || actualCaps.bundleId || actualCaps.appPackage;
-  returnedCaps.push(appIdentifier);
+  returnedCaps.push(caps.app || caps.bundleId || caps.appPackage);
   // omit all values that were not found in caps
   const nonEmptyCaps = _.reject(returnedCaps, _.isNil);
   return nonEmptyCaps.join(' / ').trim();
