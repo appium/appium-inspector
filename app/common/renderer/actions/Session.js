@@ -1,14 +1,6 @@
 import {notification} from 'antd';
 import axios from 'axios';
-import {
-  includes,
-  isPlainObject,
-  isUndefined,
-  keys,
-  toPairs,
-  union,
-  without,
-} from 'lodash';
+import {includes, isPlainObject, isUndefined, keys, toPairs, union, without} from 'lodash';
 import moment from 'moment';
 import {v4 as UUID} from 'uuid';
 import {Web2Driver} from 'web2driver';
@@ -970,7 +962,6 @@ export function getRunningSessions() {
           dispatch({type: SET_ATTACH_SESS_ID, attachSessId: null});
         }
       }
-
     } catch (err) {
       log.warn(`Ignoring error in getting list of active sessions: ${err}`);
       dispatch({type: GET_SESSIONS_DONE});
