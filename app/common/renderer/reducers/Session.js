@@ -103,19 +103,6 @@ const INITIAL_STATE = {
 
 let nextState;
 
-// returns false if the attachSessId is not present in the runningSessions list
-const isAttachSessIdValid = (runningSessions, attachSessId) => {
-  if (!attachSessId || !runningSessions) {
-    return false;
-  }
-  for (const session of runningSessions) {
-    if (session.id === attachSessId) {
-      return true;
-    }
-  }
-  return false;
-};
-
 export default function session(state = INITIAL_STATE, action) {
   switch (action.type) {
     case NEW_SESSION_REQUESTED:
@@ -294,16 +281,9 @@ export default function session(state = INITIAL_STATE, action) {
       };
 
     case GET_SESSIONS_DONE: {
-      const attachSessId = isAttachSessIdValid(action.sessions, state.attachSessId)
-        ? state.attachSessId
-        : null;
       return {
         ...state,
         gettingSessions: false,
-        attachSessId:
-          action.sessions && action.sessions.length > 0 && !attachSessId
-            ? action.sessions[0].id
-            : attachSessId,
         runningAppiumSessions: action.sessions || [],
       };
     }

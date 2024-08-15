@@ -917,15 +917,15 @@ function getSaveableState(reduxState) {
   };
 }
 
+/**
+ * Retrieve all running sessions for the currently configured server details
+ */
 export function getRunningSessions() {
   return async (dispatch, getState) => {
     const avoidServerTypes = ['sauce'];
-    // Get currently running sessions for this server
     const state = getState().session;
-    const {server, serverType} = state;
-    const serverInfo = server[serverType];
-
-    let {hostname, port, path, ssl, username, accessKey} = serverInfo;
+    const {server, serverType, attachSessId} = state;
+    let {hostname, port, path, ssl, username, accessKey} = server[serverType];
 
     // if we have a standard remote server, fill out connection info based on placeholder defaults
     // in case the user hasn't adjusted those fields
@@ -935,8 +935,8 @@ export function getRunningSessions() {
       path = path || DEFAULT_SERVER_PATH;
     }
 
+    // no need to get sessions if we don't have complete server info
     if (!hostname || !port || !path) {
-      // no need to get sessions if we don't have complete server info
       return;
     }
 
@@ -958,7 +958,20 @@ export function getRunningSessions() {
             : {}),
         },
       });
-      dispatch({type: GET_SESSIONS_DONE, sessions: res.data.value});
+      const sessions = res.data.value;
+      dispatch({type: GET_SESSIONS_DONE, sessions});
+
+      // set attachSessId if only one session found
+      if (sessions.length === 1) {
+        dispatch({type: SET_ATTACH_SESS_ID, attachSessId: sessions[0].id});
+      } else if (attachSessId) {
+        // clear attachSessId if it is no longer present in the found session list
+        const attachSessIdFound = sessions.filter((session) => session.id === attachSessId);
+        if (attachSessIdFound.length === 0) {
+          dispatch({type: SET_ATTACH_SESS_ID, attachSessId: null});
+        }
+      }
+
     } catch (err) {
       log.warn(`Ignoring error in getting list of active sessions: ${err}`);
       dispatch({type: GET_SESSIONS_DONE});
