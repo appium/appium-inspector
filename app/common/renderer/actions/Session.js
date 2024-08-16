@@ -957,8 +957,8 @@ export function getRunningSessions() {
         dispatch({type: SET_ATTACH_SESS_ID, attachSessId: sessions[0].id});
       } else if (attachSessId) {
         // clear attachSessId if it is no longer present in the found session list
-        const attachSessIdFound = sessions.filter((session) => session.id === attachSessId);
-        if (attachSessIdFound.length === 0) {
+        const attachSessIdFound = sessions.find((session) => session.id === attachSessId);
+        if (!attachSessIdFound) {
           dispatch({type: SET_ATTACH_SESS_ID, attachSessId: null});
         }
       }

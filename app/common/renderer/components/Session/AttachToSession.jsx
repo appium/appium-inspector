@@ -6,13 +6,33 @@ import React from 'react';
 import {ServerTypes} from '../../actions/Session';
 import SessionStyles from './Session.module.css';
 
-const formatCaps = (initialCaps, serverType) => {
+// Format the session string for standard Appium server connections
+const formatStandardCaps = (caps) => {
   let returnedCaps = [];
+  // add deviceName OR avd OR udid
+  returnedCaps.push(caps.deviceName || caps.avd || caps.udid);
+  // add platformName and platformVersion
+  const platformInfo = caps.platformVersion
+    ? `${caps.platformName} ${caps.platformVersion}`
+    : caps.platformName;
+  returnedCaps.push(platformInfo);
+  // add automationName
+  returnedCaps.push(caps.automationName);
+  // add app OR bundleId OR appPackage
+  returnedCaps.push(caps.app || caps.bundleId || caps.appPackage);
+  return returnedCaps;
+};
+
+// Format the session string for cloud service provider connections
+const formatVendorCaps = (initialCaps, serverType) => {
+  let returnedCaps = [];
+  // LambdaTest may use a slightly different format
+  // and package all caps in the 'capabilities' property
   const caps =
     serverType === ServerTypes.lambdatest && 'capabilities' in initialCaps
       ? initialCaps.capabilities
       : initialCaps;
-  // add sessionName (BrowserStack and other cloud providers only)
+  // add sessionName
   returnedCaps.push(caps.sessionName);
   // add deviceName OR avd OR udid
   const deviceName =
@@ -31,13 +51,19 @@ const formatCaps = (initialCaps, serverType) => {
   returnedCaps.push(caps.automationName);
   // add app OR bundleId OR appPackage
   returnedCaps.push(caps.app || caps.bundleId || caps.appPackage);
-  // omit all values that were not found in caps
-  const nonEmptyCaps = _.reject(returnedCaps, _.isNil);
-  return nonEmptyCaps.join(' / ').trim();
+  return returnedCaps;
 };
 
-const getSessionInfo = (session, serverType) =>
-  `${session.id} — ${formatCaps(session.capabilities, serverType)}`;
+const getSessionInfo = (session, serverType) => {
+  const formattedCaps =
+    serverType in [ServerTypes.remote, ServerTypes.local]
+      ? formatStandardCaps(session.capabilities)
+      : formatVendorCaps(session.capabilities, serverType);
+  // omit all null or undefined values
+  const nonEmptyCaps = _.reject(formattedCaps, _.isNil);
+  const formattedCapsString = nonEmptyCaps.join(' / ').trim();
+  return `${session.id} — ${formattedCapsString}`;
+};
 
 const AttachToSession = ({
   serverType,
