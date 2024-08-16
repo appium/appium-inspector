@@ -1,5 +1,5 @@
 import {DeleteOutlined, EditOutlined, PlayCircleOutlined, PlusOutlined} from '@ant-design/icons';
-import {Button, Space, Table, Tooltip} from 'antd';
+import {Button, Popconfirm, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useRef} from 'react';
@@ -31,7 +31,7 @@ const getGestureByID = (savedGestures, id, t) => {
 };
 
 const SavedGestures = (props) => {
-  const {savedGestures, showGestureEditor, removeGestureDisplay, t} = props;
+  const {savedGestures, deleteSavedGesture, showGestureEditor, removeGestureDisplay, t} = props;
 
   const drawnGestureRef = useRef(null);
 
@@ -51,13 +51,6 @@ const SavedGestures = (props) => {
     removeGestureDisplay();
     setLoadedGesture(gesture);
     showGestureEditor();
-  };
-
-  const handleDelete = (id) => {
-    const {deleteSavedGesture} = props;
-    if (window.confirm(t('confirmDeletion'))) {
-      deleteSavedGesture(id);
-    }
   };
 
   const onDraw = (gesture) => {
@@ -113,7 +106,15 @@ const SavedGestures = (props) => {
                 />
               </Tooltip>
               <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
-              <Button icon={<DeleteOutlined />} onClick={() => handleDelete(gesture.id)} />
+              <Popconfirm
+                title={t('confirmDeletion')}
+                placement="topRight"
+                okText={t('OK')}
+                cancelText={t('Cancel')}
+                onConfirm={() => deleteSavedGesture(gesture.id)}
+              >
+                <Button icon={<DeleteOutlined />} />
+              </Popconfirm>
             </Button.Group>
           );
         },
