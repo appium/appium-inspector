@@ -6,64 +6,77 @@ import React from 'react';
 import {ServerTypes} from '../../actions/Session';
 import SessionStyles from './Session.module.css';
 
-// Format the session string for standard Appium server connections
-const formatStandardCaps = (caps) => {
-  let returnedCaps = [];
-  // add deviceName OR avd OR udid
-  returnedCaps.push(caps.deviceName || caps.avd || caps.udid);
-  // add platformName and platformVersion
-  const platformInfo = caps.platformVersion
-    ? `${caps.platformName} ${caps.platformVersion}`
-    : caps.platformName;
-  returnedCaps.push(platformInfo);
-  // add automationName
-  returnedCaps.push(caps.automationName);
-  // add app OR bundleId OR appPackage
-  returnedCaps.push(caps.app || caps.bundleId || caps.appPackage);
-  return returnedCaps;
-};
-
-// Format the session string for cloud service provider connections
-const formatVendorCaps = (initialCaps, serverType) => {
-  let returnedCaps = [];
-  // LambdaTest may use a slightly different format
-  // and package all caps in the 'capabilities' property
-  const caps =
-    serverType === ServerTypes.lambdatest && 'capabilities' in initialCaps
-      ? initialCaps.capabilities
-      : initialCaps;
-  // add sessionName
-  returnedCaps.push(caps.sessionName);
-  // add deviceName OR avd OR udid
-  const deviceName =
-    serverType === ServerTypes.lambdatest && 'desired' in caps
-      ? caps.desired.deviceName
-      : caps.deviceName;
-  returnedCaps.push(deviceName || caps.avd || caps.udid);
-  // add platformName and platformVersion
-  if (caps.platformName) {
-    const platformInfo = caps.platformVersion
-      ? `${caps.platformName} ${caps.platformVersion}`
-      : caps.platformName;
-    returnedCaps.push(platformInfo);
+class DefaultSessionDescription {
+  constructor(caps) {
+    this._caps = caps;
   }
-  // add automationName
-  returnedCaps.push(caps.automationName);
-  // add app OR bundleId OR appPackage
-  returnedCaps.push(caps.app || caps.bundleId || caps.appPackage);
-  return returnedCaps;
+
+  // sessionName is only populated for cloud providers
+  _fetchSessionName() {
+    return this._caps.sessionName;
+  }
+
+  _fetchDeviceInfo() {
+    return this._caps.deviceName || this._caps.avd || this._caps.udid;
+  }
+
+  _fetchPlatformInfo() {
+    if (this._caps.platformName) {
+      const platformInfo = this._caps.platformVersion
+        ? `${this._caps.platformName} ${this._caps.platformVersion}`
+        : this._caps.platformName;
+      return platformInfo;
+    }
+  }
+
+  _fetchAutomationName() {
+    return this._caps.automationName;
+  }
+
+  _fetchAppInfo() {
+    return this._caps.app || this._caps.bundleId || this._caps.appPackage;
+  }
+
+  transform() {
+    const suffixItems = [
+      this._fetchSessionName(),
+      this._fetchDeviceInfo(),
+      this._fetchPlatformInfo(),
+      this._fetchAutomationName(),
+      this._fetchAppInfo(),
+    ];
+    return _.compact(suffixItems).join(' / ');
+  }
+}
+
+class LambdaTestSessionDescription extends DefaultSessionDescription {
+  constructor(caps) {
+    super();
+    if ('capabilities' in caps) {
+      this._caps = caps.capabilities;
+    }
+  }
+
+  _fetchDeviceInfo() {
+    if ('desired' in this._caps) {
+      return this._caps.desired.deviceName;
+    } else {
+      return this._caps.deviceName;
+    }
+  }
+}
+
+const getSessionDescription = (caps, serverType) => {
+  switch (serverType) {
+    case ServerTypes.lambdatest:
+      return new LambdaTestSessionDescription(caps);
+    default:
+      return new DefaultSessionDescription(caps);
+  }
 };
 
-const getSessionInfo = (session, serverType) => {
-  const formattedCaps =
-    serverType in [ServerTypes.remote, ServerTypes.local]
-      ? formatStandardCaps(session.capabilities)
-      : formatVendorCaps(session.capabilities, serverType);
-  // omit all null or undefined values
-  const nonEmptyCaps = _.reject(formattedCaps, _.isNil);
-  const formattedCapsString = nonEmptyCaps.join(' / ').trim();
-  return `${session.id} — ${formattedCapsString}`;
-};
+const getSessionInfo = (session, serverType) =>
+  `${session.id} — ${getSessionDescription(session.capabilities, serverType).transform()}`;
 
 const AttachToSession = ({
   serverType,
