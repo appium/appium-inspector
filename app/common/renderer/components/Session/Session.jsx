@@ -6,7 +6,11 @@ import {useNavigate} from 'react-router-dom';
 
 import {BUTTON} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
-import {SESSION_BUILDER_TABS, ADD_CLOUD_PROVIDER_TAB_KEY} from '../../constants/session-builder';
+import {
+  SESSION_BUILDER_TABS,
+  SERVER_TYPES,
+  ADD_CLOUD_PROVIDER_TAB_KEY,
+} from '../../constants/session-builder';
 import {ipcRenderer, shell} from '../../polyfills';
 import {log} from '../../utils/logger';
 import AdvancedServerParams from './AdvancedServerParams.jsx';
@@ -96,7 +100,11 @@ const Session = (props) => {
             onChange={(tab) => handleSelectServerTab(tab)}
             className={SessionStyles.serverTabs}
             items={[
-              {label: t('Appium Server'), key: 'remote', children: <ServerTabCustom {...props} />},
+              {
+                label: t('Appium Server'),
+                key: SERVER_TYPES.REMOTE,
+                children: <ServerTabCustom {...props} />,
+              },
               ..._(visibleProviders).map((providerName) => {
                 const provider = CloudProviders[providerName];
                 if (!provider) {

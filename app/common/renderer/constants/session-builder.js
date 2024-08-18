@@ -4,6 +4,25 @@ export const SESSION_BUILDER_TABS = {
   ATTACH_TO_SESSION: 'attach',
 };
 
+export const SERVER_TYPES = {
+  LOCAL: 'local',
+  REMOTE: 'remote',
+  ADVANCED: 'advanced',
+  SAUCE: 'sauce',
+  HEADSPIN: 'headspin',
+  BROWSERSTACK: 'browserstack',
+  LAMBDATEST: 'lambdatest',
+  TESTINGBOT: 'testingbot',
+  EXPERITEST: 'experitest',
+  ROBOTQA: 'roboticmobi',
+  REMOTETESTKIT: 'remotetestkit',
+  BITBAR: 'bitbar',
+  KOBITON: 'kobiton',
+  PERFECTO: 'perfecto',
+  PCLOUDY: 'pcloudy',
+  MOBITRU: 'mobitru',
+};
+
 export const SAVED_SESSIONS_TABLE_VALUES = {
   DATE_COLUMN_WIDTH: '25%',
   ACTIONS_COLUMN_WIDTH: '106px',
