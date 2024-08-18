@@ -131,9 +131,9 @@
   "usingXPathNotRecommended": "Usar localizadores XPath não é recomendado e pode levar a testes frágeis. Peça a sua equipe de desenvolvimento para fornecer localizadores de acessibilidade únicos!",
   "noAdditionalContextsFound": "Nenhum contexto adicional foi detectado",
   "contextDropdownInfo": "Múltiplos contextos detectados; certos elementos só podem ser acessíveis após mudar para um contexto diferente. Note que a inspeção da web no Appium Inspector é menos precisa do que o DevTools do Chrome ou do Safari. Para mais informações, consulte:",
-  "idAutocompletionCanBeDisabled": "The requested id selector does not have a package name prefix. This Appium session has package name autocompletion enabled, which may be the reason why no elements were found. To disable this behavior, change the 'disableIdLocatorAutocompletion' setting to 'true'.",
+  "idAutocompletionCanBeDisabled": "O id de seletor solicitado não tem um prefixo de nome de pacote. Esta sessão Appium tem a auto-conclusão do nome de pacote habilitada, que pode ser a razão pela qual nenhum elemento foi encontrado. Para desativar esse comportamento, altere a definição 'disableIdLocatorAutocompletion' para 'true'.",
   "missingAutomationNameForStrategies": "Estratégias de localizador adicionais podem estar disponíveis. Para visualizá-las, adicione o recurso 'appium:automationName' ao iniciar a sessão. Note que este recurso é obrigatório no Appium 2.",
-  "snapshotMaxDepthReached": "This element is located at the maximum source depth {{selectedElementDepth}}, therefore its child elements (if any) are not shown. To reveal them, change the 'snapshotMaxDepth' setting to a value greater than {{selectedElementDepth}}. Check your driver documentation for the maximum supported value.",
+  "snapshotMaxDepthReached": "Esse elemento está localizado na profundidade máxima da fonte {{selectedElementDepth}}, portanto seus elementos filhos (se houver) não serão mostrados. Para revelá-los, altere a configuração 'snapshotMaxDepth' para um valor maior que {{selectedElementDepth}}. Verifique sua documentação de driver para ver o valor máximo suportado.",
   "Tap": "Tocar",
   "Gathering initial app source…": "Coletando o fonte inicial do app…",
   "couldNotObtainSource": "Não foi possível obter o fonte: {{errorMsg}}",
@@ -199,7 +199,7 @@
   "Bitbar API Key": "Chave API da Bitbar",
   "RemoteTestKit AccessToken": "Token de Acesso Remoto TestKit",
   "RobotQA Token": "Token de RobotQA",
-  "Add": "Add",
+  "Add": "Adicionar",
   "Name": "Nome",
   "Description": "Descrição",
   "Created": "Criado",
@@ -283,5 +283,5 @@
   "invalidCapType": "Tipo de recurso inválido: {{type}}",
   "whitespaceDetected": "Texto começa e/ou termina com espaço em branco",
   "pcloudyCredentialsRequired": "O nome de usuário e a chave de API do pCloudy são necessários!",
-  "duplicateCapabilityNameError": "A capability set with the same name already exists"
+  "duplicateCapabilityNameError": "Já existe um conjunto de recursos com o mesmo nome"
 }
