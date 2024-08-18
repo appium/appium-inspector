@@ -3,7 +3,7 @@ import {Button, Col, Popconfirm, Row, Table, Tooltip} from 'antd';
 import moment from 'moment';
 import React from 'react';
 
-import {SAVED_SESSIONS_TABLE_VALUES} from '../../constants/session-builder';
+import {SESSION_BUILDER_TABS, SAVED_SESSIONS_TABLE_VALUES} from '../../constants/session-builder';
 import FormattedCaps from './FormattedCaps.jsx';
 import SessionStyles from './Session.module.css';
 
@@ -84,7 +84,7 @@ const SavedSessions = (props) => {
               icon={<EditOutlined />}
               onClick={() => {
                 handleCapsAndServer(record.key);
-                switchTabs('new');
+                switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER);
               }}
             />
           </Tooltip>
