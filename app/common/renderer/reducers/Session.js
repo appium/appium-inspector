@@ -40,46 +40,23 @@ import {
   SET_STATE_FROM_URL,
   SHOW_DESIRED_CAPS_JSON_ERROR,
   SWITCHED_TABS,
-  ServerTypes,
 } from '../actions/Session';
+import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder';
 
 const visibleProviders = []; // Pull this from the VISIBLE_PROVIDERS setting
-const server = {
-  local: {},
-  remote: {},
-  advanced: {},
-};
 
-for (const serverName of _.keys(ServerTypes)) {
-  server[serverName] = {};
+const server = {};
+for (const serverType of _.values(SERVER_TYPES)) {
+  server[serverType] = serverType === SERVER_TYPES.SAUCE ? {dataCenter: 'us-west-1'} : {};
 }
 
 // Make sure there's always at least one cap
 const INITIAL_STATE = {
   savedSessions: [],
-  tabKey: 'new',
-  serverType: ServerTypes.remote,
+  tabKey: SESSION_BUILDER_TABS.CAPS_BUILDER,
+  serverType: SERVER_TYPES.REMOTE,
   visibleProviders,
-  server: {
-    local: {},
-    remote: {},
-    sauce: {
-      dataCenter: 'us-west-1',
-    },
-    headspin: {},
-    browserstack: {},
-    lambdatest: {},
-    advanced: {},
-    bitbar: {},
-    kobiton: {},
-    perfecto: {},
-    pcloudy: {},
-    testingbot: {},
-    experitest: {},
-    roboticmobi: {},
-    remotetestkit: {},
-    mobitru: {},
-  },
+  server,
   attachSessId: null,
 
   // Make sure there's always at least one cap
@@ -102,19 +79,6 @@ const INITIAL_STATE = {
 };
 
 let nextState;
-
-// returns false if the attachSessId is not present in the runningSessions list
-const isAttachSessIdValid = (runningSessions, attachSessId) => {
-  if (!attachSessId || !runningSessions) {
-    return false;
-  }
-  for (const session of runningSessions) {
-    if (session.id === attachSessId) {
-      return true;
-    }
-  }
-  return false;
-};
 
 export default function session(state = INITIAL_STATE, action) {
   switch (action.type) {
@@ -278,7 +242,7 @@ export default function session(state = INITIAL_STATE, action) {
             return nextServerState;
           })(state.server, action.server),
         },
-        serverType: action.serverType || ServerTypes.local,
+        serverType: action.serverType || SERVER_TYPES.LOCAL,
       };
 
     case SET_ATTACH_SESS_ID:
@@ -294,16 +258,10 @@ export default function session(state = INITIAL_STATE, action) {
       };
 
     case GET_SESSIONS_DONE: {
-      const attachSessId = isAttachSessIdValid(action.sessions, state.attachSessId)
-        ? state.attachSessId
-        : null;
       return {
         ...state,
         gettingSessions: false,
-        attachSessId:
-          action.sessions && action.sessions.length > 0 && !attachSessId
-            ? action.sessions[0].id
-            : attachSessId,
+        attachSessId: action.sessions ? state.attachSessId : null,
         runningAppiumSessions: action.sessions || [],
       };
     }
@@ -420,14 +378,14 @@ export default function session(state = INITIAL_STATE, action) {
         isDuplicateCapsName: true,
       };
     case SET_STATE_FROM_SAVED:
-      if (!Object.keys(ServerTypes).includes(action.state.serverType)) {
+      if (!_.values(SERVER_TYPES).includes(action.state.serverType)) {
         notification.error({
           message: `Failed to load session: ${action.state.serverType} is not a valid server type`,
         });
         return state;
       }
       if (
-        ![...state.visibleProviders, ServerTypes.local, ServerTypes.remote].includes(
+        ![...state.visibleProviders, SERVER_TYPES.LOCAL, SERVER_TYPES.REMOTE].includes(
           action.state.serverType,
         )
       ) {

@@ -15,7 +15,6 @@ import ServerTabSauce from './ServerTabSauce.jsx';
 import ServerTabTestingbot from './ServerTabTestingbot.jsx';
 import SessionStyles from './Session.module.css';
 
-// ParcelJS handles image loading by exporting a path to the image
 import BitBarLogo from '../../assets/images/bitbar_logo.svg';
 import BrowserStackLogo from '../../assets/images/browserstack_logo.svg';
 import ExperitestLogo from '../../assets/images/experitest_logo.svg';
@@ -30,124 +29,58 @@ import RobotQALogo from '../../assets/images/robotqa_logo.svg';
 import SauceLogo from '../../assets/images/sauce_logo.svg';
 import TestingBotLogo from '../../assets/images/testingbot_logo.svg';
 
-const CloudProviders = {
-  sauce: {
-    tabhead: () => (
-      <span className={SessionStyles.tabText}>
-        <img src={SauceLogo} />
-      </span>
-    ),
-    tab: (props) => <ServerTabSauce {...props} />,
-    logo: SauceLogo,
-  },
-  headspin: {
-    tabhead: () => (
-      <span className={SessionStyles.tabText}>
-        <img src={HeadSpinLogo} />
-      </span>
-    ),
-    tab: (props) => <ServerTabHeadspin {...props} />,
-    logo: HeadSpinLogo,
-  },
-  browserstack: {
-    tabhead: () => (
-      <span className={SessionStyles.tabText}>
-        <img src={BrowserStackLogo} />
-      </span>
-    ),
-    tab: (props) => <ServerTabBrowserstack {...props} />,
-    logo: BrowserStackLogo,
-  },
-  lambdatest: {
-    tabhead: () => (
-      <span className={SessionStyles.tabText}>
-        <img src={LambdaTestLogo} />
-      </span>
-    ),
-    tab: (props) => <ServerTabLambdatest {...props} />,
-    logo: LambdaTestLogo,
-  },
-  bitbar: {
-    tabhead: () => (
-      <span className={SessionStyles.tabText}>
-        <img src={BitBarLogo} />
-      </span>
-    ),
-    tab: (props) => <ServerTabBitbar {...props} />,
-    logo: BitBarLogo,
-  },
-  kobiton: {
-    tabhead: () => (
-      <span className={SessionStyles.tabText}>
-        <img src={KobitonLogo} />
-      </span>
-    ),
-    tab: (props) => <ServerTabKobiton {...props} />,
-    logo: KobitonLogo,
-  },
-  perfecto: {
-    tabhead: () => (
-      <span className={SessionStyles.tabText}>
-        <img src={PerfectoLogo} />
-      </span>
-    ),
-    tab: (props) => <ServerTabPerfecto {...props} />,
-    logo: PerfectoLogo,
-  },
-  pcloudy: {
-    tabhead: () => (
-      <span className={SessionStyles.tabText}>
-        <img src={PcloudyLogo} />
-      </span>
-    ),
-    tab: (props) => <ServerTabPcloudy {...props} />,
-    logo: PcloudyLogo,
-  },
-  testingbot: {
-    tabhead: () => (
-      <span className={SessionStyles.tabText}>
-        <img src={TestingBotLogo} />
-      </span>
-    ),
-    tab: (props) => <ServerTabTestingbot {...props} />,
-    logo: TestingBotLogo,
-  },
-  experitest: {
-    tabhead: () => (
-      <span className={SessionStyles.tabText}>
-        <img src={ExperitestLogo} />
-      </span>
-    ),
-    tab: (props) => <ServerTabExperitest {...props} />,
-    logo: ExperitestLogo,
-  },
-  roboticmobi: {
-    tabhead: () => (
-      <span className={SessionStyles.tabText}>
-        <img src={RobotQALogo} />
-      </span>
-    ),
-    tab: (props) => <ServerTabRobotQA {...props} />,
-    logo: RobotQALogo,
-  },
-  remotetestkit: {
-    tabhead: () => (
-      <span className={SessionStyles.tabText}>
-        <img src={RemoteTestKitLogo} />
-      </span>
-    ),
-    tab: (props) => <ServerTabRemoteTestKit {...props} />,
-    logo: RemoteTestKitLogo,
-  },
-  mobitru: {
-    tabhead: () => (
-      <span className={SessionStyles.tabText}>
-        <img src={MobitruLogo} />
-      </span>
-    ),
-    tab: (props) => <ServerTabMobitru {...props} />,
-    logo: MobitruLogo,
-  },
-};
+import {SERVER_TYPES} from '../../constants/session-builder.js';
+
+const providerWrapper = (logo, providerComponent) => ({
+  tabhead: () => (
+    <span className={SessionStyles.tabText}>
+      <img src={logo} />
+    </span>
+  ),
+  tab: providerComponent,
+  logo,
+});
+
+const CloudProviders = {};
+
+CloudProviders[SERVER_TYPES.SAUCE] = providerWrapper(SauceLogo, (props) => (
+  <ServerTabSauce {...props} />
+));
+CloudProviders[SERVER_TYPES.HEADSPIN] = providerWrapper(HeadSpinLogo, (props) => (
+  <ServerTabHeadspin {...props} />
+));
+CloudProviders[SERVER_TYPES.BROWSERSTACK] = providerWrapper(BrowserStackLogo, (props) => (
+  <ServerTabBrowserstack {...props} />
+));
+CloudProviders[SERVER_TYPES.LAMBDATEST] = providerWrapper(LambdaTestLogo, (props) => (
+  <ServerTabLambdatest {...props} />
+));
+CloudProviders[SERVER_TYPES.TESTINGBOT] = providerWrapper(TestingBotLogo, (props) => (
+  <ServerTabTestingbot {...props} />
+));
+CloudProviders[SERVER_TYPES.EXPERITEST] = providerWrapper(ExperitestLogo, (props) => (
+  <ServerTabExperitest {...props} />
+));
+CloudProviders[SERVER_TYPES.ROBOTQA] = providerWrapper(RobotQALogo, (props) => (
+  <ServerTabRobotQA {...props} />
+));
+CloudProviders[SERVER_TYPES.REMOTETESTKIT] = providerWrapper(RemoteTestKitLogo, (props) => (
+  <ServerTabRemoteTestKit {...props} />
+));
+CloudProviders[SERVER_TYPES.BITBAR] = providerWrapper(BitBarLogo, (props) => (
+  <ServerTabBitbar {...props} />
+));
+CloudProviders[SERVER_TYPES.KOBITON] = providerWrapper(KobitonLogo, (props) => (
+  <ServerTabKobiton {...props} />
+));
+CloudProviders[SERVER_TYPES.PERFECTO] = providerWrapper(PerfectoLogo, (props) => (
+  <ServerTabPerfecto {...props} />
+));
+CloudProviders[SERVER_TYPES.PCLOUDY] = providerWrapper(PcloudyLogo, (props) => (
+  <ServerTabPcloudy {...props} />
+));
+CloudProviders[SERVER_TYPES.MOBITRU] = providerWrapper(MobitruLogo, (props) => (
+  <ServerTabMobitru {...props} />
+));
 
 export default CloudProviders;
