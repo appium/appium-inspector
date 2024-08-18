@@ -47,10 +47,7 @@ class DefaultSessionDescription {
 
 class LambdaTestSessionDescription extends DefaultSessionDescription {
   constructor(caps) {
-    super();
-    if ('capabilities' in caps) {
-      this._caps = caps.capabilities;
-    }
+    super('capabilities' in caps ? caps.capabilities : caps);
   }
 
   _fetchDeviceInfo() {
