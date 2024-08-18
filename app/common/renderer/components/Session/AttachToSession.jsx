@@ -1,82 +1,9 @@
 import {ReloadOutlined} from '@ant-design/icons';
 import {Button, Card, Col, Form, Row, Select, Tooltip} from 'antd';
-import _ from 'lodash';
 import React from 'react';
 
-import {ServerTypes} from '../../actions/Session';
+import {getSessionInfo} from '../../utils/attaching-to-session';
 import SessionStyles from './Session.module.css';
-
-class DefaultSessionDescription {
-  constructor(caps) {
-    this._caps = caps;
-  }
-
-  // sessionName is only populated for cloud providers
-  _fetchSessionName() {
-    return this._caps.sessionName;
-  }
-
-  _fetchDeviceInfo() {
-    return this._caps.deviceName || this._caps.avd || this._caps.udid;
-  }
-
-  _fetchPlatformInfo() {
-    if (this._caps.platformName) {
-      const platformInfo = this._caps.platformVersion
-        ? `${this._caps.platformName} ${this._caps.platformVersion}`
-        : this._caps.platformName;
-      return platformInfo;
-    }
-  }
-
-  _fetchAutomationName() {
-    return this._caps.automationName;
-  }
-
-  _fetchAppInfo() {
-    return this._caps.app || this._caps.bundleId || this._caps.appPackage;
-  }
-
-  transform() {
-    const suffixItems = [
-      this._fetchSessionName(),
-      this._fetchDeviceInfo(),
-      this._fetchPlatformInfo(),
-      this._fetchAutomationName(),
-      this._fetchAppInfo(),
-    ];
-    return _.compact(suffixItems).join(' / ');
-  }
-}
-
-class LambdaTestSessionDescription extends DefaultSessionDescription {
-  constructor(caps) {
-    super();
-    if ('capabilities' in caps) {
-      this._caps = caps.capabilities;
-    }
-  }
-
-  _fetchDeviceInfo() {
-    if ('desired' in this._caps) {
-      return this._caps.desired.deviceName;
-    } else {
-      return this._caps.deviceName;
-    }
-  }
-}
-
-const getSessionDescription = (caps, serverType) => {
-  switch (serverType) {
-    case ServerTypes.lambdatest:
-      return new LambdaTestSessionDescription(caps);
-    default:
-      return new DefaultSessionDescription(caps);
-  }
-};
-
-const getSessionInfo = (session, serverType) =>
-  `${session.id} — ${getSessionDescription(session.capabilities, serverType).transform()}`;
 
 const AttachToSession = ({
   serverType,
