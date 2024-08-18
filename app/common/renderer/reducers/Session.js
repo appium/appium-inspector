@@ -42,6 +42,7 @@ import {
   SWITCHED_TABS,
   ServerTypes,
 } from '../actions/Session';
+import {SESSION_BUILDER_TABS} from '../constants/session-builder';
 
 const visibleProviders = []; // Pull this from the VISIBLE_PROVIDERS setting
 const server = {
@@ -57,7 +58,7 @@ for (const serverName of _.keys(ServerTypes)) {
 // Make sure there's always at least one cap
 const INITIAL_STATE = {
   savedSessions: [],
-  tabKey: 'new',
+  tabKey: SESSION_BUILDER_TABS.CAPS_BUILDER,
   serverType: ServerTypes.remote,
   visibleProviders,
   server: {

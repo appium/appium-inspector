@@ -6,7 +6,7 @@ import {useNavigate} from 'react-router-dom';
 
 import {BUTTON} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
-import {ADD_CLOUD_PROVIDER_TAB_KEY} from '../../constants/session-builder';
+import {SESSION_BUILDER_TABS, ADD_CLOUD_PROVIDER_TAB_KEY} from '../../constants/session-builder';
 import {ipcRenderer, shell} from '../../polyfills';
 import {log} from '../../utils/logger';
 import AdvancedServerParams from './AdvancedServerParams.jsx';
@@ -72,7 +72,7 @@ const Session = (props) => {
     (async () => {
       try {
         bindWindowClose();
-        switchTabs('new');
+        switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER);
         await getSavedSessions();
         await setSavedServerParams();
         await setLocalServerParams();
@@ -124,7 +124,7 @@ const Session = (props) => {
           items={[
             {
               label: t('Capability Builder'),
-              key: 'new',
+              key: SESSION_BUILDER_TABS.CAPS_BUILDER,
               className: SessionStyles.scrollingTab,
               children: <CapabilityEditor {...props} />,
             },
@@ -135,14 +135,14 @@ const Session = (props) => {
                   <Badge count={savedSessions.length} offset={[0, -3]} />
                 </span>
               ),
-              key: 'saved',
+              key: SESSION_BUILDER_TABS.SAVED_CAPS,
               className: SessionStyles.scrollingTab,
               disabled: savedSessions.length === 0,
               children: <SavedSessions {...props} />,
             },
             {
               label: t('Attach to Session'),
-              key: 'attach',
+              key: SESSION_BUILDER_TABS.ATTACH_TO_SESSION,
               className: SessionStyles.scrollingTab,
               children: <AttachToSession {...props} />,
             },

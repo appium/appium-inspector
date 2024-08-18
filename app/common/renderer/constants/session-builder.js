@@ -1,3 +1,9 @@
+export const SESSION_BUILDER_TABS = {
+  CAPS_BUILDER: 'new',
+  SAVED_CAPS: 'saved',
+  ATTACH_TO_SESSION: 'attach',
+};
+
 export const SAVED_SESSIONS_TABLE_VALUES = {
   DATE_COLUMN_WIDTH: '25%',
   ACTIONS_COLUMN_WIDTH: '106px',

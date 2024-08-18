@@ -12,6 +12,7 @@ import {
   SESSION_SERVER_TYPE,
   VISIBLE_PROVIDERS,
 } from '../../shared/setting-defs';
+import {SESSION_BUILDER_TABS} from '../constants/session-builder';
 import {APP_MODE} from '../constants/session-inspector';
 import CloudProviders from '../components/Session/CloudProviders.jsx';
 import i18n from '../i18next';
@@ -710,7 +711,7 @@ export function switchTabs(key) {
   return (dispatch, getState) => {
     dispatch({type: SWITCHED_TABS, key});
     // if switching to Attach to Session tab, also retrieve the running sessions
-    if (key === 'attach') {
+    if (key === SESSION_BUILDER_TABS.ATTACH_TO_SESSION) {
       getRunningSessions()(dispatch, getState);
     }
   };
