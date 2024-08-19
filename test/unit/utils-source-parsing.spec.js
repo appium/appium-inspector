@@ -8,8 +8,6 @@ import {
   findNodeMatchingSearchTerm,
 } from '../../app/common/renderer/utils/source-parsing';
 
-const should = chai.should();
-
 describe('utils/source-parsing.js', function () {
   describe('#findDOMNodeByPath', function () {
     it('should find a Document node using the provided path', function () {
@@ -521,41 +519,41 @@ describe('utils/source-parsing.js', function () {
   describe('#findNodeMatchingSearchTerm', function () {
     it('should return the null when search value is empty', function () {
       const matcher = findNodeMatchingSearchTerm('android.widget.FrameLayout', '');
-      should.equal(matcher, null);
+      expect(matcher).toEqual(null);
     });
 
     it('should return null when search value is undefined', function () {
       const matcher = findNodeMatchingSearchTerm('android.widget.FrameLayout');
-      should.equal(matcher, null);
+      expect(matcher).toEqual(null);
     });
 
     it('should return null when the value is undefined', function () {
       const matcher = findNodeMatchingSearchTerm(undefined, 'widget');
-      should.equal(matcher, null);
+      expect(matcher).toEqual(null);
     });
 
     it('should return null when the value is empty', function () {
       const matcher = findNodeMatchingSearchTerm('', 'widget');
-      should.equal(matcher, null);
+      expect(matcher).toEqual(null);
     });
 
     it('should return null when search value is not matched', function () {
       const matcher = findNodeMatchingSearchTerm('android.widget.FrameLayout', 'login');
-      should.equal(matcher, null);
+      expect(matcher).toEqual(null);
     });
 
     it('should return valid prefix, suffix and matched if a part of text matches the search value in lowercase', function () {
       const matcher = findNodeMatchingSearchTerm('android.Widget.FrameLayout', 'widget');
-      matcher.prefix.should.equal('android.');
-      matcher.matchedWord.should.equal('Widget');
-      matcher.suffix.should.equal('.FrameLayout');
+      expect(matcher.prefix).toEqual('android.');
+      expect(matcher.matchedWord).toEqual('Widget');
+      expect(matcher.suffix).toEqual('.FrameLayout');
     });
 
     it('should return valid prefix, suffix and matched if a part of text matches the search value in uppercase', function () {
       const matcher = findNodeMatchingSearchTerm('android.Widget.FrameLayout', 'WIDGET');
-      matcher.prefix.should.equal('android.');
-      matcher.matchedWord.should.equal('Widget');
-      matcher.suffix.should.equal('.FrameLayout');
+      expect(matcher.prefix).toEqual('android.');
+      expect(matcher.matchedWord).toEqual('Widget');
+      expect(matcher.suffix).toEqual('.FrameLayout');
     });
 
     it('should return valid prefix, suffix and matched if a part of text matches the search value exact matches', function () {
@@ -563,9 +561,9 @@ describe('utils/source-parsing.js', function () {
         'android.Widget.FrameLayout',
         'android.Widget.FrameLayout',
       );
-      matcher.prefix.should.equal('');
-      matcher.matchedWord.should.equal('android.Widget.FrameLayout');
-      matcher.suffix.should.equal('');
+      expect(matcher.prefix).toEqual('');
+      expect(matcher.matchedWord).toEqual('android.Widget.FrameLayout');
+      expect(matcher.suffix).toEqual('');
     });
   });
 });
