@@ -56,41 +56,6 @@ const Source = (props) => {
     t,
   } = props;
 
-  useEffect(() => {
-    if (!treeData || !pageSourceSearchText) {
-      return;
-    }
-
-    const nodesMatchingSearchTerm = [];
-
-    /**
-     * If any search text is entered, we will try to find matching nodes in the tree.
-     * and expand their parents to make the nodes visible that matches the
-     * search text.
-     *
-     * hierarchy is an array of node keys representing the path from the root to the
-     * current node.
-     */
-    const findNodesToExpand = (node, hierarchy) => {
-      /* Node title will an object representing a react element.
-       * renderToString method will construct a HTML DOM string
-       * which can be used to match against the search text.
-       *
-       * If any node that matches the search text is found, we will add all its
-       * parents to the 'nodesMatchingSearchTerm' array to make them automatically expand.
-       */
-      const nodeText = renderToString(node.title).toLowerCase();
-      if (nodeText.includes(pageSourceSearchText.toLowerCase())) {
-        nodesMatchingSearchTerm.push(...hierarchy);
-      }
-      if (node.children) {
-        node.children.forEach((c) => findNodesToExpand(c, [...hierarchy, node.key]));
-      }
-    };
-    treeData.forEach((node) => findNodesToExpand(node, [node.key]));
-    setExpandedPaths(uniq(nodesMatchingSearchTerm));
-  }, [treeData, pageSourceSearchText]);
-
   const getFormattedTag = (el, showAllAttrs) => {
     const {tagName, attributes} = el;
     let attrs = [];
@@ -149,6 +114,41 @@ const Source = (props) => {
   };
 
   const treeData = sourceJSON && recursive(sourceJSON);
+
+  useEffect(() => {
+    if (!treeData || !pageSourceSearchText) {
+      return;
+    }
+
+    const nodesMatchingSearchTerm = [];
+
+    /**
+     * If any search text is entered, we will try to find matching nodes in the tree.
+     * and expand their parents to make the nodes visible that matches the
+     * search text.
+     *
+     * hierarchy is an array of node keys representing the path from the root to the
+     * current node.
+     */
+    const findNodesToExpand = (node, hierarchy) => {
+      /* Node title will an object representing a react element.
+       * renderToString method will construct a HTML DOM string
+       * which can be used to match against the search text.
+       *
+       * If any node that matches the search text is found, we will add all its
+       * parents to the 'nodesMatchingSearchTerm' array to make them automatically expand.
+       */
+      const nodeText = renderToString(node.title).toLowerCase();
+      if (nodeText.includes(pageSourceSearchText.toLowerCase())) {
+        nodesMatchingSearchTerm.push(...hierarchy);
+      }
+      if (node.children) {
+        node.children.forEach((c) => findNodesToExpand(c, [...hierarchy, node.key]));
+      }
+    };
+    treeData.forEach((node) => findNodesToExpand(node, [node.key]));
+    setExpandedPaths(uniq(nodesMatchingSearchTerm));
+  }, [pageSourceSearchText]);
 
   return (
     <div id="sourceContainer" className={InspectorStyles['tree-container']} tabIndex="0">
