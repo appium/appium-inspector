@@ -38,7 +38,6 @@ import SelectedElement from './SelectedElement.jsx';
 import SessionInfo from './SessionInfo.jsx';
 import Source from './Source.jsx';
 
-
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 
 const downloadXML = (sourceXML) => {
