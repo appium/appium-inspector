@@ -324,14 +324,16 @@ const Inspector = (props) => {
                         </span>
                       }
                       extra={
-                        <Row>
-                          <Input
-                            size="middle"
-                            allowClear
-                            placeholder={t('searchInPageSource')}
-                            onChange={(e) => setPageSourceSearchText(e.target.value)}
-                            prefix={<SearchOutlined />}
-                          />
+                        <Row wrap={false}>
+                          <div className={InspectorStyles['inspector-source-tree-search-input']}>
+                            <Input
+                              size="middle"
+                              allowClear
+                              placeholder={t('searchInPageSource')}
+                              onChange={(e) => setPageSourceSearchText(e.target.value)}
+                              prefix={<SearchOutlined />}
+                            />
+                          </div>
                           <Tooltip title={t('Toggle Attributes')}>
                             <Button
                               type="text"
