@@ -956,7 +956,6 @@ export function uploadGesturesFromFile(fileList) {
 
     if (parsedGestures.length) {
       await saveGesture(parsedGestures)(dispatch);
-      await getSavedGestures()(dispatch);
     }
 
     if (!_.isEmpty(invalidGestures)) {
