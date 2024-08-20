@@ -26,6 +26,7 @@ import {
 } from '../../constants/session-inspector';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {clipboard} from '../../polyfills';
+import {downloadFile} from '../../utils/other';
 import Commands from './Commands.jsx';
 import GestureEditor from './GestureEditor.jsx';
 import HeaderButtons from './HeaderButtons.jsx';
@@ -38,18 +39,6 @@ import SessionInfo from './SessionInfo.jsx';
 import Source from './Source.jsx';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
-
-const downloadFile = (href, filename) => {
-  let element = document.createElement('a');
-  element.setAttribute('href', href);
-  element.setAttribute('download', filename);
-  element.style.display = 'none';
-
-  document.body.appendChild(element);
-  element.click();
-
-  document.body.removeChild(element);
-};
 
 const downloadXML = (sourceXML) => {
   const href = 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML);

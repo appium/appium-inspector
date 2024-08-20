@@ -1,13 +1,21 @@
-import {DeleteOutlined, EditOutlined, PlayCircleOutlined, PlusOutlined} from '@ant-design/icons';
-import {Button, Popconfirm, Space, Table, Tooltip} from 'antd';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+  PlayCircleOutlined,
+  PlusOutlined,
+  DownloadOutlined,
+} from '@ant-design/icons';
+import {Button, Collapse, Modal, Row, Popconfirm, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useRef} from 'react';
 
 import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/gestures';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
-import {percentageToPixels} from '../../utils/other';
+import {downloadFile, percentageToPixels} from '../../utils/other';
 import InspectorStyles from './Inspector.module.css';
+import FileUploader from './FileUploader.jsx';
 
 const dataSource = (savedGestures, t) => {
   if (!savedGestures) {
@@ -31,7 +39,17 @@ const getGestureByID = (savedGestures, id, t) => {
 };
 
 const SavedGestures = (props) => {
-  const {savedGestures, deleteSavedGesture, showGestureEditor, removeGestureDisplay, t} = props;
+  const {
+    savedGestures,
+    deleteSavedGesture,
+    showGestureEditor,
+    setGestureUploadErrors,
+    removeGestureDisplay,
+    getSavedGestures,
+    uploadGesturesFromFile,
+    gestureUploadErrors,
+    t,
+  } = props;
 
   const drawnGestureRef = useRef(null);
 
@@ -51,6 +69,14 @@ const SavedGestures = (props) => {
     removeGestureDisplay();
     setLoadedGesture(gesture);
     showGestureEditor();
+  };
+
+  const handleDownload = (gesture) => {
+    const href = `data:text/json;charset=utf-8,${encodeURIComponent(
+      JSON.stringify(gesture, null, 2),
+    )}`;
+    const fileName = `gesture-${gesture.name.replace(' ', '-')}.json`;
+    downloadFile(href, fileName);
   };
 
   const onDraw = (gesture) => {
@@ -106,6 +132,7 @@ const SavedGestures = (props) => {
                 />
               </Tooltip>
               <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
+              <Button icon={<DownloadOutlined />} onClick={() => handleDownload(gesture)} />
               <Popconfirm
                 title={t('confirmDeletion')}
                 placement="topRight"
@@ -129,11 +156,9 @@ const SavedGestures = (props) => {
   });
 
   useEffect(() => {
-    const {getSavedGestures} = props;
     getSavedGestures();
     return () => (drawnGestureRef.current = null);
   }, []);
-
   return (
     <Space className={InspectorStyles.spaceContainer} direction="vertical" size="middle">
       {t('gesturesDescription')}
@@ -142,8 +167,45 @@ const SavedGestures = (props) => {
         pagination={false}
         dataSource={dataSource(savedGestures, t)}
         columns={columns}
-        footer={() => <Button onClick={showGestureEditor} icon={<PlusOutlined />} />}
+        footer={() => (
+          <Button.Group>
+            <Button onClick={showGestureEditor} icon={<PlusOutlined />} />
+            <FileUploader
+              onUpload={uploadGesturesFromFile}
+              multiple={true}
+              type="application/json"
+            />
+          </Button.Group>
+        )}
       />
+      {gestureUploadErrors && (
+        <Modal
+          title={
+            <Row align="start">
+              <ExclamationCircleOutlined className={InspectorStyles['error-icon']} />{' '}
+              {t('errorLoadingGestures')}
+            </Row>
+          }
+          open={!!gestureUploadErrors}
+          footer={null} // we dont need ok and cancel buttons
+          onCancel={() => setGestureUploadErrors(null)}
+        >
+          <p>
+            <i>{t('unableToUploadGestureFiles')}</i>
+          </p>
+          <Collapse ghost defaultActiveKey={Object.keys(gestureUploadErrors)}>
+            {Object.keys(gestureUploadErrors).map((errorFile) => (
+              <Collapse.Panel header={<b>{errorFile}</b>} key={errorFile}>
+                <ol>
+                  {gestureUploadErrors[errorFile].map((error) => (
+                    <li key={error}>{error}</li>
+                  ))}
+                </ol>
+              </Collapse.Panel>
+            ))}
+          </Collapse>
+        </Modal>
+      )}
     </Space>
   );
 };
