@@ -40,3 +40,16 @@ export const PROVIDER_VALUES = {
 };
 
 export const ADD_CLOUD_PROVIDER_TAB_KEY = 'addCloudProvider';
+
+export const STANDARD_W3C_CAPS = [
+  'platformName',
+  'browserName',
+  'browserVersion',
+  'acceptInsecureCerts',
+  'pageLoadStrategy',
+  'proxy',
+  'setWindowRect',
+  'timeouts',
+  'unhandledPromptBehavior',
+  'webSocketUrl', // WebDriver BiDi
+];
