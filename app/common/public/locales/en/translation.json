@@ -282,5 +282,13 @@
   "invalidCapType": "Invalid capability type: {{type}}",
   "whitespaceDetected": "Text Starts and/or Ends With Whitespace",
   "pcloudyCredentialsRequired": "pCloudy username and api key are required!",
-  "duplicateCapabilityNameError": "A capability set with the same name already exists"
+  "duplicateCapabilityNameError": "A capability set with the same name already exists",
+  "errorLoadingGestures": "Error loading gestures",
+  "unableToUploadGestureFiles": "Could not upload gestures from below files:",
+  "gestureEmptyTickError": "Actions should have valid ticks",
+  "gestureInvalidEventError": "Invalid event type '{{invalidEvent}}'. Valid values are {{validEvents}}",
+  "gestureRequiredFieldsError": "Values '{{fields}}' are required for '{{eventType}}' event",
+  "gestureNameCannotBeEmptyError": "Gesture name cannot be empty",
+  "gestureInvalidJsonError": "Invalid JSON file. Unable to parse the file content",
+  "gestureImportedFrom": "Gesture imported from '{{fileName}}'"
 }

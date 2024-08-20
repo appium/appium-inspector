@@ -739,3 +739,8 @@
 .option-inpt {
   text-align: center;
 }
+
+.error-icon {
+  color: red;
+  margin: 5px;
+}
