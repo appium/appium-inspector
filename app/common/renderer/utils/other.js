@@ -1,24 +1,14 @@
 import _ from 'lodash';
 import {Promise} from 'bluebird';
 
-const VALID_W3C_CAPS = [
-  'platformName',
-  'browserName',
-  'browserVersion',
-  'acceptInsecureCerts',
-  'pageLoadStrategy',
-  'proxy',
-  'setWindowRect',
-  'timeouts',
-  'unhandledPromptBehavior',
-];
+import {STANDARD_W3C_CAPS} from '../constants/session-builder';
 
 export function addVendorPrefixes(caps) {
   return caps.map((cap) => {
     // if we don't have a valid unprefixed cap or a cap with an existing prefix, update it
     if (
       !_.isUndefined(cap.name) &&
-      !VALID_W3C_CAPS.includes(cap.name) &&
+      !STANDARD_W3C_CAPS.includes(cap.name) &&
       !_.includes(cap.name, ':')
     ) {
       cap.name = `appium:${cap.name}`;
