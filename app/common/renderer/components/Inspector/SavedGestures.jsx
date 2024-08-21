@@ -120,7 +120,7 @@ const SavedGestures = (props) => {
           const gesture = getGestureByID(savedGestures, record.key, t);
           return (
             <Button.Group>
-              <Tooltip zIndex={2} title={t('Play')}>
+              <Tooltip zIndex={3} title={t('Play')}>
                 <Button
                   key="play"
                   type="primary"
@@ -128,15 +128,15 @@ const SavedGestures = (props) => {
                   onClick={() => onPlay(gesture)}
                 />
               </Tooltip>
-              <Tooltip zIndex={2} title={t('Edit')}>
+              <Tooltip zIndex={3} title={t('Edit')}>
                 <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
               </Tooltip>
-              <Tooltip zIndex={2} title={t('Download')}>
+              <Tooltip zIndex={3} title={t('Download')}>
                 <Button icon={<DownloadOutlined />} onClick={() => handleDownload(gesture)} />
               </Tooltip>
-              <Tooltip zIndex={2} title={t('Delete')}>
+              <Tooltip zIndex={3} title={t('Delete')}>
                 <Popconfirm
-                  zIndex={3}
+                  zIndex={4}
                   title={t('confirmDeletion')}
                   placement="topRight"
                   okText={t('OK')}

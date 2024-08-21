@@ -79,7 +79,7 @@ const SavedSessions = (props) => {
       width: SAVED_SESSIONS_TABLE_VALUES.ACTIONS_COLUMN_WIDTH,
       render: (_, record) => (
         <Button.Group>
-          <Tooltip zIndex={2} title={t('Edit')}>
+          <Tooltip zIndex={3} title={t('Edit')}>
             <Button
               icon={<EditOutlined />}
               onClick={() => {
@@ -88,9 +88,9 @@ const SavedSessions = (props) => {
               }}
             />
           </Tooltip>
-          <Tooltip zIndex={2} title={t('Delete')}>
+          <Tooltip zIndex={3} title={t('Delete')}>
             <Popconfirm
-              zIndex={3}
+              zIndex={4}
               title={t('confirmDeletion')}
               okText={t('OK')}
               cancelText={t('Cancel')}
