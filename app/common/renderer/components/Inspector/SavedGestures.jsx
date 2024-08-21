@@ -162,6 +162,7 @@ const SavedGestures = (props) => {
   useEffect(() => {
     getSavedGestures();
   }, []);
+
   return (
     <Space className={InspectorStyles.spaceContainer} direction="vertical" size="middle">
       {t('gesturesDescription')}
