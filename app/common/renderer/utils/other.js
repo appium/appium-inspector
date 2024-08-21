@@ -1,5 +1,5 @@
-import _ from 'lodash';
 import {Promise} from 'bluebird';
+import _ from 'lodash';
 
 import {STANDARD_W3C_CAPS} from '../constants/session-builder';
 

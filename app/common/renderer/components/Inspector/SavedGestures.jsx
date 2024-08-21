@@ -14,8 +14,8 @@ import React, {useEffect, useRef} from 'react';
 import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/gestures';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {downloadFile, percentageToPixels} from '../../utils/other';
-import InspectorStyles from './Inspector.module.css';
 import FileUploader from './FileUploader.jsx';
+import InspectorStyles from './Inspector.module.css';
 
 const dataSource = (savedGestures, t) => {
   if (!savedGestures) {
@@ -123,7 +123,7 @@ const SavedGestures = (props) => {
           const gesture = getGestureByID(savedGestures, record.key, t);
           return (
             <Button.Group>
-              <Tooltip title={t('Play')}>
+              <Tooltip zIndex={2} title={t('Play')}>
                 <Button
                   key="play"
                   type="primary"
@@ -131,17 +131,24 @@ const SavedGestures = (props) => {
                   onClick={() => onPlay(gesture)}
                 />
               </Tooltip>
-              <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
-              <Button icon={<DownloadOutlined />} onClick={() => handleDownload(gesture)} />
-              <Popconfirm
-                title={t('confirmDeletion')}
-                placement="topRight"
-                okText={t('OK')}
-                cancelText={t('Cancel')}
-                onConfirm={() => deleteSavedGesture(gesture.id)}
-              >
-                <Button icon={<DeleteOutlined />} />
-              </Popconfirm>
+              <Tooltip zIndex={2} title={t('Edit')}>
+                <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
+              </Tooltip>
+              <Tooltip zIndex={2} title={t('Download')}>
+                <Button icon={<DownloadOutlined />} onClick={() => handleDownload(gesture)} />
+              </Tooltip>
+              <Tooltip zIndex={2} title={t('Delete')}>
+                <Popconfirm
+                  zIndex={3}
+                  title={t('confirmDeletion')}
+                  placement="topRight"
+                  okText={t('OK')}
+                  cancelText={t('Cancel')}
+                  onConfirm={() => deleteSavedGesture(gesture.id)}
+                >
+                  <Button icon={<DeleteOutlined />} />
+                </Popconfirm>
+              </Tooltip>
             </Button.Group>
           );
         },
@@ -169,8 +176,11 @@ const SavedGestures = (props) => {
         columns={columns}
         footer={() => (
           <Button.Group>
-            <Button onClick={showGestureEditor} icon={<PlusOutlined />} />
+            <Tooltip title={t('Create New Gesture')}>
+              <Button onClick={showGestureEditor} icon={<PlusOutlined />} />
+            </Tooltip>
             <FileUploader
+              tooltipTitle={t('Upload Gesture File')}
               onUpload={uploadGesturesFromFile}
               multiple={true}
               type="application/json"
