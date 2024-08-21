@@ -159,6 +159,35 @@ const SavedGestures = (props) => {
     }
   });
 
+  const showGestureUploadErrorsModal = () => (
+    <Modal
+      title={
+        <Row align="start">
+          <ExclamationCircleOutlined className={InspectorStyles['error-icon']} />{' '}
+          {t('errorLoadingGestures')}
+        </Row>
+      }
+      open={!!gestureUploadErrors}
+      footer={null} // we dont need ok and cancel buttons
+      onCancel={() => setGestureUploadErrors(null)}
+    >
+      <p>
+        <i>{t('unableToUploadGestureFiles')}</i>
+      </p>
+      <Collapse ghost defaultActiveKey={Object.keys(gestureUploadErrors)}>
+        {Object.keys(gestureUploadErrors).map((errorFile) => (
+          <Collapse.Panel header={<b>{errorFile}</b>} key={errorFile}>
+            <ol>
+              {gestureUploadErrors[errorFile].map((error, index) => (
+                <li key={errorFile + index.toString()}>{error}</li>
+              ))}
+            </ol>
+          </Collapse.Panel>
+        ))}
+      </Collapse>
+    </Modal>
+  );
+
   useEffect(() => {
     getSavedGestures();
   }, []);
@@ -185,34 +214,7 @@ const SavedGestures = (props) => {
           </Button.Group>
         )}
       />
-      {gestureUploadErrors && (
-        <Modal
-          title={
-            <Row align="start">
-              <ExclamationCircleOutlined className={InspectorStyles['error-icon']} />{' '}
-              {t('errorLoadingGestures')}
-            </Row>
-          }
-          open={!!gestureUploadErrors}
-          footer={null} // we dont need ok and cancel buttons
-          onCancel={() => setGestureUploadErrors(null)}
-        >
-          <p>
-            <i>{t('unableToUploadGestureFiles')}</i>
-          </p>
-          <Collapse ghost defaultActiveKey={Object.keys(gestureUploadErrors)}>
-            {Object.keys(gestureUploadErrors).map((errorFile) => (
-              <Collapse.Panel header={<b>{errorFile}</b>} key={errorFile}>
-                <ol>
-                  {gestureUploadErrors[errorFile].map((error) => (
-                    <li key={error}>{error}</li>
-                  ))}
-                </ol>
-              </Collapse.Panel>
-            ))}
-          </Collapse>
-        </Modal>
-      )}
+      {gestureUploadErrors && showGestureUploadErrorsModal()}
     </Space>
   );
 };
