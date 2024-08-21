@@ -687,6 +687,7 @@ const GestureEditor = (props) => {
       </Tooltip>
     ),
     key: pointer.id,
+    closable: pointer.id !== '1',
     children: pointerTicksGrid(pointer),
   }));
 
