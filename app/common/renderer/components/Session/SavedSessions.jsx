@@ -1,9 +1,9 @@
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
-import {Button, Col, Row, Table} from 'antd';
+import {Button, Col, Popconfirm, Row, Table, Tooltip} from 'antd';
 import moment from 'moment';
 import React from 'react';
 
-import {SAVED_SESSIONS_TABLE_VALUES} from '../../constants/session-builder';
+import {SESSION_BUILDER_TABS, SAVED_SESSIONS_TABLE_VALUES} from '../../constants/session-builder';
 import FormattedCaps from './FormattedCaps.jsx';
 import SessionStyles from './Session.module.css';
 
@@ -28,7 +28,7 @@ const getSessionById = (savedSessions, id, t) => {
 };
 
 const SavedSessions = (props) => {
-  const {savedSessions, capsUUID, switchTabs, t} = props;
+  const {savedSessions, deleteSavedSession, capsUUID, switchTabs, t} = props;
 
   const handleCapsAndServer = (uuid) => {
     const {
@@ -61,13 +61,6 @@ const SavedSessions = (props) => {
     );
   };
 
-  const handleDelete = (uuid) => {
-    const {deleteSavedSession} = props;
-    if (window.confirm(t('confirmDeletion'))) {
-      deleteSavedSession(uuid);
-    }
-  };
-
   const columns = [
     {
       title: t('Name'),
@@ -85,17 +78,28 @@ const SavedSessions = (props) => {
       key: 'action',
       width: SAVED_SESSIONS_TABLE_VALUES.ACTIONS_COLUMN_WIDTH,
       render: (_, record) => (
-        <div>
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => {
-              handleCapsAndServer(record.key);
-              switchTabs('new');
-            }}
-            className={SessionStyles.editSession}
-          />
-          <Button icon={<DeleteOutlined />} onClick={() => handleDelete(record.key)} />
-        </div>
+        <Button.Group>
+          <Tooltip zIndex={2} title={t('Edit')}>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => {
+                handleCapsAndServer(record.key);
+                switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER);
+              }}
+            />
+          </Tooltip>
+          <Tooltip zIndex={2} title={t('Delete')}>
+            <Popconfirm
+              zIndex={3}
+              title={t('confirmDeletion')}
+              okText={t('OK')}
+              cancelText={t('Cancel')}
+              onConfirm={() => deleteSavedSession(record.key)}
+            >
+              <Button icon={<DeleteOutlined />} />
+            </Popconfirm>
+          </Tooltip>
+        </Button.Group>
       ),
     },
   ];

@@ -1,23 +1,14 @@
+import {Promise} from 'bluebird';
 import _ from 'lodash';
 
-const VALID_W3C_CAPS = [
-  'platformName',
-  'browserName',
-  'browserVersion',
-  'acceptInsecureCerts',
-  'pageLoadStrategy',
-  'proxy',
-  'setWindowRect',
-  'timeouts',
-  'unhandledPromptBehavior',
-];
+import {STANDARD_W3C_CAPS} from '../constants/session-builder';
 
 export function addVendorPrefixes(caps) {
   return caps.map((cap) => {
     // if we don't have a valid unprefixed cap or a cap with an existing prefix, update it
     if (
       !_.isUndefined(cap.name) &&
-      !VALID_W3C_CAPS.includes(cap.name) &&
+      !STANDARD_W3C_CAPS.includes(cap.name) &&
       !_.includes(cap.name, ':')
     ) {
       cap.name = `appium:${cap.name}`;
@@ -55,4 +46,37 @@ export function parseCoordinates(element) {
   } else {
     return {};
   }
+}
+
+export function downloadFile(href, filename) {
+  let element = document.createElement('a');
+  element.setAttribute('href', href);
+  element.setAttribute('download', filename);
+  element.style.display = 'none';
+
+  document.body.appendChild(element);
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+export async function readTextFromUploadedFiles(fileList) {
+  const fileReaderPromise = fileList.map((file) => {
+    const reader = new FileReader();
+    return new Promise((resolve) => {
+      reader.onload = (event) =>
+        resolve({
+          fileName: file.name,
+          content: event.target.result,
+        });
+      reader.onerror = (error) => {
+        resolve({
+          name: file.name,
+          error: error.message,
+        });
+      };
+      reader.readAsText(file);
+    });
+  });
+  return await Promise.all(fileReaderPromise);
 }

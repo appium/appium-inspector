@@ -25,6 +25,7 @@ const Commands = (props) => {
     setCommandArg,
     applyClientMethod,
     automationName,
+    storeSessionSettings,
     t,
   } = props;
 
@@ -115,6 +116,10 @@ const Commands = (props) => {
         skipRefresh: !refresh,
         ignoreResult: false,
       });
+      // if updating settings, store the updated values
+      if (commandName === 'updateSettings') {
+        storeSessionSettings(...copiedArgs);
+      }
     }
 
     cancelPendingCommand();

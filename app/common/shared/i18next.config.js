@@ -1,5 +1,3 @@
-import settings from './settings';
-
 export const languageList = [
   {name: 'Arabic', code: 'ar', original: 'العربية'},
   {name: 'Chinese Simplified', code: 'zh-CN', original: '中文简体'},
@@ -25,19 +23,15 @@ export const languageList = [
   {name: 'Ukrainian', code: 'uk', original: 'Українська'},
 ];
 
-const fallbackLng = 'en';
+export const fallbackLng = 'en';
 
-export function getI18NextOptions(backend) {
-  return {
-    backend,
-    // debug: true,
-    // saveMissing: true,
-    interpolation: {
-      escapeValue: false,
-    },
-    lng: (settings && settings.getSync('PREFERRED_LANGUAGE')) || fallbackLng,
-    load: 'currentOnly',
-    fallbackLng,
-    supportedLngs: languageList.map((language) => language.code),
-  };
-}
+export const commonI18NextOptions = {
+  // debug: true,
+  // saveMissing: true,
+  interpolation: {
+    escapeValue: false,
+  },
+  load: 'currentOnly',
+  fallbackLng,
+  supportedLngs: languageList.map((language) => language.code),
+};

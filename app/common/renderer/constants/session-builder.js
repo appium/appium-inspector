@@ -1,3 +1,28 @@
+export const SESSION_BUILDER_TABS = {
+  CAPS_BUILDER: 'new',
+  SAVED_CAPS: 'saved',
+  ATTACH_TO_SESSION: 'attach',
+};
+
+export const SERVER_TYPES = {
+  LOCAL: 'local',
+  REMOTE: 'remote',
+  ADVANCED: 'advanced',
+  SAUCE: 'sauce',
+  HEADSPIN: 'headspin',
+  BROWSERSTACK: 'browserstack',
+  LAMBDATEST: 'lambdatest',
+  TESTINGBOT: 'testingbot',
+  EXPERITEST: 'experitest',
+  ROBOTQA: 'roboticmobi',
+  REMOTETESTKIT: 'remotetestkit',
+  BITBAR: 'bitbar',
+  KOBITON: 'kobiton',
+  PERFECTO: 'perfecto',
+  PCLOUDY: 'pcloudy',
+  MOBITRU: 'mobitru',
+};
+
 export const SAVED_SESSIONS_TABLE_VALUES = {
   DATE_COLUMN_WIDTH: '25%',
   ACTIONS_COLUMN_WIDTH: '106px',
@@ -15,3 +40,16 @@ export const PROVIDER_VALUES = {
 };
 
 export const ADD_CLOUD_PROVIDER_TAB_KEY = 'addCloudProvider';
+
+export const STANDARD_W3C_CAPS = [
+  'platformName',
+  'browserName',
+  'browserVersion',
+  'acceptInsecureCerts',
+  'pageLoadStrategy',
+  'proxy',
+  'setWindowRect',
+  'timeouts',
+  'unhandledPromptBehavior',
+  'webSocketUrl', // WebDriver BiDi
+];

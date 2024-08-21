@@ -4,7 +4,7 @@ import {
   DownCircleOutlined,
   PauseCircleOutlined,
   PlayCircleOutlined,
-  PlusCircleOutlined,
+  PlusOutlined,
   QuestionCircleOutlined,
   RightCircleOutlined,
   UpCircleOutlined,
@@ -396,28 +396,32 @@ const GestureEditor = (props) => {
   const headerButtons = (
     <>
       <Button.Group>
-        <Button
-          className={InspectorCSS['gesture-header-coord-btn']}
-          type={coordType === POINTER_MOVE_COORDS_TYPE.PERCENTAGES ? 'primary' : 'default'}
-          onClick={() => {
-            setPointers(getConvertedPointers(POINTER_MOVE_COORDS_TYPE.PERCENTAGES));
-            setCoordType(POINTER_MOVE_COORDS_TYPE.PERCENTAGES);
-          }}
-          size="small"
-        >
-          %
-        </Button>
-        <Button
-          className={InspectorCSS['gesture-header-coord-btn']}
-          type={coordType === POINTER_MOVE_COORDS_TYPE.PIXELS ? 'primary' : 'default'}
-          onClick={() => {
-            setPointers(getConvertedPointers(POINTER_MOVE_COORDS_TYPE.PIXELS));
-            setCoordType(POINTER_MOVE_COORDS_TYPE.PIXELS);
-          }}
-          size="small"
-        >
-          px
-        </Button>
+        <Tooltip title={t('showMoveActionCoordsInPercentage')}>
+          <Button
+            className={InspectorCSS['gesture-header-coord-btn']}
+            type={coordType === POINTER_MOVE_COORDS_TYPE.PERCENTAGES ? 'primary' : 'default'}
+            onClick={() => {
+              setPointers(getConvertedPointers(POINTER_MOVE_COORDS_TYPE.PERCENTAGES));
+              setCoordType(POINTER_MOVE_COORDS_TYPE.PERCENTAGES);
+            }}
+            size="small"
+          >
+            %
+          </Button>
+        </Tooltip>
+        <Tooltip title={t('showMoveActionCoordsInPixels')}>
+          <Button
+            className={InspectorCSS['gesture-header-coord-btn']}
+            type={coordType === POINTER_MOVE_COORDS_TYPE.PIXELS ? 'primary' : 'default'}
+            onClick={() => {
+              setPointers(getConvertedPointers(POINTER_MOVE_COORDS_TYPE.PIXELS));
+              setCoordType(POINTER_MOVE_COORDS_TYPE.PIXELS);
+            }}
+            size="small"
+          >
+            px
+          </Button>
+        </Tooltip>
       </Button.Group>
       <Tooltip title={t('Play')}>
         <Button type="primary" icon={<PlayCircleOutlined />} onClick={() => onPlay()} />
@@ -609,11 +613,7 @@ const GestureEditor = (props) => {
   );
 
   const tapCoordinatesBtn = (tickId) => (
-    <Tooltip
-      title={
-        selectedTick === tickId ? t('Click to Set Coordinates') : t('Set Coordinates Via Field')
-      }
-    >
+    <Tooltip title={t('toggleMoveActionCoordPicker')}>
       <Button
         size="small"
         type={selectedTick === tickId ? 'primary' : 'text'}
@@ -630,12 +630,14 @@ const GestureEditor = (props) => {
       extra={
         <>
           {tick.type === POINTER_MOVE && tapCoordinatesBtn(tick.id)}
-          <Button
-            size="small"
-            type="text"
-            icon={<CloseOutlined />}
-            onClick={() => deleteTick(tick.id[0], tick.id)}
-          />
+          <Tooltip title={t('Delete')}>
+            <Button
+              size="small"
+              type="text"
+              icon={<CloseOutlined />}
+              onClick={() => deleteTick(tick.id[0], tick.id)}
+            />
+          </Tooltip>
         </>
       }
     >
@@ -658,11 +660,13 @@ const GestureEditor = (props) => {
       <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
         <Card className={InspectorCSS['tick-plus-card']} bordered={false}>
           <center>
-            <Button
-              className={InspectorCSS['tick-plus-btn']}
-              icon={<PlusCircleOutlined />}
-              onClick={() => addTick(pointer.id)}
-            />
+            <Tooltip title={t('Add')}>
+              <Button
+                className={InspectorCSS['tick-plus-btn']}
+                icon={<PlusOutlined />}
+                onClick={() => addTick(pointer.id)}
+              />
+            </Tooltip>
           </center>
         </Card>
       </Col>
@@ -687,6 +691,7 @@ const GestureEditor = (props) => {
       </Tooltip>
     ),
     key: pointer.id,
+    closable: pointer.id !== '1',
     children: pointerTicksGrid(pointer),
   }));
 

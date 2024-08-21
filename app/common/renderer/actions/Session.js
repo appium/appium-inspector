@@ -1,15 +1,6 @@
 import {notification} from 'antd';
 import axios from 'axios';
-import {
-  debounce,
-  includes,
-  isPlainObject,
-  isUndefined,
-  keys,
-  toPairs,
-  union,
-  without,
-} from 'lodash';
+import {includes, isPlainObject, isUndefined, toPairs, union, values, without} from 'lodash';
 import moment from 'moment';
 import {v4 as UUID} from 'uuid';
 import {Web2Driver} from 'web2driver';
@@ -19,13 +10,12 @@ import {
   SERVER_ARGS,
   SESSION_SERVER_PARAMS,
   SESSION_SERVER_TYPE,
-  getSetting,
-  setSetting,
-} from '../../shared/settings';
+  VISIBLE_PROVIDERS,
+} from '../../shared/setting-defs';
+import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder';
 import {APP_MODE} from '../constants/session-inspector';
-import CloudProviders from '../components/Session/CloudProviders.jsx';
 import i18n from '../i18next';
-import {fs, ipcRenderer, util} from '../polyfills';
+import {fs, ipcRenderer, util, getSetting, setSetting} from '../polyfills';
 import {log} from '../utils/logger';
 import {addVendorPrefixes} from '../utils/other';
 import {quitSession, setSessionDetails} from './Inspector';
@@ -51,8 +41,6 @@ export const DELETE_SAVED_SESSION_DONE = 'DELETE_SAVED_SESSION_DONE';
 export const CHANGE_SERVER_TYPE = 'CHANGE_SERVER_TYPE';
 export const SET_SERVER_PARAM = 'SET_SERVER_PARAM';
 export const SET_SERVER = 'SET_SERVER';
-
-export const VISIBLE_PROVIDERS = 'VISIBLE_PROVIDERS';
 
 export const SET_ATTACH_SESS_ID = 'SET_ATTACH_SESS_ID';
 
@@ -108,15 +96,6 @@ const HEADERS_CONTENT = 'application/json; charset=utf-8';
 const NEW_COMMAND_TIMEOUT_SEC = 3600;
 
 let isFirstRun = true; // we only want to auto start a session on a first run
-
-const serverTypes = {};
-for (const key of keys(CloudProviders)) {
-  serverTypes[key] = key;
-}
-serverTypes.local = 'local';
-serverTypes.remote = 'remote';
-
-export const ServerTypes = serverTypes;
 
 export const DEFAULT_SERVER_PATH = '/';
 export const DEFAULT_SERVER_HOST = '127.0.0.1';
@@ -258,7 +237,7 @@ export function newSession(caps, attachSessId = null) {
     desiredCapabilities = addCustomCaps(desiredCapabilities);
 
     switch (session.serverType) {
-      case ServerTypes.local:
+      case SERVER_TYPES.LOCAL:
         host = session.server.local.hostname;
         if (host === '0.0.0.0') {
           // if we're on windows, we won't be able to connect directly to '0.0.0.0'
@@ -268,13 +247,13 @@ export function newSession(caps, attachSessId = null) {
         }
         port = session.server.local.port;
         break;
-      case ServerTypes.remote:
+      case SERVER_TYPES.REMOTE:
         host = session.server.remote.hostname;
         port = session.server.remote.port;
         path = session.server.remote.path;
         https = session.server.remote.ssl;
         break;
-      case ServerTypes.sauce:
+      case SERVER_TYPES.SAUCE:
         path = '/wd/hub';
         host = `ondemand.${session.server.sauce.dataCenter}.saucelabs.com`;
         port = 80;
@@ -297,7 +276,7 @@ export function newSession(caps, attachSessId = null) {
           desiredCapabilities[SAUCE_OPTIONS_CAP].name = `Appium Desktop Session -- ${dateTime}`;
         }
         break;
-      case ServerTypes.headspin: {
+      case SERVER_TYPES.HEADSPIN: {
         let headspinUrl;
         try {
           headspinUrl = new URL(session.server.headspin.webDriverUrl);
@@ -313,7 +292,7 @@ export function newSession(caps, attachSessId = null) {
           headspinUrl.port === '' ? (https ? 443 : 80) : headspinUrl.port;
         break;
       }
-      case ServerTypes.perfecto:
+      case SERVER_TYPES.PERFECTO:
         host = session.server.perfecto.hostname;
         port = session.server.perfecto.port || (session.server.perfecto.ssl ? 443 : 80);
         token = session.server.perfecto.token || process.env.PERFECTO_TOKEN;
@@ -325,7 +304,7 @@ export function newSession(caps, attachSessId = null) {
         desiredCapabilities['perfecto:options'] = {securityToken: token};
         https = session.server.perfecto.ssl;
         break;
-      case ServerTypes.browserstack:
+      case SERVER_TYPES.BROWSERSTACK:
         host = session.server.browserstack.hostname =
           process.env.BROWSERSTACK_HOST || 'hub-cloud.browserstack.com';
         port = session.server.browserstack.port = process.env.BROWSERSTACK_PORT || 443;
@@ -342,7 +321,7 @@ export function newSession(caps, attachSessId = null) {
         }
         https = session.server.browserstack.ssl = parseInt(port, 10) === 443;
         break;
-      case ServerTypes.lambdatest:
+      case SERVER_TYPES.LAMBDATEST:
         host = session.server.lambdatest.hostname =
           process.env.LAMBDATEST_HOST || 'mobile-hub.lambdatest.com';
         port = session.server.lambdatest.port = process.env.LAMBDATEST_PORT || 443;
@@ -372,7 +351,7 @@ export function newSession(caps, attachSessId = null) {
         }
         https = session.server.lambdatest.ssl = parseInt(port, 10) === 443;
         break;
-      case ServerTypes.bitbar:
+      case SERVER_TYPES.BITBAR:
         host = process.env.BITBAR_HOST || 'appium.bitbar.com';
         port = session.server.bitbar.port = 443;
         path = session.server.bitbar.path = '/wd/hub';
@@ -387,7 +366,7 @@ export function newSession(caps, attachSessId = null) {
         };
         https = session.server.bitbar.ssl = true;
         break;
-      case ServerTypes.kobiton:
+      case SERVER_TYPES.KOBITON:
         host = process.env.KOBITON_HOST || 'api.kobiton.com';
         port = session.server.kobiton.port = 443;
         path = session.server.kobiton.path = '/wd/hub';
@@ -401,7 +380,7 @@ export function newSession(caps, attachSessId = null) {
         }
         https = session.server.kobiton.ssl = true;
         break;
-      case ServerTypes.pcloudy:
+      case SERVER_TYPES.PCLOUDY:
         host = session.server.pcloudy.hostname;
         port = session.server.pcloudy.port = 443;
         path = session.server.pcloudy.path = '/objectspy/wd/hub';
@@ -418,7 +397,7 @@ export function newSession(caps, attachSessId = null) {
         };
         https = session.server.pcloudy.ssl = true;
         break;
-      case ServerTypes.testingbot:
+      case SERVER_TYPES.TESTINGBOT:
         host = session.server.testingbot.hostname = process.env.TB_HOST || 'hub.testingbot.com';
         port = session.server.testingbot.port = 443;
         path = session.server.testingbot.path = '/wd/hub';
@@ -436,7 +415,7 @@ export function newSession(caps, attachSessId = null) {
         }
         https = session.server.testingbot.ssl = true;
         break;
-      case ServerTypes.experitest: {
+      case SERVER_TYPES.EXPERITEST: {
         if (!session.server.experitest.url || !session.server.experitest.accessKey) {
           showError(new Error(i18n.t('experitestAccessKeyURLRequired')));
           return false;
@@ -458,7 +437,7 @@ export function newSession(caps, attachSessId = null) {
           experitestUrl.port === '' ? (https ? 443 : 80) : experitestUrl.port;
         break;
       }
-      case ServerTypes.roboticmobi: {
+      case SERVER_TYPES.ROBOTQA: {
         host = 'remote.robotqa.com';
         path = '/';
         port = 443;
@@ -470,7 +449,7 @@ export function newSession(caps, attachSessId = null) {
         }
         break;
       }
-      case ServerTypes.remotetestkit: {
+      case SERVER_TYPES.REMOTETESTKIT: {
         host = 'gwjp.appkitbox.com';
         path = '/wd/hub';
         port = 443;
@@ -480,7 +459,7 @@ export function newSession(caps, attachSessId = null) {
           session.server.remotetestkit.token;
         break;
       }
-      case ServerTypes.mobitru: {
+      case SERVER_TYPES.MOBITRU: {
         const webDriverUrl =
           session.server.mobitru.webDriverUrl ||
           process.env.MOBITRU_WEBDRIVER_URL ||
@@ -716,11 +695,15 @@ export function getSavedSessions() {
 }
 
 /**
- * Switch to a different tab
+ * Switch to a different Session Builder tab
  */
 export function switchTabs(key) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch({type: SWITCHED_TABS, key});
+    // if switching to Attach to Session tab, also retrieve the running sessions
+    if (key === SESSION_BUILDER_TABS.ATTACH_TO_SESSION) {
+      getRunningSessions()(dispatch, getState);
+    }
   };
 }
 
@@ -778,11 +761,9 @@ export function setAttachSessId(attachSessId) {
  * Change the server type
  */
 export function changeServerType(serverType) {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     await setSetting(SESSION_SERVER_TYPE, serverType);
     dispatch({type: CHANGE_SERVER_TYPE, serverType});
-    const action = getRunningSessions();
-    action(dispatch, getState);
   };
 }
 
@@ -790,12 +771,10 @@ export function changeServerType(serverType) {
  * Set a server parameter (host, port, etc...)
  */
 export function setServerParam(name, value, serverType) {
-  const debounceGetRunningSessions = debounce(getRunningSessions(), 5000);
   return async (dispatch, getState) => {
     serverType = serverType || getState().session.serverType;
     await setSetting(SESSION_SERVER_TYPE, serverType);
     dispatch({type: SET_SERVER_PARAM, serverType, name, value});
-    debounceGetRunningSessions(dispatch, getState);
   };
 }
 
@@ -811,26 +790,26 @@ export function setLocalServerParams() {
     if (serverArgs) {
       dispatch({
         type: SET_SERVER_PARAM,
-        serverType: ServerTypes.local,
+        serverType: SERVER_TYPES.LOCAL,
         name: 'port',
         value: serverArgs.port,
       });
       dispatch({
         type: SET_SERVER_PARAM,
-        serverType: ServerTypes.local,
+        serverType: SERVER_TYPES.LOCAL,
         name: 'hostname',
         value: 'localhost',
       });
     } else {
       dispatch({
         type: SET_SERVER_PARAM,
-        serverType: ServerTypes.local,
+        serverType: SERVER_TYPES.LOCAL,
         name: 'port',
         value: undefined,
       });
       dispatch({
         type: SET_SERVER_PARAM,
-        serverType: ServerTypes.local,
+        serverType: SERVER_TYPES.LOCAL,
         name: 'hostname',
         value: undefined,
       });
@@ -855,8 +834,8 @@ export function setSavedServerParams() {
     if (server) {
       // if we have a cloud provider as a saved server, but for some reason the
       // cloud provider is no longer in the list, revert server type to remote
-      if (keys(CloudProviders).includes(serverType) && !currentProviders.includes(serverType)) {
-        serverType = ServerTypes.remote;
+      if (values(SERVER_TYPES).includes(serverType) && !currentProviders.includes(serverType)) {
+        serverType = SERVER_TYPES.REMOTE;
       }
       dispatch({type: SET_SERVER, server, serverType});
     }
@@ -920,26 +899,26 @@ function getSaveableState(reduxState) {
   };
 }
 
+/**
+ * Retrieve all running sessions for the currently configured server details
+ */
 export function getRunningSessions() {
   return async (dispatch, getState) => {
     const avoidServerTypes = ['sauce'];
-    // Get currently running sessions for this server
     const state = getState().session;
-    const {server, serverType} = state;
-    const serverInfo = server[serverType];
-
-    let {hostname, port, path, ssl, username, accessKey} = serverInfo;
+    const {server, serverType, attachSessId} = state;
+    let {hostname, port, path, ssl, username, accessKey} = server[serverType];
 
     // if we have a standard remote server, fill out connection info based on placeholder defaults
     // in case the user hasn't adjusted those fields
-    if (serverType === ServerTypes.remote) {
+    if (serverType === SERVER_TYPES.REMOTE) {
       hostname = hostname || DEFAULT_SERVER_HOST;
       port = port || DEFAULT_SERVER_PORT;
       path = path || DEFAULT_SERVER_PATH;
     }
 
+    // no need to get sessions if we don't have complete server info
     if (!hostname || !port || !path) {
-      // no need to get sessions if we don't have complete server info
       return;
     }
 
@@ -961,7 +940,19 @@ export function getRunningSessions() {
             : {}),
         },
       });
-      dispatch({type: GET_SESSIONS_DONE, sessions: res.data.value});
+      const sessions = res.data.value;
+      dispatch({type: GET_SESSIONS_DONE, sessions});
+
+      // set attachSessId if only one session found
+      if (sessions.length === 1) {
+        dispatch({type: SET_ATTACH_SESS_ID, attachSessId: sessions[0].id});
+      } else if (attachSessId) {
+        // clear attachSessId if it is no longer present in the found session list
+        const attachSessIdFound = sessions.find((session) => session.id === attachSessId);
+        if (!attachSessIdFound) {
+          dispatch({type: SET_ATTACH_SESS_ID, attachSessId: null});
+        }
+      }
     } catch (err) {
       log.warn(`Ignoring error in getting list of active sessions: ${err}`);
       dispatch({type: GET_SESSIONS_DONE});

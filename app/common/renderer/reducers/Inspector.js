@@ -75,6 +75,7 @@ import {
   SHOW_LOCATOR_TEST_MODAL,
   SHOW_SIRI_COMMAND_MODAL,
   START_RECORDING,
+  STORE_SESSION_SETTINGS,
   TOGGLE_REFRESHING_STATE,
   TOGGLE_SHOW_ATTRIBUTES,
   UNSELECT_CENTROID,
@@ -82,6 +83,7 @@ import {
   UNSELECT_HOVERED_CENTROID,
   UNSELECT_HOVERED_ELEMENT,
   UNSELECT_TICK_ELEMENT,
+  SET_GESTURE_UPLOAD_ERROR,
 } from '../actions/Inspector';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
 import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
@@ -103,6 +105,7 @@ const INITIAL_STATE = {
   recordedActions: [],
   actionFramework: DEFAULT_FRAMEWORK,
   sessionDetails: {},
+  sessionSettings: {},
   isGestureEditorVisible: false,
   isLocatorTestModalVisible: false,
   isSiriCommandModalVisible: false,
@@ -125,6 +128,7 @@ const INITIAL_STATE = {
   visibleCommandMethod: null,
   isAwaitingMjpegStream: true,
   showSourceAttrs: false,
+  gestureUploadErrors: null,
 };
 
 let nextState;
@@ -316,6 +320,12 @@ export default function inspector(state = INITIAL_STATE, action) {
         mjpegScreenshotUrl: action.mjpegScreenshotUrl,
       };
     }
+
+    case STORE_SESSION_SETTINGS:
+      return {
+        ...state,
+        sessionSettings: {...state.sessionSettings, ...action.sessionSettings},
+      };
 
     case SHOW_LOCATOR_TEST_MODAL:
       return {
@@ -645,6 +655,9 @@ export default function inspector(state = INITIAL_STATE, action) {
 
     case TOGGLE_REFRESHING_STATE:
       return {...state, isSourceRefreshOn: !state.isSourceRefreshOn};
+
+    case SET_GESTURE_UPLOAD_ERROR:
+      return {...state, gestureUploadErrors: action.errors};
 
     default:
       return {...state};

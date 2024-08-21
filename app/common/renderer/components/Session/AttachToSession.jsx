@@ -1,45 +1,9 @@
 import {ReloadOutlined} from '@ant-design/icons';
-import {Button, Card, Col, Form, Row, Select} from 'antd';
+import {Button, Card, Col, Form, Row, Select, Tooltip} from 'antd';
 import React from 'react';
 
-import {ServerTypes} from '../../actions/Session';
+import {getSessionInfo} from '../../utils/attaching-to-session';
 import SessionStyles from './Session.module.css';
-
-const formatCaps = (caps) => {
-  let importantCaps = [caps.app, caps.platformName, caps.deviceName];
-  if (caps.automationName) {
-    importantCaps.push(caps.automationName);
-  }
-  return importantCaps.join(', ').trim();
-};
-
-const formatCapsBrowserstack = (caps) => {
-  let importantCaps = formatCaps(caps).split(', ');
-  if (caps.sessionName) {
-    importantCaps.push(caps.sessionName);
-  }
-  return importantCaps.join(', ').trim();
-};
-
-const formatCapsLambdaTest = (caps) => {
-  if (caps.hasOwnProperty.call(caps, 'capabilities')) {
-    caps = caps.capabilities;
-  }
-  const deviceName = caps.desired ? caps.desired.deviceName : caps.deviceName;
-  const importantCaps = [deviceName, caps.platformName, caps.platformVersion];
-  return importantCaps.join(', ').trim();
-};
-
-const getSessionInfo = (session, serverType) => {
-  switch (serverType) {
-    case ServerTypes.browserstack:
-      return `${session.id} — ${formatCapsBrowserstack(session.capabilities)}`;
-    case ServerTypes.lambdatest:
-      return `${session.id} - ${formatCapsLambdaTest(session.capabilities)}`;
-    default:
-      return `${session.id} — ${formatCaps(session.capabilities)}`;
-  }
-};
 
 const AttachToSession = ({
   serverType,
@@ -69,17 +33,26 @@ const AttachToSession = ({
             value={attachSessId || undefined}
             onChange={(value) => setAttachSessId(value)}
           >
-            {runningAppiumSessions.map((session) => (
-              <Select.Option key={session.id} value={session.id}>
-                <div>{getSessionInfo(session, serverType)}</div>
-              </Select.Option>
-            ))}
+            {runningAppiumSessions
+              .slice()
+              .reverse()
+              .map((session) => (
+                // list is reversed in order to place the most recent sessions at the top
+                // slice() is added because reverse() mutates the original array
+                <Select.Option key={session.id} value={session.id}>
+                  <div>{getSessionInfo(session, serverType)}</div>
+                </Select.Option>
+              ))}
           </Select>
         </Col>
         <Col span={1}>
-          <div className={SessionStyles.btnReload}>
-            <Button onClick={getRunningSessions} icon={<ReloadOutlined />} />
-          </div>
+          <Tooltip title={t('Reload')}>
+            <Button
+              className={SessionStyles.btnReload}
+              onClick={getRunningSessions}
+              icon={<ReloadOutlined />}
+            />
+          </Tooltip>
         </Col>
       </Row>
     </Form.Item>

@@ -1,5 +1,9 @@
 {
-  "extends": ["config:base", ":semanticCommitTypeAll(chore)", ":pinAllExceptPeerDependencies"],
+  "extends": [
+    "config:recommended",
+    ":semanticCommitTypeAll(chore)",
+    ":pinAllExceptPeerDependencies"
+  ],
   "labels": ["dependencies"],
   "packageRules": [
     {
@@ -8,14 +12,26 @@
       "automerge": true
     },
     {
-      "matchPackageNames": ["antd", "electron", "electron-debug", "eslint"],
+      "matchPackageNames": [
+        "antd",
+        "cheerio",
+        "electron",
+        "electron-debug",
+        "eslint",
+        "rimraf",
+        "uuid"
+      ],
       "matchUpdateTypes": ["major"],
       "enabled": false
+    },
+    {
+      "matchPackageNames": ["appium", "@appium/**"],
+      "groupName": "Appium-related packages",
+      "groupSlug": "appium"
     }
   ],
   "baseBranches": ["main"],
   "semanticCommits": "enabled",
-  "schedule": ["after 10pm and before 5:00am"],
-  "timezone": "America/Vancouver",
-  "transitiveRemediation": true
+  "schedule": ["after 10pm", "before 5:00am"],
+  "timezone": "America/Vancouver"
 }

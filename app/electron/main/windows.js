@@ -1,7 +1,8 @@
 import {BrowserWindow, Menu, dialog, ipcMain, webContents} from 'electron';
+import settings from 'electron-settings';
 import {join} from 'path';
 
-import settings from '../../common/shared/settings';
+import {PREFERRED_LANGUAGE} from '../../common/shared/setting-defs';
 import i18n from './i18next';
 import {openFilePath} from './main';
 import {APPIUM_SESSION_EXTENSION, isDev} from './helpers';
@@ -105,7 +106,7 @@ export function setupMainWindow() {
       return;
     }
     rebuildMenus(mainWindow);
-    await settings.set('PREFERRED_LANGUAGE', languageCode);
+    await settings.set(PREFERRED_LANGUAGE, languageCode);
     webContents.getAllWebContents().forEach((wc) => {
       wc.send('appium-language-changed', {
         language: languageCode,

@@ -389,8 +389,7 @@
   width: 350px;
 }
 
-.elementActions {
-  margin-bottom: 20px;
+.selectedElemActions {
   gap: 8px;
 }
 
@@ -423,7 +422,7 @@
   margin-right: -12px;
 }
 
-.selectedElemNotInteractableAlertRow {
+.selectedElemInfoMessage {
   justify-content: center;
 }
 
@@ -739,4 +738,9 @@
 
 .option-inpt {
   text-align: center;
+}
+
+.error-icon {
+  color: red;
+  margin: 5px;
 }

@@ -1,12 +1,20 @@
-import {DeleteOutlined, EditOutlined, PlayCircleOutlined, PlusOutlined} from '@ant-design/icons';
-import {Button, Space, Table, Tooltip} from 'antd';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+  PlayCircleOutlined,
+  PlusOutlined,
+  DownloadOutlined,
+} from '@ant-design/icons';
+import {Button, Collapse, Modal, Row, Popconfirm, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
 import React, {useEffect} from 'react';
 
 import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/gestures';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
-import {percentageToPixels} from '../../utils/other';
+import {downloadFile, percentageToPixels} from '../../utils/other';
+import FileUploader from './FileUploader.jsx';
 import InspectorStyles from './Inspector.module.css';
 
 const dataSource = (savedGestures, t) => {
@@ -31,7 +39,17 @@ const getGestureByID = (savedGestures, id, t) => {
 };
 
 const SavedGestures = (props) => {
-  const {savedGestures, showGestureEditor, displayGesture, removeGestureDisplay, t} = props;
+  const {
+    savedGestures,
+    showGestureEditor,
+    displayGesture,
+    setGestureUploadErrors,
+    removeGestureDisplay,
+    getSavedGestures,
+    uploadGesturesFromFile,
+    gestureUploadErrors,
+    t,
+  } = props;
 
   const onRowMouseOver = (rowKey) => ({
     onMouseEnter: () => {
@@ -52,10 +70,16 @@ const SavedGestures = (props) => {
 
   const handleDelete = (id) => {
     const {deleteSavedGesture} = props;
-    if (window.confirm(t('confirmDeletion'))) {
-      removeGestureDisplay();
-      deleteSavedGesture(id);
-    }
+    removeGestureDisplay();
+    deleteSavedGesture(id);
+  };
+
+  const handleDownload = (gesture) => {
+    const href = `data:text/json;charset=utf-8,${encodeURIComponent(
+      JSON.stringify(gesture, null, 2),
+    )}`;
+    const fileName = `gesture-${gesture.name.replace(' ', '-')}.json`;
+    downloadFile(href, fileName);
   };
 
   const onPlay = (gesture) => {
@@ -96,7 +120,7 @@ const SavedGestures = (props) => {
           const gesture = getGestureByID(savedGestures, record.key, t);
           return (
             <Button.Group>
-              <Tooltip title={t('Play')}>
+              <Tooltip zIndex={2} title={t('Play')}>
                 <Button
                   key="play"
                   type="primary"
@@ -104,8 +128,24 @@ const SavedGestures = (props) => {
                   onClick={() => onPlay(gesture)}
                 />
               </Tooltip>
-              <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
-              <Button icon={<DeleteOutlined />} onClick={() => handleDelete(gesture.id)} />
+              <Tooltip zIndex={2} title={t('Edit')}>
+                <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
+              </Tooltip>
+              <Tooltip zIndex={2} title={t('Download')}>
+                <Button icon={<DownloadOutlined />} onClick={() => handleDownload(gesture)} />
+              </Tooltip>
+              <Tooltip zIndex={2} title={t('Delete')}>
+                <Popconfirm
+                  zIndex={3}
+                  title={t('confirmDeletion')}
+                  placement="topRight"
+                  okText={t('OK')}
+                  cancelText={t('Cancel')}
+                  onConfirm={() => handleDelete(gesture.id)}
+                >
+                  <Button icon={<DeleteOutlined />} />
+                </Popconfirm>
+              </Tooltip>
             </Button.Group>
           );
         },
@@ -120,10 +160,8 @@ const SavedGestures = (props) => {
   });
 
   useEffect(() => {
-    const {getSavedGestures} = props;
     getSavedGestures();
   }, []);
-
   return (
     <Space className={InspectorStyles.spaceContainer} direction="vertical" size="middle">
       {t('gesturesDescription')}
@@ -132,8 +170,48 @@ const SavedGestures = (props) => {
         pagination={false}
         dataSource={dataSource(savedGestures, t)}
         columns={columns}
-        footer={() => <Button onClick={showGestureEditor} icon={<PlusOutlined />} />}
+        footer={() => (
+          <Button.Group>
+            <Tooltip title={t('Create New Gesture')}>
+              <Button onClick={showGestureEditor} icon={<PlusOutlined />} />
+            </Tooltip>
+            <FileUploader
+              tooltipTitle={t('Upload Gesture File')}
+              onUpload={uploadGesturesFromFile}
+              multiple={true}
+              type="application/json"
+            />
+          </Button.Group>
+        )}
       />
+      {gestureUploadErrors && (
+        <Modal
+          title={
+            <Row align="start">
+              <ExclamationCircleOutlined className={InspectorStyles['error-icon']} />{' '}
+              {t('errorLoadingGestures')}
+            </Row>
+          }
+          open={!!gestureUploadErrors}
+          footer={null} // we dont need ok and cancel buttons
+          onCancel={() => setGestureUploadErrors(null)}
+        >
+          <p>
+            <i>{t('unableToUploadGestureFiles')}</i>
+          </p>
+          <Collapse ghost defaultActiveKey={Object.keys(gestureUploadErrors)}>
+            {Object.keys(gestureUploadErrors).map((errorFile) => (
+              <Collapse.Panel header={<b>{errorFile}</b>} key={errorFile}>
+                <ol>
+                  {gestureUploadErrors[errorFile].map((error) => (
+                    <li key={error}>{error}</li>
+                  ))}
+                </ol>
+              </Collapse.Panel>
+            ))}
+          </Collapse>
+        </Modal>
+      )}
     </Space>
   );
 };

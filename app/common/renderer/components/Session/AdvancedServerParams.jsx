@@ -1,6 +1,7 @@
 import {Checkbox, Col, Collapse, Form, Input, Row} from 'antd';
 import React from 'react';
 
+import {SERVER_TYPES} from '../../constants/session-builder';
 import styles from './Session.module.css';
 
 const AdvancedServerParams = ({server, setServerParam, serverType, t}) => (
@@ -16,7 +17,7 @@ const AdvancedServerParams = ({server, setServerParam, serverType, t}) => (
                     <Checkbox
                       checked={!!server.advanced.allowUnauthorized}
                       onChange={(e) =>
-                        setServerParam('allowUnauthorized', e.target.checked, 'advanced')
+                        setServerParam('allowUnauthorized', e.target.checked, SERVER_TYPES.ADVANCED)
                       }
                     >
                       {t('allowUnauthorizedCerts')}
@@ -28,7 +29,9 @@ const AdvancedServerParams = ({server, setServerParam, serverType, t}) => (
                 <Form.Item>
                   <Checkbox
                     checked={!!server.advanced.useProxy}
-                    onChange={(e) => setServerParam('useProxy', e.target.checked, 'advanced')}
+                    onChange={(e) =>
+                      setServerParam('useProxy', e.target.checked, SERVER_TYPES.ADVANCED)
+                    }
                   >
                     {t('Use Proxy')}
                   </Checkbox>
@@ -38,7 +41,7 @@ const AdvancedServerParams = ({server, setServerParam, serverType, t}) => (
                 <Form.Item>
                   <Input
                     disabled={!server.advanced.useProxy}
-                    onChange={(e) => setServerParam('proxy', e.target.value, 'advanced')}
+                    onChange={(e) => setServerParam('proxy', e.target.value, SERVER_TYPES.ADVANCED)}
                     placeholder={t('Proxy URL')}
                     value={server.advanced.proxy}
                   />
