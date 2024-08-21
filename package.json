@@ -80,7 +80,7 @@
     "i18next": "23.14.0",
     "i18next-chained-backend": "4.6.2",
     "i18next-fs-backend": "2.3.2",
-    "i18next-http-backend": "2.6.0",
+    "i18next-http-backend": "2.6.1",
     "i18next-localstorage-backend": "4.2.0",
     "lodash": "4.17.21",
     "moment": "2.30.1",
