@@ -14,8 +14,8 @@ import React, {useEffect, useRef} from 'react';
 import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/gestures';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {downloadFile, percentageToPixels} from '../../utils/other';
-import InspectorStyles from './Inspector.module.css';
 import FileUploader from './FileUploader.jsx';
+import InspectorStyles from './Inspector.module.css';
 
 const dataSource = (savedGestures, t) => {
   if (!savedGestures) {

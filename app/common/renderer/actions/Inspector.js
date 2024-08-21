@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {v4 as UUID} from 'uuid';
 
+import {SAVED_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs';
 import {POINTER_TYPES} from '../constants/gestures';
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import i18n from '../i18next';
@@ -17,7 +18,6 @@ import {
 } from '../utils/source-parsing';
 import {log} from '../utils/logger';
 import {showError} from './Session';
-import {SAVED_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
 export const SET_SOURCE_AND_SCREENSHOT = 'SET_SOURCE_AND_SCREENSHOT';
