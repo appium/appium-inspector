@@ -409,7 +409,7 @@ const GestureEditor = (props) => {
             %
           </Button>
         </Tooltip>
-        <Tooltip title={t('showMoveActionCoordsnInPixels')}>
+        <Tooltip title={t('showMoveActionCoordsInPixels')}>
           <Button
             className={InspectorCSS['gesture-header-coord-btn']}
             type={coordType === POINTER_MOVE_COORDS_TYPE.PIXELS ? 'primary' : 'default'}
