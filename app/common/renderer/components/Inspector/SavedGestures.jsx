@@ -9,7 +9,7 @@ import {
 import {Button, Collapse, Modal, Row, Popconfirm, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect} from 'react';
 
 import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/gestures';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
@@ -41,8 +41,8 @@ const getGestureByID = (savedGestures, id, t) => {
 const SavedGestures = (props) => {
   const {
     savedGestures,
-    deleteSavedGesture,
     showGestureEditor,
+    displayGesture,
     setGestureUploadErrors,
     removeGestureDisplay,
     getSavedGestures,
@@ -51,24 +51,27 @@ const SavedGestures = (props) => {
     t,
   } = props;
 
-  const drawnGestureRef = useRef(null);
-
-  const onRowClick = (rowKey) => {
-    const gesture = getGestureByID(savedGestures, rowKey, t);
-    if (gesture.id === drawnGestureRef.current) {
+  const onRowMouseOver = (rowKey) => ({
+    onMouseEnter: () => {
+      const gesture = getGestureByID(savedGestures, rowKey, t);
+      const pointers = convertCoordinates(gesture.actions);
+      displayGesture(pointers);
+    },
+    onMouseLeave: () => {
       removeGestureDisplay();
-      drawnGestureRef.current = null;
-    } else {
-      onDraw(gesture);
-      drawnGestureRef.current = gesture.id;
-    }
-  };
+    },
+  });
 
   const loadSavedGesture = (gesture) => {
     const {setLoadedGesture} = props;
-    removeGestureDisplay();
     setLoadedGesture(gesture);
     showGestureEditor();
+  };
+
+  const handleDelete = (id) => {
+    const {deleteSavedGesture} = props;
+    removeGestureDisplay();
+    deleteSavedGesture(id);
   };
 
   const handleDownload = (gesture) => {
@@ -77,12 +80,6 @@ const SavedGestures = (props) => {
     )}`;
     const fileName = `gesture-${gesture.name.replace(' ', '-')}.json`;
     downloadFile(href, fileName);
-  };
-
-  const onDraw = (gesture) => {
-    const {displayGesture} = props;
-    const pointers = convertCoordinates(gesture.actions);
-    displayGesture(pointers);
   };
 
   const onPlay = (gesture) => {
@@ -123,7 +120,7 @@ const SavedGestures = (props) => {
           const gesture = getGestureByID(savedGestures, record.key, t);
           return (
             <Button.Group>
-              <Tooltip zIndex={2} title={t('Play')}>
+              <Tooltip zIndex={3} title={t('Play')}>
                 <Button
                   key="play"
                   type="primary"
@@ -131,20 +128,20 @@ const SavedGestures = (props) => {
                   onClick={() => onPlay(gesture)}
                 />
               </Tooltip>
-              <Tooltip zIndex={2} title={t('Edit')}>
+              <Tooltip zIndex={3} title={t('Edit')}>
                 <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
               </Tooltip>
-              <Tooltip zIndex={2} title={t('Download')}>
+              <Tooltip zIndex={3} title={t('Download')}>
                 <Button icon={<DownloadOutlined />} onClick={() => handleDownload(gesture)} />
               </Tooltip>
-              <Tooltip zIndex={2} title={t('Delete')}>
+              <Tooltip zIndex={3} title={t('Delete')}>
                 <Popconfirm
-                  zIndex={3}
+                  zIndex={4}
                   title={t('confirmDeletion')}
                   placement="topRight"
                   okText={t('OK')}
                   cancelText={t('Cancel')}
-                  onConfirm={() => deleteSavedGesture(gesture.id)}
+                  onConfirm={() => handleDelete(gesture.id)}
                 >
                   <Button icon={<DeleteOutlined />} />
                 </Popconfirm>
@@ -162,18 +159,48 @@ const SavedGestures = (props) => {
     }
   });
 
+  const showGestureUploadErrorsModal = () => (
+    <Modal
+      title={
+        <Row align="start">
+          <ExclamationCircleOutlined className={InspectorStyles['error-icon']} />{' '}
+          {t('errorLoadingGestures')}
+        </Row>
+      }
+      open={!!gestureUploadErrors}
+      footer={null} // we dont need ok and cancel buttons
+      onCancel={() => setGestureUploadErrors(null)}
+    >
+      <p>
+        <i>{t('unableToUploadGestureFiles')}</i>
+      </p>
+      <Collapse ghost defaultActiveKey={Object.keys(gestureUploadErrors)}>
+        {Object.keys(gestureUploadErrors).map((errorFile) => (
+          <Collapse.Panel header={<b>{errorFile}</b>} key={errorFile}>
+            <ol>
+              {gestureUploadErrors[errorFile].map((error, index) => (
+                <li key={errorFile + index.toString()}>{error}</li>
+              ))}
+            </ol>
+          </Collapse.Panel>
+        ))}
+      </Collapse>
+    </Modal>
+  );
+
   useEffect(() => {
     getSavedGestures();
-    return () => (drawnGestureRef.current = null);
   }, []);
+
   return (
     <Space className={InspectorStyles.spaceContainer} direction="vertical" size="middle">
       {t('gesturesDescription')}
       <Table
-        onRow={(row) => ({onClick: () => onRowClick(row.key)})}
+        onRow={(row) => onRowMouseOver(row.key)}
         pagination={false}
         dataSource={dataSource(savedGestures, t)}
         columns={columns}
+        scroll={{y: 'calc(100vh - 32em)'}}
         footer={() => (
           <Button.Group>
             <Tooltip title={t('Create New Gesture')}>
@@ -188,34 +215,7 @@ const SavedGestures = (props) => {
           </Button.Group>
         )}
       />
-      {gestureUploadErrors && (
-        <Modal
-          title={
-            <Row align="start">
-              <ExclamationCircleOutlined className={InspectorStyles['error-icon']} />{' '}
-              {t('errorLoadingGestures')}
-            </Row>
-          }
-          open={!!gestureUploadErrors}
-          footer={null} // we dont need ok and cancel buttons
-          onCancel={() => setGestureUploadErrors(null)}
-        >
-          <p>
-            <i>{t('unableToUploadGestureFiles')}</i>
-          </p>
-          <Collapse ghost defaultActiveKey={Object.keys(gestureUploadErrors)}>
-            {Object.keys(gestureUploadErrors).map((errorFile) => (
-              <Collapse.Panel header={<b>{errorFile}</b>} key={errorFile}>
-                <ol>
-                  {gestureUploadErrors[errorFile].map((error) => (
-                    <li key={error}>{error}</li>
-                  ))}
-                </ol>
-              </Collapse.Panel>
-            ))}
-          </Collapse>
-        </Modal>
-      )}
+      {gestureUploadErrors && showGestureUploadErrorsModal()}
     </Space>
   );
 };
