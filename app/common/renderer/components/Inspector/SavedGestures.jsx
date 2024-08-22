@@ -200,7 +200,7 @@ const SavedGestures = (props) => {
         pagination={false}
         dataSource={dataSource(savedGestures, t)}
         columns={columns}
-        scroll={{y: 'calc(100vh - 30.5em)'}}
+        scroll={{y: 'calc(100vh - 32em)'}}
         footer={() => (
           <Button.Group>
             <Tooltip title={t('Create New Gesture')}>
