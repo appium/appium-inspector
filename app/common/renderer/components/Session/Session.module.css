@@ -162,7 +162,7 @@
 }
 
 .formattedCaps :global(.ant-card-body) {
-  height: calc(100% - 54px);
+  height: calc(100% - 66px);
   padding: 0 14px 0 24px;
   flex: 1;
   overflow-y: auto;
