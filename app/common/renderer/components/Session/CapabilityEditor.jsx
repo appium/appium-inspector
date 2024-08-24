@@ -136,7 +136,7 @@ const CapabilityEditor = (props) => {
               <Col span={2}>
                 <div className={SessionStyles.btnDeleteCap}>
                   <Form.Item>
-                    <Tooltip title={t('Delete')}>
+                    <Tooltip title={t('Delete')} placement="right">
                       <Button
                         {...{disabled: caps.length <= 1 || isEditingDesiredCaps}}
                         icon={<DeleteOutlined />}
@@ -161,7 +161,7 @@ const CapabilityEditor = (props) => {
             </Col>
             <Col span={2}>
               <Form.Item>
-                <Tooltip title={t('Add')}>
+                <Tooltip title={t('Add')} placement="right">
                   <Button
                     disabled={isEditingDesiredCaps}
                     id="btnAddDesiredCapability"
