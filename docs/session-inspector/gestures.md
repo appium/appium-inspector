@@ -13,9 +13,9 @@ The default saved gestures list is empty, but can be populated by either manuall
 new gestures, or importing gesture files in JSON format.
 
 -   New gestures can be created by pressing the `+` button in the bottom left, which will open the
-[Gesture Builder](#gesture-builder) screen.
+    [Gesture Builder](#gesture-builder) screen.
 -   Gesture files in JSON format can be uploaded on clicking the `upload icon`. This opens a file
-browser window, allowing multiple gestures to be uploaded simultaneously.
+    browser window, allowing multiple gestures to be uploaded simultaneously.
 
 Once a gesture has been created and saved, hovering over its entry in the saved gestures list will
 show its actions as an overlay over the [screenshot](./screenshot.md). There are also 4
