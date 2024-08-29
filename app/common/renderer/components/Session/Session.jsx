@@ -11,7 +11,7 @@ import {
   SERVER_TYPES,
   ADD_CLOUD_PROVIDER_TAB_KEY,
 } from '../../constants/session-builder';
-import {ipcRenderer, shell} from '../../polyfills';
+import {ipcRenderer, openLink} from '../../polyfills';
 import {log} from '../../utils/logger';
 import AdvancedServerParams from './AdvancedServerParams.jsx';
 import AttachToSession from './AttachToSession.jsx';
@@ -159,7 +159,7 @@ const Session = (props) => {
 
         <div className={SessionStyles.sessionFooter}>
           <div className={SessionStyles.desiredCapsLink}>
-            <a href="#" onClick={(e) => e.preventDefault() || shell.openExternal(LINKS.CAPS_DOCS)}>
+            <a href="#" onClick={(e) => e.preventDefault() || openLink(LINKS.CAPS_DOCS)}>
               <LinkOutlined />
               &nbsp;
               {t('desiredCapabilitiesDocumentation')}

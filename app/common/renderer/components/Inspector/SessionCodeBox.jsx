@@ -4,7 +4,7 @@ import hljs from 'highlight.js';
 import React from 'react';
 
 import frameworks from '../../lib/client-frameworks';
-import {clipboard} from '../../polyfills';
+import {copyToClipboard} from '../../polyfills';
 import InspectorStyles from './Inspector.module.css';
 
 const SessionCodeBox = ({actionFramework, setActionFramework, sessionDetails, t}) => {
@@ -22,7 +22,7 @@ const SessionCodeBox = ({actionFramework, setActionFramework, sessionDetails, t}
   const actionBar = () => (
     <Space size="middle">
       <Tooltip title={t('Copy code to clipboard')}>
-        <Button icon={<CopyOutlined />} onClick={() => clipboard.writeText(code())} />
+        <Button icon={<CopyOutlined />} onClick={() => copyToClipboard(code())} />
       </Tooltip>
       <Select
         defaultValue={actionFramework}
