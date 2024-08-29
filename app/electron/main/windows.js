@@ -95,6 +95,14 @@ export function setupMainWindow() {
     ]).popup(mainWindow);
   });
 
+  // Override the 'content-type' header to allow connecting to Selenium Grid devices
+  // eslint-disable-next-line promise/prefer-await-to-callbacks
+  mainWindow.webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
+    details.requestHeaders['content-type'] = 'application/json; charset=utf-8';
+    // eslint-disable-next-line promise/prefer-await-to-callbacks
+    callback({requestHeaders: details.requestHeaders});
+  });
+
   i18n.on('languageChanged', async (languageCode) => {
     // this event gets called before the i18n initialization event,
     // so add a guard condition
