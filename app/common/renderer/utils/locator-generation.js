@@ -2,7 +2,7 @@ import _ from 'lodash';
 import XPath from 'xpath';
 
 import {log} from './logger';
-import {childNodesOf, domParser, findDOMNodeByPath, xmlSerializer} from './source-parsing';
+import {childNodesOf, domParser, findDOMNodeByPath, serializeXMLToString} from './source-parsing';
 
 // Attributes on nodes that are likely to be unique to the node so we should consider first when
 // suggesting xpath locators. These are considered IN ORDER.
@@ -485,7 +485,7 @@ export function getOptimalUiAutomatorSelector(doc, domNode, path) {
     // then modify the path by changing the first index,
     // and finally recreate the domNode, since it still references the original parent
     const lastHierarchyChild = hierarchyChildren[lastHierarchyChildIndex];
-    const newXml = xmlSerializer.serializeToString(lastHierarchyChild);
+    const newXml = serializeXMLToString(lastHierarchyChild);
     // wrap the new XML in a dummy tag which will have the node type Document
     const newDoc = domParser.parseFromString(`<dummy>${newXml}</dummy>`);
     pathArray[0] = '0';

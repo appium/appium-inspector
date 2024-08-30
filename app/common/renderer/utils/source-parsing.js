@@ -2,7 +2,9 @@ import {DOMParser, XMLSerializer} from '@xmldom/xmldom';
 import _ from 'lodash';
 
 export const domParser = new DOMParser();
-export const xmlSerializer = new XMLSerializer();
+const xmlSerializer = new XMLSerializer();
+
+export const serializeXMLToString = (xml) => xmlSerializer.serializeToString(xml);
 
 /**
  * Get the child nodes of a Node object
