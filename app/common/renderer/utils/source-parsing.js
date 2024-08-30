@@ -1,10 +1,10 @@
-import {DOMParser, XMLSerializer} from '@xmldom/xmldom';
+import {DOMParser, MIME_TYPE, XMLSerializer} from '@xmldom/xmldom';
 import _ from 'lodash';
 
 const domParser = new DOMParser();
 const xmlSerializer = new XMLSerializer();
 
-export const xmlToDOM = (string) => domParser.parseFromString(string, 'application/xml');
+export const xmlToDOM = (string) => domParser.parseFromString(string, MIME_TYPE.XML_TEXT);
 export const domToXML = (dom) => xmlSerializer.serializeToString(dom);
 
 /**
