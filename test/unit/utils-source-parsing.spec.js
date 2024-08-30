@@ -1,9 +1,9 @@
 import {describe, expect, it} from 'vitest';
 
 import {
-  domParser,
   findDOMNodeByPath,
   findJSONElementByPath,
+  xmlToDOM,
   xmlToJSON,
 } from '../../app/common/renderer/utils/source-parsing';
 
@@ -13,7 +13,7 @@ describe('utils/source-parsing.js', function () {
       expect(
         findDOMNodeByPath(
           '0.1.1',
-          domParser.parseFromString(`<hierarchy>
+          xmlToDOM(`<hierarchy>
           <root>
             <firstA>
               <secondA/>

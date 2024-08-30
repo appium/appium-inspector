@@ -1,10 +1,11 @@
 import {DOMParser, XMLSerializer} from '@xmldom/xmldom';
 import _ from 'lodash';
 
-export const domParser = new DOMParser();
+const domParser = new DOMParser();
 const xmlSerializer = new XMLSerializer();
 
-export const serializeXMLToString = (xml) => xmlSerializer.serializeToString(xml);
+export const xmlToDOM = (string) => domParser.parseFromString(string, 'application/xml');
+export const domToXML = (dom) => xmlSerializer.serializeToString(dom);
 
 /**
  * Get the child nodes of a Node object
@@ -76,7 +77,7 @@ export function xmlToJSON(sourceXML) {
       path,
     };
   };
-  const sourceDoc = domParser.parseFromString(sourceXML);
+  const sourceDoc = xmlToDOM(sourceXML);
   // get the first child element node in the doc. some drivers write their xml differently so we
   // first try to find an element as a direct descendend of the doc, then look for one in
   // documentElement
