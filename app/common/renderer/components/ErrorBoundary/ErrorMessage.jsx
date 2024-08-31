@@ -5,7 +5,7 @@ import React from 'react';
 import {ALERT} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
 import {withTranslation} from '../../i18next';
-import {shell} from '../../polyfills';
+import {openLink} from '../../polyfills';
 import styles from './ErrorMessage.module.css';
 
 const ErrorMessage = ({error, copyTrace, t}) => (
@@ -21,7 +21,7 @@ const ErrorMessage = ({error, copyTrace, t}) => (
       description={
         <>
           {t('Please report this issue at:')}&nbsp;
-          <a onClick={(e) => e.preventDefault() || shell.openExternal(LINKS.CREATE_ISSUE)}>
+          <a onClick={(e) => e.preventDefault() || openLink(LINKS.CREATE_ISSUE)}>
             {LINKS.CREATE_ISSUE}
           </a>
           <br />

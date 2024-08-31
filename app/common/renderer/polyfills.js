@@ -23,8 +23,8 @@ export function getSettingSync(setting) {
 }
 
 export {
-  clipboard,
-  shell,
+  copyToClipboard,
+  openLink,
   ipcRenderer,
   i18NextBackend,
   i18NextBackendOptions,

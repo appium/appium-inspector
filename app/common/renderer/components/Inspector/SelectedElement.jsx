@@ -13,7 +13,7 @@ import React, {useRef} from 'react';
 import {ALERT, ROW} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
 import {NATIVE_APP} from '../../constants/session-inspector';
-import {clipboard, shell} from '../../polyfills';
+import {copyToClipboard, openLink} from '../../polyfills';
 import styles from './Inspector.module.css';
 
 /**
@@ -62,7 +62,7 @@ const SelectedElement = (props) => {
       return (
         <div className={styles['selected-element-table-cells']}>
           <Tooltip title={t('Copied!')} trigger="click">
-            <span className={styles['element-cell-copy']} onClick={() => clipboard.writeText(text)}>
+            <span className={styles['element-cell-copy']} onClick={() => copyToClipboard(text)}>
               {text}
             </span>
           </Tooltip>
@@ -77,7 +77,7 @@ const SelectedElement = (props) => {
     <span>
       {name}
       <strong>
-        <a onClick={(e) => e.preventDefault() || shell.openExternal(docsLink)}>
+        <a onClick={(e) => e.preventDefault() || openLink(docsLink)}>
           <br />
           (docs)
         </a>
@@ -232,7 +232,7 @@ const SelectedElement = (props) => {
               disabled={isDisabled}
               id="btnCopyAttributes"
               icon={<CopyOutlined />}
-              onClick={() => clipboard.writeText(JSON.stringify(dataSource))}
+              onClick={() => copyToClipboard(JSON.stringify(dataSource))}
             />
           </Tooltip>
           <Tooltip title={t('Get Timing')}>

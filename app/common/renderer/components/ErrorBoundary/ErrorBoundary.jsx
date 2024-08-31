@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {clipboard} from '../../polyfills';
+import {copyToClipboard} from '../../polyfills';
 import ErrorMessage from './ErrorMessage.jsx';
 
 const copyTrace = (trace) => {
-  clipboard.writeText(trace);
+  copyToClipboard(trace);
 };
 
 export default class ErrorBoundary extends React.Component {

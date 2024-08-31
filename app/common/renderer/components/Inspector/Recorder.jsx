@@ -5,7 +5,7 @@ import React from 'react';
 
 import {BUTTON} from '../../constants/antd-types';
 import frameworks from '../../lib/client-frameworks';
-import {clipboard} from '../../polyfills';
+import {copyToClipboard} from '../../polyfills';
 import InspectorStyles from './Inspector.module.css';
 
 const Recorder = (props) => {
@@ -38,7 +38,7 @@ const Recorder = (props) => {
               />
             </Tooltip>
             <Tooltip title={t('Copy code to clipboard')}>
-              <Button icon={<CopyOutlined />} onClick={() => clipboard.writeText(code())} />
+              <Button icon={<CopyOutlined />} onClick={() => copyToClipboard(code())} />
             </Tooltip>
             <Tooltip title={t('Clear Actions')}>
               <Button icon={<ClearOutlined />} onClick={clearRecording} />
