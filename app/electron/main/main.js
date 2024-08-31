@@ -2,7 +2,7 @@ import {app} from 'electron';
 import debug from 'electron-debug';
 
 // import {installExtensions} from './debug';
-import {getAppiumSessionFilePath, isDev} from './helpers';
+import {getAppiumSessionFilePath, isDev, setupIPCListeners} from './helpers';
 import {setupMainWindow} from './windows';
 
 export let openFilePath = getAppiumSessionFilePath(process.argv, app.isPackaged);
@@ -22,5 +22,6 @@ app.on('ready', () => {
     // await installExtensions();
   }
 
+  setupIPCListeners();
   setupMainWindow();
 });

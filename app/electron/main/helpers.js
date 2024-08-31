@@ -1,6 +1,13 @@
+import {clipboard, ipcMain, shell} from 'electron';
+
 import i18n from './i18next';
 
 export const isDev = process.env.NODE_ENV === 'development';
+
+export function setupIPCListeners() {
+  ipcMain.on('electron-openLink', (_evt, link) => shell.openExternal(link));
+  ipcMain.on('electron-copyToClipboard', (_evt, text) => clipboard.writeText(text));
+}
 
 export function getAppiumSessionFilePath(argv, isPackaged) {
   if (isDev) {
