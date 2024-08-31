@@ -9,18 +9,13 @@ import {
   getOptimalXPath,
   getSimpleSuggestedLocators,
 } from '../../app/common/renderer/utils/locator-generation';
-import {domParser} from '../../app/common/renderer/utils/source-parsing';
+import {xmlToDOM} from '../../app/common/renderer/utils/source-parsing';
 
 // Helper that checks that the optimal xpath for a node is the one that we expect and also
 // checks that the XPath successfully locates the node in it's doc
 function testXPath(doc, node, expectedXPath) {
   expect(getOptimalXPath(doc, node)).toBe(expectedXPath);
   expect(xpath.select(expectedXPath, doc)[0]).toEqual(node);
-}
-
-// Helper for converting source from XML to Document format
-function xmlToDoc(sourceXML) {
-  return domParser.parseFromString(sourceXML);
 }
 
 describe('utils/locator-generation.js', function () {
@@ -30,7 +25,7 @@ describe('utils/locator-generation.js', function () {
         areAttrAndValueUnique(
           'id',
           'ID',
-          xmlToDoc(`<root>
+          xmlToDOM(`<root>
           <node id='ID'></node>
           <node id='ID'></node>
         </root>`),
@@ -43,7 +38,7 @@ describe('utils/locator-generation.js', function () {
         areAttrAndValueUnique(
           'id',
           'ID',
-          xmlToDoc(`<root>
+          xmlToDOM(`<root>
           <node id='ID'></node>
         </root>`),
         ),
@@ -52,7 +47,7 @@ describe('utils/locator-generation.js', function () {
         areAttrAndValueUnique(
           'id',
           'ID',
-          xmlToDoc(`<root>
+          xmlToDOM(`<root>
           <node></node>
           <node></node>
         </root>`),
@@ -78,7 +73,7 @@ describe('utils/locator-generation.js', function () {
       expect(
         getSimpleSuggestedLocators(
           {id: 'ID'},
-          xmlToDoc(`<root>
+          xmlToDOM(`<root>
             <node id='ID'></node>
             <node id='ID'></node>
           </root>`),
@@ -94,7 +89,7 @@ describe('utils/locator-generation.js', function () {
       expect(
         getSimpleSuggestedLocators(
           {name: 'Name'},
-          xmlToDoc(`<root>
+          xmlToDOM(`<root>
           <node content-desc='Name'></node>
         </root>`),
         )['accessibility id'],
@@ -110,7 +105,7 @@ describe('utils/locator-generation.js', function () {
       expect(
         getSimpleSuggestedLocators(
           {'content-desc': 'Content Desc'},
-          xmlToDoc(`<root>
+          xmlToDOM(`<root>
             <node content-desc='Content Desc'></node>
             <node content-desc='Content Desc'></node>
           </root>`),
@@ -122,7 +117,7 @@ describe('utils/locator-generation.js', function () {
       expect(
         getSimpleSuggestedLocators(
           {'content-desc': 'Content Desc 1'},
-          xmlToDoc(`<root>
+          xmlToDOM(`<root>
             <node content-desc='Content Desc 1'></node>
             <node content-desc='Content Desc 2'></node>
           </root>`),
@@ -137,7 +132,7 @@ describe('utils/locator-generation.js', function () {
       expect(
         getSimpleSuggestedLocators(
           {class: 'The Class'},
-          xmlToDoc(`<root>
+          xmlToDOM(`<root>
           <node type='The Class'></node>
         </root>`),
         )['class name'],
@@ -151,7 +146,7 @@ describe('utils/locator-generation.js', function () {
       expect(
         getSimpleSuggestedLocators(
           {class: 'The Class'},
-          xmlToDoc(`<root>
+          xmlToDOM(`<root>
             <node class='The Class'></node>
             <node class='The Class'></node>
           </root>`),
@@ -163,17 +158,17 @@ describe('utils/locator-generation.js', function () {
   describe('#getOptimalXPath', function () {
     describe('on XML with height == 1', function () {
       it('should set an absolute xpath if attrName "id" is set', function () {
-        const doc = xmlToDoc(`<node id='foo'></node>`);
+        const doc = xmlToDOM(`<node id='foo'></node>`);
         testXPath(doc, doc.getElementById('foo'), '//node[@id="foo"]');
       });
 
       it('should set an absolute xpath if unique attributes is set to "content-desc" and that attr is set', function () {
-        const doc = xmlToDoc(`<node content-desc='foo'></node>`);
+        const doc = xmlToDOM(`<node content-desc='foo'></node>`);
         testXPath(doc, doc.firstChild, '//node[@content-desc="foo"]');
       });
 
       it('should set relative xpath with tagname if no unique attributes are set', function () {
-        const doc = xmlToDoc(`<node non-unique-attr='foo'></node>`);
+        const doc = xmlToDOM(`<node non-unique-attr='foo'></node>`);
         testXPath(doc, doc.firstChild, '/node');
       });
     });
@@ -182,7 +177,7 @@ describe('utils/locator-generation.js', function () {
       let doc;
 
       it('should set first child node to relative xpath with tagname if the child node has no siblings', function () {
-        doc = xmlToDoc(`<xml>
+        doc = xmlToDOM(`<xml>
           <child-node non-unique-attr='hello'>Hello</child-node>
           <other-node>
             <child-node></child-node>
@@ -192,7 +187,7 @@ describe('utils/locator-generation.js', function () {
       });
 
       it('should set first child node to relative xpath with tagname and index', function () {
-        doc = xmlToDoc(`<xml>
+        doc = xmlToDOM(`<xml>
           <child-node non-unique-attr='hello'>Hello</child-node>
           <child-node non-unique-attr='world'>World</child-node>
         </xml>`);
@@ -201,7 +196,7 @@ describe('utils/locator-generation.js', function () {
       });
 
       it('should set first child node to absolute xpath if it has ID set', function () {
-        doc = xmlToDoc(`<xml>
+        doc = xmlToDOM(`<xml>
           <child-node content-desc='hello'>Hello</child-node>
           <child-node content-desc='world'>World</child-node>
         </xml>`);
@@ -218,7 +213,7 @@ describe('utils/locator-generation.js', function () {
       });
 
       it('should index children based on tagName', function () {
-        doc = xmlToDoc(`<xml>
+        doc = xmlToDOM(`<xml>
           <child>Hello</child>
           <child-node>World</child-node>
           <child>Foo</child>
@@ -229,7 +224,7 @@ describe('utils/locator-generation.js', function () {
         testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node[1]');
         testXPath(doc, doc.getElementsByTagName('child-node')[1], '/xml/child-node[2]');
 
-        doc = xmlToDoc(`<xml>
+        doc = xmlToDOM(`<xml>
           <child>Hello</child>
           <child-node>World</child-node>
           <other-child-node>asdfasdf</other-child-node>
@@ -246,7 +241,7 @@ describe('utils/locator-generation.js', function () {
       let doc;
 
       it('should use child as absolute and relative grandchild path if child has an ID set', function () {
-        doc = xmlToDoc(`<root>
+        doc = xmlToDOM(`<root>
           <child id='foo'>
             <grandchild>Hello</grandchild>
             <grandchild>World</grandchild>
@@ -264,8 +259,8 @@ describe('utils/locator-generation.js', function () {
         );
       });
 
-      it('should use indexes of children and grandchildren if no IDs are set', function () {
-        doc = xmlToDoc(`<root>
+      it('should use indices of children and grandchildren if no IDs are set', function () {
+        doc = xmlToDOM(`<root>
           <child>
             <grandchild>Hello</grandchild>
             <grandchild>World</grandchild>
@@ -283,7 +278,7 @@ describe('utils/locator-generation.js', function () {
       });
 
       it("should use indices if the unique attribute isn't actually unique", function () {
-        doc = xmlToDoc(`<root>
+        doc = xmlToDOM(`<root>
           <child id='foo'>
             <grandchild>Foo</grandchild>
             <grandchild>Bar</grandchild>
@@ -319,7 +314,7 @@ describe('utils/locator-generation.js', function () {
       });
 
       it('should return conjunctively unique xpath locators if they exist', function () {
-        doc = xmlToDoc(`<root>
+        doc = xmlToDOM(`<root>
           <child id='foo' text='bar'></child>
           <child text='yo'></child>
           <child id='foo' text='yo'></child>
@@ -344,7 +339,7 @@ describe('utils/locator-generation.js', function () {
         vi.spyOn(xpath, 'select').mockImplementation(() => {
           throw new Error('Exception');
         });
-        const doc = xmlToDoc(`<node id='foo'>
+        const doc = xmlToDOM(`<node id='foo'>
           <child id='a'></child>
           <child id='b'>
             <grandchild id='hello'></grandchild>
@@ -354,7 +349,7 @@ describe('utils/locator-generation.js', function () {
       });
 
       it('should return null if anything else throws an exception', function () {
-        const doc = xmlToDoc(`<node id='foo'>
+        const doc = xmlToDOM(`<node id='foo'>
           <child id='a'></child>
           <child id='b'>
             <grandchild id='hello'></grandchild>
@@ -373,7 +368,7 @@ describe('utils/locator-generation.js', function () {
     let doc;
 
     it('should use unique class chain attributes if the node has them', function () {
-      doc = xmlToDoc(`<xml>
+      doc = xmlToDOM(`<xml>
         <child-node label='hello'>Hello</child-node>
         <child-node label='world'>World</child-node>
       </xml>`);
@@ -383,7 +378,7 @@ describe('utils/locator-generation.js', function () {
     });
 
     it('should use unique class chain attributes of parent if the node does not have them', function () {
-      doc = xmlToDoc(`<root>
+      doc = xmlToDOM(`<root>
         <child name='foo'>
           <grandchild>Hello</grandchild>
           <grandchild>World</grandchild>
@@ -395,7 +390,7 @@ describe('utils/locator-generation.js', function () {
     });
 
     it('should use indices if neither the node nor its ancestors have any unique class chain attributes', function () {
-      doc = xmlToDoc(`<root>
+      doc = xmlToDOM(`<root>
         <child>
           <grandchild>Hello</grandchild>
           <grandchild>World</grandchild>
@@ -416,7 +411,7 @@ describe('utils/locator-generation.js', function () {
     let doc;
 
     it('should exist if the node has unique predicate string attributes', function () {
-      doc = xmlToDoc(`<xml>
+      doc = xmlToDOM(`<xml>
         <child-node label='hello'>Hello</child-node>
         <child-node label='world'>World</child-node>
       </xml>`);
@@ -426,7 +421,7 @@ describe('utils/locator-generation.js', function () {
     });
 
     it('should not exist if the node does not have unique predicate string attributes', function () {
-      doc = xmlToDoc(`<root>
+      doc = xmlToDOM(`<root>
         <child name='foo'>
           <grandchild>Hello</grandchild>
           <grandchild>World</grandchild>
@@ -442,7 +437,7 @@ describe('utils/locator-generation.js', function () {
     let doc;
 
     it('should use unique UiAutomator attributes if the node has them', function () {
-      doc = xmlToDoc(`<xml>
+      doc = xmlToDOM(`<xml>
         <parent-node>
           <child-node resource-id='hello'>Hello</child-node>
           <child-node resource-id='world'>World</child-node>
@@ -454,7 +449,7 @@ describe('utils/locator-generation.js', function () {
     });
 
     it('should use indices if the valid node attributes are not unique', function () {
-      doc = xmlToDoc(`<root>
+      doc = xmlToDOM(`<root>
         <child>
           <grandchild class='grandchild'>Hello</grandchild>
           <grandchild class='grandchild'>World</grandchild>
@@ -466,7 +461,7 @@ describe('utils/locator-generation.js', function () {
     });
 
     it('should return null if looking for element outside the last direct child of the hierarchy', function () {
-      doc = xmlToDoc(`<root>
+      doc = xmlToDOM(`<root>
         <child>
           <grandchild resource-id='hello'>Hello</grandchild>
           <grandchild resource-id='world'>World</grandchild>

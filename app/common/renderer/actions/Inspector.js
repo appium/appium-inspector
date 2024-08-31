@@ -11,9 +11,9 @@ import {getSetting, setSetting} from '../polyfills';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation';
 import {readTextFromUploadedFiles} from '../utils/other';
 import {
-  domParser,
   findDOMNodeByPath,
   findJSONElementByPath,
+  xmlToDOM,
   xmlToJSON,
 } from '../utils/source-parsing';
 import {log} from '../utils/logger';
@@ -650,7 +650,7 @@ export function selectLocatedElement(sourceJSON, sourceXML, bounds, id) {
   // For each provided path, get its xpath and call Appium findElement
   // Return the path of the element whose ID matches the expected ID
   async function findElementWithMatchingId(foundPaths, dispatch, getState) {
-    const sourceDoc = domParser.parseFromString(sourceXML);
+    const sourceDoc = xmlToDOM(sourceXML);
     for (const path of foundPaths) {
       const domNode = findDOMNodeByPath(path, sourceDoc);
       const xpath = getOptimalXPath(sourceDoc, domNode);
