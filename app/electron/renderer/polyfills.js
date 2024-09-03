@@ -18,8 +18,8 @@ const i18NextBackendOptions = {
 };
 
 const electronUtils = {
-  copyToClipboard: (text) => ipcRenderer.send('electron-copyToClipboard', text),
-  openLink: (link) => ipcRenderer.send('electron-openLink', link),
+  copyToClipboard: (text) => ipcRenderer.send('electron:copyToClipboard', text),
+  openLink: (link) => ipcRenderer.send('electron:openLink', link),
 };
 
 const {copyToClipboard, openLink} = electronUtils;
