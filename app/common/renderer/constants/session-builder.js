@@ -41,6 +41,16 @@ export const PROVIDER_VALUES = {
 
 export const ADD_CLOUD_PROVIDER_TAB_KEY = 'addCloudProvider';
 
+export const CAPABILITY_TYPES = {
+  TEXT: 'text',
+  BOOL: 'boolean',
+  NUM: 'number',
+  OBJECT: 'object',
+  // historical
+  FILE: 'file',
+  JSON_OBJECT: 'json_object',
+};
+
 export const STANDARD_W3C_CAPS = [
   'platformName',
   'browserName',

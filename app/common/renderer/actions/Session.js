@@ -66,7 +66,7 @@ export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
 
 export const SET_CAPABILITY_NAME_ERROR = 'SET_CAPABILITY_NAME_ERROR';
 export const SET_STATE_FROM_URL = 'SET_STATE_FROM_URL';
-export const SET_STATE_FROM_SAVED = 'SET_STATE_FROM_SAVED';
+export const SET_STATE_FROM_FILE = 'SET_STATE_FROM_FILE';
 
 const APPIUM_SESSION_FILE_VERSION = '1.0';
 
@@ -863,7 +863,7 @@ export function setStateFromAppiumFile(newFilepath = null) {
       }
       const appiumJson = JSON.parse(await util.promisify(fs.readFile)(filePath, 'utf8'));
       sessionStorage.setItem(FILE_PATH_STORAGE_KEY, filePath);
-      dispatch({type: SET_STATE_FROM_SAVED, state: appiumJson, filePath});
+      dispatch({type: SET_STATE_FROM_FILE, state: appiumJson, filePath});
     } catch (e) {
       notification.error({
         message: `Cannot open file '${newFilepath}'.\n ${e.message}\n ${e.stack}`,
