@@ -36,7 +36,7 @@ import {
   SET_SAVE_AS_TEXT,
   SET_SERVER,
   SET_SERVER_PARAM,
-  SET_STATE_FROM_SAVED,
+  SET_STATE_FROM_FILE,
   SET_STATE_FROM_URL,
   SHOW_DESIRED_CAPS_JSON_ERROR,
   SWITCHED_TABS,
@@ -372,12 +372,14 @@ export default function session(state = INITIAL_STATE, action) {
         },
         ...omit(action.state, ['server']),
       };
+
     case SET_CAPABILITY_NAME_ERROR:
       return {
         ...state,
         isDuplicateCapsName: true,
       };
-    case SET_STATE_FROM_SAVED:
+
+    case SET_STATE_FROM_FILE:
       if (!_.values(SERVER_TYPES).includes(action.state.serverType)) {
         notification.error({
           message: `Failed to load session: ${action.state.serverType} is not a valid server type`,
