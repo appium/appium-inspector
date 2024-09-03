@@ -2,6 +2,7 @@ import {Input, Switch} from 'antd';
 import React from 'react';
 
 import {INPUT} from '../../constants/antd-types';
+import {CAPABILITY_TYPES} from '../../constants/session-builder';
 import SessionStyles from './Session.module.css';
 
 const CapabilityControl = ({
@@ -13,8 +14,8 @@ const CapabilityControl = ({
   t,
 }) => {
   switch (cap.type) {
-    case 'text':
-    case 'file':
+    case CAPABILITY_TYPES.TEXT:
+    case CAPABILITY_TYPES.FILE:
       return (
         <Input
           disabled={isEditingDesiredCaps}
@@ -26,7 +27,7 @@ const CapabilityControl = ({
           className={SessionStyles.capsBoxFont}
         />
       );
-    case 'boolean':
+    case CAPABILITY_TYPES.BOOL:
       return (
         <Switch
           disabled={isEditingDesiredCaps}
@@ -38,7 +39,7 @@ const CapabilityControl = ({
           onChange={(value) => onSetCapabilityParam(value)}
         />
       );
-    case 'number':
+    case CAPABILITY_TYPES.NUM:
       return (
         <Input
           disabled={isEditingDesiredCaps}
@@ -54,8 +55,8 @@ const CapabilityControl = ({
           className={SessionStyles.capsBoxFont}
         />
       );
-    case 'object':
-    case 'json_object':
+    case CAPABILITY_TYPES.OBJECT:
+    case CAPABILITY_TYPES.JSON_OBJECT:
       return (
         <Input
           disabled={isEditingDesiredCaps}

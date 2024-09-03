@@ -26,7 +26,7 @@ import {
 } from '../../constants/session-inspector';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {copyToClipboard} from '../../polyfills';
-import {downloadFile} from '../../utils/other';
+import {downloadFile} from '../../utils/file-handling';
 import Commands from './Commands.jsx';
 import GestureEditor from './GestureEditor.jsx';
 import HeaderButtons from './HeaderButtons.jsx';

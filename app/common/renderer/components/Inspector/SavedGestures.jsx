@@ -13,7 +13,8 @@ import React, {useEffect} from 'react';
 
 import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/gestures';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
-import {downloadFile, percentageToPixels} from '../../utils/other';
+import {downloadFile} from '../../utils/file-handling';
+import {percentageToPixels} from '../../utils/other';
 import FileUploader from './FileUploader.jsx';
 import InspectorStyles from './Inspector.module.css';
 
