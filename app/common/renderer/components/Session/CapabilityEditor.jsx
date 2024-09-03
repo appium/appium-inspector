@@ -3,6 +3,7 @@ import {Button, Checkbox, Col, Form, Input, Modal, Row, Select, Tooltip} from 'a
 import React, {useEffect, useRef} from 'react';
 
 import {ROW} from '../../constants/antd-types';
+import {CAPABILITY_TYPES} from '../../constants/session-builder';
 import CapabilityControl from './CapabilityControl.jsx';
 import FormattedCaps from './FormattedCaps.jsx';
 import SessionStyles from './Session.module.css';
@@ -25,7 +26,7 @@ const handleSetType = (setCapabilityParam, caps, index, type) => {
   // Translate the current value to the new type
   let translatedValue = caps[index].value;
   switch (type) {
-    case 'boolean':
+    case CAPABILITY_TYPES.BOOL:
       if (translatedValue === 'true') {
         translatedValue = true;
       } else if (translatedValue === 'false') {
@@ -34,12 +35,11 @@ const handleSetType = (setCapabilityParam, caps, index, type) => {
         translatedValue = !!translatedValue;
       }
       break;
-    case 'number':
+    case CAPABILITY_TYPES.NUM:
       translatedValue = parseInt(translatedValue, 10) || 0;
       break;
-    case 'text':
-    case 'json_object':
-    case 'object':
+    case CAPABILITY_TYPES.TEXT:
+    case CAPABILITY_TYPES.OBJECT:
       translatedValue = translatedValue + '';
       break;
     default:
@@ -113,10 +113,12 @@ const CapabilityEditor = (props) => {
                     defaultValue={cap.type}
                     onChange={(val) => handleSetType(setCapabilityParam, caps, index, val)}
                   >
-                    <Select.Option value="text">{t('text')}</Select.Option>
-                    <Select.Option value="boolean">{t('boolean')}</Select.Option>
-                    <Select.Option value="number">{t('number')}</Select.Option>
-                    <Select.Option value="object">{t('JSON object')}</Select.Option>
+                    <Select.Option value={CAPABILITY_TYPES.TEXT}>{t('text')}</Select.Option>
+                    <Select.Option value={CAPABILITY_TYPES.BOOL}>{t('boolean')}</Select.Option>
+                    <Select.Option value={CAPABILITY_TYPES.NUM}>{t('number')}</Select.Option>
+                    <Select.Option value={CAPABILITY_TYPES.OBJECT}>
+                      {t('JSON object')}
+                    </Select.Option>
                   </Select>
                 </Form.Item>
               </Col>
