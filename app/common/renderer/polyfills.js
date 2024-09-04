@@ -28,6 +28,4 @@ export {
   ipcRenderer,
   i18NextBackend,
   i18NextBackendOptions,
-  fs,
-  util,
 } from '#local-polyfills'; // eslint-disable-line import/no-unresolved
