@@ -1,4 +1,3 @@
-import {notification} from 'antd';
 import _, {omit} from 'lodash';
 
 import {
@@ -380,23 +379,15 @@ export default function session(state = INITIAL_STATE, action) {
       };
 
     case SET_STATE_FROM_FILE:
-      if (!_.values(SERVER_TYPES).includes(action.state.serverType)) {
-        notification.error({
-          message: `Failed to load session: ${action.state.serverType} is not a valid server type`,
-        });
-        return state;
-      }
-      if (
-        ![...state.visibleProviders, SERVER_TYPES.LOCAL, SERVER_TYPES.REMOTE].includes(
-          action.state.serverType,
-        )
-      ) {
-        state.visibleProviders.push(action.state.serverType);
-      }
       return {
         ...state,
-        ...action.state,
-        filePath: action.filePath,
+        caps: action.sessionJSON.caps || [],
+        server: {
+          ...state.server,
+          ...action.sessionJSON.server,
+        },
+        serverType: action.sessionJSON.serverType,
+        visibleProviders: action.sessionJSON.visibleProviders || [],
       };
 
     default:

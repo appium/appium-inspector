@@ -3,7 +3,7 @@ import {Menu, app, dialog, shell} from 'electron';
 import {languageList} from '../../common/shared/i18next.config';
 import i18n from './i18next';
 import {checkForUpdates} from './updater';
-import {APPIUM_SESSION_EXTENSION, isDev, t} from './helpers';
+import {APPIUM_SESSION_EXTENSION, openSessionFile, isDev, t} from './helpers';
 import {launchNewSessionWindow} from './windows';
 
 const INSPECTOR_DOCS_URL = 'https://appium.github.io/appium-inspector';
@@ -32,7 +32,8 @@ async function openFile(mainWindow) {
   });
   if (!canceled) {
     const filePath = filePaths[0];
-    mainWindow.webContents.send('open-file', filePath);
+    const sessionFileString = openSessionFile(filePath);
+    mainWindow.webContents.send('sessionfile:apply', sessionFileString);
   }
 }
 

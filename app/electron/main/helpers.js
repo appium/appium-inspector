@@ -1,4 +1,5 @@
 import {clipboard, ipcMain, shell} from 'electron';
+import fs from 'fs';
 
 import i18n from './i18next';
 
@@ -23,6 +24,9 @@ export function getAppiumSessionFilePath(argv, isPackaged) {
   const argvIndex = isPackaged ? 1 : 2;
   return argv[argvIndex];
 }
+
+// Open an .appiumsession file from the specified path and return its contents
+export const openSessionFile = (filePath) => fs.readFileSync(filePath, 'utf8');
 
 export const t = (string, params = null) => i18n.t(string, params);
 

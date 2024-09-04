@@ -16,7 +16,7 @@ import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder';
 import {APP_MODE} from '../constants/session-inspector';
 import i18n from '../i18next';
 import {fs, util, getSetting, setSetting} from '../polyfills';
-import {downloadFile} from '../utils/file-handling';
+import {downloadFile, parseSessionFileContents} from '../utils/file-handling';
 import {log} from '../utils/logger';
 import {addVendorPrefixes} from '../utils/other';
 import {quitSession, setSessionDetails} from './Inspector';
@@ -862,14 +862,32 @@ export function setStateFromAppiumFile(newFilepath = null) {
         // file was opened already, do nothing
         return;
       }
-      const appiumJson = JSON.parse(await util.promisify(fs.readFile)(filePath, 'utf8'));
+      const sessionJSON = JSON.parse(await util.promisify(fs.readFile)(filePath, 'utf8'));
       sessionStorage.setItem(FILE_PATH_STORAGE_KEY, filePath);
-      dispatch({type: SET_STATE_FROM_FILE, state: appiumJson, filePath});
+      dispatch({type: SET_STATE_FROM_FILE, sessionJSON, filePath});
     } catch (e) {
       notification.error({
         message: `Cannot open file '${newFilepath}'.\n ${e.message}\n ${e.stack}`,
       });
     }
+  };
+}
+
+/**
+ * Sets the current server and capability details using the provided .appiumsession file contents
+ */
+export function setStateFromSessionFile(sessionFileString) {
+  return (dispatch, getState) => {
+    const sessionJSON = parseSessionFileContents(sessionFileString);
+    if (sessionJSON === null) {
+      notification.error({
+        message: i18n.t('invalidSessionFile'),
+        duration: 0,
+      });
+      return;
+    }
+    dispatch({type: SET_STATE_FROM_FILE, sessionJSON});
+    switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER)(dispatch, getState);
   };
 }
 
