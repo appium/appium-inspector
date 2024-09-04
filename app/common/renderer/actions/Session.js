@@ -15,7 +15,7 @@ import {
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder';
 import {APP_MODE} from '../constants/session-inspector';
 import i18n from '../i18next';
-import {fs, util, getSetting, setSetting} from '../polyfills';
+import {ipcRenderer, getSetting, setSetting} from '../polyfills';
 import {downloadFile, parseSessionFileContents} from '../utils/file-handling';
 import {log} from '../utils/logger';
 import {addVendorPrefixes} from '../utils/other';
@@ -76,8 +76,6 @@ const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
 const CAPS_NATIVE_WEB_SCREENSHOT = 'appium:nativeWebScreenshot';
 const CAPS_ENSURE_WEBVIEW_HAVE_PAGES = 'appium:ensureWebviewsHavePages';
 const CAPS_INCLUDE_SAFARI_IN_WEBVIEWS = 'appium:includeSafariInWebviews';
-
-const FILE_PATH_STORAGE_KEY = 'last_opened_file';
 
 const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to turn it on
 
@@ -843,33 +841,19 @@ export function setSavedServerParams() {
   };
 }
 
-export function setStateFromAppiumFile(newFilepath = null) {
+/**
+ * Checks if the app was launched by opening a file -
+ * if yes, set the current server and capability details from the file contents
+ */
+export function initFromSessionFile() {
   return async (dispatch) => {
-    // no "fs" means we're not in an Electron renderer so do nothing
-    if (!fs) {
-      return;
+    const lastArg = process.argv[process.argv.length - 1];
+    if (!lastArg.startsWith('filename=')) {
+      return null;
     }
-    try {
-      let filePath = newFilepath;
-      if (!newFilepath) {
-        const lastArg = process.argv[process.argv.length - 1];
-        if (!lastArg.startsWith('filename=')) {
-          return;
-        }
-        filePath = lastArg.split('=')[1];
-      }
-      if (sessionStorage.getItem(FILE_PATH_STORAGE_KEY) === filePath) {
-        // file was opened already, do nothing
-        return;
-      }
-      const sessionJSON = JSON.parse(await util.promisify(fs.readFile)(filePath, 'utf8'));
-      sessionStorage.setItem(FILE_PATH_STORAGE_KEY, filePath);
-      dispatch({type: SET_STATE_FROM_FILE, sessionJSON, filePath});
-    } catch (e) {
-      notification.error({
-        message: `Cannot open file '${newFilepath}'.\n ${e.message}\n ${e.stack}`,
-      });
-    }
+    const filePath = lastArg.split('=')[1];
+    const sessionFileString = await ipcRenderer.invoke('sessionfile:open', filePath);
+    setStateFromSessionFile(sessionFileString)(dispatch);
   };
 }
 
