@@ -36,14 +36,8 @@ async function openFile(mainWindow) {
   }
 }
 
-async function saveAs(mainWindow) {
-  const {canceled, filePath} = await dialog.showSaveDialog({
-    title: t('saveAs'),
-    filters: [{name: 'Appium', extensions: [APPIUM_SESSION_EXTENSION]}],
-  });
-  if (!canceled) {
-    mainWindow.webContents.send('save-file', filePath);
-  }
+function saveAs(mainWindow) {
+  mainWindow.webContents.send('sessionfile:download');
 }
 
 function getLanguagesMenu() {

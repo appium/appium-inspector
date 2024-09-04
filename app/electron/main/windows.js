@@ -1,11 +1,11 @@
-import {BrowserWindow, Menu, dialog, ipcMain, webContents} from 'electron';
+import {BrowserWindow, Menu, webContents} from 'electron';
 import settings from 'electron-settings';
 import {join} from 'path';
 
 import {PREFERRED_LANGUAGE} from '../../common/shared/setting-defs';
 import i18n from './i18next';
 import {openFilePath} from './main';
-import {APPIUM_SESSION_EXTENSION, isDev} from './helpers';
+import {isDev} from './helpers';
 import {rebuildMenus} from './menus';
 
 const mainPath = isDev
@@ -29,7 +29,7 @@ function buildSplashWindow() {
 }
 
 function buildSessionWindow() {
-  const window = new BrowserWindow({
+  return new BrowserWindow({
     show: false,
     width: 1100,
     height: 710,
@@ -45,18 +45,6 @@ function buildSessionWindow() {
       additionalArguments: openFilePath ? [`filename=${openFilePath}`] : [],
     },
   });
-
-  ipcMain.on('save-file-as', async () => {
-    const {canceled, filePath} = await dialog.showSaveDialog(mainWindow, {
-      title: 'Save Appium File',
-      filters: [{name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}],
-    });
-    if (!canceled) {
-      mainWindow.webContents.send('save-file', filePath);
-    }
-  });
-
-  return window;
 }
 
 export function setupMainWindow() {

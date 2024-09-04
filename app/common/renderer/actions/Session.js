@@ -15,7 +15,8 @@ import {
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder';
 import {APP_MODE} from '../constants/session-inspector';
 import i18n from '../i18next';
-import {fs, ipcRenderer, util, getSetting, setSetting} from '../polyfills';
+import {fs, util, getSetting, setSetting} from '../polyfills';
+import {downloadFile} from '../utils/file-handling';
 import {log} from '../utils/logger';
 import {addVendorPrefixes} from '../utils/other';
 import {quitSession, setSessionDetails} from './Inspector';
@@ -872,30 +873,24 @@ export function setStateFromAppiumFile(newFilepath = null) {
   };
 }
 
-export function saveFile(filepath) {
-  return async (dispatch, getState) => {
+/**
+ * Packages the current server and capability details in an .appiumsession file
+ */
+export function saveSessionAsFile() {
+  return (_dispatch, getState) => {
     const state = getState().session;
-    const filePath = filepath || state.filePath;
-    if (filePath) {
-      const appiumFileInfo = getSaveableState(state);
-      await util.promisify(fs.writeFile)(filePath, JSON.stringify(appiumFileInfo, null, 2), 'utf8');
-      sessionStorage.setItem(FILE_PATH_STORAGE_KEY, filePath);
-    } else {
-      // no filepath provided, tell the main renderer to open the save file dialog and
-      // ask the user to save file to a provided path
-      ipcRenderer.send('save-file-as');
-    }
-  };
-}
-
-// get the slice of the redux state that's needed for the .appiumsession files
-function getSaveableState(reduxState) {
-  return {
-    version: APPIUM_SESSION_FILE_VERSION,
-    caps: reduxState.caps,
-    server: reduxState.server,
-    serverType: reduxState.serverType,
-    visibleProviders: reduxState.visibleProviders,
+    const sessionFileDetails = {
+      version: APPIUM_SESSION_FILE_VERSION,
+      caps: state.caps,
+      server: state.server,
+      serverType: state.serverType,
+      visibleProviders: state.visibleProviders,
+    };
+    const href = `data:text/json;charset=utf-8,${encodeURIComponent(
+      JSON.stringify(sessionFileDetails, null, 2),
+    )}`;
+    const fileName = `${state.serverType}.appiumsession`;
+    downloadFile(href, fileName);
   };
 }
 
