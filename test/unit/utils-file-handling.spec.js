@@ -101,7 +101,7 @@ describe('utils/file-handling.js', function () {
       expect(parseSessionFileContents(sessionString)).toBeNull();
     });
 
-    it('should not parse if sessionType is invalid', function () {
+    it('should not parse if serverType is invalid', function () {
       const sessionString = `{
         "version": "1.0",
         "caps": [],
@@ -119,7 +119,7 @@ describe('utils/file-handling.js', function () {
       expect(parseSessionFileContents(sessionString)).toBeNull();
     });
 
-    it('should not parse if any required cap property is missing', function () {
+    it('should not parse if any required capability property is missing', function () {
       const sessionString = `{
         "version": "1.0",
         "caps": [
