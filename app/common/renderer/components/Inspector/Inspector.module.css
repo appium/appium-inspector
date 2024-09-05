@@ -22,8 +22,7 @@
   width: auto !important;
 }
 
-.inspector-toolbar button {
-  border-color: #cacaca;
+.inspector-toolbar :global(.ant-space-item) {
   -webkit-app-region: no-drag;
 }
 
@@ -52,7 +51,6 @@
   width: 100%;
   height: 38px;
   margin-bottom: 12px;
-  -webkit-app-region: drag;
 }
 
 .inspector-main .screenshot-container img {
