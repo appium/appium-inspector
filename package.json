@@ -61,7 +61,6 @@
     "bluebird": "Deprecated: recommended to replace with native promises",
     "cheerio": "V1: requires Node 18",
     "electron-debug": "V4: requires Electron 30",
-    "electron-settings": "V5: need to rewrite to IPC while keeping browser version working",
     "redux-logger": "Appears to be abandoned",
     "uuid": "V10: requires Node 16. Can also be replaced with crypto.randomUUID in Electron 14+"
   },
@@ -96,7 +95,6 @@
     "xpath": "0.0.34"
   },
   "//devDependencies": {
-    "electron": "V14: breaks electron-settings",
     "eslint": "V9: need to move to flat config",
     "rimraf": "V6: requires Node 20"
   },
@@ -109,7 +107,7 @@
     "@types/redux-logger": "3.0.13",
     "@vitejs/plugin-react": "4.3.1",
     "asyncbox": "3.0.0",
-    "electron": "13.6.9",
+    "electron": "32.0.2",
     "electron-builder": "25.0.5",
     "electron-vite": "2.3.0",
     "eslint": "8.57.0",
