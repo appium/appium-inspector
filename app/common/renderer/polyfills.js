@@ -18,10 +18,6 @@ export async function setSetting(setting, value) {
   await settings.set(setting, value);
 }
 
-export function getSettingSync(setting) {
-  return settings.getSync(setting);
-}
-
 export {
   copyToClipboard,
   openLink,

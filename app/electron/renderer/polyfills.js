@@ -1,5 +1,4 @@
 import {ipcRenderer} from 'electron';
-import settings from 'electron-settings';
 import i18NextBackend from 'i18next-fs-backend';
 import {join} from 'path';
 
@@ -20,6 +19,21 @@ const electronUtils = {
   openLink: (link) => ipcRenderer.send('electron:openLink', link),
 };
 
+class ElectronSettings {
+  async has(key) {
+    return await ipcRenderer.invoke('settings:has', key);
+  }
+
+  async set(key, val) {
+    return await ipcRenderer.invoke('settings:set', key, val);
+  }
+
+  async get(key) {
+    return await ipcRenderer.invoke('settings:get', key);
+  }
+}
+
+const settings = new ElectronSettings();
 const {copyToClipboard, openLink} = electronUtils;
 
 export {settings, copyToClipboard, openLink, ipcRenderer, i18NextBackend, i18NextBackendOptions};

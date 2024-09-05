@@ -7,6 +7,16 @@ const localesPath =
     ? '/locales' // 'public' folder contents are served at '/'
     : '../locales'; // from 'dist-browser/assets/'
 
+const i18NextBackendOptions = {
+  backends: [LocalStorageBackend, HttpApi],
+  backendOptions: [
+    {},
+    {
+      loadPath: `${localesPath}/{{lng}}/{{ns}}.json`,
+    },
+  ],
+};
+
 const browserUtils = {
   copyToClipboard: (text) => navigator.clipboard.writeText(text),
   openLink: (url) => window.open(url, ''),
@@ -29,22 +39,9 @@ class BrowserSettings {
   get(key) {
     return JSON.parse(localStorage.getItem(key));
   }
-
-  getSync(key) {
-    return this.get(key);
-  }
 }
 
 const settings = new BrowserSettings();
 const {copyToClipboard, openLink, ipcRenderer} = browserUtils;
-const i18NextBackendOptions = {
-  backends: [LocalStorageBackend, HttpApi],
-  backendOptions: [
-    {},
-    {
-      loadPath: `${localesPath}/{{lng}}/{{ns}}.json`,
-    },
-  ],
-};
 
 export {settings, copyToClipboard, openLink, ipcRenderer, i18NextBackend, i18NextBackendOptions};

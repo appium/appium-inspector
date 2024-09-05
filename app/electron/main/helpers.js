@@ -1,4 +1,5 @@
 import {clipboard, ipcMain, shell} from 'electron';
+import settings from 'electron-settings';
 import fs from 'fs';
 
 import i18n from './i18next';
@@ -6,6 +7,9 @@ import i18n from './i18next';
 export const isDev = process.env.NODE_ENV === 'development';
 
 export function setupIPCListeners() {
+  ipcMain.handle('settings:has', async (_evt, key) => await settings.has(key));
+  ipcMain.handle('settings:set', async (_evt, key, value) => await settings.set(key, value));
+  ipcMain.handle('settings:get', async (_evt, key) => await settings.get(key));
   ipcMain.on('electron:openLink', (_evt, link) => shell.openExternal(link));
   ipcMain.on('electron:copyToClipboard', (_evt, text) => clipboard.writeText(text));
   ipcMain.handle('sessionfile:open', async (_evt, filePath) => openSessionFile(filePath));
