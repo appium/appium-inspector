@@ -2,14 +2,14 @@ import i18n from 'i18next';
 import _ from 'lodash';
 import {initReactI18next, withTranslation as wt} from 'react-i18next';
 
-import {commonI18NextOptions, fallbackLng} from '../shared/i18next.config';
+import {commonI18NextOptions} from '../shared/i18next.config';
 import {PREFERRED_LANGUAGE} from '../shared/setting-defs';
-import {i18NextBackend, i18NextBackendOptions, getSettingSync} from './polyfills';
+import {i18NextBackend, i18NextBackendOptions, getSetting} from './polyfills';
 
 const i18nextOptions = {
   ...commonI18NextOptions,
   backend: i18NextBackendOptions,
-  lng: getSettingSync(PREFERRED_LANGUAGE) || fallbackLng,
+  lng: await getSetting(PREFERRED_LANGUAGE),
 };
 
 const namespace = 'translation';

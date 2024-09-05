@@ -9,6 +9,7 @@ export default defineConfig({
     emptyOutDir: true,
     minify: false, // needed to avoid issues with web2driver
     reportCompressedSize: false,
+    target: 'es2022',
   },
   define: {
     'process.env': process.env,
