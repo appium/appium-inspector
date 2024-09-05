@@ -67,11 +67,12 @@ const Session = (props) => {
       setLocalServerParams,
       getSavedSessions,
       setSavedServerParams,
-      setStateFromAppiumFile,
+      initFromSessionFile,
+      setStateFromSessionFile,
       setVisibleProviders,
       bindWindowClose,
       initFromQueryString,
-      saveFile,
+      saveSessionAsFile,
     } = props;
     (async () => {
       try {
@@ -82,9 +83,11 @@ const Session = (props) => {
         await setSavedServerParams();
         await setLocalServerParams();
         initFromQueryString(loadNewSession);
-        await setStateFromAppiumFile();
-        ipcRenderer.on('open-file', (_, filePath) => setStateFromAppiumFile(filePath));
-        ipcRenderer.on('save-file', (_, filePath) => saveFile(filePath));
+        await initFromSessionFile();
+        ipcRenderer.on('sessionfile:apply', (_, sessionFileString) =>
+          setStateFromSessionFile(sessionFileString),
+        );
+        ipcRenderer.on('sessionfile:download', () => saveSessionAsFile());
       } catch (e) {
         log.error(e);
       }

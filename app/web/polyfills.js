@@ -15,8 +15,6 @@ const browserUtils = {
       console.warn(`Cannot listen for IPC event ${evt} in browser context`); // eslint-disable-line no-console
     },
   },
-  fs: null,
-  util: null,
 };
 
 class BrowserSettings {
@@ -38,7 +36,7 @@ class BrowserSettings {
 }
 
 const settings = new BrowserSettings();
-const {copyToClipboard, openLink, ipcRenderer, fs, util} = browserUtils;
+const {copyToClipboard, openLink, ipcRenderer} = browserUtils;
 const i18NextBackendOptions = {
   backends: [LocalStorageBackend, HttpApi],
   backendOptions: [
@@ -49,13 +47,4 @@ const i18NextBackendOptions = {
   ],
 };
 
-export {
-  settings,
-  copyToClipboard,
-  openLink,
-  ipcRenderer,
-  i18NextBackend,
-  i18NextBackendOptions,
-  fs,
-  util,
-};
+export {settings, copyToClipboard, openLink, ipcRenderer, i18NextBackend, i18NextBackendOptions};
