@@ -1,9 +1,7 @@
 import {ipcRenderer} from 'electron';
 import settings from 'electron-settings';
-import fs from 'fs';
 import i18NextBackend from 'i18next-fs-backend';
 import {join} from 'path';
-import util from 'util';
 
 const localesPath =
   process.env.NODE_ENV === 'development'
@@ -24,13 +22,4 @@ const electronUtils = {
 
 const {copyToClipboard, openLink} = electronUtils;
 
-export {
-  settings,
-  copyToClipboard,
-  openLink,
-  ipcRenderer,
-  i18NextBackend,
-  i18NextBackendOptions,
-  fs,
-  util,
-};
+export {settings, copyToClipboard, openLink, ipcRenderer, i18NextBackend, i18NextBackendOptions};

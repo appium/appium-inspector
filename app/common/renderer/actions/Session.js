@@ -15,7 +15,8 @@ import {
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder';
 import {APP_MODE} from '../constants/session-inspector';
 import i18n from '../i18next';
-import {fs, ipcRenderer, util, getSetting, setSetting} from '../polyfills';
+import {ipcRenderer, getSetting, setSetting} from '../polyfills';
+import {downloadFile, parseSessionFileContents} from '../utils/file-handling';
 import {log} from '../utils/logger';
 import {addVendorPrefixes} from '../utils/other';
 import {quitSession, setSessionDetails} from './Inspector';
@@ -75,8 +76,6 @@ const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
 const CAPS_NATIVE_WEB_SCREENSHOT = 'appium:nativeWebScreenshot';
 const CAPS_ENSURE_WEBVIEW_HAVE_PAGES = 'appium:ensureWebviewsHavePages';
 const CAPS_INCLUDE_SAFARI_IN_WEBVIEWS = 'appium:includeSafariInWebviews';
-
-const FILE_PATH_STORAGE_KEY = 'last_opened_file';
 
 const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to turn it on
 
@@ -842,60 +841,58 @@ export function setSavedServerParams() {
   };
 }
 
-export function setStateFromAppiumFile(newFilepath = null) {
+/**
+ * Checks if the app was launched by opening a file -
+ * if yes, set the current server and capability details from the file contents
+ */
+export function initFromSessionFile() {
   return async (dispatch) => {
-    // no "fs" means we're not in an Electron renderer so do nothing
-    if (!fs) {
+    const lastArg = process.argv[process.argv.length - 1];
+    if (!lastArg.startsWith('filename=')) {
+      return null;
+    }
+    const filePath = lastArg.split('=')[1];
+    const sessionFileString = await ipcRenderer.invoke('sessionfile:open', filePath);
+    setStateFromSessionFile(sessionFileString)(dispatch);
+  };
+}
+
+/**
+ * Sets the current server and capability details using the provided .appiumsession file contents
+ */
+export function setStateFromSessionFile(sessionFileString) {
+  return (dispatch, getState) => {
+    const sessionJSON = parseSessionFileContents(sessionFileString);
+    if (sessionJSON === null) {
+      notification.error({
+        message: i18n.t('invalidSessionFile'),
+        duration: 0,
+      });
       return;
     }
-    try {
-      let filePath = newFilepath;
-      if (!newFilepath) {
-        const lastArg = process.argv[process.argv.length - 1];
-        if (!lastArg.startsWith('filename=')) {
-          return;
-        }
-        filePath = lastArg.split('=')[1];
-      }
-      if (sessionStorage.getItem(FILE_PATH_STORAGE_KEY) === filePath) {
-        // file was opened already, do nothing
-        return;
-      }
-      const appiumJson = JSON.parse(await util.promisify(fs.readFile)(filePath, 'utf8'));
-      sessionStorage.setItem(FILE_PATH_STORAGE_KEY, filePath);
-      dispatch({type: SET_STATE_FROM_FILE, state: appiumJson, filePath});
-    } catch (e) {
-      notification.error({
-        message: `Cannot open file '${newFilepath}'.\n ${e.message}\n ${e.stack}`,
-      });
-    }
+    dispatch({type: SET_STATE_FROM_FILE, sessionJSON});
+    switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER)(dispatch, getState);
   };
 }
 
-export function saveFile(filepath) {
-  return async (dispatch, getState) => {
+/**
+ * Packages the current server and capability details in an .appiumsession file
+ */
+export function saveSessionAsFile() {
+  return (_dispatch, getState) => {
     const state = getState().session;
-    const filePath = filepath || state.filePath;
-    if (filePath) {
-      const appiumFileInfo = getSaveableState(state);
-      await util.promisify(fs.writeFile)(filePath, JSON.stringify(appiumFileInfo, null, 2), 'utf8');
-      sessionStorage.setItem(FILE_PATH_STORAGE_KEY, filePath);
-    } else {
-      // no filepath provided, tell the main renderer to open the save file dialog and
-      // ask the user to save file to a provided path
-      ipcRenderer.send('save-file-as');
-    }
-  };
-}
-
-// get the slice of the redux state that's needed for the .appiumsession files
-function getSaveableState(reduxState) {
-  return {
-    version: APPIUM_SESSION_FILE_VERSION,
-    caps: reduxState.caps,
-    server: reduxState.server,
-    serverType: reduxState.serverType,
-    visibleProviders: reduxState.visibleProviders,
+    const sessionFileDetails = {
+      version: APPIUM_SESSION_FILE_VERSION,
+      caps: state.caps,
+      server: state.server,
+      serverType: state.serverType,
+      visibleProviders: state.visibleProviders,
+    };
+    const href = `data:text/json;charset=utf-8,${encodeURIComponent(
+      JSON.stringify(sessionFileDetails, null, 2),
+    )}`;
+    const fileName = `${state.serverType}.appiumsession`;
+    downloadFile(href, fileName);
   };
 }
 
