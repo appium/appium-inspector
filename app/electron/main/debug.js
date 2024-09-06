@@ -2,7 +2,7 @@ import {
   installExtension,
   REACT_DEVELOPER_TOOLS,
   REDUX_DEVTOOLS,
-} from 'electron-extension-installer';
+} from '@tomjs/electron-devtools-installer';
 
 export async function installExtensions() {
   const opts = {
