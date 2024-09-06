@@ -23,7 +23,7 @@ export default defineConfig({
     build: {
       outDir: join(__dirname, 'dist', 'preload'),
       lib: {
-        entry: join(__dirname, 'app', 'electron', 'preload', 'preload.js'),
+        entry: join(__dirname, 'app', 'electron', 'preload', 'preload.mjs'),
       },
     },
     plugins: [externalizeDepsPlugin()],
