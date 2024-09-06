@@ -552,6 +552,15 @@ export function newSession(caps, attachSessId = null) {
         let attachedSessionCaps = {};
         if (attachedSession) {
           attachedSessionCaps = attachedSession.capabilities;
+          if (session.serverType === SERVER_TYPES.LAMBDATEST) {
+            // adjust for LambdaTest-specific format
+            if ('capabilities' in attachedSessionCaps) {
+              attachedSessionCaps = attachedSessionCaps.capabilities;
+            }
+            if ('desired' in attachedSessionCaps) {
+              attachedSessionCaps = attachedSessionCaps.desired;
+            }
+          }
         } else {
           const {protocol, hostname, port, path} = serverOpts;
           try {
