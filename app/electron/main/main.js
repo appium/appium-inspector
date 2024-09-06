@@ -1,7 +1,7 @@
 import {app} from 'electron';
 import debug from 'electron-debug';
 
-// import {installExtensions} from './debug';
+import {installExtensions} from './debug';
 import {isDev, setupIPCListeners} from './helpers';
 import {setupMainWindow} from './windows';
 
@@ -20,11 +20,10 @@ app.on('window-all-closed', () => {
   app.quit();
 });
 
-app.on('ready', () => {
+app.on('ready', async () => {
   if (isDev) {
     debug();
-    // TODO: uncomment this after upgrading to Electron 15+
-    // await installExtensions();
+    await installExtensions();
   }
 
   setupIPCListeners();
