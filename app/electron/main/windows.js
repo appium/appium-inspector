@@ -25,6 +25,9 @@ function buildSplashWindow() {
     minWidth: 300,
     minHeight: 300,
     frame: false,
+    webPreferences: {
+      devTools: false,
+    },
   });
 }
 
@@ -59,10 +62,6 @@ export function setupMainWindow() {
     splashWindow.destroy();
     mainWindow.show();
     mainWindow.focus();
-
-    if (isDev) {
-      mainWindow.openDevTools();
-    }
   });
 
   mainWindow.on('closed', () => {
