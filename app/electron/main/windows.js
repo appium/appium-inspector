@@ -41,7 +41,6 @@ function buildSessionWindow() {
       sandbox: false,
       nodeIntegration: true,
       contextIsolation: false,
-      enableRemoteModule: true,
       additionalArguments: openFilePath ? [`filename=${openFilePath}`] : [],
     },
   });

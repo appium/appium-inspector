@@ -8,10 +8,15 @@ title: System Requirements
 Since the Inspector has two versions, [a desktop app and a web app](../overview.md#formats), the
 requirements for these will differ.
 
--   The web app supports Chrome and Firefox browsers
-    ([Safari is not supported](../troubleshooting.md#browser-version-does-not-work-in-safari))
+-   Web app
+    -   Works in Chrome/Edge/Firefox, released September 2021 or later
+        ([Safari is not supported](../troubleshooting.md#browser-version-does-not-work-in-safari))
     -   Viewport size of at least **870 x 610** pixels is recommended
--   The desktop app requires up to around **600MB** of space on the computer
+-   Desktop app
+    -   Works on Windows 10+, macOS 10.15+, Ubuntu 18.04+, Debian 10+, openSUSE 15.5+, or Fedora Linux 39+
+        -   [These requirements are taken from Chrome](https://support.google.com/chrome/a/answer/7100626),
+            as the Inspector is built using Electron (which uses Chromium)
+    -   Up to around **600MB** of free space is required
     -   The minimum application window size is **890 x 710** pixels
 
 Both Inspector versions also require an **Appium server** to connect to, which is _not_ bundled with

@@ -69,6 +69,10 @@
   -webkit-app-region: drag;
 }
 
+.serverTabs :global(.ant-tabs-tab) {
+  -webkit-app-region: no-drag;
+}
+
 .serverTabs :global(.ant-form > .ant-row > div) {
   padding-bottom: 12px;
 }
