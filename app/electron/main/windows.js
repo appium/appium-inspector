@@ -40,7 +40,7 @@ function buildSessionWindow() {
     minHeight: 710,
     titleBarStyle: 'hiddenInset',
     webPreferences: {
-      preload: join(__dirname, '..', 'preload', 'preload.js'), // from 'main' in package.json
+      preload: join(__dirname, '..', 'preload', 'preload.mjs'), // from 'main' in package.json
       sandbox: false,
       nodeIntegration: true,
       contextIsolation: false,

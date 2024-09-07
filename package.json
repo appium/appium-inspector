@@ -19,6 +19,7 @@
   ],
   "homepage": "https://github.com/appium/appium-inspector",
   "main": "./dist/main/main.js",
+  "type": "module",
   "scripts": {
     "lint": "eslint . --fix",
     "prettier": "prettier . -w",
