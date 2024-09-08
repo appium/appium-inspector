@@ -294,5 +294,6 @@
   "gestureRequiredFieldsError": "Значення '{{fields}}' необхідні для події '{{eventType}}'",
   "gestureNameCannotBeEmptyError": "Ім'я жесту не може бути пустим",
   "gestureInvalidJsonError": "Неправильний файл JSON. Не вдалося розпізнати вміст файлу",
-  "gestureImportedFrom": "Жест імпортовано з '{{fileName}}'"
+  "gestureImportedFrom": "Жест імпортовано з '{{fileName}}'",
+  "invalidSessionFile": "Некоректний файл сеансу"
 }

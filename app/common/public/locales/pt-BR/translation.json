@@ -294,5 +294,6 @@
   "gestureRequiredFieldsError": "Valores '{{fields}}' são necessários para o evento '{{eventType}}'",
   "gestureNameCannotBeEmptyError": "Nome do gesto não pode ser vazio",
   "gestureInvalidJsonError": "Arquivo JSON inválido. Não é possível analisar o conteúdo do arquivo",
-  "gestureImportedFrom": "Gesto importado de '{{fileName}}'"
+  "gestureImportedFrom": "Gesto importado de '{{fileName}}'",
+  "invalidSessionFile": "Arquivo de sessão inválido"
 }
