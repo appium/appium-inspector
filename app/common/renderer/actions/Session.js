@@ -2,7 +2,6 @@ import {notification} from 'antd';
 import axios from 'axios';
 import {includes, isPlainObject, isUndefined, toPairs, union, values, without} from 'lodash';
 import moment from 'moment';
-import {v4 as UUID} from 'uuid';
 import {Web2Driver} from 'web2driver';
 
 import {
@@ -662,7 +661,7 @@ export function saveSession(server, serverType, caps, params) {
 
     if (!uuid) {
       // If it's a new session, add it to the list
-      uuid = UUID();
+      uuid = crypto.randomUUID();
       let newSavedSession = {
         date: Date.now(),
         name,
