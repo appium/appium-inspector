@@ -1,8 +1,7 @@
-import Bluebird from 'bluebird';
 import _ from 'lodash';
 
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
-import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
+import {APP_MODE, NATIVE_APP, REFRESH_DELAY_MILLIS} from '../constants/session-inspector';
 import {log} from '../utils/logger';
 import {parseSource, setHtmlElementAttributes} from './webview-helpers';
 
@@ -131,7 +130,7 @@ export default class AppiumClient {
       windowSizeUpdate = {};
     if (!skipRefresh) {
       // Give the source/screenshot time to change before taking the screenshot
-      await Bluebird.delay(500);
+      await new Promise((resolve) => setTimeout(resolve, REFRESH_DELAY_MILLIS));
       if (!skipScreenshot) {
         screenshotUpdate = await this.getScreenshotUpdate();
       }

@@ -1,4 +1,3 @@
-import {Promise} from 'bluebird';
 import _ from 'lodash';
 
 import {CAPABILITY_TYPES, SERVER_TYPES} from '../constants/session-builder';
