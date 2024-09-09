@@ -1,4 +1,3 @@
-import B from 'bluebird';
 import {createReadStream} from 'node:fs';
 import path from 'node:path';
 
@@ -42,7 +41,7 @@ async function updateFile(fileId, storageId) {
 }
 
 async function main() {
-  const [storageId, fileId] = await B.all([uploadToStorage(), getFileId()]);
+  const [storageId, fileId] = await Promise.all([uploadToStorage(), getFileId()]);
   await updateFile(fileId, storageId);
   log.info('All done');
 }
