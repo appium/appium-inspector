@@ -12,7 +12,7 @@
       "automerge": true
     },
     {
-      "matchPackageNames": ["antd", "cheerio", "electron-debug", "eslint", "rimraf", "uuid"],
+      "matchPackageNames": ["antd", "cheerio", "eslint", "uuid"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     },

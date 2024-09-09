@@ -61,7 +61,6 @@
     "antd": "V5: significant rewrite required",
     "bluebird": "Deprecated: recommended to replace with native promises",
     "cheerio": "V1: requires Node 18",
-    "electron-debug": "V4: requires Electron 30",
     "uuid": "V10: requires Node 16. Can also be replaced with crypto.randomUUID in Electron 14+"
   },
   "dependencies": {
@@ -72,10 +71,10 @@
     "axios": "1.7.7",
     "bluebird": "3.7.2",
     "cheerio": "1.0.0-rc.12",
-    "electron-debug": "3.2.0",
+    "electron-debug": "4.0.1",
     "electron-settings": "4.0.4",
     "electron-updater": "6.3.4",
-    "highlight.js": "11.9.0",
+    "highlight.js": "11.10.0",
     "i18next": "23.14.0",
     "i18next-chained-backend": "4.6.2",
     "i18next-fs-backend": "2.3.2",
@@ -94,8 +93,7 @@
     "xpath": "0.0.34"
   },
   "//devDependencies": {
-    "eslint": "V9: need to move to flat config",
-    "rimraf": "V6: requires Node 20"
+    "eslint": "V9: need to move to flat config"
   },
   "devDependencies": {
     "@appium/docutils": "1.0.19",
@@ -114,17 +112,13 @@
     "eslint-plugin-react-native": "4.1.0",
     "less": "4.2.0",
     "prettier": "3.3.3",
-    "rimraf": "5.0.10",
+    "rimraf": "6.0.1",
     "vite": "5.4.3",
     "vite-plugin-electron-renderer": "0.14.5",
     "vitest": "2.0.5"
   },
-  "devEngines": {
-    "node": ">=18.x",
-    "npm": ">=8.x"
-  },
   "engines": {
-    "node": ">=18.x",
-    "npm": ">=8.x"
+    "node": ">=20.x",
+    "npm": ">=10.x"
   }
 }
