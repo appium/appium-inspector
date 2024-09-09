@@ -12,7 +12,7 @@
       "automerge": true
     },
     {
-      "matchPackageNames": ["antd", "cheerio", "eslint", "uuid"],
+      "matchPackageNames": ["antd", "cheerio", "eslint"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     },
