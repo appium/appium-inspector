@@ -59,7 +59,6 @@
   },
   "//dependencies": {
     "antd": "V5: significant rewrite required",
-    "bluebird": "Deprecated: recommended to replace with native promises",
     "cheerio": "V1: requires Node 18",
     "uuid": "V10: requires Node 16. Can also be replaced with crypto.randomUUID in Electron 14+"
   },
@@ -69,7 +68,6 @@
     "@xmldom/xmldom": "0.9.2",
     "antd": "4.24.16",
     "axios": "1.7.7",
-    "bluebird": "3.7.2",
     "cheerio": "1.0.0-rc.12",
     "electron-debug": "4.0.1",
     "electron-settings": "4.0.4",

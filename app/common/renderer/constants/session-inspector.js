@@ -1,5 +1,6 @@
 export const MJPEG_STREAM_CHECK_INTERVAL = 1000;
 export const SESSION_EXPIRY_PROMPT_TIMEOUT = 60 * 60 * 1000; // Give user 1 hour to reply
+export const REFRESH_DELAY_MILLIS = 500;
 
 export const APP_MODE = {
   NATIVE: 'native',
