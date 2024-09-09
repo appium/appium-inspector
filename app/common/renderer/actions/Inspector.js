@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import {v4 as UUID} from 'uuid';
 
 import {SAVED_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs';
 import {POINTER_TYPES} from '../constants/gestures';
@@ -982,7 +981,7 @@ export function saveGesture(params) {
         continue;
       }
       // Adding a new gesture
-      param.id = UUID();
+      param.id = crypto.randomUUID();
       param.date = Date.now();
       savedGestures.push(param);
     }

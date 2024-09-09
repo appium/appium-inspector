@@ -9,7 +9,7 @@ Since the Inspector has two versions, [a desktop app and a web app](../overview.
 requirements for these will differ.
 
 -   Web app
-    -   Works in Chrome/Edge/Firefox, released September 2021 or later
+    -   Works in Chrome/Edge/Firefox, released in 2022 or later
         ([Safari is not supported](../troubleshooting.md#browser-version-does-not-work-in-safari))
     -   Viewport size of at least **870 x 610** pixels is recommended
 -   Desktop app
