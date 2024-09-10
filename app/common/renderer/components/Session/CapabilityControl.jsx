@@ -1,5 +1,4 @@
 import {Input, Switch} from 'antd';
-import React from 'react';
 
 import {INPUT} from '../../constants/antd-types';
 import {CAPABILITY_TYPES} from '../../constants/session-builder';

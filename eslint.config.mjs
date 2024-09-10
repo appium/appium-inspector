@@ -5,6 +5,7 @@ import {includeIgnoreFile} from '@eslint/compat';
 import {FlatCompat} from '@eslint/eslintrc';
 import js from '@eslint/js';
 import reactPlugin from 'eslint-plugin-react';
+import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -21,6 +22,7 @@ export default [
     name: 'React Plugin',
     files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
     ...reactPlugin.configs.flat.recommended,
+    ...reactPlugin.configs.flat['jsx-runtime'],
   },
   ...compat.extends('@appium/eslint-config-appium-ts'),
   {
@@ -33,19 +35,18 @@ export default [
         document: 'readonly',
       },
     },
+    plugins: {
+      'simple-import-sort': simpleImportSortPlugin,
+    },
     settings: {
       react: {
         version: 'detect',
       },
     },
     rules: {
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          varsIgnorePattern: 'React',
-        },
-      ],
       'react/prop-types': 'off',
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
     },
   },
   {

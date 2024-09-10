@@ -5,14 +5,13 @@ import {
   Collapse,
   Input,
   Modal,
+  notification,
   Row,
   Space,
   Switch,
   Tooltip,
-  notification,
 } from 'antd';
 import _ from 'lodash';
-import React from 'react';
 
 import {ALERT, INPUT} from '../../constants/antd-types';
 import {COMMAND_ARG_TYPES, COMMAND_DEFINITIONS} from '../../constants/commands';

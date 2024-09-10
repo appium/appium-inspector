@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {RENDER_CENTROID_AS} from '../../constants/screenshot';
 import {parseCoordinates} from '../../utils/other';
 import HighlighterCentroid from './HighlighterCentroid.jsx';

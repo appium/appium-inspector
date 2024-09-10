@@ -14,17 +14,17 @@ import {
 } from '@ant-design/icons';
 import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip} from 'antd';
 import {debounce} from 'lodash';
-import React, {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
 import {BUTTON} from '../../constants/antd-types';
 import {WINDOW_DIMENSIONS} from '../../constants/common';
+import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {
   INSPECTOR_TABS,
   MJPEG_STREAM_CHECK_INTERVAL,
   SESSION_EXPIRY_PROMPT_TIMEOUT,
 } from '../../constants/session-inspector';
-import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
 import {copyToClipboard} from '../../polyfills';
 import {downloadFile} from '../../utils/file-handling';
 import Commands from './Commands.jsx';

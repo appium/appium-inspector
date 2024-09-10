@@ -3,9 +3,9 @@ import settings from 'electron-settings';
 import {join} from 'path';
 
 import {PREFERRED_LANGUAGE} from '../../common/shared/setting-defs';
+import {isDev} from './helpers';
 import i18n from './i18next';
 import {openFilePath} from './main';
-import {isDev} from './helpers';
 import {rebuildMenus} from './menus';
 
 const mainPath = isDev
