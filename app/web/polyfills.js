@@ -1,6 +1,6 @@
 import i18NextBackend from 'i18next-chained-backend';
-import LocalStorageBackend from 'i18next-localstorage-backend';
 import HttpApi from 'i18next-http-backend';
+import LocalStorageBackend from 'i18next-localstorage-backend';
 
 const localesPath =
   process.env.NODE_ENV === 'development'
@@ -44,4 +44,4 @@ class BrowserSettings {
 const settings = new BrowserSettings();
 const {copyToClipboard, openLink, ipcRenderer} = browserUtils;
 
-export {settings, copyToClipboard, openLink, ipcRenderer, i18NextBackend, i18NextBackendOptions};
+export {copyToClipboard, i18NextBackend, i18NextBackendOptions, ipcRenderer, openLink, settings};

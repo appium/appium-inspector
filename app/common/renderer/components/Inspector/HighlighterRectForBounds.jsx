@@ -1,5 +1,3 @@
-import React from 'react';
-
 import InspectorCSS from './Inspector.module.css';
 
 /**

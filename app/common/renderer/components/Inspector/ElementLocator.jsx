@@ -1,5 +1,4 @@
 import {Alert, Input, Radio, Row, Space} from 'antd';
-import React from 'react';
 
 import {ALERT} from '../../constants/antd-types';
 import {LOCATOR_STRATEGY_MAP as STRAT} from '../../constants/session-inspector';

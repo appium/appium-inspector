@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {CENTROID_STYLES, RENDER_CENTROID_AS} from '../../constants/screenshot';
 import InspectorCSS from './Inspector.module.css';
 

@@ -36,4 +36,4 @@ class ElectronSettings {
 const settings = new ElectronSettings();
 const {copyToClipboard, openLink} = electronUtils;
 
-export {settings, copyToClipboard, openLink, ipcRenderer, i18NextBackend, i18NextBackendOptions};
+export {copyToClipboard, i18NextBackend, i18NextBackendOptions, ipcRenderer, openLink, settings};

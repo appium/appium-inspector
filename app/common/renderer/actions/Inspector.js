@@ -9,13 +9,13 @@ import frameworks from '../lib/client-frameworks';
 import {getSetting, setSetting} from '../polyfills';
 import {readTextFromUploadedFiles} from '../utils/file-handling';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation';
+import {log} from '../utils/logger';
 import {
   findDOMNodeByPath,
   findJSONElementByPath,
   xmlToDOM,
   xmlToJSON,
 } from '../utils/source-parsing';
-import {log} from '../utils/logger';
 import {showError} from './Session';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';

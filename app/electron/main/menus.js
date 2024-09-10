@@ -1,9 +1,9 @@
-import {Menu, app, dialog, shell} from 'electron';
+import {app, dialog, Menu, shell} from 'electron';
 
 import {languageList} from '../../common/shared/i18next.config';
+import {APPIUM_SESSION_EXTENSION, isDev, openSessionFile, t} from './helpers';
 import i18n from './i18next';
 import {checkForUpdates} from './updater';
-import {APPIUM_SESSION_EXTENSION, openSessionFile, isDev, t} from './helpers';
 import {launchNewSessionWindow} from './windows';
 
 const INSPECTOR_DOCS_URL = 'https://appium.github.io/appium-inspector';

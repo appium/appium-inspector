@@ -15,6 +15,7 @@ import {
   Col,
   Divider,
   Input,
+  notification,
   PageHeader,
   Popover,
   Row,
@@ -23,10 +24,9 @@ import {
   Steps,
   Tabs,
   Tooltip,
-  notification,
 } from 'antd';
 import _ from 'lodash';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import {NOTIF, TABLE_TAB} from '../../constants/antd-types';
 import {

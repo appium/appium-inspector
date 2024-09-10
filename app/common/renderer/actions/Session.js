@@ -14,7 +14,7 @@ import {
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder';
 import {APP_MODE} from '../constants/session-inspector';
 import i18n from '../i18next';
-import {ipcRenderer, getSetting, setSetting} from '../polyfills';
+import {getSetting, ipcRenderer, setSetting} from '../polyfills';
 import {downloadFile, parseSessionFileContents} from '../utils/file-handling';
 import {log} from '../utils/logger';
 import {addVendorPrefixes} from '../utils/other';

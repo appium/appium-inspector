@@ -4,7 +4,7 @@ import {initReactI18next, withTranslation as wt} from 'react-i18next';
 
 import {commonI18NextOptions} from '../shared/i18next.config';
 import {PREFERRED_LANGUAGE} from '../shared/setting-defs';
-import {i18NextBackend, i18NextBackendOptions, getSetting} from './polyfills';
+import {getSetting, i18NextBackend, i18NextBackendOptions} from './polyfills';
 
 const i18nextOptions = {
   ...commonI18NextOptions,

@@ -11,7 +11,6 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import {Button, Select, Space, Tooltip} from 'antd';
-import React from 'react';
 import {BiCircle, BiSquare} from 'react-icons/bi';
 import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
 import {IoChevronBackOutline} from 'react-icons/io5';

@@ -1,6 +1,5 @@
 import {CopyOutlined} from '@ant-design/icons';
 import {Alert, Button, Tooltip} from 'antd';
-import React from 'react';
 
 import {ALERT} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';

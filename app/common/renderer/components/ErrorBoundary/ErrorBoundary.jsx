@@ -1,4 +1,4 @@
-import React from 'react';
+import {Component} from 'react';
 
 import {copyToClipboard} from '../../polyfills';
 import ErrorMessage from './ErrorMessage.jsx';
@@ -7,7 +7,7 @@ const copyTrace = (trace) => {
   copyToClipboard(trace);
 };
 
-export default class ErrorBoundary extends React.Component {
+export default class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
     this.state = {

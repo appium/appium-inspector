@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import {Alert, Button, Col, Input, Row, Space, Spin, Table, Tooltip} from 'antd';
 import _ from 'lodash';
-import React, {useRef} from 'react';
+import {useRef} from 'react';
 
 import {ALERT, ROW} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
