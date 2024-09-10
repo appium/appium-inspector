@@ -1,5 +1,5 @@
 import {Spin} from 'antd';
-import React, {useRef, useState} from 'react';
+import {Fragment, useRef, useState} from 'react';
 
 import {GESTURE_ITEM_STYLES, POINTER_TYPES} from '../../constants/gestures';
 import {DEFAULT_SWIPE, DEFAULT_TAP, SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
@@ -208,7 +208,7 @@ const Screenshot = (props) => {
             <svg key="gestureSVG" className={styles.gestureSvg}>
               {points.map((pointer) =>
                 pointer.map((tick, index) => (
-                  <React.Fragment key={tick.id}>
+                  <Fragment key={tick.id}>
                     {index > 0 && (
                       <line
                         className={styles[tick.type]}
@@ -231,7 +231,7 @@ const Screenshot = (props) => {
                           : {stroke: tick.color}
                       }
                     />
-                  </React.Fragment>
+                  </Fragment>
                 )),
               )}
             </svg>

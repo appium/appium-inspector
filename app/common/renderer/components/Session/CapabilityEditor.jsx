@@ -1,6 +1,6 @@
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 import {Button, Checkbox, Col, Form, Input, Modal, Row, Select, Tooltip} from 'antd';
-import React, {useEffect, useRef} from 'react';
+import {useEffect, useRef} from 'react';
 
 import {ROW} from '../../constants/antd-types';
 import {CAPABILITY_TYPES} from '../../constants/session-builder';

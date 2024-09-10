@@ -21,6 +21,7 @@ export default [
     name: 'React Plugin',
     files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
     ...reactPlugin.configs.flat.recommended,
+    ...reactPlugin.configs.flat['jsx-runtime'],
   },
   ...compat.extends('@appium/eslint-config-appium-ts'),
   {
@@ -39,12 +40,6 @@ export default [
       },
     },
     rules: {
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          varsIgnorePattern: 'React',
-        },
-      ],
       'react/prop-types': 'off',
     },
   },

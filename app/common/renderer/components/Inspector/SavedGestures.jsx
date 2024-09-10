@@ -9,7 +9,7 @@ import {
 import {Button, Collapse, Modal, Row, Popconfirm, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 
 import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../constants/gestures';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';

@@ -1,7 +1,7 @@
 import {LinkOutlined} from '@ant-design/icons';
 import {Badge, Button, Spin, Tabs} from 'antd';
 import _ from 'lodash';
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 
 import {BUTTON} from '../../constants/antd-types';

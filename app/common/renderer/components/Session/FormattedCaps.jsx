@@ -1,7 +1,6 @@
 import {CloseOutlined, EditOutlined, SaveOutlined} from '@ant-design/icons';
 import {Alert, Button, Card, Input, Row, Tooltip} from 'antd';
 import hljs from 'highlight.js';
-import React from 'react';
 
 import {getCapsObject} from '../../actions/Session.js';
 import {ALERT} from '../../constants/antd-types.js';

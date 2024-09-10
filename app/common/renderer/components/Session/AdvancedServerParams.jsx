@@ -1,5 +1,4 @@
 import {Checkbox, Col, Collapse, Form, Input, Row} from 'antd';
-import React from 'react';
 
 import {SERVER_TYPES} from '../../constants/session-builder';
 import styles from './Session.module.css';

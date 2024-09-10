@@ -1,7 +1,6 @@
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import {Button, Col, Popconfirm, Row, Table, Tooltip} from 'antd';
 import moment from 'moment';
-import React from 'react';
 
 import {SESSION_BUILDER_TABS, SAVED_SESSIONS_TABLE_VALUES} from '../../constants/session-builder';
 import FormattedCaps from './FormattedCaps.jsx';

@@ -1,6 +1,6 @@
 import {UploadOutlined} from '@ant-design/icons';
 import {Button, Tooltip, Upload} from 'antd';
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 
 const FileUploader = (props) => {
   const {multiple, onUpload, type, icon, tooltipTitle} = props;

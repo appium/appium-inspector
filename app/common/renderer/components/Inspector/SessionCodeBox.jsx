@@ -1,7 +1,6 @@
 import {CodeOutlined, CopyOutlined} from '@ant-design/icons';
 import {Button, Card, Select, Space, Tooltip} from 'antd';
 import hljs from 'highlight.js';
-import React from 'react';
 
 import frameworks from '../../lib/client-frameworks';
 import {copyToClipboard} from '../../polyfills';

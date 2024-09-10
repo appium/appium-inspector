@@ -1,5 +1,4 @@
 import {Button, Modal} from 'antd';
-import React from 'react';
 
 import ElementLocator from './ElementLocator.jsx';
 import LocatedElements from './LocatedElements.jsx';

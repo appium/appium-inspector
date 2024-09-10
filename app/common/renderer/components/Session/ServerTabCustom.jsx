@@ -1,5 +1,4 @@
 import {Checkbox, Col, Form, Input, Row} from 'antd';
-import React from 'react';
 
 import {DEFAULT_SERVER_HOST, DEFAULT_SERVER_PATH, DEFAULT_SERVER_PORT} from '../../actions/Session';
 

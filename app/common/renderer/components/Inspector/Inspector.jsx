@@ -14,7 +14,7 @@ import {
 } from '@ant-design/icons';
 import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip} from 'antd';
 import {debounce} from 'lodash';
-import React, {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
 import {BUTTON} from '../../constants/antd-types';

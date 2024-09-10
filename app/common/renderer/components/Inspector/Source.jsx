@@ -1,5 +1,4 @@
 import {Spin, Tree} from 'antd';
-import React from 'react';
 
 import {IMPORTANT_SOURCE_ATTRS} from '../../constants/source';
 import InspectorStyles from './Inspector.module.css';

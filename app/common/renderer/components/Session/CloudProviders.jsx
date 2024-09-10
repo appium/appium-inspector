@@ -1,5 +1,3 @@
-import React from 'react';
-
 import ServerTabBitbar from './ServerTabBitbar.jsx';
 import ServerTabBrowserstack from './ServerTabBrowserstack.jsx';
 import ServerTabExperitest from './ServerTabExperitest.jsx';

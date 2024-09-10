@@ -1,6 +1,5 @@
 import {ReloadOutlined} from '@ant-design/icons';
 import {Button, Card, Col, Form, Row, Select, Tooltip} from 'antd';
-import React from 'react';
 
 import {getSessionInfo} from '../../utils/attaching-to-session';
 import SessionStyles from './Session.module.css';
