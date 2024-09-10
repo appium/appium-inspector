@@ -89,13 +89,16 @@
     "xpath": "0.0.34"
   },
   "//devDependencies": {
-    "eslint": "V9: need to move to flat config"
+    "eslint": "V9: need to wait for plugins to support it"
   },
   "devDependencies": {
     "@appium/docutils": "1.0.19",
     "@appium/eslint-config-appium-ts": "0.3.3",
     "@appium/fake-driver": "5.5.2",
     "@appium/support": "5.1.3",
+    "@eslint/compat": "1.1.1",
+    "@eslint/eslintrc": "3.1.0",
+    "@eslint/js": "9.10.0",
     "@types/react": "18.3.5",
     "@vitejs/plugin-react": "4.3.1",
     "asyncbox": "3.0.0",
@@ -103,9 +106,8 @@
     "electron-builder": "25.0.5",
     "electron-vite": "2.3.0",
     "eslint": "8.57.0",
-    "eslint-plugin-import": "2.30.0",
     "eslint-plugin-react": "7.35.2",
-    "eslint-plugin-react-native": "4.1.0",
+    "globals": "15.9.0",
     "less": "4.2.0",
     "prettier": "3.3.3",
     "rimraf": "6.0.1",
