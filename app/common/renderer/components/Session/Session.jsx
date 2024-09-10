@@ -7,17 +7,17 @@ import {useNavigate} from 'react-router-dom';
 import {BUTTON} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
 import {
-  SESSION_BUILDER_TABS,
-  SERVER_TYPES,
   ADD_CLOUD_PROVIDER_TAB_KEY,
+  SERVER_TYPES,
+  SESSION_BUILDER_TABS,
 } from '../../constants/session-builder';
 import {ipcRenderer, openLink} from '../../polyfills';
 import {log} from '../../utils/logger';
 import AdvancedServerParams from './AdvancedServerParams.jsx';
 import AttachToSession from './AttachToSession.jsx';
 import CapabilityEditor from './CapabilityEditor.jsx';
-import CloudProviderSelector from './CloudProviderSelector.jsx';
 import CloudProviders from './CloudProviders.jsx';
+import CloudProviderSelector from './CloudProviderSelector.jsx';
 import SavedSessions from './SavedSessions.jsx';
 import ServerTabCustom from './ServerTabCustom.jsx';
 import SessionStyles from './Session.module.css';

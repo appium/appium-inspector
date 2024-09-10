@@ -5,6 +5,7 @@
  */
 
 import {settings} from '#local-polyfills'; // eslint-disable-line import/no-unresolved
+
 import {DEFAULT_SETTINGS} from '../shared/setting-defs';
 
 export async function getSetting(setting) {
@@ -20,8 +21,8 @@ export async function setSetting(setting, value) {
 
 export {
   copyToClipboard,
-  openLink,
-  ipcRenderer,
   i18NextBackend,
   i18NextBackendOptions,
+  ipcRenderer,
+  openLink,
 } from '#local-polyfills'; // eslint-disable-line import/no-unresolved

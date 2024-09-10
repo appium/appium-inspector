@@ -5,6 +5,7 @@ import {includeIgnoreFile} from '@eslint/compat';
 import {FlatCompat} from '@eslint/eslintrc';
 import js from '@eslint/js';
 import reactPlugin from 'eslint-plugin-react';
+import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -34,6 +35,9 @@ export default [
         document: 'readonly',
       },
     },
+    plugins: {
+      'simple-import-sort': simpleImportSortPlugin,
+    },
     settings: {
       react: {
         version: 'detect',
@@ -41,6 +45,8 @@ export default [
     },
     rules: {
       'react/prop-types': 'off',
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
     },
   },
   {

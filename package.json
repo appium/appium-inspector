@@ -107,6 +107,7 @@
     "electron-vite": "2.3.0",
     "eslint": "8.57.0",
     "eslint-plugin-react": "7.35.2",
+    "eslint-plugin-simple-import-sort": "12.1.1",
     "globals": "15.9.0",
     "less": "4.2.0",
     "prettier": "3.3.3",

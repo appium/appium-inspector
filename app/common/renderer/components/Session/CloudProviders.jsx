@@ -1,3 +1,17 @@
+import BitBarLogo from '../../assets/images/bitbar_logo.svg';
+import BrowserStackLogo from '../../assets/images/browserstack_logo.svg';
+import ExperitestLogo from '../../assets/images/experitest_logo.svg';
+import HeadSpinLogo from '../../assets/images/headspin_logo.svg';
+import KobitonLogo from '../../assets/images/kobiton_logo.svg';
+import LambdaTestLogo from '../../assets/images/lambdatest_logo.svg';
+import MobitruLogo from '../../assets/images/mobitru_logo.svg';
+import PcloudyLogo from '../../assets/images/pcloudy_logo.svg';
+import PerfectoLogo from '../../assets/images/perfecto_logo.svg';
+import RemoteTestKitLogo from '../../assets/images/remotetestkit_logo.svg';
+import RobotQALogo from '../../assets/images/robotqa_logo.svg';
+import SauceLogo from '../../assets/images/sauce_logo.svg';
+import TestingBotLogo from '../../assets/images/testingbot_logo.svg';
+import {SERVER_TYPES} from '../../constants/session-builder.js';
 import ServerTabBitbar from './ServerTabBitbar.jsx';
 import ServerTabBrowserstack from './ServerTabBrowserstack.jsx';
 import ServerTabExperitest from './ServerTabExperitest.jsx';
@@ -12,22 +26,6 @@ import ServerTabRobotQA from './ServerTabRobotQA.jsx';
 import ServerTabSauce from './ServerTabSauce.jsx';
 import ServerTabTestingbot from './ServerTabTestingbot.jsx';
 import SessionStyles from './Session.module.css';
-
-import BitBarLogo from '../../assets/images/bitbar_logo.svg';
-import BrowserStackLogo from '../../assets/images/browserstack_logo.svg';
-import ExperitestLogo from '../../assets/images/experitest_logo.svg';
-import HeadSpinLogo from '../../assets/images/headspin_logo.svg';
-import KobitonLogo from '../../assets/images/kobiton_logo.svg';
-import LambdaTestLogo from '../../assets/images/lambdatest_logo.svg';
-import MobitruLogo from '../../assets/images/mobitru_logo.svg';
-import PcloudyLogo from '../../assets/images/pcloudy_logo.svg';
-import PerfectoLogo from '../../assets/images/perfecto_logo.svg';
-import RemoteTestKitLogo from '../../assets/images/remotetestkit_logo.svg';
-import RobotQALogo from '../../assets/images/robotqa_logo.svg';
-import SauceLogo from '../../assets/images/sauce_logo.svg';
-import TestingBotLogo from '../../assets/images/testingbot_logo.svg';
-
-import {SERVER_TYPES} from '../../constants/session-builder.js';
 
 const providerWrapper = (logo, providerComponent) => ({
   tabhead: () => (

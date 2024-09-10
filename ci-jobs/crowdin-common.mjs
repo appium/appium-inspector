@@ -1,7 +1,8 @@
+import path from 'node:path';
+
 import {logger} from '@appium/support';
 import axios from 'axios';
 import _ from 'lodash';
-import path from 'node:path';
 
 export const log = logger.getLogger('CROWDIN');
 

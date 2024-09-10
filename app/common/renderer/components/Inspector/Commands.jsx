@@ -5,11 +5,11 @@ import {
   Collapse,
   Input,
   Modal,
+  notification,
   Row,
   Space,
   Switch,
   Tooltip,
-  notification,
 } from 'antd';
 import _ from 'lodash';
 

@@ -2,7 +2,7 @@ import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import {Button, Col, Popconfirm, Row, Table, Tooltip} from 'antd';
 import moment from 'moment';
 
-import {SESSION_BUILDER_TABS, SAVED_SESSIONS_TABLE_VALUES} from '../../constants/session-builder';
+import {SAVED_SESSIONS_TABLE_VALUES, SESSION_BUILDER_TABS} from '../../constants/session-builder';
 import FormattedCaps from './FormattedCaps.jsx';
 import SessionStyles from './Session.module.css';
 
