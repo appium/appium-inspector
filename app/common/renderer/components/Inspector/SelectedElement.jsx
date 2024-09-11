@@ -2,6 +2,7 @@ import {
   AimOutlined,
   ClearOutlined,
   CopyOutlined,
+  DownloadOutlined,
   HourglassOutlined,
   LoadingOutlined,
   SendOutlined,
@@ -14,6 +15,7 @@ import {ALERT, ROW} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
 import {NATIVE_APP} from '../../constants/session-inspector';
 import {copyToClipboard, openLink} from '../../polyfills';
+import {downloadFile} from '../../utils/file-handling';
 import styles from './Inspector.module.css';
 
 /**
@@ -35,6 +37,17 @@ const SelectedElement = (props) => {
     sessionSettings,
     t,
   } = props;
+
+  const downloadElementScreenshot = async (elementId) => {
+    const elemScreenshot = await applyClientMethod({
+      methodName: 'takeScreenshot',
+      elementId,
+      skipRefresh: true,
+    });
+    const href = `data:image/png;base64,${elemScreenshot}`;
+    const filename = `element-${elementId}.png`;
+    downloadFile(href, filename);
+  };
 
   const sendKeys = useRef();
 
@@ -233,6 +246,14 @@ const SelectedElement = (props) => {
               id="btnCopyAttributes"
               icon={<CopyOutlined />}
               onClick={() => copyToClipboard(JSON.stringify(dataSource))}
+            />
+          </Tooltip>
+          <Tooltip title={t('Download Screenshot')}>
+            <Button
+              disabled={isDisabled}
+              icon={<DownloadOutlined />}
+              id="btnDownloadElemScreenshot"
+              onClick={() => downloadElementScreenshot(selectedElementId)}
             />
           </Tooltip>
           <Tooltip title={t('Get Timing')}>

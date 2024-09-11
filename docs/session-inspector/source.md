@@ -94,6 +94,7 @@ attributes.
 | ![Tap Element](./assets/images/header/search-tap-element.png)                            | Tap the element                                                                   |
 | ![Send or Clear Element Text](./assets/images/header/search-send-clear-element-text.png) | Enter text to send to the element, or clear its text                              |
 | ![Copy Attributes](./assets/images/source/copy-attributes.png)                           | Copy the element attributes to the clipboard as an array of JSON objects          |
+| ![Download Element Screenshot](./assets/images/source/download-elem-screenshot.png)      | Download a screenshot of the element as a `.PNG` file                             |
 | ![Get Element Timings](./assets/images/source/get-timings.png)                           | Run a timing comparison for the [suggested element locators](#suggested-locators) |
 
 ### Suggested Locators
