@@ -1,5 +1,4 @@
 import {notification} from 'antd';
-import axios from 'axios';
 import {includes, isPlainObject, isUndefined, toPairs, union, values, without} from 'lodash';
 import moment from 'moment';
 import {Web2Driver} from 'web2driver';
@@ -15,6 +14,7 @@ import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder';
 import {APP_MODE} from '../constants/session-inspector';
 import i18n from '../i18next';
 import {getSetting, ipcRenderer, setSetting} from '../polyfills';
+import {fetchSessionInformation, formatSeleniumGridSessions} from '../utils/attaching-to-session';
 import {downloadFile, parseSessionFileContents} from '../utils/file-handling';
 import {log} from '../utils/logger';
 import {addVendorPrefixes} from '../utils/other';
@@ -88,7 +88,6 @@ const MJPEG_PORT_CAP = 'mjpegServerPort';
 // TODO: increase this retry when we get issues
 export const CONN_RETRIES = 0;
 const CONN_TIMEOUT = 5 * 60 * 1000;
-const HEADERS_CONTENT = 'application/json; charset=utf-8';
 
 // 1 hour default newCommandTimeout
 const NEW_COMMAND_TIMEOUT_SEC = 3600;
@@ -565,11 +564,7 @@ export function newSession(caps, attachSessId = null) {
           try {
             const cleanedPath = path.replace(/\/$/, '');
             const detailsUrl = `${protocol}://${hostname}:${port}${cleanedPath}/session/${attachSessId}`;
-            const res = await axios({
-              url: detailsUrl,
-              headers: {'content-type': HEADERS_CONTENT},
-              timeout: CONN_TIMEOUT,
-            });
+            const res = await fetchSessionInformation({url: detailsUrl, timeout: CONN_TIMEOUT});
             attachedSessionCaps = res.data.value;
           } catch (err) {
             // rethrow the error as session not running, but first log the original error to console
@@ -913,6 +908,7 @@ export function getRunningSessions() {
     const state = getState().session;
     const {server, serverType, attachSessId} = state;
     let {hostname, port, path, ssl, username, accessKey} = server[serverType];
+    const authToken = username && accessKey ? btoa(`${username}:${accessKey}`) : '';
 
     // if we have a standard remote server, fill out connection info based on placeholder defaults
     // in case the user hasn't adjusted those fields
@@ -933,36 +929,46 @@ export function getRunningSessions() {
       return;
     }
 
-    try {
-      const adjPath = path.endsWith('/') ? path : `${path}/`;
-      const url = `http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}sessions`;
-      const res = await axios({
-        url,
-        headers: {
-          'content-type': HEADERS_CONTENT,
-          ...(username && accessKey
-            ? {Authorization: `Basic ${btoa(`${username}:${accessKey}`)}`}
-            : {}),
-        },
-      });
-      const sessions = res.data.value;
-      dispatch({type: GET_SESSIONS_DONE, sessions});
+    const adjPath = path.endsWith('/') ? path : `${path}/`;
+    const baseUrl = `http${ssl ? 's' : ''}://${hostname}:${port}${adjPath}`;
+    const sessions = await fetchAllSessions(baseUrl, authToken);
+    dispatch({type: GET_SESSIONS_DONE, sessions});
 
-      // set attachSessId if only one session found
-      if (sessions.length === 1) {
-        dispatch({type: SET_ATTACH_SESS_ID, attachSessId: sessions[0].id});
-      } else if (attachSessId) {
-        // clear attachSessId if it is no longer present in the found session list
-        const attachSessIdFound = sessions.find((session) => session.id === attachSessId);
-        if (!attachSessIdFound) {
-          dispatch({type: SET_ATTACH_SESS_ID, attachSessId: null});
-        }
+    // set attachSessId if only one session found
+    if (sessions.length === 1) {
+      dispatch({type: SET_ATTACH_SESS_ID, attachSessId: sessions[0].id});
+    } else if (attachSessId) {
+      // clear attachSessId if it is no longer present in the found session list
+      const attachSessIdFound = sessions.find((session) => session.id === attachSessId);
+      if (!attachSessIdFound) {
+        dispatch({type: SET_ATTACH_SESS_ID, attachSessId: null});
       }
-    } catch (err) {
-      log.warn(`Ignoring error in getting list of active sessions: ${err}`);
-      dispatch({type: GET_SESSIONS_DONE});
     }
   };
+}
+
+async function fetchAllSessions(baseUrl, authToken) {
+  async function fetchAppiumServerSessions() {
+    const url = `${baseUrl}sessions`;
+    try {
+      const res = await fetchSessionInformation({url, authToken});
+      return res.data.value ?? [];
+    } catch (err) {
+      return [];
+    }
+  }
+
+  async function fetchSeleniumGridSessions() {
+    const url = `${baseUrl}status`;
+    try {
+      const res = await fetchSessionInformation({url, authToken});
+      return formatSeleniumGridSessions(res);
+    } catch (err) {
+      return [];
+    }
+  }
+
+  return [...(await fetchAppiumServerSessions()), ...(await fetchSeleniumGridSessions())];
 }
 
 export function startDesiredCapsNameEditor() {
