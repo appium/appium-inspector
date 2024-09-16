@@ -908,7 +908,7 @@ export function getRunningSessions() {
     const state = getState().session;
     const {server, serverType, attachSessId} = state;
     let {hostname, port, path, ssl, username, accessKey} = server[serverType];
-    const authToken = username && accessKey ? btoa(`${username}:${accessKey}`) : '';
+    const authToken = username && accessKey ? btoa(`${username}:${accessKey}`) : null;
 
     // if we have a standard remote server, fill out connection info based on placeholder defaults
     // in case the user hasn't adjusted those fields
