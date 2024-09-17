@@ -501,13 +501,13 @@
 .coordinatesContainer {
   position: absolute;
   background: rgba(255, 250, 205, 0.8);
-  z-index: 10000000;
+  z-index: 100;
   padding: 2px;
 }
 
 .swipeSvg {
   position: absolute;
-  z-index: 100000000;
+  z-index: 100;
   top: 0;
   left: 0;
   height: 100%;
@@ -525,18 +525,9 @@
   fill: rgba(255, 153, 153, 0.8);
 }
 
-.tapDiv {
-  position: absolute;
-  z-index: 100000000;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-}
-
 .gestureSvg {
   position: absolute;
-  z-index: 100000000;
+  z-index: 100;
   top: 0;
   left: 0;
   height: 100%;
