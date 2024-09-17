@@ -94,33 +94,32 @@ const Inspector = (props) => {
     // If the screenshot has too much space to the right or bottom, adjust the max width
     // of its container, so the source tree always fills the remaining space.
     // This keeps everything looking tight.
-    if (!screenshotContainerEl.current) {
+    const screenshotContainer = screenshotContainerEl.current;
+    if (!screenshotContainer) {
       return;
     }
 
-    const screenshotBox = screenshotContainerEl.current;
-    const img = screenshotContainerEl.current.querySelector('#screenshot');
-
-    if (!img) {
+    const screenshotImg = screenshotContainer.querySelector('#screenshot');
+    if (!screenshotImg) {
       return;
     }
 
-    const imgRect = img.getBoundingClientRect();
-    const screenshotRect = screenshotBox.getBoundingClientRect();
-    if (imgRect.height < screenshotRect.height) {
+    const imgRect = screenshotImg.getBoundingClientRect();
+    const containerRect = screenshotContainer.getBoundingClientRect();
+    if (imgRect.height < containerRect.height) {
       // get the expected image width if the image would fill the screenshot box height
-      const attemptedImgWidth = (screenshotRect.height / imgRect.height) * imgRect.width;
+      const attemptedImgWidth = (containerRect.height / imgRect.height) * imgRect.width;
       // get the maximum image width as a fraction of the current window width
       const maxImgWidth = window.innerWidth * WINDOW_DIMENSIONS.MAX_IMAGE_WIDTH_FRACTION;
       const curMaxImgWidth = Math.min(maxImgWidth, attemptedImgWidth);
-      screenshotBox.style.maxWidth = `${curMaxImgWidth}px`;
-    } else if (imgRect.width < screenshotRect.width) {
-      screenshotBox.style.maxWidth = `${imgRect.width}px`;
+      screenshotContainer.style.maxWidth = `${curMaxImgWidth}px`;
+    } else if (imgRect.width < containerRect.width) {
+      screenshotContainer.style.maxWidth = `${imgRect.width}px`;
     }
 
     // Calculate the ratio for scaling items overlaid on the screenshot
     // (highlighter rectangles/circles, gestures, etc.)
-    const newImgWidth = img.getBoundingClientRect().width;
+    const newImgWidth = screenshotImg.getBoundingClientRect().width;
     setScaleRatio(windowSize.width / newImgWidth);
   };
 
