@@ -79,9 +79,8 @@ const Inspector = (props) => {
     t,
   } = props;
 
-  const didInitialResize = useRef(false);
   const screenAndSourceEl = useRef(null);
-  const screenshotEl = useRef(null);
+  const screenshotContainerEl = useRef(null);
   const mjpegStreamCheckInterval = useRef(null);
 
   const [scaleRatio, setScaleRatio] = useState(1);
@@ -92,17 +91,10 @@ const Inspector = (props) => {
     (screenshot && !screenshotError) ||
     (mjpegScreenshotUrl && (!isSourceRefreshOn || !isAwaitingMjpegStream));
 
-  // Calculate the ratio for scaling items overlaid on the screenshot
-  // (highlighter rectangles/circles, gestures, etc.)
-  const updateScaleRatio = (imgWidth) => setScaleRatio(windowSize.width / imgWidth);
-
-  const updateScaleRatioDebounced = debounce(updateScaleRatio, 500);
-
-  const updateSourceTreeWidth = () => {
-    // the idea here is to keep track of the screenshot image width. if it has
-    // too much space to the right or bottom, adjust the max-width of the
-    // screenshot container so the source tree flex adjusts to always fill the
-    // remaining space. This keeps everything looking tight.
+  const updateScreenshotScale = () => {
+    // If the screenshot has too much space to the right or bottom, adjust the max width
+    // of its container, so the source tree always fills the remaining space.
+    // This keeps everything looking tight.
     if (!screenAndSourceEl.current) {
       return;
     }
@@ -127,10 +119,13 @@ const Inspector = (props) => {
       screenshotBox.style.maxWidth = `${imgRect.width}px`;
     }
 
-    updateScaleRatioDebounced(imgRect.width);
+    // Calculate the ratio for scaling items overlaid on the screenshot
+    // (highlighter rectangles/circles, gestures, etc.)
+    const itemScaleRatio = windowSize.width / imgRect.width;
+    debounce(() => setScaleRatio(itemScaleRatio), 500)();
   };
 
-  const updateSourceTreeWidthDebounced = debounce(updateSourceTreeWidth, 50);
+  const updateScreenshotScaleDebounced = debounce(updateScreenshotScale, 50);
 
   const checkMjpegStream = async () => {
     const {setAwaitingMjpegStream} = props;
@@ -143,7 +138,7 @@ const Inspector = (props) => {
     } catch (ign) {}
     if (imgReady && isAwaitingMjpegStream) {
       setAwaitingMjpegStream(false);
-      updateSourceTreeWidthDebounced();
+      updateScreenshotScaleDebounced();
       // stream obtained - can clear the refresh interval
       clearInterval(mjpegStreamCheckInterval.current);
       mjpegStreamCheckInterval.current = null;
@@ -173,9 +168,7 @@ const Inspector = (props) => {
     } = props;
     const curHeight = window.innerHeight;
     const curWidth = window.innerWidth;
-    const needsResize =
-      curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT || curWidth < WINDOW_DIMENSIONS.MIN_WIDTH;
-    if (!didInitialResize.current && needsResize) {
+    if (curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT || curWidth < WINDOW_DIMENSIONS.MIN_WIDTH) {
       const newWidth =
         curWidth < WINDOW_DIMENSIONS.MIN_WIDTH ? WINDOW_DIMENSIONS.MIN_WIDTH : curWidth;
       const newHeight =
@@ -183,7 +176,6 @@ const Inspector = (props) => {
       // resize width to something sensible for using the inspector on first run
       window.resizeTo(newWidth, newHeight);
     }
-    didInitialResize.current = true;
     applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
     storeSessionSettings();
     getSavedActionFramework();
@@ -199,8 +191,8 @@ const Inspector = (props) => {
    */
   useEffect(() => {
     if (windowSize) {
-      updateSourceTreeWidthDebounced();
-      window.addEventListener('resize', updateSourceTreeWidthDebounced);
+      updateScreenshotScaleDebounced();
+      window.addEventListener('resize', updateScreenshotScaleDebounced);
       if (mjpegScreenshotUrl) {
         mjpegStreamCheckInterval.current = setInterval(
           checkMjpegStream,
@@ -210,7 +202,7 @@ const Inspector = (props) => {
     }
     return () => {
       if (windowSize) {
-        window.removeEventListener('resize', updateSourceTreeWidthDebounced);
+        window.removeEventListener('resize', updateScreenshotScaleDebounced);
         if (mjpegStreamCheckInterval.current) {
           clearInterval(mjpegStreamCheckInterval.current);
           mjpegStreamCheckInterval.current = null;
@@ -273,14 +265,11 @@ const Inspector = (props) => {
   );
 
   const main = (
-    <div
-      className={InspectorStyles['inspector-main']}
-      ref={(el) => (screenAndSourceEl.current = el)}
-    >
+    <div className={InspectorStyles['inspector-main']} ref={screenAndSourceEl}>
       <div
         id="screenshotContainer"
         className={InspectorStyles['screenshot-container']}
-        ref={(el) => (screenshotEl.current = el)}
+        ref={screenshotContainerEl}
       >
         {screenShotControls}
         {showScreenshot && <Screenshot {...props} scaleRatio={scaleRatio} />}
