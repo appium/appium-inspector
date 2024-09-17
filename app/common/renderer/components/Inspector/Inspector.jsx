@@ -79,7 +79,6 @@ const Inspector = (props) => {
     t,
   } = props;
 
-  const screenAndSourceEl = useRef(null);
   const screenshotContainerEl = useRef(null);
   const mjpegStreamCheckInterval = useRef(null);
 
@@ -95,12 +94,12 @@ const Inspector = (props) => {
     // If the screenshot has too much space to the right or bottom, adjust the max width
     // of its container, so the source tree always fills the remaining space.
     // This keeps everything looking tight.
-    if (!screenAndSourceEl.current) {
+    if (!screenshotContainerEl.current) {
       return;
     }
 
-    const screenshotBox = screenAndSourceEl.current.querySelector('#screenshotContainer');
-    const img = screenAndSourceEl.current.querySelector('#screenshotContainer img#screenshot');
+    const screenshotBox = screenshotContainerEl.current;
+    const img = screenshotContainerEl.current.querySelector('#screenshot');
 
     if (!img) {
       return;
@@ -264,7 +263,7 @@ const Inspector = (props) => {
   );
 
   const main = (
-    <div className={InspectorStyles['inspector-main']} ref={screenAndSourceEl}>
+    <div className={InspectorStyles['inspector-main']}>
       <div
         id="screenshotContainer"
         className={InspectorStyles['screenshot-container']}
