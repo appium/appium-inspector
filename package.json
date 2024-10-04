@@ -236,12 +236,5 @@
     "rimraf": "5.0.5",
     "sinon": "17.0.1",
     "spectron": "15.0.0"
-  },
-  "devEngines": {
-    "node": ">=18.x",
-    "npm": ">=8.x"
-  },
-  "engines": {
-    "node": ">=18.x"
   }
 }
