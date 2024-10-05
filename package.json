@@ -96,7 +96,7 @@
     "@appium/eslint-config-appium-ts": "0.3.3",
     "@appium/fake-driver": "5.5.4",
     "@appium/support": "5.1.4",
-    "@eslint/compat": "1.1.1",
+    "@eslint/compat": "1.2.0",
     "@eslint/eslintrc": "3.1.0",
     "@eslint/js": "9.11.1",
     "@types/react": "18.3.11",
