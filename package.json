@@ -68,7 +68,7 @@
     "antd": "4.24.16",
     "axios": "1.7.7",
     "cheerio": "1.0.0-rc.12",
-    "electron-debug": "4.0.1",
+    "electron-debug": "4.1.0",
     "electron-settings": "4.0.4",
     "electron-updater": "6.3.9",
     "highlight.js": "11.10.0",
