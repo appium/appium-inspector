@@ -64,7 +64,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "2.3.0",
     "@tomjs/electron-devtools-installer": "2.3.2",
-    "@xmldom/xmldom": "0.9.4",
+    "@xmldom/xmldom": "0.9.5",
     "antd": "4.24.16",
     "axios": "1.7.7",
     "cheerio": "1.0.0-rc.12",
@@ -72,7 +72,7 @@
     "electron-settings": "4.0.4",
     "electron-updater": "6.3.9",
     "highlight.js": "11.10.0",
-    "i18next": "23.16.2",
+    "i18next": "23.16.4",
     "i18next-chained-backend": "4.6.2",
     "i18next-fs-backend": "2.3.2",
     "i18next-http-backend": "2.6.2",
@@ -92,10 +92,10 @@
     "eslint": "V9: need to wait for plugins to support it"
   },
   "devDependencies": {
-    "@appium/docutils": "1.0.22",
+    "@appium/docutils": "1.0.23",
     "@appium/eslint-config-appium-ts": "0.3.3",
     "@appium/fake-driver": "5.5.5",
-    "@appium/support": "5.1.5",
+    "@appium/support": "5.1.6",
     "@eslint/compat": "1.1.1",
     "@eslint/eslintrc": "3.1.0",
     "@eslint/js": "9.13.0",
