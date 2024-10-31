@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "2.3.0",
-    "@tomjs/electron-devtools-installer": "2.3.2",
+    "@tomjs/electron-devtools-installer": "2.4.0",
     "@xmldom/xmldom": "0.9.5",
     "antd": "4.24.16",
     "axios": "1.7.7",
