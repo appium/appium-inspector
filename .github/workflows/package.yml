@@ -9,8 +9,8 @@ on:
 jobs:
   build:
     strategy:
-        matrix:
-          image: [ubuntu-latest, macos-latest, windows-latest]
+      matrix:
+        image: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.image }}
 
     env:
