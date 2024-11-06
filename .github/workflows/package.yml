@@ -1,0 +1,25 @@
+name: Create packages
+
+on:
+  workflow_dispatch:
+  # push:
+  #   tags:
+  #     - '*'
+      
+jobs:
+  linux-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      - name: Install dependencies (Node.js)
+        run: npm ci
+      - name: Build electron app
+        run: npm run build:electron
+      - name: build package
+        run: npx electron-builder build --x64 --arm64 --publish never
+        
