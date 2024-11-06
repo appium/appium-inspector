@@ -13,6 +13,11 @@ jobs:
           image: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.image }}
 
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: true
+      CSC_LINK: ${{ secrets.CSC_LINK }}
+      CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js LTS
