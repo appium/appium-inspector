@@ -7,8 +7,12 @@ on:
   #     - '*'
 
 jobs:
-  linux-package:
-    runs-on: ubuntu-latest
+  build:
+    strategy:
+        matrix:
+          image: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.image }}
+
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js LTS
@@ -22,3 +26,8 @@ jobs:
         run: npm run build:electron
       - name: build package
         run: npx electron-builder build --x64 --arm64 --publish never
+      - name: Upload built packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-${{ matrix.image }}
+          path: release/
