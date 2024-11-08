@@ -2,13 +2,23 @@ name: Create packages
 
 on:
   workflow_dispatch:
-  # push:
-  #   tags:
-  #     - '*'
+  push:
+    tags:
+      - '*'
 
 jobs:
-  linux-package:
-    runs-on: ubuntu-latest
+  build:
+    strategy:
+      matrix:
+        image: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.image }}
+
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: true
+      CSC_LINK: ${{ secrets.CSC_LINK }}
+      CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js LTS
@@ -21,4 +31,9 @@ jobs:
       - name: Build electron app
         run: npm run build:electron
       - name: build package
-        run: npx electron-builder build --x64 --arm64 --publish never
+        run: npx electron-builder build --x64 --arm64 --publish always
+      - name: Upload built packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-${{ matrix.image }}
+          path: release/
