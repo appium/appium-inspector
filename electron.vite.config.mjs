@@ -46,6 +46,14 @@ export default defineConfig({
         },
       },
     },
+    optimizeDeps: {
+      include: ['i18next-fs-backend'],
+      esbuildOptions: {
+        supported: {
+          'top-level-await': true
+        },
+      },
+    },
     plugins: [react(), renderer()],
     resolve: {
       alias: {
