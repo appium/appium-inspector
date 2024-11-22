@@ -50,7 +50,7 @@ export default defineConfig({
       include: ['i18next-fs-backend'],
       esbuildOptions: {
         supported: {
-          'top-level-await': true
+          'top-level-await': true,
         },
       },
     },
