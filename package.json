@@ -74,7 +74,7 @@
     "highlight.js": "11.10.0",
     "i18next": "24.0.0",
     "i18next-chained-backend": "4.6.2",
-    "i18next-fs-backend": "2.5.0",
+    "i18next-fs-backend": "2.6.0",
     "i18next-http-backend": "3.0.1",
     "i18next-localstorage-backend": "4.2.0",
     "lodash": "4.17.21",
