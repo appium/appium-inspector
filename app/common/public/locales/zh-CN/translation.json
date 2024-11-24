@@ -211,7 +211,7 @@
   "Gestures": "Gestures",
   "Gesture Builder": "Gesture Builder",
   "Saved Gestures": "Saved Gestures",
-  "Create New Gesture": "",
+  "Create New Gesture": "Create New Gesture",
   "Upload Gesture File": "Upload Gesture File",
   "gesturesDescription": "Create, save, and execute custom gestures here. Gestures are identical to action chains in the W3C WebDriver Actions API.",
   "Session Information": "会话信息",
