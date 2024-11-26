@@ -100,7 +100,7 @@
     "@eslint/eslintrc": "3.2.0",
     "@eslint/js": "9.15.0",
     "@types/react": "18.3.12",
-    "@vitejs/plugin-react": "4.3.3",
+    "@vitejs/plugin-react": "4.3.4",
     "asyncbox": "3.0.0",
     "electron": "33.2.0",
     "electron-builder": "25.1.8",
