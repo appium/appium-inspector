@@ -14,10 +14,10 @@ the system buttons, which simulate the equivalent Android or iOS system function
 
 ![Android Buttons](./assets/images/header/system-buttons-android.png) ![iOS Buttons](./assets/images/header/system-buttons-ios.png)
 
--   Android: back / home / app switcher
--   iOS: home / Siri
-    -   The Siri button will open a prompt for input text, which will be used as the Siri command.
-        Please note that the command will not work if Siri is disabled.
+- Android: back / home / app switcher
+- iOS: home / Siri
+    - The Siri button will open a prompt for input text, which will be used as the Siri command.
+      Please note that the command will not work if Siri is disabled.
 
 ## Context Switcher
 
@@ -107,10 +107,10 @@ and translate them into code that can be used with various [Appium clients](http
 
 Interactions that can be recorded include:
 
--   Actions for a specific element (tap/send keys/clear)
--   Generic tap/swipe actions on the application screenshot
--   [Mobile device system actions](#device-system-buttons)
--   [Driver commands](./commands.md)
+- Actions for a specific element (tap/send keys/clear)
+- Generic tap/swipe actions on the application screenshot
+- [Mobile device system actions](#device-system-buttons)
+- [Driver commands](./commands.md)
 
 !!! note
 

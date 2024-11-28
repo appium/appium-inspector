@@ -22,10 +22,10 @@ Changing the name or value of any capability will automatically adjust the conte
 
 There are 4 options for the value type:
 
--   text
--   boolean
--   number
--   JSON object
+- text
+- boolean
+- number
+- JSON object
 
 Selecting a different option may change the value input field.
 
@@ -64,7 +64,7 @@ The Session Builder footer also contains a few items:
 
 ![Footer](assets/images/capability-builder/capability-builder-footer.png)
 
--   The _Capabilities Documentation_ link opens the [Appium documentation on capabilities](https://appium.io/docs/en/latest/guides/caps/)
--   The _Save As_ button allows saving the current capabilities as a new capability set for future use
-    (see [Saved Capability Sets](./saved-capability-sets.md) for more details)
--   The _Start Session_ button attempts to start an Inspector session using the current capabilities
+- The _Capabilities Documentation_ link opens the [Appium documentation on capabilities](https://appium.io/docs/en/latest/guides/caps/)
+- The _Save As_ button allows saving the current capabilities as a new capability set for future use
+  (see [Saved Capability Sets](./saved-capability-sets.md) for more details)
+- The _Start Session_ button attempts to start an Inspector session using the current capabilities
