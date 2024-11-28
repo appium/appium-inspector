@@ -21,10 +21,10 @@ for ease of navigation, but can be revealed with the [Toggle Attributes button](
 
 All elements in the XML tree are interactable, and clicking on one causes 3 actions:
 
--   The element entry in the XML tree is highlighted
--   The element highlighter appears in the [Screenshot panel](./screenshot.md) (if
-    [Element Mode](./screenshot.md#interaction-mode) is selected)
--   The element details are shown in the [Selected Element panel](#selected-element)
+- The element entry in the XML tree is highlighted
+- The element highlighter appears in the [Screenshot panel](./screenshot.md) (if
+  [Element Mode](./screenshot.md#interaction-mode) is selected)
+- The element details are shown in the [Selected Element panel](#selected-element)
 
 Elements that have one or more child elements have an arrow on their left side, which can be clicked
 to toggle visibility of such child elements.
@@ -36,12 +36,12 @@ For supported Appium drivers, the maximum depth of the returned XML tree can be 
 
 By default, the source XML is only updated when a refresh is requested. This can happen when:
 
--   interacting with an element (tap/send keys/clear)
--   interacting with the [screenshot](./screenshot.md) (tap/swipe)
--   [simulating system actions](./header.md#device-system-buttons)
--   [executing driver commands](./commands.md) (depends on the command)
--   [executing custom gestures](./gestures.md)
--   [pressing the Refresh button](./header.md#refresh-source-screenshot)
+- interacting with an element (tap/send keys/clear)
+- interacting with the [screenshot](./screenshot.md) (tap/swipe)
+- [simulating system actions](./header.md#device-system-buttons)
+- [executing driver commands](./commands.md) (depends on the command)
+- [executing custom gestures](./gestures.md)
+- [pressing the Refresh button](./header.md#refresh-source-screenshot)
 
 Note that interacting with the application outside of the Inspector will _not_ cause the source XML
 to refresh.
@@ -80,9 +80,9 @@ becomes populated once an element is selected.
 
 In order to populate the panel, an element can be selected in one of the following ways:
 
--   Selecting an entry in the [Application Source](#application-source)
--   Selecting a highlighter in the [Screenshot panel](./screenshot.md)
--   Clicking the [Reveal Element in Source button in the Search Results](./header.md#search-for-element)
+- Selecting an entry in the [Application Source](#application-source)
+- Selecting a highlighter in the [Screenshot panel](./screenshot.md)
+- Clicking the [Reveal Element in Source button in the Search Results](./header.md#search-for-element)
 
 The panel can be divided into 3 parts: element action buttons, suggested locators, and element
 attributes.

@@ -25,9 +25,9 @@ it is possible to automatically download and install the latest version.
 
 Updating is supported for the following application formats:
 
--   macOS: `.dmg`
--   Windows: `.exe` installer
--   Linux: `.AppImage`
+- macOS: `.dmg`
+- Windows: `.exe` installer
+- Linux: `.AppImage`
 
 ## Open/Save Session
 
