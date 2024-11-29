@@ -62,7 +62,7 @@
     "cheerio": "V1: requires Node 18"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "2.3.0",
+    "@reduxjs/toolkit": "2.4.0",
     "@tomjs/electron-devtools-installer": "2.4.0",
     "@xmldom/xmldom": "0.9.5",
     "antd": "4.24.16",
