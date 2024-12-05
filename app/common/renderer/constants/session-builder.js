@@ -60,6 +60,8 @@ export const STANDARD_W3C_CAPS = [
   'proxy',
   'setWindowRect',
   'timeouts',
+  'strictFileInteractability',
   'unhandledPromptBehavior',
+  'userAgent',
   'webSocketUrl', // WebDriver BiDi
 ];
