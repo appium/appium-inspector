@@ -64,7 +64,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "2.4.0",
     "@tomjs/electron-devtools-installer": "2.4.0",
-    "@xmldom/xmldom": "0.9.5",
+    "@xmldom/xmldom": "0.9.6",
     "antd": "4.24.16",
     "axios": "1.7.9",
     "cheerio": "1.0.0-rc.12",
