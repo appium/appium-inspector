@@ -59,7 +59,9 @@
   },
   "//dependencies": {
     "antd": "V5: significant rewrite required",
-    "cheerio": "V1: requires Node 18"
+    "cheerio": "V1: requires Node 18",
+    "react": "V19: requires antd 5",
+    "web2driver": "3.0.5: does not load"
   },
   "dependencies": {
     "@reduxjs/toolkit": "2.4.0",
@@ -89,7 +91,9 @@
     "xpath": "0.0.34"
   },
   "//devDependencies": {
-    "eslint": "V9: need to wait for plugins to support it"
+    "@eslint/compat": "1.2.0: peer dependency on ESLint 9",
+    "eslint": "V9: need support in Appium's config",
+    "vite": "V6: need support in electron-vite"
   },
   "devDependencies": {
     "@appium/docutils": "1.0.26",
