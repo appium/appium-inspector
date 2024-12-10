@@ -1,6 +1,6 @@
 import {Suspense} from 'react';
 import {Provider} from 'react-redux';
-import {MemoryRouter, Route, Routes} from 'react-router-dom';
+import {MemoryRouter, Route, Routes} from 'react-router';
 
 import Spinner from './components/Spinner/Spinner.jsx';
 import InspectorPage from './containers/InspectorPage';

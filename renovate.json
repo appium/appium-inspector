@@ -12,8 +12,13 @@
       "automerge": true
     },
     {
-      "matchPackageNames": ["antd", "cheerio", "eslint"],
+      "matchPackageNames": ["antd", "cheerio", "eslint", "react", "vite"],
       "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["@eslint/compat", "web2driver"],
+      "matchUpdateTypes": ["minor", "patch"],
       "enabled": false
     },
     {

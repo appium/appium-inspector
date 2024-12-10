@@ -12,19 +12,19 @@ tab shows the Saved Gestures screen.
 The default saved gestures list is empty, but can be populated by either manually creating and saving
 new gestures, or importing gesture files in JSON format.
 
--   New gestures can be created by pressing the `+` button in the bottom left, which will open the
-    [Gesture Builder](#gesture-builder) screen.
--   Gesture files in JSON format can be uploaded on clicking the `upload icon`. This opens a file
-    browser window, allowing multiple gestures to be uploaded simultaneously.
+- New gestures can be created by pressing the `+` button in the bottom left, which will open the
+  [Gesture Builder](#gesture-builder) screen.
+- Gesture files in JSON format can be uploaded on clicking the `upload icon`. This opens a file
+  browser window, allowing multiple gestures to be uploaded simultaneously.
 
 Once a gesture has been created and saved, hovering over its entry in the saved gestures list will
 show its actions as an overlay over the [screenshot](./screenshot.md). There are also 4
 buttons for each gesture:
 
--   Execute the gesture
--   Edit the gesture (will open it in the [Gesture Builder](#gesture-builder))
--   Download the gesture as a JSON file
--   Delete the gesture
+- Execute the gesture
+- Edit the gesture (will open it in the [Gesture Builder](#gesture-builder))
+- Download the gesture as a JSON file
+- Delete the gesture
 
 ## Gesture Builder
 
@@ -37,10 +37,10 @@ while the gesture builder is opened.
 
 The builder screen can be divided into 4 parts:
 
--   Header
--   Gesture timeline
--   Pointer tabs
--   Pointer actions
+- Header
+- Gesture timeline
+- Pointer tabs
+- Pointer actions
 
 ### Header
 
@@ -48,13 +48,13 @@ The header lists general gesture information, settings, and actions.
 
 ![Gesture Editor Header](./assets/images/gestures/gesture-editor-header.png)
 
--   The gesture title and description can be clicked and edited
--   The 2-button group allows to set the X/Y coordinate units used for [Move pointer actions](#move):
-    either the default relative (percentage) or absolute (pixels)
--   The _Play_ button executes the gesture
--   The _Save As_ button allows to save the gesture using the specified gesture title
--   The _Save_ button is only enabled when editing an existing gesture, and it overwrites the previously
-    saved gesture details with the current ones
+- The gesture title and description can be clicked and edited
+- The 2-button group allows to set the X/Y coordinate units used for [Move pointer actions](#move):
+  either the default relative (percentage) or absolute (pixels)
+- The _Play_ button executes the gesture
+- The _Save As_ button allows to save the gesture using the specified gesture title
+- The _Save_ button is only enabled when editing an existing gesture, and it overwrites the previously
+  saved gesture details with the current ones
 
 ### Gesture Timeline
 
