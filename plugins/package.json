@@ -23,6 +23,11 @@
     "peerDependencies": {
       "appium": "^2.5.4"
     },
+    "files": [
+        "index.js",
+        "package.json",
+        "dist-browser"
+    ],
     "dependencies": {},
     "engines": {
       "node": ">=20.x",

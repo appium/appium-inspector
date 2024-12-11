@@ -8,7 +8,7 @@ class AppiumInspectorPlugin extends BasePlugin {
   }
 
   static async openInspector(req, res) {
-    // move 'dist-browser' into this directory
+    // move 'dist-browser' into this directory and publish it
     const reqPath = req.path === '/inspector' ? 'index.html' : req.path.substring(10);
     res.sendFile(reqPath, { root: `${dirname(fileURLToPath(import.meta.url))}/dist-browser` });
   }
