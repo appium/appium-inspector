@@ -20,17 +20,10 @@
     "homepage": "https://github.com/appium/appium-inspector",
     "main": "index.js",
     "type": "module",
-    "prettier": {
-      "bracketSpacing": false,
-      "printWidth": 100,
-      "singleQuote": true
-    },
     "peerDependencies": {
       "appium": "^2.5.4"
     },
-    "dependencies": {
-      "lodash": "4.17.21"
-    },
+    "dependencies": {},
     "engines": {
       "node": ">=20.x",
       "npm": ">=10.x"

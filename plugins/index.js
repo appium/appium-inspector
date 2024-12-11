@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 import {BasePlugin} from 'appium/plugin.js';
