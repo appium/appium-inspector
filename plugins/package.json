@@ -1,5 +1,5 @@
 {
-    "name": "appium-inspector",
+    "name": "appium-inspector-plugin",
     "version": "2024.12.1",
     "description": "An app inspector for use with an Appium server",
     "repository": {
