@@ -14,15 +14,13 @@ class AppiumInspectorPlugin extends BasePlugin {
     if (req.path === '/inspector') {
       res.sendFile('index.html', { root: "/Users/kazu/github/appium-inspector/dist-browser" });
     } else {
-      res.sendFile(req.path, { root: "/Users/kazu/github/appium-inspector/dist-browser" });
+      res.sendFile(req.path.substring(10), { root: "/Users/kazu/github/appium-inspector/dist-browser" });
     }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars,require-await
   static async updateServer(expressApp, httpServer, cliArgs) {
     expressApp.all(/\/inspector.*/, AppiumInspectorPlugin.openInspector);
-    expressApp.all(/\/assets\/.*/, AppiumInspectorPlugin.openInspector);
-    expressApp.all(/\/locales\/.*/, AppiumInspectorPlugin.openInspector);
   }
 }
 
