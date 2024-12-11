@@ -18,7 +18,7 @@
     "appium"
   ],
   "homepage": "https://github.com/appium/appium-inspector",
-  "main": "./dist/plugins/plugin.js",
+  "main": "./dist/main/main.js",
   "type": "module",
   "scripts": {
     "lint": "eslint . --fix",
@@ -63,9 +63,6 @@
     "cheerio": "V1: requires Node 18",
     "react": "V19: requires antd 5",
     "web2driver": "3.0.5: does not load"
-  },
-  "peerDependencies": {
-    "appium": "^2.5.4"
   },
   "dependencies": {
     "@reduxjs/toolkit": "2.4.0",
@@ -127,9 +124,5 @@
   "engines": {
     "node": ">=20.x",
     "npm": ">=10.x"
-  },
-  "appium": {
-    "pluginName": "appium-inspector",
-    "mainClass": "AppiumInspectorPlugin"
   }
 }

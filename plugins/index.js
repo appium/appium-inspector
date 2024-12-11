@@ -2,7 +2,6 @@
 /* eslint-disable no-case-declarations */
 
 import _ from 'lodash';
-import {promises as fs} from 'fs';
 import {BasePlugin} from 'appium/plugin.js';
 
 class AppiumInspectorPlugin extends BasePlugin {
