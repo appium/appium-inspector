@@ -8,7 +8,8 @@ class AppiumInspectorPlugin extends BasePlugin {
   }
 
   static async openInspector(req, res) {
-    // move 'dist-browser' into this directory and publish it
+    // move 'dist-browser' into this directory and publish it.
+    // Then, 'appium plugin install --source=local /Users/kazu/github/appium-inspector/plugins' or local
     const reqPath = req.path === '/inspector' ? 'index.html' : req.path.substring(10);
     res.sendFile(reqPath, { root: `${dirname(fileURLToPath(import.meta.url))}/dist-browser` });
   }
