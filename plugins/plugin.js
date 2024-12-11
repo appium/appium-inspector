@@ -11,11 +11,8 @@ class AppiumInspectorPlugin extends BasePlugin {
   }
 
   static async openInspector(req, res) {
-    if (req.path === '/inspector') {
-      res.sendFile('index.html', { root: "/Users/kazu/github/appium-inspector/dist-browser" });
-    } else {
-      res.sendFile(req.path.substring(10), { root: "/Users/kazu/github/appium-inspector/dist-browser" });
-    }
+    const reqPath = req.path === '/inspector' ? 'index.html' : req.path.substring(10);
+    res.sendFile(reqPath, { root: "/Users/kazu/github/appium-inspector/dist-browser" });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars,require-await
