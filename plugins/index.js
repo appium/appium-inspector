@@ -1,7 +1,6 @@
-// @ts-check
-/* eslint-disable no-case-declarations */
-
 import _ from 'lodash';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 import {BasePlugin} from 'appium/plugin.js';
 
 class AppiumInspectorPlugin extends BasePlugin {
@@ -11,10 +10,9 @@ class AppiumInspectorPlugin extends BasePlugin {
 
   static async openInspector(req, res) {
     const reqPath = req.path === '/inspector' ? 'index.html' : req.path.substring(10);
-    res.sendFile(reqPath, { root: "/Users/kazu/github/appium-inspector/dist-browser" });
+    res.sendFile(reqPath, { root: `${dirname(fileURLToPath(import.meta.url))}/dist-browser` });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars,require-await
   static async updateServer(expressApp, httpServer, cliArgs) {
     expressApp.all(/\/inspector.*/, AppiumInspectorPlugin.openInspector);
   }
