@@ -104,7 +104,7 @@
     "@eslint/compat": "1.1.1",
     "@eslint/eslintrc": "3.2.0",
     "@eslint/js": "9.17.0",
-    "@types/react": "18.3.16",
+    "@types/react": "18.3.17",
     "@vitejs/plugin-react": "4.3.4",
     "asyncbox": "3.0.0",
     "electron": "33.2.1",
