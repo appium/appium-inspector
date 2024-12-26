@@ -74,7 +74,7 @@
     "electron-debug": "4.1.0",
     "electron-settings": "4.0.4",
     "electron-updater": "6.3.9",
-    "highlight.js": "11.11.0",
+    "highlight.js": "11.11.1",
     "i18next": "24.2.0",
     "i18next-chained-backend": "4.6.2",
     "i18next-fs-backend": "2.6.0",
