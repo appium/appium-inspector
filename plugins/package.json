@@ -26,7 +26,8 @@
   "files": [
     "index.js",
     "package.json",
-    "dist-browser"
+    "dist-browser",
+    "README.md"
   ],
   "dependencies": {},
   "devDependencies": {
