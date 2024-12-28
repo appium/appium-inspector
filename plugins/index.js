@@ -1,6 +1,7 @@
-import { fileURLToPath } from 'node:url';
-import { dirname } from 'node:path';
-import {BasePlugin} from 'appium/plugin.js';
+import {dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+import {BasePlugin} from '@appium/base-plugin';
 import express from 'express';
 import path from 'path';
 class AppiumInspectorPlugin extends BasePlugin {
@@ -10,9 +11,10 @@ class AppiumInspectorPlugin extends BasePlugin {
 
   static async openInspector(req, res) {
     const reqPath = req.path === '/inspector' ? 'index.html' : req.path.substring(10);
-    res.sendFile(reqPath, { root: `${dirname(fileURLToPath(import.meta.url))}/dist-browser` });
+    res.sendFile(reqPath, {root: `${dirname(fileURLToPath(import.meta.url))}/dist-browser`});
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static async updateServer(expressApp, httpServer, cliArgs) {
     const staticFilesRouter = express.Router();
     const PUBLIC_DICRECTORY = getPublicDirectory();
