@@ -1,27 +1,45 @@
 # Appium Inspector Plugin
 
-This package is https://github.com/appium/appium-inspector as an Appium plugin.
+A plugin that integrates the [Appium Inspector](https://github.com/appium/appium-inspector) directly into your Appium server installation, providing a web-based interface for inspecting and interacting with your application under test.
 
-```
+## Features
+
+- Seamless integration with Appium server
+- Web-based interface accessible via `/inspector` endpoint
+- Full feature parity with standalone Appium Inspector
+- No need for separate Inspector installation
+
+## Installation
+
+### Current Version
+
+Install the plugin using one of the following methods:
+
+```bash
+# Install from local directory
 appium plugin install --source=local /path/to/appium-inspector/plugins
-```
 
-```
+# Install from npm
 appium plugin install --source=npm appium-inspector-plugin
 ```
 
-will be:
+### Coming in Appium 3
 
-```
+Installation will be simplified to:
+
+```bash
 appium plugin install inspector
 ```
 
-in Appium 3.
+## Usage
 
-Then, running Appium with:
+1. Start Appium server with the inspector plugin enabled:
 
+```bash
+appium --use-plugins=inspector --allow-cors
 ```
-appium --use-plugins=inspector
-```
 
-let `/inspector` endpoint to provide appium inspector.
+2. Access the Inspector interface by navigating to:
+```
+http://localhost:4723/inspector
+```
