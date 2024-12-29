@@ -34,7 +34,7 @@
     "build": "npm run build:browser && npm run build:electron",
     "build:browser": "vite build",
     "build:browser:url": "vite build --base $PUBLIC_URL",
-    "build:plugin": "npm run build:browser && mkdir plugins/dist-browser && cp -r dist-browser/ plugins/dist-browser/",
+    "build:plugin": "vite build --base /inspector && rimraf plugins/dist-browser && mkdir plugins/dist-browser && cp -r dist-browser/ plugins/dist-browser/",
     "build:electron": "electron-vite build",
     "preview:browser": "npm run build:browser && vite preview",
     "preview:electron": "electron-vite preview",
