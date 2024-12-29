@@ -18,7 +18,6 @@ appium plugin install inspector
 
 in Appium 3.
 
-
 Then, running Appium with:
 
 ```
