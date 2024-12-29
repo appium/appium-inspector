@@ -24,9 +24,5 @@ class AppiumInspectorPlugin extends BasePlugin {
   }
 }
 
-function getPublicDirectory() {
-  return PUBLISH_ROOT_DIR;
-}
-
 export {AppiumInspectorPlugin};
 export default AppiumInspectorPlugin;
