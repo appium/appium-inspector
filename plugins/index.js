@@ -5,7 +5,7 @@ import {BasePlugin} from '@appium/base-plugin';
 
 const PLUGIN_ROOT_PATH = '/inspector';
 const INDEX_HTML = 'index.html';
-const PUBLISH_ROOT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'dist-browser');
+const ROOT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'dist-browser');
 
 class AppiumInspectorPlugin extends BasePlugin {
   constructor(name, cliArgs) {
@@ -14,7 +14,7 @@ class AppiumInspectorPlugin extends BasePlugin {
 
   static async openInspector(req, res) {
     const reqPath = req.path === PLUGIN_ROOT_PATH ? INDEX_HTML : req.path.substring(10);
-    res.sendFile(reqPath, {root: PUBLISH_ROOT_DIR});
+    res.sendFile(reqPath, {root: ROOT_DIR});
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
