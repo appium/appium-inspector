@@ -40,6 +40,7 @@ appium --use-plugins=inspector --allow-cors
 ```
 
 2. Access the Inspector interface by navigating to:
+
 ```
 http://localhost:4723/inspector
 ```
