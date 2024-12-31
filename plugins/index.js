@@ -38,6 +38,7 @@ class AppiumInspectorPlugin extends BasePlugin {
    * @param {Record<string, unknown>} cliArgs - Command line arguments
    * @returns {Promise<void>}
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static async updateServer(expressApp, httpServer, cliArgs) {
     // Handle both /inspector and /inspector/* paths
     expressApp.all(['/inspector', '/inspector/*'], AppiumInspectorPlugin.openInspector);

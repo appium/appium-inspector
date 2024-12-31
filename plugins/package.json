@@ -34,9 +34,7 @@
     "dist-browser",
     "README.md"
   ],
-  "dependencies": {
-    "@appium/base-plugin": "^2.2.50"
-  },
+  "dependencies": {},
   "devDependencies": {},
   "engines": {
     "node": ">=20.x",
