@@ -20,6 +20,11 @@
   "homepage": "https://github.com/appium/appium-inspector",
   "main": "index.js",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./index.js"
+    }
+  },
   "peerDependencies": {
     "appium": "^2.0.0"
   },
@@ -29,10 +34,10 @@
     "dist-browser",
     "README.md"
   ],
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "@appium/base-plugin": "^2.2.50"
   },
+  "devDependencies": {},
   "engines": {
     "node": ">=20.x",
     "npm": ">=10.x"
