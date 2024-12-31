@@ -15,6 +15,7 @@ import {
 import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip} from 'antd';
 import {debounce} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
+import styles from './Inspector.module.css';
 import {useNavigate} from 'react-router';
 
 import {BUTTON} from '../../constants/antd-types';
@@ -30,7 +31,6 @@ import {downloadFile} from '../../utils/file-handling';
 import Commands from './Commands.jsx';
 import GestureEditor from './GestureEditor.jsx';
 import HeaderButtons from './HeaderButtons.jsx';
-import InspectorStyles from './Inspector.module.css';
 import Recorder from './Recorder.jsx';
 import SavedGestures from './SavedGestures.jsx';
 import Screenshot from './Screenshot.jsx';
@@ -221,7 +221,7 @@ const Inspector = (props) => {
   }, [showKeepAlivePrompt]);
 
   const screenShotControls = (
-    <div className={InspectorStyles['screenshot-controls']}>
+    <div className={styles['screenshot-controls']}>
       <Space size="middle">
         <Tooltip
           title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')}
@@ -263,10 +263,10 @@ const Inspector = (props) => {
   );
 
   const main = (
-    <div className={InspectorStyles['inspector-main']}>
+      <div className={styles['inspector-main']}>
       <div
         id="screenshotContainer"
-        className={InspectorStyles['screenshot-container']}
+        className={styles['screenshot-container']}
         ref={screenshotContainerEl}
       >
         {screenShotControls}
@@ -274,11 +274,11 @@ const Inspector = (props) => {
         {screenshotError && t('couldNotObtainScreenshot', {screenshotError})}
         {!showScreenshot && (
           <Spin size="large" spinning={true}>
-            <div className={InspectorStyles.screenshotBox} />
+            <div className={styles.screenshotBox} />
           </Spin>
         )}
       </div>
-      <div id="sourceTreeContainer" className={InspectorStyles['interaction-tab-container']}>
+      <div id="sourceTreeContainer" className={styles['interaction-tab-container']}>
         <Tabs
           activeKey={selectedInspectorTab}
           size="small"
@@ -331,7 +331,7 @@ const Inspector = (props) => {
                   </div>
                   <div
                     id="selectedElementContainer"
-                    className={`${InspectorStyles['interaction-tab-container']} ${InspectorStyles['element-detail-container']} action-col`}
+                    className={`${styles['interaction-tab-container']} ${styles['element-detail-container']} action-col`}
                   >
                     <Card
                       title={
@@ -339,7 +339,7 @@ const Inspector = (props) => {
                           <TagOutlined /> {t('selectedElement')}
                         </span>
                       }
-                      className={InspectorStyles['selected-element-card']}
+                      className={styles['selected-element-card']}
                     >
                       {selectedElement.path && <SelectedElement {...props} />}
                       {!selectedElement.path && <i>{t('selectElementInSource')}</i>}
@@ -359,7 +359,7 @@ const Inspector = (props) => {
                       <ThunderboltOutlined /> {t('Execute Commands')}
                     </span>
                   }
-                  className={InspectorStyles['interaction-tab-card']}
+                  className={styles['interaction-tab-card']}
                 >
                   <Commands {...props} />
                 </Card>
@@ -376,7 +376,7 @@ const Inspector = (props) => {
                       <HighlightOutlined /> {t('Gesture Builder')}
                     </span>
                   }
-                  className={InspectorStyles['interaction-tab-card']}
+                  className={styles['interaction-tab-card']}
                 >
                   <GestureEditor {...props} />
                 </Card>
@@ -387,7 +387,7 @@ const Inspector = (props) => {
                       <HighlightOutlined /> {t('Saved Gestures')}
                     </span>
                   }
-                  className={InspectorStyles['interaction-tab-card']}
+                  className={styles['interaction-tab-card']}
                 >
                   <SavedGestures {...props} />
                 </Card>
@@ -410,7 +410,7 @@ const Inspector = (props) => {
                       <InfoCircleOutlined /> {t('Session Information')}
                     </span>
                   }
-                  className={InspectorStyles['interaction-tab-card']}
+                  className={styles['interaction-tab-card']}
                 >
                   <SessionInfo {...props} />
                 </Card>
@@ -423,7 +423,7 @@ const Inspector = (props) => {
   );
 
   return (
-    <div className={InspectorStyles['inspector-container']}>
+    <div className={styles['inspector-container']}>
       <HeaderButtons quitCurrentSession={quitCurrentSession} {...props} />
       {main}
       <Modal

@@ -116,6 +116,9 @@ export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
 export const TOGGLE_REFRESHING_STATE = 'TOGGLE_REFRESHING_STATE';
 
 export const SET_GESTURE_UPLOAD_ERROR = 'SET_GESTURE_UPLOAD_ERROR';
+export const SET_ENVIRONMENT_VARIABLES = 'SET_ENVIRONMENT_VARIABLES';
+export const ADD_ENVIRONMENT_VARIABLE = 'ADD_ENVIRONMENT_VARIABLE';
+export const DELETE_ENVIRONMENT_VARIABLE = 'DELETE_ENVIRONMENT_VARIABLE';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -916,6 +919,24 @@ export function setAwaitingMjpegStream(isAwaiting) {
 export function setGestureUploadErrors(errors) {
   return (dispatch) => {
     dispatch({type: SET_GESTURE_UPLOAD_ERROR, errors});
+  };
+}
+
+export function setEnvironmentVariables(envVars) {
+  return (dispatch) => {
+    dispatch({type: SET_ENVIRONMENT_VARIABLES, envVars});
+  };
+}
+
+export function addEnvironmentVariable(key, value) {
+  return (dispatch) => {
+    dispatch({type: ADD_ENVIRONMENT_VARIABLE, key, value});
+  };
+}
+
+export function deleteEnvironmentVariable(key) {
+  return (dispatch) => {
+    dispatch({type: DELETE_ENVIRONMENT_VARIABLE, key});
   };
 }
 

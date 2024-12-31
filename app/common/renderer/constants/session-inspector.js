@@ -42,4 +42,5 @@ export const INSPECTOR_TABS = {
   GESTURES: 'gestures',
   RECORDER: 'recorder',
   SESSION_INFO: 'sessionInfo',
+  ENV_VARS: 'envVars',
 };

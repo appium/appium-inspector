@@ -1,0 +1,734 @@
+.inspector-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.inspector-toolbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+  background: linear-gradient(180deg, #e2e2e2, #e0e0e0, 10%, #d6d6d6, 50%, #cacaca);
+  border-top: 1px solid #f5f4f5;
+  border-bottom: 1px solid #a5a4a5;
+  -webkit-app-region: drag;
+}
+
+.inspector-toolbar .ant-btn {
+  height: auto !important;
+  width: auto !important;
+}
+
+.inspector-toolbar :global(.ant-space-item) {
+  -webkit-app-region: no-drag;
+}
+
+.inspector-main {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  padding: 1em;
+  max-width: 100%;
+  height: calc(100% - 50px);
+}
+
+.inspector-main .screenshot-container {
+  max-width: 500px;
+  max-height: calc(100% - 50px);
+  flex-grow: 1;
+  flex-shrink: 2;
+  flex-basis: 400px;
+}
+
+.screenshot-container .screenshot-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 38px;
+  margin-bottom: 12px;
+}
+
+.inspector-main .screenshot-container img {
+  max-width: 100%;
+  max-height: 100%;
+  box-shadow: 0px 0px 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.inspector-main .screenshot-container .screenshotBox {
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  position: absolute;
+  overflow: hidden;
+}
+
+.inspector-main .interaction-tab-container :global(.ant-tabs-tabpane) {
+  height: 100%;
+}
+
+.inspector-main .interaction-tab-container {
+  position: relative;
+  flex-grow: 1;
+  flex-basis: 550px;
+  min-width: 380px;
+  padding-left: 1em;
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.inspector-main :global(.ant-card-head) {
+  max-height: 48px;
+  padding: 0px 12px;
+}
+
+.inspector-main :global(.ant-card-head-wrapper) {
+  max-height: 48px;
+}
+
+.inspector-main :global(.ant-card-body) {
+  height: calc(100% - 48px);
+  padding: 12px;
+  scrollbar-width: none; /* -webkit-scrollbar for Firefox */
+}
+
+.inspector-main .interaction-tab-container :global(.ant-tabs) {
+  height: 100%;
+}
+
+.inspector-main .interaction-tab-container :global(.ant-tabs-content) {
+  height: 100%;
+}
+
+.inspector-main .interaction-tab-container :global(.action-row) {
+  display: flex;
+  height: 100%;
+}
+
+.inspector-main .interaction-tab-container :global(.action-col) {
+  min-width: 50%;
+  max-width: 50%;
+}
+
+.inspector-main .interaction-tab-container :global(.ant-card) {
+  height: 100%;
+}
+
+.inspector-main .tree-container {
+  height: 100%;
+  overflow: auto;
+}
+
+.session-info-table {
+  margin-right: -1em;
+}
+
+.session-code-box {
+  margin-top: 1em;
+}
+
+.session-inner-table,
+.session-inner-table :global(.ant-table) {
+  width: 102%;
+  margin-left: -32px;
+}
+
+.session-inner-table :global(.ant-table-body)::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+
+.session-inner-table :global(.ant-table-body)::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.inspector-main .interaction-tab-container .scroll-buttons {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-left: 1em;
+  padding-bottom: 1em;
+}
+
+.inspector-main .interaction-tab-container .scroll-buttons :global(button) {
+  margin: 1em;
+}
+
+.inspector-main .interaction-tab-container .scroll-buttons .scroll-right {
+  float: right;
+}
+
+._inspector-main_0387c .ant-card-body {
+  height: 100%;
+  padding: 12px;
+}
+
+.inspector-main .interaction-tab-card :global(.ant-card-body) {
+  overflow: scroll;
+}
+
+.inspector-main .interaction-tab-card {
+  flex: 2;
+}
+
+.inspector-main :global(.ant-card-body::-webkit-scrollbar) {
+  background: transparent;
+  width: 14px;
+}
+
+.inspector-main .interaction-tab-container .interaction-tab-card {
+  height: 100%;
+}
+
+.highlighter-box {
+  position: absolute;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.highlighter-box.inspected-element-box div {
+  background-color: rgb(90, 90, 178);
+  visibility: hidden;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.highlighter-box.hovered-element-box div {
+  background-color: yellow;
+  visibility: hidden;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.highlighter-box.inspected-element-box.hovered-element-box div {
+  background-color: rgb(100, 255, 100);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.highlighter-box.hovered-element-box div,
+.highlighter-box.inspected-element-box div {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  visibility: visible;
+}
+
+.centroid-box {
+  width: 2.2vh;
+  height: 2.2vh;
+  border-style: solid;
+  border-color: #ff4141;
+  border-width: 2px;
+  position: absolute;
+  overflow: hidden;
+  cursor: pointer;
+  visibility: visible;
+  transform: translate(-50%, -50%);
+}
+
+.centroid-box.centroid {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.centroid-box.centroid.inspected-element-box div {
+  background-color: blue;
+  opacity: 0.5;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease-in-out,
+    background-color 0.2s ease-in-out;
+}
+
+.centroid-box.centroid.hovered-element-box div {
+  background-color: #ff0000;
+  opacity: 0.5;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease-in-out,
+    background-color 0.2s ease-in-out;
+}
+
+.centroid-box.centroid.inspected-element-box.hovered-element-box div {
+  background-color: green;
+  opacity: 0.5;
+  transition:
+    opacity 0.2s ease-in-out,
+    background-color 0.2s ease-in-out;
+}
+
+.centroid-box.centroid.hovered-element-box div,
+.centroid-box.centroid.inspected-element-box div {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  visibility: visible;
+}
+
+.centroid-box.overlap {
+  border-style: dashed;
+  border-color: #178b00;
+  z-index: 4;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.centroid-box.overlap.inspected-element-box div {
+  background-color: blue;
+  opacity: 0.5;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease-in-out,
+    background-color 0.2s ease-in-out;
+}
+
+.centroid-box.overlap.hovered-element-box div {
+  background-color: #178b00;
+  opacity: 0.5;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease-in-out,
+    background-color 0.2s ease-in-out;
+}
+
+.centroid-box.overlap.inspected-element-box.hovered-element-box div {
+  background-color: rgb(113, 253, 113);
+  opacity: 0.5;
+  transition:
+    opacity 0.2s ease-in-out,
+    background-color 0.2s ease-in-out;
+}
+
+.centroid-box.overlap.hovered-element-box div,
+.centroid-box.overlap.inspected-element-box div {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  visibility: visible;
+}
+
+.centroid-box.expand {
+  z-index: 3;
+  background-color: #ffffff;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.plus-minus {
+  position: relative;
+  top: -0.8vh;
+  text-align: center;
+  font-size: 2vh;
+  font-weight: 800;
+  color: #ff4141;
+  opacity: 1;
+  transition:
+    opacity 0.2s ease-in-out,
+    background-color 0.2s ease-in-out;
+}
+
+.centroid-box.expand.inspected-element-box div {
+  background-color: rgb(62, 57, 57);
+  transition: background-color 0.2s ease-in-out;
+  visibility: hidden;
+}
+
+.centroid-box.expand.hovered-element-box div {
+  background-color: #2f2f2f;
+  transition: background-color 0.2s ease-in-out;
+  visibility: hidden;
+}
+
+.centroid-box.expand.inspected-element-box.hovered-element-box div {
+  background-color: rgb(255, 133, 133);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.centroid-box.expand.hovered-element-box div,
+.centroid-box.expand.inspected-element-box div {
+  position: relative;
+  height: 150%;
+  width: 100%;
+  visibility: visible;
+}
+
+.custom-button-icon {
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.wide-tooltip {
+  max-width: 400px;
+}
+
+.contexts-custom-btn {
+  height: 30px;
+  width: 30px;
+  color: #ffffff;
+  margin-top: 1px;
+  padding: 3px 0 0 7px;
+}
+
+.no-contexts-info-icon {
+  background-color: #faad14;
+}
+
+.contexts-info-icon {
+  background-color: #1890ff;
+}
+
+.header-context-selector {
+  width: 350px;
+}
+
+.selectedElemActions {
+  gap: 8px;
+}
+
+.elementKeyInputActions {
+  max-width: 300px;
+  flex: 1;
+}
+
+.inspector-main #selectedElementContainer {
+  padding-bottom: 0px;
+}
+
+.selected-element-table-cells {
+  word-wrap: break-all;
+  word-break: break-all;
+}
+
+.element-cell-copy {
+  cursor: pointer;
+}
+
+.selected-element-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.selected-element-card :global(.ant-card-body) {
+  flex: 1;
+  overflow: auto;
+}
+
+.selectedElemInfoMessage {
+  justify-content: center;
+}
+
+.selectedElemContentRow {
+  display: block;
+}
+
+.sourceTag {
+  color: #7d2020;
+  font-weight: normal;
+}
+
+.sourceAttrName {
+  color: #864da1;
+  font-style: italic;
+}
+
+.no-recorded-actions {
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+.recorded-code {
+  height: 100%;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.framework-dropdown {
+  width: 150px;
+}
+
+.searchResultsList {
+  width: 100%;
+  flex: 1;
+  min-height: 24px;
+  max-height: 150px;
+  overflow: auto;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.searchResultsList :global(.ant-list-item) {
+  padding: 4px 6px !important;
+  height: 25px;
+  text-align: left;
+}
+
+.searchResultsSelectedItem {
+  background-color: #bae7ff;
+}
+
+.searchResultsActions {
+  width: 350px;
+}
+
+.searchResultsKeyInput,
+.elementKeyInput {
+  height: 32px;
+  width: calc(100% - 64px);
+}
+
+.element-count-container {
+  margin-top: 0.5em;
+  margin-left: 0.5em;
+}
+
+.locatorStrategyBtn {
+  margin-top: -1px;
+  min-width: 25%;
+  text-align: center;
+}
+
+.locatorSelectorTextArea {
+  width: 100%;
+}
+
+.coordinatesContainer {
+  position: absolute;
+  background: rgba(255, 250, 205, 0.8);
+  z-index: 100;
+  padding: 2px;
+}
+
+.swipeSvg {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.swipeSvg line {
+  stroke-width: 15;
+  stroke: rgba(255, 153, 153, 0.8);
+  stroke-linecap: round;
+}
+
+.swipeSvg circle {
+  r: 10;
+  fill: rgba(255, 153, 153, 0.8);
+}
+
+.gestureSvg {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.gestureSvg line {
+  opacity: 0.35;
+}
+
+.gestureSvg .filled,
+.dashed {
+  stroke-dasharray: 10;
+  stroke-width: 5;
+}
+
+.gestureSvg .whole,
+.newDashed {
+  stroke-linecap: round;
+  stroke-width: 15;
+}
+
+.gestureSvg circle {
+  r: 8;
+  fill: none;
+  stroke-width: 0.4%;
+}
+
+.gestureSvg .circle-dashed,
+.circle-newDashed {
+  stroke-dasharray: 0.9%;
+  border-style: dashed;
+}
+
+.innerScreenshotContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.innerScreenshotContainer .screenshotActionsPanel {
+  margin-bottom: 2px;
+  margin: 0 auto 2px auto;
+}
+
+.commands-container .btn-container {
+  padding: 8px;
+}
+
+.arg-container {
+  padding: 4px 4px 0 0;
+}
+
+.commands-container :global(.ant-select) {
+  width: 100%;
+}
+
+.commands-container :global(.ant-btn) {
+  width: 100%;
+}
+
+.gesture-header {
+  padding: 0 0 0 0;
+  margin-right: -12px;
+}
+
+.gesture-header :global(.ant-page-header-footer) {
+  margin-top: 0px;
+  padding-bottom: 5px;
+}
+
+.gesture-header :global(.ant-typography) {
+  margin-bottom: 0px;
+}
+
+.gesture-header :global(.ant-input) {
+  box-shadow: none;
+  border-width: 0px;
+}
+
+.gesture-header-title {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.gesture-header-description {
+  font-size: 15px;
+  font-weight: 400;
+  color: #636363;
+  margin-left: 30px;
+  margin-top: 5px;
+}
+
+.gesture-header-coord-btn {
+  width: 30px;
+  height: 32px;
+}
+
+.gesture-header-timeline {
+  width: 90%;
+  margin-top: -15px;
+  min-height: 36px;
+}
+
+.timeline-tick-title {
+  text-align: center;
+}
+
+.gesture-header-timeline
+  :global(
+    .ant-steps-item-wait
+      > .ant-steps-item-container
+      > .ant-steps-item-content
+      > .ant-steps-item-title::after
+  ) {
+  background-color: #fffefe;
+}
+
+.gesture-header-timeline
+  :global(
+    .ant-steps-item-finish
+      .ant-steps-item-container
+      .ant-steps-item-content
+      .ant-steps-item-title::after
+  ) {
+  background-color: var(--timelineColor);
+}
+
+.gesture-header-icon {
+  font-size: 20px;
+}
+
+.pointer-title {
+  max-width: 65px;
+  padding: 0 0 0 0;
+  text-align: center;
+  text-decoration: underline;
+  text-decoration-thickness: 20%;
+}
+
+.tick-card {
+  overflow: hidden;
+}
+
+.tick-card :global(.ant-card-head) {
+  margin-top: -16px;
+  padding-right: 0px;
+  border-bottom: none;
+}
+
+.tick-card :global(.ant-card-body) {
+  margin-top: -12px;
+  min-height: 167px;
+  margin-right: -12px;
+}
+
+.tick-plus-card {
+  min-height: 220px;
+}
+
+.tick-plus-btn {
+  position: absolute;
+  top: 40%;
+}
+
+.spaceContainer {
+  display: flex;
+  word-break: break-word;
+}
+
+.tick-pointer-input {
+  width: 145px;
+}
+
+.tick-button-group {
+  display: block;
+}
+
+.tick-button-input {
+  width: 73px;
+}
+
+.tick-input-box {
+  width: 145px;
+}
+
+.tick-coord-box {
+  width: 72px;
+  text-align: center;
+}
+
+.tick-input-box :global(.ant-input-group-addon) {
+  position: sticky;
+  width: 50px;
+}
+
+.option-inpt {
+  text-align: center;
+}
+
+.error-icon {
+  color: red;
+  margin: 5px;
+}

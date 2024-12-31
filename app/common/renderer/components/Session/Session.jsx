@@ -1,5 +1,6 @@
 import {LinkOutlined} from '@ant-design/icons';
-import {Badge, Button, Spin, Tabs} from 'antd';
+import {Badge, Button, Spin, Tabs, Card} from 'antd';
+import { SettingOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router';
@@ -11,6 +12,9 @@ import {
   SERVER_TYPES,
   SESSION_BUILDER_TABS,
 } from '../../constants/session-builder';
+import {
+  INSPECTOR_TABS,
+} from '../../constants/session-inspector';
 import {ipcRenderer, openLink} from '../../polyfills';
 import {log} from '../../utils/logger';
 import AdvancedServerParams from './AdvancedServerParams.jsx';
@@ -21,6 +25,8 @@ import CloudProviderSelector from './CloudProviderSelector.jsx';
 import SavedSessions from './SavedSessions.jsx';
 import ServerTabCustom from './ServerTabCustom.jsx';
 import SessionStyles from './Session.module.css';
+import EnvironmentVariables from '../Inspector/EnvironmentVariables.jsx';
+import InspectorStyles from './Inspector.module.css';
 
 const Session = (props) => {
   const {
@@ -156,6 +162,22 @@ const Session = (props) => {
               key: SESSION_BUILDER_TABS.ATTACH_TO_SESSION,
               className: SessionStyles.scrollingTab,
               children: <AttachToSession {...props} />,
+            },
+            {
+              label: t('Environment Variables'),
+              key: INSPECTOR_TABS.ENV_VARS,
+              children: (
+                <Card
+                  title={
+                    <span>
+                      <SettingOutlined /> {t('Environment Variables')}
+                    </span>
+                  }
+                  className={InspectorStyles['interaction-tab-card']}
+                >
+                  <EnvironmentVariables {...props} />
+                </Card>
+              ),
             },
           ]}
         />

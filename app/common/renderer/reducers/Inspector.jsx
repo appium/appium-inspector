@@ -48,6 +48,9 @@ import {
   SET_CONTEXT,
   SET_COORD_END,
   SET_COORD_START,
+  SET_ENVIRONMENT_VARIABLES,
+  ADD_ENVIRONMENT_VARIABLE,
+  DELETE_ENVIRONMENT_VARIABLE,
   SET_EXPANDED_PATHS,
   SET_GESTURE_TAP_COORDS_MODE,
   SET_GESTURE_UPLOAD_ERROR,
@@ -94,6 +97,7 @@ const INITIAL_STATE = {
   savedGestures: [],
   driver: null,
   automationName: null,
+  environmentVariables: [],
   keepAliveInterval: null,
   showKeepAlivePrompt: false,
   userWaitTimeout: null,
@@ -133,8 +137,38 @@ const INITIAL_STATE = {
 
 let nextState;
 
+// Helper function to interpolate environment variables in a string
+const interpolateEnvVars = (str, envVars) => {
+  if (typeof str !== 'string') return str;
+  return str.replace(/\${([^}]+)}/g, (match, key) => {
+    const envVar = envVars.find(v => v.key === key);
+    return envVar ? envVar.value : match;
+  });
+};
+
 export default function inspector(state = INITIAL_STATE, action) {
   switch (action.type) {
+    case SET_ENVIRONMENT_VARIABLES:
+      return {
+        ...state,
+        environmentVariables: action.envVars,
+      };
+
+    case ADD_ENVIRONMENT_VARIABLE:
+      return {
+        ...state,
+        environmentVariables: [
+          ...state.environmentVariables,
+          {key: action.key, value: action.value}
+        ],
+      };
+
+    case DELETE_ENVIRONMENT_VARIABLE:
+      return {
+        ...state,
+        environmentVariables: state.environmentVariables.filter(v => v.key !== action.key),
+      };
+
     case SET_SOURCE_AND_SCREENSHOT:
       return {
         ...state,
