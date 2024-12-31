@@ -1,7 +1,7 @@
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-import {BasePlugin} from '@appium/base-plugin'
+import {BasePlugin} from '@appium/base-plugin';
 const PLUGIN_ROOT_PATH = '/inspector';
 const INDEX_HTML = 'index.html';
 const ROOT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'dist-browser');

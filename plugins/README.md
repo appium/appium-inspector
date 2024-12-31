@@ -52,7 +52,6 @@ http://localhost:4723/inspector
 3. Update the plugin content with `npm run build:plugin` in `/path/to/appium-inspector`
 4. Start Appium with `appium --use-plugins=inspector --allow-cors`
 
-
 ## License
 
 [Apache-2.0](https://github.com/appium/appium-inspector/blob/main/LICENSE)
