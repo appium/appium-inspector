@@ -52,6 +52,13 @@ http://localhost:4723/inspector
 3. Update the plugin content with `npm run build:plugin` in `/path/to/appium-inspector`
 4. Start Appium with `appium --use-plugins=inspector --allow-cors`
 
+## Release
+
+(TODO: add this release steps in .github/workflows/package.yml later as another PR)
+
+1. Run `npm run plugin:sync:version` to sync the version with the root project.json
+2. Run `npm publish` in `/path/to/appium-inspector/plugins` to publish the module
+
 ## License
 
 [Apache-2.0](https://github.com/appium/appium-inspector/blob/main/LICENSE)
