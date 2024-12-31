@@ -196,6 +196,7 @@ export default function inspector(state = INITIAL_STATE, action) {
     case QUIT_SESSION_DONE:
       return {
         ...INITIAL_STATE,
+        environmentVariables: state.environmentVariables,
       };
 
     case SESSION_DONE:
