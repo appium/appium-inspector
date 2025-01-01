@@ -27,7 +27,18 @@ async function readJsonContent(jsonPath) {
 async function main() {
   const rootJsonContent = await readJsonContent(ROOT_PKG_JSON_PATH);
   const pluginJsonContent = await readJsonContent(PLUGIN_PKG_JSON_PATH);
+
+  // To update ever version release
   pluginJsonContent.version = rootJsonContent.version;
+
+  // These basic information should be the same with the top package.json
+  pluginJsonContent.engines = rootJsonContent.engines;
+  pluginJsonContent.license = rootJsonContent.license;
+  pluginJsonContent.repository = rootJsonContent.repository;
+  pluginJsonContent.author = rootJsonContent.author;
+  pluginJsonContent.bugs = rootJsonContent.bugs;
+  pluginJsonContent.homepage = rootJsonContent.homepage;
+
   await fs.writeFile(PLUGIN_PKG_JSON_PATH, JSON.stringify(pluginJsonContent, null, 2), 'utf8');
 }
 
