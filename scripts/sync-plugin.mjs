@@ -1,14 +1,14 @@
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-import {fs} from '@appium/support';
+import fs from 'fs/promises';
 
-const ROOT_PKG_JSON_PATH = path.join(
+const ROOT_PKG_JSON_PATH = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   '..',
   'package.json',
 );
-const PLUGIN_PKG_JSON_PATH = path.join(
+const PLUGIN_PKG_JSON_PATH = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   '..',
   'plugins',
