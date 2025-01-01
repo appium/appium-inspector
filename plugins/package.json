@@ -18,18 +18,18 @@
     "appium"
   ],
   "homepage": "https://github.com/appium/appium-inspector",
-  "main": "index.js",
+  "main": "index.mjs",
   "type": "module",
   "exports": {
     ".": {
-      "import": "./index.js"
+      "import": "./index.mjs"
     }
   },
   "peerDependencies": {
     "appium": "^2.0.0"
   },
   "files": [
-    "index.js",
+    "index.mjs",
     "package.json",
     "dist-browser",
     "README.md"
