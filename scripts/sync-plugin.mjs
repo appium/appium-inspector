@@ -39,7 +39,12 @@ async function main() {
   pluginJsonContent.bugs = rootJsonContent.bugs;
   pluginJsonContent.homepage = rootJsonContent.homepage;
 
-  await fs.writeFile(PLUGIN_PKG_JSON_PATH, JSON.stringify(pluginJsonContent, null, 2), 'utf8');
+  // The new line in the last is to avoid prettier error.
+  await fs.writeFile(
+    PLUGIN_PKG_JSON_PATH,
+    `${JSON.stringify(pluginJsonContent, null, 2)}\n`,
+    'utf8',
+  );
 }
 
 (async () => await main())();
