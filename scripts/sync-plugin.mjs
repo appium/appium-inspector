@@ -1,19 +1,23 @@
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-import fs from 'node:fs/promises';
+const PROJECT_ROOT = path.dirname(fileURLToPath(import.meta.url));
+const ROOT_PKG_JSON_PATH = path.resolve(PROJECT_ROOT, '..', 'package.json');
+const PLUGIN_PKG_JSON_PATH = path.resolve(PROJECT_ROOT, '..', 'plugins', 'package.json');
 
-const ROOT_PKG_JSON_PATH = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  '..',
-  'package.json',
-);
-const PLUGIN_PKG_JSON_PATH = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  '..',
-  'plugins',
-  'package.json',
-);
+const SYNC_PACKAGE_KEYS = [
+  // To update ever version release
+  'version',
+
+  // These basic information should be the same with the top package.json
+  'engines',
+  'license',
+  'repository',
+  'author',
+  'bugs',
+  'homepage',
+];
 
 /**
  * Return JSON parsed contents from the given path.
@@ -25,19 +29,13 @@ async function readJsonContent(jsonPath) {
 }
 
 async function main() {
-  const rootJsonContent = await readJsonContent(ROOT_PKG_JSON_PATH);
-  const pluginJsonContent = await readJsonContent(PLUGIN_PKG_JSON_PATH);
+  const [rootJsonContent, pluginJsonContent] = await Promise.all(
+    [ROOT_PKG_JSON_PATH, PLUGIN_PKG_JSON_PATH].map(readJsonContent),
+  );
 
-  // To update ever version release
-  pluginJsonContent.version = rootJsonContent.version;
-
-  // These basic information should be the same with the top package.json
-  pluginJsonContent.engines = rootJsonContent.engines;
-  pluginJsonContent.license = rootJsonContent.license;
-  pluginJsonContent.repository = rootJsonContent.repository;
-  pluginJsonContent.author = rootJsonContent.author;
-  pluginJsonContent.bugs = rootJsonContent.bugs;
-  pluginJsonContent.homepage = rootJsonContent.homepage;
+  for (const key in SYNC_PACKAGE_KEYS) {
+    pluginJsonContent[key] = rootJsonContent[key];
+  }
 
   // The new line in the last is to avoid prettier error.
   await fs.writeFile(
