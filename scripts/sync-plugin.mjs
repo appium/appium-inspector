@@ -1,7 +1,7 @@
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-import fs from 'fs/promises';
+import fs from 'node:fs/promises';
 
 const ROOT_PKG_JSON_PATH = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
