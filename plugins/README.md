@@ -14,9 +14,6 @@ Install the plugin using one of the following methods:
 ```bash
 # Install from local directory. Then, please run 'npm run build:plugin' as well.
 appium plugin install --source=local /path/to/appium-inspector/plugins
-
-# Install from npm
-appium plugin install --source=npm appium-inspector-plugin
 ```
 
 > [!Note]
