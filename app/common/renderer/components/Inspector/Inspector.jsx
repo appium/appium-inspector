@@ -15,7 +15,6 @@ import {
 import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip} from 'antd';
 import {debounce} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
-import styles from './Inspector.module.css';
 import {useNavigate} from 'react-router';
 
 import {BUTTON} from '../../constants/antd-types';
@@ -31,6 +30,7 @@ import {downloadFile} from '../../utils/file-handling';
 import Commands from './Commands.jsx';
 import GestureEditor from './GestureEditor.jsx';
 import HeaderButtons from './HeaderButtons.jsx';
+import styles from './Inspector.module.css';
 import Recorder from './Recorder.jsx';
 import SavedGestures from './SavedGestures.jsx';
 import Screenshot from './Screenshot.jsx';
@@ -263,7 +263,7 @@ const Inspector = (props) => {
   );
 
   const main = (
-      <div className={styles['inspector-main']}>
+    <div className={styles['inspector-main']}>
       <div
         id="screenshotContainer"
         className={styles['screenshot-container']}

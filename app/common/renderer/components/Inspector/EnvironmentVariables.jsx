@@ -1,8 +1,13 @@
-import {PlusOutlined, DeleteOutlined} from '@ant-design/icons';
-import {Button, Input, Space, Table, Tooltip, Popconfirm} from 'antd';
+import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
+import {Button, Input, Popconfirm, Space, Table, Tooltip} from 'antd';
 import {useState} from 'react';
 import {connect} from 'react-redux';
-import {setEnvironmentVariables, addEnvironmentVariable, deleteEnvironmentVariable} from '../../actions/Inspector';
+
+import {
+  addEnvironmentVariable,
+  deleteEnvironmentVariable,
+  setEnvironmentVariables,
+} from '../../actions/Inspector';
 import styles from './Inspector.module.css';
 
 const EnvironmentVariables = ({t, envVars, addVariable, deleteVariable}) => {
@@ -36,11 +41,7 @@ const EnvironmentVariables = ({t, envVars, addVariable, deleteVariable}) => {
             cancelText={t('Cancel')}
             onConfirm={() => deleteVariable(record.key)}
           >
-            <Button
-              type="text"
-              danger
-              icon={<DeleteOutlined />}
-            />
+            <Button type="text" danger icon={<DeleteOutlined />} />
           </Popconfirm>
         </Tooltip>
       ),
@@ -48,8 +49,10 @@ const EnvironmentVariables = ({t, envVars, addVariable, deleteVariable}) => {
   ];
 
   const handleAddVariable = () => {
-    if (!newVar.key || !newVar.value) return;
-    
+    if (!newVar.key || !newVar.value) {
+      return;
+    }
+
     // Check for duplicate keys
     if (envVars.some((v) => v.key === newVar.key)) {
       return;
@@ -83,24 +86,18 @@ const EnvironmentVariables = ({t, envVars, addVariable, deleteVariable}) => {
           </Button>
         </Space.Compact>
       </div>
-      <Table
-        columns={columns}
-        dataSource={envVars}
-        pagination={false}
-        rowKey="key"
-        size="small"
-      />
+      <Table columns={columns} dataSource={envVars} pagination={false} rowKey="key" size="small" />
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
-  envVars: state.inspector.environmentVariables || []
+  envVars: state.inspector.environmentVariables || [],
 });
 
 const mapDispatchToProps = (dispatch) => ({
   addVariable: (key, value) => dispatch(addEnvironmentVariable(key, value)),
-  deleteVariable: (key) => dispatch(deleteEnvironmentVariable(key))
+  deleteVariable: (key) => dispatch(deleteEnvironmentVariable(key)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EnvironmentVariables);
