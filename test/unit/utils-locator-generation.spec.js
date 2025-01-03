@@ -20,6 +20,18 @@ function testXPath(doc, node, expectedXPath) {
 
 describe('utils/locator-generation.js', function () {
   describe('#areAttrAndValueUnique', function () {
+    it('should return true if there is only one node with this attribute value', function () {
+      expect(
+        areAttrAndValueUnique(
+          'id',
+          'ID',
+          xmlToDOM(`<root>
+          <node id='ID'></node>
+        </root>`),
+        ),
+      ).toBe(true);
+    });
+
     it('should return false if two nodes have the same attribute value', function () {
       expect(
         areAttrAndValueUnique(
@@ -33,16 +45,7 @@ describe('utils/locator-generation.js', function () {
       ).toBe(false);
     });
 
-    it('should return false if two nodes have the same attribute value', function () {
-      expect(
-        areAttrAndValueUnique(
-          'id',
-          'ID',
-          xmlToDOM(`<root>
-          <node id='ID'></node>
-        </root>`),
-        ),
-      ).toBe(true);
+    it('should return true if there are no nodes with this attribute', function () {
       expect(
         areAttrAndValueUnique(
           'id',

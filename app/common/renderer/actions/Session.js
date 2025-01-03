@@ -110,7 +110,7 @@ export function getCapsObject(caps) {
         try {
           let obj = JSON.parse(cap.value);
           return {[cap.name]: obj};
-        } catch (ign) {}
+        } catch {}
       }
       return {[cap.name]: cap.value};
     }),
@@ -134,7 +134,7 @@ export function showError(e, params = {methodName: null, secs: 5, url: null}) {
   } else if (e.data) {
     try {
       e.data = JSON.parse(e.data);
-    } catch (ign) {}
+    } catch {}
     if (e.data.value && e.data.value.message) {
       errMessage = e.data.value.message;
     } else {
@@ -277,7 +277,7 @@ export function newSession(caps, attachSessId = null) {
         let headspinUrl;
         try {
           headspinUrl = new URL(session.server.headspin.webDriverUrl);
-        } catch (ign) {
+        } catch {
           showError(new Error(`${i18n.t('Invalid URL:')} ${session.server.headspin.webDriverUrl}`));
           return false;
         }
@@ -422,7 +422,7 @@ export function newSession(caps, attachSessId = null) {
         let experitestUrl;
         try {
           experitestUrl = new URL(session.server.experitest.url);
-        } catch (ign) {
+        } catch {
           showError(new Error(`${i18n.t('Invalid URL:')} ${session.server.experitest.url}`));
           return false;
         }
@@ -464,7 +464,7 @@ export function newSession(caps, attachSessId = null) {
         let mobitruUrl;
         try {
           mobitruUrl = new URL(webDriverUrl);
-        } catch (ign) {
+        } catch {
           showError(new Error(`${i18n.t('Invalid URL:')} ${webDriverUrl}`));
           return false;
         }
@@ -602,7 +602,7 @@ export function newSession(caps, attachSessId = null) {
       try {
         mode = APP_MODE.WEB_HYBRID;
         await driver.navigateTo('https://appium.io');
-      } catch (ign) {}
+      } catch {}
     }
 
     let mjpegScreenshotUrl =
@@ -953,7 +953,7 @@ async function fetchAllSessions(baseUrl, authToken) {
     try {
       const res = await fetchSessionInformation({url, authToken});
       return res.data.value ?? [];
-    } catch (err) {
+    } catch {
       return [];
     }
   }
@@ -963,7 +963,7 @@ async function fetchAllSessions(baseUrl, authToken) {
     try {
       const res = await fetchSessionInformation({url, authToken});
       return formatSeleniumGridSessions(res);
-    } catch (err) {
+    } catch {
       return [];
     }
   }
@@ -1172,7 +1172,7 @@ export function initFromQueryString(loadNewSession) {
       try {
         const state = JSON.parse(initialState);
         dispatch({type: SET_STATE_FROM_URL, state});
-      } catch (e) {
+      } catch {
         showError(new Error('Could not parse initial state from URL'), {secs: 0});
       }
     }

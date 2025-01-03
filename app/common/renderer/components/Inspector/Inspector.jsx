@@ -133,7 +133,7 @@ const Inspector = (props) => {
     try {
       await img.decode();
       imgReady = true;
-    } catch (ign) {}
+    } catch {}
     if (imgReady && isAwaitingMjpegStream) {
       setAwaitingMjpegStream(false);
       updateScreenshotScaleDebounced();

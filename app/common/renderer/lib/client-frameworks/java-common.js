@@ -309,7 +309,7 @@ driver.perform(Arrays.asList(swipe));
         settings.push(`driver.setSetting("${settingName}", ${this.getJavaVal(settingValue)});`);
       }
       return settings.join('\n');
-    } catch (e) {
+    } catch {
       return `// Could not parse: ${settingsJson}`;
     }
   }

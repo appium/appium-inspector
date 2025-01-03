@@ -35,7 +35,7 @@ describe('Appium client actions', function () {
   afterAll(async function () {
     try {
       await driver.quit();
-    } catch (ign) {}
+    } catch {}
     await server.close();
   });
 
@@ -78,7 +78,7 @@ describe('Appium client actions', function () {
     });
   });
   describe('.executeMethod', function () {
-    it('should call the click method and have the variableName, variableType, etc... returned to it with source/screenshot', async function () {
+    it('should be able to call the click method on a single element', async function () {
       const {id, variableName, variableType} = await client.fetchElement({
         strategy: 'xpath',
         selector: '//MockListItem',
@@ -97,7 +97,7 @@ describe('Appium client actions', function () {
       expect(source).toBeTruthy();
       expect(screenshot).toBeTruthy();
     });
-    it('should call the click method and have the variableName, variableType, etc... returned to it with source/screenshot', async function () {
+    it('should be able to call the click method on multiple elements', async function () {
       const {elements} = await client.fetchElements({
         strategy: 'xpath',
         selector: '//MockListItem',

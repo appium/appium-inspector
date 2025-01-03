@@ -151,7 +151,7 @@ function determineXpathUniqueness(xpath, doc, domNode) {
   // If the XPath does not parse, move to the next unique attribute
   try {
     othersWithAttr = XPath.select(xpath, doc);
-  } catch (ign) {
+  } catch {
     return [false];
   }
 
@@ -358,7 +358,7 @@ export function getOptimalClassChain(doc, domNode) {
       // If the XPath does not parse, move to the next unique attribute
       try {
         othersWithAttr = XPath.select(xpath, doc);
-      } catch (ign) {
+      } catch {
         continue;
       }
 
@@ -430,7 +430,7 @@ export function getOptimalPredicateString(doc, domNode) {
       // If the XPath does not parse, move to the next attribute
       try {
         othersWithAttr = XPath.select(xpath, doc);
-      } catch (ign) {
+      } catch {
         continue;
       }
 
@@ -507,7 +507,7 @@ export function getOptimalUiAutomatorSelector(doc, domNode, path) {
       // If the XPath does not parse, move to the next unique attribute
       try {
         othersWithAttr = XPath.select(xpath, newDoc);
-      } catch (ign) {
+      } catch {
         continue;
       }
 
