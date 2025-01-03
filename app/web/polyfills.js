@@ -1,10 +1,11 @@
 import i18NextBackend from 'i18next-chained-backend';
 import HttpApi from 'i18next-http-backend';
 import LocalStorageBackend from 'i18next-localstorage-backend';
+import _ from 'lodash';
 
 // Adjust locales path depending on Vite base (web vs plugin)
 const viteBase = import.meta.env.BASE_URL;
-const vitePath = viteBase.endsWith('/') ? viteBase : `${viteBase}/`;
+const vitePath = `${_.trimEnd(viteBase, '/')}/`;
 
 const localesPath =
   process.env.NODE_ENV === 'development'

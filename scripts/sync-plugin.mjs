@@ -25,7 +25,7 @@ const SYNC_PACKAGE_KEYS = [
  * @returns {Promise<object>}
  */
 async function readJsonContent(jsonPath) {
-  return await JSON.parse(await fs.readFile(jsonPath, 'utf8'));
+  return JSON.parse(await fs.readFile(jsonPath, 'utf8'));
 }
 
 async function main() {
