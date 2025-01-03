@@ -33,7 +33,7 @@ async function main() {
     [ROOT_PKG_JSON_PATH, PLUGIN_PKG_JSON_PATH].map(readJsonContent),
   );
 
-  for (const key in SYNC_PACKAGE_KEYS) {
+  for (const key of SYNC_PACKAGE_KEYS) {
     pluginJsonContent[key] = rootJsonContent[key];
   }
 
