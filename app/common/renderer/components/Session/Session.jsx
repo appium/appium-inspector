@@ -1,5 +1,5 @@
-import {LinkOutlined} from '@ant-design/icons';
-import {Badge, Button, Spin, Tabs} from 'antd';
+import {LinkOutlined, SettingOutlined} from '@ant-design/icons';
+import {Badge, Button, Card, Spin, Tabs} from 'antd';
 import _ from 'lodash';
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router';
@@ -13,6 +13,7 @@ import {
 } from '../../constants/session-builder';
 import {ipcRenderer, openLink} from '../../polyfills';
 import {log} from '../../utils/logger';
+import EnvironmentVariables from '../Inspector/EnvironmentVariables.jsx';
 import AdvancedServerParams from './AdvancedServerParams.jsx';
 import AttachToSession from './AttachToSession.jsx';
 import CapabilityEditor from './CapabilityEditor.jsx';
@@ -40,6 +41,7 @@ const Session = (props) => {
     savedSessions,
     newSessionLoading,
     attachSessId,
+    loadEnvironmentVariables,
     t,
   } = props;
 
@@ -73,6 +75,7 @@ const Session = (props) => {
       bindWindowClose,
       initFromQueryString,
       saveSessionAsFile,
+      loadEnvironmentVariables,
     } = props;
     (async () => {
       try {
@@ -82,6 +85,7 @@ const Session = (props) => {
         await setVisibleProviders();
         await setSavedServerParams();
         await setLocalServerParams();
+        await loadEnvironmentVariables();
         initFromQueryString(loadNewSession);
         await initFromSessionFile();
         ipcRenderer.on('sessionfile:apply', (_, sessionFileString) =>
@@ -156,6 +160,22 @@ const Session = (props) => {
               key: SESSION_BUILDER_TABS.ATTACH_TO_SESSION,
               className: SessionStyles.scrollingTab,
               children: <AttachToSession {...props} />,
+            },
+            {
+              label: t('Environment Variables'),
+              key: SESSION_BUILDER_TABS.ENV_VARS,
+              children: (
+                <Card
+                  title={
+                    <span>
+                      <SettingOutlined /> {t('Environment Variables')}
+                    </span>
+                  }
+                  className={SessionStyles['interaction-tab-card']}
+                >
+                  <EnvironmentVariables {...props} />
+                </Card>
+              ),
             },
           ]}
         />

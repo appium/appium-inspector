@@ -15,6 +15,7 @@ import {APP_MODE} from '../constants/session-inspector';
 import i18n from '../i18next';
 import {getSetting, ipcRenderer, setSetting} from '../polyfills';
 import {fetchSessionInformation, formatSeleniumGridSessions} from '../utils/attaching-to-session';
+import {interpolateEnvironmentVariables} from '../utils/env-utils';
 import {downloadFile, parseSessionFileContents} from '../utils/file-handling';
 import {log} from '../utils/logger';
 import {addVendorPrefixes} from '../utils/other';
@@ -229,7 +230,15 @@ export function newSession(caps, attachSessId = null) {
 
     dispatch({type: NEW_SESSION_REQUESTED, caps});
 
+    // Get environment variables from state
+    const environmentVariables = getState().inspector.environmentVariables || [];
+
+    // Get capabilities and interpolate environment variables
     let desiredCapabilities = caps ? getCapsObject(caps) : {};
+    desiredCapabilities = interpolateEnvironmentVariables(
+      desiredCapabilities,
+      environmentVariables,
+    );
     let host, port, username, accessKey, https, path, token;
     desiredCapabilities = addCustomCaps(desiredCapabilities);
 

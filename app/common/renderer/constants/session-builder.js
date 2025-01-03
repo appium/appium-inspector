@@ -2,6 +2,7 @@ export const SESSION_BUILDER_TABS = {
   CAPS_BUILDER: 'new',
   SAVED_CAPS: 'saved',
   ATTACH_TO_SESSION: 'attach',
+  ENV_VARS: 'envVars',
 };
 
 export const SERVER_TYPES = {

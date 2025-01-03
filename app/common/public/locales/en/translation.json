@@ -295,5 +295,8 @@
   "gestureNameCannotBeEmptyError": "Gesture name cannot be empty",
   "gestureInvalidJsonError": "Invalid JSON file. Unable to parse the file content",
   "gestureImportedFrom": "Gesture imported from '{{fileName}}'",
-  "invalidSessionFile": "Invalid session file"
+  "invalidSessionFile": "Invalid session file",
+  "Environment Variables": "Environment Variables",
+  "Variable Name": "Variable Name",
+  "Delete Variable": "Delete Variable"
 }

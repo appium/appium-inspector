@@ -1,6 +1,10 @@
 import _ from 'lodash';
 
-import {SAVED_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs';
+import {
+  ENVIRONMENT_VARIABLES,
+  SAVED_FRAMEWORK,
+  SET_SAVED_GESTURES,
+} from '../../shared/setting-defs';
 import {POINTER_TYPES} from '../constants/gestures';
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import i18n from '../i18next';
@@ -116,6 +120,9 @@ export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
 export const TOGGLE_REFRESHING_STATE = 'TOGGLE_REFRESHING_STATE';
 
 export const SET_GESTURE_UPLOAD_ERROR = 'SET_GESTURE_UPLOAD_ERROR';
+export const SET_ENVIRONMENT_VARIABLES = 'SET_ENVIRONMENT_VARIABLES';
+export const ADD_ENVIRONMENT_VARIABLE = 'ADD_ENVIRONMENT_VARIABLE';
+export const DELETE_ENVIRONMENT_VARIABLE = 'DELETE_ENVIRONMENT_VARIABLE';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -357,6 +364,9 @@ export function quitSession(reason, killedByUser = true) {
     const applyAction = applyClientMethod({methodName: 'quit'});
     await applyAction(dispatch, getState);
     dispatch({type: QUIT_SESSION_DONE});
+    // Reload environment variables from persistent settings after session ends
+    const loadEnvAction = loadEnvironmentVariables();
+    await loadEnvAction(dispatch);
     if (!killedByUser) {
       showError(new Error(reason || i18n.t('Session has been terminated')), {secs: 0});
     }
@@ -916,6 +926,38 @@ export function setAwaitingMjpegStream(isAwaiting) {
 export function setGestureUploadErrors(errors) {
   return (dispatch) => {
     dispatch({type: SET_GESTURE_UPLOAD_ERROR, errors});
+  };
+}
+
+export function setEnvironmentVariables(envVars) {
+  return async (dispatch) => {
+    await setSetting(ENVIRONMENT_VARIABLES, envVars);
+    dispatch({type: SET_ENVIRONMENT_VARIABLES, envVars});
+  };
+}
+
+export function addEnvironmentVariable(key, value) {
+  return async (dispatch, getState) => {
+    const currentEnvVars = getState().inspector.environmentVariables || [];
+    const newEnvVars = [...currentEnvVars, {key, value}];
+    await setSetting(ENVIRONMENT_VARIABLES, newEnvVars);
+    dispatch({type: ADD_ENVIRONMENT_VARIABLE, key, value});
+  };
+}
+
+export function deleteEnvironmentVariable(key) {
+  return async (dispatch, getState) => {
+    const currentEnvVars = getState().inspector.environmentVariables || [];
+    const newEnvVars = currentEnvVars.filter((v) => v.key !== key);
+    await setSetting(ENVIRONMENT_VARIABLES, newEnvVars);
+    dispatch({type: DELETE_ENVIRONMENT_VARIABLE, key});
+  };
+}
+
+export function loadEnvironmentVariables() {
+  return async (dispatch) => {
+    const envVars = (await getSetting(ENVIRONMENT_VARIABLES)) || [];
+    dispatch({type: SET_ENVIRONMENT_VARIABLES, envVars});
   };
 }
 
