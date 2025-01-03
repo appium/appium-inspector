@@ -89,15 +89,20 @@ import {
   UNSELECT_TICK_ELEMENT,
 } from '../actions/Inspector';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
+import {ENVIRONMENT_VARIABLES} from '../../shared/setting-defs';
 import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
+import {getSetting} from '../polyfills';
 
 const DEFAULT_FRAMEWORK = 'java';
+
+// Load initial environment variables from persistent settings
+const envVars = await getSetting(ENVIRONMENT_VARIABLES) || [];
 
 const INITIAL_STATE = {
   savedGestures: [],
   driver: null,
   automationName: null,
-  environmentVariables: [],
+  environmentVariables: envVars,
   keepAliveInterval: null,
   showKeepAlivePrompt: false,
   userWaitTimeout: null,
@@ -196,7 +201,6 @@ export default function inspector(state = INITIAL_STATE, action) {
     case QUIT_SESSION_DONE:
       return {
         ...INITIAL_STATE,
-        environmentVariables: state.environmentVariables,
       };
 
     case SESSION_DONE:

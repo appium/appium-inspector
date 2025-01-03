@@ -1,13 +1,11 @@
 import {PlusOutlined, DeleteOutlined} from '@ant-design/icons';
-import {Button, Input, Space, Table, Tooltip} from 'antd';
+import {Button, Input, Space, Table, Tooltip, Popconfirm} from 'antd';
 import {useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {connect} from 'react-redux';
 import {setEnvironmentVariables, addEnvironmentVariable, deleteEnvironmentVariable} from '../../actions/Inspector';
-import styles from './EnvironmentVariables.module.css';
+import styles from './Inspector.module.css';
 
-const EnvironmentVariables = ({t}) => {
-  const dispatch = useDispatch();
-  const envVars = useSelector(state => state.inspector.environmentVariables || []);
+const EnvironmentVariables = ({t, envVars, addVariable, deleteVariable}) => {
   const [newVar, setNewVar] = useState({key: '', value: ''});
 
   const columns = [
@@ -29,15 +27,21 @@ const EnvironmentVariables = ({t}) => {
       key: 'action',
       width: '20%',
       render: (_, record) => (
-        <Tooltip title={t('Delete Variable')}>
-          <Button
-            type="text"
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => {
-              dispatch(deleteEnvironmentVariable(record.key));
-            }}
-          />
+        <Tooltip zIndex={3} title={t('Delete Variable')}>
+          <Popconfirm
+            zIndex={4}
+            title={t('Are you sure you want to delete this variable?')}
+            placement="topRight"
+            okText={t('OK')}
+            cancelText={t('Cancel')}
+            onConfirm={() => deleteVariable(record.key)}
+          >
+            <Button
+              type="text"
+              danger
+              icon={<DeleteOutlined />}
+            />
+          </Popconfirm>
         </Tooltip>
       ),
     },
@@ -51,7 +55,7 @@ const EnvironmentVariables = ({t}) => {
       return;
     }
 
-    dispatch(addEnvironmentVariable(newVar.key, newVar.value));
+    addVariable(newVar.key, newVar.value);
     setNewVar({key: '', value: ''});
   };
 
@@ -90,4 +94,13 @@ const EnvironmentVariables = ({t}) => {
   );
 };
 
-export default EnvironmentVariables;
+const mapStateToProps = (state) => ({
+  envVars: state.inspector.environmentVariables || []
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  addVariable: (key, value) => dispatch(addEnvironmentVariable(key, value)),
+  deleteVariable: (key) => dispatch(deleteEnvironmentVariable(key))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EnvironmentVariables);

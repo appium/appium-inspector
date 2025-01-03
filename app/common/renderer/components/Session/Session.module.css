@@ -316,3 +316,9 @@
   color: #ff4d4f;
   font-size: 12px;
 }
+
+.interaction-tab-card :global(.ant-card-body) {
+  overflow: scroll;
+  flex: 2;
+  height: 100%;
+}
