@@ -13,7 +13,7 @@ import {
   ThunderboltOutlined,
 } from '@ant-design/icons';
 import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip} from 'antd';
-import {debounce} from 'lodash';
+import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router';
 
@@ -123,7 +123,7 @@ const Inspector = (props) => {
     setScaleRatio(windowSize.width / newImgWidth);
   };
 
-  const updateScreenshotScaleDebounced = debounce(updateScreenshotScale, 50);
+  const updateScreenshotScaleDebounced = _.debounce(updateScreenshotScale, 50);
 
   const checkMjpegStream = async () => {
     const {setAwaitingMjpegStream} = props;
