@@ -45,10 +45,6 @@ export default [
   },
   {
     name: 'Ignores',
-    ignores: [
-      ...includeIgnoreFile(gitignorePath).ignores,
-      '**/*.xml',
-      '**/*.html',
-    ],
+    ignores: [...includeIgnoreFile(gitignorePath).ignores, '**/*.xml', '**/*.html'],
   },
 ];
