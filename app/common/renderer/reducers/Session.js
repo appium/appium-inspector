@@ -1,4 +1,4 @@
-import _, {omit} from 'lodash';
+import _ from 'lodash';
 
 import {
   ABORT_DESIRED_CAPS_EDITOR,
@@ -116,10 +116,10 @@ export default function session(state = INITIAL_STATE, action) {
         ...state,
         newSessionLoading: true,
       };
-      return omit(nextState, 'newSessionRequested');
+      return _.omit(nextState, 'newSessionRequested');
 
     case NEW_SESSION_DONE:
-      return omit(state, 'newSessionLoading');
+      return _.omit(state, 'newSessionLoading');
 
     case ADD_CAPABILITY:
       return {
@@ -157,14 +157,14 @@ export default function session(state = INITIAL_STATE, action) {
         capsUUID: action.uuid,
         capsName: action.name,
       };
-      return omit(nextState, 'isCapsDirty');
+      return _.omit(nextState, 'isCapsDirty');
 
     case SAVE_SESSION_REQUESTED:
       nextState = {
         ...state,
         saveSessionRequested: true,
       };
-      return omit(nextState, 'showSaveAsModal');
+      return _.omit(nextState, 'showSaveAsModal');
 
     case SAVE_SESSION_DONE:
       nextState = {
@@ -172,7 +172,7 @@ export default function session(state = INITIAL_STATE, action) {
         isEditingDesiredCapsName: false,
         isDuplicateCapsName: false,
       };
-      return omit(nextState, ['saveSessionRequested', 'saveAsText']);
+      return _.omit(nextState, ['saveSessionRequested', 'saveAsText']);
 
     case GET_SAVED_SESSIONS_REQUESTED:
       return {
@@ -185,7 +185,7 @@ export default function session(state = INITIAL_STATE, action) {
         ...state,
         savedSessions: action.savedSessions || [],
       };
-      return omit(nextState, 'getSavedSessionsRequested');
+      return _.omit(nextState, 'getSavedSessionsRequested');
 
     case DELETE_SAVED_SESSION_REQUESTED:
       return {
@@ -218,7 +218,7 @@ export default function session(state = INITIAL_STATE, action) {
         ...state,
         isDuplicateCapsName: false,
       };
-      return omit(nextState, ['saveAsText', 'showSaveAsModal']);
+      return _.omit(nextState, ['saveAsText', 'showSaveAsModal']);
 
     case SET_SAVE_AS_TEXT:
       return {
@@ -393,7 +393,7 @@ export default function session(state = INITIAL_STATE, action) {
           ...state.server,
           ...(action.state.server || {}),
         },
-        ...omit(action.state, ['server']),
+        ..._.omit(action.state, ['server']),
       };
 
     case SET_CAPABILITY_NAME_ERROR:

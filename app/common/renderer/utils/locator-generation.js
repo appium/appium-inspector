@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import XPath from 'xpath';
+import XPath, {select as xpathSelect} from 'xpath';
 
 import {log} from './logger';
 import {childNodesOf, domToXML, findDOMNodeByPath, xmlToDOM} from './source-parsing';
@@ -48,7 +48,7 @@ export function areAttrAndValueUnique(attrName, attrValue, sourceDoc) {
   if (!sourceDoc || _.isEmpty(sourceDoc)) {
     return true;
   }
-  return XPath.select(`//*[@${attrName}="${attrValue.replace(/"/g, '')}"]`, sourceDoc).length < 2;
+  return xpathSelect(`//*[@${attrName}="${attrValue.replace(/"/g, '')}"]`, sourceDoc).length < 2;
 }
 
 /**
@@ -150,8 +150,9 @@ function determineXpathUniqueness(xpath, doc, domNode) {
 
   // If the XPath does not parse, move to the next unique attribute
   try {
+    // eslint-disable-next-line import/no-named-as-default-member -- needed for Vitest spy functionality
     othersWithAttr = XPath.select(xpath, doc);
-  } catch (ign) {
+  } catch {
     return [false];
   }
 
@@ -357,8 +358,8 @@ export function getOptimalClassChain(doc, domNode) {
 
       // If the XPath does not parse, move to the next unique attribute
       try {
-        othersWithAttr = XPath.select(xpath, doc);
-      } catch (ign) {
+        othersWithAttr = xpathSelect(xpath, doc);
+      } catch {
         continue;
       }
 
@@ -429,8 +430,8 @@ export function getOptimalPredicateString(doc, domNode) {
 
       // If the XPath does not parse, move to the next attribute
       try {
-        othersWithAttr = XPath.select(xpath, doc);
-      } catch (ign) {
+        othersWithAttr = xpathSelect(xpath, doc);
+      } catch {
         continue;
       }
 
@@ -506,8 +507,8 @@ export function getOptimalUiAutomatorSelector(doc, domNode, path) {
 
       // If the XPath does not parse, move to the next unique attribute
       try {
-        othersWithAttr = XPath.select(xpath, newDoc);
-      } catch (ign) {
+        othersWithAttr = xpathSelect(xpath, newDoc);
+      } catch {
         continue;
       }
 

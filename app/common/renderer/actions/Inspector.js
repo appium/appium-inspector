@@ -570,7 +570,7 @@ export function setLocatorTestElement(elementId) {
           location: {x: commandRes.x, y: commandRes.y},
           size: {width: commandRes.width, height: commandRes.height},
         });
-      } catch (ign) {}
+      } catch {}
     }
   };
 }
@@ -825,7 +825,7 @@ export function runKeepAliveLoop() {
       log.info('Pinging Appium server to keep session active');
       try {
         await driver.getTimeouts(); // Pings the Appium server to keep it alive
-      } catch (ign) {}
+      } catch {}
       const now = Date.now();
 
       // If the new command limit has been surpassed, prompt user if they want to keep session going
@@ -963,7 +963,7 @@ export function uploadGesturesFromFile(fileList) {
 
         gesture.description = gesture.description || i18n.t('gestureImportedFrom', {fileName});
         parsedGestures.push(_.omit(gesture, ['id']));
-      } catch (e) {
+      } catch {
         invalidGestures[fileName] = [i18n.t('gestureInvalidJsonError')];
       }
     }

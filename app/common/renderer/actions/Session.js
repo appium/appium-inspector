@@ -1,5 +1,5 @@
 import {notification} from 'antd';
-import {includes, isPlainObject, isUndefined, toPairs, union, values, without} from 'lodash';
+import _ from 'lodash';
 import moment from 'moment';
 import {Web2Driver} from 'web2driver';
 
@@ -117,7 +117,7 @@ export function getCapsObject(caps) {
         try {
           let obj = JSON.parse(cap.value);
           return {[cap.name]: obj};
-        } catch (ign) {}
+        } catch {}
       }
       return {[cap.name]: cap.value};
     }),
@@ -141,7 +141,7 @@ export function showError(e, params = {methodName: null, secs: 5, url: null}) {
   } else if (e.data) {
     try {
       e.data = JSON.parse(e.data);
-    } catch (ign) {}
+    } catch {}
     if (e.data.value && e.data.value.message) {
       errMessage = e.data.value.message;
     } else {
@@ -156,8 +156,8 @@ export function showError(e, params = {methodName: null, secs: 5, url: null}) {
   }
   if (
     errMessage === 'ECONNREFUSED' ||
-    includes(errMessage, 'Failed to fetch') ||
-    includes(errMessage, 'The requested resource could not be found')
+    _.includes(errMessage, 'Failed to fetch') ||
+    _.includes(errMessage, 'The requested resource could not be found')
   ) {
     errMessage = i18n.t('couldNotConnect', {url});
   }
@@ -290,7 +290,7 @@ export function newSession(caps, attachSessId = null) {
           return false;
         }
         https = false;
-        if (!isPlainObject(desiredCapabilities[SAUCE_OPTIONS_CAP])) {
+        if (!_.isPlainObject(desiredCapabilities[SAUCE_OPTIONS_CAP])) {
           desiredCapabilities[SAUCE_OPTIONS_CAP] = {};
         }
         if (!desiredCapabilities[SAUCE_OPTIONS_CAP].name) {
@@ -302,7 +302,7 @@ export function newSession(caps, attachSessId = null) {
         let headspinUrl;
         try {
           headspinUrl = new URL(session.server.headspin.webDriverUrl);
-        } catch (ign) {
+        } catch {
           showError(new Error(`${i18n.t('Invalid URL:')} ${session.server.headspin.webDriverUrl}`));
           return false;
         }
@@ -353,7 +353,9 @@ export function newSession(caps, attachSessId = null) {
           desiredCapabilities['lt:options'].source = 'appiumdesktop';
           desiredCapabilities['lt:options'].isRealMobile = true;
           if (session.server.advanced.useProxy) {
-            desiredCapabilities['lt:options'].proxyUrl = isUndefined(session.server.advanced.proxy)
+            desiredCapabilities['lt:options'].proxyUrl = _.isUndefined(
+              session.server.advanced.proxy,
+            )
               ? ''
               : session.server.advanced.proxy;
           }
@@ -361,7 +363,9 @@ export function newSession(caps, attachSessId = null) {
           desiredCapabilities['lambdatest:source'] = 'appiumdesktop';
           desiredCapabilities['lambdatest:isRealMobile'] = true;
           if (session.server.advanced.useProxy) {
-            desiredCapabilities['lambdatest:proxyUrl'] = isUndefined(session.server.advanced.proxy)
+            desiredCapabilities['lambdatest:proxyUrl'] = _.isUndefined(
+              session.server.advanced.proxy,
+            )
               ? ''
               : session.server.advanced.proxy;
           }
@@ -447,7 +451,7 @@ export function newSession(caps, attachSessId = null) {
         let experitestUrl;
         try {
           experitestUrl = new URL(session.server.experitest.url);
-        } catch (ign) {
+        } catch {
           showError(new Error(`${i18n.t('Invalid URL:')} ${session.server.experitest.url}`));
           return false;
         }
@@ -489,7 +493,7 @@ export function newSession(caps, attachSessId = null) {
         let mobitruUrl;
         try {
           mobitruUrl = new URL(webDriverUrl);
-        } catch (ign) {
+        } catch {
           showError(new Error(`${i18n.t('Invalid URL:')} ${webDriverUrl}`));
           return false;
         }
@@ -549,13 +553,13 @@ export function newSession(caps, attachSessId = null) {
     // If a newCommandTimeout wasn't provided, set it to 60 * 60 so that sessions don't close on users in short term.
     // I saw sometimes infinit session timeout was not so good for cloud providers.
     // So, let me define this value as NEW_COMMAND_TIMEOUT_SEC by default.
-    if (isUndefined(desiredCapabilities[CAPS_NEW_COMMAND])) {
+    if (_.isUndefined(desiredCapabilities[CAPS_NEW_COMMAND])) {
       desiredCapabilities[CAPS_NEW_COMMAND] = NEW_COMMAND_TIMEOUT_SEC;
     }
 
     // If someone didn't specify connectHardwareKeyboard, set it to true by
     // default
-    if (isUndefined(desiredCapabilities[CAPS_CONNECT_HARDWARE_KEYBOARD])) {
+    if (_.isUndefined(desiredCapabilities[CAPS_CONNECT_HARDWARE_KEYBOARD])) {
       desiredCapabilities[CAPS_CONNECT_HARDWARE_KEYBOARD] = true;
     }
 
@@ -627,7 +631,7 @@ export function newSession(caps, attachSessId = null) {
       try {
         mode = APP_MODE.WEB_HYBRID;
         await driver.navigateTo('https://appium.io');
-      } catch (ign) {}
+      } catch {}
     }
 
     let mjpegScreenshotUrl =
@@ -861,7 +865,7 @@ export function setSavedServerParams() {
     if (server) {
       // if we have a cloud provider as a saved server, but for some reason the
       // cloud provider is no longer in the list, revert server type to remote
-      if (values(SERVER_TYPES).includes(serverType) && !currentProviders.includes(serverType)) {
+      if (_.values(SERVER_TYPES).includes(serverType) && !currentProviders.includes(serverType)) {
         serverType = SERVER_TYPES.REMOTE;
       }
       dispatch({type: SET_SERVER, server, serverType});
@@ -978,7 +982,7 @@ async function fetchAllSessions(baseUrl, authToken) {
     try {
       const res = await fetchSessionInformation({url, authToken});
       return res.data.value ?? [];
-    } catch (err) {
+    } catch {
       return [];
     }
   }
@@ -988,7 +992,7 @@ async function fetchAllSessions(baseUrl, authToken) {
     try {
       const res = await fetchSessionInformation({url, authToken});
       return formatSeleniumGridSessions(res);
-    } catch (err) {
+    } catch {
       return [];
     }
   }
@@ -1048,7 +1052,7 @@ export function saveRawDesiredCaps() {
       }
 
       // Translate the caps JSON to array format
-      let newCapsArray = toPairs(newCaps).map(([name, value]) => ({
+      let newCapsArray = _.toPairs(newCaps).map(([name, value]) => ({
         type: (() => {
           let type = typeof value;
 
@@ -1103,7 +1107,7 @@ export function stopAddCloudProvider() {
 export function addVisibleProvider(provider) {
   return async (dispatch, getState) => {
     let currentProviders = getState().session.visibleProviders;
-    const providers = union(currentProviders, [provider]);
+    const providers = _.union(currentProviders, [provider]);
     await setSetting(VISIBLE_PROVIDERS, providers);
     dispatch({type: SET_PROVIDERS, providers});
   };
@@ -1116,7 +1120,7 @@ export function removeVisibleProvider(provider) {
       const action = changeServerType('remote');
       await action(dispatch, getState);
     }
-    const providers = without(visibleProviders, provider);
+    const providers = _.without(visibleProviders, provider);
     await setSetting(VISIBLE_PROVIDERS, providers);
     dispatch({type: SET_PROVIDERS, providers});
   };
@@ -1197,7 +1201,7 @@ export function initFromQueryString(loadNewSession) {
       try {
         const state = JSON.parse(initialState);
         dispatch({type: SET_STATE_FROM_URL, state});
-      } catch (e) {
+      } catch {
         showError(new Error('Could not parse initial state from URL'), {secs: 0});
       }
     }

@@ -1,4 +1,4 @@
-import {omit} from 'lodash';
+import _ from 'lodash';
 
 import {
   ADD_ASSIGNED_VAR_CACHE,
@@ -214,7 +214,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       };
 
     case UNSELECT_CENTROID:
-      return omit(state, 'selectedCentroid');
+      return _.omit(state, 'selectedCentroid');
 
     case SET_SELECTED_ELEMENT_ID:
       return {
@@ -238,7 +238,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       };
 
     case UNSELECT_HOVERED_ELEMENT:
-      return omit(state, 'hoveredElement');
+      return _.omit(state, 'hoveredElement');
 
     case SELECT_HOVERED_CENTROID:
       return {
@@ -247,7 +247,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       };
 
     case UNSELECT_HOVERED_CENTROID:
-      return omit(state, 'hoveredCentroid');
+      return _.omit(state, 'hoveredCentroid');
 
     case METHOD_CALL_REQUESTED:
       return {
@@ -607,7 +607,7 @@ export default function inspector(state = INITIAL_STATE, action) {
         ...state,
         savedGestures: action.savedGestures || [],
       };
-      return omit(nextState, 'getSavedGesturesRequested');
+      return _.omit(nextState, 'getSavedGesturesRequested');
 
     case DELETE_SAVED_GESTURES_REQUESTED:
       return {
@@ -616,7 +616,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       };
 
     case DELETE_SAVED_GESTURES_DONE:
-      return omit(state, 'deleteGesture');
+      return _.omit(state, 'deleteGesture');
 
     case SET_LOADED_GESTURE:
       return {
@@ -625,7 +625,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       };
 
     case REMOVE_LOADED_GESTURE:
-      return omit(state, 'loadedGesture');
+      return _.omit(state, 'loadedGesture');
 
     case SHOW_GESTURE_ACTION:
       return {
@@ -634,7 +634,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       };
 
     case HIDE_GESTURE_ACTION:
-      return omit(state, 'showGesture');
+      return _.omit(state, 'showGesture');
 
     case SELECT_TICK_ELEMENT:
       return {
@@ -643,7 +643,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       };
 
     case UNSELECT_TICK_ELEMENT:
-      return omit(state, 'selectedTick');
+      return _.omit(state, 'selectedTick');
 
     case SET_GESTURE_TAP_COORDS_MODE:
       return {
@@ -655,7 +655,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       };
 
     case CLEAR_TAP_COORDINATES:
-      return omit(state, 'tickCoordinates');
+      return _.omit(state, 'tickCoordinates');
 
     case TOGGLE_SHOW_ATTRIBUTES:
       return {...state, showSourceAttrs: !state.showSourceAttrs};

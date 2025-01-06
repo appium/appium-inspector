@@ -60,7 +60,7 @@ export function parseSessionFileContents(sessionFileString) {
       }
     }
     return sessionJSON;
-  } catch (e) {
+  } catch {
     return null;
   }
 }
