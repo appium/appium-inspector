@@ -44,9 +44,9 @@ export default [
     },
   },
   {
+    name: 'Ignores',
     ignores: [
       ...includeIgnoreFile(gitignorePath).ignores,
-      '**/.*', // dotfiles aren't ignored by default in FlatConfig
       '**/*.xml',
       '**/*.html',
     ],
