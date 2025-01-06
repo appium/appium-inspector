@@ -60,7 +60,7 @@ export default class InspectorPage extends BasePage {
       await retryInterval(5, 500, async () => {
         await (await this.client.$('.ant-notification-notice-close')).click();
       });
-    } catch (ign) {}
+    } catch {}
   }
 
   async startRecording() {

@@ -1,6 +1,5 @@
 import {dialog} from 'electron';
-import pkg from 'electron-updater';
-const {autoUpdater} = pkg;
+import {autoUpdater} from 'electron-updater';
 
 import {t} from './helpers';
 
