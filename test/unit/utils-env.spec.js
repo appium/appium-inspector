@@ -3,11 +3,11 @@ import {describe, expect, it} from 'vitest';
 import {interpolateEnvironmentVariables} from '../../app/common/renderer/utils/env-utils';
 
 describe('interpolateEnvironmentVariables', function () {
-  const envVars = [
-    {key: 'HOME', value: '/home/user'},
-    {key: 'PATH', value: '/usr/bin'},
-    {key: 'APP_ENV', value: 'test'},
-  ];
+  const envVars = new Map([
+    ['HOME', '/home/user'],
+    ['PATH', '/usr/bin'],
+    ['APP_ENV', 'test'],
+  ]);
 
   it('should interpolate environment variables in strings', function () {
     const input = 'My home is ${HOME} and path is ${PATH}';
