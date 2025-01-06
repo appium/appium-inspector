@@ -1,8 +1,8 @@
 import {DeleteOutlined, PlusOutlined, SettingOutlined} from '@ant-design/icons';
 import {Button, Card, Input, Popconfirm, Space, Table, Tooltip} from 'antd';
 import {useState} from 'react';
-import SessionStyles from '../Session/Session.module.css';
-import styles from './Session.module.css';
+
+import SessionStyles from './Session.module.css';
 
 const EnvironmentVariables = ({t, envVars, addVariable, deleteVariable}) => {
   const [newVar, setNewVar] = useState({key: '', value: ''});
@@ -63,8 +63,8 @@ const EnvironmentVariables = ({t, envVars, addVariable, deleteVariable}) => {
       }
       className={SessionStyles['interaction-tab-card']}
     >
-      <div className={styles.container}>
-        <div className={styles.addForm}>
+      <div className={SessionStyles.container}>
+        <div className={SessionStyles.addForm}>
           <Space.Compact style={{width: '100%'}}>
             <Input
               placeholder={t('Variable Name')}
@@ -86,7 +86,13 @@ const EnvironmentVariables = ({t, envVars, addVariable, deleteVariable}) => {
             </Button>
           </Space.Compact>
         </div>
-        <Table columns={columns} dataSource={tableData} pagination={false} rowKey="key" size="small" />
+        <Table
+          columns={columns}
+          dataSource={tableData}
+          pagination={false}
+          rowKey="key"
+          size="small"
+        />
       </div>
     </Card>
   );

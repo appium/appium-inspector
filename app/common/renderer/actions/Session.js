@@ -241,17 +241,17 @@ export function newSession(caps, attachSessId = null) {
 
     // Get capabilities and interpolate environment variables
     let desiredCapabilities = caps ? getCapsObject(caps) : {};
-    
+
     // Modify this section to handle W3C capabilities format
     if (desiredCapabilities.alwaysMatch) {
       desiredCapabilities.alwaysMatch = interpolateEnvironmentVariables(
         desiredCapabilities.alwaysMatch,
-        environmentVariables
+        environmentVariables,
       );
     } else {
       desiredCapabilities = interpolateEnvironmentVariables(
         desiredCapabilities,
-        environmentVariables
+        environmentVariables,
       );
     }
 
@@ -1225,7 +1225,7 @@ export function setEnvironmentVariables(envVars) {
 
 export function loadEnvironmentVariables() {
   return async (dispatch) => {
-    const envVars = await getSetting(ENVIRONMENT_VARIABLES) || [];
+    const envVars = (await getSetting(ENVIRONMENT_VARIABLES)) || [];
     dispatch({type: SET_ENVIRONMENT_VARIABLES, envVars});
   };
 }

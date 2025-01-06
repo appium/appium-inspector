@@ -1,5 +1,5 @@
-import {LinkOutlined, SettingOutlined} from '@ant-design/icons';
-import {Badge, Button, Card, Spin, Tabs} from 'antd';
+import {LinkOutlined} from '@ant-design/icons';
+import {Badge, Button, Spin, Tabs} from 'antd';
 import _ from 'lodash';
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router';
@@ -13,12 +13,12 @@ import {
 } from '../../constants/session-builder';
 import {ipcRenderer, openLink} from '../../polyfills';
 import {log} from '../../utils/logger';
-import EnvironmentVariables from './EnvironmentVariables.jsx';
 import AdvancedServerParams from './AdvancedServerParams.jsx';
 import AttachToSession from './AttachToSession.jsx';
 import CapabilityEditor from './CapabilityEditor.jsx';
 import CloudProviders from './CloudProviders.jsx';
 import CloudProviderSelector from './CloudProviderSelector.jsx';
+import EnvironmentVariables from './EnvironmentVariables.jsx';
 import SavedSessions from './SavedSessions.jsx';
 import ServerTabCustom from './ServerTabCustom.jsx';
 import SessionStyles from './Session.module.css';

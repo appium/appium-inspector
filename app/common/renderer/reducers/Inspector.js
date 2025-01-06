@@ -86,9 +86,9 @@ import {
   UNSELECT_TICK_ELEMENT,
 } from '../actions/Inspector';
 import {
-  SET_ENVIRONMENT_VARIABLES,
   ADD_ENVIRONMENT_VARIABLE,
   DELETE_ENVIRONMENT_VARIABLE,
+  SET_ENVIRONMENT_VARIABLES,
 } from '../actions/Session';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
 import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
@@ -141,7 +141,6 @@ let nextState;
 
 export default function inspector(state = INITIAL_STATE, action) {
   switch (action.type) {
-
     case SET_SOURCE_AND_SCREENSHOT:
       return {
         ...state,
@@ -677,7 +676,7 @@ export default function inspector(state = INITIAL_STATE, action) {
         ...state,
         environmentVariables: [
           ...(state.environmentVariables || []),
-          {key: action.key, value: action.value}
+          {key: action.key, value: action.value},
         ],
       };
 
@@ -685,7 +684,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         environmentVariables: (state.environmentVariables || []).filter(
-          (envVar) => envVar.key !== action.key
+          (envVar) => envVar.key !== action.key,
         ),
       };
 
