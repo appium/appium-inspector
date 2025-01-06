@@ -40,7 +40,7 @@ export default class AppiumClient {
     if (methodName === 'quit') {
       try {
         await this.driver.quit();
-      } catch (ign) {}
+      } catch {}
 
       _instance = null;
 
@@ -193,7 +193,7 @@ export default class AppiumClient {
     let element = null;
     try {
       element = await this.driver.findElement(strategy, selector);
-    } catch (err) {
+    } catch {
       return {};
     }
 
@@ -301,13 +301,13 @@ export default class AppiumClient {
           try {
             const systemBars = await this.driver.executeScript('mobile:getSystemBars', []);
             webviewTopOffset = systemBars.statusBar.height;
-          } catch (e) {
+          } catch {
             try {
               // to minimize the endpoint call which gets error in newer chromedriver.
               const sessionDetails = await this.driver.getSession();
               // in case driver does not support mobile:getSystemBars
               webviewTopOffset = sessionDetails.viewportRect.top;
-            } catch (ign) {}
+            } catch {}
           }
         }
       } else if (this.driver.client.isIOS) {
@@ -316,7 +316,7 @@ export default class AppiumClient {
           // emulate optional chaining of deeply embedded property which might not exist using
           // a try catch
           browserName = this.driver.client.capabilities.browserName.toLowerCase();
-        } catch (ign) {}
+        } catch {}
         const isSafari = browserName === 'safari';
         if (isSafari) {
           // on iOS, if we're in Safari simply find the top status bar and address bar and use its Y endpoint
@@ -336,12 +336,12 @@ export default class AppiumClient {
                 [],
               );
               webviewLeftOffset = deviceScreenInfo.statusBarSize.height;
-            } catch (e) {
+            } catch {
               try {
                 const sessionDetails = await this.driver.getSession();
                 // in case driver does not support mobile:deviceScreenInfo
                 webviewLeftOffset = sessionDetails.statBarHeight;
-              } catch (ign) {}
+              } catch {}
             }
           }
         } else {
@@ -406,7 +406,7 @@ export default class AppiumClient {
     try {
       await this.driver.getContexts();
       return true;
-    } catch (ign) {}
+    } catch {}
 
     // If the app under test returns non JSON format response
     return false;
@@ -454,7 +454,7 @@ export default class AppiumClient {
             let descriptionJSON = {attached: false};
             try {
               descriptionJSON = JSON.parse(page.description);
-            } catch (ign) {}
+            } catch {}
 
             // You can have multiple `type` of pages, like service workers
             // We need to have pages with or 1. an attached view or 2. with an empty description
