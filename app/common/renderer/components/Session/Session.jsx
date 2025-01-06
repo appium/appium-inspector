@@ -13,7 +13,7 @@ import {
 } from '../../constants/session-builder';
 import {ipcRenderer, openLink} from '../../polyfills';
 import {log} from '../../utils/logger';
-import EnvironmentVariables from '../Inspector/EnvironmentVariables.jsx';
+import EnvironmentVariables from './EnvironmentVariables.jsx';
 import AdvancedServerParams from './AdvancedServerParams.jsx';
 import AttachToSession from './AttachToSession.jsx';
 import CapabilityEditor from './CapabilityEditor.jsx';
@@ -41,8 +41,10 @@ const Session = (props) => {
     savedSessions,
     newSessionLoading,
     attachSessId,
-    loadEnvironmentVariables,
     t,
+    environmentVariables,
+    addEnvironmentVariable,
+    deleteEnvironmentVariable,
   } = props;
 
   const navigate = useNavigate();
@@ -164,17 +166,14 @@ const Session = (props) => {
             {
               label: t('Environment Variables'),
               key: SESSION_BUILDER_TABS.ENV_VARS,
+              className: SessionStyles.scrollingTab,
               children: (
-                <Card
-                  title={
-                    <span>
-                      <SettingOutlined /> {t('Environment Variables')}
-                    </span>
-                  }
-                  className={SessionStyles['interaction-tab-card']}
-                >
-                  <EnvironmentVariables {...props} />
-                </Card>
+                <EnvironmentVariables
+                  t={t}
+                  envVars={environmentVariables}
+                  addVariable={addEnvironmentVariable}
+                  deleteVariable={deleteEnvironmentVariable}
+                />
               ),
             },
           ]}

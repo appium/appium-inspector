@@ -39,6 +39,9 @@ import {
   SET_STATE_FROM_URL,
   SHOW_DESIRED_CAPS_JSON_ERROR,
   SWITCHED_TABS,
+  SET_ENVIRONMENT_VARIABLES,
+  ADD_ENVIRONMENT_VARIABLE,
+  DELETE_ENVIRONMENT_VARIABLE
 } from '../actions/Session';
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder';
 
@@ -75,12 +78,33 @@ const INITIAL_STATE = {
   isValidatingCapsJson: false,
   isAddingCloudProvider: false,
   addVendorPrefixes: true,
+  environmentVariables: [],
 };
 
 let nextState;
 
 export default function session(state = INITIAL_STATE, action) {
   switch (action.type) {
+    case SET_ENVIRONMENT_VARIABLES:
+      return {
+        ...state,
+        environmentVariables: new Map(action.envVars.map(({key, value}) => [key, value])),
+      };
+
+    case ADD_ENVIRONMENT_VARIABLE:
+      return {
+        ...state,
+        environmentVariables: new Map(state.environmentVariables).set(action.key, action.value),
+      };
+
+    case DELETE_ENVIRONMENT_VARIABLE:
+      const newEnvVars = new Map(state.environmentVariables);
+      newEnvVars.delete(action.key);
+      return {
+        ...state,
+        environmentVariables: newEnvVars,
+      };
+
     case NEW_SESSION_REQUESTED:
       return {
         ...state,

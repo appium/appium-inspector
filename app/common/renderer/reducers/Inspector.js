@@ -1,9 +1,7 @@
 import {omit} from 'lodash';
 
-import {ENVIRONMENT_VARIABLES} from '../../shared/setting-defs';
 import {
   ADD_ASSIGNED_VAR_CACHE,
-  ADD_ENVIRONMENT_VARIABLE,
   CANCEL_PENDING_COMMAND,
   CLEAR_ASSIGNED_VAR_CACHE,
   CLEAR_COORD_ACTION,
@@ -11,7 +9,6 @@ import {
   CLEAR_SEARCH_RESULTS,
   CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS,
   CLEAR_TAP_COORDINATES,
-  DELETE_ENVIRONMENT_VARIABLE,
   DELETE_SAVED_GESTURES_DONE,
   DELETE_SAVED_GESTURES_REQUESTED,
   ENTERING_COMMAND_ARGS,
@@ -51,7 +48,6 @@ import {
   SET_CONTEXT,
   SET_COORD_END,
   SET_COORD_START,
-  SET_ENVIRONMENT_VARIABLES,
   SET_EXPANDED_PATHS,
   SET_GESTURE_TAP_COORDS_MODE,
   SET_GESTURE_UPLOAD_ERROR,
@@ -89,20 +85,21 @@ import {
   UNSELECT_HOVERED_ELEMENT,
   UNSELECT_TICK_ELEMENT,
 } from '../actions/Inspector';
+import {
+  SET_ENVIRONMENT_VARIABLES,
+  ADD_ENVIRONMENT_VARIABLE,
+  DELETE_ENVIRONMENT_VARIABLE,
+} from '../actions/Session';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
 import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
-import {getSetting} from '../polyfills';
 
 const DEFAULT_FRAMEWORK = 'java';
-
-// Load initial environment variables from persistent settings
-const envVars = (await getSetting(ENVIRONMENT_VARIABLES)) || [];
 
 const INITIAL_STATE = {
   savedGestures: [],
   driver: null,
   automationName: null,
-  environmentVariables: envVars,
+  environmentVariables: [],
   keepAliveInterval: null,
   showKeepAlivePrompt: false,
   userWaitTimeout: null,
@@ -142,39 +139,8 @@ const INITIAL_STATE = {
 
 let nextState;
 
-// Helper function to interpolate environment variables in a string
-const interpolateEnvVars = (str, envVars) => {
-  if (typeof str !== 'string') {
-    return str;
-  }
-  return str.replace(/\${([^}]+)}/g, (match, key) => {
-    const envVar = envVars.find((v) => v.key === key);
-    return envVar ? envVar.value : match;
-  });
-};
-
 export default function inspector(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case SET_ENVIRONMENT_VARIABLES:
-      return {
-        ...state,
-        environmentVariables: action.envVars,
-      };
-
-    case ADD_ENVIRONMENT_VARIABLE:
-      return {
-        ...state,
-        environmentVariables: [
-          ...state.environmentVariables,
-          {key: action.key, value: action.value},
-        ],
-      };
-
-    case DELETE_ENVIRONMENT_VARIABLE:
-      return {
-        ...state,
-        environmentVariables: state.environmentVariables.filter((v) => v.key !== action.key),
-      };
 
     case SET_SOURCE_AND_SCREENSHOT:
       return {
@@ -699,6 +665,29 @@ export default function inspector(state = INITIAL_STATE, action) {
 
     case SET_GESTURE_UPLOAD_ERROR:
       return {...state, gestureUploadErrors: action.errors};
+
+    case SET_ENVIRONMENT_VARIABLES:
+      return {
+        ...state,
+        environmentVariables: action.envVars,
+      };
+
+    case ADD_ENVIRONMENT_VARIABLE:
+      return {
+        ...state,
+        environmentVariables: [
+          ...(state.environmentVariables || []),
+          {key: action.key, value: action.value}
+        ],
+      };
+
+    case DELETE_ENVIRONMENT_VARIABLE:
+      return {
+        ...state,
+        environmentVariables: (state.environmentVariables || []).filter(
+          (envVar) => envVar.key !== action.key
+        ),
+      };
 
     default:
       return {...state};

@@ -21,6 +21,8 @@ import {log} from '../utils/logger';
 import {addVendorPrefixes} from '../utils/other';
 import {quitSession, setSessionDetails} from './Inspector';
 
+export const ENVIRONMENT_VARIABLES = 'ENVIRONMENT_VARIABLES';
+
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_LOADING = 'NEW_SESSION_LOADING';
 export const NEW_SESSION_DONE = 'NEW_SESSION_DONE';
@@ -68,6 +70,10 @@ export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
 export const SET_CAPABILITY_NAME_ERROR = 'SET_CAPABILITY_NAME_ERROR';
 export const SET_STATE_FROM_URL = 'SET_STATE_FROM_URL';
 export const SET_STATE_FROM_FILE = 'SET_STATE_FROM_FILE';
+
+export const SET_ENVIRONMENT_VARIABLES = 'SET_ENVIRONMENT_VARIABLES';
+export const ADD_ENVIRONMENT_VARIABLE = 'ADD_ENVIRONMENT_VARIABLE';
+export const DELETE_ENVIRONMENT_VARIABLE = 'DELETE_ENVIRONMENT_VARIABLE';
 
 const APPIUM_SESSION_FILE_VERSION = '1.0';
 
@@ -231,14 +237,24 @@ export function newSession(caps, attachSessId = null) {
     dispatch({type: NEW_SESSION_REQUESTED, caps});
 
     // Get environment variables from state
-    const environmentVariables = getState().inspector.environmentVariables || [];
+    const environmentVariables = session.environmentVariables || [];
 
     // Get capabilities and interpolate environment variables
     let desiredCapabilities = caps ? getCapsObject(caps) : {};
-    desiredCapabilities = interpolateEnvironmentVariables(
-      desiredCapabilities,
-      environmentVariables,
-    );
+    
+    // Modify this section to handle W3C capabilities format
+    if (desiredCapabilities.alwaysMatch) {
+      desiredCapabilities.alwaysMatch = interpolateEnvironmentVariables(
+        desiredCapabilities.alwaysMatch,
+        environmentVariables
+      );
+    } else {
+      desiredCapabilities = interpolateEnvironmentVariables(
+        desiredCapabilities,
+        environmentVariables
+      );
+    }
+
     let host, port, username, accessKey, https, path, token;
     desiredCapabilities = addCustomCaps(desiredCapabilities);
 
@@ -1193,5 +1209,37 @@ export function initFromQueryString(loadNewSession) {
       }
       loadNewSession(caps);
     }
+  };
+}
+
+export function setEnvironmentVariables(envVars) {
+  return async (dispatch) => {
+    await setSetting(ENVIRONMENT_VARIABLES, envVars);
+    dispatch({type: SET_ENVIRONMENT_VARIABLES, envVars});
+  };
+}
+
+export function loadEnvironmentVariables() {
+  return async (dispatch) => {
+    const envVars = await getSetting(ENVIRONMENT_VARIABLES) || [];
+    dispatch({type: SET_ENVIRONMENT_VARIABLES, envVars});
+  };
+}
+
+export function addEnvironmentVariable(key, value) {
+  return async (dispatch, getState) => {
+    const currentEnvVars = getState().inspector.environmentVariables || [];
+    const newEnvVars = [...currentEnvVars, {key, value}];
+    await setSetting(ENVIRONMENT_VARIABLES, newEnvVars);
+    dispatch({type: ADD_ENVIRONMENT_VARIABLE, key, value});
+  };
+}
+
+export function deleteEnvironmentVariable(key) {
+  return async (dispatch, getState) => {
+    const currentEnvVars = getState().inspector.environmentVariables || [];
+    const newEnvVars = currentEnvVars.filter((v) => v.key !== key);
+    await setSetting(ENVIRONMENT_VARIABLES, newEnvVars);
+    dispatch({type: DELETE_ENVIRONMENT_VARIABLE, key});
   };
 }

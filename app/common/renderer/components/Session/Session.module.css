@@ -322,3 +322,13 @@
   flex: 2;
   height: 100%;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.addForm {
+  padding: 8px 0;
+}
