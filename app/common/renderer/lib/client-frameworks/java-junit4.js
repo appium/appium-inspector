@@ -7,8 +7,10 @@ class JavaJUnit4Framework extends JavaFramework {
     return `// This sample code supports Appium Java client >=9
 // https://github.com/appium/java-client
 import io.appium.java_client.remote.options.BaseOptions;
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.${pkg}.${cls};
 import java.net.URL;
+import java.net.MalformedURLException;
 import java.time.Duration;
 import java.util.Arrays;
 import org.junit.After;
@@ -22,16 +24,8 @@ public class SampleTest {
 
   @Before
   public void setUp() {
-    var options = new BaseOptions()
-${capStr};
-
-    private URL getUrl() {
-      try {
-        return new URL("${this.serverUrl}");
-      } catch (MalformedURLException e) {
-        e.printStackTrace();
-      }
-    }
+    Capabilities options = new BaseOptions()
+${capStr};    
 
     driver = new ${cls}(this.getUrl(), options);
   }
@@ -45,6 +39,14 @@ ${this.indent(code, 4)}
   public void tearDown() {
     driver.quit();
   }
+
+  private URL getUrl() {
+      try {
+        return new URL("${this.serverUrl}");
+      } catch (MalformedURLException e) {
+        e.printStackTrace();
+      }
+    }
 }
 `;
   }

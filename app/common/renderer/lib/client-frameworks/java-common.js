@@ -73,11 +73,11 @@ class JavaFramework extends Framework {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `var ${localVar} = driver.findElements(AppiumBy.${
+      return `WebElements ${localVar} = driver.findElements(AppiumBy.${
         suffixMap[strategy]
       }(${JSON.stringify(locator)}));`;
     } else {
-      return `var ${localVar} = driver.findElement(AppiumBy.${suffixMap[strategy]}(${JSON.stringify(
+      return `WebElement ${localVar} = driver.findElement(AppiumBy.${suffixMap[strategy]}(${JSON.stringify(
         locator,
       )}));`;
     }
