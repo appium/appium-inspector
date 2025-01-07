@@ -329,7 +329,7 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
         settings.push(`_driver.SetSetting("${settingName}", ${this.getCSharpVal(settingValue)});`);
       }
       return settings.join('\n');
-    } catch (e) {
+    } catch {
       return `// Could not parse: ${settingsJson}`;
     }
   }
