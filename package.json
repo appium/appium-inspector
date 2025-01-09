@@ -98,10 +98,10 @@
     "vite": "V6: need support in electron-vite"
   },
   "devDependencies": {
-    "@appium/docutils": "1.0.28",
-    "@appium/eslint-config-appium-ts": "1.0.1",
-    "@appium/fake-driver": "5.6.0",
-    "@appium/support": "6.0.2",
+    "@appium/docutils": "1.0.29",
+    "@appium/eslint-config-appium-ts": "1.0.2",
+    "@appium/fake-driver": "5.7.0",
+    "@appium/support": "6.0.3",
     "@eslint/compat": "1.2.4",
     "@types/react": "18.3.18",
     "@vitejs/plugin-react": "4.3.4",
