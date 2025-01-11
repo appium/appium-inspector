@@ -49,7 +49,7 @@ jobs:
           cache: 'npm'
       - name: generate contents
         run: |
-          npm config set _authToken=$NPM_TOKEN
+          npm set "//registry.npmjs.org/:_authToken=$NPM_TOKEN"
           npm install
           npm run build:plugin
       - name: publish
