@@ -1,6 +1,6 @@
 {
   "name": "appium-inspector",
-  "version": "2024.12.2-beta.4",
+  "version": "2024.12.1",
   "description": "An app inspector for use with an Appium server",
   "repository": {
     "type": "git",
@@ -50,7 +50,7 @@
     "publish:docs": "appium-docs build --deploy --push -b docs-site -m 'docs: build docs for appium-inspector@%s' --alias latest",
     "install-docs-deps": "appium-docs init --no-mkdocs",
     "version": "npm run plugin:sync:version && git add plugins/package.json",
-    "postversion": "echo 'done'",
+    "postversion": "git pull --tags && git push && git push --tags",
     "crowdin-sync": "node ./ci-jobs/crowdin-sync-translations.mjs",
     "crowdin-update": "node ./ci-jobs/crowdin-update-resources.mjs"
   },
