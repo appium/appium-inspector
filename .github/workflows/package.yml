@@ -28,15 +28,15 @@ jobs:
           cache: 'npm'
       - name: Install dependencies (Node.js)
         run: npm ci
-      - name: Build electron app
-        run: npm run build:electron
-      - name: build package
-        run: npx electron-builder build --x64 --arm64 --publish always
-      - name: Upload built packages
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifact-${{ matrix.image }}
-          path: release/
+      # - name: Build electron app
+      #   run: npm run build:electron
+      # - name: build package
+      #   run: npx electron-builder build --x64 --arm64 --publish always
+      # - name: Upload built packages
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: artifact-${{ matrix.image }}
+      #     path: release/
 
   plugin:
     runs-on: ubuntu-latest
