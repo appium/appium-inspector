@@ -47,14 +47,14 @@ jobs:
         with:
           node-version: lts/*
           cache: 'npm'
+      - name: Authenticate with npm registry
+        run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: generate contents
         run: |
-          npm set "//registry.npmjs.org/:_authToken=$NPM_TOKEN"
           npm install
           npm run build:plugin
       - name: publish
         run: npm publish
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: plugins
