@@ -40,10 +40,6 @@ jobs:
 
   plugin:
     runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js LTS
@@ -53,8 +49,12 @@ jobs:
           cache: 'npm'
       - name: generate contents
         run: |
+          npm config set _authToken=$NPM_TOKEN
           npm install
           npm run build:plugin
       - name: publish
         run: npm publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: plugins
