@@ -51,10 +51,10 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Install dependencies (Node.js)
+        run: npm ci
       - name: generate contents
-        run: |
-          npm ci
-          npm run build:plugin
+        run: npm run build:plugin
       - name: publish
         run: npm publish
         working-directory: plugins
