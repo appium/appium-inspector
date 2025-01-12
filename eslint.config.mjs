@@ -1,15 +1,7 @@
-import path from 'node:path';
-import {fileURLToPath} from 'node:url';
-
 import appiumConfig from '@appium/eslint-config-appium-ts';
-import {includeIgnoreFile} from '@eslint/compat';
 import reactPlugin from 'eslint-plugin-react';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const gitignorePath = path.resolve(__dirname, '.gitignore');
 
 export default [
   ...appiumConfig,
@@ -45,6 +37,6 @@ export default [
   },
   {
     name: 'Ignores',
-    ignores: [...includeIgnoreFile(gitignorePath).ignores, '**/*.xml', '**/*.html'],
+    ignores: ['**/*.xml', '**/*.html'],
   },
 ];
