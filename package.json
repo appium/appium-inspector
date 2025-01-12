@@ -102,7 +102,6 @@
     "@appium/eslint-config-appium-ts": "1.0.2",
     "@appium/fake-driver": "5.7.0",
     "@appium/support": "6.0.3",
-    "@eslint/compat": "1.2.5",
     "@types/react": "18.3.18",
     "@vitejs/plugin-react": "4.3.4",
     "asyncbox": "3.0.0",
