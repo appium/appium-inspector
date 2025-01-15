@@ -1,5 +1,8 @@
 # Appium Inspector Plugin
 
+[![npm version](http://img.shields.io/npm/v/appium-inspector-plugin.svg)](https://npmjs.org/package/appium-inspector-plugin)
+[![Downloads](http://img.shields.io/npm/dm/appium-inspector-plugin.svg)](https://npmjs.org/package/appium-inspector-plugin)
+
 A plugin that integrates the [Appium Inspector](https://github.com/appium/appium-inspector) directly into your Appium server installation, providing a web-based interface for inspecting and interacting with your application under test.
 
 ## Features
@@ -9,11 +12,8 @@ A plugin that integrates the [Appium Inspector](https://github.com/appium/appium
 
 ## Installation
 
-Install the plugin using one of the following methods:
-
 ```bash
-# Install from local directory. Then, please run 'npm run build:plugin' as well.
-appium plugin install --source=local /path/to/appium-inspector/plugins
+appium plugin install --source=npm appium-inspector-plugin
 ```
 
 > [!Note]
@@ -36,11 +36,10 @@ http://localhost:4723/inspector
 ## Development
 
 1. `git clone` this repositiry
-2. `appium plugin install --source=local /path/to/appium-inspector/plugins`
-3. Update the plugin content with `npm run build:plugin` in `/path/to/appium-inspector`
-4. Start Appium with `appium --use-plugins=inspector --allow-cors`
-
-This plugin only needs the `appium` server as a `peerDependencies`.
+2. Run `npm install` in `/path/to/appium-inspector/plugins`
+3. `appium plugin install --source=local /path/to/appium-inspector/plugins`
+4. Update the plugin content with `npm run build:plugin` in `/path/to/appium-inspector`
+5. Start Appium with `appium --use-plugins=inspector --allow-cors`
 
 ## Release
 
