@@ -1,15 +1,8 @@
-import {
-  installExtension,
-  REACT_DEVELOPER_TOOLS,
-  REDUX_DEVTOOLS,
-} from '@tomjs/electron-devtools-installer';
+import {installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} from 'electron-devtools-installer';
 
 export async function installExtensions() {
   const opts = {
     forceDownload: !!process.env.UPGRADE_EXTENSIONS,
-    loadExtensionOptions: {
-      allowFileAccess: true,
-    },
   };
   try {
     await installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], opts);
