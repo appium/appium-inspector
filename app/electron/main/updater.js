@@ -1,5 +1,7 @@
 import {dialog} from 'electron';
-import {autoUpdater} from 'electron-updater';
+import pkg from 'electron-updater';
+// eslint-disable-next-line import/no-named-as-default-member -- module is CJS
+const {autoUpdater} = pkg;
 
 import {t} from './helpers';
 
