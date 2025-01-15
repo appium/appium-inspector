@@ -7,7 +7,7 @@ on:
       - '*'
 
 jobs:
-  build:
+  electron:
     strategy:
       matrix:
         image: [ubuntu-latest, macos-latest, windows-latest]
@@ -37,3 +37,24 @@ jobs:
         with:
           name: artifact-${{ matrix.image }}
           path: release/
+
+  plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      - name: Authenticate with npm registry
+        run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Install dependencies (Node.js)
+        run: npm ci
+      - name: generate contents
+        run: npm run build:plugin
+      - name: publish
+        run: npm publish
+        working-directory: plugins
