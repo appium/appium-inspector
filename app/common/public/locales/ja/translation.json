@@ -295,5 +295,6 @@
   "gestureNameCannotBeEmptyError": "ジェスチャー名は空にできません",
   "gestureInvalidJsonError": "無効な JSON ファイルです。ファイルの内容を解析できません。",
   "gestureImportedFrom": "記録された操作は '{{fileName}}' から読み込まれました",
-  "invalidSessionFile": "無効なセッションファイル"
+  "invalidSessionFile": "無効なセッションファイル",
+  "tvlabsCredentialsRequired": "TV Labs API Key is required"
 }

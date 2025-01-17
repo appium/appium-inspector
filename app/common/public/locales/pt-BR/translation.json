@@ -295,5 +295,6 @@
   "gestureNameCannotBeEmptyError": "Nome do gesto não pode ser vazio",
   "gestureInvalidJsonError": "Arquivo JSON inválido. Não é possível analisar o conteúdo do arquivo",
   "gestureImportedFrom": "Gesto importado de '{{fileName}}'",
-  "invalidSessionFile": "Arquivo de sessão inválido"
+  "invalidSessionFile": "Arquivo de sessão inválido",
+  "tvlabsCredentialsRequired": "TV Labs API Key is required"
 }
