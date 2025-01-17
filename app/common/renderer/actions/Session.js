@@ -230,7 +230,7 @@ export function newSession(caps, attachSessId = null) {
     dispatch({type: NEW_SESSION_REQUESTED, caps});
 
     let desiredCapabilities = caps ? getCapsObject(caps) : {};
-    let host, port, username, accessKey, https, path, token;
+    let host, port, username, accessKey, https, path, token, headers;
     desiredCapabilities = addCustomCaps(desiredCapabilities);
 
     switch (session.serverType) {
@@ -492,6 +492,19 @@ export function newSession(caps, attachSessId = null) {
         desiredCapabilities['mobitru:options'].source = 'appium-inspector';
         break;
       }
+      case SERVER_TYPES.TVLABS: {
+        host = process.env.TVLABS_WEBDRIVER_URL || 'appium.tvlabs.ai';
+        path = '/';
+        port = 4723;
+        https = true;
+        accessKey = session.server.tvlabs.apiKey || process.env.TVLABS_API_KEY;
+        if (!accessKey) {
+          showError(new Error(i18n.t('tvlabsCredentialsRequired')));
+          return false;
+        }
+        headers = { 'Authorization': `Bearer ${accessKey}` };
+        break;
+      }
 
       default:
         break;
@@ -516,6 +529,7 @@ export function newSession(caps, attachSessId = null) {
       port: parseInt(port, 10),
       protocol: https ? 'https' : 'http',
       path,
+      headers,
       connectionRetryCount: CONN_RETRIES,
       connectionRetryTimeout: CONN_TIMEOUT,
     };
