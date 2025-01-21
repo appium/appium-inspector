@@ -316,3 +316,19 @@
   color: #ff4d4f;
   font-size: 12px;
 }
+
+.interaction-tab-card :global(.ant-card-body) {
+  overflow: scroll;
+  flex: 2;
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.addForm {
+  padding: 8px 0;
+}

@@ -4,7 +4,9 @@ import {
   ABORT_DESIRED_CAPS_EDITOR,
   ABORT_DESIRED_CAPS_NAME_EDITOR,
   ADD_CAPABILITY,
+  ADD_ENVIRONMENT_VARIABLE,
   CHANGE_SERVER_TYPE,
+  DELETE_ENVIRONMENT_VARIABLE,
   DELETE_SAVED_SESSION_DONE,
   DELETE_SAVED_SESSION_REQUESTED,
   ENABLE_DESIRED_CAPS_EDITOR,
@@ -30,6 +32,7 @@ import {
   SET_CAPABILITY_PARAM,
   SET_CAPS_AND_SERVER,
   SET_DESIRED_CAPS_NAME,
+  SET_ENVIRONMENT_VARIABLES,
   SET_PROVIDERS,
   SET_RAW_DESIRED_CAPS,
   SET_SAVE_AS_TEXT,
@@ -75,12 +78,34 @@ const INITIAL_STATE = {
   isValidatingCapsJson: false,
   isAddingCloudProvider: false,
   addVendorPrefixes: true,
+  environmentVariables: [],
 };
 
 let nextState;
 
 export default function session(state = INITIAL_STATE, action) {
   switch (action.type) {
+    case SET_ENVIRONMENT_VARIABLES:
+      return {
+        ...state,
+        environmentVariables: new Map(action.envVars.map(({key, value}) => [key, value])),
+      };
+
+    case ADD_ENVIRONMENT_VARIABLE:
+      return {
+        ...state,
+        environmentVariables: new Map(state.environmentVariables).set(action.key, action.value),
+      };
+
+    case DELETE_ENVIRONMENT_VARIABLE: {
+      const newEnvVars = new Map(state.environmentVariables);
+      newEnvVars.delete(action.key);
+      return {
+        ...state,
+        environmentVariables: newEnvVars,
+      };
+    }
+
     case NEW_SESSION_REQUESTED:
       return {
         ...state,

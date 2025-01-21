@@ -85,6 +85,11 @@ import {
   UNSELECT_HOVERED_ELEMENT,
   UNSELECT_TICK_ELEMENT,
 } from '../actions/Inspector';
+import {
+  ADD_ENVIRONMENT_VARIABLE,
+  DELETE_ENVIRONMENT_VARIABLE,
+  SET_ENVIRONMENT_VARIABLES,
+} from '../actions/Session';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
 import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
 
@@ -94,6 +99,7 @@ const INITIAL_STATE = {
   savedGestures: [],
   driver: null,
   automationName: null,
+  environmentVariables: [],
   keepAliveInterval: null,
   showKeepAlivePrompt: false,
   userWaitTimeout: null,
@@ -658,6 +664,29 @@ export default function inspector(state = INITIAL_STATE, action) {
 
     case SET_GESTURE_UPLOAD_ERROR:
       return {...state, gestureUploadErrors: action.errors};
+
+    case SET_ENVIRONMENT_VARIABLES:
+      return {
+        ...state,
+        environmentVariables: action.envVars,
+      };
+
+    case ADD_ENVIRONMENT_VARIABLE:
+      return {
+        ...state,
+        environmentVariables: [
+          ...(state.environmentVariables || []),
+          {key: action.key, value: action.value},
+        ],
+      };
+
+    case DELETE_ENVIRONMENT_VARIABLE:
+      return {
+        ...state,
+        environmentVariables: (state.environmentVariables || []).filter(
+          (envVar) => envVar.key !== action.key,
+        ),
+      };
 
     default:
       return {...state};

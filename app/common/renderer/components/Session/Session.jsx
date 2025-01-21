@@ -18,6 +18,7 @@ import AttachToSession from './AttachToSession.jsx';
 import CapabilityEditor from './CapabilityEditor.jsx';
 import CloudProviders from './CloudProviders.jsx';
 import CloudProviderSelector from './CloudProviderSelector.jsx';
+import EnvironmentVariables from './EnvironmentVariables.jsx';
 import SavedSessions from './SavedSessions.jsx';
 import ServerTabCustom from './ServerTabCustom.jsx';
 import SessionStyles from './Session.module.css';
@@ -41,6 +42,9 @@ const Session = (props) => {
     newSessionLoading,
     attachSessId,
     t,
+    environmentVariables,
+    addEnvironmentVariable,
+    deleteEnvironmentVariable,
   } = props;
 
   const navigate = useNavigate();
@@ -73,6 +77,7 @@ const Session = (props) => {
       bindWindowClose,
       initFromQueryString,
       saveSessionAsFile,
+      loadEnvironmentVariables,
     } = props;
     (async () => {
       try {
@@ -82,6 +87,7 @@ const Session = (props) => {
         await setVisibleProviders();
         await setSavedServerParams();
         await setLocalServerParams();
+        await loadEnvironmentVariables();
         initFromQueryString(loadNewSession);
         await initFromSessionFile();
         ipcRenderer.on('sessionfile:apply', (_, sessionFileString) =>
@@ -156,6 +162,19 @@ const Session = (props) => {
               key: SESSION_BUILDER_TABS.ATTACH_TO_SESSION,
               className: SessionStyles.scrollingTab,
               children: <AttachToSession {...props} />,
+            },
+            {
+              label: t('Environment Variables'),
+              key: SESSION_BUILDER_TABS.ENV_VARS,
+              className: SessionStyles.scrollingTab,
+              children: (
+                <EnvironmentVariables
+                  t={t}
+                  envVars={environmentVariables}
+                  addVariable={addEnvironmentVariable}
+                  deleteVariable={deleteEnvironmentVariable}
+                />
+              ),
             },
           ]}
         />
