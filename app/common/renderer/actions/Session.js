@@ -502,7 +502,7 @@ export function newSession(caps, attachSessId = null) {
           showError(new Error(i18n.t('tvlabsCredentialsRequired')));
           return false;
         }
-        headers = { 'Authorization': `Bearer ${accessKey}` };
+        headers = {Authorization: `Bearer ${accessKey}`};
         break;
       }
 

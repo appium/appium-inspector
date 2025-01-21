@@ -9,7 +9,6 @@ const tvlabsApiKeyPlaceholder = (t) => {
   return t('yourApiKey');
 };
 
-
 const ServerTabTVLabs = ({server, setServerParam, t}) => (
   <Form>
     <Row gutter={8}>
