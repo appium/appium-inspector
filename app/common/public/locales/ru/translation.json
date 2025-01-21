@@ -295,6 +295,5 @@
   "gestureNameCannotBeEmptyError": "Название жеста не может быть пустым",
   "gestureInvalidJsonError": "Негодный файл JSON. Невозможно разобрать содержимое файла",
   "gestureImportedFrom": "Жест импортирован из '{{fileName}}'",
-  "invalidSessionFile": "Invalid session file",
-  "tvlabsCredentialsRequired": "TV Labs API Key is required"
+  "invalidSessionFile": "Invalid session file"
 }

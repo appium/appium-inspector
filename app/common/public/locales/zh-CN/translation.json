@@ -295,6 +295,5 @@
   "gestureNameCannotBeEmptyError": "Gesture name cannot be empty",
   "gestureInvalidJsonError": "Invalid JSON file. Unable to parse the file content",
   "gestureImportedFrom": "Gesture imported from '{{fileName}}'",
-  "invalidSessionFile": "Invalid session file",
-  "tvlabsCredentialsRequired": "TV Labs API Key is required"
+  "invalidSessionFile": "Invalid session file"
 }
