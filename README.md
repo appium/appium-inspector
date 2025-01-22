@@ -139,6 +139,11 @@ The Inspector has built-in integrations with various cloud service provider plat
         <img width="200" height="50" alt="Mobitru" src="app/common/renderer/assets/images/mobitru_logo.svg">
       </a>
     </td>
+    <td align="center" valign="center">
+      <a href="https://docs.tvlabs.ai/platform/integrations/appium">
+        <img width="200" height="50" alt="TV Labs" src="app/common/renderer/assets/images/tvlabs_logo.svg">
+      </a>
+    </td>
   </tr>
 </table>
 
