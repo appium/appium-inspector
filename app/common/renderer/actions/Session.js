@@ -496,7 +496,7 @@ export function newSession(caps, attachSessId = null) {
         host = process.env.TVLABS_WEBDRIVER_URL || 'appium.tvlabs.ai';
         path = '/';
         port = 4723;
-        https = host === 'appium.tvlabs.ai' ? true : false;
+        https = host === 'appium.tvlabs.ai';
         accessKey = session.server.tvlabs.apiKey || process.env.TVLABS_API_KEY;
         if (!accessKey) {
           showError(new Error(i18n.t('tvlabsCredentialsRequired')));
