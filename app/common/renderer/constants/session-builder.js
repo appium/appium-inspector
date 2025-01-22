@@ -21,6 +21,7 @@ export const SERVER_TYPES = {
   PERFECTO: 'perfecto',
   PCLOUDY: 'pcloudy',
   MOBITRU: 'mobitru',
+  TVLABS: 'tvlabs',
 };
 
 export const SAVED_SESSIONS_TABLE_VALUES = {

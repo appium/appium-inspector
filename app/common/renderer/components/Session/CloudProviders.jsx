@@ -11,6 +11,7 @@ import RemoteTestKitLogo from '../../assets/images/remotetestkit_logo.svg';
 import RobotQALogo from '../../assets/images/robotqa_logo.svg';
 import SauceLogo from '../../assets/images/sauce_logo.svg';
 import TestingBotLogo from '../../assets/images/testingbot_logo.svg';
+import TVLabsLogo from '../../assets/images/tvlabs_logo.svg';
 import {SERVER_TYPES} from '../../constants/session-builder.js';
 import ServerTabBitbar from './ServerTabBitbar.jsx';
 import ServerTabBrowserstack from './ServerTabBrowserstack.jsx';
@@ -25,6 +26,7 @@ import ServerTabRemoteTestKit from './ServerTabRemoteTestKit.jsx';
 import ServerTabRobotQA from './ServerTabRobotQA.jsx';
 import ServerTabSauce from './ServerTabSauce.jsx';
 import ServerTabTestingbot from './ServerTabTestingbot.jsx';
+import ServerTabTVLabs from './ServerTabTVLabs.jsx';
 import SessionStyles from './Session.module.css';
 
 const providerWrapper = (logo, providerComponent) => ({
@@ -77,6 +79,9 @@ CloudProviders[SERVER_TYPES.PCLOUDY] = providerWrapper(PcloudyLogo, (props) => (
 ));
 CloudProviders[SERVER_TYPES.MOBITRU] = providerWrapper(MobitruLogo, (props) => (
   <ServerTabMobitru {...props} />
+));
+CloudProviders[SERVER_TYPES.TVLABS] = providerWrapper(TVLabsLogo, (props) => (
+  <ServerTabTVLabs {...props} />
 ));
 
 export default CloudProviders;
