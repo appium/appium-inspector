@@ -10,10 +10,17 @@ Different file formats are provided for each supported platform.
 
 ## Windows
 
-Installing the Windows version is easiest by downloading the appropriate `.exe` file. When opening
-the file, it is possible that Windows [may show a warning](https://github.com/appium/appium-inspector/issues/1134),
-though this can be bypassed. If successful, the installation wizard will open, and after following
-the required steps, the Inspector should be installed and ready to use.
+For Windows it is recommended to download the `.exe` installer file, as it supports [checking for updates](../menu-bar.md#update-checker).
+
+Since the app is currently not signed, Windows will show a security warning to prevent you from
+opening the installer file. This can be bypassed with sufficient user permissions.
+
+1. Upon opening the installer, the following warning will likely be shown.
+   ![Appium Inspector Open Warning on Windows](assets/images/open-warning-windows.png)
+2. Click _More info_ - a new button _Run anyway_ should appear at the bottom.
+3. Click _Run anyway_ - the installer window should open.
+4. After following the installer steps, the Inspector app should be installed, and you should be
+   able to open it without any warnings.
 
 ## macOS
 
@@ -61,7 +68,7 @@ required steps to allow opening the app have become more complex.
 ### UI - macOS Sonoma or earlier
 
 1. Upon opening the app, the following warning will be shown. Click _OK_.
-   ![Appium Inspector Open Warning](./assets/images/open-warning.png)
+   ![Appium Inspector Open Warning on macOS](./assets/images/open-warning-macos.png)
 2. Open _Finder_ -> _Applications_ and find Appium Inspector.
 3. _Control+Click_/click with two fingers on Appium Inspector and click _Open_.
 4. A prompt should appear - click _Open_ again.
@@ -69,8 +76,9 @@ required steps to allow opening the app have become more complex.
 
 ## Linux
 
-The Linux version is packaged as an `.AppImage` file. In order to open the file, its executable flag
-needs to be set first:
+For Linux it is recommended to download the `.AppImage` file, as it supports [checking for updates](../menu-bar.md#update-checker).
+
+In order to open the file, its executable flag needs to be set first:
 
 ```
 chmod a+x Appium-Inspector-<version>-linux-<arch>.AppImage
