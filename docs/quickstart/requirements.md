@@ -13,7 +13,7 @@ requirements for these will differ.
       ([Safari is not supported](../troubleshooting.md#browser-version-does-not-work-in-safari))
     - Viewport size of at least **870 x 610** pixels is recommended
 - Desktop app
-    - Works on Windows 10+, macOS 10.15+, Ubuntu 18.04+, Debian 10+, openSUSE 15.5+, or Fedora Linux 39+
+    - Works on Windows 10+, macOS 11+, Ubuntu 18.04+, Debian 10+, openSUSE 15.5+, or Fedora Linux 39+
         - [These requirements are taken from Chrome](https://support.google.com/chrome/a/answer/7100626),
           as the Inspector is built using Electron (which uses Chromium)
     - Up to around **600MB** of free space is required
