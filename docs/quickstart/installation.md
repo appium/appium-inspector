@@ -15,12 +15,20 @@ For Windows it is recommended to download the `.exe` installer file, as it suppo
 Since the app is currently not signed, Windows will show a security warning to prevent you from
 opening the installer file. This can be bypassed with sufficient user permissions.
 
+1. Right-click on the installer file and click _Properties_ - a new window should open.
+2. Near the bottom of the window, there will be an _Unblock_ checkbox - check it.
+3. Click _OK_.
+4. You should now be able to open the installer without issues.
+
+Alternatively, you can also bypass this after having opened the installer:
+
 1. Upon opening the installer, the following warning will likely be shown.
    ![Appium Inspector Open Warning on Windows](assets/images/open-warning-windows.png)
 2. Click _More info_ - a new button _Run anyway_ should appear at the bottom.
 3. Click _Run anyway_ - the installer window should open.
-4. After following the installer steps, the Inspector app should be installed, and you should be
-   able to open it without any warnings.
+
+After following the installer steps, the Inspector app should be installed, and you should be able
+to open it without any warnings.
 
 ## macOS
 
