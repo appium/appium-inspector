@@ -17,26 +17,55 @@ the required steps, the Inspector should be installed and ready to use.
 
 ## macOS
 
-The macOS version may be easiest to set up by downloading the `.dmg` file. Opening it will show a
-simple window, where the Inspector icon should be dragged-and-dropped to the _Applications_ folder
-icon. This will extract the app, after which it can be opened from the _Applications_ folder.
+For macOS it is recommended to download the `.dmg` file, as it supports [checking for updates](../menu-bar.md#update-checker).
+Opening the file will open a simple window, showing icons for the Inspector and the _Applications_ folder.
+Drag-and-drop the Inspector icon over the _Applications_ icon to extract the app.
 
-When you run the app, you may be greeted with some error about the app not being able to be opened,
-not verified by Apple, or something similar. The easiest way to get around this is as follows:
+Since the app [is currently not notarized](https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution),
+macOS will show various security warnings to prevent you from opening the app for the first time.
+The steps to handle these warnings are described below. Note that you will only need to go through
+these steps once - subsequent attempts to open the app should work fine.
 
-1. _Control+Click_ the Appium Inspector icon in the _Applications_ folder and choose _Open_.
-   ![Appium Inspector Ctrl+Click](./assets/images/mac-ctrl-click.png)
+There are two ways to work around these warnings: using the macOS user interface, or using the
+command line. The user interface flows will differ depending on your macOS version, while the
+command line approach works for all macOS versions.
 
-2. The dialog below will open. Just click _Open_ and Appium Inspector should launch.
-   ![Appium Inspector Open Warning](./assets/images/open-warning.png)
+### Command Line
 
-There is also an alternative approach which uses the command line. Run the following command:
-
+Simply open your Terminal app and run the following command:
 ```
 xattr -cr "/Applications/Appium Inspector.app"
 ```
+You should now be able to open the app with no warnings.
 
-After this, opening the app should not produce any warnings anymore.
+### UI - macOS Sequoia or later
+
+With macOS Sequoia, Apple has tightened their security for installing non-notarized apps, so the
+required steps to allow opening the app have become more complex.
+
+!!! note
+
+    If your Mac has an Apple chip, you can skip these steps by installing Appium Inspector v2024.9.1
+    (which should not show any warnings), then using [the update checker](../menu-bar.md#update-checker)
+    to upgrade to the most recent version.
+
+1. Upon opening the app, the following warning will be shown. Click _Done_.
+   ![Appium Inspector Open Warning on macOS Sequoia](./assets/images/open-warning-sequoia.png)
+2. Open macOS Settings -> _Privacy & Security_, then scroll down to the _Security_ section. You should
+   see the info text _"Appium Inspector" was blocked to protect your Mac._
+3. Click _Open Anyway_.
+4. A prompt should appear - click _Open Anyway_ again.
+5. A prompt should appear, requiring you to confirm the action using administrator user credentials.
+6. After confirming the action, the app should open.
+
+### UI - macOS Sonoma or earlier
+
+1. Upon opening the app, the following warning will be shown. Click _OK_.
+   ![Appium Inspector Open Warning](./assets/images/open-warning.png)
+2. Open _Finder_ -> _Applications_ and find Appium Inspector.
+3. _Control+Click_/click with two fingers on Appium Inspector and click _Open_.
+4. A prompt should appear - click _Open_ again.
+5. After accepting the prompt, the app should open.
 
 ## Linux
 
@@ -44,11 +73,11 @@ The Linux version is packaged as an `.AppImage` file. In order to open the file,
 needs to be set first:
 
 ```
-chmod a+x Appium-Inspector-linux-<version>.AppImage
+chmod a+x Appium-Inspector-<version>-linux-<arch>.AppImage
 ```
 
 Afterwards, the app can be opened through the command line:
 
 ```
-./Appium-Inspector-linux-<version>.AppImage
+./Appium-Inspector-<version>-linux-<arch>.AppImage
 ```
