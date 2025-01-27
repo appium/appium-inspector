@@ -51,8 +51,8 @@
     "install-docs-deps": "appium-docs init --no-mkdocs",
     "version": "npm run plugin:sync:version && git add plugins/package.json",
     "postversion": "git pull --tags && git push && git push --tags",
-    "crowdin-sync": "node ./ci-jobs/crowdin-sync-translations.mjs",
-    "crowdin-update": "node ./ci-jobs/crowdin-update-resources.mjs"
+    "crowdin-sync": "node ./scripts/crowdin-sync-translations.mjs",
+    "crowdin-update": "node ./scripts/crowdin-update-resources.mjs"
   },
   "prettier": {
     "bracketSpacing": false,
