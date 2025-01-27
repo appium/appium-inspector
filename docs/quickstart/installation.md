@@ -48,9 +48,11 @@ command line approach works for all macOS versions.
 ### Command Line
 
 Simply open your Terminal app and run the following command:
+
 ```
 xattr -cr "/Applications/Appium Inspector.app"
 ```
+
 You should now be able to open the app with no warnings.
 
 ### UI - macOS Sequoia or later
