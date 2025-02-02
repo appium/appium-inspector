@@ -65,8 +65,16 @@ const getSessionDescription = (caps, serverType) => {
   }
 };
 
-export const getSessionInfo = (session, serverType) =>
-  `${session.id} — ${getSessionDescription(session.capabilities, serverType).assemble()}`;
+export const getSessionInfo = (session, serverType) => {
+  let identifier = session.id;
+  if ('created' in session) {
+    // For Appium 3+ sessions, replace session ID with timestamp
+    const sessionTimestampInt = parseInt(session.created, 10);
+    identifier = new Date(sessionTimestampInt).toJSON();
+  }
+  const description = getSessionDescription(session.capabilities, serverType).assemble();
+  return `${identifier} — ${description}`;
+};
 
 // Make a session-related HTTP GET request to the provided Appium server URL
 export async function fetchSessionInformation({url, authToken, ...params}) {
