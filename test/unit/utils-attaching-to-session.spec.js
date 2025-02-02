@@ -11,7 +11,7 @@ describe('utils/attaching-to-session.js', function () {
     it('should show correct info if all expected parameters are defined', function () {
       const session = {
         id: '12345',
-        created: '1738500585000',
+        created: 1738500585000,
         capabilities: {
           sessionName: 'Vitest Session',
           deviceName: 'Vitest Phone',

@@ -67,10 +67,9 @@ const getSessionDescription = (caps, serverType) => {
 
 export const getSessionInfo = (session, serverType) => {
   let identifier = session.id;
-  if ('created' in session) {
+  if ('created' in session && !_.isUndefined(session.created)) {
     // For Appium 3+ sessions, replace session ID with timestamp
-    const sessionTimestampInt = parseInt(session.created, 10);
-    identifier = new Date(sessionTimestampInt).toJSON();
+    identifier = new Date(session.created).toJSON();
   }
   const description = getSessionDescription(session.capabilities, serverType).assemble();
   return `${identifier} — ${description}`;
