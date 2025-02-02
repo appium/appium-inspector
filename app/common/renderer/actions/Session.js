@@ -973,9 +973,9 @@ async function fetchAllSessions(baseUrl, authToken) {
   async function fetchSessionsFromEndpoint(url) {
     try {
       const res = await fetchSessionInformation({url, authToken});
-      return url === seleniumSessionsEndpoint ?
-        formatSeleniumGridSessions(res) :
-        res.data.value ?? [];
+      return url === seleniumSessionsEndpoint
+        ? formatSeleniumGridSessions(res)
+        : (res.data.value ?? []);
     } catch {
       return [];
     }
