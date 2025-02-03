@@ -11,6 +11,7 @@ describe('utils/attaching-to-session.js', function () {
     it('should show correct info if all expected parameters are defined', function () {
       const session = {
         id: '12345',
+        created: 1738500585000,
         capabilities: {
           sessionName: 'Vitest Session',
           deviceName: 'Vitest Phone',
@@ -22,7 +23,7 @@ describe('utils/attaching-to-session.js', function () {
       };
       const serverType = SERVER_TYPES.HEADSPIN;
       expect(getSessionInfo(session, serverType)).toEqual(
-        '12345 — Vitest Session / Vitest Phone / Android 100 / UiAutomator2 / bestapp.apk',
+        '2025-02-02T12:49:45.000Z — Vitest Session / Vitest Phone / Android 100 / UiAutomator2 / bestapp.apk',
       );
     });
     it('should show correct info if some expected parameters are missing', function () {
