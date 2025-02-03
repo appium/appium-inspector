@@ -966,27 +966,28 @@ export function getRunningSessions() {
 }
 
 async function fetchAllSessions(baseUrl, authToken) {
-  async function fetchAppiumServerSessions() {
-    const url = `${baseUrl}sessions`;
+  const appiumSessionsEndpoint = `${baseUrl}appium/sessions`; // Appium 3+
+  const oldAppiumSessionsEndpoint = `${baseUrl}sessions`; // Appium 1-2
+  const seleniumSessionsEndpoint = `${baseUrl}status`;
+
+  async function fetchSessionsFromEndpoint(url) {
     try {
       const res = await fetchSessionInformation({url, authToken});
-      return res.data.value ?? [];
+      return url === seleniumSessionsEndpoint
+        ? formatSeleniumGridSessions(res)
+        : (res.data.value ?? []);
     } catch {
       return [];
     }
   }
 
-  async function fetchSeleniumGridSessions() {
-    const url = `${baseUrl}status`;
-    try {
-      const res = await fetchSessionInformation({url, authToken});
-      return formatSeleniumGridSessions(res);
-    } catch {
-      return [];
-    }
-  }
+  const [appiumSessions, oldAppiumSessions, seleniumSessions] = await Promise.all([
+    fetchSessionsFromEndpoint(appiumSessionsEndpoint),
+    fetchSessionsFromEndpoint(oldAppiumSessionsEndpoint),
+    fetchSessionsFromEndpoint(seleniumSessionsEndpoint),
+  ]);
 
-  return [...(await fetchAppiumServerSessions()), ...(await fetchSeleniumGridSessions())];
+  return [...appiumSessions, ...oldAppiumSessions, ...seleniumSessions];
 }
 
 export function startDesiredCapsNameEditor() {
