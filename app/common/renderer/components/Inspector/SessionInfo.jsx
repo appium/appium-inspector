@@ -5,8 +5,6 @@ import {SESSION_INFO_PROPS, SESSION_INFO_TABLE_PARAMS} from '../../constants/ses
 import InspectorStyles from './Inspector.module.css';
 import SessionCodeBox from './SessionCodeBox.jsx';
 
-let getSessionData;
-
 const SessionInfo = (props) => {
   const {driver, t} = props;
 
@@ -88,7 +86,7 @@ const SessionInfo = (props) => {
   };
 
   const generateSessionInfo = (name) => {
-    const {sessionDetails, appId, status} = props;
+    const {sessionDetails, appId, status, sessionCaps} = props;
     const {host, path, port} = sessionDetails;
     const {sessionId, connectedUrl} = driver || '';
 
@@ -98,9 +96,7 @@ const SessionInfo = (props) => {
       ['port', port],
     ];
     const sessionArray =
-      getSessionData != null
-        ? Object.keys(getSessionData).map((key) => [key, getSessionData[key]])
-        : [];
+      sessionCaps != null ? Object.keys(sessionCaps).map((key) => [key, sessionCaps[key]]) : [];
     const serverStatusArray =
       status != null ? Object.keys(status).map((key) => [key, String(status[key])]) : [];
 
@@ -133,13 +129,13 @@ const SessionInfo = (props) => {
   };
 
   useEffect(() => {
-    const {getActiveAppId, getServerStatus, applyClientMethod} = props;
+    const {getActiveAppId, getServerStatus, getSessionCaps} = props;
     const {isIOS, isAndroid} = driver.client;
 
     getActiveAppId(isIOS, isAndroid);
     getServerStatus();
+    getSessionCaps();
 
-    (async () => (getSessionData = await applyClientMethod({methodName: 'getSession'})))();
     interval.current = setInterval(() => {
       setTime(generateSessionTime());
     }, 1000);

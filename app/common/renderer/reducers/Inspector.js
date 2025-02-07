@@ -63,6 +63,7 @@ import {
   SET_SEARCHED_FOR_ELEMENT_BOUNDS,
   SET_SELECTED_ELEMENT_ID,
   SET_SERVER_STATUS,
+  SET_SESSION_CAPS,
   SET_SESSION_DETAILS,
   SET_SESSION_TIME,
   SET_SHOW_BOILERPLATE,
@@ -572,6 +573,12 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         status: action.status,
+      };
+
+    case SET_SESSION_CAPS:
+      return {
+        ...state,
+        sessionCaps: action.sessionCaps,
       };
 
     case SET_AWAITING_MJPEG_STREAM:

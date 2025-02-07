@@ -88,6 +88,7 @@ export const SET_CONTEXT = 'SET_CONTEXT';
 
 export const SET_APP_ID = 'SET_APP_ID';
 export const SET_SERVER_STATUS = 'SET_SERVER_STATUS';
+export const SET_SESSION_CAPS = 'SET_SESSION_CAPS';
 
 export const SET_KEEP_ALIVE_INTERVAL = 'SET_KEEP_ALIVE_INTERVAL';
 export const SET_USER_WAIT_TIMEOUT = 'SET_USER_WAIT_TIMEOUT';
@@ -746,6 +747,14 @@ export function getServerStatus() {
     const status = applyClientMethod({methodName: 'status'});
     const {build} = await status(dispatch, getState);
     dispatch({type: SET_SERVER_STATUS, status: build});
+  };
+}
+
+export function getSessionCaps() {
+  return async (dispatch, getState) => {
+    const action = applyClientMethod({methodName: 'getSession'});
+    const sessionCaps = await action(dispatch, getState);
+    dispatch({type: SET_SESSION_CAPS, sessionCaps});
   };
 }
 
