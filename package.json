@@ -112,7 +112,7 @@
     "eslint": "9.20.1",
     "eslint-plugin-react": "7.37.4",
     "eslint-plugin-simple-import-sort": "12.1.1",
-    "globals": "15.14.0",
+    "globals": "15.15.0",
     "less": "4.2.2",
     "prettier": "3.5.0",
     "rimraf": "6.0.1",
