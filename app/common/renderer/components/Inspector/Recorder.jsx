@@ -11,9 +11,15 @@ const Recorder = (props) => {
   const {showBoilerplate, recordedActions, actionFramework, t} = props;
 
   const code = (raw = true) => {
-    const {host, port, path, https, desiredCapabilities} = props.sessionDetails;
+    const {host, port, path, protocol, desiredCapabilities} = props.sessionDetails;
 
-    let framework = new frameworks[actionFramework](host, port, path, https, desiredCapabilities);
+    let framework = new frameworks[actionFramework](
+      host,
+      port,
+      path,
+      protocol,
+      desiredCapabilities,
+    );
     framework.actions = recordedActions;
     const rawCode = framework.getCodeString(showBoilerplate);
     if (raw) {

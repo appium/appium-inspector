@@ -524,10 +524,11 @@ export function newSession(caps, attachSessId = null) {
 
     dispatch({type: NEW_SESSION_LOADING});
 
+    const protocol = https ? 'https' : 'http';
     const serverOpts = {
       hostname: host,
       port: parseInt(port, 10),
-      protocol: https ? 'https' : 'http',
+      protocol,
       path,
       headers,
       connectionRetryCount: CONN_RETRIES,
@@ -633,7 +634,7 @@ export function newSession(caps, attachSessId = null) {
 
     // Build mjpegScreenshotUrl if mjpegServerPort in session capabilities
     if (!mjpegScreenshotUrl && mjpegScreenshotPort) {
-      mjpegScreenshotUrl = `${https ? 'https' : 'http'}://${host}:${mjpegScreenshotPort}`;
+      mjpegScreenshotUrl = `${protocol}://${host}:${mjpegScreenshotPort}`;
     }
 
     // pass some state to the inspector that it needs to build recorder
@@ -647,7 +648,7 @@ export function newSession(caps, attachSessId = null) {
         path,
         username,
         accessKey,
-        https,
+        protocol,
       },
       mode,
       mjpegScreenshotUrl,
