@@ -218,20 +218,20 @@ function _addVendorPrefixes(caps, dispatch, getState) {
 /**
  * Start a new appium session with the given caps
  */
-export function newSession(caps, attachSessId = null) {
+export function newSession(originalCaps, attachSessId = null) {
   return async (dispatch, getState) => {
     let session = getState().session;
 
     // first add vendor prefixes to caps if requested
     if (!attachSessId && session.addVendorPrefixes) {
-      caps = _addVendorPrefixes(caps, dispatch, getState);
+      originalCaps = _addVendorPrefixes(originalCaps, dispatch, getState);
     }
 
-    dispatch({type: NEW_SESSION_REQUESTED, caps});
+    dispatch({type: NEW_SESSION_REQUESTED});
 
-    let desiredCapabilities = caps ? getCapsObject(caps) : {};
+    let formattedCaps = originalCaps ? getCapsObject(originalCaps) : {};
     let host, port, username, accessKey, https, path, token, headers;
-    desiredCapabilities = addCustomCaps(desiredCapabilities);
+    formattedCaps = addCustomCaps(formattedCaps);
 
     switch (session.serverType) {
       case SERVER_TYPES.LOCAL:
@@ -265,12 +265,12 @@ export function newSession(caps, attachSessId = null) {
           return false;
         }
         https = false;
-        if (!_.isPlainObject(desiredCapabilities[SAUCE_OPTIONS_CAP])) {
-          desiredCapabilities[SAUCE_OPTIONS_CAP] = {};
+        if (!_.isPlainObject(formattedCaps[SAUCE_OPTIONS_CAP])) {
+          formattedCaps[SAUCE_OPTIONS_CAP] = {};
         }
-        if (!desiredCapabilities[SAUCE_OPTIONS_CAP].name) {
+        if (!formattedCaps[SAUCE_OPTIONS_CAP].name) {
           const dateTime = moment().format('lll');
-          desiredCapabilities[SAUCE_OPTIONS_CAP].name = `Appium Desktop Session -- ${dateTime}`;
+          formattedCaps[SAUCE_OPTIONS_CAP].name = `Appium Desktop Session -- ${dateTime}`;
         }
         break;
       case SERVER_TYPES.HEADSPIN: {
@@ -298,7 +298,7 @@ export function newSession(caps, attachSessId = null) {
           showError(new Error(i18n.t('Perfecto SecurityToken is required')));
           return false;
         }
-        desiredCapabilities['perfecto:options'] = {securityToken: token};
+        formattedCaps['perfecto:options'] = {securityToken: token};
         https = session.server.perfecto.ssl;
         break;
       case SERVER_TYPES.BROWSERSTACK:
@@ -307,10 +307,10 @@ export function newSession(caps, attachSessId = null) {
         port = session.server.browserstack.port = process.env.BROWSERSTACK_PORT || 443;
         path = session.server.browserstack.path = '/wd/hub';
         username = session.server.browserstack.username || process.env.BROWSERSTACK_USERNAME;
-        if (!desiredCapabilities['bstack:options']) {
-          desiredCapabilities['bstack:options'] = {};
+        if (!formattedCaps['bstack:options']) {
+          formattedCaps['bstack:options'] = {};
         }
-        desiredCapabilities['bstack:options'].source = 'appiumdesktop';
+        formattedCaps['bstack:options'].source = 'appiumdesktop';
         accessKey = session.server.browserstack.accessKey || process.env.BROWSERSTACK_ACCESS_KEY;
         if (!username || !accessKey) {
           showError(new Error(i18n.t('browserstackCredentialsRequired')));
@@ -324,23 +324,19 @@ export function newSession(caps, attachSessId = null) {
         port = session.server.lambdatest.port = process.env.LAMBDATEST_PORT || 443;
         path = session.server.lambdatest.path = '/wd/hub';
         username = session.server.lambdatest.username || process.env.LAMBDATEST_USERNAME;
-        if (desiredCapabilities.hasOwnProperty.call(desiredCapabilities, 'lt:options')) {
-          desiredCapabilities['lt:options'].source = 'appiumdesktop';
-          desiredCapabilities['lt:options'].isRealMobile = true;
+        if (formattedCaps.hasOwnProperty.call(formattedCaps, 'lt:options')) {
+          formattedCaps['lt:options'].source = 'appiumdesktop';
+          formattedCaps['lt:options'].isRealMobile = true;
           if (session.server.advanced.useProxy) {
-            desiredCapabilities['lt:options'].proxyUrl = _.isUndefined(
-              session.server.advanced.proxy,
-            )
+            formattedCaps['lt:options'].proxyUrl = _.isUndefined(session.server.advanced.proxy)
               ? ''
               : session.server.advanced.proxy;
           }
         } else {
-          desiredCapabilities['lambdatest:source'] = 'appiumdesktop';
-          desiredCapabilities['lambdatest:isRealMobile'] = true;
+          formattedCaps['lambdatest:source'] = 'appiumdesktop';
+          formattedCaps['lambdatest:isRealMobile'] = true;
           if (session.server.advanced.useProxy) {
-            desiredCapabilities['lambdatest:proxyUrl'] = _.isUndefined(
-              session.server.advanced.proxy,
-            )
+            formattedCaps['lambdatest:proxyUrl'] = _.isUndefined(session.server.advanced.proxy)
               ? ''
               : session.server.advanced.proxy;
           }
@@ -361,7 +357,7 @@ export function newSession(caps, attachSessId = null) {
           showError(new Error(i18n.t('bitbarCredentialsRequired')));
           return false;
         }
-        desiredCapabilities['bitbar:options'] = {
+        formattedCaps['bitbar:options'] = {
           source: 'appiumdesktop',
           apiKey: accessKey,
         };
@@ -373,8 +369,8 @@ export function newSession(caps, attachSessId = null) {
         path = session.server.kobiton.path = '/wd/hub';
         username = session.server.kobiton.username || process.env.KOBITON_USERNAME;
         accessKey = session.server.kobiton.accessKey || process.env.KOBITON_ACCESS_KEY;
-        desiredCapabilities['kobiton:options'] = {};
-        desiredCapabilities['kobiton:options'].source = 'appiumdesktop';
+        formattedCaps['kobiton:options'] = {};
+        formattedCaps['kobiton:options'].source = 'appiumdesktop';
         if (!username || !accessKey) {
           showError(new Error(i18n.t('kobitonCredentialsRequired')));
           return false;
@@ -391,7 +387,7 @@ export function newSession(caps, attachSessId = null) {
           showError(new Error(i18n.t('pcloudyCredentialsRequired')));
           return false;
         }
-        desiredCapabilities['pcloudy:options'] = {
+        formattedCaps['pcloudy:options'] = {
           source: 'appiumdesktop',
           pCloudy_Username: username,
           pCloudy_ApiKey: accessKey,
@@ -402,14 +398,14 @@ export function newSession(caps, attachSessId = null) {
         host = session.server.testingbot.hostname = process.env.TB_HOST || 'hub.testingbot.com';
         port = session.server.testingbot.port = 443;
         path = session.server.testingbot.path = '/wd/hub';
-        if (!desiredCapabilities['tb:options']) {
-          desiredCapabilities['tb:options'] = {};
+        if (!formattedCaps['tb:options']) {
+          formattedCaps['tb:options'] = {};
         }
         username = session.server.testingbot.username || process.env.TB_KEY;
         accessKey = session.server.testingbot.accessKey || process.env.TB_SECRET;
-        desiredCapabilities['tb:options'].key = username;
-        desiredCapabilities['tb:options'].secret = accessKey;
-        desiredCapabilities['tb:options'].source = 'appiumdesktop';
+        formattedCaps['tb:options'].key = username;
+        formattedCaps['tb:options'].secret = accessKey;
+        formattedCaps['tb:options'].source = 'appiumdesktop';
         if (!username || !accessKey) {
           showError(new Error(i18n.t('testingbotCredentialsRequired')));
           return false;
@@ -421,7 +417,7 @@ export function newSession(caps, attachSessId = null) {
           showError(new Error(i18n.t('experitestAccessKeyURLRequired')));
           return false;
         }
-        desiredCapabilities['experitest:accessKey'] = session.server.experitest.accessKey;
+        formattedCaps['experitest:accessKey'] = session.server.experitest.accessKey;
 
         let experitestUrl;
         try {
@@ -443,11 +439,9 @@ export function newSession(caps, attachSessId = null) {
         path = '/';
         port = 443;
         https = session.server.roboticmobi.ssl = true;
-        if (caps) {
-          desiredCapabilities['robotqa:options'] = {};
-          desiredCapabilities['robotqa:options'].robotqa_token =
-            session.server.roboticmobi.token || process.env.ROBOTQA_TOKEN;
-        }
+        formattedCaps['robotqa:options'] = {};
+        formattedCaps['robotqa:options'].robotqa_token =
+          session.server.roboticmobi.token || process.env.ROBOTQA_TOKEN;
         break;
       }
       case SERVER_TYPES.REMOTETESTKIT: {
@@ -455,9 +449,8 @@ export function newSession(caps, attachSessId = null) {
         path = '/wd/hub';
         port = 443;
         https = true;
-        desiredCapabilities['remotetestkit:options'] = {};
-        desiredCapabilities['remotetestkit:options'].accessToken =
-          session.server.remotetestkit.token;
+        formattedCaps['remotetestkit:options'] = {};
+        formattedCaps['remotetestkit:options'].accessToken = session.server.remotetestkit.token;
         break;
       }
       case SERVER_TYPES.MOBITRU: {
@@ -486,10 +479,10 @@ export function newSession(caps, attachSessId = null) {
           return false;
         }
 
-        if (!desiredCapabilities['mobitru:options']) {
-          desiredCapabilities['mobitru:options'] = {};
+        if (!formattedCaps['mobitru:options']) {
+          formattedCaps['mobitru:options'] = {};
         }
-        desiredCapabilities['mobitru:options'].source = 'appium-inspector';
+        formattedCaps['mobitru:options'].source = 'appium-inspector';
         break;
       }
       case SERVER_TYPES.TVLABS: {
@@ -543,14 +536,14 @@ export function newSession(caps, attachSessId = null) {
     // If a newCommandTimeout wasn't provided, set it to 60 * 60 so that sessions don't close on users in short term.
     // I saw sometimes infinit session timeout was not so good for cloud providers.
     // So, let me define this value as NEW_COMMAND_TIMEOUT_SEC by default.
-    if (_.isUndefined(desiredCapabilities[CAPS_NEW_COMMAND])) {
-      desiredCapabilities[CAPS_NEW_COMMAND] = NEW_COMMAND_TIMEOUT_SEC;
+    if (_.isUndefined(formattedCaps[CAPS_NEW_COMMAND])) {
+      formattedCaps[CAPS_NEW_COMMAND] = NEW_COMMAND_TIMEOUT_SEC;
     }
 
     // If someone didn't specify connectHardwareKeyboard, set it to true by
     // default
-    if (_.isUndefined(desiredCapabilities[CAPS_CONNECT_HARDWARE_KEYBOARD])) {
-      desiredCapabilities[CAPS_CONNECT_HARDWARE_KEYBOARD] = true;
+    if (_.isUndefined(formattedCaps[CAPS_CONNECT_HARDWARE_KEYBOARD])) {
+      formattedCaps[CAPS_CONNECT_HARDWARE_KEYBOARD] = true;
     }
 
     serverOpts.logLevel = process.env.NODE_ENV === 'development' ? 'info' : 'warn';
@@ -598,7 +591,7 @@ export function newSession(caps, attachSessId = null) {
         driver = await Web2Driver.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
         driver._isAttachedSession = true;
       } else {
-        driver = await Web2Driver.remote(serverOpts, desiredCapabilities);
+        driver = await Web2Driver.remote(serverOpts, formattedCaps);
       }
     } catch (err) {
       const {protocol, hostname, port, path} = serverOpts;
@@ -614,7 +607,7 @@ export function newSession(caps, attachSessId = null) {
     // The homepage arg in ChromeDriver is not working with Appium. iOS can have a default url, but
     // we want to keep the process equal to prevent complexity so we launch a default url here to make
     // sure we don't start with an empty page which will not show proper HTML in the inspector
-    const {browserName = ''} = desiredCapabilities;
+    const {browserName = ''} = formattedCaps;
     let mode = APP_MODE.NATIVE;
 
     if (browserName.trim() !== '') {
@@ -642,7 +635,7 @@ export function newSession(caps, attachSessId = null) {
     const action = setSessionDetails({
       driver,
       sessionDetails: {
-        desiredCapabilities,
+        formattedCaps,
         host,
         port,
         path,
