@@ -8,8 +8,15 @@ import InspectorStyles from './Inspector.module.css';
 
 const SessionCodeBox = ({actionFramework, setActionFramework, sessionDetails, t}) => {
   const code = (raw = true) => {
-    const {host, port, path, protocol, formattedCaps} = sessionDetails;
-    const framework = new frameworks[actionFramework](host, port, path, protocol, formattedCaps);
+    const {protocol, host, port, path, serverUrl, formattedCaps} = sessionDetails;
+    const framework = new frameworks[actionFramework](
+      protocol,
+      host,
+      port,
+      path,
+      serverUrl,
+      formattedCaps,
+    );
     const rawCode = framework.getCodeString(true);
     if (raw) {
       return rawCode;

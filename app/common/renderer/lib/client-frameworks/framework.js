@@ -3,11 +3,12 @@ import _ from 'lodash';
 import {DEFAULT_SWIPE, DEFAULT_TAP} from '../../constants/screenshot';
 
 export default class Framework {
-  constructor(host, port, path, protocol, caps) {
+  constructor(protocol, host, port, path, serverUrl, caps) {
     this.host = host || 'localhost';
     this.port = port || 4723;
     this.path = path || '/wd/hub';
     this.caps = caps || {};
+    this.serverUrl = serverUrl;
     this.protocol = protocol;
     this.actions = [];
     this.localVarCount = 0;
@@ -30,10 +31,6 @@ export default class Framework {
       x2: pointerMoveActionEnd.x,
       y2: pointerMoveActionEnd.y,
     };
-  }
-
-  get serverUrl() {
-    return `${this.protocol}://${this.host}:${this.port}${this.path === '/' ? '' : this.path}`;
   }
 
   indent(str, spaces) {

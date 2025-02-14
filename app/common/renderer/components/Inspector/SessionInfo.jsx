@@ -87,8 +87,8 @@ const SessionInfo = (props) => {
 
   const generateSessionInfo = (name) => {
     const {sessionDetails, appId, status, sessionCaps} = props;
-    const {host, path, port} = sessionDetails;
-    const {sessionId, connectedUrl} = driver || '';
+    const {host, path, port, serverUrl} = sessionDetails;
+    const {sessionId} = driver || '';
 
     const serverDetailsArray = [
       ['host', host],
@@ -101,10 +101,9 @@ const SessionInfo = (props) => {
       status != null ? Object.keys(status).map((key) => [key, String(status[key])]) : [];
 
     // TODO: Fetch URL from Cloud Providers
-    const sessionUrl =
-      sessionId && connectedUrl
-        ? `${connectedUrl}session/${sessionId}`
-        : t('Error Fetching Session URL');
+    const sessionUrl = sessionId
+      ? `${serverUrl}session/${sessionId}`
+      : t('Error Fetching Session URL');
 
     switch (name) {
       case 'Session ID':

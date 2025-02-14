@@ -518,6 +518,7 @@ export function newSession(originalCaps, attachSessId = null) {
     dispatch({type: NEW_SESSION_LOADING});
 
     const protocol = https ? 'https' : 'http';
+    const serverUrl = `${protocol}://${host}:${port}${path === '/' ? '' : path}`;
     const serverOpts = {
       hostname: host,
       port: parseInt(port, 10),
@@ -572,10 +573,8 @@ export function newSession(originalCaps, attachSessId = null) {
             }
           }
         } else {
-          const {protocol, hostname, port, path} = serverOpts;
           try {
-            const cleanedPath = path.replace(/\/$/, '');
-            const detailsUrl = `${protocol}://${hostname}:${port}${cleanedPath}/session/${attachSessId}`;
+            const detailsUrl = `${serverUrl}/session/${attachSessId}`;
             const res = await fetchSessionInformation({url: detailsUrl, timeout: CONN_TIMEOUT});
             attachedSessionCaps = res.data.value;
           } catch (err) {
@@ -594,9 +593,7 @@ export function newSession(originalCaps, attachSessId = null) {
         driver = await Web2Driver.remote(serverOpts, formattedCaps);
       }
     } catch (err) {
-      const {protocol, hostname, port, path} = serverOpts;
-      const url = `${protocol}://${hostname}:${port}${path}`;
-      showError(err, {secs: 0, url});
+      showError(err, {secs: 0, serverUrl});
       return false;
     } finally {
       dispatch({type: NEW_SESSION_DONE});
@@ -636,12 +633,13 @@ export function newSession(originalCaps, attachSessId = null) {
       driver,
       sessionDetails: {
         formattedCaps,
+        protocol,
         host,
         port,
         path,
         username,
         accessKey,
-        protocol,
+        serverUrl,
       },
       mode,
       mjpegScreenshotUrl,
