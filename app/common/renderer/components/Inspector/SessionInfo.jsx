@@ -1,4 +1,4 @@
-import {Col, Row, Table} from 'antd';
+import {Space, Table} from 'antd';
 import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 
@@ -49,7 +49,7 @@ const SessionInfo = (props) => {
       pagination={false}
       showHeader={false}
       size="small"
-      scroll={{y: 104}}
+      scroll={{y: 125}}
     />
   );
 
@@ -107,23 +107,17 @@ const SessionInfo = (props) => {
   }, []);
 
   return (
-    <div className={InspectorStyles['session-info-table']}>
-      <Row>
-        <Col span={24}>
-          <Table
-            columns={columns}
-            dataSource={outerDataSource()}
-            pagination={false}
-            showHeader={false}
-            bordered={true}
-            size="small"
-          />
-        </Col>
-      </Row>
-      <div className={InspectorStyles['session-code-box']}>
-        <SessionCodeBox {...props} />
-      </div>
-    </div>
+    <Space direction="vertical" size="middle">
+      <Table
+        columns={columns}
+        dataSource={outerDataSource()}
+        pagination={false}
+        showHeader={false}
+        bordered={true}
+        size="small"
+      />
+      <SessionCodeBox {...props} />
+    </Space>
   );
 };
 
