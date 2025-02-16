@@ -101,7 +101,7 @@ The Inspector has built-in integrations with various cloud service provider plat
       </a>
     </td>
     <td align="center" valign="center">
-      <a href="https://robotqa.com/appium-remote">
+      <a href="https://robotqa.com/documentation/docs/for-testers/first-test/inspect_element">
         <img width="200" height="50" alt="RobotQA" src="app/common/renderer/assets/images/robotqa_logo.svg">
       </a>
     </td>
