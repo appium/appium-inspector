@@ -124,29 +124,13 @@
   overflow: auto;
 }
 
-.session-info-table {
-  margin-right: -1em;
-}
-
-.session-code-box {
-  margin-top: 1em;
-}
-
-.session-inner-table,
-.session-inner-table :global(.ant-table) {
-  width: 102%;
+.session-inner-table :global(.ant-table-body) {
+  scrollbar-width: none; /* -webkit-scrollbar for Firefox */
   margin-left: -32px;
 }
 
 .session-inner-table :global(.ant-table-body)::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 7px;
-}
-
-.session-inner-table :global(.ant-table-body)::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: rgba(0, 0, 0, 0.5);
-  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  width: 0px;
 }
 
 .inspector-main .interaction-tab-container .scroll-buttons {

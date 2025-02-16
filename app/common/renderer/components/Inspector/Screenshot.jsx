@@ -16,7 +16,8 @@ const {TAP, SELECT, SWIPE, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 const Screenshot = (props) => {
   const {
     screenshot,
-    mjpegScreenshotUrl,
+    serverDetails,
+    isUsingMjpegMode,
     methodCallInProgress,
     screenshotInteractionMode,
     coordStart,
@@ -160,14 +161,14 @@ const Screenshot = (props) => {
     screenshotStyle.cursor = 'crosshair';
   }
 
-  const screenSrc = mjpegScreenshotUrl || `data:image/gif;base64,${screenshot}`;
+  const screenSrc = serverDetails.mjpegScreenshotUrl || `data:image/gif;base64,${screenshot}`;
   const screenImg = <img src={screenSrc} id="screenshot" />;
   const points = getGestureCoordinates();
 
   // Show the screenshot and highlighter rects.
   // Show loading indicator if a method call is in progress, unless using MJPEG mode.
   return (
-    <Spin size="large" spinning={!!methodCallInProgress && !mjpegScreenshotUrl}>
+    <Spin size="large" spinning={!!methodCallInProgress && !isUsingMjpegMode}>
       <div className={styles.innerScreenshotContainer}>
         <div
           ref={containerEl}
