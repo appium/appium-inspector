@@ -86,12 +86,14 @@ const SessionInfo = (props) => {
   };
 
   const generateSessionInfo = (name) => {
-    const {sessionDetails, appId, status, sessionCaps} = props;
-    const {serverUrl} = sessionDetails;
+    const {serverDetails, appId, status, flatSessionCaps} = props;
+    const {serverUrl} = serverDetails;
     const {sessionId} = driver || '';
 
     const sessionArray =
-      sessionCaps != null ? Object.keys(sessionCaps).map((key) => [key, sessionCaps[key]]) : [];
+      flatSessionCaps != null
+        ? Object.keys(flatSessionCaps).map((key) => [key, flatSessionCaps[key]])
+        : [];
     const serverStatusArray =
       status != null ? Object.keys(status).map((key) => [key, String(status[key])]) : [];
 
@@ -117,12 +119,12 @@ const SessionInfo = (props) => {
   };
 
   useEffect(() => {
-    const {getActiveAppId, getServerStatus, getSessionCaps} = props;
+    const {getActiveAppId, getServerStatus, getFlatSessionCaps} = props;
     const {isIOS, isAndroid} = driver.client;
 
     getActiveAppId(isIOS, isAndroid);
     getServerStatus();
-    getSessionCaps();
+    getFlatSessionCaps();
 
     interval.current = setInterval(() => {
       setTime(generateSessionTime());

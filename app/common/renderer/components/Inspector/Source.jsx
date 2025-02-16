@@ -17,7 +17,7 @@ const Source = (props) => {
     selectedElement = {},
     showSourceAttrs,
     methodCallInProgress,
-    mjpegScreenshotUrl,
+    serverDetails,
     isSourceRefreshOn,
     t,
   } = props;
@@ -81,7 +81,7 @@ const Source = (props) => {
       {/* Show loading indicator in MJPEG mode if a method call is in progress and source refresh is on */}
       <Spin
         size="large"
-        spinning={!!methodCallInProgress && mjpegScreenshotUrl && isSourceRefreshOn}
+        spinning={!!methodCallInProgress && serverDetails.mjpegScreenshotUrl && isSourceRefreshOn}
       >
         {/* Must switch to a new antd Tree component when there's changes to treeData  */}
         {treeData ? (

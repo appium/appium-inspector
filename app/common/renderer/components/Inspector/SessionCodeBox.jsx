@@ -6,10 +6,14 @@ import frameworks from '../../lib/client-frameworks';
 import {copyToClipboard} from '../../polyfills';
 import InspectorStyles from './Inspector.module.css';
 
-const SessionCodeBox = ({actionFramework, setActionFramework, sessionDetails, t}) => {
+const SessionCodeBox = (props) => {
+  const {actionFramework, setActionFramework, t} = props;
+
   const code = (raw = true) => {
-    const {serverUrl, serverUrlParts, formattedCaps} = sessionDetails;
-    const framework = new frameworks[actionFramework](serverUrl, serverUrlParts, formattedCaps);
+    const {serverDetails, sessionCaps} = props;
+    const {serverUrl, serverUrlParts} = serverDetails;
+
+    const framework = new frameworks[actionFramework](serverUrl, serverUrlParts, sessionCaps);
     const rawCode = framework.getCodeString(true);
     if (raw) {
       return rawCode;

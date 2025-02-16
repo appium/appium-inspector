@@ -88,7 +88,7 @@ export const SET_CONTEXT = 'SET_CONTEXT';
 
 export const SET_APP_ID = 'SET_APP_ID';
 export const SET_SERVER_STATUS = 'SET_SERVER_STATUS';
-export const SET_SESSION_CAPS = 'SET_SESSION_CAPS';
+export const SET_FLAT_SESSION_CAPS = 'SET_FLAT_SESSION_CAPS';
 
 export const SET_KEEP_ALIVE_INTERVAL = 'SET_KEEP_ALIVE_INTERVAL';
 export const SET_USER_WAIT_TIMEOUT = 'SET_USER_WAIT_TIMEOUT';
@@ -413,9 +413,9 @@ export function toggleShowBoilerplate() {
   };
 }
 
-export function setSessionDetails({driver, sessionDetails, mode, mjpegScreenshotUrl}) {
+export function setSessionDetails({serverDetails, driver, sessionCaps, appMode}) {
   return (dispatch) => {
-    dispatch({type: SET_SESSION_DETAILS, driver, sessionDetails, mode, mjpegScreenshotUrl});
+    dispatch({type: SET_SESSION_DETAILS, serverDetails, driver, sessionCaps, appMode});
   };
 }
 
@@ -750,11 +750,11 @@ export function getServerStatus() {
   };
 }
 
-export function getSessionCaps() {
+export function getFlatSessionCaps() {
   return async (dispatch, getState) => {
     const action = applyClientMethod({methodName: 'getSession'});
-    const sessionCaps = await action(dispatch, getState);
-    dispatch({type: SET_SESSION_CAPS, sessionCaps});
+    const flatSessionCaps = await action(dispatch, getState);
+    dispatch({type: SET_FLAT_SESSION_CAPS, flatSessionCaps});
   };
 }
 
@@ -870,7 +870,8 @@ export function keepSessionAlive() {
 
 export function callClientMethod(params) {
   return async (dispatch, getState) => {
-    const {driver, appMode, mjpegScreenshotUrl, isSourceRefreshOn} = getState().inspector;
+    const {serverDetails, driver, appMode, isSourceRefreshOn} = getState().inspector;
+    const {mjpegScreenshotUrl} = serverDetails;
     const {methodName, ignoreResult = true} = params;
     params.appMode = appMode;
 

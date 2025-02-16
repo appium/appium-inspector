@@ -68,7 +68,7 @@ const Inspector = (props) => {
     keepSessionAlive,
     sourceXML,
     visibleCommandResult,
-    mjpegScreenshotUrl,
+    serverDetails,
     isAwaitingMjpegStream,
     toggleShowCentroids,
     showCentroids,
@@ -88,7 +88,7 @@ const Inspector = (props) => {
 
   const showScreenshot =
     (screenshot && !screenshotError) ||
-    (mjpegScreenshotUrl && (!isSourceRefreshOn || !isAwaitingMjpegStream));
+    (serverDetails.mjpegScreenshotUrl && (!isSourceRefreshOn || !isAwaitingMjpegStream));
 
   const updateScreenshotScale = () => {
     // If the screenshot has too much space to the right or bottom, adjust the max width
@@ -128,7 +128,7 @@ const Inspector = (props) => {
   const checkMjpegStream = async () => {
     const {setAwaitingMjpegStream} = props;
     const img = new Image();
-    img.src = mjpegScreenshotUrl;
+    img.src = serverDetails.mjpegScreenshotUrl;
     let imgReady = false;
     try {
       await img.decode();
@@ -191,7 +191,7 @@ const Inspector = (props) => {
     if (windowSize) {
       updateScreenshotScaleDebounced();
       window.addEventListener('resize', updateScreenshotScaleDebounced);
-      if (mjpegScreenshotUrl) {
+      if (serverDetails.mjpegScreenshotUrl) {
         mjpegStreamCheckInterval.current = setInterval(
           checkMjpegStream,
           MJPEG_STREAM_CHECK_INTERVAL,
@@ -253,7 +253,7 @@ const Inspector = (props) => {
             />
           </Tooltip>
         </Button.Group>
-        {showScreenshot && !mjpegScreenshotUrl && (
+        {showScreenshot && !serverDetails.mjpegScreenshotUrl && (
           <Tooltip title={t('Download Screenshot')}>
             <Button icon={<DownloadOutlined />} onClick={() => downloadScreenshot(screenshot)} />
           </Tooltip>

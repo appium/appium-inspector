@@ -1,8 +1,8 @@
 // Columns in the session information table
 export const SESSION_INFO_PROPS = {
   session_url: 'Session URL',
-  server_details: 'Server Details',
   session_length: 'Session Length',
+  server_details: 'Server Details',
   session_details: 'Session Details',
   active_appId: 'Currently Active App ID',
 };
