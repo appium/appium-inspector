@@ -230,7 +230,7 @@ export function newSession(originalCaps, attachSessId = null) {
     dispatch({type: NEW_SESSION_REQUESTED});
 
     let sessionCaps = originalCaps ? getCapsObject(originalCaps) : {};
-    let host, port, username, accessKey, https, path, token, headers;
+    let host, port, username, accessKey, https, path, headers;
     sessionCaps = addCustomCaps(sessionCaps);
 
     switch (session.serverType) {
@@ -292,13 +292,13 @@ export function newSession(originalCaps, attachSessId = null) {
       case SERVER_TYPES.PERFECTO:
         host = session.server.perfecto.hostname;
         port = session.server.perfecto.port || (session.server.perfecto.ssl ? 443 : 80);
-        token = session.server.perfecto.token || process.env.PERFECTO_TOKEN;
+        accessKey = session.server.perfecto.token || process.env.PERFECTO_TOKEN;
         path = session.server.perfecto.path = '/nexperience/perfectomobile/wd/hub';
-        if (!token) {
+        if (!accessKey) {
           showError(new Error(i18n.t('Perfecto SecurityToken is required')));
           return false;
         }
-        sessionCaps['perfecto:options'] = {securityToken: token};
+        sessionCaps['perfecto:options'] = {securityToken: accessKey};
         https = session.server.perfecto.ssl;
         break;
       case SERVER_TYPES.BROWSERSTACK:
@@ -631,6 +631,7 @@ export function newSession(originalCaps, attachSessId = null) {
       serverDetails: {
         username,
         accessKey,
+        headers,
         serverUrl,
         serverUrlParts: {
           protocol,
