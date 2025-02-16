@@ -1,6 +1,5 @@
 // Columns in the session information table
 export const SESSION_INFO_PROPS = {
-  session_id: 'Session ID',
   session_url: 'Session URL',
   server_details: 'Server Details',
   session_length: 'Session Length',

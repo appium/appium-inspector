@@ -101,14 +101,12 @@ const SessionInfo = (props) => {
       : t('Error Fetching Session URL');
 
     switch (name) {
-      case 'Session ID':
-        return sessionId;
       case 'Session URL':
         return sessionUrl;
-      case 'Server Details':
-        return getTable(serverStatusArray, SESSION_INFO_TABLE_PARAMS.SERVER_KEY, false);
       case 'Session Length':
         return time;
+      case 'Server Details':
+        return getTable(serverStatusArray, SESSION_INFO_TABLE_PARAMS.SERVER_KEY, false);
       case 'Session Details':
         return getTable(sessionArray, SESSION_INFO_TABLE_PARAMS.SESSION_KEY, false);
       case 'Currently Active App ID':
