@@ -88,6 +88,7 @@ export const SET_CONTEXT = 'SET_CONTEXT';
 
 export const SET_APP_ID = 'SET_APP_ID';
 export const SET_SERVER_STATUS = 'SET_SERVER_STATUS';
+export const SET_FLAT_SESSION_CAPS = 'SET_FLAT_SESSION_CAPS';
 
 export const SET_KEEP_ALIVE_INTERVAL = 'SET_KEEP_ALIVE_INTERVAL';
 export const SET_USER_WAIT_TIMEOUT = 'SET_USER_WAIT_TIMEOUT';
@@ -412,9 +413,16 @@ export function toggleShowBoilerplate() {
   };
 }
 
-export function setSessionDetails({driver, sessionDetails, mode, mjpegScreenshotUrl}) {
+export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, isUsingMjpegMode}) {
   return (dispatch) => {
-    dispatch({type: SET_SESSION_DETAILS, driver, sessionDetails, mode, mjpegScreenshotUrl});
+    dispatch({
+      type: SET_SESSION_DETAILS,
+      serverDetails,
+      driver,
+      sessionCaps,
+      appMode,
+      isUsingMjpegMode,
+    });
   };
 }
 
@@ -749,6 +757,14 @@ export function getServerStatus() {
   };
 }
 
+export function getFlatSessionCaps() {
+  return async (dispatch, getState) => {
+    const action = applyClientMethod({methodName: 'getSession'});
+    const flatSessionCaps = await action(dispatch, getState);
+    dispatch({type: SET_FLAT_SESSION_CAPS, flatSessionCaps});
+  };
+}
+
 // Start the session timer once session starts
 export function setSessionTime(time) {
   return (dispatch) => {
@@ -861,12 +877,12 @@ export function keepSessionAlive() {
 
 export function callClientMethod(params) {
   return async (dispatch, getState) => {
-    const {driver, appMode, mjpegScreenshotUrl, isSourceRefreshOn} = getState().inspector;
+    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn} = getState().inspector;
     const {methodName, ignoreResult = true} = params;
     params.appMode = appMode;
 
     // don't retrieve screenshot if we're already using the mjpeg stream
-    if (mjpegScreenshotUrl) {
+    if (isUsingMjpegMode) {
       params.skipScreenshot = true;
     }
 

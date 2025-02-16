@@ -49,6 +49,7 @@ import {
   SET_COORD_END,
   SET_COORD_START,
   SET_EXPANDED_PATHS,
+  SET_FLAT_SESSION_CAPS,
   SET_GESTURE_TAP_COORDS_MODE,
   SET_GESTURE_UPLOAD_ERROR,
   SET_INTERACTIONS_NOT_AVAILABLE,
@@ -104,7 +105,8 @@ const INITIAL_STATE = {
   showBoilerplate: false,
   recordedActions: [],
   actionFramework: DEFAULT_FRAMEWORK,
-  sessionDetails: {},
+  serverDetails: {},
+  sessionCaps: {},
   sessionSettings: {},
   isGestureEditorVisible: false,
   isLocatorTestModalVisible: false,
@@ -119,7 +121,6 @@ const INITIAL_STATE = {
   searchedForElementBounds: null,
   selectedInspectorTab: INSPECTOR_TABS.SOURCE,
   appMode: APP_MODE.NATIVE,
-  mjpegScreenshotUrl: null,
   pendingCommand: null,
   findElementsExecutionTimes: [],
   isFindingElementsTimes: false,
@@ -313,11 +314,12 @@ export default function inspector(state = INITIAL_STATE, action) {
       const automationName = action.driver.client.capabilities.automationName;
       return {
         ...state,
-        sessionDetails: action.sessionDetails,
+        serverDetails: action.serverDetails,
         driver: action.driver,
+        sessionCaps: action.sessionCaps,
         automationName: automationName && automationName.toLowerCase(),
-        appMode: action.mode,
-        mjpegScreenshotUrl: action.mjpegScreenshotUrl,
+        appMode: action.appMode,
+        isUsingMjpegMode: action.isUsingMjpegMode,
       };
     }
 
@@ -572,6 +574,12 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         status: action.status,
+      };
+
+    case SET_FLAT_SESSION_CAPS:
+      return {
+        ...state,
+        flatSessionCaps: action.flatSessionCaps,
       };
 
     case SET_AWAITING_MJPEG_STREAM:

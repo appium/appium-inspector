@@ -3,13 +3,10 @@ import _ from 'lodash';
 import {DEFAULT_SWIPE, DEFAULT_TAP} from '../../constants/screenshot';
 
 export default class Framework {
-  constructor(host, port, path, https, caps) {
-    this.host = host || 'localhost';
-    this.port = port || 4723;
-    this.path = path || '/wd/hub';
+  constructor(serverUrl, serverUrlParts, caps) {
+    this.serverUrl = serverUrl;
+    this.serverUrlParts = serverUrlParts;
     this.caps = caps || {};
-    this.https = !!https;
-    this.scheme = https ? 'https' : 'http';
     this.actions = [];
     this.localVarCount = 0;
     this.localVarCache = {};
@@ -31,10 +28,6 @@ export default class Framework {
       x2: pointerMoveActionEnd.x,
       y2: pointerMoveActionEnd.y,
     };
-  }
-
-  get serverUrl() {
-    return `${this.scheme}://${this.host}:${this.port}${this.path === '/' ? '' : this.path}`;
   }
 
   indent(str, spaces) {
