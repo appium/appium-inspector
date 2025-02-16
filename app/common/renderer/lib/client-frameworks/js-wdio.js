@@ -15,10 +15,10 @@ import {remote} from 'webdriverio';
 async function main () {
   const caps = ${JSON.stringify(this.caps, null, 2)}
   const driver = await remote({
-    protocol: "${this.protocol}",
-    hostname: "${this.host}",
-    port: ${this.port},
-    path: "${this.path}",
+    protocol: "${this.serverUrlParts.protocol}",
+    hostname: "${this.serverUrlParts.host}",
+    port: ${this.serverUrlParts.port},
+    path: "${this.serverUrlParts.path}",
     capabilities: caps
   });
 ${this.indent(code, 2)}
