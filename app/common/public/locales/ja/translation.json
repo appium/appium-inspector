@@ -44,7 +44,7 @@
   "updateDetails": "リリース日: {{pubDate}}\n\nリリースノート: {{notes}}",
   "appiumIsAvailable": "Appium Inspector {{name}} が入手可能です",
   "updateIsBeingDownloaded": "更新をダウンロードし始めました。完了し次第、お知らせします。",
-  "updateIsDownloaded": "Appium Inspector {{releaseName}} のダウンロードが完了しました。適用するにはアプリを再起動してください（Appium Inspectorをインストール、再起動するまでに数分かかることがあります）",
+  "updateIsDownloaded": "Appium Inspector {{releaseName}} のダウンロードが完了しました。適用するにはアプリを再起動してください(Appium Inspectorをインストール、再起動するまでに数分かかることがあります)",
   "updateDownloadFailed": "{{message}} のため更新のダウンロードに失敗しました",
   "OK": "OK",
   "Install Now": "今すぐインストールする",
@@ -65,7 +65,7 @@
   "frameworkNotSupported": "フレームワーク '{{framework}}' がサポートされていません",
   "findElementFailure": "'{{methodName}}' の要素検索に失敗しました。ページを更新しやり直してください。",
   "Could not start session": "セッションを開始できませんでした。",
-  "couldNotConnect": "'{{url}}' に接続できませんでした。 Appiumサーバーが起動、URLが正しいかどうかを確認してください（Appiumサーバーログの先頭に有効なURLが表示されています）。 Browser版Appium Inspectorを使用している場合は、サーバーが '--allow-cors' で起動されていることを確認してください。",
+  "couldNotConnect": "'{{url}}' に接続できませんでした。 Appiumサーバーが起動、URLが正しいかどうかを確認してください(Appiumサーバーログの先頭に有効なURLが表示されています）。 Browser版Appium Inspectorを使用している場合は、サーバーが '--allow-cors' で起動されていることを確認してください。",
   "Invalid URL:": "無効なURLです：",
   "sauceCredentialsRequired": "Sauceのユーザー名とアクセス キーが必要です",
   "testingbotCredentialsRequired": "TestingBotのキーとシークレットが必要です",
@@ -296,6 +296,6 @@
   "gestureInvalidJsonError": "無効な JSON ファイルです。ファイルの内容を解析できません。",
   "gestureImportedFrom": "記録された操作は '{{fileName}}' から読み込まれました",
   "invalidSessionFile": "無効なセッションファイル",
-  "tvlabsCredentialsRequired": "TV Labs API Key is required",
-  "TV Labs API Key": "TV Labs API Key"
+  "tvlabsCredentialsRequired": "TV Labs の APIキーが必要です",
+  "TV Labs API Key": "TV LabsのAPIキー"
 }
