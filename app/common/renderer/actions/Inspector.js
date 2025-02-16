@@ -413,9 +413,16 @@ export function toggleShowBoilerplate() {
   };
 }
 
-export function setSessionDetails({serverDetails, driver, sessionCaps, appMode}) {
+export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, isUsingMjpegMode}) {
   return (dispatch) => {
-    dispatch({type: SET_SESSION_DETAILS, serverDetails, driver, sessionCaps, appMode});
+    dispatch({
+      type: SET_SESSION_DETAILS,
+      serverDetails,
+      driver,
+      sessionCaps,
+      appMode,
+      isUsingMjpegMode,
+    });
   };
 }
 
@@ -870,13 +877,12 @@ export function keepSessionAlive() {
 
 export function callClientMethod(params) {
   return async (dispatch, getState) => {
-    const {serverDetails, driver, appMode, isSourceRefreshOn} = getState().inspector;
-    const {mjpegScreenshotUrl} = serverDetails;
+    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn} = getState().inspector;
     const {methodName, ignoreResult = true} = params;
     params.appMode = appMode;
 
     // don't retrieve screenshot if we're already using the mjpeg stream
-    if (mjpegScreenshotUrl) {
+    if (isUsingMjpegMode) {
       params.skipScreenshot = true;
     }
 

@@ -25,7 +25,7 @@ const HeaderButtons = (props) => {
   const {
     selectAppMode,
     appMode,
-    serverDetails,
+    isUsingMjpegMode,
     isSourceRefreshOn,
     toggleRefreshingState,
     isRecording,
@@ -164,7 +164,7 @@ const HeaderButtons = (props) => {
 
   const generalControls = (
     <Button.Group>
-      {serverDetails.mjpegScreenshotUrl && !isSourceRefreshOn && (
+      {isUsingMjpegMode && !isSourceRefreshOn && (
         <Tooltip title={t('Start Refreshing Source')}>
           <Button
             id="btnStartRefreshing"
@@ -173,7 +173,7 @@ const HeaderButtons = (props) => {
           />
         </Tooltip>
       )}
-      {serverDetails.mjpegScreenshotUrl && isSourceRefreshOn && (
+      {isUsingMjpegMode && isSourceRefreshOn && (
         <Tooltip title={t('Pause Refreshing Source')}>
           <Button
             id="btnPauseRefreshing"

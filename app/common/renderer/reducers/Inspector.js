@@ -319,6 +319,7 @@ export default function inspector(state = INITIAL_STATE, action) {
         sessionCaps: action.sessionCaps,
         automationName: automationName && automationName.toLowerCase(),
         appMode: action.appMode,
+        isUsingMjpegMode: action.isUsingMjpegMode,
       };
     }
 

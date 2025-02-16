@@ -17,6 +17,7 @@ const Screenshot = (props) => {
   const {
     screenshot,
     serverDetails,
+    isUsingMjpegMode,
     methodCallInProgress,
     screenshotInteractionMode,
     coordStart,
@@ -167,7 +168,7 @@ const Screenshot = (props) => {
   // Show the screenshot and highlighter rects.
   // Show loading indicator if a method call is in progress, unless using MJPEG mode.
   return (
-    <Spin size="large" spinning={!!methodCallInProgress && !serverDetails.mjpegScreenshotUrl}>
+    <Spin size="large" spinning={!!methodCallInProgress && !isUsingMjpegMode}>
       <div className={styles.innerScreenshotContainer}>
         <div
           ref={containerEl}

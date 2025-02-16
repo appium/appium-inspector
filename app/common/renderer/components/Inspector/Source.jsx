@@ -17,7 +17,7 @@ const Source = (props) => {
     selectedElement = {},
     showSourceAttrs,
     methodCallInProgress,
-    serverDetails,
+    isUsingMjpegMode,
     isSourceRefreshOn,
     t,
   } = props;
@@ -79,10 +79,7 @@ const Source = (props) => {
       {!sourceJSON && !sourceError && <i>{t('Gathering initial app source…')}</i>}
       {sourceError && t('couldNotObtainSource', {errorMsg: JSON.stringify(sourceError)})}
       {/* Show loading indicator in MJPEG mode if a method call is in progress and source refresh is on */}
-      <Spin
-        size="large"
-        spinning={!!methodCallInProgress && serverDetails.mjpegScreenshotUrl && isSourceRefreshOn}
-      >
+      <Spin size="large" spinning={!!methodCallInProgress && isUsingMjpegMode && isSourceRefreshOn}>
         {/* Must switch to a new antd Tree component when there's changes to treeData  */}
         {treeData ? (
           <Tree

@@ -627,8 +627,6 @@ export function newSession(originalCaps, attachSessId = null) {
       mjpegScreenshotUrl = `${protocol}://${host}:${mjpegScreenshotPort}`;
     }
 
-    // pass some state to the inspector that it needs to build recorder
-    // code boilerplate
     const action = setSessionDetails({
       serverDetails: {
         username,
@@ -645,6 +643,7 @@ export function newSession(originalCaps, attachSessId = null) {
       driver,
       sessionCaps,
       appMode,
+      isUsingMjpegMode: mjpegScreenshotUrl !== null,
     });
     action(dispatch);
     return true;
