@@ -208,13 +208,6 @@ export function removeCapability(index) {
   };
 }
 
-function _addVendorPrefixes(caps, dispatch, getState) {
-  const {server, serverType, capsUUID, capsName} = getState().session;
-  const prefixedCaps = addVendorPrefixes(caps);
-  setCapsAndServer(server, serverType, prefixedCaps, capsUUID, capsName)(dispatch);
-  return prefixedCaps;
-}
-
 /**
  * Start a new appium session with the given caps
  */
@@ -223,13 +216,16 @@ export function newSession(originalCaps, attachSessId = null) {
     let session = getState().session;
 
     // first add vendor prefixes to caps if requested
+    let prefixedCaps = originalCaps;
     if (!attachSessId && session.addVendorPrefixes) {
-      originalCaps = _addVendorPrefixes(originalCaps, dispatch, getState);
+      const {server, serverType, capsUUID, capsName} = session;
+      prefixedCaps = addVendorPrefixes(originalCaps);
+      setCapsAndServer(server, serverType, prefixedCaps, capsUUID, capsName)(dispatch);
     }
 
     dispatch({type: NEW_SESSION_REQUESTED});
 
-    let sessionCaps = originalCaps ? getCapsObject(originalCaps) : {};
+    let sessionCaps = prefixedCaps ? getCapsObject(prefixedCaps) : {};
     let host, port, username, accessKey, https, path, headers;
     sessionCaps = addCustomCaps(sessionCaps);
 
