@@ -94,9 +94,6 @@
     "web2driver": "3.0.4",
     "xpath": "0.0.34"
   },
-  "//devDependencies": {
-    "vite": "V6: need support in electron-vite"
-  },
   "devDependencies": {
     "@appium/docutils": "1.0.29",
     "@appium/eslint-config-appium-ts": "1.0.2",
