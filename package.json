@@ -108,7 +108,7 @@
     "electron": "34.2.0",
     "electron-builder": "25.1.8",
     "electron-devtools-installer": "4.0.0",
-    "electron-vite": "2.3.0",
+    "electron-vite": "3.0.0",
     "eslint": "9.20.1",
     "eslint-plugin-react": "7.37.4",
     "eslint-plugin-simple-import-sort": "12.1.1",
