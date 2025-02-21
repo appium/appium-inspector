@@ -95,10 +95,10 @@
     "xpath": "0.0.34"
   },
   "devDependencies": {
-    "@appium/docutils": "1.0.30",
+    "@appium/docutils": "1.0.32",
     "@appium/eslint-config-appium-ts": "1.0.3",
     "@appium/fake-driver": "5.7.1",
-    "@appium/support": "6.0.4",
+    "@appium/support": "6.0.6",
     "@types/react": "18.3.18",
     "@vitejs/plugin-react": "4.3.4",
     "asyncbox": "3.0.0",
