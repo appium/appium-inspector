@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
 import {APP_MODE, NATIVE_APP, REFRESH_DELAY_MILLIS} from '../constants/session-inspector';
 import {log} from '../utils/logger';
-import {parseSource, setHtmlElementAttributes} from './webview-helpers';
+import {parseHtmlSource, setHtmlElementAttributes} from '../utils/webview';
 
 const {TAP, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
 
@@ -380,7 +380,7 @@ export default class AppiumClient {
 
   async getSourceUpdate() {
     try {
-      const source = parseSource(await this.driver.getPageSource());
+      const source = parseHtmlSource(await this.driver.getPageSource());
       return {source};
     } catch (err) {
       return {sourceError: err};
