@@ -14,5 +14,21 @@ describe('webview-helpers.js', function () {
       const parsed = await fs.readFile(join(__dirname, 'mocks', 'appium.page.parsed.html'), 'utf8');
       expect(parseHtmlSource(original)).toEqual(parsed);
     });
+
+    it('should do nothing if the source is already xml', function () {
+      const basicXmlSource = `<hierarchy>
+        <root>
+          <firstA>
+            <secondA/>
+            <secondB/>
+          </firstA>
+          <firstB>
+            <secondC/>
+            <secondD/>
+          </firstB>
+        </root>
+      </hierarchy>`;
+      expect(parseHtmlSource(basicXmlSource)).toEqual(basicXmlSource);
+    });
   });
 });
