@@ -72,7 +72,7 @@
     "@reduxjs/toolkit": "2.6.0",
     "@xmldom/xmldom": "0.9.7",
     "antd": "4.24.16",
-    "axios": "1.7.9",
+    "axios": "1.8.1",
     "cheerio": "1.0.0-rc.12",
     "electron-debug": "4.1.0",
     "electron-settings": "4.0.4",
