@@ -1,21 +1,20 @@
 import {SERVER_TYPES} from '../../constants/session-builder';
-import { BitbarVendor } from './bitbar.js';
-import { BrowserstackVendor } from './browserstack.js';
-import { ExperitestVendor } from './experitest.js';
-import { HeadspinVendor } from './headspin.js';
-import { KobitonVendor } from './kobiton.js';
-import { LambdatestVendor } from './lambdatest.js';
-import { LocalVendor } from './local.js';
-import { MobitruVendor } from './mobitru.js';
-import { PcloudyVendor } from './pcluody.js';
-import { PerfectoVendor } from './perfecto.js';
-import { RemoteVendor } from './remote.js';
-import { RemotetestkitVendor } from './remotetestkit.js';
-import { RobotqaVendor } from './robotqa.js';
-import { SaucelabsVendor } from './saucelabs.js';
-import { TestingbotVendor } from './testingbot.js';
-import { TvlabsVendor } from './tvlabs.js';
-
+import {BitbarVendor} from './bitbar.js';
+import {BrowserstackVendor} from './browserstack.js';
+import {ExperitestVendor} from './experitest.js';
+import {HeadspinVendor} from './headspin.js';
+import {KobitonVendor} from './kobiton.js';
+import {LambdatestVendor} from './lambdatest.js';
+import {LocalVendor} from './local.js';
+import {MobitruVendor} from './mobitru.js';
+import {PcloudyVendor} from './pcluody.js';
+import {PerfectoVendor} from './perfecto.js';
+import {RemoteVendor} from './remote.js';
+import {RemotetestkitVendor} from './remotetestkit.js';
+import {RobotqaVendor} from './robotqa.js';
+import {SaucelabsVendor} from './saucelabs.js';
+import {TestingbotVendor} from './testingbot.js';
+import {TvlabsVendor} from './tvlabs.js';
 
 export const VENDOR_MAP = {
   [SERVER_TYPES.LOCAL]: LocalVendor,

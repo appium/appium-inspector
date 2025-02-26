@@ -2,7 +2,7 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import i18n from '../../i18next';
-import { BaseVendor } from './base';
+import {BaseVendor} from './base';
 
 const SAUCE_OPTIONS_CAP = 'sauce:options';
 

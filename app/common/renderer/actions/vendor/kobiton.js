@@ -1,5 +1,5 @@
 import i18n from '../../i18next';
-import { BaseVendor } from './base';
+import {BaseVendor} from './base';
 
 export class KobitonVendor extends BaseVendor {
   /**
@@ -8,8 +8,8 @@ export class KobitonVendor extends BaseVendor {
   async apply(sessionCaps) {
     const kobiton = this._server.kobiton;
     const host = process.env.KOBITON_HOST || 'api.kobiton.com';
-    const port = kobiton.port = 443;
-    const path = kobiton.path = '/wd/hub';
+    const port = (kobiton.port = 443);
+    const path = (kobiton.path = '/wd/hub');
     const username = kobiton.username || process.env.KOBITON_USERNAME;
     const accessKey = kobiton.accessKey || process.env.KOBITON_ACCESS_KEY;
     sessionCaps['kobiton:options'] = {
@@ -19,7 +19,7 @@ export class KobitonVendor extends BaseVendor {
     if (!username || !accessKey) {
       throw new Error(i18n.t('kobitonCredentialsRequired'));
     }
-    const https = kobiton.ssl = true;
+    const https = (kobiton.ssl = true);
     return {
       path,
       host,

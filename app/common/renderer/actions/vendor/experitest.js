@@ -1,5 +1,5 @@
 import i18n from '../../i18next';
-import { BaseVendor } from './base';
+import {BaseVendor} from './base';
 
 export class ExperitestVendor extends BaseVendor {
   /**
@@ -19,12 +19,11 @@ export class ExperitestVendor extends BaseVendor {
       throw new Error(`${i18n.t('Invalid URL:')} ${experitest.url}`);
     }
 
-    const host = experitest.hostname = experitestUrl.hostname;
-    const path = experitest.path = '/wd/hub';
-    const https = experitest.ssl = experitestUrl.protocol === 'https:';
-    const port = experitest.port = experitestUrl.port === ''
-      ? (https ? 443 : 80)
-      : experitestUrl.port;
+    const host = (experitest.hostname = experitestUrl.hostname);
+    const path = (experitest.path = '/wd/hub');
+    const https = (experitest.ssl = experitestUrl.protocol === 'https:');
+    const port = (experitest.port =
+      experitestUrl.port === '' ? (https ? 443 : 80) : experitestUrl.port);
     return {
       path,
       host,

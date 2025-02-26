@@ -1,5 +1,5 @@
 import i18n from '../../i18next';
-import { BaseVendor } from './base';
+import {BaseVendor} from './base';
 
 export class PcloudyVendor extends BaseVendor {
   /**
@@ -8,8 +8,8 @@ export class PcloudyVendor extends BaseVendor {
   async apply(sessionCaps) {
     const pcloudy = this._server.pcloudy;
     const host = pcloudy.hostname;
-    const port = pcloudy.port = 443;
-    const path = pcloudy.path = '/objectspy/wd/hub';
+    const port = (pcloudy.port = 443);
+    const path = (pcloudy.path = '/objectspy/wd/hub');
     const username = pcloudy.username || process.env.PCLOUDY_USERNAME;
     const accessKey = pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
     if (!username || !accessKey) {
@@ -21,7 +21,7 @@ export class PcloudyVendor extends BaseVendor {
       pCloudy_Username: username,
       pCloudy_ApiKey: accessKey,
     };
-    const https = pcloudy.ssl = true;
+    const https = (pcloudy.ssl = true);
     return {
       path,
       host,

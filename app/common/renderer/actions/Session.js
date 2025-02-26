@@ -229,15 +229,9 @@ export function newSession(originalCaps, attachSessId = null) {
     const VendorClass = VENDOR_MAP[session.serverType];
     if (VendorClass) {
       try {
-        ({
-          host,
-          port,
-          username,
-          accessKey,
-          https,
-          path,
-          headers,
-        } = await (new VendorClass(session.server)).apply(sessionCaps));
+        ({host, port, username, accessKey, https, path, headers} = await new VendorClass(
+          session.server,
+        ).apply(sessionCaps));
       } catch (e) {
         showError(new Error(e.message));
         return false;

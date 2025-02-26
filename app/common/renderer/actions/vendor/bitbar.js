@@ -1,5 +1,5 @@
 import i18n from '../../i18next';
-import { BaseVendor } from './base';
+import {BaseVendor} from './base';
 
 export class BitbarVendor extends BaseVendor {
   /**
@@ -8,8 +8,8 @@ export class BitbarVendor extends BaseVendor {
   async apply(sessionCaps) {
     const bitbar = this._server.bitbar;
     const host = process.env.BITBAR_HOST || 'appium.bitbar.com';
-    const port = bitbar.port = 443;
-    const path = bitbar.path = '/wd/hub';
+    const port = (bitbar.port = 443);
+    const path = (bitbar.path = '/wd/hub');
     const accessKey = bitbar.apiKey || process.env.BITBAR_API_KEY;
     if (!accessKey) {
       throw new Error(i18n.t('bitbarCredentialsRequired'));
@@ -19,7 +19,7 @@ export class BitbarVendor extends BaseVendor {
       source: 'appiumdesktop',
       apiKey: accessKey,
     };
-    const https = bitbar.ssl = true;
+    const https = (bitbar.ssl = true);
     return {
       path,
       host,

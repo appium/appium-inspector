@@ -9,7 +9,7 @@ export class BaseVendor {
    * @param {Record<string, any>} sessionCaps
    * @returns {Promise<VendorProperties>}
    */
-  async apply (/* sessionCaps **/) {
+  async apply(/* sessionCaps **/) {
     throw new Error(`The apply() method must be implemented for the ${this.constructor.name}`);
   }
 }

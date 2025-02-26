@@ -1,5 +1,5 @@
 import i18n from '../../i18next';
-import { BaseVendor } from './base';
+import {BaseVendor} from './base';
 
 export class TvlabsVendor extends BaseVendor {
   /**

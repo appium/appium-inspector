@@ -1,4 +1,4 @@
-import { BaseVendor } from './base';
+import {BaseVendor} from './base';
 
 export class RemoteVendor extends BaseVendor {
   /**

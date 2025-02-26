@@ -1,4 +1,4 @@
-import { BaseVendor } from './base';
+import {BaseVendor} from './base';
 
 export class RobotqaVendor extends BaseVendor {
   /**
@@ -9,7 +9,7 @@ export class RobotqaVendor extends BaseVendor {
     const host = 'remote.robotqa.com';
     const path = '/';
     const port = 443;
-    const https = roboticmobi.ssl = true;
+    const https = (roboticmobi.ssl = true);
     sessionCaps['robotqa:options'] = {
       ...(sessionCaps['robotqa:options'] ?? {}),
       robotqa_token: roboticmobi.token || process.env.ROBOTQA_TOKEN,
