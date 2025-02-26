@@ -494,6 +494,24 @@ export function newSession(originalCaps, attachSessId = null) {
         headers = {Authorization: `Bearer ${accessKey}`};
         break;
       }
+      case SERVER_TYPES.TESTCRIBE: {
+        host = process.env.TESTCRIBE_WEBDRIVER_URL || 'app.testcribe.com';
+        port = 443;
+        https = true;
+        path = '/gw';
+        const apikey = session.server.testcribe.apiKey || process.env.TESTCRIBE_API_KEY;
+        // delete sessionCaps[undefined];
+        if (!apikey) {
+          showError(new Error(i18n.t('testcribeCredentialsRequired')));
+          return false;
+        }
+        if (!sessionCaps['testcribe:options']) {
+          sessionCaps['testcribe:options'] = {};
+        }
+        sessionCaps['testcribe:options'].apikey = apikey;
+        sessionCaps['appium:apiKey'] = apikey;
+        break;
+      }
 
       default:
         break;
