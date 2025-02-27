@@ -26,7 +26,7 @@ import ServerTabPerfecto from './ServerTabPerfecto.jsx';
 import ServerTabRemoteTestKit from './ServerTabRemoteTestKit.jsx';
 import ServerTabRobotQA from './ServerTabRobotQA.jsx';
 import ServerTabSauce from './ServerTabSauce.jsx';
-import ServerTestcribe from './ServerTabTestcribe.jsx';
+import ServerTabTestcribe from './ServerTabTestcribe.jsx';
 import ServerTabTestingbot from './ServerTabTestingbot.jsx';
 import ServerTabTVLabs from './ServerTabTVLabs.jsx';
 import SessionStyles from './Session.module.css';
@@ -86,7 +86,7 @@ CloudProviders[SERVER_TYPES.TVLABS] = providerWrapper(TVLabsLogo, (props) => (
   <ServerTabTVLabs {...props} />
 ));
 CloudProviders[SERVER_TYPES.TESTCRIBE] = providerWrapper(TestcribeLogo, (props) => (
-  <ServerTestcribe {...props} />
+  <ServerTabTestcribe {...props} />
 ));
 
 export default CloudProviders;
