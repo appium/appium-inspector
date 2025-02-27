@@ -226,8 +226,14 @@ export function newSession(originalCaps, attachSessId = null) {
     let sessionCaps = prefixedCaps ? getCapsObject(prefixedCaps) : {};
     sessionCaps = addCustomCaps(sessionCaps);
     let host, port, username, accessKey, https, path, headers;
+    /**
+     * To register a new session vendor:
+     * - Implement a new class inherited from VendorBase in app/common/renderer/lib/vendor/<vendor_name>.js
+     * - Add the newly created class to the VENDOR_MAP defined in app/common/renderer/lib/vendor/map.js
+     */
     const VendorClass = VENDOR_MAP[session.serverType];
     if (VendorClass) {
+      log.info(`Using ${VendorClass.name}`);
       try {
         ({host, port, username, accessKey, https, path, headers} = await new VendorClass(
           session.server,
@@ -236,6 +242,10 @@ export function newSession(originalCaps, attachSessId = null) {
         showError(e);
         return false;
       }
+    } else {
+      log.info(
+        `No vendor mapping is defined for the server type '${session.serverType}'. Using defaults`
+      );
     }
 
     // if the server path is '' (or any other kind of falsy) set it to default
