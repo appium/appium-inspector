@@ -233,7 +233,7 @@ export function newSession(originalCaps, attachSessId = null) {
           session.server,
         ).apply(sessionCaps));
       } catch (e) {
-        showError(new Error(e.message));
+        showError(e);
         return false;
       }
     }
