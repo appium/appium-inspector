@@ -1,5 +1,4 @@
-import i18n from '../../i18next';
-import {BaseVendor} from './base';
+import {BaseVendor} from './base.js';
 
 export class TestingbotVendor extends BaseVendor {
   /**
@@ -13,7 +12,7 @@ export class TestingbotVendor extends BaseVendor {
     const username = testingbot.username || process.env.TB_KEY;
     const accessKey = testingbot.accessKey || process.env.TB_SECRET;
     if (!username || !accessKey) {
-      throw new Error(i18n.t('testingbotCredentialsRequired'));
+      throw new Error(this._translate('testingbotCredentialsRequired'));
     }
     sessionCaps['tb:options'] = {
       ...(sessionCaps['tb:options'] ?? {}),

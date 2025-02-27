@@ -1,7 +1,6 @@
 import _ from 'lodash';
 
-import i18n from '../../i18next';
-import {BaseVendor} from './base';
+import {BaseVendor} from './base.js';
 
 export class LambdatestVendor extends BaseVendor {
   /**
@@ -29,7 +28,7 @@ export class LambdatestVendor extends BaseVendor {
     const username = lambdatest.username || process.env.LAMBDATEST_USERNAME;
     const accessKey = lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
     if (!username || !accessKey) {
-      throw new Error(i18n.t('lambdatestCredentialsRequired'));
+      throw new Error(this._translate('lambdatestCredentialsRequired'));
     }
     const https = (lambdatest.ssl = parseInt(port, 10) === 443);
     return {

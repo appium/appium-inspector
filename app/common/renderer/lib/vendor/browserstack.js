@@ -1,5 +1,4 @@
-import i18n from '../../i18next';
-import {BaseVendor} from './base';
+import {BaseVendor} from './base.js';
 
 export class BrowserstackVendor extends BaseVendor {
   /**
@@ -18,7 +17,7 @@ export class BrowserstackVendor extends BaseVendor {
     };
     const accessKey = browserstack.accessKey || process.env.BROWSERSTACK_ACCESS_KEY;
     if (!username || !accessKey) {
-      throw new Error(i18n.t('browserstackCredentialsRequired'));
+      throw new Error(this._translate('browserstackCredentialsRequired'));
     }
     const https = (browserstack.ssl = parseInt(port, 10) === 443);
     return {

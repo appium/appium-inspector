@@ -1,5 +1,4 @@
-import i18n from '../../i18next';
-import {BaseVendor} from './base';
+import {BaseVendor} from './base.js';
 
 export class HeadspinVendor extends BaseVendor {
   /**
@@ -11,7 +10,7 @@ export class HeadspinVendor extends BaseVendor {
     try {
       headspinUrl = new URL(headspin.webDriverUrl);
     } catch {
-      throw new Error(`${i18n.t('Invalid URL:')} ${headspin.webDriverUrl}`);
+      throw new Error(`${this._translate('Invalid URL:')} ${headspin.webDriverUrl}`);
     }
     const host = (headspin.hostname = headspinUrl.hostname);
     const path = (headspin.path = headspinUrl.pathname);

@@ -1,5 +1,4 @@
-import i18n from '../../i18next';
-import {BaseVendor} from './base';
+import {BaseVendor} from './base.js';
 
 export class KobitonVendor extends BaseVendor {
   /**
@@ -17,7 +16,7 @@ export class KobitonVendor extends BaseVendor {
       source: 'appiumdesktop',
     };
     if (!username || !accessKey) {
-      throw new Error(i18n.t('kobitonCredentialsRequired'));
+      throw new Error(this._translate('kobitonCredentialsRequired'));
     }
     const https = (kobiton.ssl = true);
     return {

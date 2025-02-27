@@ -1,6 +1,12 @@
 export class BaseVendor {
-  constructor(server) {
+  /**
+   *
+   * @param {unknown} server
+   * @param {(tpl: string) => string} translate
+   */
+  constructor(server, translate) {
     this._server = server;
+    this._translate = translate;
   }
 
   /**
@@ -17,7 +23,7 @@ export class BaseVendor {
 /**
  * @typedef {Object} VendorProperties
  * @property {string} [host='127.0.0.1'] Server host name
- * @property {number} [port=4723] Server port
+ * @property {number|string} [port=4723] Server port
  * @property {string} [username] Optional auth username for HTTP basic auth.
  * @property {string} [accessKey] Optional auth password for HTTP basic auth.
  * @property {boolean} [https=false] Whether to use https protocol while conecting to the server

@@ -1,5 +1,4 @@
-import i18n from '../../i18next';
-import {BaseVendor} from './base';
+import {BaseVendor} from './base.js';
 
 export class ExperitestVendor extends BaseVendor {
   /**
@@ -8,7 +7,7 @@ export class ExperitestVendor extends BaseVendor {
   async apply(sessionCaps) {
     const experitest = this._server.experitest;
     if (!experitest.url || !experitest.accessKey) {
-      throw new Error(i18n.t('experitestAccessKeyURLRequired'));
+      throw new Error(this._translate('experitestAccessKeyURLRequired'));
     }
     sessionCaps['experitest:accessKey'] = experitest.accessKey;
 
@@ -16,7 +15,7 @@ export class ExperitestVendor extends BaseVendor {
     try {
       experitestUrl = new URL(experitest.url);
     } catch {
-      throw new Error(`${i18n.t('Invalid URL:')} ${experitest.url}`);
+      throw new Error(`${this._translate('Invalid URL:')} ${experitest.url}`);
     }
 
     const host = (experitest.hostname = experitestUrl.hostname);

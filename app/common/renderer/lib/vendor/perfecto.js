@@ -1,5 +1,4 @@
-import i18n from '../../i18next';
-import {BaseVendor} from './base';
+import {BaseVendor} from './base.js';
 
 export class PerfectoVendor extends BaseVendor {
   /**
@@ -13,7 +12,7 @@ export class PerfectoVendor extends BaseVendor {
     const path = (perfecto.path = '/nexperience/perfectomobile/wd/hub');
     const accessKey = perfecto.token || process.env.PERFECTO_TOKEN;
     if (!accessKey) {
-      throw new Error(i18n.t('Perfecto SecurityToken is required'));
+      throw new Error(this._translate('Perfecto SecurityToken is required'));
     }
     sessionCaps['perfecto:options'] = {
       ...(sessionCaps['perfecto:options'] ?? {}),

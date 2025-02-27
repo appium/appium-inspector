@@ -1,5 +1,4 @@
-import i18n from '../../i18next';
-import {BaseVendor} from './base';
+import {BaseVendor} from './base.js';
 
 export class BitbarVendor extends BaseVendor {
   /**
@@ -12,7 +11,7 @@ export class BitbarVendor extends BaseVendor {
     const path = (bitbar.path = '/wd/hub');
     const accessKey = bitbar.apiKey || process.env.BITBAR_API_KEY;
     if (!accessKey) {
-      throw new Error(i18n.t('bitbarCredentialsRequired'));
+      throw new Error(this._translate('bitbarCredentialsRequired'));
     }
     sessionCaps['bitbar:options'] = {
       ...(sessionCaps['bitbar:options'] ?? {}),

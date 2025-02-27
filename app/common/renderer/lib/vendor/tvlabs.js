@@ -1,5 +1,4 @@
-import i18n from '../../i18next';
-import {BaseVendor} from './base';
+import {BaseVendor} from './base.js';
 
 export class TvlabsVendor extends BaseVendor {
   /**
@@ -13,7 +12,7 @@ export class TvlabsVendor extends BaseVendor {
     const https = host === 'appium.tvlabs.ai';
     const accessKey = tvlabs.apiKey || process.env.TVLABS_API_KEY;
     if (!accessKey) {
-      throw new Error(i18n.t('tvlabsCredentialsRequired'));
+      throw new Error(this._translate('tvlabsCredentialsRequired'));
     }
     const headers = {Authorization: `Bearer ${accessKey}`};
     return {

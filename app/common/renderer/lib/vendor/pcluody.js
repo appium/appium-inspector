@@ -1,5 +1,4 @@
-import i18n from '../../i18next';
-import {BaseVendor} from './base';
+import {BaseVendor} from './base.js';
 
 export class PcloudyVendor extends BaseVendor {
   /**
@@ -13,7 +12,7 @@ export class PcloudyVendor extends BaseVendor {
     const username = pcloudy.username || process.env.PCLOUDY_USERNAME;
     const accessKey = pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
     if (!username || !accessKey) {
-      throw new Error(i18n.t('pcloudyCredentialsRequired'));
+      throw new Error(this._translate('pcloudyCredentialsRequired'));
     }
     sessionCaps['pcloudy:options'] = {
       ...(sessionCaps['pcloudy:options'] ?? {}),

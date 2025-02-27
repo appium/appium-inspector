@@ -1,5 +1,4 @@
-import i18n from '../../i18next';
-import {BaseVendor} from './base';
+import {BaseVendor} from './base.js';
 
 export class MobitruVendor extends BaseVendor {
   /**
@@ -13,7 +12,7 @@ export class MobitruVendor extends BaseVendor {
     try {
       mobitruUrl = new URL(webDriverUrl);
     } catch {
-      throw new Error(`${i18n.t('Invalid URL:')} ${webDriverUrl}`);
+      throw new Error(`${this._translate('Invalid URL:')} ${webDriverUrl}`);
     }
     const host = (mobitru.hostname = mobitruUrl.hostname);
     const path = (mobitru.path = mobitruUrl.pathname);
@@ -23,7 +22,7 @@ export class MobitruVendor extends BaseVendor {
     const username = mobitru.username || process.env.MOBITRU_BILLING_UNIT || 'personal';
     const accessKey = mobitru.accessKey || process.env.MOBITRU_ACCESS_KEY;
     if (!accessKey) {
-      throw new Error(i18n.t('mobitruCredentialsRequired'));
+      throw new Error(this._translate('mobitruCredentialsRequired'));
     }
 
     sessionCaps['mobitru:options'] = {

@@ -12,13 +12,13 @@ import {
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder';
 import {APP_MODE} from '../constants/session-inspector';
 import i18n from '../i18next';
+import {VENDOR_MAP} from '../lib/vendor/map.js';
 import {getSetting, ipcRenderer, setSetting} from '../polyfills';
 import {fetchSessionInformation, formatSeleniumGridSessions} from '../utils/attaching-to-session';
 import {downloadFile, parseSessionFileContents} from '../utils/file-handling';
 import {log} from '../utils/logger';
 import {addVendorPrefixes} from '../utils/other';
 import {quitSession, setSessionDetails} from './Inspector';
-import {VENDOR_MAP} from './vendor/map.js';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
 export const NEW_SESSION_LOADING = 'NEW_SESSION_LOADING';

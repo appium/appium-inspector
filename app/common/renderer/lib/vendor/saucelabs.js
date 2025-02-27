@@ -1,8 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 
-import i18n from '../../i18next';
-import {BaseVendor} from './base';
+import {BaseVendor} from './base.js';
 
 const SAUCE_OPTIONS_CAP = 'sauce:options';
 
@@ -22,7 +21,7 @@ export class SaucelabsVendor extends BaseVendor {
     const username = sauce.username || process.env.SAUCE_USERNAME;
     const accessKey = sauce.accessKey || process.env.SAUCE_ACCESS_KEY;
     if (!username || !accessKey) {
-      throw new Error(i18n.t('sauceCredentialsRequired'));
+      throw new Error(this._translate('sauceCredentialsRequired'));
     }
     if (!_.isPlainObject(sessionCaps[SAUCE_OPTIONS_CAP])) {
       sessionCaps[SAUCE_OPTIONS_CAP] = {};
