@@ -237,6 +237,7 @@ export function newSession(originalCaps, attachSessId = null) {
       try {
         ({host, port, username, accessKey, https, path, headers} = await new VendorClass(
           session.server,
+          (tpl) => i18n.t(tpl),
         ).apply(sessionCaps));
       } catch (e) {
         showError(e);
