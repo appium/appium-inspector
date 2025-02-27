@@ -500,7 +500,6 @@ export function newSession(originalCaps, attachSessId = null) {
         https = true;
         path = '/gw';
         const apikey = session.server.testcribe.apiKey || process.env.TESTCRIBE_API_KEY;
-        // delete sessionCaps[undefined];
         if (!apikey) {
           showError(new Error(i18n.t('testcribeCredentialsRequired')));
           return false;
