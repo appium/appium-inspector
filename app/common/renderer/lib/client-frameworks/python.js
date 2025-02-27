@@ -1,10 +1,14 @@
 import _ from 'lodash';
 
-import Framework from './framework';
+import CommonClientFramework from './common.js';
 
-class PythonFramework extends Framework {
+export default class PythonFramework extends CommonClientFramework {
   get language() {
     return 'python';
+  }
+
+  get readableName() {
+    return 'Python';
   }
 
   getPythonVal(jsonVal) {
@@ -322,7 +326,3 @@ actions.perform()
     return `driver.switch_to.context('${name}')`;
   }
 }
-
-PythonFramework.readableName = 'Python';
-
-export default PythonFramework;

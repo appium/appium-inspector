@@ -1,6 +1,10 @@
-import JavaFramework from './java-common';
+import JavaFramework from './java-common.js';
 
-class JavaJUnit4Framework extends JavaFramework {
+export default class JavaJUnit4Framework extends JavaFramework {
+  get readableName() {
+    return 'Java - JUnit4';
+  }
+
   wrapWithBoilerplate(code) {
     const [pkg, cls, capStr] = this.getBoilerplateParams();
     // Import everything from Selenium in order to use WebElement, Point and other classes.
@@ -51,7 +55,3 @@ ${this.indent(code, 4)}
 `;
   }
 }
-
-JavaJUnit4Framework.readableName = 'Java - JUnit4';
-
-export default JavaJUnit4Framework;

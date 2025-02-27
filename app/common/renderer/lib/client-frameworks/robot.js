@@ -1,11 +1,15 @@
 import _ from 'lodash';
 
-import Framework from './framework';
+import CommonClientFramework from './common.js';
 
-class RobotFramework extends Framework {
+export default class RobotFramework extends CommonClientFramework {
   get language() {
     // Robot highlighting requires highlightjs-robot package
     return 'python';
+  }
+
+  get readableName() {
+    return 'Robot Framework';
   }
 
   getRobotVal(jsonVal) {
@@ -308,7 +312,3 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
     return `Switch To Context    ${name}`;
   }
 }
-
-RobotFramework.readableName = 'Robot Framework';
-
-export default RobotFramework;

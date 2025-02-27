@@ -1,10 +1,14 @@
 import _ from 'lodash';
 
-import Framework from './framework';
+import CommonClientFramework from './common.js';
 
-class RubyFramework extends Framework {
+export default class RubyFramework extends CommonClientFramework {
   get language() {
     return 'ruby';
+  }
+
+  get readableName() {
+    return 'Ruby';
   }
 
   // Use this instead of JSON.stringify, as it puts quotes around dictionary keys
@@ -311,7 +315,3 @@ driver.quit`;
     return `driver.context = '${name}'`;
   }
 }
-
-RubyFramework.readableName = 'Ruby';
-
-export default RubyFramework;

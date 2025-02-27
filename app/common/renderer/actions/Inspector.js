@@ -5,7 +5,7 @@ import {POINTER_TYPES} from '../constants/gestures';
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import i18n from '../i18next';
 import AppiumClient from '../lib/appium-client';
-import frameworks from '../lib/client-frameworks';
+import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map';
 import {getSetting, setSetting} from '../polyfills';
 import {readTextFromUploadedFiles} from '../utils/file-handling';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation';
@@ -392,7 +392,7 @@ export function getSavedActionFramework() {
 
 export function setActionFramework(framework) {
   return async (dispatch) => {
-    if (!frameworks[framework]) {
+    if (!CLIENT_FRAMEWORK_MAP[framework]) {
       throw new Error(i18n.t('frameworkNotSupported', {framework}));
     }
     await setSetting(SAVED_FRAMEWORK, framework);

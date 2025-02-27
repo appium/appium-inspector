@@ -2,7 +2,7 @@ import {CodeOutlined, CopyOutlined} from '@ant-design/icons';
 import {Button, Card, Select, Space, Tooltip} from 'antd';
 import hljs from 'highlight.js';
 
-import frameworks from '../../lib/client-frameworks';
+import {CLIENT_FRAMEWORK_MAP} from '../../lib/client-frameworks/map';
 import {copyToClipboard} from '../../polyfills';
 import InspectorStyles from './Inspector.module.css';
 
@@ -13,7 +13,7 @@ const SessionCodeBox = (props) => {
     const {serverDetails, sessionCaps} = props;
     const {serverUrl, serverUrlParts} = serverDetails;
 
-    const framework = new frameworks[actionFramework](serverUrl, serverUrlParts, sessionCaps);
+    const framework = new CLIENT_FRAMEWORK_MAP[actionFramework](serverUrl, serverUrlParts, sessionCaps);
     const rawCode = framework.getCodeString(true);
     if (raw) {
       return rawCode;
@@ -32,9 +32,9 @@ const SessionCodeBox = (props) => {
         onChange={setActionFramework}
         className={InspectorStyles['framework-dropdown']}
       >
-        {Object.keys(frameworks).map((f) => (
+        {Object.keys(CLIENT_FRAMEWORK_MAP).map((f) => (
           <Select.Option value={f} key={f}>
-            {frameworks[f].readableName}
+            {CLIENT_FRAMEWORK_MAP[f].readableName}
           </Select.Option>
         ))}
       </Select>

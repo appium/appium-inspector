@@ -1,10 +1,14 @@
 import _ from 'lodash';
 
-import Framework from './framework';
+import CommonClientFramework from './common.js';
 
-class DotNetNUnitFramework extends Framework {
+export default class DotNetNUnitFramework extends CommonClientFramework {
   get language() {
     return 'csharp';
+  }
+
+  get readableName() {
+    return '.NET - NUnit';
   }
 
   getCSharpVal(jsonVal) {
@@ -374,7 +378,3 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
     return `_driver.Context = "${name}";`;
   }
 }
-
-DotNetNUnitFramework.readableName = '.NET - NUnit';
-
-export default DotNetNUnitFramework;

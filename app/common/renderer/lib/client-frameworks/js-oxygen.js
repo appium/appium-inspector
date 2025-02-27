@@ -1,8 +1,12 @@
-import Framework from './framework';
+import CommonClientFramework from './common.js';
 
-class JsOxygenFramework extends Framework {
+export default class JsOxygenFramework extends CommonClientFramework {
   get language() {
     return 'js';
+  }
+
+  get readableName() {
+    return 'JS - Oxygen HQ';
   }
 
   get type() {
@@ -292,7 +296,3 @@ ${code}`;
     return `${this.type}.setContext("${name}");`;
   }
 }
-
-JsOxygenFramework.readableName = 'JS - Oxygen HQ';
-
-export default JsOxygenFramework;

@@ -1,8 +1,8 @@
 import _ from 'lodash';
 
-import Framework from './framework';
+import CommonClientFramework from './common.js';
 
-class JavaFramework extends Framework {
+export default class JavaFramework extends CommonClientFramework {
   get language() {
     return 'java';
   }
@@ -354,5 +354,3 @@ driver.perform(Arrays.asList(swipe));
     return `driver.context("${name}");`;
   }
 }
-
-export default JavaFramework;
