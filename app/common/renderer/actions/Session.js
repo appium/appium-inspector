@@ -244,7 +244,7 @@ export function newSession(originalCaps, attachSessId = null) {
       }
     } else {
       log.info(
-        `No vendor mapping is defined for the server type '${session.serverType}'. Using defaults`
+        `No vendor mapping is defined for the server type '${session.serverType}'. Using defaults`,
       );
     }
 
