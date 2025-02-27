@@ -144,6 +144,11 @@ The Inspector has built-in integrations with various cloud service provider plat
         <img width="200" height="50" alt="TV Labs" src="app/common/renderer/assets/images/tvlabs_logo.svg">
       </a>
     </td>
+     <td align="center" valign="center">
+      <a href="https://docs.testcribe.com/docs/Introduction">
+        <img width="200" height="50" alt="Testcribe" src="app/common/renderer/assets/images/testcribe_logo.svg">
+      </a>
+    </td>
   </tr>
 </table>
 

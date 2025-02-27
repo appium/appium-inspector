@@ -10,6 +10,7 @@ import PerfectoLogo from '../../assets/images/perfecto_logo.svg';
 import RemoteTestKitLogo from '../../assets/images/remotetestkit_logo.svg';
 import RobotQALogo from '../../assets/images/robotqa_logo.svg';
 import SauceLogo from '../../assets/images/sauce_logo.svg';
+import TestcribeLogo from '../../assets/images/testcribe_logo.svg';
 import TestingBotLogo from '../../assets/images/testingbot_logo.svg';
 import TVLabsLogo from '../../assets/images/tvlabs_logo.svg';
 import {SERVER_TYPES} from '../../constants/session-builder.js';
@@ -25,6 +26,7 @@ import ServerTabPerfecto from './ServerTabPerfecto.jsx';
 import ServerTabRemoteTestKit from './ServerTabRemoteTestKit.jsx';
 import ServerTabRobotQA from './ServerTabRobotQA.jsx';
 import ServerTabSauce from './ServerTabSauce.jsx';
+import ServerTabTestcribe from './ServerTabTestcribe.jsx';
 import ServerTabTestingbot from './ServerTabTestingbot.jsx';
 import ServerTabTVLabs from './ServerTabTVLabs.jsx';
 import SessionStyles from './Session.module.css';
@@ -82,6 +84,9 @@ CloudProviders[SERVER_TYPES.MOBITRU] = providerWrapper(MobitruLogo, (props) => (
 ));
 CloudProviders[SERVER_TYPES.TVLABS] = providerWrapper(TVLabsLogo, (props) => (
   <ServerTabTVLabs {...props} />
+));
+CloudProviders[SERVER_TYPES.TESTCRIBE] = providerWrapper(TestcribeLogo, (props) => (
+  <ServerTabTestcribe {...props} />
 ));
 
 export default CloudProviders;

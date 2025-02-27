@@ -22,6 +22,7 @@ export const SERVER_TYPES = {
   PCLOUDY: 'pcloudy',
   MOBITRU: 'mobitru',
   TVLABS: 'tvlabs',
+  TESTCRIBE: 'testcribe',
 };
 
 export const SAVED_SESSIONS_TABLE_VALUES = {
