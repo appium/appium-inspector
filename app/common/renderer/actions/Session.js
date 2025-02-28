@@ -231,7 +231,7 @@ export function newSession(originalCaps, attachSessId = null) {
     // - Implement a new class inherited from VendorBase in app/common/renderer/lib/vendor/<vendor_name>.js
     // - Add the newly created class to the VENDOR_MAP defined in app/common/renderer/lib/vendor/map.js
     //
-    /** @type {(new (server: unknown, t: Function) => BaseVendor) | undefined} */
+    /** @type {(new (server: unknown, t: Function) => import('../lib/vendor/base.js').BaseVendor) | undefined} */
     const VendorClass = VENDOR_MAP[session.serverType];
     if (VendorClass) {
       log.info(`Using ${VendorClass.name}`);
