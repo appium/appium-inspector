@@ -70,7 +70,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "2.6.0",
-    "@xmldom/xmldom": "0.9.7",
+    "@xmldom/xmldom": "0.9.8",
     "antd": "4.24.16",
     "axios": "1.8.1",
     "cheerio": "1.0.0-rc.12",
