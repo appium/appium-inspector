@@ -104,7 +104,7 @@ const INITIAL_STATE = {
   isSourceRefreshOn: true,
   showBoilerplate: false,
   recordedActions: [],
-  actionFramework: DEFAULT_FRAMEWORK,
+  clientFramework: DEFAULT_FRAMEWORK,
   serverDetails: {},
   sessionCaps: {},
   sessionSettings: {},

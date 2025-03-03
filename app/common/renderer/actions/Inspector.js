@@ -385,7 +385,7 @@ export function clearRecording() {
 
 export function getSavedClientFramework() {
   return async (dispatch) => {
-    let framework = await getSetting(SAVED_CLIENT_FRAMEWORK);
+    const framework = await getSetting(SAVED_CLIENT_FRAMEWORK);
     dispatch({type: SET_CLIENT_FRAMEWORK, framework});
   };
 }
