@@ -25,7 +25,7 @@ export class SaucelabsVendor extends BaseVendor {
     if (!this._sessionCaps[SAUCE_OPTIONS_CAP]?.name) {
       const dateTime = moment().format('lll');
       this._updateSessionCap(SAUCE_OPTIONS_CAP, {
-        name: `Appium Desktop Session -- ${dateTime}`
+        name: `Appium Desktop Session -- ${dateTime}`,
       });
     }
     return {
