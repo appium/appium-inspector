@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs';
 import {POINTER_TYPES} from '../constants/gestures';
-import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
+import {APP_MODE, CLIENT_FRAMEWORKS, NATIVE_APP} from '../constants/session-inspector';
 import i18n from '../i18next';
 import AppiumClient from '../lib/appium-client';
 import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map';
@@ -385,7 +385,11 @@ export function clearRecording() {
 
 export function getSavedClientFramework() {
   return async (dispatch) => {
-    const framework = await getSetting(SAVED_CLIENT_FRAMEWORK);
+    let framework = await getSetting(SAVED_CLIENT_FRAMEWORK);
+    if (framework === 'java') {
+      // historical
+      framework = CLIENT_FRAMEWORKS.JAVA_JUNIT4;
+    }
     dispatch({type: SET_CLIENT_FRAMEWORK, framework});
   };
 }

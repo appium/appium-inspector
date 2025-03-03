@@ -87,9 +87,12 @@ import {
   UNSELECT_TICK_ELEMENT,
 } from '../actions/Inspector';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
-import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
-
-const DEFAULT_FRAMEWORK = 'java';
+import {
+  APP_MODE,
+  CLIENT_FRAMEWORKS,
+  INSPECTOR_TABS,
+  NATIVE_APP,
+} from '../constants/session-inspector';
 
 const INITIAL_STATE = {
   savedGestures: [],
@@ -104,7 +107,7 @@ const INITIAL_STATE = {
   isSourceRefreshOn: true,
   showBoilerplate: false,
   recordedActions: [],
-  clientFramework: DEFAULT_FRAMEWORK,
+  clientFramework: CLIENT_FRAMEWORKS.JAVA_JUNIT4,
   serverDetails: {},
   sessionCaps: {},
   sessionSettings: {},
