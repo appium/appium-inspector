@@ -8,13 +8,17 @@ import {copyToClipboard} from '../../polyfills';
 import InspectorStyles from './Inspector.module.css';
 
 const Recorder = (props) => {
-  const {showBoilerplate, recordedActions, actionFramework, t} = props;
+  const {showBoilerplate, recordedActions, clientFramework, t} = props;
 
   const code = (raw = true) => {
     const {serverDetails, sessionCaps} = props;
     const {serverUrl, serverUrlParts} = serverDetails;
 
-    let framework = new CLIENT_FRAMEWORK_MAP[actionFramework](serverUrl, serverUrlParts, sessionCaps);
+    let framework = new CLIENT_FRAMEWORK_MAP[clientFramework](
+      serverUrl,
+      serverUrlParts,
+      sessionCaps,
+    );
     framework.actions = recordedActions;
     const rawCode = framework.getCodeString(showBoilerplate);
     if (raw) {
@@ -24,7 +28,7 @@ const Recorder = (props) => {
   };
 
   const actionBar = () => {
-    const {setActionFramework, toggleShowBoilerplate, clearRecording} = props;
+    const {setClientFramework, toggleShowBoilerplate, clearRecording} = props;
 
     return (
       <Space size="middle">
@@ -46,8 +50,8 @@ const Recorder = (props) => {
           </Button.Group>
         )}
         <Select
-          defaultValue={actionFramework}
-          onChange={setActionFramework}
+          defaultValue={clientFramework}
+          onChange={setClientFramework}
           className={InspectorStyles['framework-dropdown']}
         >
           {Object.keys(CLIENT_FRAMEWORK_MAP).map((f) => (

@@ -40,10 +40,10 @@ import {
   SELECT_INSPECTOR_TAB,
   SELECT_TICK_ELEMENT,
   SESSION_DONE,
-  SET_ACTION_FRAMEWORK,
   SET_APP_ID,
   SET_APP_MODE,
   SET_AWAITING_MJPEG_STREAM,
+  SET_CLIENT_FRAMEWORK,
   SET_COMMAND_ARG,
   SET_CONTEXT,
   SET_COORD_END,
@@ -280,10 +280,10 @@ export default function inspector(state = INITIAL_STATE, action) {
         recordedActions: [],
       };
 
-    case SET_ACTION_FRAMEWORK:
+    case SET_CLIENT_FRAMEWORK:
       return {
         ...state,
-        actionFramework: action.framework || DEFAULT_FRAMEWORK,
+        clientFramework: action.framework,
       };
 
     case RECORD_ACTION:

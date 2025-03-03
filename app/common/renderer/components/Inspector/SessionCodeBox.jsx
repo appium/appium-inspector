@@ -7,13 +7,17 @@ import {copyToClipboard} from '../../polyfills';
 import InspectorStyles from './Inspector.module.css';
 
 const SessionCodeBox = (props) => {
-  const {actionFramework, setActionFramework, t} = props;
+  const {clientFramework, setClientFramework, t} = props;
 
   const code = (raw = true) => {
     const {serverDetails, sessionCaps} = props;
     const {serverUrl, serverUrlParts} = serverDetails;
 
-    const framework = new CLIENT_FRAMEWORK_MAP[actionFramework](serverUrl, serverUrlParts, sessionCaps);
+    const framework = new CLIENT_FRAMEWORK_MAP[clientFramework](
+      serverUrl,
+      serverUrlParts,
+      sessionCaps,
+    );
     const rawCode = framework.getCodeString(true);
     if (raw) {
       return rawCode;
@@ -28,8 +32,8 @@ const SessionCodeBox = (props) => {
         <Button icon={<CopyOutlined />} onClick={() => copyToClipboard(code())} />
       </Tooltip>
       <Select
-        defaultValue={actionFramework}
-        onChange={setActionFramework}
+        defaultValue={clientFramework}
+        onChange={setClientFramework}
         className={InspectorStyles['framework-dropdown']}
       >
         {Object.keys(CLIENT_FRAMEWORK_MAP).map((f) => (
