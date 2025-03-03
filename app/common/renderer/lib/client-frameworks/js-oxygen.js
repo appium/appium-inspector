@@ -2,9 +2,7 @@ import CommonClientFramework from './common.js';
 
 export default class JsOxygenFramework extends CommonClientFramework {
   static readableName = 'JS - Oxygen HQ';
-  get language() {
-    return 'js';
-  }
+  static highlightLang = 'js';
 
   get type() {
     if (this.caps && this.caps.platformName && this.caps.platformName.toLowerCase() === 'windows') {

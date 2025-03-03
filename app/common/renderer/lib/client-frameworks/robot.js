@@ -4,10 +4,7 @@ import CommonClientFramework from './common.js';
 
 export default class RobotFramework extends CommonClientFramework {
   static readableName = 'Robot Framework';
-  get language() {
-    // Robot highlighting requires highlightjs-robot package
-    return 'python';
-  }
+  static highlightLang = 'python'; // Robot highlighting requires highlightjs-robot package
 
   getRobotVal(jsonVal) {
     if (typeof jsonVal === 'boolean') {

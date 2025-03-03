@@ -4,9 +4,7 @@ import CommonClientFramework from './common.js';
 
 export default class PythonFramework extends CommonClientFramework {
   static readableName = 'Python';
-  get language() {
-    return 'python';
-  }
+  static highlightLang = 'python';
 
   getPythonVal(jsonVal) {
     if (typeof jsonVal === 'boolean') {

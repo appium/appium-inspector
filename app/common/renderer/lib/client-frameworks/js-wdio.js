@@ -2,9 +2,7 @@ import CommonClientFramework from './common.js';
 
 export default class JsWdIoFramework extends CommonClientFramework {
   static readableName = 'JS - WebdriverIO';
-  get language() {
-    return 'js';
-  }
+  static highlightLang = 'js';
 
   wrapWithBoilerplate(code) {
     return `// This sample code supports WebdriverIO client >=8

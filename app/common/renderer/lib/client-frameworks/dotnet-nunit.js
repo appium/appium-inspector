@@ -4,9 +4,7 @@ import CommonClientFramework from './common.js';
 
 export default class DotNetNUnitFramework extends CommonClientFramework {
   static readableName = '.NET - NUnit';
-  get language() {
-    return 'csharp';
-  }
+  static highlightLang = 'csharp';
 
   getCSharpVal(jsonVal) {
     if (Array.isArray(jsonVal)) {

@@ -3,9 +3,7 @@ import _ from 'lodash';
 import CommonClientFramework from './common.js';
 
 export default class JavaFramework extends CommonClientFramework {
-  get language() {
-    return 'java';
-  }
+  static highlightLang = 'java';
 
   getJavaVal(jsonVal) {
     if (Array.isArray(jsonVal)) {

@@ -4,9 +4,7 @@ import CommonClientFramework from './common.js';
 
 export default class RubyFramework extends CommonClientFramework {
   static readableName = 'Ruby';
-  get language() {
-    return 'ruby';
-  }
+  static highlightLang = 'ruby';
 
   // Use this instead of JSON.stringify, as it puts quotes around dictionary keys
   getRubyVal(jsonVal) {

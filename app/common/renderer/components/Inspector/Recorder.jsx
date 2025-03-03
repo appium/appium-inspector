@@ -22,7 +22,7 @@ const Recorder = (props) => {
     if (raw) {
       return rawCode;
     }
-    return hljs.highlight(rawCode, {language: framework.language}).value;
+    return hljs.highlight(rawCode, {language: ClientFrameworkClass.highlightLang}).value;
   };
 
   const actionBar = () => {
