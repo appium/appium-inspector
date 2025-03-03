@@ -1,9 +1,7 @@
 import JavaFramework from './java-common.js';
 
 export default class JavaJUnit4Framework extends JavaFramework {
-  get readableName() {
-    return 'Java - JUnit4';
-  }
+  static readableName = 'Java - JUnit4';
 
   wrapWithBoilerplate(code) {
     const [pkg, cls, capStr] = this.getBoilerplateParams();

@@ -3,12 +3,9 @@ import _ from 'lodash';
 import CommonClientFramework from './common.js';
 
 export default class DotNetNUnitFramework extends CommonClientFramework {
+  static readableName = '.NET - NUnit';
   get language() {
     return 'csharp';
-  }
-
-  get readableName() {
-    return '.NET - NUnit';
   }
 
   getCSharpVal(jsonVal) {

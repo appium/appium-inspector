@@ -1,9 +1,7 @@
 import JavaFramework from './java-common.js';
 
 export default class JavaJUnit5Framework extends JavaFramework {
-  get readableName() {
-    return 'Java - JUnit5';
-  }
+  static readableName = 'Java - JUnit5';
 
   wrapWithBoilerplate(code) {
     const [pkg, cls, capStr] = this.getBoilerplateParams();

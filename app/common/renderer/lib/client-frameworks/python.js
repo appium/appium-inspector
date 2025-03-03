@@ -3,12 +3,9 @@ import _ from 'lodash';
 import CommonClientFramework from './common.js';
 
 export default class PythonFramework extends CommonClientFramework {
+  static readableName = 'Python';
   get language() {
     return 'python';
-  }
-
-  get readableName() {
-    return 'Python';
   }
 
   getPythonVal(jsonVal) {

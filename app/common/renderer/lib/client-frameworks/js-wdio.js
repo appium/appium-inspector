@@ -1,12 +1,9 @@
 import CommonClientFramework from './common.js';
 
 export default class JsWdIoFramework extends CommonClientFramework {
+  static readableName = 'JS - WebdriverIO';
   get language() {
     return 'js';
-  }
-
-  get readableName() {
-    return 'JS - WebdriverIO';
   }
 
   wrapWithBoilerplate(code) {

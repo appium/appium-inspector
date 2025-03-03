@@ -1,12 +1,9 @@
 import CommonClientFramework from './common.js';
 
 export default class JsOxygenFramework extends CommonClientFramework {
+  static readableName = 'JS - Oxygen HQ';
   get language() {
     return 'js';
-  }
-
-  get readableName() {
-    return 'JS - Oxygen HQ';
   }
 
   get type() {
