@@ -15,11 +15,8 @@ const Recorder = (props) => {
     const {serverDetails, sessionCaps} = props;
     const {serverUrl, serverUrlParts} = serverDetails;
 
-    let framework = new CLIENT_FRAMEWORK_MAP[clientFramework](
-      serverUrl,
-      serverUrlParts,
-      sessionCaps,
-    );
+    const ClientFrameworkClass = CLIENT_FRAMEWORK_MAP[clientFramework];
+    let framework = new ClientFrameworkClass(serverUrl, serverUrlParts, sessionCaps);
     framework.actions = recordedActions;
     const rawCode = framework.getCodeString(showBoilerplate);
     if (raw) {

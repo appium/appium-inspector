@@ -14,11 +14,8 @@ const SessionCodeBox = (props) => {
     const {serverDetails, sessionCaps} = props;
     const {serverUrl, serverUrlParts} = serverDetails;
 
-    const framework = new CLIENT_FRAMEWORK_MAP[clientFramework](
-      serverUrl,
-      serverUrlParts,
-      sessionCaps,
-    );
+    const ClientFrameworkClass = CLIENT_FRAMEWORK_MAP[clientFramework];
+    const framework = new ClientFrameworkClass(serverUrl, serverUrlParts, sessionCaps);
     const rawCode = framework.getCodeString(true);
     if (raw) {
       return rawCode;
