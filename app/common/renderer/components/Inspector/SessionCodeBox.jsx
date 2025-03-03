@@ -1,6 +1,7 @@
 import {CodeOutlined, CopyOutlined} from '@ant-design/icons';
 import {Button, Card, Select, Space, Tooltip} from 'antd';
 import hljs from 'highlight.js';
+import _ from 'lodash';
 
 import {CLIENT_FRAMEWORK_MAP} from '../../lib/client-frameworks/map';
 import {copyToClipboard} from '../../polyfills';
@@ -35,13 +36,11 @@ const SessionCodeBox = (props) => {
         defaultValue={clientFramework}
         onChange={setClientFramework}
         className={InspectorStyles['framework-dropdown']}
-      >
-        {Object.keys(CLIENT_FRAMEWORK_MAP).map((f) => (
-          <Select.Option value={f} key={f}>
-            {CLIENT_FRAMEWORK_MAP[f].readableName}
-          </Select.Option>
-        ))}
-      </Select>
+        options={_.map(CLIENT_FRAMEWORK_MAP, (fwClass, fwId) => ({
+          value: fwId,
+          label: fwClass.readableName,
+        }))}
+      />
     </Space>
   );
 
