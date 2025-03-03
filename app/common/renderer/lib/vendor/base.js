@@ -27,11 +27,11 @@ export class BaseVendor {
    *
    * @param {string} name
    * @param {any} value
-   * @param {boolean} [overwrite=false]
+   * @param {boolean} [merge=true]
    */
-  _updateSessionCap(name, value, overwrite = false) {
+  _updateSessionCap(name, value, merge = true) {
     const previousValue = this._sessionCaps[name];
-    if (!overwrite && _.isPlainObject(previousValue) && _.isPlainObject(value)) {
+    if (merge && _.isPlainObject(previousValue) && _.isPlainObject(value)) {
       this._sessionCaps[name] = {
         ...previousValue,
         ...value,
