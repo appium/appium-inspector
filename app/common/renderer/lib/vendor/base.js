@@ -1,22 +1,59 @@
+import _ from 'lodash';
+
+import i18n from '../../i18next.js';
+
 export class BaseVendor {
   /**
    *
    * @param {unknown} server
-   * @param {(tpl: string) => string} translate
+   * @param {Record<string, any>} sessionCaps
    */
-  constructor(server, translate) {
+  constructor(server, sessionCaps) {
     this._server = server;
-    this._translate = translate;
+    this._sessionCaps = sessionCaps;
+    this._translate = (tpl) => i18n.t(tpl);
   }
 
   /**
    * ! It is OK for this method to mutate sessionCaps
    *
-   * @param {Record<string, any>} sessionCaps
    * @returns {Promise<VendorProperties>}
    */
-  async apply(/* sessionCaps **/) {
+  async apply() {
     throw new Error(`The apply() method must be implemented for the ${this.constructor.name}`);
+  }
+
+  /**
+   *
+   * @param {string} name
+   * @param {any} value
+   * @param {boolean} [overwrite=false]
+   */
+  _updateSessionCap(name, value, overwrite = false) {
+    const previousValue = this._sessionCaps[name];
+    if (!overwrite && _.isPlainObject(previousValue) && _.isPlainObject(value)) {
+      this._sessionCaps[name] = {
+        ...previousValue,
+        ...value,
+      };
+    } else {
+      this._sessionCaps[name] = value;
+    }
+  }
+
+  /**
+   *
+   * @param {string} url
+   * @returns {URL}
+   */
+  _validateUrl(url) {
+    let webdriverUrl;
+    try {
+      webdriverUrl = new URL(url);
+    } catch {
+      throw new Error(`${this._translate('Invalid URL:')} ${webdriverUrl}`);
+    }
+    return webdriverUrl;
   }
 }
 

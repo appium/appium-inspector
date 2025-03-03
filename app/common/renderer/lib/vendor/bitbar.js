@@ -4,7 +4,7 @@ export class BitbarVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply(sessionCaps) {
+  async apply() {
     const bitbar = this._server.bitbar;
     const host = process.env.BITBAR_HOST || 'appium.bitbar.com';
     const port = (bitbar.port = 443);
@@ -13,11 +13,10 @@ export class BitbarVendor extends BaseVendor {
     if (!accessKey) {
       throw new Error(this._translate('bitbarCredentialsRequired'));
     }
-    sessionCaps['bitbar:options'] = {
-      ...(sessionCaps['bitbar:options'] ?? {}),
+    this._updateSessionCap('bitbar:options', {
       source: 'appiumdesktop',
       apiKey: accessKey,
-    };
+    });
     const https = (bitbar.ssl = true);
     return {
       path,

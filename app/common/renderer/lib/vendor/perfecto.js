@@ -4,7 +4,7 @@ export class PerfectoVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply(sessionCaps) {
+  async apply() {
     const perfecto = this._server.perfecto;
     const host = perfecto.hostname;
     const port = perfecto.port || (perfecto.ssl ? 443 : 80);
@@ -14,10 +14,9 @@ export class PerfectoVendor extends BaseVendor {
     if (!accessKey) {
       throw new Error(this._translate('Perfecto SecurityToken is required'));
     }
-    sessionCaps['perfecto:options'] = {
-      ...(sessionCaps['perfecto:options'] ?? {}),
+    this._updateSessionCap('perfecto:options', {
       securityToken: accessKey,
-    };
+    });
     return {
       path,
       host,

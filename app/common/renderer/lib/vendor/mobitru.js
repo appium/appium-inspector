@@ -4,16 +4,11 @@ export class MobitruVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply(sessionCaps) {
+  async apply() {
     const mobitru = this._server.mobitru;
     const webDriverUrl =
       mobitru.webDriverUrl || process.env.MOBITRU_WEBDRIVER_URL || 'https://app.mobitru.com/wd/hub';
-    let mobitruUrl;
-    try {
-      mobitruUrl = new URL(webDriverUrl);
-    } catch {
-      throw new Error(`${this._translate('Invalid URL:')} ${webDriverUrl}`);
-    }
+    const mobitruUrl = this._validateUrl(webDriverUrl);
     const host = (mobitru.hostname = mobitruUrl.hostname);
     const path = (mobitru.path = mobitruUrl.pathname);
     const https = (mobitru.ssl = mobitruUrl.protocol === 'https:');
@@ -25,10 +20,9 @@ export class MobitruVendor extends BaseVendor {
       throw new Error(this._translate('mobitruCredentialsRequired'));
     }
 
-    sessionCaps['mobitru:options'] = {
-      ...(sessionCaps['mobitru:options'] ?? {}),
+    this._updateSessionCap('mobitru:options', {
       source: 'appium-inspector',
-    };
+    });
     return {
       path,
       host,

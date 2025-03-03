@@ -4,7 +4,7 @@ export class PcloudyVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply(sessionCaps) {
+  async apply() {
     const pcloudy = this._server.pcloudy;
     const host = pcloudy.hostname;
     const port = (pcloudy.port = 443);
@@ -14,12 +14,11 @@ export class PcloudyVendor extends BaseVendor {
     if (!username || !accessKey) {
       throw new Error(this._translate('pcloudyCredentialsRequired'));
     }
-    sessionCaps['pcloudy:options'] = {
-      ...(sessionCaps['pcloudy:options'] ?? {}),
+    this._updateSessionCap('pcloudy:options', {
       source: 'appiumdesktop',
       pCloudy_Username: username,
       pCloudy_ApiKey: accessKey,
-    };
+    });
     const https = (pcloudy.ssl = true);
     return {
       path,

@@ -4,14 +4,9 @@ export class HeadspinVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply(/* sessionCaps **/) {
+  async apply() {
     const headspin = this._server.headspin;
-    let headspinUrl;
-    try {
-      headspinUrl = new URL(headspin.webDriverUrl);
-    } catch {
-      throw new Error(`${this._translate('Invalid URL:')} ${headspin.webDriverUrl}`);
-    }
+    const headspinUrl = this._validateUrl(headspin.webDriverUrl);
     const host = (headspin.hostname = headspinUrl.hostname);
     const path = (headspin.path = headspinUrl.pathname);
     const https = (headspin.ssl = headspinUrl.protocol === 'https:');

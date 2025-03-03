@@ -4,7 +4,7 @@ export class LocalVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply(/** sessionCaps */) {
+  async apply() {
     const local = this._server.local;
     return {
       // if we're on windows, we won't be able to connect directly to '0.0.0.0'

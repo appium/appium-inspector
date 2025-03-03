@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import moment from 'moment';
 
 import {BaseVendor} from './base.js';
@@ -9,7 +8,7 @@ export class SaucelabsVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply(sessionCaps) {
+  async apply() {
     const sauce = this._server.sauce;
     const path = '/wd/hub';
     let host = `ondemand.${sauce.dataCenter}.saucelabs.com`;
@@ -23,12 +22,11 @@ export class SaucelabsVendor extends BaseVendor {
     if (!username || !accessKey) {
       throw new Error(this._translate('sauceCredentialsRequired'));
     }
-    if (!_.isPlainObject(sessionCaps[SAUCE_OPTIONS_CAP])) {
-      sessionCaps[SAUCE_OPTIONS_CAP] = {};
-    }
-    if (!sessionCaps[SAUCE_OPTIONS_CAP].name) {
+    if (!this._sessionCaps[SAUCE_OPTIONS_CAP]?.name) {
       const dateTime = moment().format('lll');
-      sessionCaps[SAUCE_OPTIONS_CAP].name = `Appium Desktop Session -- ${dateTime}`;
+      this._updateSessionCap(SAUCE_OPTIONS_CAP, {
+        name: `Appium Desktop Session -- ${dateTime}`
+      });
     }
     return {
       path,

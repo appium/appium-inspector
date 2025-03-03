@@ -4,7 +4,7 @@ export class RemoteVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply(/* sessionCaps **/) {
+  async apply() {
     const remote = this._server.remote;
     return {
       host: remote.hostname,

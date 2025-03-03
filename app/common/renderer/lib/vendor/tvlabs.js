@@ -4,7 +4,7 @@ export class TvlabsVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply(/* sessionCaps **/) {
+  async apply() {
     const tvlabs = this._server.tvlabs;
     const host = process.env.TVLABS_WEBDRIVER_URL || 'appium.tvlabs.ai';
     const path = '/';
