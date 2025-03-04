@@ -47,6 +47,7 @@ const Recorder = (props) => {
         )}
         <Select
           defaultValue={actionFramework}
+          value={actionFramework}
           onChange={setActionFramework}
           className={InspectorStyles['framework-dropdown']}
         >
