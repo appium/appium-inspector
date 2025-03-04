@@ -70,9 +70,9 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "2.6.0",
-    "@xmldom/xmldom": "0.9.7",
+    "@xmldom/xmldom": "0.9.8",
     "antd": "4.24.16",
-    "axios": "1.7.9",
+    "axios": "1.8.1",
     "cheerio": "1.0.0-rc.12",
     "electron-debug": "4.1.0",
     "electron-settings": "4.0.4",
@@ -102,7 +102,7 @@
     "@types/react": "18.3.18",
     "@vitejs/plugin-react": "4.3.4",
     "asyncbox": "3.0.0",
-    "electron": "34.2.0",
+    "electron": "34.3.0",
     "electron-builder": "25.1.8",
     "electron-devtools-installer": "4.0.0",
     "electron-vite": "3.0.0",
@@ -111,11 +111,11 @@
     "eslint-plugin-simple-import-sort": "12.1.1",
     "globals": "16.0.0",
     "less": "4.2.2",
-    "prettier": "3.5.2",
+    "prettier": "3.5.3",
     "rimraf": "6.0.1",
-    "vite": "6.1.1",
+    "vite": "6.2.0",
     "vite-plugin-electron-renderer": "0.14.6",
-    "vitest": "3.0.6"
+    "vitest": "3.0.7"
   },
   "engines": {
     "node": ">=20.x",
