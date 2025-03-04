@@ -13,10 +13,14 @@ export class BitbarVendor extends BaseVendor {
     if (!accessKey) {
       throw new Error(this._translate('bitbarCredentialsRequired'));
     }
-    this._updateSessionCap('bitbar:options', {
-      source: 'appiumdesktop',
-      apiKey: accessKey,
-    }, false);
+    this._updateSessionCap(
+      'bitbar:options',
+      {
+        source: 'appiumdesktop',
+        apiKey: accessKey,
+      },
+      false,
+    );
     const https = (bitbar.ssl = true);
     return {
       path,

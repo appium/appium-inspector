@@ -14,9 +14,13 @@ export class PerfectoVendor extends BaseVendor {
     if (!accessKey) {
       throw new Error(this._translate('Perfecto SecurityToken is required'));
     }
-    this._updateSessionCap('perfecto:options', {
-      securityToken: accessKey,
-    }, false);
+    this._updateSessionCap(
+      'perfecto:options',
+      {
+        securityToken: accessKey,
+      },
+      false,
+    );
     return {
       path,
       host,

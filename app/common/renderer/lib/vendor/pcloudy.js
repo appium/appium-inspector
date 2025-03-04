@@ -14,11 +14,15 @@ export class PcloudyVendor extends BaseVendor {
     if (!username || !accessKey) {
       throw new Error(this._translate('pcloudyCredentialsRequired'));
     }
-    this._updateSessionCap('pcloudy:options', {
-      source: 'appiumdesktop',
-      pCloudy_Username: username,
-      pCloudy_ApiKey: accessKey,
-    }, false);
+    this._updateSessionCap(
+      'pcloudy:options',
+      {
+        source: 'appiumdesktop',
+        pCloudy_Username: username,
+        pCloudy_ApiKey: accessKey,
+      },
+      false,
+    );
     const https = (pcloudy.ssl = true);
     return {
       path,
