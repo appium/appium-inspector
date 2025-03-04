@@ -3,7 +3,7 @@ import path from 'path';
 import {afterAll, beforeAll, describe, expect, it} from 'vitest';
 import {Web2Driver} from 'web2driver/node';
 
-import InspectorDriver from '../../app/common/renderer/lib/appium-driver/inspector-driver';
+import InspectorDriver from '../../app/common/renderer/lib/appium/inspector-driver';
 
 const FAKE_DRIVER_PORT = 12121;
 
