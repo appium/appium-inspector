@@ -1,9 +1,9 @@
 import _ from 'lodash';
 
-import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
-import {APP_MODE, NATIVE_APP, REFRESH_DELAY_MILLIS} from '../constants/session-inspector';
-import {log} from '../utils/logger';
-import {parseHtmlSource, setHtmlElementAttributes} from '../utils/webview';
+import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot.js';
+import {APP_MODE, NATIVE_APP, REFRESH_DELAY_MILLIS} from '../../constants/session-inspector.js';
+import {log} from '../../utils/logger.js';
+import {parseHtmlSource, setHtmlElementAttributes} from '../../utils/webview.js';
 
 const {TAP, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
 
@@ -16,7 +16,16 @@ const IOS_TOP_CONTROLS_SELECTOR =
 
 let _instance = null;
 
-export default class AppiumClient {
+/**
+ * Wrapper class providing access to the currently active Appium driver methods,
+ * with additional Inspector-specific handling
+ */
+export default class InspectorDriver {
+  static instance(driver) {
+    _instance ??= new this(driver);
+    return _instance;
+  }
+
   constructor(driver) {
     this.driver = driver;
     this.elementCache = {};
@@ -483,10 +492,3 @@ export default class AppiumClient {
     ];
   }
 }
-
-AppiumClient.instance = (driver) => {
-  if (_instance === null) {
-    _instance = new AppiumClient(driver);
-  }
-  return _instance;
-};

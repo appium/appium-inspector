@@ -4,7 +4,7 @@ import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-d
 import {POINTER_TYPES} from '../constants/gestures';
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import i18n from '../i18next';
-import AppiumClient from '../lib/appium-client';
+import InspectorDriver from '../lib/appium-driver/inspector-driver';
 import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map';
 import {getSetting, setSetting} from '../polyfills';
 import {readTextFromUploadedFiles} from '../utils/file-handling';
@@ -894,7 +894,7 @@ export function callClientMethod(params) {
     log.info(params);
     const action = keepSessionAlive();
     action(dispatch, getState);
-    const client = AppiumClient.instance(driver);
+    const client = InspectorDriver.instance(driver);
     const res = await client.run(params);
     let {commandRes} = res;
 
