@@ -18,7 +18,7 @@ export class PcloudyVendor extends BaseVendor {
       source: 'appiumdesktop',
       pCloudy_Username: username,
       pCloudy_ApiKey: accessKey,
-    });
+    }, false);
     const https = (pcloudy.ssl = true);
     return {
       path,

@@ -16,7 +16,7 @@ export class BitbarVendor extends BaseVendor {
     this._updateSessionCap('bitbar:options', {
       source: 'appiumdesktop',
       apiKey: accessKey,
-    });
+    }, false);
     const https = (bitbar.ssl = true);
     return {
       path,

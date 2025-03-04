@@ -16,7 +16,7 @@ export class PerfectoVendor extends BaseVendor {
     }
     this._updateSessionCap('perfecto:options', {
       securityToken: accessKey,
-    });
+    }, false);
     return {
       path,
       host,
