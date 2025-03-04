@@ -7,7 +7,7 @@ import {KobitonVendor} from './kobiton.js';
 import {LambdatestVendor} from './lambdatest.js';
 import {LocalVendor} from './local.js';
 import {MobitruVendor} from './mobitru.js';
-import {PcloudyVendor} from './pcluody.js';
+import {PcloudyVendor} from './pcloudy.js';
 import {PerfectoVendor} from './perfecto.js';
 import {RemoteVendor} from './remote.js';
 import {RemotetestkitVendor} from './remotetestkit.js';
