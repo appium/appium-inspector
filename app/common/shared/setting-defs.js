@@ -18,6 +18,6 @@ export const DEFAULT_SETTINGS = {
   [SERVER_ARGS]: null,
   [SESSION_SERVER_PARAMS]: null,
   [SESSION_SERVER_TYPE]: null,
-  [SAVED_CLIENT_FRAMEWORK]: 'java-junit4',
+  [SAVED_CLIENT_FRAMEWORK]: 'java',
   [VISIBLE_PROVIDERS]: null,
 };
