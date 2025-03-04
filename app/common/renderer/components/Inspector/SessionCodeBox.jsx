@@ -31,6 +31,7 @@ const SessionCodeBox = (props) => {
       </Tooltip>
       <Select
         defaultValue={clientFramework}
+        value={clientFramework}
         onChange={setClientFramework}
         className={InspectorStyles['framework-dropdown']}
         options={_.map(CLIENT_FRAMEWORK_MAP, (fwClass, fwId) => ({
