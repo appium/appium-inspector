@@ -13,6 +13,7 @@ import {RemoteVendor} from './remote.js';
 import {RemotetestkitVendor} from './remotetestkit.js';
 import {RobotqaVendor} from './robotqa.js';
 import {SaucelabsVendor} from './saucelabs.js';
+import {TestcribeVendor} from './testcribe.js';
 import {TestingbotVendor} from './testingbot.js';
 import {TvlabsVendor} from './tvlabs.js';
 
@@ -33,4 +34,5 @@ export const VENDOR_MAP = {
   [SERVER_TYPES.REMOTETESTKIT]: RemotetestkitVendor,
   [SERVER_TYPES.MOBITRU]: MobitruVendor,
   [SERVER_TYPES.TVLABS]: TvlabsVendor,
+  [SERVER_TYPES.TESTCRIBE]: TestcribeVendor,
 };
