@@ -29,6 +29,7 @@ const SessionCodeBox = (props) => {
       </Tooltip>
       <Select
         defaultValue={actionFramework}
+        value={actionFramework}
         onChange={setActionFramework}
         className={InspectorStyles['framework-dropdown']}
       >
