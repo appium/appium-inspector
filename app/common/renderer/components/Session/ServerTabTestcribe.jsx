@@ -11,7 +11,7 @@ const ServerTabTestcribe = ({server, setServerParam, t}) => (
           <Input
             className={SessionStyles.customServerInputLeft}
             id="testcribeServerHost"
-            placeholder={PROVIDER_VALUES.TESCRIBE_API_KEY}
+            placeholder={PROVIDER_VALUES.TESTCRIBE_API_KEY}
             addonBefore={t('TestcribeAPIKey')}
             value={server.testcribe.apiKey}
             onChange={(e) => setServerParam('apiKey', e.target.value)}
