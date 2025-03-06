@@ -22,6 +22,7 @@ export const SERVER_TYPES = {
   PCLOUDY: 'pcloudy',
   MOBITRU: 'mobitru',
   TVLABS: 'tvlabs',
+  TESTCRIBE: 'testcribe',
 };
 
 export const SAVED_SESSIONS_TABLE_VALUES = {
@@ -38,6 +39,7 @@ export const PROVIDER_VALUES = {
   PCLOUDY_HOST: 'cloud.pcloudy.com',
   PCLOUDY_ACCESS_KEY: 'kjdgtdwn65fdasd78uy6y',
   PERFECTO_URL: 'cloud.Perfectomobile.com',
+  TESTCRIBE_API_KEY: 'your-api-key',
 };
 
 export const ADD_CLOUD_PROVIDER_TAB_KEY = 'addCloudProvider';
