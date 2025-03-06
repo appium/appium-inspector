@@ -39,7 +39,7 @@ export function setHtmlElementAttributes(obj) {
  * - head and scripts need to be removed to clean the HTML tree
  * - all custom attributes need to be transformed to normal width/height/x/y
  */
-export function parseSource(source) {
+export function parseHtmlSource(source) {
   // TODO this check is a bit brittle, figure out a better way to check whether we have a web
   // source vs something else. Just checking for <html in the source doesn't work because fake
   // driver app sources can include embedded <html elements even though the overall source is not

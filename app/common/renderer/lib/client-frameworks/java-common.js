@@ -1,11 +1,9 @@
 import _ from 'lodash';
 
-import Framework from './framework';
+import CommonClientFramework from './common.js';
 
-class JavaFramework extends Framework {
-  get language() {
-    return 'java';
-  }
+export default class JavaFramework extends CommonClientFramework {
+  static highlightLang = 'java';
 
   getJavaVal(jsonVal) {
     if (Array.isArray(jsonVal)) {
@@ -354,5 +352,3 @@ driver.perform(Arrays.asList(swipe));
     return `driver.context("${name}");`;
   }
 }
-
-export default JavaFramework;
