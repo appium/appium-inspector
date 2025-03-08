@@ -69,7 +69,7 @@
     "web2driver": "3.0.5: does not load"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "2.6.0",
+    "@reduxjs/toolkit": "2.6.1",
     "@xmldom/xmldom": "0.9.8",
     "antd": "4.24.16",
     "axios": "1.8.2",
