@@ -296,5 +296,8 @@
   "gestureImportedFrom": "Gesture imported from '{{fileName}}'",
   "invalidSessionFile": "Invalid session file",
   "tvlabsCredentialsRequired": "TV Labs API Key is required",
-  "TV Labs API Key": "TV Labs API Key"
+  "TV Labs API Key": "TV Labs API Key",
+  "TestcribeAPIKey": "Testcribe API Key",
+  "sessionTestcribeApiKeyDescription": "You can get your api key from https://app.testcribe.com/settings/apiKeys",
+  "testcribeCredentialsRequired": "Testcribe API Key is required"
 }

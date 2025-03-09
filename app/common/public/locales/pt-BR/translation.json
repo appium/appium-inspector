@@ -296,5 +296,8 @@
   "gestureImportedFrom": "Gesto importado de '{{fileName}}'",
   "invalidSessionFile": "Arquivo de sessão inválido",
   "tvlabsCredentialsRequired": "Chave API do TV Labs é necessária",
-  "TV Labs API Key": "Chave API do TV Labs"
+  "TV Labs API Key": "Chave API do TV Labs",
+  "TestcribeAPIKey": "Testcribe API Key",
+  "sessionTestcribeApiKeyDescription": "You can get your api key from https://app.testcribe.com/settings/apiKeys",
+  "testcribeCredentialsRequired": "Testcribe API Key is required"
 }

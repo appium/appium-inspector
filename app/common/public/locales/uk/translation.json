@@ -296,5 +296,8 @@
   "gestureImportedFrom": "Жест імпортовано з '{{fileName}}'",
   "invalidSessionFile": "Некоректний файл сеансу",
   "tvlabsCredentialsRequired": "Потрібно ключ API TV Labs",
-  "TV Labs API Key": "TV Labs API ключ"
+  "TV Labs API Key": "TV Labs API ключ",
+  "TestcribeAPIKey": "Тестування API-ключа",
+  "sessionTestcribeApiKeyDescription": "Ви можете отримати свій API-ключ з https://app.testcribe.com/settings/apiKeys",
+  "testcribeCredentialsRequired": "Тестування API-ключа є обовʼязковим"
 }
