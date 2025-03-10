@@ -43,3 +43,14 @@ export const INSPECTOR_TABS = {
   RECORDER: 'recorder',
   SESSION_INFO: 'sessionInfo',
 };
+
+export const CLIENT_FRAMEWORKS = {
+  DOTNET_NUNIT: 'dotNetNUnit',
+  JS_WDIO: 'jsWdIo',
+  JS_OXYGEN: 'jsOxygen',
+  JAVA_JUNIT4: 'java', // historical
+  JAVA_JUNIT5: 'javaJUnit5',
+  PYTHON: 'python',
+  ROBOT: 'robot',
+  RUBY: 'ruby',
+};

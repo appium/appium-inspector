@@ -1,8 +1,8 @@
 import _ from 'lodash';
 
-import {DEFAULT_SWIPE, DEFAULT_TAP} from '../../constants/screenshot';
+import {DEFAULT_SWIPE, DEFAULT_TAP} from '../../constants/screenshot.js';
 
-export default class Framework {
+export default class CommonClientFramework {
   constructor(serverUrl, serverUrlParts, caps) {
     this.serverUrl = serverUrl;
     this.serverUrlParts = serverUrlParts;
