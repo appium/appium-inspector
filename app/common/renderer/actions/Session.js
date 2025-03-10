@@ -1,6 +1,5 @@
 import {notification} from 'antd';
 import _ from 'lodash';
-import moment from 'moment';
 import {Web2Driver} from 'web2driver';
 
 import {
@@ -13,6 +12,7 @@ import {
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder';
 import {APP_MODE} from '../constants/session-inspector';
 import i18n from '../i18next';
+import {VENDOR_MAP} from '../lib/vendor/map.js';
 import {getSetting, ipcRenderer, setSetting} from '../polyfills';
 import {fetchSessionInformation, formatSeleniumGridSessions} from '../utils/attaching-to-session';
 import {downloadFile, parseSessionFileContents} from '../utils/file-handling';
@@ -97,8 +97,6 @@ let isFirstRun = true; // we only want to auto start a session on a first run
 export const DEFAULT_SERVER_PATH = '/';
 export const DEFAULT_SERVER_HOST = '127.0.0.1';
 export const DEFAULT_SERVER_PORT = 4723;
-
-const SAUCE_OPTIONS_CAP = 'sauce:options';
 
 const JSON_TYPES = ['object', 'number', 'boolean'];
 
@@ -226,277 +224,28 @@ export function newSession(originalCaps, attachSessId = null) {
     dispatch({type: NEW_SESSION_REQUESTED});
 
     let sessionCaps = prefixedCaps ? getCapsObject(prefixedCaps) : {};
-    let host, port, username, accessKey, https, path, headers;
     sessionCaps = addCustomCaps(sessionCaps);
-
-    switch (session.serverType) {
-      case SERVER_TYPES.LOCAL:
-        host = session.server.local.hostname;
-        if (host === '0.0.0.0') {
-          // if we're on windows, we won't be able to connect directly to '0.0.0.0'
-          // so just connect to localhost; if we're listening on all interfaces,
-          // that will of course include 127.0.0.1 on all platforms
-          host = 'localhost';
-        }
-        port = session.server.local.port;
-        break;
-      case SERVER_TYPES.REMOTE:
-        host = session.server.remote.hostname;
-        port = session.server.remote.port;
-        path = session.server.remote.path;
-        https = session.server.remote.ssl;
-        break;
-      case SERVER_TYPES.SAUCE:
-        path = '/wd/hub';
-        host = `ondemand.${session.server.sauce.dataCenter}.saucelabs.com`;
-        port = 80;
-        if (session.server.sauce.useSCProxy) {
-          host = session.server.sauce.scHost || 'localhost';
-          port = parseInt(session.server.sauce.scPort, 10) || 4445;
-        }
-        username = session.server.sauce.username || process.env.SAUCE_USERNAME;
-        accessKey = session.server.sauce.accessKey || process.env.SAUCE_ACCESS_KEY;
-        if (!username || !accessKey) {
-          showError(new Error(i18n.t('sauceCredentialsRequired')));
-          return false;
-        }
-        https = false;
-        if (!_.isPlainObject(sessionCaps[SAUCE_OPTIONS_CAP])) {
-          sessionCaps[SAUCE_OPTIONS_CAP] = {};
-        }
-        if (!sessionCaps[SAUCE_OPTIONS_CAP].name) {
-          const dateTime = moment().format('lll');
-          sessionCaps[SAUCE_OPTIONS_CAP].name = `Appium Desktop Session -- ${dateTime}`;
-        }
-        break;
-      case SERVER_TYPES.HEADSPIN: {
-        let headspinUrl;
-        try {
-          headspinUrl = new URL(session.server.headspin.webDriverUrl);
-        } catch {
-          showError(new Error(`${i18n.t('Invalid URL:')} ${session.server.headspin.webDriverUrl}`));
-          return false;
-        }
-        host = session.server.headspin.hostname = headspinUrl.hostname;
-        path = session.server.headspin.path = headspinUrl.pathname;
-        https = session.server.headspin.ssl = headspinUrl.protocol === 'https:';
-        // new URL() does not have the port of 443 when `https` and 80 when `http`
-        port = session.server.headspin.port =
-          headspinUrl.port === '' ? (https ? 443 : 80) : headspinUrl.port;
-        break;
+    let host, port, username, accessKey, https, path, headers;
+    //
+    // To register a new session vendor:
+    // - Implement a new class inherited from VendorBase in app/common/renderer/lib/vendor/<vendor_name>.js
+    // - Add the newly created class to the VENDOR_MAP defined in app/common/renderer/lib/vendor/map.js
+    //
+    /** @type {(new (server: unknown, caps: Record<string, any>) => import('../lib/vendor/base.js').BaseVendor) | undefined} */
+    const VendorClass = VENDOR_MAP[session.serverType];
+    if (VendorClass) {
+      log.info(`Using ${VendorClass.name}`);
+      try {
+        const vendor = new VendorClass(session.server, sessionCaps);
+        ({host, port, username, accessKey, https, path, headers} = await vendor.apply());
+      } catch (e) {
+        showError(e);
+        return false;
       }
-      case SERVER_TYPES.PERFECTO:
-        host = session.server.perfecto.hostname;
-        port = session.server.perfecto.port || (session.server.perfecto.ssl ? 443 : 80);
-        accessKey = session.server.perfecto.token || process.env.PERFECTO_TOKEN;
-        path = session.server.perfecto.path = '/nexperience/perfectomobile/wd/hub';
-        if (!accessKey) {
-          showError(new Error(i18n.t('Perfecto SecurityToken is required')));
-          return false;
-        }
-        sessionCaps['perfecto:options'] = {securityToken: accessKey};
-        https = session.server.perfecto.ssl;
-        break;
-      case SERVER_TYPES.BROWSERSTACK:
-        host = session.server.browserstack.hostname =
-          process.env.BROWSERSTACK_HOST || 'hub-cloud.browserstack.com';
-        port = session.server.browserstack.port = process.env.BROWSERSTACK_PORT || 443;
-        path = session.server.browserstack.path = '/wd/hub';
-        username = session.server.browserstack.username || process.env.BROWSERSTACK_USERNAME;
-        if (!sessionCaps['bstack:options']) {
-          sessionCaps['bstack:options'] = {};
-        }
-        sessionCaps['bstack:options'].source = 'appiumdesktop';
-        accessKey = session.server.browserstack.accessKey || process.env.BROWSERSTACK_ACCESS_KEY;
-        if (!username || !accessKey) {
-          showError(new Error(i18n.t('browserstackCredentialsRequired')));
-          return false;
-        }
-        https = session.server.browserstack.ssl = parseInt(port, 10) === 443;
-        break;
-      case SERVER_TYPES.LAMBDATEST:
-        host = session.server.lambdatest.hostname =
-          process.env.LAMBDATEST_HOST || 'mobile-hub.lambdatest.com';
-        port = session.server.lambdatest.port = process.env.LAMBDATEST_PORT || 443;
-        path = session.server.lambdatest.path = '/wd/hub';
-        username = session.server.lambdatest.username || process.env.LAMBDATEST_USERNAME;
-        if (sessionCaps.hasOwnProperty.call(sessionCaps, 'lt:options')) {
-          sessionCaps['lt:options'].source = 'appiumdesktop';
-          sessionCaps['lt:options'].isRealMobile = true;
-          if (session.server.advanced.useProxy) {
-            sessionCaps['lt:options'].proxyUrl = _.isUndefined(session.server.advanced.proxy)
-              ? ''
-              : session.server.advanced.proxy;
-          }
-        } else {
-          sessionCaps['lambdatest:source'] = 'appiumdesktop';
-          sessionCaps['lambdatest:isRealMobile'] = true;
-          if (session.server.advanced.useProxy) {
-            sessionCaps['lambdatest:proxyUrl'] = _.isUndefined(session.server.advanced.proxy)
-              ? ''
-              : session.server.advanced.proxy;
-          }
-        }
-        accessKey = session.server.lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
-        if (!username || !accessKey) {
-          showError(new Error(i18n.t('lambdatestCredentialsRequired')));
-          return false;
-        }
-        https = session.server.lambdatest.ssl = parseInt(port, 10) === 443;
-        break;
-      case SERVER_TYPES.BITBAR:
-        host = process.env.BITBAR_HOST || 'appium.bitbar.com';
-        port = session.server.bitbar.port = 443;
-        path = session.server.bitbar.path = '/wd/hub';
-        accessKey = session.server.bitbar.apiKey || process.env.BITBAR_API_KEY;
-        if (!accessKey) {
-          showError(new Error(i18n.t('bitbarCredentialsRequired')));
-          return false;
-        }
-        sessionCaps['bitbar:options'] = {
-          source: 'appiumdesktop',
-          apiKey: accessKey,
-        };
-        https = session.server.bitbar.ssl = true;
-        break;
-      case SERVER_TYPES.KOBITON:
-        host = process.env.KOBITON_HOST || 'api.kobiton.com';
-        port = session.server.kobiton.port = 443;
-        path = session.server.kobiton.path = '/wd/hub';
-        username = session.server.kobiton.username || process.env.KOBITON_USERNAME;
-        accessKey = session.server.kobiton.accessKey || process.env.KOBITON_ACCESS_KEY;
-        sessionCaps['kobiton:options'] = {};
-        sessionCaps['kobiton:options'].source = 'appiumdesktop';
-        if (!username || !accessKey) {
-          showError(new Error(i18n.t('kobitonCredentialsRequired')));
-          return false;
-        }
-        https = session.server.kobiton.ssl = true;
-        break;
-      case SERVER_TYPES.PCLOUDY:
-        host = session.server.pcloudy.hostname;
-        port = session.server.pcloudy.port = 443;
-        path = session.server.pcloudy.path = '/objectspy/wd/hub';
-        username = session.server.pcloudy.username || process.env.PCLOUDY_USERNAME;
-        accessKey = session.server.pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
-        if (!username || !accessKey) {
-          showError(new Error(i18n.t('pcloudyCredentialsRequired')));
-          return false;
-        }
-        sessionCaps['pcloudy:options'] = {
-          source: 'appiumdesktop',
-          pCloudy_Username: username,
-          pCloudy_ApiKey: accessKey,
-        };
-        https = session.server.pcloudy.ssl = true;
-        break;
-      case SERVER_TYPES.TESTINGBOT:
-        host = session.server.testingbot.hostname = process.env.TB_HOST || 'hub.testingbot.com';
-        port = session.server.testingbot.port = 443;
-        path = session.server.testingbot.path = '/wd/hub';
-        if (!sessionCaps['tb:options']) {
-          sessionCaps['tb:options'] = {};
-        }
-        username = session.server.testingbot.username || process.env.TB_KEY;
-        accessKey = session.server.testingbot.accessKey || process.env.TB_SECRET;
-        sessionCaps['tb:options'].key = username;
-        sessionCaps['tb:options'].secret = accessKey;
-        sessionCaps['tb:options'].source = 'appiumdesktop';
-        if (!username || !accessKey) {
-          showError(new Error(i18n.t('testingbotCredentialsRequired')));
-          return false;
-        }
-        https = session.server.testingbot.ssl = true;
-        break;
-      case SERVER_TYPES.EXPERITEST: {
-        if (!session.server.experitest.url || !session.server.experitest.accessKey) {
-          showError(new Error(i18n.t('experitestAccessKeyURLRequired')));
-          return false;
-        }
-        sessionCaps['experitest:accessKey'] = session.server.experitest.accessKey;
-
-        let experitestUrl;
-        try {
-          experitestUrl = new URL(session.server.experitest.url);
-        } catch {
-          showError(new Error(`${i18n.t('Invalid URL:')} ${session.server.experitest.url}`));
-          return false;
-        }
-
-        host = session.server.experitest.hostname = experitestUrl.hostname;
-        path = session.server.experitest.path = '/wd/hub';
-        https = session.server.experitest.ssl = experitestUrl.protocol === 'https:';
-        port = session.server.experitest.port =
-          experitestUrl.port === '' ? (https ? 443 : 80) : experitestUrl.port;
-        break;
-      }
-      case SERVER_TYPES.ROBOTQA: {
-        host = 'remote.robotqa.com';
-        path = '/';
-        port = 443;
-        https = session.server.roboticmobi.ssl = true;
-        sessionCaps['robotqa:options'] = {};
-        sessionCaps['robotqa:options'].robotqa_token =
-          session.server.roboticmobi.token || process.env.ROBOTQA_TOKEN;
-        break;
-      }
-      case SERVER_TYPES.REMOTETESTKIT: {
-        host = 'gwjp.appkitbox.com';
-        path = '/wd/hub';
-        port = 443;
-        https = true;
-        sessionCaps['remotetestkit:options'] = {};
-        sessionCaps['remotetestkit:options'].accessToken = session.server.remotetestkit.token;
-        break;
-      }
-      case SERVER_TYPES.MOBITRU: {
-        const webDriverUrl =
-          session.server.mobitru.webDriverUrl ||
-          process.env.MOBITRU_WEBDRIVER_URL ||
-          'https://app.mobitru.com/wd/hub';
-        let mobitruUrl;
-        try {
-          mobitruUrl = new URL(webDriverUrl);
-        } catch {
-          showError(new Error(`${i18n.t('Invalid URL:')} ${webDriverUrl}`));
-          return false;
-        }
-        host = session.server.mobitru.hostname = mobitruUrl.hostname;
-        path = session.server.mobitru.path = mobitruUrl.pathname;
-        https = session.server.mobitru.ssl = mobitruUrl.protocol === 'https:';
-        port = session.server.mobitru.port =
-          mobitruUrl.port === '' ? (https ? 443 : 80) : mobitruUrl.port;
-
-        username =
-          session.server.mobitru.username || process.env.MOBITRU_BILLING_UNIT || 'personal';
-        accessKey = session.server.mobitru.accessKey || process.env.MOBITRU_ACCESS_KEY;
-        if (!accessKey) {
-          showError(new Error(i18n.t('mobitruCredentialsRequired')));
-          return false;
-        }
-
-        if (!sessionCaps['mobitru:options']) {
-          sessionCaps['mobitru:options'] = {};
-        }
-        sessionCaps['mobitru:options'].source = 'appium-inspector';
-        break;
-      }
-      case SERVER_TYPES.TVLABS: {
-        host = process.env.TVLABS_WEBDRIVER_URL || 'appium.tvlabs.ai';
-        path = '/';
-        port = 4723;
-        https = host === 'appium.tvlabs.ai';
-        accessKey = session.server.tvlabs.apiKey || process.env.TVLABS_API_KEY;
-        if (!accessKey) {
-          showError(new Error(i18n.t('tvlabsCredentialsRequired')));
-          return false;
-        }
-        headers = {Authorization: `Bearer ${accessKey}`};
-        break;
-      }
-
-      default:
-        break;
+    } else {
+      log.info(
+        `No vendor mapping is defined for the server type '${session.serverType}'. Using defaults`,
+      );
     }
 
     // if the server path is '' (or any other kind of falsy) set it to default

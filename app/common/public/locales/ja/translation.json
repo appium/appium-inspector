@@ -296,5 +296,8 @@
   "gestureImportedFrom": "記録された操作は '{{fileName}}' から読み込まれました",
   "invalidSessionFile": "無効なセッションファイル",
   "tvlabsCredentialsRequired": "TV Labs の APIキーが必要です",
-  "TV Labs API Key": "TV LabsのAPIキー"
+  "TV Labs API Key": "TV LabsのAPIキー",
+  "TestcribeAPIKey": "Testcribe API Key",
+  "sessionTestcribeApiKeyDescription": "You can get your api key from https://app.testcribe.com/settings/apiKeys",
+  "testcribeCredentialsRequired": "Testcribe API Key is required"
 }
