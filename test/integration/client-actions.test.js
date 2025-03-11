@@ -3,7 +3,7 @@ import path from 'path';
 import {afterAll, beforeAll, describe, expect, it} from 'vitest';
 import {Web2Driver} from 'web2driver/node';
 
-import AppiumClient from '../../app/common/renderer/lib/appium-client';
+import InspectorDriver from '../../app/common/renderer/lib/appium/inspector-driver';
 
 const FAKE_DRIVER_PORT = 12121;
 
@@ -30,7 +30,7 @@ describe('Appium client actions', function () {
       },
       DEFAULT_CAPS,
     );
-    client = AppiumClient.instance(driver);
+    client = InspectorDriver.instance(driver);
   });
   afterAll(async function () {
     try {

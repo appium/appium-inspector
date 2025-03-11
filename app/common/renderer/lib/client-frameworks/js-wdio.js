@@ -1,9 +1,8 @@
-import Framework from './framework';
+import CommonClientFramework from './common.js';
 
-class JsWdIoFramework extends Framework {
-  get language() {
-    return 'js';
-  }
+export default class JsWdIoFramework extends CommonClientFramework {
+  static readableName = 'JS - WebdriverIO';
+  static highlightLang = 'js';
 
   wrapWithBoilerplate(code) {
     return `// This sample code supports WebdriverIO client >=8
@@ -301,7 +300,3 @@ main().catch(console.log);`;
     return `await driver.switchContext("${name}");`;
   }
 }
-
-JsWdIoFramework.readableName = 'JS - Webdriver.io';
-
-export default JsWdIoFramework;

@@ -1,25 +1,27 @@
 import {CodeOutlined, CopyOutlined} from '@ant-design/icons';
 import {Button, Card, Select, Space, Tooltip} from 'antd';
 import hljs from 'highlight.js';
+import _ from 'lodash';
 
-import frameworks from '../../lib/client-frameworks';
+import {CLIENT_FRAMEWORK_MAP} from '../../lib/client-frameworks/map';
 import {copyToClipboard} from '../../polyfills';
 import InspectorStyles from './Inspector.module.css';
 
 const SessionCodeBox = (props) => {
-  const {actionFramework, setActionFramework, t} = props;
+  const {clientFramework, setClientFramework, t} = props;
 
   const code = (raw = true) => {
     const {serverDetails, sessionCaps} = props;
     const {serverUrl, serverUrlParts} = serverDetails;
 
-    const framework = new frameworks[actionFramework](serverUrl, serverUrlParts, sessionCaps);
+    const ClientFrameworkClass = CLIENT_FRAMEWORK_MAP[clientFramework];
+    const framework = new ClientFrameworkClass(serverUrl, serverUrlParts, sessionCaps);
     const rawCode = framework.getCodeString(true);
     if (raw) {
       return rawCode;
     }
 
-    return hljs.highlight(rawCode, {language: framework.language}).value;
+    return hljs.highlight(rawCode, {language: ClientFrameworkClass.highlightLang}).value;
   };
 
   const actionBar = () => (
@@ -28,17 +30,15 @@ const SessionCodeBox = (props) => {
         <Button icon={<CopyOutlined />} onClick={() => copyToClipboard(code())} />
       </Tooltip>
       <Select
-        defaultValue={actionFramework}
-        value={actionFramework}
-        onChange={setActionFramework}
+        defaultValue={clientFramework}
+        value={clientFramework}
+        onChange={setClientFramework}
         className={InspectorStyles['framework-dropdown']}
-      >
-        {Object.keys(frameworks).map((f) => (
-          <Select.Option value={f} key={f}>
-            {frameworks[f].readableName}
-          </Select.Option>
-        ))}
-      </Select>
+        options={_.map(CLIENT_FRAMEWORK_MAP, (fwClass, fwId) => ({
+          value: fwId,
+          label: fwClass.readableName,
+        }))}
+      />
     </Space>
   );
 

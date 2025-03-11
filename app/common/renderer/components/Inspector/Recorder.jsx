@@ -1,30 +1,32 @@
 import {ClearOutlined, CodeOutlined, CopyOutlined, PicRightOutlined} from '@ant-design/icons';
 import {Button, Card, Select, Space, Tooltip} from 'antd';
 import hljs from 'highlight.js';
+import _ from 'lodash';
 
 import {BUTTON} from '../../constants/antd-types';
-import frameworks from '../../lib/client-frameworks';
+import {CLIENT_FRAMEWORK_MAP} from '../../lib/client-frameworks/map';
 import {copyToClipboard} from '../../polyfills';
 import InspectorStyles from './Inspector.module.css';
 
 const Recorder = (props) => {
-  const {showBoilerplate, recordedActions, actionFramework, t} = props;
+  const {showBoilerplate, recordedActions, clientFramework, t} = props;
 
   const code = (raw = true) => {
     const {serverDetails, sessionCaps} = props;
     const {serverUrl, serverUrlParts} = serverDetails;
 
-    let framework = new frameworks[actionFramework](serverUrl, serverUrlParts, sessionCaps);
+    const ClientFrameworkClass = CLIENT_FRAMEWORK_MAP[clientFramework];
+    const framework = new ClientFrameworkClass(serverUrl, serverUrlParts, sessionCaps);
     framework.actions = recordedActions;
     const rawCode = framework.getCodeString(showBoilerplate);
     if (raw) {
       return rawCode;
     }
-    return hljs.highlight(rawCode, {language: framework.language}).value;
+    return hljs.highlight(rawCode, {language: ClientFrameworkClass.highlightLang}).value;
   };
 
   const actionBar = () => {
-    const {setActionFramework, toggleShowBoilerplate, clearRecording} = props;
+    const {setClientFramework, toggleShowBoilerplate, clearRecording} = props;
 
     return (
       <Space size="middle">
@@ -46,17 +48,15 @@ const Recorder = (props) => {
           </Button.Group>
         )}
         <Select
-          defaultValue={actionFramework}
-          value={actionFramework}
-          onChange={setActionFramework}
+          defaultValue={clientFramework}
+          value={clientFramework}
+          onChange={setClientFramework}
           className={InspectorStyles['framework-dropdown']}
-        >
-          {Object.keys(frameworks).map((f) => (
-            <Select.Option value={f} key={f}>
-              {frameworks[f].readableName}
-            </Select.Option>
-          ))}
-        </Select>
+          options={_.map(CLIENT_FRAMEWORK_MAP, (fwClass, fwId) => ({
+            value: fwId,
+            label: fwClass.readableName,
+          }))}
+        />
       </Space>
     );
   };
