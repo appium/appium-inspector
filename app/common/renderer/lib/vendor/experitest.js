@@ -11,11 +11,13 @@ export class ExperitestVendor extends BaseVendor {
     }
     this._updateSessionCap('experitest:accessKey', experitest.accessKey);
     const experitestUrl = this._validateUrl(experitest.url);
-    const host = (experitest.hostname = experitestUrl.hostname);
-    const path = (experitest.path = '/wd/hub');
-    const https = (experitest.ssl = experitestUrl.protocol === 'https:');
-    const port = (experitest.port =
-      experitestUrl.port === '' ? (https ? 443 : 80) : experitestUrl.port);
+
+    const host = experitestUrl.hostname;
+    const path = '/wd/hub';
+    const https = experitestUrl.protocol === 'https:';
+    const port = experitestUrl.port === '' ? (https ? 443 : 80) : experitestUrl.port;
+    this._setCommonProperties({vendor: experitest, host, path, port, https});
+
     return {
       path,
       host,

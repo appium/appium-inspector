@@ -14,6 +14,15 @@ export class BaseVendor {
     this._translate = (tpl) => i18n.t(tpl);
   }
 
+  _setCommonProperties({vendor, host, path, port, https}) {
+    // It is fine to assign all parameters to 'vendor' values -
+    // they are only saved in Redux and not sent to the actual server
+    this.host = vendor.host = host;
+    this.path = vendor.path = path;
+    this.port = vendor.port = port;
+    this.https = vendor.ssl = https;
+  }
+
   /**
    * ! It is OK for this method to mutate sessionCaps
    *

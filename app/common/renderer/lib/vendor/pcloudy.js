@@ -6,9 +6,13 @@ export class PcloudyVendor extends BaseVendor {
    */
   async apply() {
     const pcloudy = this._server.pcloudy;
+
     const host = pcloudy.hostname;
-    const port = (pcloudy.port = 443);
-    const path = (pcloudy.path = '/objectspy/wd/hub');
+    const port = 443;
+    const path = '/objectspy/wd/hub';
+    const https = true;
+    this._setCommonProperties({vendor: pcloudy, host, path, port, https});
+
     const username = pcloudy.username || process.env.PCLOUDY_USERNAME;
     const accessKey = pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
     if (!username || !accessKey) {
@@ -23,7 +27,6 @@ export class PcloudyVendor extends BaseVendor {
       },
       false,
     );
-    const https = (pcloudy.ssl = true);
     return {
       path,
       host,

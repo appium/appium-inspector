@@ -9,9 +9,13 @@ export class LambdatestVendor extends BaseVendor {
   async apply() {
     const lambdatest = this._server.lambdatest;
     const advanced = this._server.advanced;
-    const host = (lambdatest.hostname = process.env.LAMBDATEST_HOST || 'mobile-hub.lambdatest.com');
-    const port = (lambdatest.port = process.env.LAMBDATEST_PORT || 443);
-    const path = (lambdatest.path = '/wd/hub');
+
+    const host = process.env.LAMBDATEST_HOST || 'mobile-hub.lambdatest.com';
+    const port = process.env.LAMBDATEST_PORT || 443;
+    const path = '/wd/hub';
+    const https = parseInt(port, 10) === 443;
+    this._setCommonProperties({vendor: lambdatest, host, path, port, https});
+
     const username = lambdatest.username || process.env.LAMBDATEST_USERNAME;
     const accessKey = lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
     if (!username || !accessKey) {
@@ -36,7 +40,6 @@ export class LambdatestVendor extends BaseVendor {
         );
       }
     }
-    const https = (lambdatest.ssl = parseInt(port, 10) === 443);
     return {
       path,
       host,

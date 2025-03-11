@@ -6,10 +6,13 @@ export class BrowserstackVendor extends BaseVendor {
    */
   async apply() {
     const browserstack = this._server.browserstack;
-    const host = (browserstack.hostname =
-      process.env.BROWSERSTACK_HOST || 'hub-cloud.browserstack.com');
-    const port = (browserstack.port = process.env.BROWSERSTACK_PORT || 443);
-    const path = (browserstack.path = '/wd/hub');
+
+    const host = process.env.BROWSERSTACK_HOST || 'hub-cloud.browserstack.com';
+    const port = process.env.BROWSERSTACK_PORT || 443;
+    const path = '/wd/hub';
+    const https = parseInt(port, 10) === 443;
+    this._setCommonProperties({vendor: browserstack, host, path, port, https});
+
     const username = browserstack.username || process.env.BROWSERSTACK_USERNAME;
     const accessKey = browserstack.accessKey || process.env.BROWSERSTACK_ACCESS_KEY;
     if (!username || !accessKey) {
@@ -18,7 +21,6 @@ export class BrowserstackVendor extends BaseVendor {
     this._updateSessionCap('bstack:options', {
       source: 'appiumdesktop',
     });
-    const https = (browserstack.ssl = parseInt(port, 10) === 443);
     return {
       path,
       host,

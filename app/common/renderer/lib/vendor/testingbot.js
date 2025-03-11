@@ -6,9 +6,13 @@ export class TestingbotVendor extends BaseVendor {
    */
   async apply() {
     const testingbot = this._server.testingbot;
-    const host = (testingbot.hostname = process.env.TB_HOST || 'hub.testingbot.com');
-    const port = (testingbot.port = 443);
-    const path = (testingbot.path = '/wd/hub');
+
+    const host = process.env.TB_HOST || 'hub.testingbot.com';
+    const port = 443;
+    const path = '/wd/hub';
+    const https = true;
+    this._setCommonProperties({vendor: testingbot, host, path, port, https});
+
     const username = testingbot.username || process.env.TB_KEY;
     const accessKey = testingbot.accessKey || process.env.TB_SECRET;
     if (!username || !accessKey) {
@@ -19,7 +23,6 @@ export class TestingbotVendor extends BaseVendor {
       secret: accessKey,
       source: 'appiumdesktop',
     });
-    const https = (testingbot.ssl = true);
     return {
       path,
       host,

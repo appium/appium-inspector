@@ -6,11 +6,18 @@ export class RemoteVendor extends BaseVendor {
    */
   async apply() {
     const remote = this._server.remote;
+
+    const host = remote.hostname;
+    const port = remote.port;
+    const path = remote.path;
+    const https = remote.ssl;
+    this._setCommonProperties({vendor: remote, host, path, port, https});
+
     return {
-      host: remote.hostname,
-      port: remote.port,
-      path: remote.path,
-      https: remote.ssl,
+      host,
+      port,
+      path,
+      https,
     };
   }
 }

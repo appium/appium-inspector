@@ -10,13 +10,17 @@ export class SaucelabsVendor extends BaseVendor {
    */
   async apply() {
     const sauce = this._server.sauce;
-    const path = '/wd/hub';
+
     let host = `ondemand.${sauce.dataCenter}.saucelabs.com`;
     let port = 80;
     if (sauce.useSCProxy) {
       host = sauce.scHost || 'localhost';
       port = parseInt(sauce.scPort, 10) || 4445;
     }
+    const path = '/wd/hub';
+    const https = false;
+    this._setCommonProperties({vendor: sauce, host, path, port, https});
+
     const username = sauce.username || process.env.SAUCE_USERNAME;
     const accessKey = sauce.accessKey || process.env.SAUCE_ACCESS_KEY;
     if (!username || !accessKey) {
@@ -32,7 +36,7 @@ export class SaucelabsVendor extends BaseVendor {
       path,
       host,
       port,
-      https: false,
+      https,
     };
   }
 }

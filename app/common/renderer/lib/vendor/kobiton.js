@@ -6,9 +6,13 @@ export class KobitonVendor extends BaseVendor {
    */
   async apply() {
     const kobiton = this._server.kobiton;
+
     const host = process.env.KOBITON_HOST || 'api.kobiton.com';
-    const port = (kobiton.port = 443);
-    const path = (kobiton.path = '/wd/hub');
+    const port = 443;
+    const path = '/wd/hub';
+    const https = true;
+    this._setCommonProperties({vendor: kobiton, host, path, port, https});
+
     const username = kobiton.username || process.env.KOBITON_USERNAME;
     const accessKey = kobiton.accessKey || process.env.KOBITON_ACCESS_KEY;
     if (!username || !accessKey) {
@@ -17,7 +21,6 @@ export class KobitonVendor extends BaseVendor {
     this._updateSessionCap('kobiton:options', {
       source: 'appiumdesktop',
     });
-    const https = (kobiton.ssl = true);
     return {
       path,
       host,

@@ -6,13 +6,16 @@ export class MobitruVendor extends BaseVendor {
    */
   async apply() {
     const mobitru = this._server.mobitru;
+
     const webDriverUrl =
       mobitru.webDriverUrl || process.env.MOBITRU_WEBDRIVER_URL || 'https://app.mobitru.com/wd/hub';
     const mobitruUrl = this._validateUrl(webDriverUrl);
-    const host = (mobitru.hostname = mobitruUrl.hostname);
-    const path = (mobitru.path = mobitruUrl.pathname);
-    const https = (mobitru.ssl = mobitruUrl.protocol === 'https:');
-    const port = (mobitru.port = mobitruUrl.port === '' ? (https ? 443 : 80) : mobitruUrl.port);
+
+    const host = mobitruUrl.hostname;
+    const path = mobitruUrl.pathname;
+    const https = mobitruUrl.protocol === 'https:';
+    const port = mobitruUrl.port === '' ? (https ? 443 : 80) : mobitruUrl.port;
+    this._setCommonProperties({vendor: mobitru, host, path, port, https});
 
     const username = mobitru.username || process.env.MOBITRU_BILLING_UNIT || 'personal';
     const accessKey = mobitru.accessKey || process.env.MOBITRU_ACCESS_KEY;
