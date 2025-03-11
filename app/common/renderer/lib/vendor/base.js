@@ -14,6 +14,10 @@ export class BaseVendor {
     this._translate = (tpl) => i18n.t(tpl);
   }
 
+  /**
+   *
+   * @param {CommonVendorProperties}
+   */
   _setCommonProperties({vendor, host, path, port, https}) {
     // It is fine to assign all parameters to 'vendor' values -
     // they are only saved in Redux and not sent to the actual server
@@ -72,7 +76,16 @@ export class BaseVendor {
  * @property {number|string} [port=4723] Server port
  * @property {string} [username] Optional auth username for HTTP basic auth.
  * @property {string} [accessKey] Optional auth password for HTTP basic auth.
- * @property {boolean} [https=false] Whether to use https protocol while conecting to the server
+ * @property {boolean} [https=false] Whether to use https protocol while connecting to the server
  * @property {string} [path='/'] Server pathname
  * @property {Record<string, string>} [headers] Optional server headers
+ */
+
+/**
+ * @typedef {Object} CommonVendorProperties
+ * @property {Object} [vendor] Vendor properties entered through the Inspector user interface
+ * @property {string} [host='127.0.0.1'] Server host name
+ * @property {number|string} [port=4723] Server port
+ * @property {boolean} [https=false] Whether to use https protocol while connecting to the server
+ * @property {string} [path='/'] Server pathname
  */
