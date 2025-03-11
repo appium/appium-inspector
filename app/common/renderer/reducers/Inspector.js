@@ -40,10 +40,10 @@ import {
   SELECT_INSPECTOR_TAB,
   SELECT_TICK_ELEMENT,
   SESSION_DONE,
-  SET_ACTION_FRAMEWORK,
   SET_APP_ID,
   SET_APP_MODE,
   SET_AWAITING_MJPEG_STREAM,
+  SET_CLIENT_FRAMEWORK,
   SET_COMMAND_ARG,
   SET_CONTEXT,
   SET_COORD_END,
@@ -87,9 +87,12 @@ import {
   UNSELECT_TICK_ELEMENT,
 } from '../actions/Inspector';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
-import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
-
-const DEFAULT_FRAMEWORK = 'java';
+import {
+  APP_MODE,
+  CLIENT_FRAMEWORKS,
+  INSPECTOR_TABS,
+  NATIVE_APP,
+} from '../constants/session-inspector';
 
 const INITIAL_STATE = {
   savedGestures: [],
@@ -104,7 +107,7 @@ const INITIAL_STATE = {
   isSourceRefreshOn: true,
   showBoilerplate: false,
   recordedActions: [],
-  actionFramework: DEFAULT_FRAMEWORK,
+  clientFramework: CLIENT_FRAMEWORKS.JAVA_JUNIT4,
   serverDetails: {},
   sessionCaps: {},
   sessionSettings: {},
@@ -280,10 +283,10 @@ export default function inspector(state = INITIAL_STATE, action) {
         recordedActions: [],
       };
 
-    case SET_ACTION_FRAMEWORK:
+    case SET_CLIENT_FRAMEWORK:
       return {
         ...state,
-        actionFramework: action.framework || DEFAULT_FRAMEWORK,
+        clientFramework: action.framework,
       };
 
     case RECORD_ACTION:

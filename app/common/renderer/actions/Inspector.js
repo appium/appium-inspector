@@ -1,11 +1,11 @@
 import _ from 'lodash';
 
-import {SAVED_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs';
+import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs';
 import {POINTER_TYPES} from '../constants/gestures';
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import i18n from '../i18next';
-import AppiumClient from '../lib/appium-client';
-import frameworks from '../lib/client-frameworks';
+import InspectorDriver from '../lib/appium/inspector-driver';
+import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map';
 import {getSetting, setSetting} from '../polyfills';
 import {readTextFromUploadedFiles} from '../utils/file-handling';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation';
@@ -46,7 +46,7 @@ export const SET_SESSION_TIME = 'SET_SESSION_TIME';
 export const START_RECORDING = 'START_RECORDING';
 export const PAUSE_RECORDING = 'PAUSE_RECORDING';
 export const CLEAR_RECORDING = 'CLEAR_RECORDING';
-export const SET_ACTION_FRAMEWORK = 'SET_ACTION_FRAMEWORK';
+export const SET_CLIENT_FRAMEWORK = 'SET_CLIENT_FRAMEWORK';
 export const RECORD_ACTION = 'RECORD_ACTION';
 export const SET_SHOW_BOILERPLATE = 'SET_SHOW_BOILERPLATE';
 
@@ -383,20 +383,20 @@ export function clearRecording() {
   };
 }
 
-export function getSavedActionFramework() {
+export function getSavedClientFramework() {
   return async (dispatch) => {
-    let framework = await getSetting(SAVED_FRAMEWORK);
-    dispatch({type: SET_ACTION_FRAMEWORK, framework});
+    let framework = await getSetting(SAVED_CLIENT_FRAMEWORK);
+    dispatch({type: SET_CLIENT_FRAMEWORK, framework});
   };
 }
 
-export function setActionFramework(framework) {
+export function setClientFramework(framework) {
   return async (dispatch) => {
-    if (!frameworks[framework]) {
+    if (!CLIENT_FRAMEWORK_MAP[framework]) {
       throw new Error(i18n.t('frameworkNotSupported', {framework}));
     }
-    await setSetting(SAVED_FRAMEWORK, framework);
-    dispatch({type: SET_ACTION_FRAMEWORK, framework});
+    await setSetting(SAVED_CLIENT_FRAMEWORK, framework);
+    dispatch({type: SET_CLIENT_FRAMEWORK, framework});
   };
 }
 
@@ -894,7 +894,7 @@ export function callClientMethod(params) {
     log.info(params);
     const action = keepSessionAlive();
     action(dispatch, getState);
-    const client = AppiumClient.instance(driver);
+    const client = InspectorDriver.instance(driver);
     const res = await client.run(params);
     let {commandRes} = res;
 

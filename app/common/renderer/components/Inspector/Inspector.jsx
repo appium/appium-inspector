@@ -160,7 +160,7 @@ const Inspector = (props) => {
   useEffect(() => {
     const {
       applyClientMethod,
-      getSavedActionFramework,
+      getSavedClientFramework,
       runKeepAliveLoop,
       setSessionTime,
       storeSessionSettings,
@@ -177,7 +177,7 @@ const Inspector = (props) => {
     }
     applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
     storeSessionSettings();
-    getSavedActionFramework();
+    getSavedClientFramework();
     runKeepAliveLoop();
     setSessionTime(Date.now());
   }, []);
