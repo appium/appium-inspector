@@ -12,7 +12,14 @@
       "automerge": true
     },
     {
-      "matchPackageNames": ["antd", "cheerio", "react"],
+      "matchPackageNames": [
+        "@types/react",
+        "@types/react-dom",
+        "antd",
+        "cheerio",
+        "react",
+        "react-dom"
+      ],
       "matchUpdateTypes": ["major"],
       "enabled": false
     },
@@ -22,9 +29,13 @@
       "enabled": false
     },
     {
-      "matchPackageNames": ["appium", "@appium/**"],
+      "matchPackageNames": ["appium", "@appium/**", "!@appium/base-plugin"],
       "groupName": "Appium-related packages",
       "groupSlug": "appium"
+    },
+    {
+      "matchPackageNames": ["@appium/base-plugin"],
+      "updateLockFiles": false
     }
   ],
   "baseBranches": ["main"],
