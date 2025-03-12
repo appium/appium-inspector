@@ -63,25 +63,18 @@ export class BaseVendor {
   }
 
   /**
-   * Set the properties common to all vendors (host/path/port/https)
+   * Set all class properties required to access the vendor server
    *
-   * @param {VendorCommonProperties}
+   * @param {Object} vendor
+   * @param {VendorProperties} vendorProperties
    */
-  _setCommonProperties({vendor, host, path, port, https}) {
+  _setProperties(vendor, {host, path, port, https, username, accessKey, headers}) {
     // It is fine to assign all parameters to 'vendor' values -
     // they are only saved in Redux and not sent to the actual server
     this.host = vendor.host = host;
     this.path = vendor.path = path;
     this.port = vendor.port = port;
     this.https = vendor.ssl = https;
-  }
-
-  /**
-   * Set one or more vendor-specific access properties
-   *
-   * @param {VendorAccessProperties}
-   */
-  _setAccessProperties({username, accessKey, headers}) {
     this.username = username;
     this.accessKey = accessKey;
     this.headers = headers;
@@ -114,22 +107,6 @@ export class BaseVendor {
  * @property {string} [accessKey] Optional password/access key for authenticating to vendor service
  * @property {boolean} [https=false] Whether to use https protocol while connecting to the server
  * @property {string} [path='/'] Server pathname
- * @property {Record<string, string>} [headers] Optional server headers
- */
-
-/**
- * @typedef {Object} VendorCommonProperties
- * @property {Object} [vendor] Vendor properties entered through the Inspector user interface
- * @property {string} [host='127.0.0.1'] Server host name
- * @property {number|string} [port=4723] Server port
- * @property {boolean} [https=false] Whether to use https protocol while connecting to the server
- * @property {string} [path='/'] Server pathname
- */
-
-/**
- * @typedef {Object} VendorAccessProperties
- * @property {string} [username] Optional username for authenticating to vendor service
- * @property {string} [accessKey] Optional password/access key for authenticating to vendor service
  * @property {Record<string, string>} [headers] Optional server headers
  */
 
