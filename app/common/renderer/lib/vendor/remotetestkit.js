@@ -6,15 +6,19 @@ export class RemotetestkitVendor extends BaseVendor {
    */
   async apply() {
     const remotetestkit = this._server.remotetestkit;
+    const vendorName = 'RemoteTestKit';
+
+    const token = remotetestkit.token;
+    this._checkInputPropertyPresence(vendorName, [{name: 'AccessToken', val: token}]);
 
     const host = 'gwjp.appkitbox.com';
     const path = '/wd/hub';
     const port = 443;
     const https = true;
-    this._setCommonProperties({vendor: remotetestkit, host, path, port, https});
+    this._setProperties(remotetestkit, {host, path, port, https, accessKey: token});
 
     this._updateSessionCap('remotetestkit:options', {
-      accessToken: remotetestkit.token,
+      accessToken: token,
     });
     return {
       path,

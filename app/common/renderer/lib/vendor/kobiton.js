@@ -6,18 +6,21 @@ export class KobitonVendor extends BaseVendor {
    */
   async apply() {
     const kobiton = this._server.kobiton;
+    const vendorName = 'Kobiton';
+
+    const username = kobiton.username || process.env.KOBITON_USERNAME;
+    const accessKey = kobiton.accessKey || process.env.KOBITON_ACCESS_KEY;
+    this._checkInputPropertyPresence(vendorName, [
+      {name: 'Username', val: username},
+      {name: 'API Key', val: accessKey},
+    ]);
 
     const host = process.env.KOBITON_HOST || 'api.kobiton.com';
     const port = 443;
     const path = '/wd/hub';
     const https = true;
-    this._setCommonProperties({vendor: kobiton, host, path, port, https});
+    this._setProperties(kobiton, {host, path, port, https, username, accessKey});
 
-    const username = kobiton.username || process.env.KOBITON_USERNAME;
-    const accessKey = kobiton.accessKey || process.env.KOBITON_ACCESS_KEY;
-    if (!username || !accessKey) {
-      throw new Error(this._translate('kobitonCredentialsRequired'));
-    }
     this._updateSessionCap('kobiton:options', {
       source: 'appiumdesktop',
     });

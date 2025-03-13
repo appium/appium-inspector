@@ -12,7 +12,7 @@ export class LocalVendor extends BaseVendor {
     // that will of course include 127.0.0.1 on all platforms
     const host = local.host === '0.0.0.0' ? 'localhost' : local.hostname;
     const port = local.port;
-    this._setCommonProperties({vendor: local, host, port});
+    this._setProperties(local, {host, port});
 
     return {
       host,

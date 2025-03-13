@@ -6,15 +6,19 @@ export class RobotqaVendor extends BaseVendor {
    */
   async apply() {
     const robotqa = this._server.roboticmobi;
+    const vendorName = 'RobotQA';
+
+    const token = robotqa.token || process.env.ROBOTQA_TOKEN;
+    this._checkInputPropertyPresence(vendorName, [{name: 'Token', val: token}]);
 
     const host = 'remote.robotqa.com';
     const path = '/';
     const port = 443;
     const https = true;
-    this._setCommonProperties({vendor: robotqa, host, path, port, https});
+    this._setProperties(robotqa, {host, path, port, https, accessKey: token});
 
     this._updateSessionCap('robotqa:options', {
-      robotqa_token: robotqa.token || process.env.ROBOTQA_TOKEN,
+      robotqa_token: token,
     });
     return {
       path,

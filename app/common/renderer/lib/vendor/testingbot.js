@@ -6,18 +6,21 @@ export class TestingbotVendor extends BaseVendor {
    */
   async apply() {
     const testingbot = this._server.testingbot;
+    const vendorName = 'TestingBot';
+
+    const username = testingbot.username || process.env.TB_KEY;
+    const accessKey = testingbot.accessKey || process.env.TB_SECRET;
+    this._checkInputPropertyPresence(vendorName, [
+      {name: 'Key', val: username},
+      {name: 'Secret', val: accessKey},
+    ]);
 
     const host = process.env.TB_HOST || 'hub.testingbot.com';
     const port = 443;
     const path = '/wd/hub';
     const https = true;
-    this._setCommonProperties({vendor: testingbot, host, path, port, https});
+    this._setProperties(testingbot, {host, path, port, https, username, accessKey});
 
-    const username = testingbot.username || process.env.TB_KEY;
-    const accessKey = testingbot.accessKey || process.env.TB_SECRET;
-    if (!username || !accessKey) {
-      throw new Error(this._translate('testingbotCredentialsRequired'));
-    }
     this._updateSessionCap('tb:options', {
       key: username,
       secret: accessKey,
