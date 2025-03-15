@@ -27,7 +27,7 @@
     "./package.json": "./package.json"
   },
   "peerDependencies": {
-    "appium": "^2.0.0"
+    "appium": "^2.0.0 || ^3.0.0-beta.0"
   },
   "files": [
     "index.mjs",
