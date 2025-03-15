@@ -4,7 +4,7 @@ export class RemotetestkitVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async setProperties() {
     const remotetestkit = this._server.remotetestkit;
     const vendorName = 'RemoteTestKit';
 
@@ -20,11 +20,5 @@ export class RemotetestkitVendor extends BaseVendor {
     this._updateSessionCap('remotetestkit:options', {
       accessToken: token,
     });
-    return {
-      path,
-      host,
-      port,
-      https,
-    };
   }
 }

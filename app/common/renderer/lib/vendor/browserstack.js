@@ -4,7 +4,7 @@ export class BrowserstackVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async setProperties() {
     const browserstack = this._server.browserstack;
     const vendorName = 'BrowserStack';
 
@@ -24,13 +24,5 @@ export class BrowserstackVendor extends BaseVendor {
     this._updateSessionCap('bstack:options', {
       source: 'appiumdesktop',
     });
-    return {
-      path,
-      host,
-      port,
-      username,
-      accessKey,
-      https,
-    };
   }
 }

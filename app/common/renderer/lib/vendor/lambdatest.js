@@ -6,7 +6,7 @@ export class LambdatestVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async setProperties() {
     const lambdatest = this._server.lambdatest;
     const advanced = this._server.advanced;
     const vendorName = 'LambdaTest';
@@ -43,13 +43,5 @@ export class LambdatestVendor extends BaseVendor {
         );
       }
     }
-    return {
-      path,
-      host,
-      port,
-      username,
-      accessKey,
-      https,
-    };
   }
 }

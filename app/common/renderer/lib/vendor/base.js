@@ -15,11 +15,25 @@ export class BaseVendor {
 
   /**
    * ! It is OK for this method to mutate sessionCaps
-   *
+   */
+  async setProperties() {
+    throw new Error(`The getProperties() method must be implemented for the ${this.constructor.name}`);
+  }
+
+  /**
    * @returns {Promise<VendorProperties>}
    */
   async apply() {
-    throw new Error(`The apply() method must be implemented for the ${this.constructor.name}`);
+    await this.setProperties();
+    return {
+      host: this.host,
+      path: this.path,
+      port: this.port,
+      https: this.https,
+      username: this.username,
+      accessKey: this.accessKey,
+      headers: this.headers,
+    };
   }
 
   /**

@@ -4,7 +4,7 @@ export class KobitonVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async setProperties() {
     const kobiton = this._server.kobiton;
     const vendorName = 'Kobiton';
 
@@ -24,13 +24,5 @@ export class KobitonVendor extends BaseVendor {
     this._updateSessionCap('kobiton:options', {
       source: 'appiumdesktop',
     });
-    return {
-      path,
-      host,
-      port,
-      username,
-      accessKey,
-      https,
-    };
   }
 }

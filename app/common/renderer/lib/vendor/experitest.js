@@ -4,7 +4,7 @@ export class ExperitestVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async setProperties() {
     const experitest = this._server.experitest;
     const vendorName = 'Experitest';
 
@@ -23,11 +23,5 @@ export class ExperitestVendor extends BaseVendor {
     this._saveProperties(experitest, {host, path, port, https});
 
     this._updateSessionCap('experitest:accessKey', accessKey);
-    return {
-      path,
-      host,
-      port,
-      https,
-    };
   }
 }

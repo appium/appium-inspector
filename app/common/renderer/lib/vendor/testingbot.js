@@ -4,7 +4,7 @@ export class TestingbotVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async setProperties() {
     const testingbot = this._server.testingbot;
     const vendorName = 'TestingBot';
 
@@ -26,13 +26,5 @@ export class TestingbotVendor extends BaseVendor {
       secret: accessKey,
       source: 'appiumdesktop',
     });
-    return {
-      path,
-      host,
-      port,
-      username,
-      accessKey,
-      https,
-    };
   }
 }

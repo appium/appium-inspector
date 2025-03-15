@@ -4,7 +4,7 @@ export class RobotqaVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async setProperties() {
     const robotqa = this._server.roboticmobi;
     const vendorName = 'RobotQA';
 
@@ -20,11 +20,5 @@ export class RobotqaVendor extends BaseVendor {
     this._updateSessionCap('robotqa:options', {
       robotqa_token: token,
     });
-    return {
-      path,
-      host,
-      port,
-      https,
-    };
   }
 }

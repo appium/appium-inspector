@@ -4,7 +4,7 @@ export class PcloudyVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async setProperties() {
     const pcloudy = this._server.pcloudy;
     const vendorName = 'pCloudy';
 
@@ -30,13 +30,5 @@ export class PcloudyVendor extends BaseVendor {
       },
       false,
     );
-    return {
-      path,
-      host,
-      port,
-      username,
-      accessKey,
-      https,
-    };
   }
 }

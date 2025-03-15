@@ -4,7 +4,7 @@ export class TestcribeVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async setProperties() {
     const testcribe = this._server.testcribe;
     const vendorName = 'Testcribe';
 
@@ -19,12 +19,5 @@ export class TestcribeVendor extends BaseVendor {
 
     this._updateSessionCap('testcribe:options', {apikey: accessKey});
     this._updateSessionCap('appium:apiKey', accessKey);
-    return {
-      path,
-      host,
-      port,
-      accessKey,
-      https,
-    };
   }
 }

@@ -8,7 +8,7 @@ export class SaucelabsVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async setProperties() {
     const sauce = this._server.sauce;
     const vendorName = 'Sauce Labs';
 
@@ -35,11 +35,5 @@ export class SaucelabsVendor extends BaseVendor {
         name: `Appium Desktop Session -- ${dateTime}`,
       });
     }
-    return {
-      path,
-      host,
-      port,
-      https,
-    };
   }
 }

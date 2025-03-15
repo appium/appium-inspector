@@ -4,7 +4,7 @@ export class BitbarVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async setProperties() {
     const bitbar = this._server.bitbar;
     const vendorName = 'BitBar';
 
@@ -25,12 +25,5 @@ export class BitbarVendor extends BaseVendor {
       },
       false,
     );
-    return {
-      path,
-      host,
-      port,
-      accessKey,
-      https,
-    };
   }
 }

@@ -4,7 +4,7 @@ export class HeadspinVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async setProperties() {
     const headspin = this._server.headspin;
     const vendorName = 'HeadSpin';
 
@@ -18,12 +18,5 @@ export class HeadspinVendor extends BaseVendor {
     // new URL() does not have the port of 443 when `https` and 80 when `http`
     const port = headspinUrl.port === '' ? (https ? 443 : 80) : headspinUrl.port;
     this._saveProperties(headspin, {host, path, port, https});
-
-    return {
-      path,
-      host,
-      port,
-      https,
-    };
   }
 }

@@ -4,7 +4,7 @@ export class PerfectoVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async setProperties() {
     const perfecto = this._server.perfecto;
     const vendorName = 'Perfecto';
 
@@ -24,12 +24,5 @@ export class PerfectoVendor extends BaseVendor {
       },
       false,
     );
-    return {
-      path,
-      host,
-      port,
-      accessKey,
-      https,
-    };
   }
 }

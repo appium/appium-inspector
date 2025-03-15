@@ -4,7 +4,7 @@ export class MobitruVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async setProperties() {
     const mobitru = this._server.mobitru;
     const vendorName = 'Mobitru';
 
@@ -24,13 +24,5 @@ export class MobitruVendor extends BaseVendor {
     this._updateSessionCap('mobitru:options', {
       source: 'appium-inspector',
     });
-    return {
-      path,
-      host,
-      port,
-      username,
-      accessKey,
-      https,
-    };
   }
 }
