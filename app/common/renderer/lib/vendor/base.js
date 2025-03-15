@@ -11,7 +11,6 @@ export class BaseVendor {
   constructor(server, sessionCaps) {
     this._server = server;
     this._sessionCaps = sessionCaps;
-    this._translate = (tpl) => i18n.t(tpl);
   }
 
   /**
@@ -38,7 +37,7 @@ export class BaseVendor {
     }
     if (missingProps.length > 0) {
       throw new Error(
-        this._t('missingVendorProperties', {
+        i18n.t('missingVendorProperties', {
           vendorName,
           vendorProps: missingProps.join(', '),
         }),
@@ -57,7 +56,7 @@ export class BaseVendor {
     try {
       webdriverUrl = new URL(url);
     } catch {
-      throw new Error(`${this._translate('Invalid URL:')} ${webdriverUrl}`);
+      throw new Error(`${i18n.t('Invalid URL:')} ${webdriverUrl}`);
     }
     return webdriverUrl;
   }
