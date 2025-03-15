@@ -17,7 +17,9 @@ export class BaseVendor {
    * ! It is OK for this method to mutate sessionCaps
    */
   async setProperties() {
-    throw new Error(`The getProperties() method must be implemented for the ${this.constructor.name}`);
+    throw new Error(
+      `The getProperties() method must be implemented for the ${this.constructor.name}`,
+    );
   }
 
   /**

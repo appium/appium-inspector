@@ -8,22 +8,22 @@ export class TestingbotVendor extends BaseVendor {
     const testingbot = this._server.testingbot;
     const vendorName = 'TestingBot';
 
-    const username = testingbot.username || process.env.TB_KEY;
-    const accessKey = testingbot.accessKey || process.env.TB_SECRET;
+    const key = testingbot.username || process.env.TB_KEY;
+    const secret = testingbot.accessKey || process.env.TB_SECRET;
     this._checkInputPropertyPresence(vendorName, [
-      {name: 'Key', val: username},
-      {name: 'Secret', val: accessKey},
+      {name: 'Key', val: key},
+      {name: 'Secret', val: secret},
     ]);
 
     const host = process.env.TB_HOST || 'hub.testingbot.com';
     const port = 443;
     const path = '/wd/hub';
     const https = true;
-    this._saveProperties(testingbot, {host, path, port, https, username, accessKey});
+    this._saveProperties(testingbot, {host, path, port, https, username: key, accessKey: secret});
 
     this._updateSessionCap('tb:options', {
-      key: username,
-      secret: accessKey,
+      key,
+      secret,
       source: 'appiumdesktop',
     });
   }
