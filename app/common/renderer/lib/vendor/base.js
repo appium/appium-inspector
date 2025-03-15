@@ -62,12 +62,12 @@ export class BaseVendor {
   }
 
   /**
-   * Set all class properties required to access the vendor server
+   * Locally save all class properties required to access the vendor server
    *
    * @param {Object} vendor
    * @param {VendorProperties} vendorProperties
    */
-  _setProperties(vendor, {host, path, port, https, username, accessKey, headers}) {
+  _saveProperties(vendor, {host, path, port, https, username, accessKey, headers}) {
     // It is fine to assign all parameters to 'vendor' values -
     // they are only saved in Redux and not sent to the actual server
     this.host = vendor.host = host;

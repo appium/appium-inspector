@@ -17,7 +17,7 @@ export class HeadspinVendor extends BaseVendor {
     const https = headspinUrl.protocol === 'https:';
     // new URL() does not have the port of 443 when `https` and 80 when `http`
     const port = headspinUrl.port === '' ? (https ? 443 : 80) : headspinUrl.port;
-    this._setProperties(headspin, {host, path, port, https});
+    this._saveProperties(headspin, {host, path, port, https});
 
     return {
       path,

@@ -15,7 +15,7 @@ export class TestcribeVendor extends BaseVendor {
     const port = 443;
     const https = true;
     const path = '/gw';
-    this._setProperties(testcribe, {host, path, port, https, accessKey});
+    this._saveProperties(testcribe, {host, path, port, https, accessKey});
 
     this._updateSessionCap('testcribe:options', {apikey: accessKey});
     this._updateSessionCap('appium:apiKey', accessKey);

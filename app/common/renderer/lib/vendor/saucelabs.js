@@ -27,7 +27,7 @@ export class SaucelabsVendor extends BaseVendor {
     }
     const path = '/wd/hub';
     const https = false;
-    this._setProperties(sauce, {host, path, port, https, username, accessKey});
+    this._saveProperties(sauce, {host, path, port, https, username, accessKey});
 
     if (!this._sessionCaps[SAUCE_OPTIONS_CAP]?.name) {
       const dateTime = moment().format('lll');

@@ -19,7 +19,7 @@ export class PcloudyVendor extends BaseVendor {
     const port = 443;
     const path = '/objectspy/wd/hub';
     const https = true;
-    this._setProperties(pcloudy, {host, path, port, https, username, accessKey});
+    this._saveProperties(pcloudy, {host, path, port, https, username, accessKey});
 
     this._updateSessionCap(
       'pcloudy:options',

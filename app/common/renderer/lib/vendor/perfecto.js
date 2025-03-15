@@ -15,7 +15,7 @@ export class PerfectoVendor extends BaseVendor {
     const port = perfecto.port || (perfecto.ssl ? 443 : 80);
     const https = perfecto.ssl;
     const path = '/nexperience/perfectomobile/wd/hub';
-    this._setProperties(perfecto, {host, path, port, https, accessKey});
+    this._saveProperties(perfecto, {host, path, port, https, accessKey});
 
     this._updateSessionCap(
       'perfecto:options',

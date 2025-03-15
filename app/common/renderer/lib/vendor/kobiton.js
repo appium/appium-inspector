@@ -19,7 +19,7 @@ export class KobitonVendor extends BaseVendor {
     const port = 443;
     const path = '/wd/hub';
     const https = true;
-    this._setProperties(kobiton, {host, path, port, https, username, accessKey});
+    this._saveProperties(kobiton, {host, path, port, https, username, accessKey});
 
     this._updateSessionCap('kobiton:options', {
       source: 'appiumdesktop',

@@ -15,7 +15,7 @@ export class BitbarVendor extends BaseVendor {
     const port = 443;
     const path = '/wd/hub';
     const https = true;
-    this._setProperties(bitbar, {host, path, port, https, accessKey});
+    this._saveProperties(bitbar, {host, path, port, https, accessKey});
 
     this._updateSessionCap(
       'bitbar:options',

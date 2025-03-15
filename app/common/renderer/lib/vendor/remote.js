@@ -11,7 +11,7 @@ export class RemoteVendor extends BaseVendor {
     const port = remote.port;
     const path = remote.path;
     const https = remote.ssl;
-    this._setProperties(remote, {host, path, port, https});
+    this._saveProperties(remote, {host, path, port, https});
 
     return {
       host,

@@ -22,7 +22,7 @@ export class LambdatestVendor extends BaseVendor {
     const port = process.env.LAMBDATEST_PORT || 443;
     const path = '/wd/hub';
     const https = parseInt(port, 10) === 443;
-    this._setProperties(lambdatest, {host, path, port, https, username, accessKey});
+    this._saveProperties(lambdatest, {host, path, port, https, username, accessKey});
 
     if (_.has(this._sessionCaps, 'lt:options')) {
       const options = {

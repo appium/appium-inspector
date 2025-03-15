@@ -15,7 +15,7 @@ export class RemotetestkitVendor extends BaseVendor {
     const path = '/wd/hub';
     const port = 443;
     const https = true;
-    this._setProperties(remotetestkit, {host, path, port, https, accessKey: token});
+    this._saveProperties(remotetestkit, {host, path, port, https, accessKey: token});
 
     this._updateSessionCap('remotetestkit:options', {
       accessToken: token,

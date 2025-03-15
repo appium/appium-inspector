@@ -19,7 +19,7 @@ export class BrowserstackVendor extends BaseVendor {
     const port = process.env.BROWSERSTACK_PORT || 443;
     const path = '/wd/hub';
     const https = parseInt(port, 10) === 443;
-    this._setProperties(browserstack, {host, path, port, https, username, accessKey});
+    this._saveProperties(browserstack, {host, path, port, https, username, accessKey});
 
     this._updateSessionCap('bstack:options', {
       source: 'appiumdesktop',

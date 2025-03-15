@@ -15,7 +15,7 @@ export class RobotqaVendor extends BaseVendor {
     const path = '/';
     const port = 443;
     const https = true;
-    this._setProperties(robotqa, {host, path, port, https, accessKey: token});
+    this._saveProperties(robotqa, {host, path, port, https, accessKey: token});
 
     this._updateSessionCap('robotqa:options', {
       robotqa_token: token,

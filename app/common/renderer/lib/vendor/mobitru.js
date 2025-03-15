@@ -19,7 +19,7 @@ export class MobitruVendor extends BaseVendor {
     const path = mobitruUrl.pathname;
     const https = mobitruUrl.protocol === 'https:';
     const port = mobitruUrl.port === '' ? (https ? 443 : 80) : mobitruUrl.port;
-    this._setProperties(mobitru, {host, path, port, https, username, accessKey});
+    this._saveProperties(mobitru, {host, path, port, https, username, accessKey});
 
     this._updateSessionCap('mobitru:options', {
       source: 'appium-inspector',

@@ -16,7 +16,7 @@ export class TvlabsVendor extends BaseVendor {
     const path = '/';
     const port = 4723;
     const https = host === 'appium.tvlabs.ai';
-    this._setProperties(tvlabs, {host, path, port, https, accessKey, headers});
+    this._saveProperties(tvlabs, {host, path, port, https, accessKey, headers});
 
     return {
       path,

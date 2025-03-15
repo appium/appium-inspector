@@ -20,7 +20,7 @@ export class ExperitestVendor extends BaseVendor {
     const path = '/wd/hub';
     const https = experitestUrl.protocol === 'https:';
     const port = experitestUrl.port === '' ? (https ? 443 : 80) : experitestUrl.port;
-    this._setProperties(experitest, {host, path, port, https});
+    this._saveProperties(experitest, {host, path, port, https});
 
     this._updateSessionCap('experitest:accessKey', accessKey);
     return {

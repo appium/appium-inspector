@@ -19,7 +19,7 @@ export class TestingbotVendor extends BaseVendor {
     const port = 443;
     const path = '/wd/hub';
     const https = true;
-    this._setProperties(testingbot, {host, path, port, https, username, accessKey});
+    this._saveProperties(testingbot, {host, path, port, https, username, accessKey});
 
     this._updateSessionCap('tb:options', {
       key: username,
