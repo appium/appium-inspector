@@ -8,10 +8,13 @@ export class PerfectoVendor extends BaseVendor {
     const perfecto = this._server.perfecto;
     const vendorName = 'Perfecto';
 
-    const securityToken = perfecto.token || process.env.PERFECTO_TOKEN;
-    this._checkInputPropertyPresence(vendorName, [{name: 'SecurityToken', val: securityToken}]);
-
     const host = perfecto.hostname;
+    const securityToken = perfecto.token || process.env.PERFECTO_TOKEN;
+    this._checkInputPropertyPresence(vendorName, [
+      {name: 'Host', val: host},
+      {name: 'SecurityToken', val: securityToken}
+    ]);
+
     const port = perfecto.port || (perfecto.ssl ? 443 : 80);
     const https = perfecto.ssl;
     const path = '/nexperience/perfectomobile/wd/hub';
