@@ -12,7 +12,7 @@ export class PerfectoVendor extends BaseVendor {
     const securityToken = perfecto.token || process.env.PERFECTO_TOKEN;
     this._checkInputPropertyPresence(vendorName, [
       {name: 'Host', val: host},
-      {name: 'SecurityToken', val: securityToken}
+      {name: 'SecurityToken', val: securityToken},
     ]);
 
     const port = perfecto.port || (perfecto.ssl ? 443 : 80);
