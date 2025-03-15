@@ -9,15 +9,15 @@ export class BitbarVendor extends BaseVendor {
     const vendorName = 'BitBar';
 
     const apiKey = bitbar.apiKey || process.env.BITBAR_API_KEY;
-    this._checkInputPropertyPresence(vendorName, [{name: 'API Key', val: apiKey}]);
+    this.checkInputPropertyPresence(vendorName, [{name: 'API Key', val: apiKey}]);
 
     const host = process.env.BITBAR_HOST || 'appium.bitbar.com';
     const port = 443;
     const path = '/wd/hub';
     const https = true;
-    this._saveProperties(bitbar, {host, path, port, https, accessKey: apiKey});
+    this.saveProperties(bitbar, {host, path, port, https, accessKey: apiKey});
 
-    this._updateSessionCap(
+    this.updateSessionCap(
       'bitbar:options',
       {
         source: 'appiumdesktop',

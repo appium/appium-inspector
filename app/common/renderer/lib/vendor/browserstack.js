@@ -10,7 +10,7 @@ export class BrowserstackVendor extends BaseVendor {
 
     const username = browserstack.username || process.env.BROWSERSTACK_USERNAME;
     const accessKey = browserstack.accessKey || process.env.BROWSERSTACK_ACCESS_KEY;
-    this._checkInputPropertyPresence(vendorName, [
+    this.checkInputPropertyPresence(vendorName, [
       {name: 'Username', val: username},
       {name: 'Access Key', val: accessKey},
     ]);
@@ -19,9 +19,9 @@ export class BrowserstackVendor extends BaseVendor {
     const port = process.env.BROWSERSTACK_PORT || 443;
     const path = '/wd/hub';
     const https = parseInt(port, 10) === 443;
-    this._saveProperties(browserstack, {host, path, port, https, username, accessKey});
+    this.saveProperties(browserstack, {host, path, port, https, username, accessKey});
 
-    this._updateSessionCap('bstack:options', {
+    this.updateSessionCap('bstack:options', {
       source: 'appiumdesktop',
     });
   }

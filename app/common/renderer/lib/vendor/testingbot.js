@@ -10,7 +10,7 @@ export class TestingbotVendor extends BaseVendor {
 
     const key = testingbot.username || process.env.TB_KEY;
     const secret = testingbot.accessKey || process.env.TB_SECRET;
-    this._checkInputPropertyPresence(vendorName, [
+    this.checkInputPropertyPresence(vendorName, [
       {name: 'Key', val: key},
       {name: 'Secret', val: secret},
     ]);
@@ -19,9 +19,9 @@ export class TestingbotVendor extends BaseVendor {
     const port = 443;
     const path = '/wd/hub';
     const https = true;
-    this._saveProperties(testingbot, {host, path, port, https, username: key, accessKey: secret});
+    this.saveProperties(testingbot, {host, path, port, https, username: key, accessKey: secret});
 
-    this._updateSessionCap('tb:options', {
+    this.updateSessionCap('tb:options', {
       key,
       secret,
       source: 'appiumdesktop',

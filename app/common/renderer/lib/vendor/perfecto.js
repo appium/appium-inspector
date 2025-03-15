@@ -10,7 +10,7 @@ export class PerfectoVendor extends BaseVendor {
 
     const host = perfecto.hostname;
     const securityToken = perfecto.token || process.env.PERFECTO_TOKEN;
-    this._checkInputPropertyPresence(vendorName, [
+    this.checkInputPropertyPresence(vendorName, [
       {name: 'Host', val: host},
       {name: 'SecurityToken', val: securityToken},
     ]);
@@ -18,8 +18,8 @@ export class PerfectoVendor extends BaseVendor {
     const port = perfecto.port || (perfecto.ssl ? 443 : 80);
     const https = perfecto.ssl;
     const path = '/nexperience/perfectomobile/wd/hub';
-    this._saveProperties(perfecto, {host, path, port, https, accessKey: securityToken});
+    this.saveProperties(perfecto, {host, path, port, https, accessKey: securityToken});
 
-    this._updateSessionCap('perfecto:options', {securityToken}, false);
+    this.updateSessionCap('perfecto:options', {securityToken}, false);
   }
 }

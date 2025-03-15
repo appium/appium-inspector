@@ -44,7 +44,7 @@ export class BaseVendor {
    * @param {string} vendorName
    * @param {List<InputProperty>} propertyList
    */
-  _checkInputPropertyPresence(vendorName, propertyList) {
+  checkInputPropertyPresence(vendorName, propertyList) {
     const missingProps = [];
     for (const prop of propertyList) {
       if (!prop.val) {
@@ -67,7 +67,7 @@ export class BaseVendor {
    * @param {string} url
    * @returns {URL}
    */
-  _validateUrl(url) {
+  validateUrl(url) {
     let webdriverUrl;
     try {
       webdriverUrl = new URL(url);
@@ -83,7 +83,7 @@ export class BaseVendor {
    * @param {Object} vendor
    * @param {VendorProperties} vendorProperties
    */
-  _saveProperties(vendor, {host, path, port, https, username, accessKey, headers}) {
+  saveProperties(vendor, {host, path, port, https, username, accessKey, headers}) {
     // It is fine to assign all parameters to 'vendor' values -
     // they are only saved in Redux and not sent to the actual server
     this.host = vendor.host = host;
@@ -101,7 +101,7 @@ export class BaseVendor {
    * @param {any} value
    * @param {boolean} [merge=true]
    */
-  _updateSessionCap(name, value, merge = true) {
+  updateSessionCap(name, value, merge = true) {
     const previousValue = this._sessionCaps[name];
     if (merge && _.isPlainObject(previousValue) && _.isPlainObject(value)) {
       this._sessionCaps[name] = {

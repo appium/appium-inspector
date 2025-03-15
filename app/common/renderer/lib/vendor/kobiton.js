@@ -10,7 +10,7 @@ export class KobitonVendor extends BaseVendor {
 
     const username = kobiton.username || process.env.KOBITON_USERNAME;
     const accessKey = kobiton.accessKey || process.env.KOBITON_ACCESS_KEY;
-    this._checkInputPropertyPresence(vendorName, [
+    this.checkInputPropertyPresence(vendorName, [
       {name: 'Username', val: username},
       {name: 'API Key', val: accessKey},
     ]);
@@ -19,9 +19,9 @@ export class KobitonVendor extends BaseVendor {
     const port = 443;
     const path = '/wd/hub';
     const https = true;
-    this._saveProperties(kobiton, {host, path, port, https, username, accessKey});
+    this.saveProperties(kobiton, {host, path, port, https, username, accessKey});
 
-    this._updateSessionCap('kobiton:options', {
+    this.updateSessionCap('kobiton:options', {
       source: 'appiumdesktop',
     });
   }
