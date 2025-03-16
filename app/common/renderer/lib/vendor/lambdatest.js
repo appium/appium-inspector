@@ -6,17 +6,24 @@ export class LambdatestVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async configureProperties() {
     const lambdatest = this._server.lambdatest;
     const advanced = this._server.advanced;
-    const host = (lambdatest.hostname = process.env.LAMBDATEST_HOST || 'mobile-hub.lambdatest.com');
-    const port = (lambdatest.port = process.env.LAMBDATEST_PORT || 443);
-    const path = (lambdatest.path = '/wd/hub');
+    const vendorName = 'LambdaTest';
+
     const username = lambdatest.username || process.env.LAMBDATEST_USERNAME;
     const accessKey = lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
-    if (!username || !accessKey) {
-      throw new Error(this._translate('lambdatestCredentialsRequired'));
-    }
+    this._checkInputPropertyPresence(vendorName, [
+      {name: 'Username', val: username},
+      {name: 'Access Key', val: accessKey},
+    ]);
+
+    const host = process.env.LAMBDATEST_HOST || 'mobile-hub.lambdatest.com';
+    const port = process.env.LAMBDATEST_PORT || 443;
+    const path = '/wd/hub';
+    const https = parseInt(port, 10) === 443;
+    this._saveProperties(lambdatest, {host, path, port, https, username, accessKey});
+
     if (_.has(this._sessionCaps, 'lt:options')) {
       const options = {
         source: 'appiumdesktop',
@@ -36,14 +43,5 @@ export class LambdatestVendor extends BaseVendor {
         );
       }
     }
-    const https = (lambdatest.ssl = parseInt(port, 10) === 443);
-    return {
-      path,
-      host,
-      port,
-      username,
-      accessKey,
-      https,
-    };
   }
 }

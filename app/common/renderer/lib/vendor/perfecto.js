@@ -4,29 +4,22 @@ export class PerfectoVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async configureProperties() {
     const perfecto = this._server.perfecto;
+    const vendorName = 'Perfecto';
+
     const host = perfecto.hostname;
+    const securityToken = perfecto.token || process.env.PERFECTO_TOKEN;
+    this._checkInputPropertyPresence(vendorName, [
+      {name: 'Host', val: host},
+      {name: 'SecurityToken', val: securityToken},
+    ]);
+
     const port = perfecto.port || (perfecto.ssl ? 443 : 80);
     const https = perfecto.ssl;
-    const path = (perfecto.path = '/nexperience/perfectomobile/wd/hub');
-    const accessKey = perfecto.token || process.env.PERFECTO_TOKEN;
-    if (!accessKey) {
-      throw new Error(this._translate('Perfecto SecurityToken is required'));
-    }
-    this._updateSessionCap(
-      'perfecto:options',
-      {
-        securityToken: accessKey,
-      },
-      false,
-    );
-    return {
-      path,
-      host,
-      port,
-      accessKey,
-      https,
-    };
+    const path = '/nexperience/perfectomobile/wd/hub';
+    this._saveProperties(perfecto, {host, path, port, https, accessKey: securityToken});
+
+    this._updateSessionCap('perfecto:options', {securityToken}, false);
   }
 }

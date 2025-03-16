@@ -4,19 +4,19 @@ export class HeadspinVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async configureProperties() {
     const headspin = this._server.headspin;
+    const vendorName = 'HeadSpin';
+
+    const url = headspin.webDriverUrl;
+    this._checkInputPropertyPresence(vendorName, [{name: 'WebDriver URL', val: url}]);
     const headspinUrl = this._validateUrl(headspin.webDriverUrl);
-    const host = (headspin.hostname = headspinUrl.hostname);
-    const path = (headspin.path = headspinUrl.pathname);
-    const https = (headspin.ssl = headspinUrl.protocol === 'https:');
+
+    const host = headspinUrl.hostname;
+    const path = headspinUrl.pathname;
+    const https = headspinUrl.protocol === 'https:';
     // new URL() does not have the port of 443 when `https` and 80 when `http`
-    const port = (headspin.port = headspinUrl.port === '' ? (https ? 443 : 80) : headspinUrl.port);
-    return {
-      path,
-      host,
-      port,
-      https,
-    };
+    const port = headspinUrl.port === '' ? (https ? 443 : 80) : headspinUrl.port;
+    this._saveProperties(headspin, {host, path, port, https});
   }
 }

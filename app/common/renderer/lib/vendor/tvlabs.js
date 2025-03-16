@@ -4,24 +4,18 @@ export class TvlabsVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async configureProperties() {
     const tvlabs = this._server.tvlabs;
+    const vendorName = 'TV Labs';
+
+    const apiKey = tvlabs.apiKey || process.env.TVLABS_API_KEY;
+    this._checkInputPropertyPresence(vendorName, [{name: 'API Key', val: apiKey}]);
+    const headers = {Authorization: `Bearer ${apiKey}`};
+
     const host = process.env.TVLABS_WEBDRIVER_URL || 'appium.tvlabs.ai';
     const path = '/';
     const port = 4723;
     const https = host === 'appium.tvlabs.ai';
-    const accessKey = tvlabs.apiKey || process.env.TVLABS_API_KEY;
-    if (!accessKey) {
-      throw new Error(this._translate('tvlabsCredentialsRequired'));
-    }
-    const headers = {Authorization: `Bearer ${accessKey}`};
-    return {
-      path,
-      host,
-      port,
-      headers,
-      accessKey,
-      https,
-    };
+    this._saveProperties(tvlabs, {host, path, port, https, accessKey: apiKey, headers});
   }
 }
