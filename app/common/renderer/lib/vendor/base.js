@@ -46,9 +46,9 @@ export class BaseVendor {
    */
   _checkInputPropertyPresence(vendorName, propertyList) {
     const missingProps = [];
-    for (const prop of propertyList) {
-      if (!prop.val) {
-        missingProps.push(i18n.t(prop.name));
+    for (const {name, val} of propertyList) {
+      if (!val) {
+        missingProps.push(i18n.t(name));
       }
     }
     if (missingProps.length > 0) {
