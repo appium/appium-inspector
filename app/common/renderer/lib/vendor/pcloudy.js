@@ -4,16 +4,24 @@ export class PcloudyVendor extends BaseVendor {
   /**
    * @override
    */
-  async apply() {
+  async configureProperties() {
     const pcloudy = this._server.pcloudy;
+    const vendorName = 'pCloudy';
+
     const host = pcloudy.hostname;
-    const port = (pcloudy.port = 443);
-    const path = (pcloudy.path = '/objectspy/wd/hub');
     const username = pcloudy.username || process.env.PCLOUDY_USERNAME;
     const accessKey = pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
-    if (!username || !accessKey) {
-      throw new Error(this._translate('pcloudyCredentialsRequired'));
-    }
+    this._checkInputPropertyPresence(vendorName, [
+      {name: 'Host', val: host},
+      {name: 'Username', val: username},
+      {name: 'API Key', val: accessKey},
+    ]);
+
+    const port = 443;
+    const path = '/objectspy/wd/hub';
+    const https = true;
+    this._saveProperties(pcloudy, {host, path, port, https, username, accessKey});
+
     this._updateSessionCap(
       'pcloudy:options',
       {
@@ -23,14 +31,5 @@ export class PcloudyVendor extends BaseVendor {
       },
       false,
     );
-    const https = (pcloudy.ssl = true);
-    return {
-      path,
-      host,
-      port,
-      username,
-      accessKey,
-      https,
-    };
   }
 }
