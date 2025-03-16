@@ -4,7 +4,7 @@ export class LocalVendor extends BaseVendor {
   /**
    * @override
    */
-  async setProperties() {
+  async configureProperties() {
     const local = this._server.local;
 
     // if we're on windows, we won't be able to connect directly to '0.0.0.0'
@@ -12,6 +12,6 @@ export class LocalVendor extends BaseVendor {
     // that will of course include 127.0.0.1 on all platforms
     const host = local.host === '0.0.0.0' ? 'localhost' : local.hostname;
     const port = local.port;
-    this.saveProperties(local, {host, port});
+    this._saveProperties(local, {host, port});
   }
 }

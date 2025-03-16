@@ -4,14 +4,14 @@ export class PcloudyVendor extends BaseVendor {
   /**
    * @override
    */
-  async setProperties() {
+  async configureProperties() {
     const pcloudy = this._server.pcloudy;
     const vendorName = 'pCloudy';
 
     const host = pcloudy.hostname;
     const username = pcloudy.username || process.env.PCLOUDY_USERNAME;
     const accessKey = pcloudy.accessKey || process.env.PCLOUDY_ACCESS_KEY;
-    this.checkInputPropertyPresence(vendorName, [
+    this._checkInputPropertyPresence(vendorName, [
       {name: 'Host', val: host},
       {name: 'Username', val: username},
       {name: 'API Key', val: accessKey},
@@ -20,9 +20,9 @@ export class PcloudyVendor extends BaseVendor {
     const port = 443;
     const path = '/objectspy/wd/hub';
     const https = true;
-    this.saveProperties(pcloudy, {host, path, port, https, username, accessKey});
+    this._saveProperties(pcloudy, {host, path, port, https, username, accessKey});
 
-    this.updateSessionCap(
+    this._updateSessionCap(
       'pcloudy:options',
       {
         source: 'appiumdesktop',

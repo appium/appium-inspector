@@ -8,13 +8,13 @@ export class SaucelabsVendor extends BaseVendor {
   /**
    * @override
    */
-  async setProperties() {
+  async configureProperties() {
     const sauce = this._server.sauce;
     const vendorName = 'Sauce Labs';
 
     const username = sauce.username || process.env.SAUCE_USERNAME;
     const accessKey = sauce.accessKey || process.env.SAUCE_ACCESS_KEY;
-    this.checkInputPropertyPresence(vendorName, [
+    this._checkInputPropertyPresence(vendorName, [
       {name: 'Username', val: username},
       {name: 'Access Key', val: accessKey},
     ]);
@@ -27,11 +27,11 @@ export class SaucelabsVendor extends BaseVendor {
     }
     const path = '/wd/hub';
     const https = false;
-    this.saveProperties(sauce, {host, path, port, https, username, accessKey});
+    this._saveProperties(sauce, {host, path, port, https, username, accessKey});
 
     if (!this._sessionCaps[SAUCE_OPTIONS_CAP]?.name) {
       const dateTime = moment().format('lll');
-      this.updateSessionCap(SAUCE_OPTIONS_CAP, {
+      this._updateSessionCap(SAUCE_OPTIONS_CAP, {
         name: `Appium Desktop Session -- ${dateTime}`,
       });
     }

@@ -16,9 +16,9 @@ export class BaseVendor {
   /**
    * ! It is OK for this method to mutate sessionCaps
    */
-  async setProperties() {
+  async configureProperties() {
     throw new Error(
-      `The getProperties() method must be implemented for the ${this.constructor.name}`,
+      `The configureProperties() method must be implemented for the ${this.constructor.name}`,
     );
   }
 
@@ -26,7 +26,7 @@ export class BaseVendor {
    * @returns {Promise<VendorProperties>}
    */
   async apply() {
-    await this.setProperties();
+    await this.configureProperties();
     return {
       host: this.host,
       path: this.path,
@@ -42,9 +42,9 @@ export class BaseVendor {
    * Validate the presence of one or more properties that the user can enter in the Inspector GUI
    *
    * @param {string} vendorName
-   * @param {List<InputProperty>} propertyList
+   * @param {InputProperty[]} propertyList
    */
-  checkInputPropertyPresence(vendorName, propertyList) {
+  _checkInputPropertyPresence(vendorName, propertyList) {
     const missingProps = [];
     for (const prop of propertyList) {
       if (!prop.val) {
@@ -67,7 +67,7 @@ export class BaseVendor {
    * @param {string} url
    * @returns {URL}
    */
-  validateUrl(url) {
+  _validateUrl(url) {
     let webdriverUrl;
     try {
       webdriverUrl = new URL(url);
@@ -83,7 +83,7 @@ export class BaseVendor {
    * @param {Object} vendor
    * @param {VendorProperties} vendorProperties
    */
-  saveProperties(vendor, {host, path, port, https, username, accessKey, headers}) {
+  _saveProperties(vendor, {host, path, port, https, username, accessKey, headers}) {
     // It is fine to assign all parameters to 'vendor' values -
     // they are only saved in Redux and not sent to the actual server
     this.host = vendor.host = host;
@@ -101,7 +101,7 @@ export class BaseVendor {
    * @param {any} value
    * @param {boolean} [merge=true]
    */
-  updateSessionCap(name, value, merge = true) {
+  _updateSessionCap(name, value, merge = true) {
     const previousValue = this._sessionCaps[name];
     if (merge && _.isPlainObject(previousValue) && _.isPlainObject(value)) {
       this._sessionCaps[name] = {
@@ -127,6 +127,6 @@ export class BaseVendor {
 
 /**
  * @typedef {Object} InputProperty
- * @property {string} [name] Property name (used in error messages if no value is provided)
- * @property {string} [val] Property value
+ * @property {string} name Property name (used in error messages if no value is provided)
+ * @property {string} val Property value
  */

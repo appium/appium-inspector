@@ -6,14 +6,14 @@ export class LambdatestVendor extends BaseVendor {
   /**
    * @override
    */
-  async setProperties() {
+  async configureProperties() {
     const lambdatest = this._server.lambdatest;
     const advanced = this._server.advanced;
     const vendorName = 'LambdaTest';
 
     const username = lambdatest.username || process.env.LAMBDATEST_USERNAME;
     const accessKey = lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
-    this.checkInputPropertyPresence(vendorName, [
+    this._checkInputPropertyPresence(vendorName, [
       {name: 'Username', val: username},
       {name: 'Access Key', val: accessKey},
     ]);
@@ -22,7 +22,7 @@ export class LambdatestVendor extends BaseVendor {
     const port = process.env.LAMBDATEST_PORT || 443;
     const path = '/wd/hub';
     const https = parseInt(port, 10) === 443;
-    this.saveProperties(lambdatest, {host, path, port, https, username, accessKey});
+    this._saveProperties(lambdatest, {host, path, port, https, username, accessKey});
 
     if (_.has(this._sessionCaps, 'lt:options')) {
       const options = {
@@ -32,12 +32,12 @@ export class LambdatestVendor extends BaseVendor {
       if (advanced.useProxy) {
         options.proxyUrl = _.isUndefined(advanced.proxy) ? '' : advanced.proxy;
       }
-      this.updateSessionCap('lt:options', options);
+      this._updateSessionCap('lt:options', options);
     } else {
-      this.updateSessionCap('lambdatest:source', 'appiumdesktop');
-      this.updateSessionCap('lambdatest:isRealMobile', true);
+      this._updateSessionCap('lambdatest:source', 'appiumdesktop');
+      this._updateSessionCap('lambdatest:isRealMobile', true);
       if (advanced.useProxy) {
-        this.updateSessionCap(
+        this._updateSessionCap(
           'lambdatest:proxyUrl',
           _.isUndefined(advanced.proxy) ? '' : advanced.proxy,
         );

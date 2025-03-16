@@ -4,7 +4,7 @@ export class MobitruVendor extends BaseVendor {
   /**
    * @override
    */
-  async setProperties() {
+  async configureProperties() {
     const mobitru = this._server.mobitru;
     const vendorName = 'Mobitru';
 
@@ -12,16 +12,16 @@ export class MobitruVendor extends BaseVendor {
     const accessKey = mobitru.accessKey || process.env.MOBITRU_ACCESS_KEY;
     const url =
       mobitru.webDriverUrl || process.env.MOBITRU_WEBDRIVER_URL || 'https://app.mobitru.com/wd/hub';
-    this.checkInputPropertyPresence(vendorName, [{name: 'Access Key', val: accessKey}]);
-    const mobitruUrl = this.validateUrl(url);
+    this._checkInputPropertyPresence(vendorName, [{name: 'Access Key', val: accessKey}]);
+    const mobitruUrl = this._validateUrl(url);
 
     const host = mobitruUrl.hostname;
     const path = mobitruUrl.pathname;
     const https = mobitruUrl.protocol === 'https:';
     const port = mobitruUrl.port === '' ? (https ? 443 : 80) : mobitruUrl.port;
-    this.saveProperties(mobitru, {host, path, port, https, username, accessKey});
+    this._saveProperties(mobitru, {host, path, port, https, username, accessKey});
 
-    this.updateSessionCap('mobitru:options', {
+    this._updateSessionCap('mobitru:options', {
       source: 'appium-inspector',
     });
   }
