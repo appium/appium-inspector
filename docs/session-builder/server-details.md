@@ -17,14 +17,13 @@ The default server details have 4 fields:
 
 ![Default Server Details](./assets/images/server-details/default-server-details.png)
 
-- **Remote Host**: the host URL of the server
-- **Remote Port**: the port on which the server is running
-- **Remote Path**: the path used to access the server. Appium 2 servers use `/` by default, whereas
-  Appium 1 servers use `/wd/hub`
-- **SSL**: by default, the server is accessed over HTTP - tick this checkbox to use HTTPS
+- **Remote Host**: the host URL of the server (default: `127.0.0.1`)
+- **Remote Port**: the port on which the server is running (default: `4723`)
+- **Remote Path**: the base path used to access the server (default: `/`)
+- **SSL**: whether HTTPS should be used when connecting to the server (default: `false`)
 
 If using the placeholder details, the Inspector will try to connect to `http://127.0.0.1:4723/`.
-If you have a locally-running Appium 2 server that was launched with default parameters, it should
+If you have a locally-running Appium server that was launched with default parameters, it should
 also be using this address, in which case you can leave the fields unchanged.
 
 ## Cloud Providers

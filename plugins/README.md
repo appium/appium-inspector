@@ -7,7 +7,7 @@ A plugin that integrates the [Appium Inspector](https://github.com/appium/appium
 
 ## Features
 
-- Web-based Appium Inspector interface accessible via `/inspector` endpoint with appium server
+- Web-based Appium Inspector interface, accessible via the Appium server's `/inspector` endpoint
 - Full feature parity with standalone Appium Inspector
 
 ## Installation
@@ -27,26 +27,29 @@ appium plugin install --source=npm appium-inspector-plugin
 appium --use-plugins=inspector --allow-cors
 ```
 
-2. Access the Inspector interface by navigating to:
+2. Access the Inspector in your web browser by navigating to:
 
 ```
 http://localhost:4723/inspector
 ```
 
+Make sure the above **host URL** and **port** match those of the Appium server itself.
+Note that the server's base path value is ignored - the plugin always uses the `/inspector` path. 
+
 ## Development
 
-1. `git clone` this repositiry
-2. Run `npm install` in `/path/to/appium-inspector/plugins`
-3. `appium plugin install --source=local /path/to/appium-inspector/plugins`
-4. Update the plugin content with `npm run build:plugin` in `/path/to/appium-inspector`
-5. Start Appium with `appium --use-plugins=inspector --allow-cors`
+### Set Up
 
-## Release
+1. Clone this repo
+2. `cd /path/to/appium-inspector/plugins`
+3. `npm install`
+4. `appium plugin install --source=local /path/to/appium-inspector/plugins`
 
-(TODO: add this release steps in .github/workflows/package.yml later as another PR)
+### Develop
 
-1. Run `npm run plugin:sync:version` to sync the version with the root project.json
-2. Run `npm publish` in `/path/to/appium-inspector/plugins` to publish the module
+1. `cd /path/to/appium-inspector`
+2. `npm run build:plugin`
+3. `appium --use-plugins=inspector --allow-cors`
 
 ## License
 

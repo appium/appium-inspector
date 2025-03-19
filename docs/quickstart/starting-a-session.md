@@ -31,12 +31,6 @@ information about the Appium server is specified, so that the Inspector knows ho
     - For a local or remote Appium server with non-default properties, please change the field
       values accordingly.
 
-!!! note
-
-    The above assumes that you are using Appium 2. If using Appium 1, the _Remote Path_ value
-    must be changed to `/wd/hub`. This may also apply to an Appium 2 server, if it was launched
-    with the `--base-path="/wd/hub"` argument.
-
 With the server details specified, you can move on to the session details!
 
 ## Adding Session Details
