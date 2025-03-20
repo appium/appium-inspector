@@ -2,13 +2,46 @@
 title: Installation
 ---
 
-If you are using the Inspector's web app version, this step is, of course, not required. But if
-you wish to use the Inspector desktop app, it needs to be installed first.
+This step is only relevant if using the Inspector desktop app or Appium plugin formats.
+
+## Appium Plugin
+
+Like all Appium plugins, the Inspector plugin can be installed and activated using
+[the Appium command line](https://appium.io/docs/en/latest/cli/).
+
+1. Install the plugin:
+
+```bash
+appium plugin install --source=npm appium-inspector-plugin
+```
+
+!!! note
+
+    Appium 3 will also support the `appium plugin install inspector` command
+
+2. Launch the Appium server with the plugin activated:
+
+```bash
+appium --use-plugins=inspector --allow-cors
+```
+
+3. Open the Inspector URL in your web browser:
+
+```
+http://localhost:4723/inspector
+```
+
+!!! info
+
+    Make sure the above **host URL** and **port** match those of the Appium server. Note that the
+    server's base path value is ignored - the plugin always uses the `/inspector` path.
+
+## Desktop App
 
 The app can be downloaded from [the Inspector's GitHub repository](https://github.com/appium/appium-inspector/releases).
 Different file formats are provided for each supported platform.
 
-## Windows
+### Windows
 
 For Windows it is recommended to download the `.exe` installer file, as it supports [checking for updates](../menu-bar.md#update-checker).
 
@@ -30,7 +63,7 @@ Alternatively, you can also bypass this after having opened the installer:
 After following the installer steps, the Inspector app should be installed, and you should be able
 to open it without any warnings.
 
-## macOS
+### macOS
 
 For macOS it is recommended to download the `.dmg` file, as it supports [checking for updates](../menu-bar.md#update-checker).
 Opening the file will open a simple window, showing icons for the Inspector and the _Applications_ folder.
@@ -45,7 +78,7 @@ There are two ways to work around these warnings: using the macOS user interface
 command line. The user interface flows will differ depending on your macOS version, while the
 command line approach works for all macOS versions.
 
-### Command Line
+#### Command Line
 
 Simply open your Terminal app and run the following command:
 
@@ -55,7 +88,7 @@ xattr -cr "/Applications/Appium Inspector.app"
 
 You should now be able to open the app with no warnings.
 
-### UI - macOS Sequoia or later
+#### UI - macOS Sequoia or later
 
 With macOS Sequoia, Apple has tightened their security for installing non-notarized apps, so the
 required steps to allow opening the app have become more complex.
@@ -75,7 +108,7 @@ required steps to allow opening the app have become more complex.
 5. A prompt should appear, requiring you to confirm the action using administrator user credentials.
 6. After confirming the action, the app should open.
 
-### UI - macOS Sonoma or earlier
+#### UI - macOS Sonoma or earlier
 
 1. Upon opening the app, the following warning will be shown. Click _OK_.
    ![Appium Inspector Open Warning on macOS](./assets/images/open-warning-macos.png)
@@ -84,7 +117,7 @@ required steps to allow opening the app have become more complex.
 4. A prompt should appear - click _Open_ again.
 5. After accepting the prompt, the app should open.
 
-## Linux
+### Linux
 
 For Linux it is recommended to download the `.AppImage` file, as it supports [checking for updates](../menu-bar.md#update-checker).
 

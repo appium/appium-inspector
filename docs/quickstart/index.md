@@ -15,4 +15,4 @@ This quickstart will cover the following:
 3. [Configure Appium session details](./starting-a-session.md)
 4. [Start an Inspector session](./starting-a-session.md#launching-the-session)
 
-Continue with the [installation requirements](./requirements.md)!
+Continue with the [system requirements](./requirements.md)!

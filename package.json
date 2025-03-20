@@ -37,6 +37,7 @@
     "build:plugin": "vite build --base /inspector --outDir ../../plugins/dist-browser",
     "build:electron": "electron-vite build",
     "preview:browser": "npm run build:browser && vite preview",
+    "preview:plugin": "npm run build:plugin && vite preview --base /inspector --outDir ../../plugins/dist-browser",
     "preview:electron": "electron-vite preview",
     "pack:electron": "electron-builder build --publish never",
     "clean": "npm run clean:electron && npm run clean:browser && npm run clean:npm && npm run clean:plugin",
