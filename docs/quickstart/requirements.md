@@ -17,16 +17,14 @@ will differ:
 - Web app/Appium server plugin
     - Works in Chrome/Edge/Firefox, released in 2022 or later
       ([Safari is not supported](../troubleshooting.md#browser-version-does-not-work-in-safari))
+    - The plugin version requires around **8MB** of free space
     - Viewport size of at least **870 x 610** pixels is recommended
 
-All Inspector versions also require an **Appium server** to connect to:
+All Inspector versions also require an **Appium server** to connect to, which can be hosted either
+locally or remotely. For instructions on how to install and set up the server, please refer to the
+[Appium documentation](https://appium.io/docs/en/latest/quickstart/install/). Make sure to also
+install the necessary [driver(s)](https://appium.io/docs/en/latest/ecosystem/drivers/) for your
+target platform(s).
 
-- The server can be run either locally or remotely
-- For server installation, refer to the [Appium documentation](https://appium.io/docs/en/latest/quickstart/install/).
-  Make sure to also install the necessary [driver(s)](https://appium.io/docs/en/latest/ecosystem/drivers/)
-  for your target platform(s).
-
-While the Inspector is designed to work with Appium 2 or newer, it is also compatible with
-later versions of Appium 1. If connecting to an Appium 1 server, please be aware of
-[the differences from Appium 2](https://appium.io/docs/en/latest/guides/migrating-1-to-2/) -
-in particular, the default server base path.
+Continue with the [Installation](./installation.md) steps, or jump directly to
+[Starting a Session](./starting-a-session.md)!

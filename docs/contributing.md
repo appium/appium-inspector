@@ -9,7 +9,8 @@ Want to contribute to this app? We'd love it!
 
 ## Code
 
-The code for this app is based on React and Electron.
+The application is primarily built using React, with the desktop app version additionally being
+based on Electron.
 
 To start off, clone the project from GitHub and run:
 
@@ -28,7 +29,7 @@ npm ci
 Run in development mode:
 
 ```bash
-npm run dev:browser
+npm run dev:browser  # same as the plugin version
 npm run dev:electron
 ```
 
@@ -51,21 +52,23 @@ npm run test:e2e
 npm run test # lint, unit & integration
 ```
 
-Build the production version (desktop app into `/dist`, browser app into `/dist-browser`):
+Build the production version:
 
 ```bash
-npm run build:browser
-npm run build:electron
+npm run build:browser  # output directory: /dist-browser
+npm run build:plugin   # output directory: /plugins/dist-browser
+npm run build:electron # output directory: /dist
 ```
 
 Build the production version and run it:
 
 ```bash
 npm run preview:browser
+npm run preview:plugin
 npm run preview:electron
 ```
 
-Build the Electron app executable package (and other artifacts) for your platform into `/release`:
+Build the desktop app executable package (and other artifacts) for your platform into `/release`:
 
 !!! note
 
@@ -73,6 +76,13 @@ Build the Electron app executable package (and other artifacts) for your platfor
 
 ```bash
 npm run pack:electron
+```
+
+Link the plugin version to your local Appium server:
+
+```bash
+cd plugins && npm install && cd ..           # install @appium/base-plugin
+appium plugin install --source=local plugins # link the plugin to Appium
 ```
 
 ## Documentation
