@@ -44,7 +44,7 @@ Appium Inspector is released in 3 formats:
 2. Web application - **<https://inspector.appiumpro.com>** (note that
    [CORS must be enabled](https://appium.github.io/appium-inspector/latest/troubleshooting/#cannot-start-a-session-using-browser-inspector)
    in order to connect to an Appium server)
-3. Appium server plugin - see the [**plugin README**](./plugins/README.md) for details   
+3. Appium server plugin - see the [**plugin README**](./plugins/README.md) for details
 
 Check the [System Requirements](https://appium.github.io/appium-inspector/latest/quickstart/requirements/)
 and [Installation](https://appium.github.io/appium-inspector/latest/quickstart/installation/)

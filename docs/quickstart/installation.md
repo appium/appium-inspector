@@ -10,6 +10,7 @@ Like all Appium plugins, the Inspector plugin can be installed and activated usi
 [the Appium command line](https://appium.io/docs/en/latest/cli/).
 
 1. Install the plugin:
+
 ```bash
 appium plugin install --source=npm appium-inspector-plugin
 ```
@@ -19,11 +20,13 @@ appium plugin install --source=npm appium-inspector-plugin
     Appium 3 will also support the `appium plugin install inspector` command
 
 2. Launch the Appium server with the plugin activated:
+
 ```bash
 appium --use-plugins=inspector --allow-cors
 ```
 
 3. Open the Inspector URL in your web browser:
+
 ```
 http://localhost:4723/inspector
 ```
@@ -31,7 +34,7 @@ http://localhost:4723/inspector
 !!! info
 
     Make sure the above **host URL** and **port** match those of the Appium server. Note that the
-    server's base path value is ignored - the plugin always uses the `/inspector` path. 
+    server's base path value is ignored - the plugin always uses the `/inspector` path.
 
 ## Desktop App
 
