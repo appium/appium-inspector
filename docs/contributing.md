@@ -9,8 +9,7 @@ Want to contribute to this app? We'd love it!
 
 ## Code
 
-The application is primarily built using React, with the desktop app version additionally being
-based on Electron.
+The application is primarily built using React, with the desktop app version being based on Electron.
 
 To start off, clone the project from GitHub and run:
 

@@ -17,7 +17,7 @@ will differ:
 - Web app/Appium server plugin
     - Works in Chrome/Edge/Firefox, released in 2022 or later
       ([Safari is not supported](../troubleshooting.md#browser-version-does-not-work-in-safari))
-    - The plugin version requires around **8MB** of free space
+    - The plugin version requires around **9MB** of free space
     - Viewport size of at least **870 x 610** pixels is recommended
 
 All Inspector versions also require an **Appium server** to connect to, which can be hosted either
