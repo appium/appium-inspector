@@ -1,5 +1,3 @@
-import {DRIVERS} from './common';
-
 export const COMMAND_ARG_TYPES = {
   STRING: 'string',
   NUMBER: 'number',
@@ -7,16 +5,78 @@ export const COMMAND_ARG_TYPES = {
 };
 
 const {STRING, NUMBER} = COMMAND_ARG_TYPES;
-const {UIAUTOMATOR2, ESPRESSO, XCUITEST} = DRIVERS;
+
+// Commonly used commands not hidden under a collapse
+export const TOP_LEVEL_COMMANDS = {
+  executeScript: {
+    args: [
+      ['executeScriptCommand', STRING],
+      ['jsonArgument', STRING],
+    ],
+  },
+  updateSettings: {
+    args: [['settingsJson', STRING]],
+  },
+  getSettings: {},
+};
 
 // Note: When changing COMMAND_DEFINITIONS categories, or 'notes' for any command, update `en/translation.json`
 export const COMMAND_DEFINITIONS = {
-  'Execute Script': {
-    executeScript: {
+  Session: {
+    status: {},
+    getSession: {},
+    getTimeouts: {},
+    setTimeouts: {
       args: [
-        ['executeScriptCommand', STRING],
-        ['jsonArgument', STRING],
+        ['implicitTimeout', NUMBER],
+        ['pageLoadTimeout', NUMBER],
+        ['scriptTimeout', NUMBER],
       ],
+    },
+    getLogTypes: {},
+    getLogs: {
+      args: [['logType', STRING]],
+    },
+  },
+  Context: {
+    getContext: {},
+    getContexts: {},
+    switchContext: {
+      args: [['name', STRING]],
+      refresh: true,
+    },
+  },
+  'Device Interaction': {
+    getWindowRect: {},
+    takeScreenshot: {},
+    getDeviceTime: {},
+    hideKeyboard: {
+      refresh: true,
+    },
+    isKeyboardShown: {},
+    getOrientation: {},
+    setOrientation: {
+      args: [['orientation', STRING]],
+      refresh: true,
+    },
+    getGeoLocation: {},
+    setGeoLocation: {
+      args: [
+        ['latitude', NUMBER],
+        ['longitude', NUMBER],
+        ['altitude', NUMBER],
+      ],
+    },
+    rotateDevice: {
+      args: [
+        ['x', NUMBER],
+        ['y', NUMBER],
+        ['duration', NUMBER],
+        ['radius', NUMBER],
+        ['rotation', NUMBER],
+        ['touchCount', NUMBER],
+      ],
+      refresh: true,
     },
   },
   'App Management': {
@@ -55,63 +115,6 @@ export const COMMAND_DEFINITIONS = {
       args: [['folderToPullFrom', STRING]],
     },
   },
-  'Device Interaction': {
-    rotateDevice: {
-      args: [
-        ['x', NUMBER],
-        ['y', NUMBER],
-        ['duration', NUMBER],
-        ['radius', NUMBER],
-        ['rotation', NUMBER],
-        ['touchCount', NUMBER],
-      ],
-      refresh: true,
-    },
-  },
-  Keyboard: {
-    hideKeyboard: {
-      refresh: true,
-    },
-    isKeyboardShown: {},
-  },
-  System: {
-    getDeviceTime: {},
-    getWindowRect: {},
-    takeScreenshot: {},
-  },
-  Session: {
-    status: {},
-    getSession: {},
-    getTimeouts: {},
-    setTimeouts: {
-      args: [
-        ['implicitTimeout', NUMBER],
-        ['pageLoadTimeout', NUMBER],
-        ['scriptTimeout', NUMBER],
-      ],
-    },
-    getOrientation: {},
-    setOrientation: {
-      args: [['orientation', STRING]],
-      refresh: true,
-    },
-    getGeoLocation: {},
-    setGeoLocation: {
-      args: [
-        ['latitude', NUMBER],
-        ['longitude', NUMBER],
-        ['altitude', NUMBER],
-      ],
-    },
-    getLogTypes: {},
-    getLogs: {
-      args: [['logType', STRING]],
-    },
-    updateSettings: {
-      args: [['settingsJson', STRING]],
-    },
-    getSettings: {},
-  },
   Web: {
     navigateTo: {
       args: [['url', STRING]],
@@ -128,16 +131,6 @@ export const COMMAND_DEFINITIONS = {
       refresh: true,
     },
     getTitle: {},
-  },
-  Context: {
-    getContext: {},
-    getContexts: {},
-    switchContext: {
-      args: [['name', STRING]],
-      refresh: true,
-    },
-  },
-  'Window (W3C)': {
     getWindowHandle: {},
     closeWindow: {
       refresh: true,
