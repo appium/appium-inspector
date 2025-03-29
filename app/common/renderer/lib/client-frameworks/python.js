@@ -130,7 +130,7 @@ actions.perform()
   }
 
   codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
-    return `driver.update_settings(${this.getPythonVal(settingsJson)}))`;
+    return `driver.update_settings(${this.getPythonVal(settingsJson)})`;
   }
 
   codeFor_getSettings() {
