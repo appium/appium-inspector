@@ -145,13 +145,12 @@ driver.perform(Arrays.asList(swipe));
 
   codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
     try {
-      let settings = [];
-      for (let [settingName, settingValue] of _.toPairs(settingsJson)) {
-        settings.push(`driver.setSetting("${settingName}", ${this.getJavaVal(settingValue)});`);
-      }
+      const settings = _.toPairs(settingsJson).map(([settingName, settingValue]) =>
+        `driver.setSetting("${settingName}", ${this.getJavaVal(settingValue)});`
+      );
       return settings.join('\n');
     } catch {
-      return `// Could not parse: ${settingsJson}`;
+      return `// Could not parse: ${JSON.stringify(settingsJson)}`;
     }
   }
 
