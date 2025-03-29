@@ -219,7 +219,7 @@ main().catch(console.log);`;
   }
 
   codeFor_getUrl() {
-    return `let current_url = await driver.getUrl();`;
+    return `let currentUrl = await driver.getUrl();`;
   }
 
   codeFor_back() {
@@ -232,6 +232,10 @@ main().catch(console.log);`;
 
   codeFor_refresh() {
     return `await driver.refresh();`;
+  }
+
+  codeFor_getTitle() {
+    return `let title = await driver.getTitle();`;
   }
 
   // Context

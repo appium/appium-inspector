@@ -255,6 +255,10 @@ actions.perform()
     return `driver.refresh()`;
   }
 
+  codeFor_getTitle() {
+    return `title = driver.title`;
+  }
+
   // Context
 
   codeFor_getContext() {

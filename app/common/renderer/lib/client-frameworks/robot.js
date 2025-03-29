@@ -232,6 +232,10 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
     return '# Not supported: refresh';
   }
 
+  codeFor_getTitle() {
+    return '${title} =    Get Window Title';
+  }
+
   // Context
 
   codeFor_getContext() {

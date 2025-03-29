@@ -233,11 +233,15 @@ driver.quit`;
   }
 
   codeFor_forward() {
-    return `driver.navigate.forward`;
+    return `driver.forward`;
   }
 
   codeFor_refresh() {
-    return `driver.navigate.refresh`;
+    return `driver.refresh`;
+  }
+
+  codeFor_getTitle() {
+    return `title = driver.get_title`;
   }
 
   // Context

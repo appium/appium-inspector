@@ -123,6 +123,7 @@ export const COMMAND_DEFINITIONS = {
     refresh: {
       refresh: true,
     },
+    getTitle: {},
   },
   Context: {
     getContext: {},

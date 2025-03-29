@@ -295,6 +295,10 @@ var timeouts = Map.ofEntries(
     return `driver.navigate().refresh();`;
   }
 
+  codeFor_getTitle() {
+    return `var title = driver.getTitle();`;
+  }
+
   // Context
 
   codeFor_getContext() {

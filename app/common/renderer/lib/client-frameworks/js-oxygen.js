@@ -210,7 +210,7 @@ ${code}`;
   }
 
   codeFor_getUrl() {
-    return `${this.type}.getUrl();`;
+    return `let currentUrl = ${this.type}.getUrl();`;
   }
 
   codeFor_back() {
@@ -223,6 +223,10 @@ ${code}`;
 
   codeFor_refresh() {
     return `${this.type}.getDriver().refresh();`;
+  }
+
+  codeFor_getTitle() {
+    return `let title = ${this.type}.getTitle();`;
   }
 
   // Context

@@ -314,6 +314,10 @@ let timeouts = new Dictionary<string, TimeSpan>()
     return `_driver.Navigate().Refresh();`;
   }
 
+  codeFor_getTitle() {
+    return `var title = _driver.Title;`;
+  }
+
   // Context
 
   codeFor_getContext() {
