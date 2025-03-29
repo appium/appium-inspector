@@ -231,6 +231,10 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
     return `let sessionDetails = _driver.SessionDetails;`;
   }
 
+  codeFor_getTimeouts() {
+    return `// Not supported: getTimeouts`;
+  }
+
   codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
     return '/* TODO implement setTimeouts */';
   }

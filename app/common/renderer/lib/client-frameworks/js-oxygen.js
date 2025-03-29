@@ -157,6 +157,10 @@ ${code}`;
     return `let caps = ${this.type}.getDriver().getSession();`;
   }
 
+  codeFor_getTimeouts() {
+    return `let timeouts = ${this.type}.getDriver().getTimeouts();`;
+  }
+
   codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
     return '/* TODO implement setTimeouts */';
   }

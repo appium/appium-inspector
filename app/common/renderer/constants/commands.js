@@ -77,6 +77,7 @@ export const COMMAND_DEFINITIONS = {
   Session: {
     status: {},
     getSession: {},
+    getTimeouts: {},
     setTimeouts: {
       args: [
         ['implicitTimeout', NUMBER],

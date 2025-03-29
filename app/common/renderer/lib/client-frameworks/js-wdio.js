@@ -166,6 +166,10 @@ main().catch(console.log);`;
     return `let sessionDetails = await driver.getSession();`;
   }
 
+  codeFor_getTimeouts() {
+    return `let timeouts = await driver.getTimeouts();`;
+  }
+
   codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
     return '/* TODO implement setTimeouts */';
   }

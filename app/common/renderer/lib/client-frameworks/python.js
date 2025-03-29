@@ -187,6 +187,10 @@ actions.perform()
     return `desired_caps = driver.desired_capabilities()`;
   }
 
+  codeFor_getTimeouts() {
+    return '# Not supported: getTimeouts';
+  }
+
   codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
     return '# TODO implement setTimeouts';
   }

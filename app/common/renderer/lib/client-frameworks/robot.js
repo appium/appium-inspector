@@ -159,6 +159,10 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
     return '# Not supported: getSession';
   }
 
+  codeFor_getTimeouts() {
+    return '# Not supported: getTimeouts';
+  }
+
   codeFor_setTimeouts() {
     // There is 'Set Appium Timeout' which may be different
     return '# Not supported: setTimeouts';

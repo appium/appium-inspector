@@ -172,6 +172,10 @@ driver.quit`;
     return `session_capabilities = driver.session_capabilities`;
   }
 
+  codeFor_getTimeouts() {
+    return `timeouts = driver.get_timeouts`;
+  }
+
   codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
     return '# TODO implement setTimeouts';
   }

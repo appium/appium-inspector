@@ -210,6 +210,10 @@ driver.perform(Arrays.asList(swipe));
     return `var caps = driver.getSessionDetails();`;
   }
 
+  codeFor_getTimeouts() {
+    return `// Not supported: getTimeouts`;
+  }
+
   codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
     return '/* TODO implement setTimeouts */';
   }
