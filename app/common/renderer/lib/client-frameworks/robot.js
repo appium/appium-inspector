@@ -85,7 +85,7 @@ Tap With Positions    $\{100}    $\{positions}`;
     return `Swipe    $\{${x1}}    $\{${y1}}    $\{${x2}}    $\{${y2}}`;
   }
 
-  // Execute Script
+  // Top-Level Commands
 
   codeFor_executeScriptNoArgs(scriptCmd) {
     return `Execute Script    ${scriptCmd}`;
@@ -99,139 +99,69 @@ Tap With Positions    $\{100}    $\{positions}`;
 ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
   }
 
-  // App Management
-
-  codeFor_getCurrentActivity() {
-    return `$\{activity_name} =    ${this.codeFor_executeScriptNoArgs(
-      'mobile: getCurrentActivity',
-    )}`;
+  codeFor_updateSettings() {
+    return '# Not supported: updateSettings';
   }
 
-  codeFor_getCurrentPackage() {
-    return `$\{package_name} =    ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
-  }
-
-  codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
-    return `Install App    ${app}`;
-  }
-
-  codeFor_isAppInstalled() {
-    return '# Not supported: isAppInstalled';
-  }
-
-  codeFor_activateApp(varNameIgnore, varIndexIgnore, app) {
-    return `Activate Application    ${app}`;
-  }
-
-  codeFor_terminateApp(varNameIgnore, varIndexIgnore, app) {
-    return `Terminate Application    ${app}`;
-  }
-
-  codeFor_removeApp(varNameIgnore, varIndexIgnore, app) {
-    return `Remove Application    ${app}`;
-  }
-
-  codeFor_getStrings(varNameIgnore, varIndexIgnore, language) {
-    if (language === undefined) {
-      return `$\{app_strings} =    ${this.codeFor_executeScriptNoArgs('mobile: getAppStrings')}`;
-    } else {
-      return this.codeFor_executeScriptWithArgs(
-        'mobile: getAppStrings',
-        [{language}],
-        `$\{app_strings} =    `,
-      );
-    }
-  }
-
-  // Clipboard
-
-  codeFor_getClipboard() {
-    return '# Not supported: getClipboard';
-  }
-
-  codeFor_setClipboard() {
-    return '# Not supported: setClipboard';
-  }
-
-  // File Transfer
-
-  codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
-    return `Push File    ${pathToInstallTo}    ${fileContentString}`;
-  }
-
-  codeFor_pullFile(varNameIgnore, varIndexIgnore, pathToPullFrom) {
-    return `$\{file_base64} =    Pull File    ${pathToPullFrom}`;
-  }
-
-  codeFor_pullFolder(varNameIgnore, varIndexIgnore, folderToPullFrom) {
-    return `$\{folder_base64} =    Pull Folder    ${folderToPullFrom}`;
-  }
-
-  // Device Interaction
-
-  codeFor_isLocked() {
-    return `$\{is_locked} =    ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
-  }
-
-  codeFor_rotateDevice() {
-    return '# Not supported: rotateDevice';
-  }
-
-  codeFor_touchId(varNameIgnore, varIndexIgnore, match) {
-    return `Touch Id    $\{${match}}`;
-  }
-
-  codeFor_toggleEnrollTouchId() {
-    return 'Toggle Touch Id Enrollment';
-  }
-
-  // Keyboard
-
-  codeFor_isKeyboardShown() {
-    return `$\{is_keyboard_shown} =    ${this.codeFor_executeScriptNoArgs(
-      'mobile: isKeyboardShown',
-    )}`;
-  }
-
-  // Connectivity
-
-  codeFor_toggleAirplaneMode() {
-    return '# Not supported: toggleAirplaneMode';
-  }
-
-  codeFor_toggleData() {
-    return '# Not supported: toggleData';
-  }
-
-  codeFor_toggleWiFi() {
-    return '# Not supported: toggleWifi';
-  }
-
-  codeFor_sendSMS() {
-    return '# Not supported: sendSMS';
-  }
-
-  codeFor_gsmCall() {
-    return '# Not supported: gsmCall';
-  }
-
-  codeFor_gsmSignal() {
-    return '# Not supported: gsmSignal';
-  }
-
-  codeFor_gsmVoice() {
-    return '# Not supported: gsmVoice';
+  codeFor_getSettings() {
+    return '# Not supported: getSettings';
   }
 
   // Session
+
+  codeFor_status() {
+    return '# Not supported: status';
+  }
 
   codeFor_getSession() {
     return '# Not supported: getSession';
   }
 
+  codeFor_getTimeouts() {
+    return '# Not supported: getTimeouts';
+  }
+
   codeFor_setTimeouts() {
     // There is 'Set Appium Timeout' which may be different
     return '# Not supported: setTimeouts';
+  }
+
+  codeFor_getLogTypes() {
+    return '# Not supported: getLogTypes';
+  }
+
+  codeFor_getLogs() {
+    return '# Not supported: getLogs';
+  }
+
+  // Context
+
+  codeFor_getContext() {
+    return '${context} =    Get Current Context';
+  }
+
+  codeFor_getContexts() {
+    return '${contexts} =    Get Contexts';
+  }
+
+  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+    return `Switch To Context    ${name}`;
+  }
+
+  // Device Interaction
+
+  codeFor_getWindowRect() {
+    return `# Not supported: getWindowRect`;
+  }
+
+  codeFor_takeScreenshot() {
+    return `Capture Page Screenshot`;
+  }
+
+  codeFor_isKeyboardShown() {
+    return `$\{is_keyboard_shown} =    ${this.codeFor_executeScriptNoArgs(
+      'mobile: isKeyboardShown',
+    )}`;
   }
 
   codeFor_getOrientation() {
@@ -254,20 +184,48 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
     return `Set Location    $\{${latitude}}    $\{${longitude}}    $\{${altitude}}`;
   }
 
-  codeFor_getLogTypes() {
-    return '# Not supported: getLogTypes';
+  codeFor_rotateDevice() {
+    return '# Not supported: rotateDevice';
   }
 
-  codeFor_getLogs() {
-    return '# Not supported: getLogs';
+  // App Management
+
+  codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
+    return `Install App    ${app}`;
   }
 
-  codeFor_updateSettings() {
-    return '# Not supported: updateSettings';
+  codeFor_isAppInstalled() {
+    return '# Not supported: isAppInstalled';
   }
 
-  codeFor_getSettings() {
-    return '# Not supported: getSettings';
+  codeFor_activateApp(varNameIgnore, varIndexIgnore, app) {
+    return `Activate Application    ${app}`;
+  }
+
+  codeFor_terminateApp(varNameIgnore, varIndexIgnore, app) {
+    return `Terminate Application    ${app}`;
+  }
+
+  codeFor_removeApp(varNameIgnore, varIndexIgnore, app) {
+    return `Remove Application    ${app}`;
+  }
+
+  codeFor_queryAppState() {
+    return `# Not supported: queryAppState`;
+  }
+
+  // File Transfer
+
+  codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
+    return `Push File    ${pathToInstallTo}    ${fileContentString}`;
+  }
+
+  codeFor_pullFile(varNameIgnore, varIndexIgnore, pathToPullFrom) {
+    return `$\{file_base64} =    Pull File    ${pathToPullFrom}`;
+  }
+
+  codeFor_pullFolder(varNameIgnore, varIndexIgnore, folderToPullFrom) {
+    return `$\{folder_base64} =    Pull Folder    ${folderToPullFrom}`;
   }
 
   // Web
@@ -292,17 +250,27 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
     return '# Not supported: refresh';
   }
 
-  // Context
-
-  codeFor_getContext() {
-    return '${context} =    Get Current Context';
+  codeFor_getTitle() {
+    return '${title} =    Get Window Title';
   }
 
-  codeFor_getContexts() {
-    return '${contexts} =    Get Contexts';
+  codeFor_getWindowHandle() {
+    return '# Not supported: getWindowHandle';
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
-    return `Switch To Context    ${name}`;
+  codeFor_closeWindow() {
+    return `# Not supported: closeWindow`;
+  }
+
+  codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
+    return `Switch To Window    ${handle}`;
+  }
+
+  codeFor_getWindowHandles() {
+    return '${window_handles} =    Get Windows';
+  }
+
+  codeFor_createWindow() {
+    return '# Not supported: createWindow';
   }
 }

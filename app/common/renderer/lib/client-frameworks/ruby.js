@@ -104,7 +104,7 @@ driver.quit`;
 `;
   }
 
-  // Execute Script
+  // Top-Level Commands
 
   codeFor_executeScriptNoArgs(scriptCmd) {
     return `driver.execute_script '${scriptCmd}'`;
@@ -114,15 +114,89 @@ driver.quit`;
     return `driver.execute_script '${scriptCmd}', ${this.getRubyVal(jsonArg[0])}`;
   }
 
+  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
+    return `driver.update_settings ${this.getRubyVal(settingsJson)}`;
+  }
+
+  codeFor_getSettings() {
+    return `settings = driver.settings.get`;
+  }
+
+  // Session
+
+  codeFor_status() {
+    return `status = driver.status`;
+  }
+
+  codeFor_getSession() {
+    return `session_capabilities = driver.session_capabilities`;
+  }
+
+  codeFor_getTimeouts() {
+    return `timeouts = driver.get_timeouts`;
+  }
+
+  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
+    return '# TODO implement setTimeouts';
+  }
+
+  codeFor_getLogTypes() {
+    return `log_types = driver.logs.available_types`;
+  }
+
+  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
+    return `logs = driver.logs.get :${_.lowerCase(logType)}`;
+  }
+
+  // Context
+
+  codeFor_getContext() {
+    return `context = driver.current_context`;
+  }
+
+  codeFor_getContexts() {
+    return `contexts = driver.available_contexts`;
+  }
+
+  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+    return `driver.context = '${name}'`;
+  }
+
+  // Device Interaction
+
+  codeFor_getWindowRect() {
+    return `window_rect = driver.get_window_rect`;
+  }
+
+  codeFor_takeScreenshot() {
+    return `screenshot = driver.take_screenshot`;
+  }
+
+  codeFor_isKeyboardShown() {
+    return `is_keyboard_shown = ${this.codeFor_executeScriptNoArgs('mobile: isKeyboardShown')}`;
+  }
+
+  codeFor_getOrientation() {
+    return `orientation = driver.orientation`;
+  }
+
+  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
+    return `driver.rotation = :${_.lowerCase(orientation)}`;
+  }
+
+  codeFor_getGeoLocation() {
+    return `location = driver.location`;
+  }
+
+  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
+    return `driver.set_location ${latitude}, ${longitude}, ${altitude}`;
+  }
+
+  codeFor_rotateDevice() {
+    return `# Not supported: rotateDevice`;
+  }
+
   // App Management
-
-  codeFor_getCurrentActivity() {
-    return `activity_name = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentActivity')}`;
-  }
-
-  codeFor_getCurrentPackage() {
-    return `package_name = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
-  }
 
   codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
     return `driver.install_app '${app}'`;
@@ -144,24 +218,8 @@ driver.quit`;
     return `driver.remove_app '${app}'`;
   }
 
-  codeFor_getStrings(varNameIgnore, varIndexIgnore, language) {
-    if (language === undefined) {
-      return `app_strings = ${this.codeFor_executeScriptNoArgs('mobile: getAppStrings')}`;
-    } else {
-      return `app_strings = ${this.codeFor_executeScriptWithArgs('mobile: getAppStrings', [
-        {language},
-      ])}`;
-    }
-  }
-
-  // Clipboard
-
-  codeFor_getClipboard() {
-    return `clipboard_text = driver.get_clipboard`;
-  }
-
-  codeFor_setClipboard(varNameIgnore, varIndexIgnore, clipboardText) {
-    return `driver.set_clipboard content: '${clipboardText}'`;
+  codeFor_queryAppState(varNameIgnore, varIndexIgnore, app) {
+    return `app_state = driver.query_app_state '${app}'`;
   }
 
   // File Transfer
@@ -176,102 +234,6 @@ driver.quit`;
 
   codeFor_pullFolder(varNameIgnore, varIndexIgnore, folderToPullFrom) {
     return `driver.pull_folder '${folderToPullFrom}'`;
-  }
-
-  // Device Interaction
-
-  codeFor_isLocked() {
-    return `is_locked = ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
-  }
-
-  codeFor_rotateDevice() {
-    return `# Not supported: rotateDevice`;
-  }
-
-  codeFor_touchId(varNameIgnore, varIndexIgnore, match) {
-    return `driver.touch_id ${match}`;
-  }
-
-  codeFor_toggleEnrollTouchId(varNameIgnore, varIndexIgnore, enroll) {
-    return `driver.toggle_touch_id_enrollment ${enroll}`;
-  }
-
-  // Keyboard
-
-  codeFor_isKeyboardShown() {
-    return `is_keyboard_shown = ${this.codeFor_executeScriptNoArgs('mobile: isKeyboardShown')}`;
-  }
-
-  // Connectivity
-
-  codeFor_toggleAirplaneMode() {
-    return `driver.toggle_airplane_mode`;
-  }
-
-  codeFor_toggleData() {
-    return `driver.toggle_data`;
-  }
-
-  codeFor_toggleWiFi() {
-    return `driver.toggle_wifi`;
-  }
-
-  codeFor_sendSMS(varNameIgnore, varIndexIgnore, phoneNumber, text) {
-    return `driver.send_sms phone_number: '${phoneNumber}', message: '${text}'`;
-  }
-
-  codeFor_gsmCall(varNameIgnore, varIndexIgnore, phoneNumber, action) {
-    return `driver.gsm_call phone_number: '${phoneNumber}', action: :${action}`;
-  }
-
-  codeFor_gsmSignal(varNameIgnore, varIndexIgnore, signalStrength) {
-    return `driver.gsm_signal :${signalStrength}`;
-  }
-
-  codeFor_gsmVoice(varNameIgnore, varIndexIgnore, state) {
-    return `driver.gsm_voice :${state}`;
-  }
-
-  // Session
-
-  codeFor_getSession() {
-    return `session_capabilities = driver.session_capabilities`;
-  }
-
-  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
-    return '# TODO implement setTimeouts';
-  }
-
-  codeFor_getOrientation() {
-    return `orientation = driver.orientation`;
-  }
-
-  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
-    return `driver.rotation = :${_.lowerCase(orientation)}`;
-  }
-
-  codeFor_getGeoLocation() {
-    return `location = driver.location`;
-  }
-
-  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
-    return `driver.set_location ${latitude}, ${longitude}, ${altitude}`;
-  }
-
-  codeFor_getLogTypes() {
-    return `log_types = driver.logs.available_types`;
-  }
-
-  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
-    return `logs = driver.logs.get :${_.lowerCase(logType)}`;
-  }
-
-  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
-    return `driver.update_settings ${this.getRubyVal(settingsJson)}`;
-  }
-
-  codeFor_getSettings() {
-    return `settings = driver.settings.get`;
   }
 
   // Web
@@ -289,24 +251,34 @@ driver.quit`;
   }
 
   codeFor_forward() {
-    return `driver.navigate.forward`;
+    return `driver.forward`;
   }
 
   codeFor_refresh() {
-    return `driver.navigate.refresh`;
+    return `driver.refresh`;
   }
 
-  // Context
-
-  codeFor_getContext() {
-    return `context = driver.current_context`;
+  codeFor_getTitle() {
+    return `title = driver.get_title`;
   }
 
-  codeFor_getContexts() {
-    return `contexts = driver.available_contexts`;
+  codeFor_getWindowHandle() {
+    return `window_handle = driver.get_window_handle`;
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
-    return `driver.context = '${name}'`;
+  codeFor_closeWindow() {
+    return `driver.close_window`;
+  }
+
+  codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
+    return `driver.switch_to_window '${handle}'`;
+  }
+
+  codeFor_getWindowHandles() {
+    return `window_handles = driver.get_window_handles`;
+  }
+
+  codeFor_createWindow(varNameIgnore, varIndexIgnore, type) {
+    return `new_window = driver.new_window '${type}'`;
   }
 }

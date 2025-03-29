@@ -271,7 +271,6 @@ export function applyClientMethod(params) {
       params.methodName !== 'quit' &&
       params.methodName !== 'getPageSource' &&
       params.methodName !== 'gesture' &&
-      params.methodName !== 'status' &&
       getState().inspector.isRecording;
     try {
       dispatch({type: METHOD_CALL_REQUESTED});

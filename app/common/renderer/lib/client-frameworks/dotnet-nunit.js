@@ -162,7 +162,7 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
 `;
   }
 
-  // Execute Script
+  // Top-Level Commands
 
   codeFor_executeScriptNoArgs(scriptCmd) {
     return `_driver.ExecuteScript(${JSON.stringify(scriptCmd)});`;
@@ -173,15 +173,104 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
     return `_driver.ExecuteScript(${JSON.stringify(scriptCmd)}, ${this.getCSharpVal(jsonArg[0])});`;
   }
 
+  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
+    try {
+      const settings = _.toPairs(settingsJson).map(
+        ([settingName, settingValue]) =>
+          `_driver.SetSetting("${settingName}", ${this.getCSharpVal(settingValue)});`,
+      );
+      return settings.join('\n');
+    } catch {
+      return `// Could not parse: ${JSON.stringify(settingsJson)}`;
+    }
+  }
+
+  codeFor_getSettings() {
+    return `let settings = _driver.Settings();`;
+  }
+
+  // Session
+
+  codeFor_status() {
+    return `let status = _driver.Status;`;
+  }
+
+  codeFor_getSession() {
+    return `let sessionDetails = _driver.SessionDetails;`;
+  }
+
+  codeFor_getTimeouts() {
+    return `
+let timeouts = new Dictionary<string, TimeSpan>()
+{
+    { "script", _driver.Manage().Timeouts().AsynchronousJavaScript },
+    { "pageLoad", _driver.Manage().Timeouts().PageLoad },
+    { "implicit", _driver.Manage().Timeouts().ImplicitWait }
+};
+`;
+  }
+
+  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
+    return '/* TODO implement setTimeouts */';
+  }
+
+  codeFor_getLogTypes() {
+    return `let logTypes = _driver.Manage().Logs.AvailableLogTypes;`;
+  }
+
+  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
+    return `let logs = _driver.Manage().Logs.GetLog("${logType}");`;
+  }
+
+  // Context
+
+  codeFor_getContext() {
+    return `var context = _driver.Context;`;
+  }
+
+  codeFor_getContexts() {
+    return `var contexts = _driver.Contexts;`;
+  }
+
+  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+    return `_driver.Context = "${name}";`;
+  }
+
+  // Device Interaction
+
+  codeFor_getWindowRect() {
+    return `let windowRect = _driver.GetWindowRect;`;
+  }
+
+  codeFor_takeScreenshot() {
+    return `let screenshotBase64 = _driver.GetScreenshot().AsBase64EncodedString;`;
+  }
+
+  codeFor_isKeyboardShown() {
+    return `let isKeyboardShown = _driver.IsKeyboardShown();`;
+  }
+
+  codeFor_getOrientation() {
+    return `let orientation = _driver.Orientation;`;
+  }
+
+  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
+    return `_driver.Orientation = "${orientation}";`;
+  }
+
+  codeFor_getGeoLocation() {
+    return `let location = _driver.Location;`;
+  }
+
+  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
+    return `_driver.Location = new Location { Latitude = ${latitude}, Longitude = ${longitude}, Altitude = ${altitude} };`;
+  }
+
+  codeFor_rotateDevice() {
+    return `// Not supported: rotateDevice`;
+  }
+
   // App Management
-
-  codeFor_getCurrentActivity() {
-    return `var activityName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentActivity')}`;
-  }
-
-  codeFor_getCurrentPackage() {
-    return `var packageName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
-  }
 
   codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
     return `_driver.InstallApp("${app}");`;
@@ -203,20 +292,8 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
     return `_driver.RemoveApp("${app}")`;
   }
 
-  codeFor_getStrings(varNameIgnore, varIndexIgnore, language, stringFile) {
-    return `var appStrings = _driver.GetAppStringDictionary(${language ? `"${language}", ` : ''}${
-      stringFile ? `"${stringFile}"` : ''
-    });`;
-  }
-
-  // Clipboard
-
-  codeFor_getClipboard() {
-    return `var clipboardText = _driver.GetClipboardText();`;
-  }
-
-  codeFor_setClipboard(varNameIgnore, varIndexIgnore, clipboardText) {
-    return `_driver.SetClipboardText("${clipboardText}");`;
+  codeFor_queryAppState(varNameIgnore, varIndexIgnore, app) {
+    return `var appState = _driver.GetAppState("${app}");`;
   }
 
   // File Transfer
@@ -231,110 +308,6 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
 
   codeFor_pullFolder(varNameIgnore, varIndexIgnore, folderToPullFrom) {
     return `var folderBase64 = _driver.PullFolder("${folderToPullFrom}");`;
-  }
-
-  // Device Interaction
-
-  codeFor_isLocked() {
-    return `let isLocked = ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
-  }
-
-  codeFor_rotateDevice() {
-    return `// Not supported: rotateDevice`;
-  }
-
-  codeFor_touchId(varNameIgnore, varIndexIgnore, match) {
-    return `_driver.PerformTouchID(${match});`;
-  }
-
-  codeFor_toggleEnrollTouchId() {
-    return `// Not supported: toggleEnrollTouchId`;
-  }
-
-  // Keyboard
-
-  codeFor_isKeyboardShown() {
-    return `let isKeyboardShown = _driver.IsKeyboardShown();`;
-  }
-
-  // Connectivity
-
-  codeFor_toggleAirplaneMode() {
-    return `_driver.ToggleAirplaneMode();`;
-  }
-
-  codeFor_toggleData() {
-    return `_driver.ToggleData();`;
-  }
-
-  codeFor_toggleWiFi() {
-    return `_driver.ToggleWiFi();`;
-  }
-
-  codeFor_sendSMS(varNameIgnore, varIndexIgnore, phoneNumber, text) {
-    return `_driver.SendSms("${phoneNumber}", "${text}");`;
-  }
-
-  codeFor_gsmCall(varNameIgnore, varIndexIgnore, phoneNumber, action) {
-    return `_driver.MakeGsmCall("${phoneNumber}", "${action}");`;
-  }
-
-  codeFor_gsmSignal(varNameIgnore, varIndexIgnore, signalStrength) {
-    return `_driver.SetGsmSignalStrength("${signalStrength}");`;
-  }
-
-  codeFor_gsmVoice(varNameIgnore, varIndexIgnore, state) {
-    return `_driver.SetGsmVoice("${state}");`;
-  }
-
-  // Session
-
-  codeFor_getSession() {
-    return `let sessionDetails = _driver.SessionDetails;`;
-  }
-
-  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
-    return '/* TODO implement setTimeouts */';
-  }
-
-  codeFor_getOrientation() {
-    return `let orientation = _driver.Orientation;`;
-  }
-
-  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
-    return `_driver.Orientation = "${orientation}";`;
-  }
-
-  codeFor_getGeoLocation() {
-    return `let location = _driver.Location;`;
-  }
-
-  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
-    return `_driver.Location = new Location { Latitude = ${latitude}, Longitude = ${longitude}, Altitude = ${altitude} };`;
-  }
-
-  codeFor_getLogTypes() {
-    return `let logTypes = _driver.Manage().Logs.AvailableLogTypes;`;
-  }
-
-  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
-    return `let logs = _driver.Manage().Logs.GetLog("${logType}");`;
-  }
-
-  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
-    try {
-      let settings = [];
-      for (let [settingName, settingValue] of _.toPairs(settingsJson)) {
-        settings.push(`_driver.SetSetting("${settingName}", ${this.getCSharpVal(settingValue)});`);
-      }
-      return settings.join('\n');
-    } catch {
-      return `// Could not parse: ${settingsJson}`;
-    }
-  }
-
-  codeFor_getSettings() {
-    return `let settings = _driver.Settings();`;
   }
 
   // Web
@@ -359,17 +332,27 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
     return `_driver.Navigate().Refresh();`;
   }
 
-  // Context
-
-  codeFor_getContext() {
-    return `var context = _driver.Context;`;
+  codeFor_getTitle() {
+    return `var title = _driver.Title;`;
   }
 
-  codeFor_getContexts() {
-    return `var contexts = _driver.Contexts;`;
+  codeFor_getWindowHandle() {
+    return `var windowHandle = _driver.CurrentWindowHandle;`;
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
-    return `_driver.Context = "${name}";`;
+  codeFor_closeWindow() {
+    return `_driver.Close();`;
+  }
+
+  codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
+    return `_driver.SwitchTo().Window("${handle}");`;
+  }
+
+  codeFor_getWindowHandles() {
+    return `var windowHandles = _driver.WindowHandles;`;
+  }
+
+  codeFor_createWindow() {
+    return `// Not supported: createWindow`;
   }
 }
