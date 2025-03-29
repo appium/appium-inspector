@@ -158,6 +158,10 @@ main().catch(console.log);`;
 
   // Session
 
+  codeFor_status() {
+    return `let status = await driver.status();`;
+  }
+
   codeFor_getSession() {
     return `let sessionDetails = await driver.getSession();`;
   }

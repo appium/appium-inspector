@@ -202,6 +202,10 @@ driver.perform(Arrays.asList(swipe));
 
   // Session
 
+  codeFor_status() {
+    return `var status = driver.getStatus();`;
+  }
+
   codeFor_getSession() {
     return `var caps = driver.getSessionDetails();`;
   }

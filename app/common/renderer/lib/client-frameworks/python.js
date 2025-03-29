@@ -179,6 +179,10 @@ actions.perform()
 
   // Session
 
+  codeFor_status() {
+    return `status = driver.get_status()`;
+  }
+
   codeFor_getSession() {
     return `desired_caps = driver.desired_capabilities()`;
   }

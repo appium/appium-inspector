@@ -75,6 +75,7 @@ export const COMMAND_DEFINITIONS = {
     getDeviceTime: {},
   },
   Session: {
+    status: {},
     getSession: {},
     setTimeouts: {
       args: [

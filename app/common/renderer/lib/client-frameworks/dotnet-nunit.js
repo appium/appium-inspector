@@ -223,6 +223,10 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
 
   // Session
 
+  codeFor_status() {
+    return `// Not supported: status`;
+  }
+
   codeFor_getSession() {
     return `let sessionDetails = _driver.SessionDetails;`;
   }

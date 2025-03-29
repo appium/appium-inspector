@@ -151,6 +151,10 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
 
   // Session
 
+  codeFor_status() {
+    return '# Not supported: status';
+  }
+
   codeFor_getSession() {
     return '# Not supported: getSession';
   }

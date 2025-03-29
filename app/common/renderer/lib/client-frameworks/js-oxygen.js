@@ -149,6 +149,10 @@ ${code}`;
 
   // Session
 
+  codeFor_status() {
+    return `let status = ${this.type}.getDriver().status();`;
+  }
+
   codeFor_getSession() {
     return `let caps = ${this.type}.getDriver().getSession();`;
   }

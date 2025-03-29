@@ -164,6 +164,10 @@ driver.quit`;
 
   // Session
 
+  codeFor_status() {
+    return `status = driver.status`;
+  }
+
   codeFor_getSession() {
     return `session_capabilities = driver.session_capabilities`;
   }
