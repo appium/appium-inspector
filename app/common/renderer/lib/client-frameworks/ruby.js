@@ -162,6 +162,12 @@ driver.quit`;
     return `is_keyboard_shown = ${this.codeFor_executeScriptNoArgs('mobile: isKeyboardShown')}`;
   }
 
+  // System
+
+  codeFor_takeScreenshot() {
+    return `screenshot = driver.take_screenshot`;
+  }
+
   // Session
 
   codeFor_status() {

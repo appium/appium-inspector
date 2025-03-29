@@ -15,6 +15,7 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Base64;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

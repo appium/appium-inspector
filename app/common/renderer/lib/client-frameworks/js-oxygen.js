@@ -147,6 +147,12 @@ ${code}`;
     return `let isKeyboardShown = ${this.type}.getDriver().isKeyboardShown();`;
   }
 
+  // System
+
+  codeFor_takeScreenshot() {
+    return `let screenshot = ${this.type}.takeScreenshot();`;
+  }
+
   // Session
 
   codeFor_status() {

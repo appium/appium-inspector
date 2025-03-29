@@ -221,6 +221,12 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
     return `let isKeyboardShown = _driver.IsKeyboardShown();`;
   }
 
+  // System
+
+  codeFor_takeScreenshot() {
+    return `// Not supported: takeScreenshot`;
+  }
+
   // Session
 
   codeFor_status() {

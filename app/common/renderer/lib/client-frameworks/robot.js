@@ -149,6 +149,12 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
     )}`;
   }
 
+  // System
+
+  codeFor_takeScreenshot() {
+    return `Capture Page Screenshot`;
+  }
+
   // Session
 
   codeFor_status() {

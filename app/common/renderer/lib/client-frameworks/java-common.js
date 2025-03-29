@@ -200,6 +200,12 @@ driver.perform(Arrays.asList(swipe));
     return `var isKeyboardShown = driver.isKeyboardShown();`;
   }
 
+  // System
+
+  codeFor_takeScreenshot() {
+    return `byte[] screenshot = Base64.getEncoder().encode(driver.getScreenshotAs(OutputType.BYTES));`;
+  }
+
   // Session
 
   codeFor_status() {

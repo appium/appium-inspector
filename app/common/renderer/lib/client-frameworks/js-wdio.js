@@ -156,6 +156,12 @@ main().catch(console.log);`;
     return `let isKeyboardShown = await driver.isKeyboardShown();`;
   }
 
+  // System
+
+  codeFor_takeScreenshot() {
+    return `let screenshot = await driver.takeScreenshot();`;
+  }
+
   // Session
 
   codeFor_status() {

@@ -73,6 +73,7 @@ export const COMMAND_DEFINITIONS = {
   },
   System: {
     getDeviceTime: {},
+    takeScreenshot: {},
   },
   Session: {
     status: {},

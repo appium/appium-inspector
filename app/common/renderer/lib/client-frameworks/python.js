@@ -177,6 +177,12 @@ actions.perform()
     return `is_keyboard_shown = driver.is_keyboard_shown()`;
   }
 
+  // System
+
+  codeFor_takeScreenshot() {
+    return `# Not supported: takeScreenshot`;
+  }
+
   // Session
 
   codeFor_status() {
