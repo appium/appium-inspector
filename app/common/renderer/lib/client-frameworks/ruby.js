@@ -104,7 +104,7 @@ driver.quit`;
 `;
   }
 
-  // Execute Script
+  // Top-Level Commands
 
   codeFor_executeScriptNoArgs(scriptCmd) {
     return `driver.execute_script '${scriptCmd}'`;
@@ -112,6 +112,88 @@ driver.quit`;
 
   codeFor_executeScriptWithArgs(scriptCmd, jsonArg) {
     return `driver.execute_script '${scriptCmd}', ${this.getRubyVal(jsonArg[0])}`;
+  }
+
+  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
+    return `driver.update_settings ${this.getRubyVal(settingsJson)}`;
+  }
+
+  codeFor_getSettings() {
+    return `settings = driver.settings.get`;
+  }
+
+  // Session
+
+  codeFor_status() {
+    return `status = driver.status`;
+  }
+
+  codeFor_getSession() {
+    return `session_capabilities = driver.session_capabilities`;
+  }
+
+  codeFor_getTimeouts() {
+    return `timeouts = driver.get_timeouts`;
+  }
+
+  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
+    return '# TODO implement setTimeouts';
+  }
+
+  codeFor_getLogTypes() {
+    return `log_types = driver.logs.available_types`;
+  }
+
+  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
+    return `logs = driver.logs.get :${_.lowerCase(logType)}`;
+  }
+
+  // Context
+
+  codeFor_getContext() {
+    return `context = driver.current_context`;
+  }
+
+  codeFor_getContexts() {
+    return `contexts = driver.available_contexts`;
+  }
+
+  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+    return `driver.context = '${name}'`;
+  }
+
+  // Device Interaction
+
+  codeFor_getWindowRect() {
+    return `window_rect = driver.get_window_rect`;
+  }
+
+  codeFor_takeScreenshot() {
+    return `screenshot = driver.take_screenshot`;
+  }
+
+  codeFor_isKeyboardShown() {
+    return `is_keyboard_shown = ${this.codeFor_executeScriptNoArgs('mobile: isKeyboardShown')}`;
+  }
+
+  codeFor_getOrientation() {
+    return `orientation = driver.orientation`;
+  }
+
+  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
+    return `driver.rotation = :${_.lowerCase(orientation)}`;
+  }
+
+  codeFor_getGeoLocation() {
+    return `location = driver.location`;
+  }
+
+  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
+    return `driver.set_location ${latitude}, ${longitude}, ${altitude}`;
+  }
+
+  codeFor_rotateDevice() {
+    return `# Not supported: rotateDevice`;
   }
 
   // App Management
@@ -154,78 +236,6 @@ driver.quit`;
     return `driver.pull_folder '${folderToPullFrom}'`;
   }
 
-  // Device Interaction
-
-  codeFor_rotateDevice() {
-    return `# Not supported: rotateDevice`;
-  }
-
-  // Keyboard
-
-  codeFor_isKeyboardShown() {
-    return `is_keyboard_shown = ${this.codeFor_executeScriptNoArgs('mobile: isKeyboardShown')}`;
-  }
-
-  // System
-
-  codeFor_getWindowRect() {
-    return `window_rect = driver.get_window_rect`;
-  }
-
-  codeFor_takeScreenshot() {
-    return `screenshot = driver.take_screenshot`;
-  }
-
-  // Session
-
-  codeFor_status() {
-    return `status = driver.status`;
-  }
-
-  codeFor_getSession() {
-    return `session_capabilities = driver.session_capabilities`;
-  }
-
-  codeFor_getTimeouts() {
-    return `timeouts = driver.get_timeouts`;
-  }
-
-  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
-    return '# TODO implement setTimeouts';
-  }
-
-  codeFor_getOrientation() {
-    return `orientation = driver.orientation`;
-  }
-
-  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
-    return `driver.rotation = :${_.lowerCase(orientation)}`;
-  }
-
-  codeFor_getGeoLocation() {
-    return `location = driver.location`;
-  }
-
-  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
-    return `driver.set_location ${latitude}, ${longitude}, ${altitude}`;
-  }
-
-  codeFor_getLogTypes() {
-    return `log_types = driver.logs.available_types`;
-  }
-
-  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
-    return `logs = driver.logs.get :${_.lowerCase(logType)}`;
-  }
-
-  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
-    return `driver.update_settings ${this.getRubyVal(settingsJson)}`;
-  }
-
-  codeFor_getSettings() {
-    return `settings = driver.settings.get`;
-  }
-
   // Web
 
   codeFor_navigateTo(varNameIgnore, varIndexIgnore, url) {
@@ -250,19 +260,5 @@ driver.quit`;
 
   codeFor_getTitle() {
     return `title = driver.get_title`;
-  }
-
-  // Context
-
-  codeFor_getContext() {
-    return `context = driver.current_context`;
-  }
-
-  codeFor_getContexts() {
-    return `contexts = driver.available_contexts`;
-  }
-
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
-    return `driver.context = '${name}'`;
   }
 }

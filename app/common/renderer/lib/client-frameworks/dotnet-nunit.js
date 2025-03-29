@@ -162,7 +162,7 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
 `;
   }
 
-  // Execute Script
+  // Top-Level Commands
 
   codeFor_executeScriptNoArgs(scriptCmd) {
     return `_driver.ExecuteScript(${JSON.stringify(scriptCmd)});`;
@@ -171,6 +171,103 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
   codeFor_executeScriptWithArgs(scriptCmd, jsonArg) {
     // C# Dictionary accepts a sequence of tuples
     return `_driver.ExecuteScript(${JSON.stringify(scriptCmd)}, ${this.getCSharpVal(jsonArg[0])});`;
+  }
+
+  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
+    try {
+      let settings = [];
+      for (let [settingName, settingValue] of _.toPairs(settingsJson)) {
+        settings.push(`_driver.SetSetting("${settingName}", ${this.getCSharpVal(settingValue)});`);
+      }
+      return settings.join('\n');
+    } catch {
+      return `// Could not parse: ${settingsJson}`;
+    }
+  }
+
+  codeFor_getSettings() {
+    return `let settings = _driver.Settings();`;
+  }
+
+  // Session
+
+  codeFor_status() {
+    return `let status = _driver.Status;`;
+  }
+
+  codeFor_getSession() {
+    return `let sessionDetails = _driver.SessionDetails;`;
+  }
+
+  codeFor_getTimeouts() {
+    return `
+let timeouts = new Dictionary<string, TimeSpan>()
+{
+    { "script", _driver.Manage().Timeouts().AsynchronousJavaScript },
+    { "pageLoad", _driver.Manage().Timeouts().PageLoad },
+    { "implicit", _driver.Manage().Timeouts().ImplicitWait }
+};
+`;
+  }
+
+  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
+    return '/* TODO implement setTimeouts */';
+  }
+
+  codeFor_getLogTypes() {
+    return `let logTypes = _driver.Manage().Logs.AvailableLogTypes;`;
+  }
+
+  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
+    return `let logs = _driver.Manage().Logs.GetLog("${logType}");`;
+  }
+
+  // Context
+
+  codeFor_getContext() {
+    return `var context = _driver.Context;`;
+  }
+
+  codeFor_getContexts() {
+    return `var contexts = _driver.Contexts;`;
+  }
+
+  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+    return `_driver.Context = "${name}";`;
+  }
+
+  // Device Interaction
+
+  codeFor_getWindowRect() {
+    return `let windowRect = _driver.GetWindowRect;`;
+  }
+
+  codeFor_takeScreenshot() {
+    return `let screenshotBase64 = _driver.GetScreenshot().AsBase64EncodedString;`;
+  }
+
+  codeFor_isKeyboardShown() {
+    return `let isKeyboardShown = _driver.IsKeyboardShown();`;
+  }
+
+  codeFor_getOrientation() {
+    return `let orientation = _driver.Orientation;`;
+  }
+
+  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
+    return `_driver.Orientation = "${orientation}";`;
+  }
+
+  codeFor_getGeoLocation() {
+    return `let location = _driver.Location;`;
+  }
+
+  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
+    return `_driver.Location = new Location { Latitude = ${latitude}, Longitude = ${longitude}, Altitude = ${altitude} };`;
+  }
+
+  codeFor_rotateDevice() {
+    return `// Not supported: rotateDevice`;
   }
 
   // App Management
@@ -213,93 +310,6 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
     return `var folderBase64 = _driver.PullFolder("${folderToPullFrom}");`;
   }
 
-  // Device Interaction
-
-  codeFor_rotateDevice() {
-    return `// Not supported: rotateDevice`;
-  }
-
-  // Keyboard
-
-  codeFor_isKeyboardShown() {
-    return `let isKeyboardShown = _driver.IsKeyboardShown();`;
-  }
-
-  // System
-
-  codeFor_getWindowRect() {
-    return `let windowRect = _driver.GetWindowRect;`;
-  }
-
-  codeFor_takeScreenshot() {
-    return `let screenshotBase64 = _driver.GetScreenshot().AsBase64EncodedString;`;
-  }
-
-  // Session
-
-  codeFor_status() {
-    return `let status = _driver.Status;`;
-  }
-
-  codeFor_getSession() {
-    return `let sessionDetails = _driver.SessionDetails;`;
-  }
-
-  codeFor_getTimeouts() {
-    return `
-let timeouts = new Dictionary<string, TimeSpan>()
-{
-    { "script", _driver.Manage().Timeouts().AsynchronousJavaScript },
-    { "pageLoad", _driver.Manage().Timeouts().PageLoad },
-    { "implicit", _driver.Manage().Timeouts().ImplicitWait }
-};
-`;
-  }
-
-  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
-    return '/* TODO implement setTimeouts */';
-  }
-
-  codeFor_getOrientation() {
-    return `let orientation = _driver.Orientation;`;
-  }
-
-  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
-    return `_driver.Orientation = "${orientation}";`;
-  }
-
-  codeFor_getGeoLocation() {
-    return `let location = _driver.Location;`;
-  }
-
-  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
-    return `_driver.Location = new Location { Latitude = ${latitude}, Longitude = ${longitude}, Altitude = ${altitude} };`;
-  }
-
-  codeFor_getLogTypes() {
-    return `let logTypes = _driver.Manage().Logs.AvailableLogTypes;`;
-  }
-
-  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
-    return `let logs = _driver.Manage().Logs.GetLog("${logType}");`;
-  }
-
-  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
-    try {
-      let settings = [];
-      for (let [settingName, settingValue] of _.toPairs(settingsJson)) {
-        settings.push(`_driver.SetSetting("${settingName}", ${this.getCSharpVal(settingValue)});`);
-      }
-      return settings.join('\n');
-    } catch {
-      return `// Could not parse: ${settingsJson}`;
-    }
-  }
-
-  codeFor_getSettings() {
-    return `let settings = _driver.Settings();`;
-  }
-
   // Web
 
   codeFor_navigateTo(varNameIgnore, varIndexIgnore, url) {
@@ -324,19 +334,5 @@ let timeouts = new Dictionary<string, TimeSpan>()
 
   codeFor_getTitle() {
     return `var title = _driver.Title;`;
-  }
-
-  // Context
-
-  codeFor_getContext() {
-    return `var context = _driver.Context;`;
-  }
-
-  codeFor_getContexts() {
-    return `var contexts = _driver.Contexts;`;
-  }
-
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
-    return `_driver.Context = "${name}";`;
   }
 }

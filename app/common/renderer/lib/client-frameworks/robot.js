@@ -85,7 +85,7 @@ Tap With Positions    $\{100}    $\{positions}`;
     return `Swipe    $\{${x1}}    $\{${y1}}    $\{${x2}}    $\{${y2}}`;
   }
 
-  // Execute Script
+  // Top-Level Commands
 
   codeFor_executeScriptNoArgs(scriptCmd) {
     return `Execute Script    ${scriptCmd}`;
@@ -97,6 +97,95 @@ Tap With Positions    $\{100}    $\{positions}`;
     const argsValuesStrings = _.map(cleanedJson, (v, k) => `${k}=${this.getRobotVal(v)}`);
     return `&{scriptArgument}    Create Dictionary    ${argsValuesStrings.join('    ')}
 ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
+  }
+
+  codeFor_updateSettings() {
+    return '# Not supported: updateSettings';
+  }
+
+  codeFor_getSettings() {
+    return '# Not supported: getSettings';
+  }
+
+  // Session
+
+  codeFor_status() {
+    return '# Not supported: status';
+  }
+
+  codeFor_getSession() {
+    return '# Not supported: getSession';
+  }
+
+  codeFor_getTimeouts() {
+    return '# Not supported: getTimeouts';
+  }
+
+  codeFor_setTimeouts() {
+    // There is 'Set Appium Timeout' which may be different
+    return '# Not supported: setTimeouts';
+  }
+
+  codeFor_getLogTypes() {
+    return '# Not supported: getLogTypes';
+  }
+
+  codeFor_getLogs() {
+    return '# Not supported: getLogs';
+  }
+
+  // Context
+
+  codeFor_getContext() {
+    return '${context} =    Get Current Context';
+  }
+
+  codeFor_getContexts() {
+    return '${contexts} =    Get Contexts';
+  }
+
+  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+    return `Switch To Context    ${name}`;
+  }
+
+  // Device Interaction
+
+  codeFor_getWindowRect() {
+    return `# Not supported: getWindowRect`;
+  }
+
+  codeFor_takeScreenshot() {
+    return `Capture Page Screenshot`;
+  }
+
+  codeFor_isKeyboardShown() {
+    return `$\{is_keyboard_shown} =    ${this.codeFor_executeScriptNoArgs(
+      'mobile: isKeyboardShown',
+    )}`;
+  }
+
+  codeFor_getOrientation() {
+    return '# Not supported: getOrientation';
+  }
+
+  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
+    if (orientation === 'LANDSCAPE') {
+      return 'Landscape';
+    } else if (orientation === 'PORTRAIT') {
+      return 'Portrait';
+    }
+  }
+
+  codeFor_getGeoLocation() {
+    return '# Not supported: getGeoLocation';
+  }
+
+  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
+    return `Set Location    $\{${latitude}}    $\{${longitude}}    $\{${altitude}}`;
+  }
+
+  codeFor_rotateDevice() {
+    return '# Not supported: rotateDevice';
   }
 
   // App Management
@@ -139,85 +228,6 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
     return `$\{folder_base64} =    Pull Folder    ${folderToPullFrom}`;
   }
 
-  // Device Interaction
-
-  codeFor_rotateDevice() {
-    return '# Not supported: rotateDevice';
-  }
-
-  // Keyboard
-
-  codeFor_isKeyboardShown() {
-    return `$\{is_keyboard_shown} =    ${this.codeFor_executeScriptNoArgs(
-      'mobile: isKeyboardShown',
-    )}`;
-  }
-
-  // System
-
-  codeFor_getWindowRect() {
-    return `# Not supported: getWindowRect`;
-  }
-
-  codeFor_takeScreenshot() {
-    return `Capture Page Screenshot`;
-  }
-
-  // Session
-
-  codeFor_status() {
-    return '# Not supported: status';
-  }
-
-  codeFor_getSession() {
-    return '# Not supported: getSession';
-  }
-
-  codeFor_getTimeouts() {
-    return '# Not supported: getTimeouts';
-  }
-
-  codeFor_setTimeouts() {
-    // There is 'Set Appium Timeout' which may be different
-    return '# Not supported: setTimeouts';
-  }
-
-  codeFor_getOrientation() {
-    return '# Not supported: getOrientation';
-  }
-
-  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
-    if (orientation === 'LANDSCAPE') {
-      return 'Landscape';
-    } else if (orientation === 'PORTRAIT') {
-      return 'Portrait';
-    }
-  }
-
-  codeFor_getGeoLocation() {
-    return '# Not supported: getGeoLocation';
-  }
-
-  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
-    return `Set Location    $\{${latitude}}    $\{${longitude}}    $\{${altitude}}`;
-  }
-
-  codeFor_getLogTypes() {
-    return '# Not supported: getLogTypes';
-  }
-
-  codeFor_getLogs() {
-    return '# Not supported: getLogs';
-  }
-
-  codeFor_updateSettings() {
-    return '# Not supported: updateSettings';
-  }
-
-  codeFor_getSettings() {
-    return '# Not supported: getSettings';
-  }
-
   // Web
 
   codeFor_navigateTo(varNameIgnore, varIndexIgnore, url) {
@@ -242,19 +252,5 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
 
   codeFor_getTitle() {
     return '${title} =    Get Window Title';
-  }
-
-  // Context
-
-  codeFor_getContext() {
-    return '${context} =    Get Current Context';
-  }
-
-  codeFor_getContexts() {
-    return '${contexts} =    Get Contexts';
-  }
-
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
-    return `Switch To Context    ${name}`;
   }
 }

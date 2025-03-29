@@ -89,7 +89,7 @@ main().catch(console.log);`;
 `;
   }
 
-  // Execute Script
+  // Top-Level Commands
 
   codeFor_executeScriptNoArgs(scriptCmd) {
     return `await driver.executeScript(${JSON.stringify(scriptCmd)});`;
@@ -97,6 +97,97 @@ main().catch(console.log);`;
 
   codeFor_executeScriptWithArgs(scriptCmd, jsonArg) {
     return `await driver.executeScript(${JSON.stringify(scriptCmd)}, ${JSON.stringify(jsonArg)});`;
+  }
+
+  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
+    return `await driver.updateSettings(${JSON.stringify(settingsJson)});`;
+  }
+
+  codeFor_getSettings() {
+    return `let settings = await driver.getSettings();`;
+  }
+
+  // Session
+
+  codeFor_status() {
+    return `let status = await driver.status();`;
+  }
+
+  codeFor_getSession() {
+    return `let sessionDetails = await driver.getSession();`;
+  }
+
+  codeFor_getTimeouts() {
+    return `let timeouts = await driver.getTimeouts();`;
+  }
+
+  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
+    return '/* TODO implement setTimeouts */';
+  }
+
+  codeFor_getLogTypes() {
+    return `let logTypes = await driver.getLogTypes();`;
+  }
+
+  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
+    return `let logs = await driver.getLogs("${logType}");`;
+  }
+
+  // Context
+
+  codeFor_getContext() {
+    return `let context = await driver.getContext();`;
+  }
+
+  codeFor_getContexts() {
+    return `let contexts = await driver.getContexts();`;
+  }
+
+  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+    return `await driver.switchContext("${name}");`;
+  }
+
+  // Device Interaction
+
+  codeFor_getWindowRect() {
+    return `let windowRect = await driver.getWindowRect();`;
+  }
+
+  codeFor_takeScreenshot() {
+    return `let screenshot = await driver.takeScreenshot();`;
+  }
+
+  codeFor_isKeyboardShown() {
+    return `let isKeyboardShown = await driver.isKeyboardShown();`;
+  }
+
+  codeFor_getOrientation() {
+    return `let orientation = await driver.getOrientation();`;
+  }
+
+  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
+    return `await driver.setOrientation("${orientation}");`;
+  }
+
+  codeFor_getGeoLocation() {
+    return `let location = await driver.getGeoLocation();`;
+  }
+
+  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
+    return `await driver.setGeoLocation({latitude: ${latitude}, longitude: ${longitude}, altitude: ${altitude}});`;
+  }
+
+  codeFor_rotateDevice(
+    varNameIgnore,
+    varIndexIgnore,
+    x,
+    y,
+    radius,
+    rotation,
+    touchCount,
+    duration,
+  ) {
+    return `await driver.rotateDevice(${x}, ${y}, ${radius}, ${rotation}, ${touchCount}, ${duration});`;
   }
 
   // App Management
@@ -139,87 +230,6 @@ main().catch(console.log);`;
     return `let folderBase64 = await driver.pullFolder("${folderToPullFrom}");`;
   }
 
-  // Device Interaction
-
-  codeFor_rotateDevice(
-    varNameIgnore,
-    varIndexIgnore,
-    x,
-    y,
-    radius,
-    rotation,
-    touchCount,
-    duration,
-  ) {
-    return `await driver.rotateDevice(${x}, ${y}, ${radius}, ${rotation}, ${touchCount}, ${duration});`;
-  }
-
-  // Keyboard
-
-  codeFor_isKeyboardShown() {
-    return `let isKeyboardShown = await driver.isKeyboardShown();`;
-  }
-
-  // System
-
-  codeFor_getWindowRect() {
-    return `let windowRect = await driver.getWindowRect();`;
-  }
-
-  codeFor_takeScreenshot() {
-    return `let screenshot = await driver.takeScreenshot();`;
-  }
-
-  // Session
-
-  codeFor_status() {
-    return `let status = await driver.status();`;
-  }
-
-  codeFor_getSession() {
-    return `let sessionDetails = await driver.getSession();`;
-  }
-
-  codeFor_getTimeouts() {
-    return `let timeouts = await driver.getTimeouts();`;
-  }
-
-  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
-    return '/* TODO implement setTimeouts */';
-  }
-
-  codeFor_getOrientation() {
-    return `let orientation = await driver.getOrientation();`;
-  }
-
-  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
-    return `await driver.setOrientation("${orientation}");`;
-  }
-
-  codeFor_getGeoLocation() {
-    return `let location = await driver.getGeoLocation();`;
-  }
-
-  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
-    return `await driver.setGeoLocation({latitude: ${latitude}, longitude: ${longitude}, altitude: ${altitude}});`;
-  }
-
-  codeFor_getLogTypes() {
-    return `let logTypes = await driver.getLogTypes();`;
-  }
-
-  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
-    return `let logs = await driver.getLogs("${logType}");`;
-  }
-
-  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
-    return `await driver.updateSettings(${JSON.stringify(settingsJson)});`;
-  }
-
-  codeFor_getSettings() {
-    return `let settings = await driver.getSettings();`;
-  }
-
   // Web
 
   codeFor_navigateTo(varNameIgnore, varIndexIgnore, url) {
@@ -244,19 +254,5 @@ main().catch(console.log);`;
 
   codeFor_getTitle() {
     return `let title = await driver.getTitle();`;
-  }
-
-  // Context
-
-  codeFor_getContext() {
-    return `let context = await driver.getContext();`;
-  }
-
-  codeFor_getContexts() {
-    return `let contexts = await driver.getContexts();`;
-  }
-
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
-    return `await driver.switchContext("${name}");`;
   }
 }

@@ -132,7 +132,7 @@ driver.perform(Arrays.asList(swipe));
   `;
   }
 
-  // Execute Script
+  // Top-Level Commands
 
   codeFor_executeScriptNoArgs(scriptCmd) {
     return `driver.executeScript("${scriptCmd}");`;
@@ -141,6 +141,114 @@ driver.perform(Arrays.asList(swipe));
   codeFor_executeScriptWithArgs(scriptCmd, jsonArg) {
     // Java dictionary needs to use the Map.ofEntries(Map.entry() ...) syntax
     return `driver.executeScript("${scriptCmd}", ${this.getJavaVal(jsonArg[0])};`;
+  }
+
+  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
+    try {
+      let settings = [];
+      for (let [settingName, settingValue] of _.toPairs(settingsJson)) {
+        settings.push(`driver.setSetting("${settingName}", ${this.getJavaVal(settingValue)});`);
+      }
+      return settings.join('\n');
+    } catch {
+      return `// Could not parse: ${settingsJson}`;
+    }
+  }
+
+  codeFor_getSettings() {
+    return `var settings = driver.getSettings();`;
+  }
+
+  // Session
+
+  codeFor_status() {
+    return `var status = driver.getStatus();`;
+  }
+
+  codeFor_getSession() {
+    return `var caps = driver.getSessionDetails();`;
+  }
+
+  codeFor_getTimeouts() {
+    return `
+var implicitTimeout = driver.manage().timeouts().getImplicitWaitTimeout();
+var pageLoadTimeout = driver.manage().timeouts().getPageLoadTimeout();
+var scriptTimeout = driver.manage().timeouts().getScriptTimeout();
+var timeouts = Map.ofEntries(
+  Map.entry("implicit", implicitTimeout),
+  Map.entry("pageLoad", pageLoadTimeout),
+  Map.entry("script", scriptTimeout)
+);
+`;
+  }
+
+  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
+    return '/* TODO implement setTimeouts */';
+  }
+
+  codeFor_getLogTypes() {
+    return `var getLogTypes = driver.manage().logs().getAvailableLogTypes();`;
+  }
+
+  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
+    return `var logEntries = driver.manage().logs().get("${logType}");`;
+  }
+
+  // Context
+
+  codeFor_getContext() {
+    return `var context = driver.getContext();`;
+  }
+
+  codeFor_getContexts() {
+    return `var contexts = driver.getContextHandles();`;
+  }
+
+  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+    return `driver.context("${name}");`;
+  }
+
+  // Device Interaction
+
+  codeFor_getWindowRect() {
+    return `// Not supported: getWindowRect`;
+  }
+
+  codeFor_takeScreenshot() {
+    return `byte[] screenshot = Base64.getEncoder().encode(driver.getScreenshotAs(OutputType.BYTES));`;
+  }
+
+  codeFor_isKeyboardShown() {
+    return `var isKeyboardShown = driver.isKeyboardShown();`;
+  }
+
+  codeFor_getOrientation() {
+    return `var orientation = driver.getOrientation();`;
+  }
+
+  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
+    return `driver.rotate("${orientation}");`;
+  }
+
+  codeFor_getGeoLocation() {
+    return `var location = driver.location();`;
+  }
+
+  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
+    return `driver.setLocation(new Location(${latitude}, ${longitude}, ${altitude}));`;
+  }
+
+  codeFor_rotateDevice(
+    varNameIgnore,
+    varIndexIgnore,
+    x,
+    y,
+    radius,
+    rotation,
+    touchCount,
+    duration,
+  ) {
+    return `driver.rotate(new DeviceRotation(${x}, ${y}, ${radius}, ${rotation}, ${touchCount}, ${duration}));`;
   }
 
   // App Management
@@ -183,104 +291,6 @@ driver.perform(Arrays.asList(swipe));
     return `var folderBase64 = driver.pullFolder("${folderToPullFrom}");`;
   }
 
-  // Device Interaction
-
-  codeFor_rotateDevice(
-    varNameIgnore,
-    varIndexIgnore,
-    x,
-    y,
-    radius,
-    rotation,
-    touchCount,
-    duration,
-  ) {
-    return `driver.rotate(new DeviceRotation(${x}, ${y}, ${radius}, ${rotation}, ${touchCount}, ${duration}));`;
-  }
-
-  // Keyboard
-
-  codeFor_isKeyboardShown() {
-    return `var isKeyboardShown = driver.isKeyboardShown();`;
-  }
-
-  // System
-
-  codeFor_getWindowRect() {
-    return `// Not supported: getWindowRect`;
-  }
-
-  codeFor_takeScreenshot() {
-    return `byte[] screenshot = Base64.getEncoder().encode(driver.getScreenshotAs(OutputType.BYTES));`;
-  }
-
-  // Session
-
-  codeFor_status() {
-    return `var status = driver.getStatus();`;
-  }
-
-  codeFor_getSession() {
-    return `var caps = driver.getSessionDetails();`;
-  }
-
-  codeFor_getTimeouts() {
-    return `
-var implicitTimeout = driver.manage().timeouts().getImplicitWaitTimeout();
-var pageLoadTimeout = driver.manage().timeouts().getPageLoadTimeout();
-var scriptTimeout = driver.manage().timeouts().getScriptTimeout();
-var timeouts = Map.ofEntries(
-  Map.entry("implicit", implicitTimeout),
-  Map.entry("pageLoad", pageLoadTimeout),
-  Map.entry("script", scriptTimeout)
-);
-`;
-  }
-
-  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
-    return '/* TODO implement setTimeouts */';
-  }
-
-  codeFor_getOrientation() {
-    return `var orientation = driver.getOrientation();`;
-  }
-
-  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
-    return `driver.rotate("${orientation}");`;
-  }
-
-  codeFor_getGeoLocation() {
-    return `var location = driver.location();`;
-  }
-
-  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
-    return `driver.setLocation(new Location(${latitude}, ${longitude}, ${altitude}));`;
-  }
-
-  codeFor_getLogTypes() {
-    return `var getLogTypes = driver.manage().logs().getAvailableLogTypes();`;
-  }
-
-  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
-    return `var logEntries = driver.manage().logs().get("${logType}");`;
-  }
-
-  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
-    try {
-      let settings = [];
-      for (let [settingName, settingValue] of _.toPairs(settingsJson)) {
-        settings.push(`driver.setSetting("${settingName}", ${this.getJavaVal(settingValue)});`);
-      }
-      return settings.join('\n');
-    } catch {
-      return `// Could not parse: ${settingsJson}`;
-    }
-  }
-
-  codeFor_getSettings() {
-    return `var settings = driver.getSettings();`;
-  }
-
   // Web
 
   codeFor_navigateTo(varNameIgnore, varIndexIgnore, url) {
@@ -305,19 +315,5 @@ var timeouts = Map.ofEntries(
 
   codeFor_getTitle() {
     return `var title = driver.getTitle();`;
-  }
-
-  // Context
-
-  codeFor_getContext() {
-    return `var context = driver.getContext();`;
-  }
-
-  codeFor_getContexts() {
-    return `var contexts = driver.getContextHandles();`;
-  }
-
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
-    return `driver.context("${name}");`;
   }
 }

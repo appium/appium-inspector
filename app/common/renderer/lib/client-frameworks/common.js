@@ -104,7 +104,7 @@ export default class CommonClientFramework {
     return this.codeFor_findAndAssign(strategy, locator, localVar);
   }
 
-  // Execute Script
+  // Top-Level Commands
 
   codeFor_executeScript(varNameIgnore, varIndexIgnore, scriptCmd, jsonArg) {
     // jsonArg is expected to be an array with 0-1 objects
@@ -114,15 +114,13 @@ export default class CommonClientFramework {
     return this.codeFor_executeScriptWithArgs(scriptCmd, jsonArg);
   }
 
-  // Keyboard
-
-  codeFor_hideKeyboard() {
-    return this.codeFor_executeScriptNoArgs('mobile: hideKeyboard');
-  }
-
-  // System
+  // Device Interaction
 
   codeFor_getDeviceTime() {
     return this.codeFor_executeScriptNoArgs('mobile: getDeviceTime');
+  }
+
+  codeFor_hideKeyboard() {
+    return this.codeFor_executeScriptNoArgs('mobile: hideKeyboard');
   }
 }
