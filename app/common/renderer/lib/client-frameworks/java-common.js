@@ -140,7 +140,7 @@ driver.perform(Arrays.asList(swipe));
 
   codeFor_executeScriptWithArgs(scriptCmd, jsonArg) {
     // Java dictionary needs to use the Map.ofEntries(Map.entry() ...) syntax
-    return `driver.executeScript("${scriptCmd}", ${this.getJavaVal(jsonArg[0])};`;
+    return `driver.executeScript("${scriptCmd}", ${this.getJavaVal(jsonArg[0])});`;
   }
 
   codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
