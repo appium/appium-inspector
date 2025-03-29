@@ -195,6 +195,10 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
     return `_driver.RemoveApp("${app}")`;
   }
 
+  codeFor_queryAppState(varNameIgnore, varIndexIgnore, app) {
+    return `var appState = _driver.GetAppState("${app}");`;
+  }
+
   // File Transfer
 
   codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {

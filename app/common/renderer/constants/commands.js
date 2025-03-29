@@ -37,6 +37,9 @@ export const COMMAND_DEFINITIONS = {
     removeApp: {
       args: [['appId', STRING]],
     },
+    queryAppState: {
+      args: [['appId', STRING]],
+    },
   },
   'File Transfer': {
     pushFile: {

@@ -112,6 +112,10 @@ ${code}`;
     return `${this.type}.removeApp("${app}")`;
   }
 
+  codeFor_queryAppState(varNameIgnore, varIndexIgnore, app) {
+    return `let appState = ${this.type}.getDriver().queryAppState("${app}");`;
+  }
+
   // File Transfer
 
   codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {

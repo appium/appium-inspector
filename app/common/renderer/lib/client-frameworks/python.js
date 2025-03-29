@@ -151,6 +151,10 @@ actions.perform()
     return `driver.remove_app('${app}')`;
   }
 
+  codeFor_queryAppState(varNameIgnore, varIndexIgnore, app) {
+    return `app_state = driver.query_app_state('${app}')`;
+  }
+
   // File Transfer
 
   codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {

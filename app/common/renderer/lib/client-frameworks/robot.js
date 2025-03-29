@@ -121,6 +121,10 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
     return `Remove Application    ${app}`;
   }
 
+  codeFor_queryAppState() {
+    return `# Not supported: queryAppState`;
+  }
+
   // File Transfer
 
   codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {

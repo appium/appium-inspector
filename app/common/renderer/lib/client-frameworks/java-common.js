@@ -165,6 +165,10 @@ driver.perform(Arrays.asList(swipe));
     return `driver.removeApp("${app}");`;
   }
 
+  codeFor_queryAppState(varNameIgnore, varIndexIgnore, app) {
+    return `var appState = driver.queryAppState("${app}");`;
+  }
+
   // File Transfer
 
   codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {

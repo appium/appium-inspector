@@ -121,6 +121,10 @@ main().catch(console.log);`;
     return `await driver.removeApp("${app}")`;
   }
 
+  codeFor_queryAppState(varNameIgnore, varIndexIgnore, app) {
+    return `let appState = await driver.queryAppState("${app}");`;
+  }
+
   // File Transfer
 
   codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
