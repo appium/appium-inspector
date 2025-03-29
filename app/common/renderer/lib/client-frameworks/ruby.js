@@ -261,4 +261,24 @@ driver.quit`;
   codeFor_getTitle() {
     return `title = driver.get_title`;
   }
+
+  codeFor_getWindowHandle() {
+    return `window_handle = driver.get_window_handle`;
+  }
+
+  codeFor_closeWindow() {
+    return `driver.close_window`;
+  }
+
+  codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
+    return `driver.switch_to_window '${handle}'`;
+  }
+
+  codeFor_getWindowHandles() {
+    return `window_handles = driver.get_window_handles`;
+  }
+
+  codeFor_createWindow(varNameIgnore, varIndexIgnore, type) {
+    return `new_window = driver.new_window '${type}'`;
+  }
 }

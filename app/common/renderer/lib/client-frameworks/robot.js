@@ -253,4 +253,24 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
   codeFor_getTitle() {
     return '${title} =    Get Window Title';
   }
+
+  codeFor_getWindowHandle() {
+    return '# Not supported: getWindowHandle';
+  }
+
+  codeFor_closeWindow() {
+    return `# Not supported: closeWindow`;
+  }
+
+  codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
+    return `Switch To Window    ${handle}`;
+  }
+
+  codeFor_getWindowHandles() {
+    return '${window_handles} =    Get Windows';
+  }
+
+  codeFor_createWindow() {
+    return '# Not supported: createWindow';
+  }
 }

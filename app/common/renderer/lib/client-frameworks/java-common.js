@@ -316,4 +316,24 @@ var timeouts = Map.ofEntries(
   codeFor_getTitle() {
     return `var title = driver.getTitle();`;
   }
+
+  codeFor_getWindowHandle() {
+    return `var windowHandle = driver.getWindowHandle();`;
+  }
+
+  codeFor_closeWindow() {
+    return `driver.close();`;
+  }
+
+  codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
+    return `driver.switchTo().window("${handle}");`;
+  }
+
+  codeFor_getWindowHandles() {
+    return `var windowHandles = driver.getWindowHandles();`;
+  }
+
+  codeFor_createWindow() {
+    return `// Not supported: createWindow`;
+  }
 }

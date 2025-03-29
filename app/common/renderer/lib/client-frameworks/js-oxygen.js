@@ -246,4 +246,24 @@ ${code}`;
   codeFor_getTitle() {
     return `let title = ${this.type}.getTitle();`;
   }
+
+  codeFor_getWindowHandle() {
+    return `let windowHandle = ${this.type}.getDriver().getWindowHandle();`;
+  }
+
+  codeFor_closeWindow() {
+    return `${this.type}.closeWindow();`;
+  }
+
+  codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
+    return `${this.type}.selectWindow("${handle}");`;
+  }
+
+  codeFor_getWindowHandles() {
+    return `let windowHandles = ${this.type}.getWindowHandles();`;
+  }
+
+  codeFor_createWindow(varNameIgnore, varIndexIgnore, type) {
+    return `let newWindow = await ${this.type}.getDriver().createWindow("${type}");`;
+  }
 }

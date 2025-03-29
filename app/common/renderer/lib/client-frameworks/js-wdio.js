@@ -255,4 +255,24 @@ main().catch(console.log);`;
   codeFor_getTitle() {
     return `let title = await driver.getTitle();`;
   }
+
+  codeFor_getWindowHandle() {
+    return `let windowHandle = await driver.getWindowHandle();`;
+  }
+
+  codeFor_closeWindow() {
+    return `await driver.closeWindow();`;
+  }
+
+  codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
+    return `await driver.switchToWindow("${handle}");`;
+  }
+
+  codeFor_getWindowHandles() {
+    return `let windowHandles = await driver.getWindowHandles();`;
+  }
+
+  codeFor_createWindow(varNameIgnore, varIndexIgnore, type) {
+    return `let newWindow = await driver.createWindow("${type}");`;
+  }
 }

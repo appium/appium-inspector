@@ -276,4 +276,24 @@ actions.perform()
   codeFor_getTitle() {
     return `title = driver.title`;
   }
+
+  codeFor_getWindowHandle() {
+    return `window_handle = driver.current_window_handle`;
+  }
+
+  codeFor_closeWindow() {
+    return `driver.close()`;
+  }
+
+  codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
+    return `driver.switch_to.window('${handle}')`;
+  }
+
+  codeFor_getWindowHandles() {
+    return `window_handles = driver.window_handles`;
+  }
+
+  codeFor_createWindow() {
+    return '# Not supported: createWindow';
+  }
 }

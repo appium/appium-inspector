@@ -335,4 +335,24 @@ let timeouts = new Dictionary<string, TimeSpan>()
   codeFor_getTitle() {
     return `var title = _driver.Title;`;
   }
+
+  codeFor_getWindowHandle() {
+    return `var windowHandle = _driver.CurrentWindowHandle;`;
+  }
+
+  codeFor_closeWindow() {
+    return `_driver.Close();`;
+  }
+
+  codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
+    return `_driver.SwitchTo().Window("${handle}");`;
+  }
+
+  codeFor_getWindowHandles() {
+    return `var windowHandles = _driver.WindowHandles;`;
+  }
+
+  codeFor_createWindow() {
+    return `// Not supported: createWindow`;
+  }
 }
