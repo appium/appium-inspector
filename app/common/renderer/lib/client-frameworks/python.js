@@ -180,7 +180,7 @@ actions.perform()
   // System
 
   codeFor_takeScreenshot() {
-    return `# Not supported: takeScreenshot`;
+    return `screenshot = driver.get_screenshot_as_base64()`;
   }
 
   // Session
@@ -194,7 +194,7 @@ actions.perform()
   }
 
   codeFor_getTimeouts() {
-    return '# Not supported: getTimeouts';
+    return 'timeouts = driver.timeouts()';
   }
 
   codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {

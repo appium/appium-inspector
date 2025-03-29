@@ -217,7 +217,16 @@ driver.perform(Arrays.asList(swipe));
   }
 
   codeFor_getTimeouts() {
-    return `// Not supported: getTimeouts`;
+    return `
+var implicitTimeout = driver.manage().timeouts().getImplicitWaitTimeout();
+var pageLoadTimeout = driver.manage().timeouts().getPageLoadTimeout();
+var scriptTimeout = driver.manage().timeouts().getScriptTimeout();
+var timeouts = Map.ofEntries(
+  Map.entry("implicit", implicitTimeout),
+  Map.entry("pageLoad", pageLoadTimeout),
+  Map.entry("script", scriptTimeout)
+);
+`;
   }
 
   codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
