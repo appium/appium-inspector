@@ -175,8 +175,9 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
 
   codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
     try {
-      const settings = _.toPairs(settingsJson).map(([settingName, settingValue]) =>
-        `_driver.SetSetting("${settingName}", ${this.getCSharpVal(settingValue)});`
+      const settings = _.toPairs(settingsJson).map(
+        ([settingName, settingValue]) =>
+          `_driver.SetSetting("${settingName}", ${this.getCSharpVal(settingValue)});`,
       );
       return settings.join('\n');
     } catch {

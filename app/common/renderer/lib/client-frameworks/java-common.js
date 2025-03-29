@@ -145,8 +145,9 @@ driver.perform(Arrays.asList(swipe));
 
   codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
     try {
-      const settings = _.toPairs(settingsJson).map(([settingName, settingValue]) =>
-        `driver.setSetting("${settingName}", ${this.getJavaVal(settingValue)});`
+      const settings = _.toPairs(settingsJson).map(
+        ([settingName, settingValue]) =>
+          `driver.setSetting("${settingName}", ${this.getJavaVal(settingValue)});`,
       );
       return settings.join('\n');
     } catch {
