@@ -101,14 +101,6 @@ main().catch(console.log);`;
 
   // App Management
 
-  codeFor_getCurrentActivity() {
-    return `let activityName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentActivity')}`;
-  }
-
-  codeFor_getCurrentPackage() {
-    return `let packageName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
-  }
-
   codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
     return `await driver.installApp("${app}");`;
   }
@@ -129,22 +121,6 @@ main().catch(console.log);`;
     return `await driver.removeApp("${app}")`;
   }
 
-  codeFor_getStrings(varNameIgnore, varIndexIgnore, language, stringFile) {
-    return `let appStrings = await driver.getStrings(${language ? `"${language}", ` : ''}${
-      stringFile ? `"${stringFile}"` : ''
-    });`;
-  }
-
-  // Clipboard
-
-  codeFor_getClipboard() {
-    return `let clipboardText = await driver.getClipboard();`;
-  }
-
-  codeFor_setClipboard(varNameIgnore, varIndexIgnore, clipboardText) {
-    return `await driver.setClipboard("${clipboardText}")`;
-  }
-
   // File Transfer
 
   codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
@@ -161,10 +137,6 @@ main().catch(console.log);`;
 
   // Device Interaction
 
-  codeFor_isLocked() {
-    return `let isLocked = ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
-  }
-
   codeFor_rotateDevice(
     varNameIgnore,
     varIndexIgnore,
@@ -178,48 +150,10 @@ main().catch(console.log);`;
     return `await driver.rotateDevice(${x}, ${y}, ${radius}, ${rotation}, ${touchCount}, ${duration});`;
   }
 
-  codeFor_touchId(varNameIgnore, varIndexIgnore, match) {
-    return `await driver.touchId(${match});`;
-  }
-
-  codeFor_toggleEnrollTouchId(varNameIgnore, varIndexIgnore, enroll) {
-    return `await driver.toggleEnrollTouchId(${enroll});`;
-  }
-
   // Keyboard
 
   codeFor_isKeyboardShown() {
     return `let isKeyboardShown = await driver.isKeyboardShown();`;
-  }
-
-  // Connectivity
-
-  codeFor_toggleAirplaneMode() {
-    return `await driver.toggleAirplaneMode();`;
-  }
-
-  codeFor_toggleData() {
-    return `await driver.toggleData();`;
-  }
-
-  codeFor_toggleWiFi() {
-    return `await driver.toggleWiFi();`;
-  }
-
-  codeFor_sendSMS(varNameIgnore, varIndexIgnore, phoneNumber, text) {
-    return `await driver.sendSms("${phoneNumber}", "${text}");`;
-  }
-
-  codeFor_gsmCall(varNameIgnore, varIndexIgnore, phoneNumber, action) {
-    return `await driver.gsmCall("${phoneNumber}", "${action}");`;
-  }
-
-  codeFor_gsmSignal(varNameIgnore, varIndexIgnore, signalStrength) {
-    return `await driver.gsmSignal("${signalStrength}");`;
-  }
-
-  codeFor_gsmVoice(varNameIgnore, varIndexIgnore, state) {
-    return `await driver.gsmVoice("${state}");`;
   }
 
   // Session

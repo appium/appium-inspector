@@ -92,14 +92,6 @@ ${code}`;
 
   // App Management
 
-  codeFor_getCurrentActivity() {
-    return `let activityName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentActivity')}`;
-  }
-
-  codeFor_getCurrentPackage() {
-    return `let packageName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
-  }
-
   codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
     return `${this.type}.installApp("${app}");`;
   }
@@ -120,22 +112,6 @@ ${code}`;
     return `${this.type}.removeApp("${app}")`;
   }
 
-  codeFor_getStrings(varNameIgnore, varIndexIgnore, language, stringFile) {
-    return `let appStrings = ${this.type}.getDriver().getStrings(${
-      language ? `"${language}", ` : ''
-    }${stringFile ? `"${stringFile}"` : ''});`;
-  }
-
-  // Clipboard
-
-  codeFor_getClipboard() {
-    return `let clipboardText = ${this.type}.getDriver().getClipboard();`;
-  }
-
-  codeFor_setClipboard(varNameIgnore, varIndexIgnore, clipboardText) {
-    return `${this.type}.getDriver().setClipboard("${clipboardText}")`;
-  }
-
   // File Transfer
 
   codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
@@ -152,10 +128,6 @@ ${code}`;
 
   // Device Interaction
 
-  codeFor_isLocked() {
-    return `let isLocked = ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
-  }
-
   codeFor_rotateDevice(
     varNameIgnore,
     varIndexIgnore,
@@ -169,48 +141,10 @@ ${code}`;
     return `${this.type}.getDriver().rotateDevice({x: ${x}, y: ${y}, duration: ${duration}, radius: ${radius}, rotation: ${rotation}, touchCount: ${touchCount}});`;
   }
 
-  codeFor_touchId(varNameIgnore, varIndexIgnore, match) {
-    return `${this.type}.getDriver().touchId(${match});`;
-  }
-
-  codeFor_toggleEnrollTouchId(varNameIgnore, varIndexIgnore, enroll) {
-    return `${this.type}.getDriver().toggleEnrollTouchId(${enroll});`;
-  }
-
   // Keyboard
 
   codeFor_isKeyboardShown() {
     return `let isKeyboardShown = ${this.type}.getDriver().isKeyboardShown();`;
-  }
-
-  // Connectivity
-
-  codeFor_toggleAirplaneMode() {
-    return `${this.type}.getDriver().toggleAirplaneMode();`;
-  }
-
-  codeFor_toggleData() {
-    return `${this.type}.getDriver().toggleData();`;
-  }
-
-  codeFor_toggleWiFi() {
-    return `${this.type}.getDriver().toggleWiFi();`;
-  }
-
-  codeFor_sendSMS(varNameIgnore, varIndexIgnore, phoneNumber, text) {
-    return `${this.type}.getDriver().sendSms("${phoneNumber}", "${text}");`;
-  }
-
-  codeFor_gsmCall(varNameIgnore, varIndexIgnore, phoneNumber, action) {
-    return `${this.type}.getDriver().gsmCall("${phoneNumber}", "${action}");`;
-  }
-
-  codeFor_gsmSignal(varNameIgnore, varIndexIgnore, signalStrength) {
-    return `${this.type}.getDriver().gsmSignal("${signalStrength}");`;
-  }
-
-  codeFor_gsmVoice(varNameIgnore, varIndexIgnore, state) {
-    return `${this.type}.getDriver().gsmVoice("${state}");`;
   }
 
   // Session

@@ -175,14 +175,6 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
 
   // App Management
 
-  codeFor_getCurrentActivity() {
-    return `var activityName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentActivity')}`;
-  }
-
-  codeFor_getCurrentPackage() {
-    return `var packageName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
-  }
-
   codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
     return `_driver.InstallApp("${app}");`;
   }
@@ -203,22 +195,6 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
     return `_driver.RemoveApp("${app}")`;
   }
 
-  codeFor_getStrings(varNameIgnore, varIndexIgnore, language, stringFile) {
-    return `var appStrings = _driver.GetAppStringDictionary(${language ? `"${language}", ` : ''}${
-      stringFile ? `"${stringFile}"` : ''
-    });`;
-  }
-
-  // Clipboard
-
-  codeFor_getClipboard() {
-    return `var clipboardText = _driver.GetClipboardText();`;
-  }
-
-  codeFor_setClipboard(varNameIgnore, varIndexIgnore, clipboardText) {
-    return `_driver.SetClipboardText("${clipboardText}");`;
-  }
-
   // File Transfer
 
   codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
@@ -235,56 +211,14 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
 
   // Device Interaction
 
-  codeFor_isLocked() {
-    return `let isLocked = ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
-  }
-
   codeFor_rotateDevice() {
     return `// Not supported: rotateDevice`;
-  }
-
-  codeFor_touchId(varNameIgnore, varIndexIgnore, match) {
-    return `_driver.PerformTouchID(${match});`;
-  }
-
-  codeFor_toggleEnrollTouchId() {
-    return `// Not supported: toggleEnrollTouchId`;
   }
 
   // Keyboard
 
   codeFor_isKeyboardShown() {
     return `let isKeyboardShown = _driver.IsKeyboardShown();`;
-  }
-
-  // Connectivity
-
-  codeFor_toggleAirplaneMode() {
-    return `_driver.ToggleAirplaneMode();`;
-  }
-
-  codeFor_toggleData() {
-    return `_driver.ToggleData();`;
-  }
-
-  codeFor_toggleWiFi() {
-    return `_driver.ToggleWiFi();`;
-  }
-
-  codeFor_sendSMS(varNameIgnore, varIndexIgnore, phoneNumber, text) {
-    return `_driver.SendSms("${phoneNumber}", "${text}");`;
-  }
-
-  codeFor_gsmCall(varNameIgnore, varIndexIgnore, phoneNumber, action) {
-    return `_driver.MakeGsmCall("${phoneNumber}", "${action}");`;
-  }
-
-  codeFor_gsmSignal(varNameIgnore, varIndexIgnore, signalStrength) {
-    return `_driver.SetGsmSignalStrength("${signalStrength}");`;
-  }
-
-  codeFor_gsmVoice(varNameIgnore, varIndexIgnore, state) {
-    return `_driver.SetGsmVoice("${state}");`;
   }
 
   // Session

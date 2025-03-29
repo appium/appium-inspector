@@ -101,16 +101,6 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
 
   // App Management
 
-  codeFor_getCurrentActivity() {
-    return `$\{activity_name} =    ${this.codeFor_executeScriptNoArgs(
-      'mobile: getCurrentActivity',
-    )}`;
-  }
-
-  codeFor_getCurrentPackage() {
-    return `$\{package_name} =    ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
-  }
-
   codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
     return `Install App    ${app}`;
   }
@@ -131,28 +121,6 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
     return `Remove Application    ${app}`;
   }
 
-  codeFor_getStrings(varNameIgnore, varIndexIgnore, language) {
-    if (language === undefined) {
-      return `$\{app_strings} =    ${this.codeFor_executeScriptNoArgs('mobile: getAppStrings')}`;
-    } else {
-      return this.codeFor_executeScriptWithArgs(
-        'mobile: getAppStrings',
-        [{language}],
-        `$\{app_strings} =    `,
-      );
-    }
-  }
-
-  // Clipboard
-
-  codeFor_getClipboard() {
-    return '# Not supported: getClipboard';
-  }
-
-  codeFor_setClipboard() {
-    return '# Not supported: setClipboard';
-  }
-
   // File Transfer
 
   codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
@@ -169,20 +137,8 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
 
   // Device Interaction
 
-  codeFor_isLocked() {
-    return `$\{is_locked} =    ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
-  }
-
   codeFor_rotateDevice() {
     return '# Not supported: rotateDevice';
-  }
-
-  codeFor_touchId(varNameIgnore, varIndexIgnore, match) {
-    return `Touch Id    $\{${match}}`;
-  }
-
-  codeFor_toggleEnrollTouchId() {
-    return 'Toggle Touch Id Enrollment';
   }
 
   // Keyboard
@@ -191,36 +147,6 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
     return `$\{is_keyboard_shown} =    ${this.codeFor_executeScriptNoArgs(
       'mobile: isKeyboardShown',
     )}`;
-  }
-
-  // Connectivity
-
-  codeFor_toggleAirplaneMode() {
-    return '# Not supported: toggleAirplaneMode';
-  }
-
-  codeFor_toggleData() {
-    return '# Not supported: toggleData';
-  }
-
-  codeFor_toggleWiFi() {
-    return '# Not supported: toggleWifi';
-  }
-
-  codeFor_sendSMS() {
-    return '# Not supported: sendSMS';
-  }
-
-  codeFor_gsmCall() {
-    return '# Not supported: gsmCall';
-  }
-
-  codeFor_gsmSignal() {
-    return '# Not supported: gsmSignal';
-  }
-
-  codeFor_gsmVoice() {
-    return '# Not supported: gsmVoice';
   }
 
   // Session

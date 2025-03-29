@@ -131,14 +131,6 @@ actions.perform()
 
   // App Management
 
-  codeFor_getCurrentActivity() {
-    return `activity_name = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentActivity')}`;
-  }
-
-  codeFor_getCurrentPackage() {
-    return `package_name = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
-  }
-
   codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
     return `driver.install_app('${app}')`;
   }
@@ -159,22 +151,6 @@ actions.perform()
     return `driver.remove_app('${app}')`;
   }
 
-  codeFor_getStrings(varNameIgnore, varIndexIgnore, language, stringFile) {
-    return `app_strings = driver.app_strings(${language ? `'${language}'` : 'None'}, ${
-      stringFile ? `'${stringFile}'` : 'None'
-    })`;
-  }
-
-  // Clipboard
-
-  codeFor_getClipboard() {
-    return `clipboard_text = driver.get_clipboard_text()`;
-  }
-
-  codeFor_setClipboard(varNameIgnore, varIndexIgnore, clipboardText) {
-    return `driver.set_clipboard_text('${clipboardText}')`;
-  }
-
   // File Transfer
 
   codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
@@ -191,56 +167,14 @@ actions.perform()
 
   // Device Interaction
 
-  codeFor_isLocked() {
-    return `is_locked = ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
-  }
-
   codeFor_rotateDevice() {
     return `# Not supported: rotate device`;
-  }
-
-  codeFor_touchId(varNameIgnore, varIndexIgnore, match) {
-    return `driver.touch_id(${match})`;
-  }
-
-  codeFor_toggleEnrollTouchId() {
-    return `driver.toggle_touch_id_enrollment()`;
   }
 
   // Keyboard
 
   codeFor_isKeyboardShown() {
     return `is_keyboard_shown = driver.is_keyboard_shown()`;
-  }
-
-  // Connectivity
-
-  codeFor_toggleAirplaneMode() {
-    return `# Not supported: toggleAirplaneMode`;
-  }
-
-  codeFor_toggleData() {
-    return `# Not supported: toggleData`;
-  }
-
-  codeFor_toggleWiFi() {
-    return `driver.toggle_wifi()`;
-  }
-
-  codeFor_sendSMS(varNameIgnore, varIndexIgnore, phoneNumber, text) {
-    return `driver.send_sms('${phoneNumber}', '${text}')`;
-  }
-
-  codeFor_gsmCall(varNameIgnore, varIndexIgnore, phoneNumber, action) {
-    return `driver.make_gsm_call('${phoneNumber}', '${action}')`;
-  }
-
-  codeFor_gsmSignal(varNameIgnore, varIndexIgnore, signalStrength) {
-    return `driver.set_gsm_signal(${signalStrength})`;
-  }
-
-  codeFor_gsmVoice(varNameIgnore, varIndexIgnore, state) {
-    return `driver.set_gsm_voice('${state}')`;
   }
 
   // Session

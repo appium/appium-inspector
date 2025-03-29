@@ -116,14 +116,6 @@ driver.quit`;
 
   // App Management
 
-  codeFor_getCurrentActivity() {
-    return `activity_name = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentActivity')}`;
-  }
-
-  codeFor_getCurrentPackage() {
-    return `package_name = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
-  }
-
   codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
     return `driver.install_app '${app}'`;
   }
@@ -144,26 +136,6 @@ driver.quit`;
     return `driver.remove_app '${app}'`;
   }
 
-  codeFor_getStrings(varNameIgnore, varIndexIgnore, language) {
-    if (language === undefined) {
-      return `app_strings = ${this.codeFor_executeScriptNoArgs('mobile: getAppStrings')}`;
-    } else {
-      return `app_strings = ${this.codeFor_executeScriptWithArgs('mobile: getAppStrings', [
-        {language},
-      ])}`;
-    }
-  }
-
-  // Clipboard
-
-  codeFor_getClipboard() {
-    return `clipboard_text = driver.get_clipboard`;
-  }
-
-  codeFor_setClipboard(varNameIgnore, varIndexIgnore, clipboardText) {
-    return `driver.set_clipboard content: '${clipboardText}'`;
-  }
-
   // File Transfer
 
   codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
@@ -180,56 +152,14 @@ driver.quit`;
 
   // Device Interaction
 
-  codeFor_isLocked() {
-    return `is_locked = ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
-  }
-
   codeFor_rotateDevice() {
     return `# Not supported: rotateDevice`;
-  }
-
-  codeFor_touchId(varNameIgnore, varIndexIgnore, match) {
-    return `driver.touch_id ${match}`;
-  }
-
-  codeFor_toggleEnrollTouchId(varNameIgnore, varIndexIgnore, enroll) {
-    return `driver.toggle_touch_id_enrollment ${enroll}`;
   }
 
   // Keyboard
 
   codeFor_isKeyboardShown() {
     return `is_keyboard_shown = ${this.codeFor_executeScriptNoArgs('mobile: isKeyboardShown')}`;
-  }
-
-  // Connectivity
-
-  codeFor_toggleAirplaneMode() {
-    return `driver.toggle_airplane_mode`;
-  }
-
-  codeFor_toggleData() {
-    return `driver.toggle_data`;
-  }
-
-  codeFor_toggleWiFi() {
-    return `driver.toggle_wifi`;
-  }
-
-  codeFor_sendSMS(varNameIgnore, varIndexIgnore, phoneNumber, text) {
-    return `driver.send_sms phone_number: '${phoneNumber}', message: '${text}'`;
-  }
-
-  codeFor_gsmCall(varNameIgnore, varIndexIgnore, phoneNumber, action) {
-    return `driver.gsm_call phone_number: '${phoneNumber}', action: :${action}`;
-  }
-
-  codeFor_gsmSignal(varNameIgnore, varIndexIgnore, signalStrength) {
-    return `driver.gsm_signal :${signalStrength}`;
-  }
-
-  codeFor_gsmVoice(varNameIgnore, varIndexIgnore, state) {
-    return `driver.gsm_voice :${state}`;
   }
 
   // Session
