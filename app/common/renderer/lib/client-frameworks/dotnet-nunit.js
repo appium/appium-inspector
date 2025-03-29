@@ -223,6 +223,10 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
 
   // System
 
+  codeFor_getWindowRect() {
+    return `let windowRect = _driver.GetWindowRect;`;
+  }
+
   codeFor_takeScreenshot() {
     return `let screenshotBase64 = _driver.GetScreenshot().AsBase64EncodedString;`;
   }

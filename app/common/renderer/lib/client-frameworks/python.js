@@ -179,6 +179,10 @@ actions.perform()
 
   // System
 
+  codeFor_getWindowRect() {
+    return `window_rect = driver.get_window_rect()`;
+  }
+
   codeFor_takeScreenshot() {
     return `screenshot = driver.get_screenshot_as_base64()`;
   }

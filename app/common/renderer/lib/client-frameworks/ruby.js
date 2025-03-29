@@ -164,6 +164,10 @@ driver.quit`;
 
   // System
 
+  codeFor_getWindowRect() {
+    return `window_rect = driver.get_window_rect`;
+  }
+
   codeFor_takeScreenshot() {
     return `screenshot = driver.take_screenshot`;
   }

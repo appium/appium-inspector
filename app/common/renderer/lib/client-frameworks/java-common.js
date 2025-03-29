@@ -202,6 +202,10 @@ driver.perform(Arrays.asList(swipe));
 
   // System
 
+  codeFor_getWindowRect() {
+    return `// Not supported: getWindowRect`;
+  }
+
   codeFor_takeScreenshot() {
     return `byte[] screenshot = Base64.getEncoder().encode(driver.getScreenshotAs(OutputType.BYTES));`;
   }

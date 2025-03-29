@@ -149,6 +149,10 @@ ${code}`;
 
   // System
 
+  codeFor_getWindowRect() {
+    return `let windowRect = ${this.type}.getDriver().getWindowRect();`;
+  }
+
   codeFor_takeScreenshot() {
     return `let screenshot = ${this.type}.takeScreenshot();`;
   }

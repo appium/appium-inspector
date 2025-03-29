@@ -151,6 +151,10 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
 
   // System
 
+  codeFor_getWindowRect() {
+    return `# Not supported: getWindowRect`;
+  }
+
   codeFor_takeScreenshot() {
     return `Capture Page Screenshot`;
   }

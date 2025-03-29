@@ -158,6 +158,10 @@ main().catch(console.log);`;
 
   // System
 
+  codeFor_getWindowRect() {
+    return `let windowRect = await driver.getWindowRect();`;
+  }
+
   codeFor_takeScreenshot() {
     return `let screenshot = await driver.takeScreenshot();`;
   }
