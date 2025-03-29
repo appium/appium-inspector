@@ -224,13 +224,13 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
   // System
 
   codeFor_takeScreenshot() {
-    return `// Not supported: takeScreenshot`;
+    return `let screenshotBase64 = _driver.GetScreenshot().AsBase64EncodedString;`;
   }
 
   // Session
 
   codeFor_status() {
-    return `// Not supported: status`;
+    return `let status = _driver.Status;`;
   }
 
   codeFor_getSession() {
@@ -238,7 +238,14 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
   }
 
   codeFor_getTimeouts() {
-    return `// Not supported: getTimeouts`;
+    return `
+let timeouts = new Dictionary<string, TimeSpan>()
+{
+    { "script", _driver.Manage().Timeouts().AsynchronousJavaScript },
+    { "pageLoad", _driver.Manage().Timeouts().PageLoad },
+    { "implicit", _driver.Manage().Timeouts().ImplicitWait }
+};
+`;
   }
 
   codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
