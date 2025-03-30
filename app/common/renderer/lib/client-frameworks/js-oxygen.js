@@ -78,7 +78,7 @@ ${code}`;
     return `${this.type}.swipeScreen(${x1}, ${y1}, ${x2}, ${y2});`;
   }
 
-  // Execute Script
+  // Top-Level Commands
 
   codeFor_executeScriptNoArgs(scriptCmd) {
     return `${this.type}.getDriver().executeScript(${JSON.stringify(scriptCmd)});`;
@@ -90,15 +90,98 @@ ${code}`;
     )});`;
   }
 
+  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
+    return `${this.type}.getDriver().updateSettings(${JSON.stringify(settingsJson)});`;
+  }
+
+  codeFor_getSettings() {
+    return `let settings = ${this.type}.getDriver().getSettings();`;
+  }
+
+  // Session
+
+  codeFor_status() {
+    return `let status = ${this.type}.getDriver().status();`;
+  }
+
+  codeFor_getSession() {
+    return `let caps = ${this.type}.getDriver().getSession();`;
+  }
+
+  codeFor_getTimeouts() {
+    return `let timeouts = ${this.type}.getDriver().getTimeouts();`;
+  }
+
+  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
+    return '/* TODO implement setTimeouts */';
+  }
+
+  codeFor_getLogTypes() {
+    return `let getLogTypes = ${this.type}.getDriver().getLogTypes();`;
+  }
+
+  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
+    return `let logs = ${this.type}.getDriver().getLogs("${logType}");`;
+  }
+
+  // Context
+
+  codeFor_getContext() {
+    return `let context = ${this.type}.getDriver().getContext();`;
+  }
+
+  codeFor_getContexts() {
+    return `let contexts = ${this.type}.getDriver().getContexts();`;
+  }
+
+  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+    return `${this.type}.setContext("${name}");`;
+  }
+
+  // Device Interaction
+
+  codeFor_getWindowRect() {
+    return `let windowRect = ${this.type}.getDriver().getWindowRect();`;
+  }
+
+  codeFor_takeScreenshot() {
+    return `let screenshot = ${this.type}.takeScreenshot();`;
+  }
+
+  codeFor_isKeyboardShown() {
+    return `let isKeyboardShown = ${this.type}.getDriver().isKeyboardShown();`;
+  }
+
+  codeFor_getOrientation() {
+    return `let orientation = ${this.type}.getDriver().getOrientation();`;
+  }
+
+  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
+    return `${this.type}.getDriver().setOrientation("${orientation}");`;
+  }
+
+  codeFor_getGeoLocation() {
+    return `let location = ${this.type}.getDriver().getGeoLocation();`;
+  }
+
+  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
+    return `${this.type}.getDriver().setGeoLocation({latitude: ${latitude}, longitude: ${longitude}, altitude: ${altitude}});`;
+  }
+
+  codeFor_rotateDevice(
+    varNameIgnore,
+    varIndexIgnore,
+    x,
+    y,
+    radius,
+    rotation,
+    touchCount,
+    duration,
+  ) {
+    return `${this.type}.getDriver().rotateDevice({x: ${x}, y: ${y}, duration: ${duration}, radius: ${radius}, rotation: ${rotation}, touchCount: ${touchCount}});`;
+  }
+
   // App Management
-
-  codeFor_getCurrentActivity() {
-    return `let activityName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentActivity')}`;
-  }
-
-  codeFor_getCurrentPackage() {
-    return `let packageName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
-  }
 
   codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
     return `${this.type}.installApp("${app}");`;
@@ -120,20 +203,8 @@ ${code}`;
     return `${this.type}.removeApp("${app}")`;
   }
 
-  codeFor_getStrings(varNameIgnore, varIndexIgnore, language, stringFile) {
-    return `let appStrings = ${this.type}.getDriver().getStrings(${
-      language ? `"${language}", ` : ''
-    }${stringFile ? `"${stringFile}"` : ''});`;
-  }
-
-  // Clipboard
-
-  codeFor_getClipboard() {
-    return `let clipboardText = ${this.type}.getDriver().getClipboard();`;
-  }
-
-  codeFor_setClipboard(varNameIgnore, varIndexIgnore, clipboardText) {
-    return `${this.type}.getDriver().setClipboard("${clipboardText}")`;
+  codeFor_queryAppState(varNameIgnore, varIndexIgnore, app) {
+    return `let appState = ${this.type}.getDriver().queryAppState("${app}");`;
   }
 
   // File Transfer
@@ -150,111 +221,6 @@ ${code}`;
     return `let fileBase64 = ${this.type}.getDriver().pullFolder("${folderToPullFrom}");`;
   }
 
-  // Device Interaction
-
-  codeFor_isLocked() {
-    return `let isLocked = ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
-  }
-
-  codeFor_rotateDevice(
-    varNameIgnore,
-    varIndexIgnore,
-    x,
-    y,
-    radius,
-    rotation,
-    touchCount,
-    duration,
-  ) {
-    return `${this.type}.getDriver().rotateDevice({x: ${x}, y: ${y}, duration: ${duration}, radius: ${radius}, rotation: ${rotation}, touchCount: ${touchCount}});`;
-  }
-
-  codeFor_touchId(varNameIgnore, varIndexIgnore, match) {
-    return `${this.type}.getDriver().touchId(${match});`;
-  }
-
-  codeFor_toggleEnrollTouchId(varNameIgnore, varIndexIgnore, enroll) {
-    return `${this.type}.getDriver().toggleEnrollTouchId(${enroll});`;
-  }
-
-  // Keyboard
-
-  codeFor_isKeyboardShown() {
-    return `let isKeyboardShown = ${this.type}.getDriver().isKeyboardShown();`;
-  }
-
-  // Connectivity
-
-  codeFor_toggleAirplaneMode() {
-    return `${this.type}.getDriver().toggleAirplaneMode();`;
-  }
-
-  codeFor_toggleData() {
-    return `${this.type}.getDriver().toggleData();`;
-  }
-
-  codeFor_toggleWiFi() {
-    return `${this.type}.getDriver().toggleWiFi();`;
-  }
-
-  codeFor_sendSMS(varNameIgnore, varIndexIgnore, phoneNumber, text) {
-    return `${this.type}.getDriver().sendSms("${phoneNumber}", "${text}");`;
-  }
-
-  codeFor_gsmCall(varNameIgnore, varIndexIgnore, phoneNumber, action) {
-    return `${this.type}.getDriver().gsmCall("${phoneNumber}", "${action}");`;
-  }
-
-  codeFor_gsmSignal(varNameIgnore, varIndexIgnore, signalStrength) {
-    return `${this.type}.getDriver().gsmSignal("${signalStrength}");`;
-  }
-
-  codeFor_gsmVoice(varNameIgnore, varIndexIgnore, state) {
-    return `${this.type}.getDriver().gsmVoice("${state}");`;
-  }
-
-  // Session
-
-  codeFor_getSession() {
-    return `let caps = ${this.type}.getDriver().getSession();`;
-  }
-
-  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
-    return '/* TODO implement setTimeouts */';
-  }
-
-  codeFor_getOrientation() {
-    return `let orientation = ${this.type}.getDriver().getOrientation();`;
-  }
-
-  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
-    return `${this.type}.getDriver().setOrientation("${orientation}");`;
-  }
-
-  codeFor_getGeoLocation() {
-    return `let location = ${this.type}.getDriver().getGeoLocation();`;
-  }
-
-  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
-    return `${this.type}.getDriver().setGeoLocation({latitude: ${latitude}, longitude: ${longitude}, altitude: ${altitude}});`;
-  }
-
-  codeFor_getLogTypes() {
-    return `let getLogTypes = ${this.type}.getDriver().getLogTypes();`;
-  }
-
-  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
-    return `let logs = ${this.type}.getDriver().getLogs("${logType}");`;
-  }
-
-  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
-    return `${this.type}.getDriver().updateSettings(${JSON.stringify(settingsJson)});`;
-  }
-
-  codeFor_getSettings() {
-    return `let settings = ${this.type}.getDriver().getSettings();`;
-  }
-
   // Web
 
   codeFor_navigateTo(varNameIgnore, varIndexIgnore, url) {
@@ -262,7 +228,7 @@ ${code}`;
   }
 
   codeFor_getUrl() {
-    return `${this.type}.getUrl();`;
+    return `let currentUrl = ${this.type}.getUrl();`;
   }
 
   codeFor_back() {
@@ -277,17 +243,27 @@ ${code}`;
     return `${this.type}.getDriver().refresh();`;
   }
 
-  // Context
-
-  codeFor_getContext() {
-    return `let context = ${this.type}.getDriver().getContext();`;
+  codeFor_getTitle() {
+    return `let title = ${this.type}.getTitle();`;
   }
 
-  codeFor_getContexts() {
-    return `let contexts = ${this.type}.getDriver().getContexts();`;
+  codeFor_getWindowHandle() {
+    return `let windowHandle = ${this.type}.getDriver().getWindowHandle();`;
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
-    return `${this.type}.setContext("${name}");`;
+  codeFor_closeWindow() {
+    return `${this.type}.closeWindow();`;
+  }
+
+  codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
+    return `${this.type}.selectWindow("${handle}");`;
+  }
+
+  codeFor_getWindowHandles() {
+    return `let windowHandles = ${this.type}.getWindowHandles();`;
+  }
+
+  codeFor_createWindow(varNameIgnore, varIndexIgnore, type) {
+    return `let newWindow = await ${this.type}.getDriver().createWindow("${type}");`;
   }
 }

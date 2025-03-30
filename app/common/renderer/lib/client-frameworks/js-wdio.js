@@ -89,7 +89,7 @@ main().catch(console.log);`;
 `;
   }
 
-  // Execute Script
+  // Top-Level Commands
 
   codeFor_executeScriptNoArgs(scriptCmd) {
     return `await driver.executeScript(${JSON.stringify(scriptCmd)});`;
@@ -99,15 +99,98 @@ main().catch(console.log);`;
     return `await driver.executeScript(${JSON.stringify(scriptCmd)}, ${JSON.stringify(jsonArg)});`;
   }
 
+  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
+    return `await driver.updateSettings(${JSON.stringify(settingsJson)});`;
+  }
+
+  codeFor_getSettings() {
+    return `let settings = await driver.getSettings();`;
+  }
+
+  // Session
+
+  codeFor_status() {
+    return `let status = await driver.status();`;
+  }
+
+  codeFor_getSession() {
+    return `let sessionDetails = await driver.getSession();`;
+  }
+
+  codeFor_getTimeouts() {
+    return `let timeouts = await driver.getTimeouts();`;
+  }
+
+  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
+    return '/* TODO implement setTimeouts */';
+  }
+
+  codeFor_getLogTypes() {
+    return `let logTypes = await driver.getLogTypes();`;
+  }
+
+  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
+    return `let logs = await driver.getLogs("${logType}");`;
+  }
+
+  // Context
+
+  codeFor_getContext() {
+    return `let context = await driver.getContext();`;
+  }
+
+  codeFor_getContexts() {
+    return `let contexts = await driver.getContexts();`;
+  }
+
+  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+    return `await driver.switchContext("${name}");`;
+  }
+
+  // Device Interaction
+
+  codeFor_getWindowRect() {
+    return `let windowRect = await driver.getWindowRect();`;
+  }
+
+  codeFor_takeScreenshot() {
+    return `let screenshot = await driver.takeScreenshot();`;
+  }
+
+  codeFor_isKeyboardShown() {
+    return `let isKeyboardShown = await driver.isKeyboardShown();`;
+  }
+
+  codeFor_getOrientation() {
+    return `let orientation = await driver.getOrientation();`;
+  }
+
+  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
+    return `await driver.setOrientation("${orientation}");`;
+  }
+
+  codeFor_getGeoLocation() {
+    return `let location = await driver.getGeoLocation();`;
+  }
+
+  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
+    return `await driver.setGeoLocation({latitude: ${latitude}, longitude: ${longitude}, altitude: ${altitude}});`;
+  }
+
+  codeFor_rotateDevice(
+    varNameIgnore,
+    varIndexIgnore,
+    x,
+    y,
+    radius,
+    rotation,
+    touchCount,
+    duration,
+  ) {
+    return `await driver.rotateDevice(${x}, ${y}, ${radius}, ${rotation}, ${touchCount}, ${duration});`;
+  }
+
   // App Management
-
-  codeFor_getCurrentActivity() {
-    return `let activityName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentActivity')}`;
-  }
-
-  codeFor_getCurrentPackage() {
-    return `let packageName = ${this.codeFor_executeScriptNoArgs('mobile: getCurrentPackage')}`;
-  }
 
   codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
     return `await driver.installApp("${app}");`;
@@ -129,20 +212,8 @@ main().catch(console.log);`;
     return `await driver.removeApp("${app}")`;
   }
 
-  codeFor_getStrings(varNameIgnore, varIndexIgnore, language, stringFile) {
-    return `let appStrings = await driver.getStrings(${language ? `"${language}", ` : ''}${
-      stringFile ? `"${stringFile}"` : ''
-    });`;
-  }
-
-  // Clipboard
-
-  codeFor_getClipboard() {
-    return `let clipboardText = await driver.getClipboard();`;
-  }
-
-  codeFor_setClipboard(varNameIgnore, varIndexIgnore, clipboardText) {
-    return `await driver.setClipboard("${clipboardText}")`;
+  codeFor_queryAppState(varNameIgnore, varIndexIgnore, app) {
+    return `let appState = await driver.queryAppState("${app}");`;
   }
 
   // File Transfer
@@ -159,111 +230,6 @@ main().catch(console.log);`;
     return `let folderBase64 = await driver.pullFolder("${folderToPullFrom}");`;
   }
 
-  // Device Interaction
-
-  codeFor_isLocked() {
-    return `let isLocked = ${this.codeFor_executeScriptNoArgs('mobile: isLocked')}`;
-  }
-
-  codeFor_rotateDevice(
-    varNameIgnore,
-    varIndexIgnore,
-    x,
-    y,
-    radius,
-    rotation,
-    touchCount,
-    duration,
-  ) {
-    return `await driver.rotateDevice(${x}, ${y}, ${radius}, ${rotation}, ${touchCount}, ${duration});`;
-  }
-
-  codeFor_touchId(varNameIgnore, varIndexIgnore, match) {
-    return `await driver.touchId(${match});`;
-  }
-
-  codeFor_toggleEnrollTouchId(varNameIgnore, varIndexIgnore, enroll) {
-    return `await driver.toggleEnrollTouchId(${enroll});`;
-  }
-
-  // Keyboard
-
-  codeFor_isKeyboardShown() {
-    return `let isKeyboardShown = await driver.isKeyboardShown();`;
-  }
-
-  // Connectivity
-
-  codeFor_toggleAirplaneMode() {
-    return `await driver.toggleAirplaneMode();`;
-  }
-
-  codeFor_toggleData() {
-    return `await driver.toggleData();`;
-  }
-
-  codeFor_toggleWiFi() {
-    return `await driver.toggleWiFi();`;
-  }
-
-  codeFor_sendSMS(varNameIgnore, varIndexIgnore, phoneNumber, text) {
-    return `await driver.sendSms("${phoneNumber}", "${text}");`;
-  }
-
-  codeFor_gsmCall(varNameIgnore, varIndexIgnore, phoneNumber, action) {
-    return `await driver.gsmCall("${phoneNumber}", "${action}");`;
-  }
-
-  codeFor_gsmSignal(varNameIgnore, varIndexIgnore, signalStrength) {
-    return `await driver.gsmSignal("${signalStrength}");`;
-  }
-
-  codeFor_gsmVoice(varNameIgnore, varIndexIgnore, state) {
-    return `await driver.gsmVoice("${state}");`;
-  }
-
-  // Session
-
-  codeFor_getSession() {
-    return `let sessionDetails = await driver.getSession();`;
-  }
-
-  codeFor_setTimeouts(/*varNameIgnore, varIndexIgnore, timeoutsJson*/) {
-    return '/* TODO implement setTimeouts */';
-  }
-
-  codeFor_getOrientation() {
-    return `let orientation = await driver.getOrientation();`;
-  }
-
-  codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
-    return `await driver.setOrientation("${orientation}");`;
-  }
-
-  codeFor_getGeoLocation() {
-    return `let location = await driver.getGeoLocation();`;
-  }
-
-  codeFor_setGeoLocation(varNameIgnore, varIndexIgnore, latitude, longitude, altitude) {
-    return `await driver.setGeoLocation({latitude: ${latitude}, longitude: ${longitude}, altitude: ${altitude}});`;
-  }
-
-  codeFor_getLogTypes() {
-    return `let logTypes = await driver.getLogTypes();`;
-  }
-
-  codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
-    return `let logs = await driver.getLogs("${logType}");`;
-  }
-
-  codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
-    return `await driver.updateSettings(${JSON.stringify(settingsJson)});`;
-  }
-
-  codeFor_getSettings() {
-    return `let settings = await driver.getSettings();`;
-  }
-
   // Web
 
   codeFor_navigateTo(varNameIgnore, varIndexIgnore, url) {
@@ -271,7 +237,7 @@ main().catch(console.log);`;
   }
 
   codeFor_getUrl() {
-    return `let current_url = await driver.getUrl();`;
+    return `let currentUrl = await driver.getUrl();`;
   }
 
   codeFor_back() {
@@ -286,17 +252,27 @@ main().catch(console.log);`;
     return `await driver.refresh();`;
   }
 
-  // Context
-
-  codeFor_getContext() {
-    return `let context = await driver.getContext();`;
+  codeFor_getTitle() {
+    return `let title = await driver.getTitle();`;
   }
 
-  codeFor_getContexts() {
-    return `let contexts = await driver.getContexts();`;
+  codeFor_getWindowHandle() {
+    return `let windowHandle = await driver.getWindowHandle();`;
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
-    return `await driver.switchContext("${name}");`;
+  codeFor_closeWindow() {
+    return `await driver.closeWindow();`;
+  }
+
+  codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
+    return `await driver.switchToWindow("${handle}");`;
+  }
+
+  codeFor_getWindowHandles() {
+    return `let windowHandles = await driver.getWindowHandles();`;
+  }
+
+  codeFor_createWindow(varNameIgnore, varIndexIgnore, type) {
+    return `let newWindow = await driver.createWindow("${type}");`;
   }
 }
