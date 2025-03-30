@@ -14,7 +14,7 @@ import {
 import _ from 'lodash';
 
 import {ALERT, INPUT} from '../../constants/antd-types';
-import {COMMAND_ARG_TYPES, COMMAND_DEFINITIONS} from '../../constants/commands';
+import {COMMAND_ARG_TYPES, COMMAND_DEFINITIONS, TOP_LEVEL_COMMANDS} from '../../constants/commands';
 import InspectorStyles from './Inspector.module.css';
 
 const Commands = (props) => {
@@ -131,6 +131,17 @@ const Commands = (props) => {
     <div className={InspectorStyles['commands-container']}>
       <Space className={InspectorStyles.spaceContainer} direction="vertical" size="middle">
         {t('commandsDescription')}
+        <Row>
+          {_.toPairs(TOP_LEVEL_COMMANDS).map(([commandName, command], index) => (
+            <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
+              <div className={InspectorStyles['btn-container']}>
+                <Button onClick={() => startPerformingCommand(commandName, command)}>
+                  {commandName}
+                </Button>
+              </div>
+            </Col>
+          ))}
+        </Row>
         <Collapse>
           {_.toPairs(COMMAND_DEFINITIONS).map(([commandGroup, commands]) => (
             <Collapse.Panel header={t(commandGroup)} key={commandGroup}>

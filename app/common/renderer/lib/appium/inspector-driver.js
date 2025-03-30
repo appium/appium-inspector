@@ -128,7 +128,7 @@ export default class InspectorDriver {
           actions: args[0][key],
         }));
         res = await this.driver.performActions(actions);
-      } else if (methodName !== 'getPageSource' && methodName !== 'takeScreenshot') {
+      } else if (methodName !== 'getPageSource') {
         res = await this.driver[methodName].apply(this.driver, args);
       }
     }
