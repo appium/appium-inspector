@@ -271,7 +271,7 @@ driver.quit`;
   }
 
   codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
-    return `driver.switch_to_window '${handle}'`;
+    return `driver.switch_to.window '${handle}'`;
   }
 
   codeFor_getWindowHandles() {
@@ -279,6 +279,6 @@ driver.quit`;
   }
 
   codeFor_createWindow(varNameIgnore, varIndexIgnore, type) {
-    return `new_window = driver.switch_to.window :${type}`;
+    return `driver.switch_to.new_window :${type}`;
   }
 }
