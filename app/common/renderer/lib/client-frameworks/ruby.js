@@ -165,15 +165,15 @@ driver.quit`;
   // Device Interaction
 
   codeFor_getWindowRect() {
-    return `window_rect = driver.get_window_rect`;
+    return `window_rect = driver.window_rect`;
   }
 
   codeFor_takeScreenshot() {
-    return `screenshot = driver.take_screenshot`;
+    return `screenshot = driver.screenshot_as :base64`;
   }
 
   codeFor_isKeyboardShown() {
-    return `is_keyboard_shown = ${this.codeFor_executeScriptNoArgs('mobile: isKeyboardShown')}`;
+    return `is_keyboard_shown = driver.keyboard_shown?`;
   }
 
   codeFor_getOrientation() {
@@ -243,7 +243,7 @@ driver.quit`;
   }
 
   codeFor_getUrl() {
-    return `current_url = driver.get_current_url`;
+    return `current_url = driver.current_url`;
   }
 
   codeFor_back() {
@@ -251,34 +251,34 @@ driver.quit`;
   }
 
   codeFor_forward() {
-    return `driver.forward`;
+    return `driver.navigate.forward`;
   }
 
   codeFor_refresh() {
-    return `driver.refresh`;
+    return `driver.navigate.refresh`;
   }
 
   codeFor_getTitle() {
-    return `title = driver.get_title`;
+    return `title = driver.title`;
   }
 
   codeFor_getWindowHandle() {
-    return `window_handle = driver.get_window_handle`;
+    return `window_handle = driver.window_handle`;
   }
 
   codeFor_closeWindow() {
-    return `driver.close_window`;
+    return `driver.close`;
   }
 
   codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
-    return `driver.switch_to_window '${handle}'`;
+    return `driver.switch_to.window '${handle}'`;
   }
 
   codeFor_getWindowHandles() {
-    return `window_handles = driver.get_window_handles`;
+    return `window_handles = driver.window_handles`;
   }
 
-  codeFor_createWindow(varNameIgnore, varIndexIgnore, type) {
-    return `new_window = driver.new_window '${type}'`;
+  codeFor_createWindow() {
+    return `# Not supported: createWindow`;
   }
 }
