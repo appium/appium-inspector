@@ -278,7 +278,7 @@ driver.quit`;
     return `window_handles = driver.window_handles`;
   }
 
-  codeFor_createWindow(varNameIgnore, varIndexIgnore, type) {
-    return `driver.switch_to.new_window :${type}`;
+  codeFor_createWindow() {
+    return `# Not supported: 'driver.switch_to.new_window' opens a new window but it also switches to the window.`;
   }
 }
