@@ -279,6 +279,6 @@ driver.quit`;
   }
 
   codeFor_createWindow() {
-    return `# Not supported: 'driver.switch_to.new_window' opens a new window but it also switches to the window.`;
+    return `# Not supported: createWindow`;
   }
 }
