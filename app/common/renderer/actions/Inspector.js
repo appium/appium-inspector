@@ -738,7 +738,10 @@ export function getActiveAppId(isIOS, isAndroid) {
         dispatch({type: SET_APP_ID, appId: bundleId});
       }
       if (isAndroid) {
-        const action = applyClientMethod({methodName: 'getCurrentPackage'});
+        const action = applyClientMethod({
+          methodName: 'executeScript',
+          args: ['mobile:getCurrentPackage', []],
+        });
         const appPackage = await action(dispatch, getState);
         dispatch({type: SET_APP_ID, appId: appPackage});
       }

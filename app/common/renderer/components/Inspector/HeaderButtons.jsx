@@ -73,21 +73,36 @@ const HeaderButtons = (props) => {
             <Button
               id="btnPressHomeButton"
               icon={<IoChevronBackOutline className={InspectorStyles['custom-button-icon']} />}
-              onClick={() => applyClientMethod({methodName: 'pressKeyCode', args: [4]})}
+              onClick={() =>
+                applyClientMethod({
+                  methodName: 'executeScript',
+                  args: ['mobile:pressKey', [{keycode: 4}]],
+                })
+              }
             />
           </Tooltip>
           <Tooltip title={t('Press Home Button')}>
             <Button
               id="btnPressHomeButton"
               icon={<BiCircle className={InspectorStyles['custom-button-icon']} />}
-              onClick={() => applyClientMethod({methodName: 'pressKeyCode', args: [3]})}
+              onClick={() =>
+                applyClientMethod({
+                  methodName: 'executeScript',
+                  args: ['mobile:pressKey', [{keycode: 3}]],
+                })
+              }
             />
           </Tooltip>
           <Tooltip title={t('Press App Switch Button')}>
             <Button
               id="btnPressHomeButton"
               icon={<BiSquare className={InspectorStyles['custom-button-icon']} />}
-              onClick={() => applyClientMethod({methodName: 'pressKeyCode', args: [187]})}
+              onClick={() =>
+                applyClientMethod({
+                  methodName: 'executeScript',
+                  args: ['mobile:pressKey', [{keycode: 187}]],
+                })
+              }
             />
           </Tooltip>
         </>
