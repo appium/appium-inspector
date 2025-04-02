@@ -102,7 +102,7 @@
     "@appium/support": "6.0.8",
     "@types/lodash": "4.17.16",
     "@types/react": "18.3.20",
-    "@types/react-dom": "18.3.5",
+    "@types/react-dom": "18.3.6",
     "@vitejs/plugin-react": "4.3.4",
     "asyncbox": "3.0.0",
     "electron": "35.1.2",
