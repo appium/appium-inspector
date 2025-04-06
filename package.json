@@ -113,7 +113,7 @@
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "globals": "16.0.0",
-    "less": "4.2.2",
+    "less": "4.3.0",
     "prettier": "3.5.3",
     "rimraf": "6.0.1",
     "vite": "6.2.5",
