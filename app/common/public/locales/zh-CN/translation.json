@@ -110,7 +110,7 @@
   "Start this Kind of Session with Code": "用代码开始这个类别的会话",
   "Clear Actions": "清除操作",
   "Close Recorder": "关闭录制",
-  "enableRecordingAndPerformActions": "Enable recording in the application header, then perform some actions to see code show up here",
+  "enableRecordingAndPerformActions": "",
   "Recorder": "录制",
   "Attribute": "属性",
   "Value": "值",
