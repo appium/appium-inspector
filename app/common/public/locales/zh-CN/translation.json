@@ -289,5 +289,6 @@
   "AccessToken": "访问令牌",
   "Token": "令牌",
   "Key": "密钥",
-  "Secret": "密钥"
+  "Secret": "密钥",
+  "Close tab": "关闭标签页"
 }

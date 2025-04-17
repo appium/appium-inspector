@@ -1,5 +1,5 @@
 import {LinkOutlined} from '@ant-design/icons';
-import {Badge, Button, Spin, Tabs} from 'antd';
+import {Badge, Button, Menu, Dropdown, Spin, Tabs} from 'antd';
 import _ from 'lodash';
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router';
@@ -27,8 +27,10 @@ const Session = (props) => {
     tabKey,
     switchTabs,
     serverType,
+    setServerType,
     server,
     visibleProviders = [],
+    removeVisibleProvider,
     caps,
     capsUUID,
     capsName,
@@ -41,6 +43,7 @@ const Session = (props) => {
     newSessionLoading,
     attachSessId,
     t,
+    setVisibleProviders,
   } = props;
 
   const navigate = useNavigate();
@@ -59,6 +62,31 @@ const Session = (props) => {
   const loadNewSession = async (caps, attachSessId = null) => {
     if (await newSession(_.cloneDeep(caps), attachSessId)) {
       navigate('/inspector', {replace: true});
+    }
+  };
+
+  const getContextMenu = (tabKey) => ({
+    items: [
+      {
+        key: 'closeTab',
+        label: t('Close tab'),
+        onClick: () => handleCloseTab(tabKey),
+        disabled: tabKey === SERVER_TYPES.REMOTE
+      }
+    ]
+  });
+
+  const handleContextMenu = (e, tabKey) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleCloseTab = (tabKey) => {
+    if (tabKey !== SERVER_TYPES.REMOTE) {
+      removeVisibleProvider(tabKey);
+      if (serverType === tabKey) {
+        setServerType(SERVER_TYPES.REMOTE);
+      }
     }
   };
 
@@ -114,7 +142,13 @@ const Session = (props) => {
                   return true;
                 }
                 return {
-                  label: <div>{provider.tabhead()}</div>,
+                  label: (
+                    <Dropdown menu={getContextMenu(providerName)} trigger={['contextMenu']}>
+                      <div onContextMenu={(e) => handleContextMenu(e, providerName)}>
+                        {provider.tabhead()}
+                      </div>
+                    </Dropdown>
+                  ),
                   key: providerName,
                   children: provider.tab(props),
                 };
