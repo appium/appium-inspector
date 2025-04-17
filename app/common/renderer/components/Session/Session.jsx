@@ -1,7 +1,7 @@
 import {LinkOutlined} from '@ant-design/icons';
 import {Badge, Button, Dropdown, Spin, Tabs} from 'antd';
 import _ from 'lodash';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router';
 
 import {BUTTON} from '../../constants/antd-types';
@@ -45,6 +45,7 @@ const Session = (props) => {
   } = props;
 
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState(SESSION_BUILDER_TABS.CAPS_BUILDER);
 
   const isAttaching = serverType === 'attach';
 
@@ -55,6 +56,16 @@ const Session = (props) => {
       return;
     }
     await changeServerType(tab);
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    switchTabs(tab);
+  };
+
+  const handleSwitchTabs = (tab) => {
+    switchTabs(tab);
+    setActiveTab(tab);
   };
 
   const loadNewSession = async (caps, attachSessId = null) => {
@@ -157,8 +168,8 @@ const Session = (props) => {
         </div>
 
         <Tabs
-          activeKey={serverType}
-          onChange={switchTabs}
+          activeKey={activeTab}
+          onChange={handleTabChange}
           className={SessionStyles.scrollingTabCont}
           items={[
             {
@@ -177,7 +188,7 @@ const Session = (props) => {
               key: SESSION_BUILDER_TABS.SAVED_CAPS,
               className: SessionStyles.scrollingTab,
               disabled: savedSessions.length === 0,
-              children: <SavedSessions {...props} />,
+              children: <SavedSessions {...props} handleSwitchTabs={handleSwitchTabs} />,
             },
             {
               label: t('Attach to Session'),
