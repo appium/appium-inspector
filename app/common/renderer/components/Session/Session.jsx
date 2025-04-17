@@ -1,16 +1,12 @@
+import {Badge, Button, Dropdown, Spin, Tabs} from 'antd';
 import {LinkOutlined} from '@ant-design/icons';
-import {Badge, Button, Menu, Dropdown, Spin, Tabs} from 'antd';
 import _ from 'lodash';
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router';
 
+import {ADD_CLOUD_PROVIDER_TAB_KEY, SERVER_TYPES, SESSION_BUILDER_TABS} from '../../constants/session-builder';
 import {BUTTON} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
-import {
-  ADD_CLOUD_PROVIDER_TAB_KEY,
-  SERVER_TYPES,
-  SESSION_BUILDER_TABS,
-} from '../../constants/session-builder';
 import {ipcRenderer, openLink} from '../../polyfills';
 import {log} from '../../utils/logger';
 import AdvancedServerParams from './AdvancedServerParams.jsx';
@@ -24,7 +20,6 @@ import SessionStyles from './Session.module.css';
 
 const Session = (props) => {
   const {
-    tabKey,
     switchTabs,
     serverType,
     setServerType,
@@ -43,12 +38,11 @@ const Session = (props) => {
     newSessionLoading,
     attachSessId,
     t,
-    setVisibleProviders,
   } = props;
 
   const navigate = useNavigate();
 
-  const isAttaching = tabKey === 'attach';
+  const isAttaching = serverType === 'attach';
 
   const handleSelectServerTab = async (tab) => {
     const {changeServerType, addCloudProvider} = props;
@@ -76,7 +70,7 @@ const Session = (props) => {
     ]
   });
 
-  const handleContextMenu = (e, tabKey) => {
+  const handleContextMenu = (e) => {
     e.preventDefault();
     e.stopPropagation();
   };
@@ -97,7 +91,6 @@ const Session = (props) => {
       setSavedServerParams,
       initFromSessionFile,
       setStateFromSessionFile,
-      setVisibleProviders,
       bindWindowClose,
       initFromQueryString,
       saveSessionAsFile,
@@ -107,7 +100,6 @@ const Session = (props) => {
         bindWindowClose();
         switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER);
         await getSavedSessions();
-        await setVisibleProviders();
         await setSavedServerParams();
         await setLocalServerParams();
         initFromQueryString(loadNewSession);
@@ -144,7 +136,7 @@ const Session = (props) => {
                 return {
                   label: (
                     <Dropdown menu={getContextMenu(providerName)} trigger={['contextMenu']}>
-                      <div onContextMenu={(e) => handleContextMenu(e, providerName)}>
+                      <div onContextMenu={(e) => handleContextMenu(e)}>
                         {provider.tabhead()}
                       </div>
                     </Dropdown>
@@ -163,7 +155,7 @@ const Session = (props) => {
         </div>
 
         <Tabs
-          activeKey={tabKey}
+          activeKey={serverType}
           onChange={switchTabs}
           className={SessionStyles.scrollingTabCont}
           items={[
