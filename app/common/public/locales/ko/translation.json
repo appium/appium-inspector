@@ -291,6 +291,5 @@
   "AccessToken": "AccessToken",
   "Token": "Token",
   "Key": "Key",
-  "Secret": "시크릿",
-  "Close tab": "탭 닫기"
+  "Secret": "시크릿"
 }

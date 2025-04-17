@@ -291,6 +291,5 @@
   "AccessToken": "AccessToken",
   "Token": "Token",
   "Key": "Key",
-  "Secret": "密鑰",
-  "Close tab": "關閉標籤頁"
+  "Secret": "密鑰"
 }

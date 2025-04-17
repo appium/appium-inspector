@@ -291,6 +291,5 @@
   "AccessToken": "AccessToken",
   "Token": "Token",
   "Key": "Key",
-  "Secret": "Secret",
-  "Close tab": "Fermer l'onglet"
+  "Secret": "Secret"
 }

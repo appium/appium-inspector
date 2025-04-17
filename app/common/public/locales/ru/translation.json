@@ -291,6 +291,5 @@
   "AccessToken": "AccessToken",
   "Token": "Token",
   "Key": "Key",
-  "Secret": "Секрет",
-  "Close tab": "Закрыть вкладку"
+  "Secret": "Секрет"
 }

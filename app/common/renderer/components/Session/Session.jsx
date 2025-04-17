@@ -6,14 +6,19 @@ import {useNavigate} from 'react-router';
 
 import {BUTTON} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
-import {ADD_CLOUD_PROVIDER_TAB_KEY, SERVER_TYPES, SESSION_BUILDER_TABS} from '../../constants/session-builder';
+import {
+  ADD_CLOUD_PROVIDER_TAB_KEY,
+  SERVER_TYPES,
+  SESSION_BUILDER_TABS,
+} from '../../constants/session-builder';
 import {ipcRenderer, openLink} from '../../polyfills';
 import {log} from '../../utils/logger';
+
 import AdvancedServerParams from './AdvancedServerParams.jsx';
 import AttachToSession from './AttachToSession.jsx';
 import CapabilityEditor from './CapabilityEditor.jsx';
-import CloudProviders from './CloudProviders.jsx';
 import CloudProviderSelector from './CloudProviderSelector.jsx';
+import CloudProviders from './CloudProviders.jsx';
 import SavedSessions from './SavedSessions.jsx';
 import ServerTabCustom from './ServerTabCustom.jsx';
 import SessionStyles from './Session.module.css';
@@ -65,9 +70,9 @@ const Session = (props) => {
         key: 'closeTab',
         label: t('Close tab'),
         onClick: () => handleCloseTab(tabKey),
-        disabled: tabKey === SERVER_TYPES.REMOTE
-      }
-    ]
+        disabled: tabKey === SERVER_TYPES.REMOTE,
+      },
+    ],
   });
 
   const handleContextMenu = (e) => {
@@ -128,7 +133,7 @@ const Session = (props) => {
                 key: SERVER_TYPES.REMOTE,
                 children: <ServerTabCustom {...props} />,
               },
-              ..._(visibleProviders).map((providerName) => {
+              ..._.map(visibleProviders, (providerName) => {
                 const provider = CloudProviders[providerName];
                 if (!provider) {
                   return true;
@@ -136,9 +141,7 @@ const Session = (props) => {
                 return {
                   label: (
                     <Dropdown menu={getContextMenu(providerName)} trigger={['contextMenu']}>
-                      <div onContextMenu={(e) => handleContextMenu(e)}>
-                        {provider.tabhead()}
-                      </div>
+                      <div onContextMenu={(e) => handleContextMenu(e)}>{provider.tabhead()}</div>
                     </Dropdown>
                   ),
                   key: providerName,
