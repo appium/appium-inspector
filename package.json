@@ -105,7 +105,7 @@
     "@types/react-dom": "18.3.6",
     "@vitejs/plugin-react": "4.4.0",
     "asyncbox": "3.0.0",
-    "electron": "35.1.5",
+    "electron": "35.2.0",
     "electron-builder": "26.0.12",
     "electron-devtools-installer": "4.0.0",
     "electron-vite": "3.1.0",
