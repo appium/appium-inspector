@@ -36,7 +36,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@appium/base-plugin": "2.3.5"
+    "@appium/base-plugin": "2.3.6"
   },
   "devDependencies": {},
   "engines": {
