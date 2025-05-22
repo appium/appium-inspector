@@ -101,7 +101,7 @@
     "@appium/fake-driver": "5.7.2",
     "@appium/support": "6.1.0",
     "@types/lodash": "4.17.17",
-    "@types/react": "18.3.21",
+    "@types/react": "18.3.22",
     "@types/react-dom": "18.3.7",
     "@vitejs/plugin-react": "4.4.1",
     "asyncbox": "3.0.0",
