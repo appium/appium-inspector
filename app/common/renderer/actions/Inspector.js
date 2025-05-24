@@ -584,7 +584,7 @@ export function selectLocatedElement(sourceJSON, sourceXML, bounds, id) {
   // Parse the source tree and find all nodes whose bounds match the expected bounds
   // Return the path of each node
   function findPathsMatchingBounds() {
-    if (!bounds || !(sourceJSON.children?.[0]?.attributes)) {
+    if (!bounds || !sourceJSON.children?.[0]?.attributes) {
       return null;
     }
     if (sourceJSON.children[0].attributes.bounds) {

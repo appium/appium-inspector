@@ -189,7 +189,7 @@ function getUniqueXPath(doc, domNode, attrs) {
     if (isUnique) {
       // even if this node name is unique, if it's the root node, we don't want to refer to it using
       // '//' but rather '/'
-      if (!(domNode.parentNode?.tagName)) {
+      if (!domNode.parentNode?.tagName) {
         xpath = `/${domNode.tagName}`;
       }
       return [xpath, true];

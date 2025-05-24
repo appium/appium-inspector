@@ -14,7 +14,7 @@ export const domToXML = (dom) => xmlSerializer.serializeToString(dom);
  * @returns {Array<Node|null>} list of Nodes
  */
 export function childNodesOf(domNode) {
-  if (!(domNode?.hasChildNodes())) {
+  if (!domNode?.hasChildNodes()) {
     return [];
   }
   return _.filter(domNode.childNodes, ['nodeType', domNode.ELEMENT_NODE]);
