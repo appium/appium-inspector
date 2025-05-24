@@ -14,7 +14,7 @@ export const domToXML = (dom) => xmlSerializer.serializeToString(dom);
  * @returns {Array<Node|null>} list of Nodes
  */
 export function childNodesOf(domNode) {
-  if (!domNode || !domNode.hasChildNodes()) {
+  if (!domNode?.hasChildNodes()) {
     return [];
   }
   return _.filter(domNode.childNodes, ['nodeType', domNode.ELEMENT_NODE]);
@@ -79,7 +79,7 @@ export function xmlToJSON(sourceXML) {
   };
   const sourceDoc = xmlToDOM(sourceXML);
   // get the first child element node in the doc. some drivers write their xml differently so we
-  // first try to find an element as a direct descendend of the doc, then look for one in
+  // first try to find an element as a direct descended of the doc, then look for one in
   // documentElement
   const firstChild = childNodesOf(sourceDoc)[0] || childNodesOf(sourceDoc.documentElement)[0];
 

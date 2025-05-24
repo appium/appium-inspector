@@ -66,7 +66,7 @@ const HighlighterRects = (props) => {
 
   // This func creates a new object for each element and determines its properties
   // 'elements' is an array that stores all prev elements
-  // 'overlaps' is an object which organzies elements by their positions
+  // 'overlaps' is an object which organizes elements by their positions
   const buildElementsWithProps = (sourceJSON, prevElement, elements, overlaps) => {
     if (!sourceJSON) {
       return {};
