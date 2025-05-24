@@ -133,7 +133,7 @@ export function showError(e, params = {methodName: null, secs: 5, url: null}) {
     try {
       e.data = JSON.parse(e.data);
     } catch {}
-    if (e.data.value && e.data.value.message) {
+    if (e.data.value?.message) {
       errMessage = e.data.value.message;
     } else {
       errMessage = e.data;
@@ -280,7 +280,7 @@ export function newSession(originalCaps, attachSessId = null) {
     }
 
     // If a newCommandTimeout wasn't provided, set it to 60 * 60 so that sessions don't close on users in short term.
-    // I saw sometimes infinit session timeout was not so good for cloud providers.
+    // I saw sometimes infinite session timeout was not so good for cloud providers.
     // So, let me define this value as NEW_COMMAND_TIMEOUT_SEC by default.
     if (_.isUndefined(sessionCaps[CAPS_NEW_COMMAND])) {
       sessionCaps[CAPS_NEW_COMMAND] = NEW_COMMAND_TIMEOUT_SEC;

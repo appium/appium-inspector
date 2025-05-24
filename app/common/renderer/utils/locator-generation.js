@@ -189,7 +189,7 @@ function getUniqueXPath(doc, domNode, attrs) {
     if (isUnique) {
       // even if this node name is unique, if it's the root node, we don't want to refer to it using
       // '//' but rather '/'
-      if (!(domNode.parentNode && domNode.parentNode.tagName)) {
+      if (!domNode.parentNode?.tagName) {
         xpath = `/${domNode.tagName}`;
       }
       return [xpath, true];
@@ -293,7 +293,7 @@ export function getOptimalXPath(doc, domNode) {
       }
     }
 
-    // Once we've gone through all our cases, if we do have a semi uniqe xpath, send that back
+    // Once we've gone through all our cases, if we do have a semi unique xpath, send that back
     if (semiUniqueXpath) {
       return semiUniqueXpath;
     }
