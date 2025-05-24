@@ -104,7 +104,7 @@ pointer up, or pause. Each action requires different parameters.
 Valid combinations of move/pointer down/pointer up actions will automatically be reflected on the
 [screenshot](./screenshot.md), showing the exact behavior of the gesture.
 
-![Pointer Actions Visualised](./assets/images/gestures/pointer-action-visualisation.png)
+![Pointer Actions Visualized](./assets/images/gestures/pointer-action-visualization.png)
 
 #### Move
 
