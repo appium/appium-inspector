@@ -16,7 +16,7 @@ async function uploadToStorage() {
     payload: createReadStream(RESOURCE_PATH),
     isProjectSpecific: false,
   });
-  log.info(`'${RESOURCE_NAME}' has been succesfully uploaded to Crowdin`);
+  log.info(`'${RESOURCE_NAME}' has been successfully uploaded to Crowdin`);
   return storageData.id;
 }
 

@@ -68,7 +68,7 @@ Mode. The differences are as follows:
 
 ### Download Screenshot
 
-![Download Sreenshot Button](./assets/images/screenshot/download-screenshot-button.png)
+![Download Screenshot Button](./assets/images/screenshot/download-screenshot-button.png)
 
 !!! info
 
