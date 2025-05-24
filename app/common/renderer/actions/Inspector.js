@@ -584,7 +584,7 @@ export function selectLocatedElement(sourceJSON, sourceXML, bounds, id) {
   // Parse the source tree and find all nodes whose bounds match the expected bounds
   // Return the path of each node
   function findPathsMatchingBounds() {
-    if (!bounds || !sourceJSON.children || !sourceJSON.children[0].attributes) {
+    if (!bounds || !(sourceJSON.children?.[0]?.attributes)) {
       return null;
     }
     if (sourceJSON.children[0].attributes.bounds) {
@@ -945,7 +945,7 @@ export function uploadGesturesFromFile(fileList) {
     for (const gesture of gestures) {
       const {fileName, content, error} = gesture;
       try {
-        // Some error occured while reading the uploaded file
+        // Some error occurred while reading the uploaded file
         if (error) {
           invalidGestures[fileName] = [i18n.t('gestureInvalidJsonError')];
           continue;

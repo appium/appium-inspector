@@ -5,7 +5,7 @@ export default class JsOxygenFramework extends CommonClientFramework {
   static highlightLang = 'js';
 
   get type() {
-    if (this.caps && this.caps.platformName && this.caps.platformName.toLowerCase() === 'windows') {
+    if (this.caps?.platformName && this.caps.platformName.toLowerCase() === 'windows') {
       return 'win';
     }
     return 'mob';
