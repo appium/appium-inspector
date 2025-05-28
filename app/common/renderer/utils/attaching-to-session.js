@@ -76,13 +76,16 @@ export const getSessionInfo = (session, serverType) => {
 };
 
 // Make a session-related HTTP GET request to the provided Appium server URL
-export async function fetchSessionInformation({url, authToken, ...params}) {
+export async function fetchSessionInformation({url, authToken, apiKey, ...params}) {
+  const headers = {
+    'content-type': 'application/json; charset=utf-8',
+    ...(apiKey ? {Authorization: `Bearer ${apiKey}`} : {}),
+    ...(authToken ? {Authorization: `Basic ${authToken}`} : {}),
+  };
+
   return await axios({
     url,
-    headers: {
-      'content-type': 'application/json; charset=utf-8',
-      ...(authToken ? {Authorization: `Basic ${authToken}`} : {}),
-    },
+    headers,
     ...params,
   });
 }
