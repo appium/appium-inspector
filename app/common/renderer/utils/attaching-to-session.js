@@ -81,7 +81,7 @@ export async function fetchSessionInformation({url, headers, ...params}) {
     url,
     headers: {
       'content-type': 'application/json; charset=utf-8',
-      ...headers
+      ...headers,
     },
     ...params,
   });

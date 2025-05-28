@@ -226,7 +226,10 @@ export function newSession(originalCaps, attachSessId = null) {
     let sessionCaps = prefixedCaps ? getCapsObject(prefixedCaps) : {};
     sessionCaps = addCustomCaps(sessionCaps);
 
-    let {host, port, username, accessKey, https, path, headers} = await retreiveVendorProperties({...session, sessionCaps});
+    let {host, port, username, accessKey, https, path, headers} = await retreiveVendorProperties({
+      ...session,
+      sessionCaps,
+    });
 
     // if the server path is '' (or any other kind of falsy) set it to default
     path = path || DEFAULT_SERVER_PATH;
@@ -658,9 +661,7 @@ function retreiveVendorProperties({server, serverType, sessionCaps}) {
       return false;
     }
   } else {
-    log.info(
-      `No vendor mapping is defined for the server type '${serverType}'. Using defaults`,
-    );
+    log.info(`No vendor mapping is defined for the server type '${serverType}'. Using defaults`);
 
     return {};
   }
@@ -674,7 +675,11 @@ export function getRunningSessions() {
     const avoidServerTypes = ['sauce'];
     const state = getState().session;
     const {server, serverType, attachSessId} = state;
-    let {path, host, port, username, accessKey, https, headers} = await retreiveVendorProperties({server, serverType, sessionCaps: {}});
+    let {path, host, port, username, accessKey, https, headers} = await retreiveVendorProperties({
+      server,
+      serverType,
+      sessionCaps: {},
+    });
 
     if (username && accessKey) {
       const authToken = btoa(`${username}:${accessKey}`);
