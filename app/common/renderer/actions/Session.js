@@ -654,7 +654,6 @@ function retreiveVendorProperties({server, serverType, sessionCaps}) {
     log.info(`Using ${VendorClass.name}`);
     try {
       const vendor = new VendorClass(server, sessionCaps);
-      // ({host, port, username, accessKey, https, path, headers} = await vendor.apply());
       return vendor.apply();
     } catch (e) {
       showError(e);
