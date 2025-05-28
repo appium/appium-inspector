@@ -709,8 +709,9 @@ export function getRunningSessions() {
       return;
     }
 
+    const protocol = https ? 'https' : 'http';
     const adjPath = path.endsWith('/') ? path : `${path}/`;
-    const baseUrl = `http${https ? 's' : ''}://${host}:${port}${adjPath}`;
+    const baseUrl = `${protocol}://${host}:${port}${adjPath}`;
     const sessions = await fetchAllSessions(baseUrl, headers);
     dispatch({type: GET_SESSIONS_DONE, sessions});
 
