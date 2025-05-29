@@ -226,8 +226,9 @@ export function newSession(originalCaps, attachSessId = null) {
     let sessionCaps = prefixedCaps ? getCapsObject(prefixedCaps) : {};
     sessionCaps = addCustomCaps(sessionCaps);
 
-    let {host, port, username, accessKey, https, path, headers} = await retreiveVendorProperties({
-      ...session,
+    let {host, port, username, accessKey, https, path, headers} = await retrieveVendorProperties({
+      server: session.server,
+      serverType: session.serverType,
       sessionCaps,
     });
 
@@ -640,9 +641,9 @@ export function saveSessionAsFile() {
 }
 
 /**
- * @returns {Promise<VendorProperties>}
+ * @returns {Promise<VendorProperties | false | {}>}
  */
-function retreiveVendorProperties({server, serverType, sessionCaps}) {
+async function retrieveVendorProperties({server, serverType, sessionCaps}) {
   //
   // To register a new session vendor:
   // - Implement a new class inherited from VendorBase in app/common/renderer/lib/vendor/<vendor_name>.js
@@ -654,7 +655,7 @@ function retreiveVendorProperties({server, serverType, sessionCaps}) {
     log.info(`Using ${VendorClass.name}`);
     try {
       const vendor = new VendorClass(server, sessionCaps);
-      return vendor.apply();
+      return await vendor.apply();
     } catch (e) {
       showError(e);
       return false;
@@ -674,7 +675,7 @@ export function getRunningSessions() {
     const avoidServerTypes = ['sauce'];
     const state = getState().session;
     const {server, serverType, attachSessId} = state;
-    let {path, host, port, username, accessKey, https, headers} = await retreiveVendorProperties({
+    let {path, host, port, username, accessKey, https, headers} = await retrieveVendorProperties({
       server,
       serverType,
       sessionCaps: {},
@@ -684,7 +685,7 @@ export function getRunningSessions() {
       const authToken = btoa(`${username}:${accessKey}`);
 
       headers = {
-        ...(headers || {}),
+        ...headers,
         Authorization: `Basic ${authToken}`,
       };
     }
@@ -699,7 +700,7 @@ export function getRunningSessions() {
 
     // no need to get sessions if we don't have complete server info
     if (!host || !port || !path) {
-      showError(new Error('Missing server info, could not query sessions'), {secs: 5});
+      showError(new Error(i18n.t('missingServerInfo')));
       return;
     }
 
