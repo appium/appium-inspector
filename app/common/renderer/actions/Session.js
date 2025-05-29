@@ -226,11 +226,17 @@ export function newSession(originalCaps, attachSessId = null) {
     let sessionCaps = prefixedCaps ? getCapsObject(prefixedCaps) : {};
     sessionCaps = addCustomCaps(sessionCaps);
 
-    let {host, port, username, accessKey, https, path, headers} = await retrieveVendorProperties({
+    const vendorProperties = await retrieveVendorProperties({
       server: session.server,
       serverType: session.serverType,
       sessionCaps,
     });
+
+    if (!vendorProperties) {
+      return false;
+    }
+
+    let {host, port, username, accessKey, https, path, headers} = vendorProperties;
 
     // if the server path is '' (or any other kind of falsy) set it to default
     path = path || DEFAULT_SERVER_PATH;
