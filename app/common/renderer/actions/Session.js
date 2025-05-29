@@ -310,7 +310,11 @@ export function newSession(originalCaps, attachSessId = null) {
         } else {
           try {
             const detailsUrl = `${serverUrl}/session/${attachSessId}`;
-            const res = await fetchSessionInformation({url: detailsUrl, headers, timeout: CONN_TIMEOUT});
+            const res = await fetchSessionInformation({
+              url: detailsUrl,
+              headers,
+              timeout: CONN_TIMEOUT,
+            });
             attachedSessionCaps = res.data.value;
           } catch (err) {
             // rethrow the error as session not running, but first log the original error to console
