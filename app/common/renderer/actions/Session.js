@@ -661,19 +661,20 @@ async function retrieveVendorProperties({server, serverType, sessionCaps}) {
   //
   const VendorClass = VENDOR_MAP[serverType];
 
-  if (VendorClass) {
-    log.info(`Using ${VendorClass.name}`);
-    try {
-      const vendor = new VendorClass(server, sessionCaps);
-      return await vendor.apply();
-    } catch (e) {
-      showError(e);
-      return false;
-    }
-  } else {
+  if (!VendorClass) {
     log.info(`No vendor mapping is defined for the server type '${serverType}'. Using defaults`);
 
     return {};
+  }
+
+  log.info(`Using ${VendorClass.name}`);
+
+  try {
+    const vendor = new VendorClass(server, sessionCaps);
+    return await vendor.apply();
+  } catch (e) {
+    showError(e);
+    return false;
   }
 }
 
@@ -685,11 +686,17 @@ export function getRunningSessions() {
     const avoidServerTypes = ['sauce'];
     const state = getState().session;
     const {server, serverType, attachSessId} = state;
-    let {path, host, port, username, accessKey, https, headers} = await retrieveVendorProperties({
+    const vendorProperties = await retrieveVendorProperties({
       server,
       serverType,
       sessionCaps: {},
     });
+
+    if (!vendorProperties) {
+      return;
+    }
+
+    let {path, host, port, username, accessKey, https, headers} = vendorProperties;
 
     if (username && accessKey) {
       const authToken = btoa(`${username}:${accessKey}`);
