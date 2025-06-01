@@ -282,6 +282,7 @@
   "TestcribeAPIKey": "Chave API do Testcribe",
   "sessionTestcribeApiKeyDescription": "Você pode obter sua chave de api em https://app.testcribe.com/settings/apiKeys",
   "missingVendorProperties": "Por favor, forneça os seguintes detalhes do servidor para {{vendorName}}: {{vendorProps}}",
+  "missingServerInfo": "Missing server info, could not query sessions",
   "Username": "Nome de Usuário",
   "URL": "URL",
   "WebDriver URL": "URL do WebDrive",
