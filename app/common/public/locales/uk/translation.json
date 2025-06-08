@@ -282,7 +282,7 @@
   "TestcribeAPIKey": "Тестування API-ключа",
   "sessionTestcribeApiKeyDescription": "Ви можете отримати свій API-ключ з https://app.testcribe.com/settings/apiKeys",
   "missingVendorProperties": "Будь ласка, надайте наступну інформацію про сервер для {{vendorName}}: {{vendorProps}}",
-  "missingServerInfo": "Missing server info, could not query sessions",
+  "missingServerInfo": "Немає інформації про сервер, не вдалося отримати запит сесій",
   "Username": "Ім'я користувача",
   "URL": "URL-адреса",
   "WebDriver URL": "URL-адреса WebDriver",
