@@ -74,7 +74,7 @@
     "@xmldom/xmldom": "0.9.8",
     "antd": "4.24.16",
     "axios": "1.9.0",
-    "cheerio": "1.0.0-rc.12",
+    "cheerio": "1.1.0",
     "electron-debug": "4.1.0",
     "electron-settings": "4.0.4",
     "electron-updater": "6.6.2",
