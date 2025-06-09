@@ -65,7 +65,6 @@
   },
   "//dependencies": {
     "antd": "V5: significant rewrite required",
-    "cheerio": "V1: requires Node 18",
     "react": "V19: requires antd 5",
     "web2driver": "3.0.5: does not load"
   },
