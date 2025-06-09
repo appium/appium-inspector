@@ -14,8 +14,8 @@ import {load} from 'cheerio';
 export function setHtmlElementAttributes(obj) {
   const {isAndroid, webviewTopOffset, webviewLeftOffset} = obj;
   const htmlElements = document.body.getElementsByTagName('*');
-  // iOS uses CSS sizes for elements and screenshots, Android sizes times DRP
-  // for other platforms, use default DRP of 1
+  // iOS uses CSS sizes for elements and screenshots, Android sizes times DPR
+  // for other platforms, use default DPR of 1
   const dpr = isAndroid ? window.devicePixelRatio : 1;
 
   Array.from(htmlElements).forEach((el) => {
