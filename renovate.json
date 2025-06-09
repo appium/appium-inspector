@@ -16,7 +16,6 @@
         "@types/react",
         "@types/react-dom",
         "antd",
-        "cheerio",
         "react",
         "react-dom"
       ],
