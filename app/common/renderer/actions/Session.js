@@ -332,7 +332,7 @@ export function newSession(originalCaps, attachSessId = null) {
         driver = await Web2Driver.remote(serverOpts, sessionCaps);
       }
     } catch (err) {
-      showError(err, {secs: 0, serverUrl});
+      showError(err, {secs: 0, url: serverUrl});
       return false;
     } finally {
       dispatch({type: NEW_SESSION_DONE});
