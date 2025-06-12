@@ -68,10 +68,10 @@
     "web2driver": "3.0.5: does not load"
   },
   "dependencies": {
-    "@ant-design/pro-components": "^2.8.9",
+    "@ant-design/pro-components": "2.8.9",
     "@reduxjs/toolkit": "2.8.2",
     "@xmldom/xmldom": "0.9.8",
-    "antd": "^5.26.0",
+    "antd": "5.26.0",
     "axios": "1.9.0",
     "cheerio": "1.1.0",
     "electron-debug": "4.1.0",
