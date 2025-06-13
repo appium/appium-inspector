@@ -1,0 +1,66 @@
+@import 'antd/dist/reset.css';
+@import 'highlight.js/styles/intellij-light.css';
+
+body {
+  min-height: 610px;
+  min-width: 870px;
+  color: #222 !important;
+  box-sizing: border-box;
+}
+
+body::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+body::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+#root,
+.ant-app,
+.ant-layout {
+  height: 100%;
+}
+
+#root .ant-spin-nested-loading > div > .ant-spin {
+  max-height: initial;
+}
+
+.window {
+  background-color: #cde4f5 !important;
+  width: 100%;
+  height: 100%;
+}
+
+.list-group-item.active {
+  background-color: #662d91 !important;
+}
+
+.ant-spin-nested-loading,
+.ant-spin-container {
+  height: 100%;
+}
+
+.ant-input-group .ant-select {
+  height: 100%;
+}
+
+.ant-input-group .ant-select-selection {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  height: 100%;
+  padding-top: 0;
+}
+
+.ant-input-group .ant-select-selection .ant-select-selection-selected-value {
+  padding-top: 2px;
+}
+
+.ant-input-group .ant-input-group-addon {
+  padding-left: 8px;
+}
+
+.ant-input-group .select-container {
+  height: 32px;
+}
