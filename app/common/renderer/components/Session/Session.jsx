@@ -1,7 +1,7 @@
 import {LinkOutlined} from '@ant-design/icons';
-import {Badge, Button, Spin, Tabs} from 'antd';
+import {Badge, Button, Dropdown, Spin, Tabs} from 'antd';
 import _ from 'lodash';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router';
 
 import {BUTTON} from '../../constants/antd-types';
@@ -24,11 +24,12 @@ import SessionStyles from './Session.module.css';
 
 const Session = (props) => {
   const {
-    tabKey,
     switchTabs,
     serverType,
+    setServerType,
     server,
     visibleProviders = [],
+    removeVisibleProvider,
     caps,
     capsUUID,
     capsName,
@@ -44,8 +45,9 @@ const Session = (props) => {
   } = props;
 
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState(SESSION_BUILDER_TABS.CAPS_BUILDER);
 
-  const isAttaching = tabKey === 'attach';
+  const isAttaching = serverType === 'attach';
 
   const handleSelectServerTab = async (tab) => {
     const {changeServerType, addCloudProvider} = props;
@@ -56,9 +58,44 @@ const Session = (props) => {
     await changeServerType(tab);
   };
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    switchTabs(tab);
+  };
+
+  const handleSwitchTabs = (tab) => {
+    switchTabs(tab);
+    setActiveTab(tab);
+  };
+
   const loadNewSession = async (caps, attachSessId = null) => {
     if (await newSession(_.cloneDeep(caps), attachSessId)) {
       navigate('/inspector', {replace: true});
+    }
+  };
+
+  const getContextMenu = (tabKey) => ({
+    items: [
+      {
+        key: 'closeTab',
+        label: t('Close tab'),
+        onClick: () => handleCloseTab(tabKey),
+        disabled: tabKey === SERVER_TYPES.REMOTE,
+      },
+    ],
+  });
+
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleCloseTab = (tabKey) => {
+    if (tabKey !== SERVER_TYPES.REMOTE) {
+      removeVisibleProvider(tabKey);
+      if (serverType === tabKey) {
+        setServerType(SERVER_TYPES.REMOTE);
+      }
     }
   };
 
@@ -69,7 +106,6 @@ const Session = (props) => {
       setSavedServerParams,
       initFromSessionFile,
       setStateFromSessionFile,
-      setVisibleProviders,
       bindWindowClose,
       initFromQueryString,
       saveSessionAsFile,
@@ -79,7 +115,6 @@ const Session = (props) => {
         bindWindowClose();
         switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER);
         await getSavedSessions();
-        await setVisibleProviders();
         await setSavedServerParams();
         await setLocalServerParams();
         initFromQueryString(loadNewSession);
@@ -108,13 +143,17 @@ const Session = (props) => {
                 key: SERVER_TYPES.REMOTE,
                 children: <ServerTabCustom {...props} />,
               },
-              ..._(visibleProviders).map((providerName) => {
+              ..._.map(visibleProviders, (providerName) => {
                 const provider = CloudProviders[providerName];
                 if (!provider) {
                   return true;
                 }
                 return {
-                  label: <div>{provider.tabhead()}</div>,
+                  label: (
+                    <Dropdown menu={getContextMenu(providerName)} trigger={['contextMenu']}>
+                      <div onContextMenu={(e) => handleContextMenu(e)}>{provider.tabhead()}</div>
+                    </Dropdown>
+                  ),
                   key: providerName,
                   children: provider.tab(props),
                 };
@@ -129,8 +168,8 @@ const Session = (props) => {
         </div>
 
         <Tabs
-          activeKey={tabKey}
-          onChange={switchTabs}
+          activeKey={activeTab}
+          onChange={handleTabChange}
           className={SessionStyles.scrollingTabCont}
           items={[
             {
@@ -149,7 +188,7 @@ const Session = (props) => {
               key: SESSION_BUILDER_TABS.SAVED_CAPS,
               className: SessionStyles.scrollingTab,
               disabled: savedSessions.length === 0,
-              children: <SavedSessions {...props} />,
+              children: <SavedSessions {...props} handleSwitchTabs={handleSwitchTabs} />,
             },
             {
               label: t('Attach to Session'),
