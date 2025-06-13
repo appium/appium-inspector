@@ -42,21 +42,6 @@ body::-webkit-scrollbar-corner {
   height: 100%;
 }
 
-.ant-notification {
-  margin-right: 10%;
-  -webkit-app-region: no-drag;
-}
-
-.ant-notification > div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.ant-notification-notice {
-  margin-left: revert;
-}
-
 .ant-input-group .ant-select {
   height: 100%;
 }
