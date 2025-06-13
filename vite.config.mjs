@@ -14,14 +14,6 @@ export default defineConfig({
   define: {
     'process.env': process.env,
   },
-  css: {
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true,
-        additionalData: '@root-entry-name: default;',
-      },
-    },
-  },
   plugins: [react()],
   resolve: {
     alias: {

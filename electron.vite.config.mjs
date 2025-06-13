@@ -38,14 +38,6 @@ export default defineConfig({
         },
       },
     },
-    css: {
-      preprocessorOptions: {
-        less: {
-          javascriptEnabled: true,
-          additionalData: '@root-entry-name: default;',
-        },
-      },
-    },
     optimizeDeps: {
       include: ['i18next-fs-backend'],
       esbuildOptions: {

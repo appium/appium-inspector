@@ -64,14 +64,14 @@
     "electron": "./node_modules/.bin/electron"
   },
   "//dependencies": {
-    "antd": "V5: significant rewrite required",
     "react": "V19: requires antd 5",
     "web2driver": "3.0.5: does not load"
   },
   "dependencies": {
+    "@ant-design/pro-components": "2.8.9",
     "@reduxjs/toolkit": "2.8.2",
     "@xmldom/xmldom": "0.9.8",
-    "antd": "4.24.16",
+    "antd": "5.26.0",
     "axios": "1.9.0",
     "cheerio": "1.1.0",
     "electron-debug": "4.1.0",
@@ -112,7 +112,6 @@
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "globals": "16.2.0",
-    "less": "4.3.0",
     "prettier": "3.5.3",
     "rimraf": "6.0.1",
     "vite": "6.3.5",

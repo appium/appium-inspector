@@ -12,7 +12,7 @@
       "automerge": true
     },
     {
-      "matchPackageNames": ["@types/react", "@types/react-dom", "antd", "react", "react-dom"],
+      "matchPackageNames": ["@types/react", "@types/react-dom", "react", "react-dom"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     },
