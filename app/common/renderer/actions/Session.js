@@ -1,4 +1,3 @@
-import {notification} from 'antd';
 import _ from 'lodash';
 import {Web2Driver} from 'web2driver';
 
@@ -17,6 +16,7 @@ import {getSetting, ipcRenderer, setSetting} from '../polyfills';
 import {fetchSessionInformation, formatSeleniumGridSessions} from '../utils/attaching-to-session';
 import {downloadFile, parseSessionFileContents} from '../utils/file-handling';
 import {log} from '../utils/logger';
+import {notification} from '../utils/notification';
 import {addVendorPrefixes} from '../utils/other';
 import {quitSession, setSessionDetails} from './Inspector';
 
