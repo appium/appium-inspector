@@ -236,7 +236,7 @@ const Inspector = (props) => {
             disabled={isGestureEditorVisible}
           />
         </Tooltip>
-        <Space.Compact value={screenshotInteractionMode}>
+        <Space.Compact>
           <Tooltip title={t('Select Elements')}>
             <Button
               icon={<SelectOutlined />}

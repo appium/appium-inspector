@@ -111,7 +111,7 @@ const HeaderButtons = (props) => {
   );
 
   const appModeControls = (
-    <Space.Compact value={appMode}>
+    <Space.Compact>
       <Tooltip title={t('Native App Mode')}>
         <Button
           icon={<AppstoreOutlined />}
