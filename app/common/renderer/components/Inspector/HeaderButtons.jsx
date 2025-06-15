@@ -129,7 +129,7 @@ const HeaderButtons = (props) => {
       {contexts && contexts.length === 1 && (
         <Tooltip
           title={t('noAdditionalContextsFound')}
-          overlayClassName={InspectorStyles['wide-tooltip']}
+          classNames={{root: InspectorStyles['wide-tooltip']}}
         >
           <div
             className={`${InspectorStyles['contexts-custom-btn']} ${InspectorStyles['no-contexts-info-icon']}`}
@@ -143,7 +143,7 @@ const HeaderButtons = (props) => {
           <Select
             className={InspectorStyles['header-context-selector']}
             value={currentContext}
-            dropdownMatchSelectWidth={false}
+            popupMatchSelectWidth={false}
             onChange={(value) => {
               setContext(value);
               applyClientMethod({methodName: 'switchContext', args: [value]});
@@ -164,7 +164,7 @@ const HeaderButtons = (props) => {
                 </a>
               </>
             }
-            overlayClassName={InspectorStyles['wide-tooltip']}
+            classNames={{root: InspectorStyles['wide-tooltip']}}
           >
             <div
               className={`${InspectorStyles['contexts-custom-btn']} ${InspectorStyles['contexts-info-icon']}`}
