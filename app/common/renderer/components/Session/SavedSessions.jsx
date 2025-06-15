@@ -1,5 +1,5 @@
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
-import {Button, Col, Popconfirm, Row, Table, Tooltip} from 'antd';
+import {Button, Col, Popconfirm, Row, Space, Table, Tooltip} from 'antd';
 import moment from 'moment';
 
 import {SAVED_SESSIONS_TABLE_VALUES, SESSION_BUILDER_TABS} from '../../constants/session-builder';
@@ -77,7 +77,7 @@ const SavedSessions = (props) => {
       key: 'action',
       width: SAVED_SESSIONS_TABLE_VALUES.ACTIONS_COLUMN_WIDTH,
       render: (_, record) => (
-        <Button.Group>
+        <Space.Compact>
           <Tooltip zIndex={3} title={t('Edit')}>
             <Button
               icon={<EditOutlined />}
@@ -98,7 +98,7 @@ const SavedSessions = (props) => {
               <Button icon={<DeleteOutlined />} />
             </Popconfirm>
           </Tooltip>
-        </Button.Group>
+        </Space.Compact>
       ),
     },
   ];

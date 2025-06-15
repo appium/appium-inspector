@@ -43,7 +43,7 @@ const HeaderButtons = (props) => {
   } = props;
 
   const deviceControls = (
-    <Button.Group>
+    <Space.Compact>
       {driver && driver.client.isIOS && (
         <>
           <Tooltip title={t('Press Home Button')}>
@@ -107,11 +107,11 @@ const HeaderButtons = (props) => {
           </Tooltip>
         </>
       )}
-    </Button.Group>
+    </Space.Compact>
   );
 
   const appModeControls = (
-    <Button.Group value={appMode}>
+    <Space.Compact>
       <Tooltip title={t('Native App Mode')}>
         <Button
           icon={<AppstoreOutlined />}
@@ -129,7 +129,7 @@ const HeaderButtons = (props) => {
       {contexts && contexts.length === 1 && (
         <Tooltip
           title={t('noAdditionalContextsFound')}
-          overlayClassName={InspectorStyles['wide-tooltip']}
+          classNames={{root: InspectorStyles['wide-tooltip']}}
         >
           <div
             className={`${InspectorStyles['contexts-custom-btn']} ${InspectorStyles['no-contexts-info-icon']}`}
@@ -143,7 +143,7 @@ const HeaderButtons = (props) => {
           <Select
             className={InspectorStyles['header-context-selector']}
             value={currentContext}
-            dropdownMatchSelectWidth={false}
+            popupMatchSelectWidth={false}
             onChange={(value) => {
               setContext(value);
               applyClientMethod({methodName: 'switchContext', args: [value]});
@@ -164,7 +164,7 @@ const HeaderButtons = (props) => {
                 </a>
               </>
             }
-            overlayClassName={InspectorStyles['wide-tooltip']}
+            classNames={{root: InspectorStyles['wide-tooltip']}}
           >
             <div
               className={`${InspectorStyles['contexts-custom-btn']} ${InspectorStyles['contexts-info-icon']}`}
@@ -174,11 +174,11 @@ const HeaderButtons = (props) => {
           </Tooltip>
         </>
       )}
-    </Button.Group>
+    </Space.Compact>
   );
 
   const generalControls = (
-    <Button.Group>
+    <Space.Compact>
       {isUsingMjpegMode && !isSourceRefreshOn && (
         <Tooltip title={t('Start Refreshing Source')}>
           <Button
@@ -222,7 +222,7 @@ const HeaderButtons = (props) => {
           />
         </Tooltip>
       )}
-    </Button.Group>
+    </Space.Compact>
   );
 
   const quitSessionButton = (

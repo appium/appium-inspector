@@ -31,7 +31,7 @@ const Recorder = (props) => {
     return (
       <Space size="middle">
         {!!recordedActions.length && (
-          <Button.Group>
+          <Space.Compact>
             <Tooltip title={t('Show/Hide Boilerplate Code')}>
               <Button
                 onClick={toggleShowBoilerplate}
@@ -45,7 +45,7 @@ const Recorder = (props) => {
             <Tooltip title={t('Clear Actions')}>
               <Button icon={<ClearOutlined />} onClick={clearRecording} />
             </Tooltip>
-          </Button.Group>
+          </Space.Compact>
         )}
         <Select
           defaultValue={clientFramework}

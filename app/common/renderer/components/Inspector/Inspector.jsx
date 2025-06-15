@@ -236,7 +236,7 @@ const Inspector = (props) => {
             disabled={isGestureEditorVisible}
           />
         </Tooltip>
-        <Button.Group value={screenshotInteractionMode}>
+        <Space.Compact>
           <Tooltip title={t('Select Elements')}>
             <Button
               icon={<SelectOutlined />}
@@ -253,7 +253,7 @@ const Inspector = (props) => {
               disabled={isGestureEditorVisible}
             />
           </Tooltip>
-        </Button.Group>
+        </Space.Compact>
         {showScreenshot && !isUsingMjpegMode && (
           <Tooltip title={t('Download Screenshot')}>
             <Button icon={<DownloadOutlined />} onClick={() => downloadScreenshot(screenshot)} />
