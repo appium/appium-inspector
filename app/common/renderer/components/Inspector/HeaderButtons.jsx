@@ -43,7 +43,7 @@ const HeaderButtons = (props) => {
   } = props;
 
   const deviceControls = (
-    <Button.Group>
+    <Space.Compact>
       {driver && driver.client.isIOS && (
         <>
           <Tooltip title={t('Press Home Button')}>
@@ -107,11 +107,11 @@ const HeaderButtons = (props) => {
           </Tooltip>
         </>
       )}
-    </Button.Group>
+    </Space.Compact>
   );
 
   const appModeControls = (
-    <Button.Group value={appMode}>
+    <Space.Compact value={appMode}>
       <Tooltip title={t('Native App Mode')}>
         <Button
           icon={<AppstoreOutlined />}
@@ -174,11 +174,11 @@ const HeaderButtons = (props) => {
           </Tooltip>
         </>
       )}
-    </Button.Group>
+    </Space.Compact>
   );
 
   const generalControls = (
-    <Button.Group>
+    <Space.Compact>
       {isUsingMjpegMode && !isSourceRefreshOn && (
         <Tooltip title={t('Start Refreshing Source')}>
           <Button
@@ -222,7 +222,7 @@ const HeaderButtons = (props) => {
           />
         </Tooltip>
       )}
-    </Button.Group>
+    </Space.Compact>
   );
 
   const quitSessionButton = (

@@ -115,7 +115,7 @@ const LocatedElements = (props) => {
                     }
                   />
                 </Tooltip>
-                <Button.Group className={InspectorStyles.searchResultsActions}>
+                <Space.Compact className={InspectorStyles.searchResultsActions}>
                   <Input
                     className={InspectorStyles.searchResultsKeyInput}
                     disabled={!locatorTestElement}
@@ -146,7 +146,7 @@ const LocatedElements = (props) => {
                       }
                     />
                   </Tooltip>
-                </Button.Group>
+                </Space.Compact>
               </Space>
             </Row>
           </Space>

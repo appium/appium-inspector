@@ -395,7 +395,7 @@ const GestureEditor = (props) => {
 
   const headerButtons = (
     <>
-      <Button.Group>
+      <Space.Compact>
         <Tooltip title={t('showMoveActionCoordsInPercentage')}>
           <Button
             className={InspectorCSS['gesture-header-coord-btn']}
@@ -422,7 +422,7 @@ const GestureEditor = (props) => {
             px
           </Button>
         </Tooltip>
-      </Button.Group>
+      </Space.Compact>
       <Tooltip title={t('Play')}>
         <Button type="primary" icon={<PlayCircleOutlined />} onClick={() => onPlay()} />
       </Tooltip>
@@ -532,7 +532,7 @@ const GestureEditor = (props) => {
 
   const tickButton = (tick) => (
     <center>
-      <Button.Group className={InspectorCSS['tick-button-group']}>
+      <Space.Compact className={InspectorCSS['tick-button-group']}>
         <Button
           type={tick.button === POINTER_DOWN_BTNS.LEFT ? 'primary' : 'default'}
           className={InspectorCSS['tick-button-input']}
@@ -547,7 +547,7 @@ const GestureEditor = (props) => {
         >
           {t('Right')}
         </Button>
-      </Button.Group>
+      </Space.Compact>
     </center>
   );
 
