@@ -208,7 +208,7 @@ const SelectedElement = (props) => {
             onClick={() => applyClientMethod({methodName: 'click', elementId: selectedElementId})}
           />
         </Tooltip>
-        <Button.Group className={styles.elementKeyInputActions}>
+        <Space.Compact className={styles.elementKeyInputActions}>
           <Input
             className={styles.elementKeyInput}
             disabled={isDisabled}
@@ -238,8 +238,8 @@ const SelectedElement = (props) => {
               onClick={() => applyClientMethod({methodName: 'clear', elementId: selectedElementId})}
             />
           </Tooltip>
-        </Button.Group>
-        <Button.Group>
+        </Space.Compact>
+        <Space.Compact>
           <Tooltip title={t('Copy Attributes to Clipboard')}>
             <Button
               disabled={isDisabled}
@@ -264,7 +264,7 @@ const SelectedElement = (props) => {
               onClick={() => getFindElementsTimes(findDataSource)}
             />
           </Tooltip>
-        </Button.Group>
+        </Space.Compact>
       </Row>
       {findDataSource.length > 0 && (
         <Row className={styles.selectedElemContentRow}>

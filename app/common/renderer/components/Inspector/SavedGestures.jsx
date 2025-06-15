@@ -120,7 +120,7 @@ const SavedGestures = (props) => {
         render: (_, record) => {
           const gesture = getGestureByID(savedGestures, record.key, t);
           return (
-            <Button.Group>
+            <Space.Compact>
               <Tooltip zIndex={3} title={t('Play')}>
                 <Button
                   key="play"
@@ -147,7 +147,7 @@ const SavedGestures = (props) => {
                   <Button icon={<DeleteOutlined />} />
                 </Popconfirm>
               </Tooltip>
-            </Button.Group>
+            </Space.Compact>
           );
         },
       };
@@ -203,7 +203,7 @@ const SavedGestures = (props) => {
         columns={columns}
         scroll={{y: 'calc(100vh - 32em)'}}
         footer={() => (
-          <Button.Group>
+          <Space.Compact>
             <Tooltip title={t('Create New Gesture')}>
               <Button onClick={showGestureEditor} icon={<PlusOutlined />} />
             </Tooltip>
@@ -213,7 +213,7 @@ const SavedGestures = (props) => {
               multiple={true}
               type="application/json"
             />
-          </Button.Group>
+          </Space.Compact>
         )}
       />
       {gestureUploadErrors && showGestureUploadErrorsModal()}
