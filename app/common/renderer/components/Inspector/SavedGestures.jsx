@@ -175,17 +175,21 @@ const SavedGestures = (props) => {
       <p>
         <i>{t('unableToUploadGestureFiles')}</i>
       </p>
-      <Collapse ghost defaultActiveKey={Object.keys(gestureUploadErrors)}>
-        {Object.keys(gestureUploadErrors).map((errorFile) => (
-          <Collapse.Panel header={<b>{errorFile}</b>} key={errorFile}>
+      <Collapse
+        ghost
+        defaultActiveKey={Object.keys(gestureUploadErrors)}
+        items={Object.keys(gestureUploadErrors).map((errorFile) => ({
+          key: errorFile,
+          label: <b>{errorFile}</b>,
+          children: (
             <ol>
               {gestureUploadErrors[errorFile].map((error, index) => (
                 <li key={errorFile + index.toString()}>{error}</li>
               ))}
             </ol>
-          </Collapse.Panel>
-        ))}
-      </Collapse>
+          ),
+        }))}
+      />
     </Modal>
   );
 

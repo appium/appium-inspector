@@ -142,9 +142,11 @@ const Commands = (props) => {
             </Col>
           ))}
         </Row>
-        <Collapse>
-          {_.toPairs(COMMAND_DEFINITIONS).map(([commandGroup, commands]) => (
-            <Collapse.Panel header={t(commandGroup)} key={commandGroup}>
+        <Collapse
+          items={_.toPairs(COMMAND_DEFINITIONS).map(([commandGroup, commands]) => ({
+            key: commandGroup,
+            label: t(commandGroup),
+            children: (
               <Row>
                 {_.toPairs(commands).map(
                   ([commandName, command], index) =>
@@ -167,9 +169,9 @@ const Commands = (props) => {
                     ),
                 )}
               </Row>
-            </Collapse.Panel>
-          ))}
-        </Collapse>
+            ),
+          }))}
+        />
       </Space>
       {!!pendingCommand && (
         <Modal
