@@ -126,7 +126,7 @@ const FormattedCaps = (props) => {
         </div>
         {isEditingDesiredCaps && (
           <div className={SessionStyles.capsEditor}>
-            <textarea
+            <Input.TextArea
               onChange={(e) => setRawDesiredCaps(e.target.value)}
               value={rawDesiredCaps}
               className={`${SessionStyles.capsEditorBody} ${
