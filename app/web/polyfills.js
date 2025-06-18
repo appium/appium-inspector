@@ -29,7 +29,9 @@ const browserUtils = {
 
 class BrowserSettings {
   has(key) {
-    return this.get(key) !== null;
+    // Appium Inspector tries to access previous connection details from localstorage and pre-fill.
+    // But, block it, as we pre-fill the current session details.
+    return false;
   }
 
   set(key, val) {

@@ -152,6 +152,7 @@ const Inspector = (props) => {
   };
 
   const quitCurrentSession = async (reason, killedByUser = true) => {
+    window.parent.postMessage({ type: 'AppLiveAppiumInspector', data: 'quitSession', sessionId: window.AppLiveSessionId }, '*');
     await quitSession(reason, killedByUser);
     navigate('/session', {replace: true});
   };
@@ -289,8 +290,9 @@ const Inspector = (props) => {
               key: INSPECTOR_TABS.SOURCE,
               disabled: !showScreenshot,
               children: (
-                <div className="action-row">
-                  <div className="action-col">
+                // show the two sections side by side
+                <div className="applive-row">
+                  <div className="applive-col">
                     <Card
                       title={
                         <span>
@@ -331,7 +333,8 @@ const Inspector = (props) => {
                   </div>
                   <div
                     id="selectedElementContainer"
-                    className={`${InspectorStyles['interaction-tab-container']} ${InspectorStyles['element-detail-container']} action-col`}
+                    // for showing the sections side by side with proper margins
+                    className={`${InspectorStyles['interaction-tab-container']} ${InspectorStyles['element-detail-container']} selectedElementContainer applive-col`}
                   >
                     <Card
                       title={

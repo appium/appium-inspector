@@ -10,7 +10,8 @@ import {
   SearchOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
-import {Button, Select, Space, Tooltip} from 'antd';
+import {Button, Select, Space, Switch, Tooltip} from 'antd';
+import {useCallback, useEffect, useRef} from 'react';
 import {BiCircle, BiSquare} from 'react-icons/bi';
 import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
 import {IoChevronBackOutline} from 'react-icons/io5';
@@ -40,7 +41,31 @@ const HeaderButtons = (props) => {
     currentContext,
     setContext,
     t,
+    isAutoReloadEnabled,
+    toggleAutoReload
   } = props;
+  const isAutoReloadEnabledRef = useRef(isAutoReloadEnabled);
+
+  const handleToggleAutoReloadClicked = useCallback((event) => {
+    isAutoReloadEnabledRef.current = !isAutoReloadEnabled;
+    toggleAutoReload(event);
+    applyClientMethod({methodName: 'getPageSource'});
+  }, [isAutoReloadEnabled]);
+
+  const windowMessageCallback = useCallback((event) => {
+    if (event.data.type === 'AppLiveAppiumInspector') {
+      if (event.data.data === 'triggerAutoRefresh' && isAutoReloadEnabledRef.current) {
+        applyClientMethod({methodName: 'getPageSource'});
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('message', windowMessageCallback);
+    return () => {
+      window.removeEventListener('message', windowMessageCallback);
+    };
+  }, []);
 
   const deviceControls = (
     <Button.Group>
@@ -162,6 +187,26 @@ const HeaderButtons = (props) => {
     </Button.Group>
   );
 
+  const refreshControls = (
+    <Button.Group className='refresh-button-group'>
+      <Tooltip title={t('refreshSource')}>
+        <Button
+          id="btnReload"
+          icon={<ReloadOutlined />}
+          onClick={() => applyClientMethod({methodName: 'getPageSource'})}
+        />
+      </Tooltip>
+      <Tooltip
+          title="Auto Refresh Source & Screenshot"
+        >
+          <Switch
+            defaultChecked={isAutoReloadEnabled}
+            onChange={handleToggleAutoReloadClicked}
+          />
+        </Tooltip>
+    </Button.Group>
+  );
+
   const generalControls = (
     <Button.Group>
       {mjpegScreenshotUrl && !isSourceRefreshOn && (
@@ -182,13 +227,6 @@ const HeaderButtons = (props) => {
           />
         </Tooltip>
       )}
-      <Tooltip title={t('refreshSource')}>
-        <Button
-          id="btnReload"
-          icon={<ReloadOutlined />}
-          onClick={() => applyClientMethod({methodName: 'getPageSource'})}
-        />
-      </Tooltip>
       <Tooltip title={t('Search for element')}>
         <Button id="searchForElement" icon={<SearchOutlined />} onClick={showLocatorTestModal} />
       </Tooltip>
@@ -221,6 +259,7 @@ const HeaderButtons = (props) => {
       <Space size="middle">
         {deviceControls}
         {appModeControls}
+        {refreshControls}
         {generalControls}
         {quitSessionButton}
       </Space>

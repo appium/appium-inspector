@@ -4,6 +4,7 @@ import _ from 'lodash';
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router';
 
+import { checkIfAllParamsPresent } from '../../../shared/setting-defs';
 import {BUTTON} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
 import {
@@ -41,6 +42,7 @@ const Session = (props) => {
     newSessionLoading,
     attachSessId,
     t,
+    getRunningSessions
   } = props;
 
   const navigate = useNavigate();
@@ -77,7 +79,8 @@ const Session = (props) => {
     (async () => {
       try {
         bindWindowClose();
-        switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER);
+        // We have removed the Capability Builder tab. Hence, select Attach to session tab by default
+        switchTabs(SESSION_BUILDER_TABS.ATTACH_TO_SESSION);
         await getSavedSessions();
         await setVisibleProviders();
         await setSavedServerParams();
@@ -92,6 +95,19 @@ const Session = (props) => {
         log.error(e);
       }
     })();
+  }, []);
+
+  // Try to attach and start session automatically if all params are present
+  useEffect(() => {
+    const checkAndStartSessionAutomatically = async () => {
+      if (checkIfAllParamsPresent()) {
+        const sessions = await getRunningSessions();
+        if (sessions.length === 1) {
+          loadNewSession(null, sessions[0].id);
+        }
+      }
+    };
+    setTimeout(() => checkAndStartSessionAutomatically(), 100);
   }, []);
 
   return [
@@ -123,7 +139,8 @@ const Session = (props) => {
                 label: <span className="addCloudProviderTab">{t('Select Cloud Providers')}</span>,
                 key: ADD_CLOUD_PROVIDER_TAB_KEY,
               },
-            ]}
+            // show only remote connection tab
+            ].filter((tab) => tab.key === SERVER_TYPES.REMOTE)}
           />
           <AdvancedServerParams {...props} />
         </div>
@@ -157,7 +174,8 @@ const Session = (props) => {
               className: SessionStyles.scrollingTab,
               children: <AttachToSession {...props} />,
             },
-          ]}
+          // show only attach to session tab
+          ].filter((tab) => tab.key === SESSION_BUILDER_TABS.ATTACH_TO_SESSION)}
         />
 
         <div className={SessionStyles.sessionFooter}>

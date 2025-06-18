@@ -944,6 +944,8 @@ export function getRunningSessions() {
         dispatch({type: SET_ATTACH_SESS_ID, attachSessId: null});
       }
     }
+    // return the sessions to outer function. So, that automatic session start can be done
+    return sessions;
   };
 }
 

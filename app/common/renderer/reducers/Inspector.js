@@ -11,6 +11,8 @@ import {
   CLEAR_TAP_COORDINATES,
   DELETE_SAVED_GESTURES_DONE,
   DELETE_SAVED_GESTURES_REQUESTED,
+  DISABLE_AUTO_RELOAD,
+  ENABLE_AUTO_RELOAD,
   ENTERING_COMMAND_ARGS,
   FINDING_ELEMENT_IN_SOURCE,
   FINDING_ELEMENT_IN_SOURCE_COMPLETED,
@@ -129,6 +131,7 @@ const INITIAL_STATE = {
   isAwaitingMjpegStream: true,
   showSourceAttrs: false,
   gestureUploadErrors: null,
+  isAutoReloadEnabled: false
 };
 
 let nextState;
@@ -658,6 +661,18 @@ export default function inspector(state = INITIAL_STATE, action) {
 
     case SET_GESTURE_UPLOAD_ERROR:
       return {...state, gestureUploadErrors: action.errors};
+
+    case ENABLE_AUTO_RELOAD:
+      return {
+        ...state,
+        isAutoReloadEnabled: true,
+      };
+
+    case DISABLE_AUTO_RELOAD:
+      return {
+        ...state,
+        isAutoReloadEnabled: false,
+      };
 
     default:
       return {...state};

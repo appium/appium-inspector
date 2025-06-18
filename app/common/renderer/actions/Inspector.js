@@ -117,6 +117,10 @@ export const TOGGLE_REFRESHING_STATE = 'TOGGLE_REFRESHING_STATE';
 
 export const SET_GESTURE_UPLOAD_ERROR = 'SET_GESTURE_UPLOAD_ERROR';
 
+
+export const ENABLE_AUTO_RELOAD = 'ENABLE_AUTO_RELOAD';
+export const DISABLE_AUTO_RELOAD = 'DISABLE_AUTO_RELOAD';
+
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
 
@@ -1077,5 +1081,13 @@ export function tapTickCoordinates(x, y) {
 export function toggleShowAttributes() {
   return (dispatch) => {
     dispatch({type: TOGGLE_SHOW_ATTRIBUTES});
+  };
+}
+
+export function toggleAutoReload() {
+  return (dispatch, getState) => {
+    const {isAutoReloadEnabled} = getState().inspector;
+    const type = isAutoReloadEnabled ? DISABLE_AUTO_RELOAD : ENABLE_AUTO_RELOAD;
+    dispatch({type});
   };
 }
