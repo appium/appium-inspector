@@ -99,7 +99,7 @@
     "@appium/eslint-config-appium-ts": "1.0.4",
     "@appium/fake-driver": "5.7.3",
     "@appium/support": "6.1.1",
-    "@types/lodash": "4.17.17",
+    "@types/lodash": "4.17.18",
     "@types/react": "18.3.23",
     "@types/react-dom": "18.3.7",
     "@vitejs/plugin-react": "4.5.2",
