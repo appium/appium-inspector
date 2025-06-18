@@ -1,8 +1,8 @@
-import {BrowserWindow, Menu, webContents} from 'electron';
+import {BrowserWindow, Menu, nativeTheme, webContents} from 'electron';
 import settings from 'electron-settings';
 import {join} from 'path';
 
-import {PREFERRED_LANGUAGE} from '../../common/shared/setting-defs';
+import {PREFERRED_LANGUAGE, PREFERRED_THEME} from '../../common/shared/setting-defs';
 import {isDev} from './helpers';
 import i18n from './i18next';
 import {openFilePath} from './main';
@@ -18,20 +18,21 @@ const pathLoadMethod = isDev ? 'loadURL' : 'loadFile';
 
 let mainWindow = null;
 
-function buildSplashWindow() {
+function buildSplashWindow(backgroundColor) {
   return new BrowserWindow({
     width: 300,
     height: 300,
     minWidth: 300,
     minHeight: 300,
     frame: false,
+    backgroundColor,
     webPreferences: {
       devTools: false,
     },
   });
 }
 
-function buildSessionWindow() {
+function buildSessionWindow(backgroundColor) {
   return new BrowserWindow({
     show: false,
     width: 1100,
@@ -39,6 +40,7 @@ function buildSessionWindow() {
     minWidth: 890,
     minHeight: 710,
     titleBarStyle: 'hiddenInset',
+    backgroundColor,
     webPreferences: {
       preload: join(__dirname, '..', 'preload', 'preload.mjs'), // from 'main' in package.json
       sandbox: false,
@@ -49,12 +51,16 @@ function buildSessionWindow() {
   });
 }
 
-export function setupMainWindow() {
-  const splashWindow = buildSplashWindow();
+export async function setupMainWindow() {
+  const savedTheme = await settings.get(PREFERRED_THEME);
+  const shouldUseDarkColors = savedTheme ? savedTheme === 'dark' : nativeTheme.shouldUseDarkColors;
+  const backgroundColor = shouldUseDarkColors ? '#000' : '#fff';
+
+  const splashWindow = buildSplashWindow(backgroundColor);
   splashWindow[pathLoadMethod](splashPath);
   splashWindow.show();
 
-  mainWindow = buildSessionWindow();
+  mainWindow = buildSessionWindow(backgroundColor);
   mainWindow[pathLoadMethod](mainPath);
 
   mainWindow.webContents.on('did-finish-load', () => {

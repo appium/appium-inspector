@@ -37,6 +37,12 @@
 .cloudProviderModal :global(.ant-modal-body button img) {
   height: 100%;
 }
+
+.sessionHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
 .sessionFooter {
   text-align: right;
   height: 30px;
@@ -57,6 +63,7 @@
 
 .serverTabs {
   padding-bottom: 8px;
+  flex: 1;
 }
 
 .serverTabs :global(.ant-tabs-bar) {
@@ -81,8 +88,7 @@
 }
 
 .scrollingTabCont {
-  border-bottom: 1px solid #d9d9d9;
-  margin-bottom: 15px;
+  margin-bottom: -15px;
   margin-top: 15px;
   flex-grow: 1;
   display: flex;
@@ -148,10 +154,16 @@
   padding-left: 12px;
 }
 
+.savedCaps,
 .formattedCaps,
 .formattedCapsBody {
   height: 100%;
 }
+
+.savedCaps :global(.ant-card-body) {
+  padding: 0;
+}
+
 .formattedCaps :global(.ant-row) {
   width: 100%;
 }
@@ -222,10 +234,6 @@
   color: #666;
   margin: 0;
   padding: 6px 8px 0 8px;
-}
-
-.selected {
-  background-color: #d6e8ff;
 }
 
 .capsNameEditorButton {

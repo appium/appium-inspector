@@ -3,6 +3,7 @@
 import {fallbackLng} from './i18next.config';
 
 export const PREFERRED_LANGUAGE = 'PREFERRED_LANGUAGE';
+export const PREFERRED_THEME = 'PREFERRED_THEME';
 export const SAVED_SESSIONS = 'SAVED_SESSIONS';
 export const SET_SAVED_GESTURES = 'SET_SAVED_GESTURES';
 export const SERVER_ARGS = 'SERVER_ARGS';
@@ -13,6 +14,7 @@ export const VISIBLE_PROVIDERS = 'VISIBLE_PROVIDERS';
 
 export const DEFAULT_SETTINGS = {
   [PREFERRED_LANGUAGE]: fallbackLng,
+  [PREFERRED_THEME]: '',
   [SAVED_SESSIONS]: [],
   [SET_SAVED_GESTURES]: [],
   [SERVER_ARGS]: null,

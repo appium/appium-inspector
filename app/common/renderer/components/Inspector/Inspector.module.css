@@ -11,9 +11,6 @@
   justify-content: center;
   width: 100%;
   height: 50px;
-  background: linear-gradient(180deg, #e2e2e2, #e0e0e0, 10%, #d6d6d6, 50%, #cacaca);
-  border-top: 1px solid #f5f4f5;
-  border-bottom: 1px solid #a5a4a5;
   -webkit-app-region: drag;
 }
 
@@ -416,9 +413,17 @@
   font-weight: normal;
 }
 
+:global([data-theme='dark']) .sourceTag {
+  color: #ad2020;
+}
+
 .sourceAttrName {
   color: #864da1;
   font-style: italic;
+}
+
+:global([data-theme='dark']) .sourceAttrName {
+  color: #a64da1;
 }
 
 .no-recorded-actions {
