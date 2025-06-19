@@ -24,13 +24,13 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
-     inkscape:zoom="2.8095238"
-     inkscape:cx="175.47458"
-     inkscape:cy="42"
+     inkscape:zoom="2.1432703"
+     inkscape:cx="146.97166"
+     inkscape:cy="41.05875"
      inkscape:window-width="1309"
      inkscape:window-height="456"
-     inkscape:window-x="1960"
-     inkscape:window-y="1400"
+     inkscape:window-x="419"
+     inkscape:window-y="633"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2609" />
   <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
@@ -57,10 +57,10 @@
        font-size="49"
        font-weight="bold"
        fill="#000000"
-       style="fill:#ffffff"><tspan
+       style="fill:#e6e6e6"><tspan
          x="134"
          y="60"
          id="tspan2605"
-         style="fill:#ffffff">TestingBot</tspan></text>
+         style="fill:#e6e6e6">TestingBot</tspan></text>
   </g>
 </svg>

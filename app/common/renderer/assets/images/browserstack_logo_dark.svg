@@ -23,12 +23,12 @@
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
      inkscape:zoom="2.5082988"
-     inkscape:cx="216.08271"
+     inkscape:cx="191.36476"
      inkscape:cy="39.867659"
      inkscape:window-width="1309"
      inkscape:window-height="456"
-     inkscape:window-x="0"
-     inkscape:window-y="478"
+     inkscape:window-x="196"
+     inkscape:window-y="477"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg307" />
   <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
@@ -335,11 +335,11 @@
       <g
          id="Group"
          transform="translate(88,13.45)"
-         style="display:inline;fill:#ffffff;fill-opacity:1">
+         style="display:inline;fill:#e6e6e6;fill-opacity:1">
         <g
            id="Group-36"
            transform="translate(1.086385,2.120238)"
-           style="fill:#ffffff;fill-opacity:1">
+           style="fill:#e6e6e6;fill-opacity:1">
           <mask
              id="mask-25"
              fill="#ffffff">
@@ -349,18 +349,18 @@
           </mask>
           <g
              id="Clip-35"
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
           <polygon
              id="Fill-34"
              fill="#333333"
              mask="url(#mask-25)"
              points="53.480169,62.435083 -17.222888,62.435083 -17.222888,-17.450845 53.480169,-17.450845 "
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
         </g>
         <g
            id="Group-39"
            transform="translate(40.147418,13.12381)"
-           style="fill:#ffffff;fill-opacity:1">
+           style="fill:#e6e6e6;fill-opacity:1">
           <mask
              id="mask-27"
              fill="#ffffff">
@@ -370,18 +370,18 @@
           </mask>
           <g
              id="Clip-38"
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
           <polygon
              id="Fill-37"
              fill="#333333"
              mask="url(#mask-27)"
              points="43.596507,50.926155 -17.294639,50.926155 -17.294639,-17.336738 43.596507,-17.336738 "
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
         </g>
         <g
            id="Group-42"
            transform="translate(64.560563,14.346429)"
-           style="fill:#ffffff;fill-opacity:1">
+           style="fill:#e6e6e6;fill-opacity:1">
           <mask
              id="mask-29"
              fill="#ffffff">
@@ -391,18 +391,18 @@
           </mask>
           <g
              id="Clip-41"
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
           <polygon
              id="Fill-40"
              fill="#333333"
              mask="url(#mask-29)"
              points="49.39353,50.461559 -17.694526,50.461559 -17.694526,-18.054012 49.39353,-18.054012 "
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
         </g>
         <g
            id="Group-45"
            transform="translate(96.297653,14.346429)"
-           style="fill:#ffffff;fill-opacity:1">
+           style="fill:#e6e6e6;fill-opacity:1">
           <mask
              id="mask-31"
              fill="#ffffff">
@@ -412,18 +412,18 @@
           </mask>
           <g
              id="Clip-44"
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
           <polygon
              id="Fill-43"
              fill="#333333"
              mask="url(#mask-31)"
              points="68.593615,49.703536 -17.22616,49.703536 -17.22616,-18.054012 68.593615,-18.054012 "
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
         </g>
         <g
            id="Group-48"
            transform="translate(147.56526,14.346429)"
-           style="fill:#ffffff;fill-opacity:1">
+           style="fill:#e6e6e6;fill-opacity:1">
           <mask
              id="mask-33"
              fill="#ffffff">
@@ -433,18 +433,18 @@
           </mask>
           <g
              id="Clip-47"
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
           <polygon
              id="Fill-46"
              fill="#333333"
              mask="url(#mask-33)"
              points="47.465868,50.479067 -18.26677,50.479067 -18.26677,-17.801333 47.465868,-17.801333 "
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
         </g>
         <g
            id="Group-51"
            transform="translate(180.523,14.346429)"
-           style="fill:#ffffff;fill-opacity:1">
+           style="fill:#e6e6e6;fill-opacity:1">
           <mask
              id="mask-35"
              fill="#ffffff">
@@ -454,18 +454,18 @@
           </mask>
           <g
              id="Clip-50"
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
           <polygon
              id="Fill-49"
              fill="#333333"
              mask="url(#mask-35)"
              points="48.849606,50.476182 -18.238573,50.476182 -18.238573,-18.054012 48.849606,-18.054012 "
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
         </g>
         <g
            id="Group-54"
            transform="translate(214.70141,13.12381)"
-           style="fill:#ffffff;fill-opacity:1">
+           style="fill:#e6e6e6;fill-opacity:1">
           <mask
              id="mask-37"
              fill="#ffffff">
@@ -475,18 +475,18 @@
           </mask>
           <g
              id="Clip-53"
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
           <polygon
              id="Fill-52"
              fill="#333333"
              mask="url(#mask-37)"
              points="43.332113,50.926155 -17.559033,50.926155 -17.559033,-17.336738 43.332113,-17.336738 "
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
         </g>
         <g
            id="Group-57"
            transform="translate(240.33521,0.897619)"
-           style="fill:#ffffff;fill-opacity:1">
+           style="fill:#e6e6e6;fill-opacity:1">
           <mask
              id="mask-39"
              fill="#ffffff">
@@ -496,18 +496,18 @@
           </mask>
           <g
              id="Clip-56"
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
           <polygon
              id="Fill-55"
              fill="#333333"
              mask="url(#mask-39)"
              points="54.363681,63.927816 -18.146779,63.927816 -18.146779,-17.238929 54.363681,-17.238929 "
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
         </g>
         <g
            id="Group-60"
            transform="translate(276.95493,5.788095)"
-           style="fill:#ffffff;fill-opacity:1">
+           style="fill:#e6e6e6;fill-opacity:1">
           <mask
              id="mask-41"
              fill="#ffffff">
@@ -517,18 +517,18 @@
           </mask>
           <g
              id="Clip-59"
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
           <polygon
              id="Fill-58"
              fill="#333333"
              mask="url(#mask-41)"
              points="36.076648,59.272571 -17.326498,59.272571 -17.326498,-18.086607 36.076648,-18.086607 "
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
         </g>
         <g
            id="Group-63"
            transform="translate(297.7061,13.12381)"
-           style="fill:#ffffff;fill-opacity:1">
+           style="fill:#e6e6e6;fill-opacity:1">
           <mask
              id="mask-43"
              fill="#ffffff">
@@ -538,18 +538,18 @@
           </mask>
           <g
              id="Clip-62"
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
           <polygon
              id="Fill-61"
              fill="#333333"
              mask="url(#mask-43)"
              points="46.826732,51.431512 -17.421099,51.431512 -17.421099,-17.336738 46.826732,-17.336738 "
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
         </g>
         <g
            id="Group-66"
            transform="translate(330.66385,14.346429)"
-           style="fill:#ffffff;fill-opacity:1">
+           style="fill:#e6e6e6;fill-opacity:1">
           <mask
              id="mask-45"
              fill="#ffffff">
@@ -559,18 +559,18 @@
           </mask>
           <g
              id="Clip-65"
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
           <polygon
              id="Fill-64"
              fill="#333333"
              mask="url(#mask-45)"
              points="46.314545,50.476182 -17.328329,50.476182 -17.328329,-18.054012 46.314545,-18.054012 "
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
         </g>
         <g
            id="Group-69"
            transform="translate(362.40094,2.120238)"
-           style="fill:#ffffff;fill-opacity:1">
+           style="fill:#e6e6e6;fill-opacity:1">
           <mask
              id="mask-47"
              fill="#ffffff">
@@ -580,13 +580,13 @@
           </mask>
           <g
              id="Clip-68"
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
           <polygon
              id="Fill-67"
              fill="#333333"
              mask="url(#mask-47)"
              points="49.177108,62.182405 -17.305991,62.182405 -17.305991,-17.956202 49.177108,-17.956202 "
-             style="fill:#ffffff;fill-opacity:1" />
+             style="fill:#e6e6e6;fill-opacity:1" />
         </g>
       </g>
     </g>
