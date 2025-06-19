@@ -5,7 +5,7 @@ import {PREFERRED_THEME} from '../../shared/setting-defs';
 import {getSetting, setSetting} from '../polyfills';
 import {loadHighlightTheme} from '../utils/highlight-theme';
 
-export const ThemeContext = createContext(undefined);
+export const ThemeContext = createContext(null);
 
 export const ThemeProvider = ({children}) => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
