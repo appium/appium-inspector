@@ -7,7 +7,7 @@ const ToggleTheme = ({t}) => {
   const {toggleTheme} = useTheme();
 
   return (
-    <Tooltip title={t('Toggle theme')}>
+    <Tooltip title={t('Toggle Theme')}>
       <Button id="btnToggleTheme" icon={<BulbOutlined />} onClick={() => toggleTheme()} />
     </Tooltip>
   );
