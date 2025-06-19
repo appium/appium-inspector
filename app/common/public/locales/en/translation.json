@@ -292,5 +292,6 @@
   "AccessToken": "AccessToken",
   "Token": "Token",
   "Key": "Key",
-  "Secret": "Secret"
+  "Secret": "Secret",
+  "Toggle Theme": "Toggle Theme"
 }
