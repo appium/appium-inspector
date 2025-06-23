@@ -139,13 +139,12 @@ const providerTabs = {
   [SERVER_TYPES.TESTCRIBE]: ServerTabTestcribe,
 };
 
-const CloudProviders = Object.keys(providerTabs).reduce((acc, serverType) => {
+const CloudProviders = Object.entries(providerTabs).reduce((acc, [serverType, ProviderTab]) => {
   const logo = <ProviderLogo serverType={serverType} />;
-  const Tab = providerTabs[serverType];
 
   acc[serverType] = {
     tabhead: () => <span className={SessionStyles.tabText}>{logo}</span>,
-    tab: (props) => <Tab {...props} />,
+    tab: (props) => <ProviderTab {...props} />,
     logo,
   };
 
