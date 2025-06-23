@@ -46,65 +46,65 @@ import ServerTabTVLabs from './ServerTabTVLabs.jsx';
 import SessionStyles from './Session.module.css';
 
 const logoMapping = {
-  [SERVER_TYPES.SAUCE]: {
-    light: SauceLogo,
-    dark: SauceLogoDark,
-  },
-  [SERVER_TYPES.HEADSPIN]: {
-    light: HeadSpinLogo,
-    dark: null,
+  [SERVER_TYPES.BITBAR]: {
+    light: BitBarLogo,
+    dark: BitBarLogoDark,
   },
   [SERVER_TYPES.BROWSERSTACK]: {
     light: BrowserStackLogo,
     dark: BrowserStackLogoDark,
   },
-  [SERVER_TYPES.LAMBDATEST]: {
-    light: LambdaTestLogo,
-    dark: null,
-  },
-  [SERVER_TYPES.TESTINGBOT]: {
-    light: TestingBotLogo,
-    dark: TestingBotLogoDark,
-  },
   [SERVER_TYPES.EXPERITEST]: {
     light: ExperitestLogo,
     dark: ExperitestLogoDark,
   },
-  [SERVER_TYPES.ROBOTQA]: {
-    light: RobotQALogo,
-    dark: RobotQALogoDark,
-  },
-  [SERVER_TYPES.REMOTETESTKIT]: {
-    light: RemoteTestKitLogo,
-    dark: RemoteTestKitLogoDark,
-  },
-  [SERVER_TYPES.BITBAR]: {
-    light: BitBarLogo,
-    dark: BitBarLogoDark,
+  [SERVER_TYPES.HEADSPIN]: {
+    light: HeadSpinLogo,
+    dark: null,
   },
   [SERVER_TYPES.KOBITON]: {
     light: KobitonLogo,
     dark: KobitonLogoDark,
   },
-  [SERVER_TYPES.PERFECTO]: {
-    light: PerfectoLogo,
-    dark: PerfectoLogoDark,
-  },
-  [SERVER_TYPES.PCLOUDY]: {
-    light: PcloudyLogo,
-    dark: PcloudyLogoDark,
+  [SERVER_TYPES.LAMBDATEST]: {
+    light: LambdaTestLogo,
+    dark: null,
   },
   [SERVER_TYPES.MOBITRU]: {
     light: MobitruLogo,
     dark: MobitruLogoDark,
   },
-  [SERVER_TYPES.TVLABS]: {
-    light: TVLabsLogo,
-    dark: TVLabsLogoDark,
+  [SERVER_TYPES.PCLOUDY]: {
+    light: PcloudyLogo,
+    dark: PcloudyLogoDark,
+  },
+  [SERVER_TYPES.PERFECTO]: {
+    light: PerfectoLogo,
+    dark: PerfectoLogoDark,
+  },
+  [SERVER_TYPES.REMOTETESTKIT]: {
+    light: RemoteTestKitLogo,
+    dark: RemoteTestKitLogoDark,
+  },
+  [SERVER_TYPES.ROBOTQA]: {
+    light: RobotQALogo,
+    dark: RobotQALogoDark,
+  },
+  [SERVER_TYPES.SAUCE]: {
+    light: SauceLogo,
+    dark: SauceLogoDark,
   },
   [SERVER_TYPES.TESTCRIBE]: {
     light: TestcribeLogo,
     dark: TestcribeLogoDark,
+  },
+  [SERVER_TYPES.TESTINGBOT]: {
+    light: TestingBotLogo,
+    dark: TestingBotLogoDark,
+  },
+  [SERVER_TYPES.TVLABS]: {
+    light: TVLabsLogo,
+    dark: TVLabsLogoDark,
   },
 };
 
@@ -122,21 +122,21 @@ const ProviderLogo = ({serverType}) => {
 };
 
 const providerTabs = {
-  [SERVER_TYPES.SAUCE]: ServerTabSauce,
-  [SERVER_TYPES.HEADSPIN]: ServerTabHeadspin,
-  [SERVER_TYPES.BROWSERSTACK]: ServerTabBrowserstack,
-  [SERVER_TYPES.LAMBDATEST]: ServerTabLambdatest,
-  [SERVER_TYPES.TESTINGBOT]: ServerTabTestingbot,
-  [SERVER_TYPES.EXPERITEST]: ServerTabExperitest,
-  [SERVER_TYPES.ROBOTQA]: ServerTabRobotQA,
-  [SERVER_TYPES.REMOTETESTKIT]: ServerTabRemoteTestKit,
   [SERVER_TYPES.BITBAR]: ServerTabBitbar,
+  [SERVER_TYPES.BROWSERSTACK]: ServerTabBrowserstack,
+  [SERVER_TYPES.EXPERITEST]: ServerTabExperitest,
+  [SERVER_TYPES.HEADSPIN]: ServerTabHeadspin,
   [SERVER_TYPES.KOBITON]: ServerTabKobiton,
-  [SERVER_TYPES.PERFECTO]: ServerTabPerfecto,
-  [SERVER_TYPES.PCLOUDY]: ServerTabPcloudy,
+  [SERVER_TYPES.LAMBDATEST]: ServerTabLambdatest,
   [SERVER_TYPES.MOBITRU]: ServerTabMobitru,
-  [SERVER_TYPES.TVLABS]: ServerTabTVLabs,
+  [SERVER_TYPES.PCLOUDY]: ServerTabPcloudy,
+  [SERVER_TYPES.PERFECTO]: ServerTabPerfecto,
+  [SERVER_TYPES.REMOTETESTKIT]: ServerTabRemoteTestKit,
+  [SERVER_TYPES.ROBOTQA]: ServerTabRobotQA,
+  [SERVER_TYPES.SAUCE]: ServerTabSauce,
   [SERVER_TYPES.TESTCRIBE]: ServerTabTestcribe,
+  [SERVER_TYPES.TESTINGBOT]: ServerTabTestingbot,
+  [SERVER_TYPES.TVLABS]: ServerTabTVLabs,
 };
 
 const CloudProviders = Object.entries(providerTabs).reduce((acc, [serverType, ProviderTab]) => {
