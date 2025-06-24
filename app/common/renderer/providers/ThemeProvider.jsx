@@ -2,6 +2,7 @@ import {App, ConfigProvider, Layout, theme} from 'antd';
 import {createContext, useEffect, useState} from 'react';
 
 import {PREFERRED_THEME} from '../../shared/setting-defs';
+import Notification from '../components/Notification';
 import {getSetting, setSetting} from '../polyfills';
 import {loadHighlightTheme} from '../utils/highlight-theme';
 
@@ -44,6 +45,7 @@ export const ThemeProvider = ({children}) => {
       <ConfigProvider theme={themeConfig}>
         <App>
           <Layout data-theme={isDarkTheme ? 'dark' : 'light'}>{children}</Layout>
+          <Notification />
         </App>
       </ConfigProvider>
     </ThemeContext.Provider>
