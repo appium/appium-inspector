@@ -3,6 +3,7 @@ import {Suspense} from 'react';
 import {Provider} from 'react-redux';
 import {MemoryRouter, Route, Routes} from 'react-router';
 
+import Notification from './components/Notification';
 import Spinner from './components/Spinner/Spinner.jsx';
 import InspectorPage from './containers/InspectorPage';
 import SessionPage from './containers/SessionPage';
@@ -42,6 +43,7 @@ const Root = ({store}) => (
             </Suspense>
           </MemoryRouter>
         </Layout>
+        <Notification />
       </App>
     </ConfigProvider>
   </Provider>
