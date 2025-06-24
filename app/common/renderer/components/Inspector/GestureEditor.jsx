@@ -16,7 +16,6 @@ import {
   Col,
   Divider,
   Input,
-  notification,
   Popover,
   Row,
   Select,
@@ -42,6 +41,7 @@ import {
   TICK_PROPS,
 } from '../../constants/gestures';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
+import {notification} from '../../utils/notification';
 import {percentageToPixels, pixelsToPercentage} from '../../utils/other';
 import InspectorCSS from './Inspector.module.css';
 
