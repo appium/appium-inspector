@@ -23,7 +23,6 @@ information about the Appium server is specified, so that the Inspector knows ho
 - If you wish to connect to a standalone local or remote Appium server, first make sure the server
   is launched and running. The start of the server log will have a list of IP addresses and ports
   that can be used to connect to the server.
-
     - For a local Appium server running on its default port, **all server details fields can be left
       unchanged**. By default, the Inspector will attempt to connect to `http://127.0.0.1:4723`,
       which matches the default values of the Appium server.
