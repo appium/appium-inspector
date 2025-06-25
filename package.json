@@ -71,7 +71,7 @@
     "@ant-design/pro-components": "2.8.9",
     "@reduxjs/toolkit": "2.8.2",
     "@xmldom/xmldom": "0.9.8",
-    "antd": "5.26.1",
+    "antd": "5.26.2",
     "axios": "1.10.0",
     "cheerio": "1.1.0",
     "electron-debug": "4.1.0",
