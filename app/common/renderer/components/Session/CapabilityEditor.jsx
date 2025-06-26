@@ -75,13 +75,8 @@ const CapabilityEditor = (props) => {
   // added a new cap field, so focus that input element. But only do this once, so we don't annoy
   // the user if they decide to unfocus and do something else.
   useEffect(() => {
-    if (
-      caps.length > 1 &&
-      !latestCapField.current.input.value &&
-      !latestCapField.current.__didFocus
-    ) {
+    if (caps.length > 1 && latestCapField.current && !latestCapField.current.input.value) {
       latestCapField.current.focus();
-      latestCapField.current.__didFocus = true;
     }
   }, [caps.length, latestCapField]);
 
