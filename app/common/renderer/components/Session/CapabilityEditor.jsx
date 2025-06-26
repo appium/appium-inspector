@@ -71,9 +71,8 @@ const CapabilityEditor = (props) => {
   const onSaveAsOk = () => saveSession(server, serverType, caps, {name: saveAsText});
   const latestCapField = useRef();
 
-  // if we have more than one cap and the most recent cap name is empty, it means we've just
-  // added a new cap field, so focus that input element. But only do this once, so we don't annoy
-  // the user if they decide to unfocus and do something else.
+  // if we have more than one cap and the most recent cap name is empty,
+  // it means we've just added a new cap field, so focus that input element
   useEffect(() => {
     if (caps.length > 1 && latestCapField.current && !latestCapField.current.input.value) {
       latestCapField.current.focus();
