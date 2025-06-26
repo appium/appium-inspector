@@ -22,6 +22,14 @@ const getTheme = () => ({
     fontSize: 12,
   },
   components: {
+    Badge: {
+      indicatorHeight: 20,
+    },
+    Switch: {
+      handleSize: 18,
+      trackHeight: 22,
+      trackMinWidth: 44,
+    },
     Tabs: {
       titleFontSize: 14,
     },
