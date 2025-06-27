@@ -12,7 +12,8 @@ export const ThemeProvider = ({children}) => {
   const [preferredTheme, setPreferredTheme] = useState('system');
 
   const systemPrefersDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const isDarkTheme = preferredTheme !== 'light' && systemPrefersDarkTheme;
+  const isDarkTheme =
+    preferredTheme === 'dark' || (preferredTheme === 'system' && systemPrefersDarkTheme);
 
   loadHighlightTheme(isDarkTheme);
 
@@ -22,9 +23,7 @@ export const ThemeProvider = ({children}) => {
 
   const initTheme = async () => {
     const savedTheme = await getSetting(PREFERRED_THEME);
-    if (savedTheme) {
-      setPreferredTheme(savedTheme);
-    }
+    setPreferredTheme(savedTheme);
   };
 
   const updatePreferredTheme = async (theme) => {

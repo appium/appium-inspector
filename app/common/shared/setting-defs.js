@@ -14,7 +14,7 @@ export const VISIBLE_PROVIDERS = 'VISIBLE_PROVIDERS';
 
 export const DEFAULT_SETTINGS = {
   [PREFERRED_LANGUAGE]: fallbackLng,
-  [PREFERRED_THEME]: '',
+  [PREFERRED_THEME]: 'system',
   [SAVED_SESSIONS]: [],
   [SET_SAVED_GESTURES]: [],
   [SERVER_ARGS]: null,

@@ -52,9 +52,10 @@ function buildSessionWindow(backgroundColor) {
 }
 
 export async function setupMainWindow() {
-  const savedTheme = await settings.get(PREFERRED_THEME);
-  const shouldUseDarkColors = savedTheme ? savedTheme === 'dark' : nativeTheme.shouldUseDarkColors;
-  const backgroundColor = shouldUseDarkColors ? '#000' : '#fff';
+  const preferredTheme = await settings.get(PREFERRED_THEME);
+  const isDarkTheme =
+    preferredTheme === 'dark' || (preferredTheme === 'system' && nativeTheme.shouldUseDarkColors);
+  const backgroundColor = isDarkTheme ? '#000' : '#fff';
 
   const splashWindow = buildSplashWindow(backgroundColor);
   splashWindow[pathLoadMethod](splashPath);
