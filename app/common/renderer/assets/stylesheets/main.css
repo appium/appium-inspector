@@ -79,11 +79,3 @@ body::-webkit-scrollbar-corner {
 .ant-switch-inner-unchecked {
   font-size: 12px !important;
 }
-
-.ant-switch-inner-checked .anticon {
-  margin-right: 2px !important;
-}
-
-.ant-switch-inner-unchecked .anticon {
-  margin-left: 2px !important;
-}
