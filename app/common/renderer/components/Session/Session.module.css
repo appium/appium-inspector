@@ -11,6 +11,10 @@
   flex-flow: column;
 }
 
+.sessionContainer :global(.ant-divider-horizontal) {
+  margin: 0px;
+}
+
 .sessionContainer :global(.ant-tabs-tab .anticon.anticon-close-square) {
   color: red;
   margin-left: 10px;
@@ -44,6 +48,7 @@
 }
 
 .sessionFooter {
+  margin-top: 15px;
   text-align: right;
   height: 30px;
 }
@@ -88,7 +93,6 @@
 }
 
 .scrollingTabCont {
-  margin-bottom: -15px;
   margin-top: 15px;
   flex-grow: 1;
   display: flex;

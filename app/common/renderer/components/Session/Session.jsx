@@ -160,7 +160,7 @@ const Session = (props) => {
             },
           ]}
         />
-        <Divider size="middle" />
+        <Divider />
         <div className={SessionStyles.sessionFooter}>
           <div className={SessionStyles.desiredCapsLink}>
             <a href="#" onClick={(e) => e.preventDefault() || openLink(LINKS.CAPS_DOCS)}>

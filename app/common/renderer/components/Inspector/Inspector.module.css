@@ -4,6 +4,10 @@
   height: 100%;
 }
 
+.inspector-container :global(.ant-divider-horizontal) {
+  margin: 0px;
+}
+
 .inspector-toolbar {
   display: flex;
   flex-direction: row;
