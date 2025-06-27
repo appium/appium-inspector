@@ -75,6 +75,10 @@ body::-webkit-scrollbar-corner {
 }
 
 .anticon {
+  font-size: 14px;
+}
+
+.ant-switch .anticon {
   font-size: 12px;
 }
 
