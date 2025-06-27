@@ -24,6 +24,7 @@ const getTheme = () => ({
   components: {
     Badge: {
       indicatorHeight: 20,
+      textFontSize: 12,
     },
     Switch: {
       handleSize: 18,
