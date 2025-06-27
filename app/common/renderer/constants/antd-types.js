@@ -9,8 +9,9 @@ export const ALERT = {
 export const BUTTON = {
   DEFAULT: 'default',
   PRIMARY: 'primary',
-  DISABLED: 'disabled',
-  DANGER: 'danger',
+  DASHED: 'dashed',
+  TEXT: 'text',
+  LINK: 'link',
 };
 
 export const INPUT = {

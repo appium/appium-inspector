@@ -217,7 +217,8 @@ const HeaderButtons = (props) => {
           <Button
             id="btnPause"
             icon={<VideoCameraOutlined />}
-            type={BUTTON.DANGER}
+            type={BUTTON.PRIMARY}
+            danger
             onClick={pauseRecording}
           />
         </Tooltip>
