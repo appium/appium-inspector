@@ -293,5 +293,7 @@
   "Token": "Token",
   "Key": "Key",
   "Secret": "Secret",
-  "Toggle Theme": "Toggle Theme"
+  "Light Theme": "Light Theme",
+  "Dark Theme": "Dark Theme",
+  "System Theme": "System Theme"
 }

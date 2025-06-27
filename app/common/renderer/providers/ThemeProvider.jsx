@@ -9,23 +9,27 @@ import {loadHighlightTheme} from '../utils/highlight-theme';
 export const ThemeContext = createContext(null);
 
 export const ThemeProvider = ({children}) => {
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [preferredTheme, setPreferredTheme] = useState('system');
+
+  const systemPrefersDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDarkTheme = preferredTheme !== 'light' && systemPrefersDarkTheme;
+
   loadHighlightTheme(isDarkTheme);
 
   useEffect(() => {
-    initializeTheme();
+    initTheme();
   }, []);
 
-  const initializeTheme = async () => {
+  const initTheme = async () => {
     const savedTheme = await getSetting(PREFERRED_THEME);
-    const prefersDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setIsDarkTheme(savedTheme ? savedTheme === 'dark' : prefersDarkTheme);
+    if (savedTheme) {
+      setPreferredTheme(savedTheme);
+    }
   };
 
-  const toggleTheme = async () => {
-    const newIsDarkTheme = !isDarkTheme;
-    setIsDarkTheme(newIsDarkTheme);
-    await setSetting(PREFERRED_THEME, newIsDarkTheme ? 'dark' : 'light');
+  const updatePreferredTheme = async (theme) => {
+    setPreferredTheme(theme);
+    await setSetting(PREFERRED_THEME, theme);
   };
 
   const themeConfig = {
@@ -41,7 +45,7 @@ export const ThemeProvider = ({children}) => {
   };
 
   return (
-    <ThemeContext.Provider value={{toggleTheme, isDarkTheme}}>
+    <ThemeContext.Provider value={{updatePreferredTheme, preferredTheme, isDarkTheme}}>
       <ConfigProvider theme={themeConfig}>
         <App>
           <Layout data-theme={isDarkTheme ? 'dark' : 'light'}>{children}</Layout>
