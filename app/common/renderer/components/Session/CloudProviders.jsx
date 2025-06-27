@@ -45,72 +45,117 @@ import ServerTabTestingbot from './ServerTabTestingbot.jsx';
 import ServerTabTVLabs from './ServerTabTVLabs.jsx';
 import SessionStyles from './Session.module.css';
 
-const logoMapping = {
+const providers = {
   [SERVER_TYPES.SAUCE]: {
-    light: SauceLogo,
-    dark: SauceLogoDark,
+    tab: ServerTabSauce,
+    logos: {
+      light: SauceLogo,
+      dark: SauceLogoDark,
+    },
   },
   [SERVER_TYPES.HEADSPIN]: {
-    light: HeadSpinLogo,
-    dark: null,
+    tab: ServerTabHeadspin,
+    logos: {
+      light: HeadSpinLogo,
+      dark: null,
+    },
   },
   [SERVER_TYPES.BROWSERSTACK]: {
-    light: BrowserStackLogo,
-    dark: BrowserStackLogoDark,
+    tab: ServerTabBrowserstack,
+    logos: {
+      light: BrowserStackLogo,
+      dark: BrowserStackLogoDark,
+    },
   },
   [SERVER_TYPES.LAMBDATEST]: {
-    light: LambdaTestLogo,
-    dark: null,
+    tab: ServerTabLambdatest,
+    logos: {
+      light: LambdaTestLogo,
+      dark: null,
+    },
   },
   [SERVER_TYPES.TESTINGBOT]: {
-    light: TestingBotLogo,
-    dark: TestingBotLogoDark,
+    tab: ServerTabTestingbot,
+    logos: {
+      light: TestingBotLogo,
+      dark: TestingBotLogoDark,
+    },
   },
   [SERVER_TYPES.EXPERITEST]: {
-    light: ExperitestLogo,
-    dark: ExperitestLogoDark,
+    tab: ServerTabExperitest,
+    logos: {
+      light: ExperitestLogo,
+      dark: ExperitestLogoDark,
+    },
   },
   [SERVER_TYPES.ROBOTQA]: {
-    light: RobotQALogo,
-    dark: RobotQALogoDark,
+    tab: ServerTabRobotQA,
+    logos: {
+      light: RobotQALogo,
+      dark: RobotQALogoDark,
+    },
   },
   [SERVER_TYPES.REMOTETESTKIT]: {
-    light: RemoteTestKitLogo,
-    dark: RemoteTestKitLogoDark,
+    tab: ServerTabRemoteTestKit,
+    logos: {
+      light: RemoteTestKitLogo,
+      dark: RemoteTestKitLogoDark,
+    },
   },
   [SERVER_TYPES.BITBAR]: {
-    light: BitBarLogo,
-    dark: BitBarLogoDark,
+    tab: ServerTabBitbar,
+    logos: {
+      light: BitBarLogo,
+      dark: BitBarLogoDark,
+    },
   },
   [SERVER_TYPES.KOBITON]: {
-    light: KobitonLogo,
-    dark: KobitonLogoDark,
+    tab: ServerTabKobiton,
+    logos: {
+      light: KobitonLogo,
+      dark: KobitonLogoDark,
+    },
   },
   [SERVER_TYPES.PERFECTO]: {
-    light: PerfectoLogo,
-    dark: PerfectoLogoDark,
+    tab: ServerTabPerfecto,
+    logos: {
+      light: PerfectoLogo,
+      dark: PerfectoLogoDark,
+    },
   },
   [SERVER_TYPES.PCLOUDY]: {
-    light: PcloudyLogo,
-    dark: PcloudyLogoDark,
+    tab: ServerTabPcloudy,
+    logos: {
+      light: PcloudyLogo,
+      dark: PcloudyLogoDark,
+    },
   },
   [SERVER_TYPES.MOBITRU]: {
-    light: MobitruLogo,
-    dark: MobitruLogoDark,
+    tab: ServerTabMobitru,
+    logos: {
+      light: MobitruLogo,
+      dark: MobitruLogoDark,
+    },
   },
   [SERVER_TYPES.TVLABS]: {
-    light: TVLabsLogo,
-    dark: TVLabsLogoDark,
+    tab: ServerTabTVLabs,
+    logos: {
+      light: TVLabsLogo,
+      dark: TVLabsLogoDark,
+    },
   },
   [SERVER_TYPES.TESTCRIBE]: {
-    light: TestcribeLogo,
-    dark: TestcribeLogoDark,
+    tab: ServerTabTestcribe,
+    logos: {
+      light: TestcribeLogo,
+      dark: TestcribeLogoDark,
+    },
   },
 };
 
 const ProviderLogo = ({serverType}) => {
   const {isDarkTheme} = useTheme();
-  const logos = logoMapping[serverType];
+  const {logos} = providers[serverType];
 
   if (!logos) {
     return null;
@@ -121,30 +166,12 @@ const ProviderLogo = ({serverType}) => {
   return <img src={logo} />;
 };
 
-const providerTabs = {
-  [SERVER_TYPES.SAUCE]: ServerTabSauce,
-  [SERVER_TYPES.HEADSPIN]: ServerTabHeadspin,
-  [SERVER_TYPES.BROWSERSTACK]: ServerTabBrowserstack,
-  [SERVER_TYPES.LAMBDATEST]: ServerTabLambdatest,
-  [SERVER_TYPES.TESTINGBOT]: ServerTabTestingbot,
-  [SERVER_TYPES.EXPERITEST]: ServerTabExperitest,
-  [SERVER_TYPES.ROBOTQA]: ServerTabRobotQA,
-  [SERVER_TYPES.REMOTETESTKIT]: ServerTabRemoteTestKit,
-  [SERVER_TYPES.BITBAR]: ServerTabBitbar,
-  [SERVER_TYPES.KOBITON]: ServerTabKobiton,
-  [SERVER_TYPES.PERFECTO]: ServerTabPerfecto,
-  [SERVER_TYPES.PCLOUDY]: ServerTabPcloudy,
-  [SERVER_TYPES.MOBITRU]: ServerTabMobitru,
-  [SERVER_TYPES.TVLABS]: ServerTabTVLabs,
-  [SERVER_TYPES.TESTCRIBE]: ServerTabTestcribe,
-};
-
-const CloudProviders = Object.entries(providerTabs).reduce((acc, [serverType, ProviderTab]) => {
+const CloudProviders = Object.entries(providers).reduce((acc, [serverType, provider]) => {
   const logo = <ProviderLogo serverType={serverType} />;
 
   acc[serverType] = {
     tabhead: () => <span className={SessionStyles.tabText}>{logo}</span>,
-    tab: (props) => <ProviderTab {...props} />,
+    tab: (props) => <provider.tab {...props} />,
     logo,
   };
 
