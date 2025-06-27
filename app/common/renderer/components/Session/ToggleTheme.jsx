@@ -1,5 +1,5 @@
-import {MoonOutlined, SettingOutlined, SunOutlined} from '@ant-design/icons';
-import {Dropdown} from 'antd';
+import {BgColorsOutlined, MoonOutlined, SunOutlined} from '@ant-design/icons';
+import {Button, Dropdown, Tooltip} from 'antd';
 
 import {useTheme} from '../../hooks/use-theme';
 import SessionStyles from './Session.module.css';
@@ -21,24 +21,29 @@ const ToggleTheme = ({t}) => {
     {
       key: 'system',
       label: t('System Theme'),
-      icon: <SettingOutlined />,
+      icon: <BgColorsOutlined />,
     },
   ];
 
   return (
     <div className={SessionStyles.toggleTheme}>
-      <Dropdown
-        menu={{
-          items: themes,
-          selectable: true,
-          selectedKeys: [preferredTheme],
-          onSelect: ({key}) => {
-            updatePreferredTheme(key);
-          },
-        }}
-      >
-        {themes.find((t) => t.key === preferredTheme)?.icon || <SettingOutlined />}
-      </Dropdown>
+      <Tooltip title={t('Toggle Theme')}>
+        <Dropdown
+          menu={{
+            items: themes,
+            selectable: true,
+            selectedKeys: [preferredTheme],
+            onSelect: ({key}) => {
+              updatePreferredTheme(key);
+            },
+          }}
+          trigger={['click']}
+        >
+          <Button
+            icon={themes.find((t) => t.key === preferredTheme)?.icon || <BgColorsOutlined />}
+          />
+        </Dropdown>
+      </Tooltip>
     </div>
   );
 };
