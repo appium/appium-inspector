@@ -123,10 +123,6 @@
   padding: 15px;
 }
 
-:global(.ant-badge-count) {
-  background-color: #1890ff !important;
-}
-
 .savedSessions,
 .savedSessions :global(.ant-table),
 .savedSessions :global(.ant-table-wrapper) {

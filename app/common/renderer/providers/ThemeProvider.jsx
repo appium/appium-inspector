@@ -38,6 +38,15 @@ export const ThemeProvider = ({children}) => {
       fontSize: 12,
     },
     components: {
+      Badge: {
+        indicatorHeight: 20,
+        textFontSize: 12,
+      },
+      Switch: {
+        handleSize: 18,
+        trackHeight: 22,
+        trackMinWidth: 44,
+      },
       Tabs: {
         titleFontSize: 14,
       },

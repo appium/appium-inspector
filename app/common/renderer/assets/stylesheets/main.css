@@ -73,3 +73,12 @@ body::-webkit-scrollbar-corner {
   display: flex;
   justify-content: center;
 }
+
+.anticon {
+  font-size: 12px;
+}
+
+.ant-switch-inner-checked,
+.ant-switch-inner-unchecked {
+  font-size: 12px !important;
+}
