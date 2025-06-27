@@ -69,6 +69,7 @@
 .serverTabs {
   padding-bottom: 8px;
   flex: 1;
+  max-width: 95%;
 }
 
 .serverTabs :global(.ant-tabs-bar) {
