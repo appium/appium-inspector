@@ -27,7 +27,7 @@ const getSessionById = (savedSessions, id, t) => {
 };
 
 const SavedSessions = (props) => {
-  const {savedSessions, deleteSavedSession, capsUUID, switchTabs, t} = props;
+  const {savedSessions, deleteSavedSession, capsUUID, handleSwitchTabs, t} = props;
 
   const handleCapsAndServer = (uuid) => {
     const {
@@ -83,7 +83,7 @@ const SavedSessions = (props) => {
               icon={<EditOutlined />}
               onClick={() => {
                 handleCapsAndServer(record.key);
-                switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER);
+                handleSwitchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER);
               }}
             />
           </Tooltip>
