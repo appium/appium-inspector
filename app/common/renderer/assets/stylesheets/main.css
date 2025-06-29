@@ -1,6 +1,6 @@
 @import 'antd/dist/reset.css';
 
-[data-theme='dark'] {
+body.dark {
   color-scheme: dark;
 }
 
@@ -79,7 +79,7 @@ body::-webkit-scrollbar-corner {
 }
 
 .ant-switch .anticon {
-  font-size: 12px;
+  font-size: 12px !important;
 }
 
 .ant-switch-inner-checked,

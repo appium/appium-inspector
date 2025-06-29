@@ -21,6 +21,16 @@ export const ThemeProvider = ({children}) => {
     initTheme();
   }, []);
 
+  const handleDarkClass = () => {
+    if (isDarkTheme) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  };
+
+  handleDarkClass();
+
   const initTheme = async () => {
     const savedTheme = await getSetting(PREFERRED_THEME);
     setPreferredTheme(savedTheme);
@@ -56,7 +66,7 @@ export const ThemeProvider = ({children}) => {
     <ThemeContext.Provider value={{updatePreferredTheme, preferredTheme, isDarkTheme}}>
       <ConfigProvider theme={themeConfig}>
         <App>
-          <Layout data-theme={isDarkTheme ? 'dark' : 'light'}>{children}</Layout>
+          <Layout>{children}</Layout>
           <Notification />
         </App>
       </ConfigProvider>
