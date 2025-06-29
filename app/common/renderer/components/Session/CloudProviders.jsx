@@ -12,12 +12,14 @@ import PcloudyLogoDark from '../../assets/images/pcloudy_logo_dark.svg';
 import PerfectoLogo from '../../assets/images/perfecto_logo.svg';
 import RemoteTestKitLogo from '../../assets/images/remotetestkit_logo.svg';
 import RobotQALogo from '../../assets/images/robotqa_logo.svg';
+import RobotQALogoDark from '../../assets/images/robotqa_logo_dark.svg';
 import SauceLogo from '../../assets/images/sauce_logo.svg';
 import SauceLogoDark from '../../assets/images/sauce_logo_dark.svg';
 import TestcribeLogo from '../../assets/images/testcribe_logo.svg';
 import TestcribeLogoDark from '../../assets/images/testcribe_logo_dark.svg';
 import TestingBotLogo from '../../assets/images/testingbot_logo.svg';
 import TVLabsLogo from '../../assets/images/tvlabs_logo.svg';
+import TVLabsLogoDark from '../../assets/images/tvlabs_logo_dark.svg';
 import {SERVER_TYPES} from '../../constants/session-builder.js';
 import {useTheme} from '../../hooks/use-theme';
 import ServerTabBitbar from './ServerTabBitbar.jsx';
@@ -84,7 +86,7 @@ const providers = {
     tab: ServerTabRobotQA,
     logos: {
       light: RobotQALogo,
-      dark: null,
+      dark: RobotQALogoDark,
     },
   },
   [SERVER_TYPES.REMOTETESTKIT]: {
@@ -133,7 +135,7 @@ const providers = {
     tab: ServerTabTVLabs,
     logos: {
       light: TVLabsLogo,
-      dark: null,
+      dark: TVLabsLogoDark,
     },
   },
   [SERVER_TYPES.TESTCRIBE]: {
