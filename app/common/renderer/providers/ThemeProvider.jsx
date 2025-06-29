@@ -48,6 +48,7 @@ export const ThemeProvider = ({children}) => {
     },
     components: {
       Badge: {
+        colorError: '#1677ff',
         indicatorHeight: 20,
         textFontSize: 12,
       },

@@ -144,7 +144,7 @@ const Session = (props) => {
               label: (
                 <span>
                   {t('Saved Capability Sets')}{' '}
-                  <Badge color="blue" count={savedSessions.length} offset={[0, -3]} />
+                  <Badge count={savedSessions.length} offset={[0, -3]} />
                 </span>
               ),
               key: SESSION_BUILDER_TABS.SAVED_CAPS,

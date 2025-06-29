@@ -60,8 +60,7 @@ const LocatedElements = (props) => {
           <Space className={InspectorStyles.spaceContainer} direction="vertical" size="small">
             <Row justify="space-between">
               <span>
-                {t('elementsCount')}{' '}
-                <Badge color="blue" count={locatedElements.length} offset={[0, -2]} />
+                {t('elementsCount')} <Badge count={locatedElements.length} offset={[0, -2]} />
               </span>
               <>
                 {t('Time')}: {locatedElementsExecutionTime}
