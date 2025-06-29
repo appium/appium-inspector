@@ -1,31 +1,23 @@
 import BitBarLogo from '../../assets/images/bitbar_logo.svg';
-import BitBarLogoDark from '../../assets/images/bitbar_logo_dark.svg';
 import BrowserStackLogo from '../../assets/images/browserstack_logo.svg';
 import BrowserStackLogoDark from '../../assets/images/browserstack_logo_dark.svg';
 import ExperitestLogo from '../../assets/images/experitest_logo.svg';
-import ExperitestLogoDark from '../../assets/images/experitest_logo_dark.svg';
 import HeadSpinLogo from '../../assets/images/headspin_logo.svg';
 import KobitonLogo from '../../assets/images/kobiton_logo.svg';
 import KobitonLogoDark from '../../assets/images/kobiton_logo_dark.svg';
 import LambdaTestLogo from '../../assets/images/lambdatest_logo.svg';
 import MobitruLogo from '../../assets/images/mobitru_logo.svg';
-import MobitruLogoDark from '../../assets/images/mobitru_logo_dark.svg';
 import PcloudyLogo from '../../assets/images/pcloudy_logo.svg';
 import PcloudyLogoDark from '../../assets/images/pcloudy_logo_dark.svg';
 import PerfectoLogo from '../../assets/images/perfecto_logo.svg';
-import PerfectoLogoDark from '../../assets/images/perfecto_logo_dark.svg';
 import RemoteTestKitLogo from '../../assets/images/remotetestkit_logo.svg';
-import RemoteTestKitLogoDark from '../../assets/images/remotetestkit_logo_dark.svg';
 import RobotQALogo from '../../assets/images/robotqa_logo.svg';
-import RobotQALogoDark from '../../assets/images/robotqa_logo_dark.svg';
 import SauceLogo from '../../assets/images/sauce_logo.svg';
 import SauceLogoDark from '../../assets/images/sauce_logo_dark.svg';
 import TestcribeLogo from '../../assets/images/testcribe_logo.svg';
 import TestcribeLogoDark from '../../assets/images/testcribe_logo_dark.svg';
 import TestingBotLogo from '../../assets/images/testingbot_logo.svg';
-import TestingBotLogoDark from '../../assets/images/testingbot_logo_dark.svg';
 import TVLabsLogo from '../../assets/images/tvlabs_logo.svg';
-import TVLabsLogoDark from '../../assets/images/tvlabs_logo_dark.svg';
 import {SERVER_TYPES} from '../../constants/session-builder.js';
 import {useTheme} from '../../hooks/use-theme';
 import ServerTabBitbar from './ServerTabBitbar.jsx';
@@ -78,35 +70,35 @@ const providers = {
     tab: ServerTabTestingbot,
     logos: {
       light: TestingBotLogo,
-      dark: TestingBotLogoDark,
+      dark: null,
     },
   },
   [SERVER_TYPES.EXPERITEST]: {
     tab: ServerTabExperitest,
     logos: {
       light: ExperitestLogo,
-      dark: ExperitestLogoDark,
+      dark: null,
     },
   },
   [SERVER_TYPES.ROBOTQA]: {
     tab: ServerTabRobotQA,
     logos: {
       light: RobotQALogo,
-      dark: RobotQALogoDark,
+      dark: null,
     },
   },
   [SERVER_TYPES.REMOTETESTKIT]: {
     tab: ServerTabRemoteTestKit,
     logos: {
       light: RemoteTestKitLogo,
-      dark: RemoteTestKitLogoDark,
+      dark: null,
     },
   },
   [SERVER_TYPES.BITBAR]: {
     tab: ServerTabBitbar,
     logos: {
       light: BitBarLogo,
-      dark: BitBarLogoDark,
+      dark: null,
     },
   },
   [SERVER_TYPES.KOBITON]: {
@@ -120,7 +112,7 @@ const providers = {
     tab: ServerTabPerfecto,
     logos: {
       light: PerfectoLogo,
-      dark: PerfectoLogoDark,
+      dark: null,
     },
   },
   [SERVER_TYPES.PCLOUDY]: {
@@ -134,14 +126,14 @@ const providers = {
     tab: ServerTabMobitru,
     logos: {
       light: MobitruLogo,
-      dark: MobitruLogoDark,
+      dark: null,
     },
   },
   [SERVER_TYPES.TVLABS]: {
     tab: ServerTabTVLabs,
     logos: {
       light: TVLabsLogo,
-      dark: TVLabsLogoDark,
+      dark: null,
     },
   },
   [SERVER_TYPES.TESTCRIBE]: {
