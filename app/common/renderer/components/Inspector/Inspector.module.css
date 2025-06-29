@@ -4,18 +4,19 @@
   height: 100%;
 }
 
-.inspector-container :global(.ant-divider-horizontal) {
-  margin: 0px;
-}
-
 .inspector-toolbar {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  padding: 10px 0;
+  gap: 10px;
   width: 100%;
   height: 50px;
   -webkit-app-region: drag;
+}
+
+.inspector-toolbar :global(.ant-divider-horizontal) {
+  margin: 0px;
 }
 
 .inspector-toolbar .ant-btn {

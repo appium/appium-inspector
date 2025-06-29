@@ -10,7 +10,7 @@ import {
   SearchOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
-import {Button, Select, Space, Tooltip} from 'antd';
+import {Button, Divider, Select, Space, Tooltip} from 'antd';
 import {BiCircle, BiSquare} from 'react-icons/bi';
 import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
 import {IoChevronBackOutline} from 'react-icons/io5';
@@ -233,12 +233,13 @@ const HeaderButtons = (props) => {
 
   return (
     <div className={InspectorStyles['inspector-toolbar']}>
-      <Space size="middle">
+      <Space size="middle" className={InspectorStyles['inspector-toolbar-controls']}>
         {deviceControls}
         {appModeControls}
         {generalControls}
         {quitSessionButton}
       </Space>
+      <Divider />
     </div>
   );
 };

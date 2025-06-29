@@ -12,7 +12,7 @@ import {
   TagOutlined,
   ThunderboltOutlined,
 } from '@ant-design/icons';
-import {Button, Card, Divider, Modal, Space, Spin, Switch, Tabs, Tooltip} from 'antd';
+import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router';
@@ -426,7 +426,6 @@ const Inspector = (props) => {
   return (
     <div className={InspectorStyles['inspector-container']}>
       <HeaderButtons quitCurrentSession={quitCurrentSession} {...props} />
-      <Divider />
       {main}
       <Modal
         title={t('Session Inactive')}
