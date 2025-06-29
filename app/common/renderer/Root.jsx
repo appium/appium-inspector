@@ -1,14 +1,13 @@
-import {App, ConfigProvider, Layout, theme} from 'antd';
 import {Suspense} from 'react';
 import {Provider} from 'react-redux';
 import {MemoryRouter, Route, Routes} from 'react-router';
 
-import Notification from './components/Notification';
 import Spinner from './components/Spinner/Spinner.jsx';
 import InspectorPage from './containers/InspectorPage';
 import SessionPage from './containers/SessionPage';
 import i18n from './i18next';
 import {ipcRenderer} from './polyfills';
+import {ThemeProvider} from './providers/ThemeProvider';
 
 ipcRenderer.on('appium-language-changed', (event, message) => {
   if (i18n.language !== message.language) {
@@ -16,45 +15,19 @@ ipcRenderer.on('appium-language-changed', (event, message) => {
   }
 });
 
-const getTheme = () => ({
-  algorithm: theme.defaultAlgorithm,
-  token: {
-    fontSize: 12,
-  },
-  components: {
-    Badge: {
-      indicatorHeight: 20,
-      textFontSize: 12,
-    },
-    Switch: {
-      handleSize: 18,
-      trackHeight: 22,
-      trackMinWidth: 44,
-    },
-    Tabs: {
-      titleFontSize: 14,
-    },
-  },
-});
-
 const Root = ({store}) => (
   <Provider store={store}>
-    <ConfigProvider theme={getTheme()}>
-      <App>
-        <Layout>
-          <MemoryRouter initialEntries={['/']}>
-            <Suspense fallback={<Spinner />}>
-              <Routes>
-                <Route path="/" element={<SessionPage />} />
-                <Route path="/session" element={<SessionPage />} />
-                <Route path="/inspector" element={<InspectorPage />} />
-              </Routes>
-            </Suspense>
-          </MemoryRouter>
-        </Layout>
-        <Notification />
-      </App>
-    </ConfigProvider>
+    <ThemeProvider>
+      <MemoryRouter initialEntries={['/']}>
+        <Suspense fallback={<Spinner />}>
+          <Routes>
+            <Route path="/" element={<SessionPage />} />
+            <Route path="/session" element={<SessionPage />} />
+            <Route path="/inspector" element={<InspectorPage />} />
+          </Routes>
+        </Suspense>
+      </MemoryRouter>
+    </ThemeProvider>
   </Provider>
 );
 

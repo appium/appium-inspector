@@ -52,7 +52,7 @@ const CloudProviderSelector = (props) => {
                         style={style}
                         onClick={() => toggleVisibleProvider(providerName)}
                       >
-                        <img src={provider.logo} />
+                        {provider.logo}
                       </Button>
                     </Col>
                   )
