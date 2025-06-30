@@ -84,11 +84,6 @@
   height: 100%;
 }
 
-.inspector-main :global(.ant-card-head) {
-  max-height: 48px;
-  padding: 0px 12px;
-}
-
 .inspector-main :global(.ant-card-head-wrapper) {
   max-height: 48px;
 }
@@ -400,11 +395,6 @@
   flex-direction: column;
 }
 
-.selected-element-card :global(.ant-card-body) {
-  flex: 1;
-  overflow: auto;
-}
-
 .selectedElemInfoMessage {
   justify-content: center;
 }
@@ -688,6 +678,8 @@
 .spaceContainer {
   display: flex;
   word-break: break-word;
+  height: 100%;
+  overflow: auto;
 }
 
 .tick-pointer-input {
