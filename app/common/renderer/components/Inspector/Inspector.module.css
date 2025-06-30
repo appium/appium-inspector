@@ -89,7 +89,7 @@
 }
 
 .inspector-main :global(.ant-card-body) {
-  height: calc(100% - 48px);
+  height: calc(100% - 54px);
   padding: 12px;
   scrollbar-width: none; /* -webkit-scrollbar for Firefox */
 }
