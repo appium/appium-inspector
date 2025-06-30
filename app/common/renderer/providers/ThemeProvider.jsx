@@ -34,6 +34,7 @@ export const ThemeProvider = ({children}) => {
 
   const initTheme = async () => {
     const savedTheme = await getSetting(PREFERRED_THEME);
+    setTheme(savedTheme);
     setPreferredTheme(savedTheme);
   };
 
