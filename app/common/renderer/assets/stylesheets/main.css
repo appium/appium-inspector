@@ -82,6 +82,10 @@ body::-webkit-scrollbar-corner {
   font-size: 12px !important;
 }
 
+.ant-steps-icon .anticon {
+  font-size: 20px !important;
+}
+
 .ant-switch-inner-checked,
 .ant-switch-inner-unchecked {
   font-size: 12px !important;
