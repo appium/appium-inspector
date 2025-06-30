@@ -46,7 +46,7 @@ export const ThemeProvider = ({children}) => {
   const themeConfig = {
     algorithm: isDarkTheme ? theme.darkAlgorithm : theme.defaultAlgorithm,
     token: {
-      colorBgLayout: isDarkTheme ? '#121212' : '#f5f5f5',
+      colorBgLayout: isDarkTheme ? '#191919' : '#f5f5f5',
       fontSize: 12,
     },
     components: {
