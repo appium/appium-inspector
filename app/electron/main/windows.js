@@ -32,7 +32,7 @@ function buildSplashWindow(backgroundColor) {
   });
 }
 
-function buildSessionWindow(backgroundColor) {
+function buildSessionWindow() {
   return new BrowserWindow({
     show: false,
     width: 1100,
@@ -40,7 +40,6 @@ function buildSessionWindow(backgroundColor) {
     minWidth: 890,
     minHeight: 710,
     titleBarStyle: 'hiddenInset',
-    backgroundColor,
     webPreferences: {
       preload: join(__dirname, '..', 'preload', 'preload.mjs'), // from 'main' in package.json
       sandbox: false,
@@ -61,7 +60,7 @@ export async function setupMainWindow() {
   splashWindow[pathLoadMethod](splashPath);
   splashWindow.show();
 
-  mainWindow = buildSessionWindow(backgroundColor);
+  mainWindow = buildSessionWindow();
   mainWindow[pathLoadMethod](mainPath);
 
   mainWindow.webContents.on('did-finish-load', () => {

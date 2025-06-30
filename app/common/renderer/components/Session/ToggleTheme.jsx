@@ -5,7 +5,7 @@ import {useTheme} from '../../hooks/use-theme';
 import SessionStyles from './Session.module.css';
 
 const ToggleTheme = ({t}) => {
-  const {preferredTheme, updatePreferredTheme} = useTheme();
+  const {preferredTheme, updateTheme} = useTheme();
 
   const themes = [
     {
@@ -34,7 +34,7 @@ const ToggleTheme = ({t}) => {
             selectable: true,
             selectedKeys: [preferredTheme],
             onSelect: ({key}) => {
-              updatePreferredTheme(key);
+              updateTheme(key);
             },
           }}
           trigger={['click']}

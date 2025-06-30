@@ -3,15 +3,16 @@ import {createContext, useEffect, useState} from 'react';
 
 import {PREFERRED_THEME} from '../../shared/setting-defs';
 import Notification from '../components/Notification';
-import {getSetting, setSetting} from '../polyfills';
+import {getSetting, setSetting, setTheme} from '../polyfills';
 import {loadHighlightTheme} from '../utils/highlight-theme';
+
+const systemPrefersDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 export const ThemeContext = createContext(null);
 
 export const ThemeProvider = ({children}) => {
   const [preferredTheme, setPreferredTheme] = useState('system');
 
-  const systemPrefersDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const isDarkTheme =
     preferredTheme === 'dark' || (preferredTheme === 'system' && systemPrefersDarkTheme);
 
@@ -36,7 +37,8 @@ export const ThemeProvider = ({children}) => {
     setPreferredTheme(savedTheme);
   };
 
-  const updatePreferredTheme = async (theme) => {
+  const updateTheme = async (theme) => {
+    setTheme(theme);
     setPreferredTheme(theme);
     await setSetting(PREFERRED_THEME, theme);
   };
@@ -65,7 +67,7 @@ export const ThemeProvider = ({children}) => {
   };
 
   return (
-    <ThemeContext.Provider value={{updatePreferredTheme, preferredTheme, isDarkTheme}}>
+    <ThemeContext.Provider value={{updateTheme, preferredTheme, isDarkTheme}}>
       <ConfigProvider theme={themeConfig}>
         <App>
           <Layout>{children}</Layout>
