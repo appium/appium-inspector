@@ -233,7 +233,7 @@ const HeaderButtons = (props) => {
 
   return (
     <div className={InspectorStyles['inspector-toolbar']}>
-      <Space size="middle" className={InspectorStyles['inspector-toolbar-controls']}>
+      <Space size="middle">
         {deviceControls}
         {appModeControls}
         {generalControls}
