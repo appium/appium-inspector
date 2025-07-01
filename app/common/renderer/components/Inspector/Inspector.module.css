@@ -420,7 +420,7 @@
 }
 
 :global(.dark) .sourceTag {
-  color: #ad2020;
+  color: #b31b1b;
 }
 
 .sourceAttrName {
@@ -429,7 +429,7 @@
 }
 
 :global(.dark) .sourceAttrName {
-  color: #a64da1;
+  color: #c96dc6;
 }
 
 .no-recorded-actions {
