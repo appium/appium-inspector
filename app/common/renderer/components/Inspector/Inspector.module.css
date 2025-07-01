@@ -446,6 +446,7 @@
   border-style: solid;
   border-width: 1px;
   border-color: #303030;
+  border-radius: 6px 6px 0 0;
 }
 
 .searchResultsList :global(.ant-table-cell) {
