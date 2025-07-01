@@ -88,6 +88,12 @@
   max-height: 48px;
 }
 
+.inspector-main :global(.ant-card-head) {
+  max-height: 48px;
+  padding: 0px 12px;
+  margin-bottom: 0px;
+}
+
 .inspector-main :global(.ant-card-body) {
   height: calc(100% - 54px);
   padding: 12px;
@@ -395,6 +401,11 @@
   flex-direction: column;
 }
 
+.selected-element-card :global(.ant-card-body) {
+  flex: 1;
+  overflow: auto;
+}
+
 .selectedElemInfoMessage {
   justify-content: center;
 }
@@ -679,8 +690,6 @@
 .spaceContainer {
   display: flex;
   word-break: break-word;
-  height: 100%;
-  overflow: auto;
 }
 
 .tick-pointer-input {
