@@ -10,7 +10,7 @@ import {
   SearchOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
-import {Button, Select, Space, Tooltip} from 'antd';
+import {Button, Divider, Select, Space, Tooltip} from 'antd';
 import {BiCircle, BiSquare} from 'react-icons/bi';
 import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
 import {IoChevronBackOutline} from 'react-icons/io5';
@@ -240,6 +240,7 @@ const HeaderButtons = (props) => {
         {generalControls}
         {quitSessionButton}
       </Space>
+      <Divider />
     </div>
   );
 };

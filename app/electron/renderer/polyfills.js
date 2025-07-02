@@ -17,6 +17,7 @@ const i18NextBackendOptions = {
 const electronUtils = {
   copyToClipboard: (text) => ipcRenderer.send('electron:copyToClipboard', text),
   openLink: (link) => ipcRenderer.send('electron:openLink', link),
+  setTheme: (theme) => ipcRenderer.send('electron:setTheme', theme),
 };
 
 class ElectronSettings {
@@ -34,6 +35,14 @@ class ElectronSettings {
 }
 
 const settings = new ElectronSettings();
-const {copyToClipboard, openLink} = electronUtils;
+const {copyToClipboard, openLink, setTheme} = electronUtils;
 
-export {copyToClipboard, i18NextBackend, i18NextBackendOptions, ipcRenderer, openLink, settings};
+export {
+  copyToClipboard,
+  i18NextBackend,
+  i18NextBackendOptions,
+  ipcRenderer,
+  openLink,
+  setTheme,
+  settings,
+};

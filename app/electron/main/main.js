@@ -27,5 +27,5 @@ app.on('ready', async () => {
   }
 
   setupIPCListeners();
-  setupMainWindow();
+  await setupMainWindow();
 });

@@ -1,5 +1,5 @@
 import {AimOutlined, ClearOutlined, MenuUnfoldOutlined, SendOutlined} from '@ant-design/icons';
-import {Alert, Badge, Button, Input, List, Row, Space, Spin, Tooltip} from 'antd';
+import {Alert, Badge, Button, Input, Row, Space, Spin, Table, Tooltip} from 'antd';
 import {useRef} from 'react';
 
 import {ALERT} from '../../constants/antd-types';
@@ -60,35 +60,35 @@ const LocatedElements = (props) => {
           <Space className={InspectorStyles.spaceContainer} direction="vertical" size="small">
             <Row justify="space-between">
               <span>
-                {t('elementsCount')}{' '}
-                <Badge color="blue" count={locatedElements.length} offset={[0, -2]} />
+                {t('elementsCount')} <Badge count={locatedElements.length} offset={[0, -2]} />
               </span>
               <>
                 {t('Time')}: {locatedElementsExecutionTime}
               </>
             </Row>
             <Row>
-              <List
+              <Table
+                pagination={false}
                 className={InspectorStyles.searchResultsList}
-                size="small"
-                dataSource={locatedElements}
-                renderItem={(elementId) => (
-                  <List.Item
-                    type="text"
-                    {...(locatorTestElement === elementId
-                      ? {className: InspectorStyles.searchResultsSelectedItem}
-                      : {})}
-                    {...(locatorTestElement !== elementId
-                      ? {
-                          onClick: () => {
-                            setLocatorTestElement(elementId);
-                          },
-                        }
-                      : {})}
-                  >
-                    {elementId}
-                  </List.Item>
-                )}
+                dataSource={locatedElements.map((elementId) => ({
+                  key: elementId,
+                  id: elementId,
+                }))}
+                columns={[
+                  {
+                    dataIndex: 'id',
+                  },
+                ]}
+                showHeader={false}
+                onRow={(row) => ({
+                  onClick: () => locatorTestElement !== row.key && setLocatorTestElement(row.key),
+                })}
+                rowSelection={{
+                  selectedRowKeys: [locatorTestElement],
+                  hideSelectAll: true,
+                  columnWidth: 0,
+                  renderCell: () => null,
+                }}
               />
             </Row>
             <Row justify="center">

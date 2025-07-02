@@ -1,4 +1,4 @@
-import {clipboard, ipcMain, shell} from 'electron';
+import {clipboard, ipcMain, nativeTheme, shell} from 'electron';
 import settings from 'electron-settings';
 import fs from 'fs';
 
@@ -12,6 +12,7 @@ export function setupIPCListeners() {
   ipcMain.handle('settings:get', async (_evt, key) => await settings.get(key));
   ipcMain.on('electron:openLink', (_evt, link) => shell.openExternal(link));
   ipcMain.on('electron:copyToClipboard', (_evt, text) => clipboard.writeText(text));
+  ipcMain.on('electron:setTheme', (_evt, theme) => (nativeTheme.themeSource = theme));
   ipcMain.handle('sessionfile:open', async (_evt, filePath) => openSessionFile(filePath));
 }
 
