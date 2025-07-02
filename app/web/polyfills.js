@@ -25,6 +25,7 @@ const i18NextBackendOptions = {
 const browserUtils = {
   copyToClipboard: (text) => navigator.clipboard.writeText(text),
   openLink: (url) => window.open(url, ''),
+  setTheme: () => {},
   ipcRenderer: {
     on: (evt) => {
       console.warn(`Cannot listen for IPC event ${evt} in browser context`); // eslint-disable-line no-console
@@ -47,6 +48,14 @@ class BrowserSettings {
 }
 
 const settings = new BrowserSettings();
-const {copyToClipboard, openLink, ipcRenderer} = browserUtils;
+const {copyToClipboard, openLink, setTheme, ipcRenderer} = browserUtils;
 
-export {copyToClipboard, i18NextBackend, i18NextBackendOptions, ipcRenderer, openLink, settings};
+export {
+  copyToClipboard,
+  i18NextBackend,
+  i18NextBackendOptions,
+  ipcRenderer,
+  openLink,
+  setTheme,
+  settings,
+};
