@@ -35,6 +35,7 @@ nav:
   - menu-bar.md
   - Session Builder:
       - session-builder/index.md
+      - session-builder/settings.md
       - session-builder/server-details.md
       - session-builder/capability-builder.md
       - session-builder/saved-capability-sets.md
