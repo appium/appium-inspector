@@ -726,3 +726,28 @@
   color: red;
   margin: 5px;
 }
+
+.tree-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 8px;
+}
+
+.tree-search-input {
+  max-width: 300px;
+}
+
+.tree-search-input :global(.ant-input-group-addon) {
+  min-width: 46px;
+}
+
+.tree-search-highlight {
+  background-color: #ffeb3b;
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+:global(.dark) .tree-search-highlight {
+  background-color: #dba400;
+}
