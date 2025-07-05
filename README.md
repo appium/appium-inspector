@@ -33,7 +33,7 @@ various features for interacting with the app.
 
 When inspecting a mobile app, the Inspector looks like this:
 
-![Appium Inspector screenshot](./docs/assets/images/inspector-window.png)
+![Appium Inspector screenshot](./docs/assets/images/session-inspector.png)
 
 ## Installation
 

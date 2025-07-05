@@ -11,6 +11,7 @@ The **Session Builder** is the default screen shown upon opening the Inspector.
 
 The user interface here can be divided into several groups:
 
+- [Application Settings](./app-settings.md)
 - [Configuration of Server Details](./server-details.md)
 - [Capability Builder tab](./capability-builder.md)
 - [Saved Capability Sets tab](./saved-capability-sets.md)
