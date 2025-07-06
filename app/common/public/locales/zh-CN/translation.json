@@ -292,5 +292,9 @@
   "AccessToken": "访问令牌",
   "Token": "令牌",
   "Key": "密钥",
-  "Secret": "密钥"
+  "Secret": "密钥",
+  "Toggle Theme": "Toggle Theme",
+  "Light Theme": "Light Theme",
+  "Dark Theme": "Dark Theme",
+  "System Theme": "System Theme"
 }
