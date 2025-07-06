@@ -292,5 +292,9 @@
   "AccessToken": "Token доступу",
   "Token": "Токен",
   "Key": "Ключ",
-  "Secret": "Секретний ключ"
+  "Secret": "Секретний ключ",
+  "Toggle Theme": "Перемкнути тему",
+  "Light Theme": "Світла тема",
+  "Dark Theme": "Темна тема",
+  "System Theme": "Тема системи"
 }
