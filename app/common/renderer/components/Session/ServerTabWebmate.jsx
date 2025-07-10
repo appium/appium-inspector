@@ -5,7 +5,7 @@ import {INPUT} from '../../constants/antd-types.js';
 const ServerTabWebmate = ({server, setServerParam, t}) => (
   <Form>
     <Row gutter={8}>
-      <Col span={24}>
+      <Col span={12}>
         <Form.Item>
           <Input
             type={INPUT.PASSWORD}
@@ -20,9 +20,7 @@ const ServerTabWebmate = ({server, setServerParam, t}) => (
           />
         </Form.Item>
       </Col>
-    </Row>
-    <Row gutter={8}>
-      <Col span={24}>
+      <Col span={12}>
         <Form.Item>
           <Input
             placeholder={
@@ -38,7 +36,7 @@ const ServerTabWebmate = ({server, setServerParam, t}) => (
       </Col>
     </Row>
     <Row gutter={8}>
-      <Col span={8}>
+      <Col span={12} align="right">
         <Form.Item>
           <Checkbox
             checked={!!server.webmate.useCustomHost}
@@ -46,7 +44,7 @@ const ServerTabWebmate = ({server, setServerParam, t}) => (
           >Specify webmate host explicitly</Checkbox>
         </Form.Item>
       </Col>
-      <Col span={16}>
+      <Col span={12}>
         <Form.Item>
           <Input
             placeholder={
