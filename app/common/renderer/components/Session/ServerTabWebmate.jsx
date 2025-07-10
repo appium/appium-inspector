@@ -5,21 +5,7 @@ import {INPUT} from '../../constants/antd-types.js';
 const ServerTabWebmate = ({server, setServerParam, t}) => (
   <Form>
     <Row gutter={8}>
-      <Col span={12}>
-        <Form.Item>
-          <Input
-            placeholder={
-              process.env.WEBMATE_EMAIL_ADDRESS
-                ? t('usingDataFoundIn', {environmentVariable: 'WEBMATE_EMAIL_ADDRESS'})
-                : t('yourUsername')
-            }
-            addonBefore={'webmate email address'}
-            value={server.webmate.emailAddress}
-            onChange={(e) => setServerParam('emailAddress', e.target.value)}
-          />
-        </Form.Item>
-      </Col>
-      <Col span={12}>
+      <Col span={24}>
         <Form.Item>
           <Input
             type={INPUT.PASSWORD}
