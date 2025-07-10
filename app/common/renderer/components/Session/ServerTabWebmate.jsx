@@ -50,11 +50,11 @@ const ServerTabWebmate = ({server, setServerParam, t}) => (
         <Form.Item>
           <Input
             placeholder={
-              process.env.WEBMATE_SELENIUM_HOST
-                ? t('usingDataFoundIn', {environmentVariable: 'WEBMATE_SELENIUM_HOST'})
+              process.env.WEBMATE_HOST
+                ? t('usingDataFoundIn', {environmentVariable: 'WEBMATE_HOST'})
                 : 'selenium.webmate.io'
             }
-            addonBefore={'webmate Selenium host'}
+            addonBefore={'webmate host'}
             disabled={!server.webmate.useCustomHost}
             value={server.webmate.seleniumHost}
             onChange={(e) => setServerParam('seleniumHost', e.target.value)}
