@@ -13,6 +13,7 @@ import SauceLogo from '../../assets/images/sauce_logo.svg';
 import TestcribeLogo from '../../assets/images/testcribe_logo.svg';
 import TestingBotLogo from '../../assets/images/testingbot_logo.svg';
 import TVLabsLogo from '../../assets/images/tvlabs_logo.svg';
+import WebmateLogo from '../../assets/images/webmate_logo.svg';
 import {SERVER_TYPES} from '../../constants/session-builder.js';
 import ServerTabBitbar from './ServerTabBitbar.jsx';
 import ServerTabBrowserstack from './ServerTabBrowserstack.jsx';
@@ -29,6 +30,7 @@ import ServerTabSauce from './ServerTabSauce.jsx';
 import ServerTabTestcribe from './ServerTabTestcribe.jsx';
 import ServerTabTestingbot from './ServerTabTestingbot.jsx';
 import ServerTabTVLabs from './ServerTabTVLabs.jsx';
+import ServerTabWebmate from './ServerTabWebmate.jsx';
 import SessionStyles from './Session.module.css';
 
 const providerWrapper = (logo, providerComponent) => ({
@@ -87,6 +89,9 @@ CloudProviders[SERVER_TYPES.TVLABS] = providerWrapper(TVLabsLogo, (props) => (
 ));
 CloudProviders[SERVER_TYPES.TESTCRIBE] = providerWrapper(TestcribeLogo, (props) => (
   <ServerTabTestcribe {...props} />
+));
+CloudProviders[SERVER_TYPES.WEBMATE] = providerWrapper(WebmateLogo, (props) => (
+  <ServerTabWebmate {...props} />
 ));
 
 export default CloudProviders;
