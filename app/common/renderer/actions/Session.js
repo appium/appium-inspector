@@ -602,7 +602,7 @@ export function setSavedServerParams() {
 export function initFromSessionFile() {
   return async (dispatch) => {
     const lastArg = process.argv[process.argv.length - 1];
-    if (!lastArg.startsWith('filename=')) {
+    if (!lastArg?.startsWith('filename=')) {
       return null;
     }
     const filePath = lastArg.split('=')[1];
