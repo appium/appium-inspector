@@ -9,6 +9,7 @@ export class WebmateVendor extends BaseVendor {
     const vendorName = 'webmate';
 
     const apiKey = webmate.apiKey || process.env.WEBMATE_API_KEY;
+    const projectId = webmate.projectId || process.env.WEBMATE_PROJECT;
     this._checkInputPropertyPresence(vendorName, [
       {name: 'API key', val: apiKey},
     ]);
@@ -20,5 +21,8 @@ export class WebmateVendor extends BaseVendor {
     this._saveProperties(webmate, {host, path, port, https, accessKey: apiKey});
 
     this._updateSessionCap('wm:apikey', apiKey);
+    if (projectId) {
+      this._updateSessionCap('wm:project', projectId);
+    }
   }
 }

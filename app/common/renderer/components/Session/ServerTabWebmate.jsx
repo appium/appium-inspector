@@ -26,6 +26,22 @@ const ServerTabWebmate = ({server, setServerParam, t}) => (
         <Form.Item>
           <Input
             placeholder={
+              process.env.WEBMATE_PROJECT
+                ? t('usingDataFoundIn', {environmentVariable: 'WEBMATE_PROJECT'})
+                : 'Your project id'
+            }
+            addonBefore={'webmate project id'}
+            value={server.webmate.projectId}
+            onChange={(e) => setServerParam('projectId', e.target.value)}
+          />
+        </Form.Item>
+      </Col>
+    </Row>
+    <Row gutter={8}>
+      <Col span={24}>
+        <Form.Item>
+          <Input
+            placeholder={
               process.env.WEBMATE_SELENIUM_HOST
                 ? t('usingDataFoundIn', {environmentVariable: 'WEBMATE_SELENIUM_HOST'})
                 : 'selenium.webmate.io'
