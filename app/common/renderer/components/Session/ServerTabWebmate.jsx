@@ -1,4 +1,4 @@
-import {Col, Form, Input, Row} from 'antd';
+import {Checkbox, Col, Form, Input, Row} from 'antd';
 
 import {INPUT} from '../../constants/antd-types.js';
 
@@ -38,7 +38,15 @@ const ServerTabWebmate = ({server, setServerParam, t}) => (
       </Col>
     </Row>
     <Row gutter={8}>
-      <Col span={24}>
+      <Col span={8}>
+        <Form.Item>
+          <Checkbox
+            checked={!!server.webmate.useCustomHost}
+            onChange={(e) => setServerParam('useCustomHost', e.target.checked)}
+          >Specify webmate host explicitly</Checkbox>
+        </Form.Item>
+      </Col>
+      <Col span={16}>
         <Form.Item>
           <Input
             placeholder={
@@ -47,6 +55,7 @@ const ServerTabWebmate = ({server, setServerParam, t}) => (
                 : 'selenium.webmate.io'
             }
             addonBefore={'webmate Selenium host'}
+            disabled={!server.webmate.useCustomHost}
             value={server.webmate.seleniumHost}
             onChange={(e) => setServerParam('seleniumHost', e.target.value)}
           />

@@ -14,7 +14,7 @@ export class WebmateVendor extends BaseVendor {
       {name: 'API key', val: apiKey},
     ]);
 
-    const host = webmate.seleniumHost || process.env.WEBMATE_SELENIUM_HOST || 'selenium.webmate.io';
+    const host = (webmate.useCustomHost && webmate.seleniumHost) || process.env.WEBMATE_SELENIUM_HOST || 'selenium.webmate.io';
     const path = '/wd/hub';
     const port = 443;
     const https = true;
