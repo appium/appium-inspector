@@ -16,10 +16,7 @@
  * limitations under the License.
  */
 
-import AppiumProtocol from '@wdio/protocols/protocols/appium.json';
-import JsonWProtocol from '@wdio/protocols/protocols/jsonwp.json';
-import MJsonWProtocol from '@wdio/protocols/protocols/mjsonwp.json';
-import WebDriverProtocol from '@wdio/protocols/protocols/webdriver.json';
+import {AppiumProtocol, MJsonWProtocol, WebDriverProtocol} from '@wdio/protocols';
 import _ from 'lodash';
 
 import {ELEMENT_CMDS, getElementFromResponse} from './element';
@@ -133,7 +130,7 @@ const ALIAS_CMDS = {
 // and simply put all the methods on Session (except for element methods and
 // edge cases)
 
-for (const proto of [WebDriverProtocol, JsonWProtocol, MJsonWProtocol, AppiumProtocol]) {
+for (const proto of [WebDriverProtocol, MJsonWProtocol, AppiumProtocol]) {
   for (const [, methods] of _.toPairs(proto)) {
     for (const [, cmdData] of _.toPairs(methods)) {
       // if we've explicitly asked not to include the command, skip it
