@@ -326,7 +326,7 @@ export function newSession(originalCaps, attachSessId = null) {
         const platformName = attachedSessionCaps.platformName || attachedSessionCaps.platform;
         serverOpts.isIOS = Boolean(platformName.match(/iOS/i));
         serverOpts.isAndroid = Boolean(platformName.match(/Android/i));
-        driver = await Web2Driver.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
+        driver = Web2Driver.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
         driver._isAttachedSession = true;
       } else {
         driver = await Web2Driver.remote(serverOpts, sessionCaps);

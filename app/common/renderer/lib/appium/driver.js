@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import WDCore from 'webdriver';
+import webdriver from 'webdriver';
 
 import Session from './session';
 
@@ -41,11 +41,11 @@ export default class Web2Driver {
     capabilities = {},
   ) {
     const params = {protocol, hostname, port, path, capabilities, logLevel, ...otherParams};
-    const sessionClient = await WDCore.newSession(params);
+    const sessionClient = await webdriver.newSession(params);
     return new Session(sessionClient);
   }
 
-  static async attachToSession(
+  static attachToSession(
     sessionId,
     {
       protocol = DEFAULTS.protocol,
@@ -72,7 +72,7 @@ export default class Web2Driver {
       logLevel,
       ...otherParams,
     };
-    const sessionClient = await WDCore.attachToSession(params);
+    const sessionClient = webdriver.attachToSession(params);
     return new Session(sessionClient);
   }
 }
