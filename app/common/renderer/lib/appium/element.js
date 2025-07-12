@@ -18,8 +18,8 @@
 
 import _ from 'lodash';
 
-const W3C_ELEMENT_KEY = 'element-6066-11e4-a52e-4f735466cecf';
-const JWP_ELEMENT_KEY = 'ELEMENT';
+export const W3C_ELEMENT_KEY = 'element-6066-11e4-a52e-4f735466cecf';
+export const JWP_ELEMENT_KEY = 'ELEMENT';
 
 export default class UIElement {
   constructor(elementKey, findRes, parent) {
@@ -45,7 +45,7 @@ export default class UIElement {
   }
 }
 
-function getElementFromResponse(res, parent) {
+export function getElementFromResponse(res, parent) {
   let elementKey;
   if (res[W3C_ELEMENT_KEY]) {
     elementKey = W3C_ELEMENT_KEY;
@@ -63,7 +63,7 @@ function getElementFromResponse(res, parent) {
   return new UIElement(elementKey, res, parent);
 }
 
-const ELEMENT_CMDS = {
+export const ELEMENT_CMDS = {
   isElementSelected: 'isSelected',
   isElementDisplayed: 'isDisplayed',
   getElementAttribute: 'getAttribute',
@@ -84,5 +84,3 @@ for (const [protoCmd, newCmd] of _.toPairs(ELEMENT_CMDS)) {
     return await this.session.cmd(protoCmd, this.elementId, ...args);
   };
 }
-
-export {ELEMENT_CMDS, getElementFromResponse, JWP_ELEMENT_KEY, W3C_ELEMENT_KEY};
