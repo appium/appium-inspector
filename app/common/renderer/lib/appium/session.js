@@ -21,22 +21,17 @@ import AppiumProtocol from '@wdio/protocols/protocols/appium.json';
 import JsonWProtocol from '@wdio/protocols/protocols/jsonwp.json';
 import MJsonWProtocol from '@wdio/protocols/protocols/mjsonwp.json';
 import WebDriverProtocol from '@wdio/protocols/protocols/webdriver.json';
-import {includes, keys, toPairs} from 'lodash';
+import _ from 'lodash';
 
 import {DEFAULTS} from './driver';
 import {ELEMENT_CMDS, getElementFromResponse} from './element';
 
 const log = logger('web2driver');
 
-const DIRECT_CONNECT_PREFIX = 'directConnect';
-let DIRECT_CONNECT_CAPS = ['Protocol', 'Host', 'Port', 'Path'];
-DIRECT_CONNECT_CAPS = DIRECT_CONNECT_CAPS.map((c) => `${DIRECT_CONNECT_PREFIX}${c}`);
-const PREFIXED_DIRECT_CAPS = DIRECT_CONNECT_CAPS.map((c) => `appium:${c}`);
-
 export default class Session {
   constructor(wdSessionClient, logLevel = DEFAULTS.logLevel) {
     this.client = wdSessionClient;
-    log.setLevel && log.setLevel(logLevel);
+    log.setLevel(logLevel);
   }
 
   async cmd(commandName, ...args) {
@@ -77,7 +72,7 @@ export default class Session {
     while (el === null && Date.now() < end) {
       try {
         el = await this.findElement(using, value);
-      } catch (ign) {}
+      } catch {}
     }
 
     if (el) {
@@ -144,20 +139,20 @@ const ALIAS_CMDS = {
 // edge cases)
 
 for (const proto of [WebDriverProtocol, JsonWProtocol, MJsonWProtocol, AppiumProtocol]) {
-  for (const [route, methods] of toPairs(proto)) {
-    for (const [method, cmdData] of toPairs(methods)) {
+  for (const [, methods] of _.toPairs(proto)) {
+    for (const [, cmdData] of _.toPairs(methods)) {
       // if we've explicitly asked not to include the command, skip it
       if (AVOID_CMDS.includes(cmdData.command)) {
         continue;
       }
 
       // likewise skip element commands; those are handled by element.js
-      if (keys(ELEMENT_CMDS).includes(cmdData.command)) {
+      if (_.keys(ELEMENT_CMDS).includes(cmdData.command)) {
         continue;
       }
 
       // give the command a new name if we so desire
-      const cmdName = keys(ALIAS_CMDS).includes(cmdData.command)
+      const cmdName = _.keys(ALIAS_CMDS).includes(cmdData.command)
         ? ALIAS_CMDS[cmdData.command]
         : cmdData.command;
 

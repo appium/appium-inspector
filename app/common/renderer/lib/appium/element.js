@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import {toPairs} from 'lodash';
+import _ from 'lodash';
 
 const W3C_ELEMENT_KEY = 'element-6066-11e4-a52e-4f735466cecf';
 const JWP_ELEMENT_KEY = 'ELEMENT';
@@ -83,7 +83,7 @@ const ELEMENT_CMDS = {
   takeElementScreenshot: 'takeScreenshot',
 };
 
-for (const [protoCmd, newCmd] of toPairs(ELEMENT_CMDS)) {
+for (const [protoCmd, newCmd] of _.toPairs(ELEMENT_CMDS)) {
   UIElement.prototype[newCmd] = async function (...args) {
     return await this.session.cmd(protoCmd, this.elementId, ...args);
   };
