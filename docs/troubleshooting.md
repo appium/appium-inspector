@@ -34,11 +34,6 @@ create a session.
     If you encounter this issue with a cloud provider, the fix must be applied on the provider side,
     because they are the ones hosting the Appium server.
 
-## Browser version does not work in Safari
-
-This is [a known issue](https://github.com/appium/appium-inspector/issues/103). Currently it is
-advised to use Chrome, Edge or Firefox instead.
-
 ## Start Session button is cut off
 
 This problem may appear if your computer screen size is too small. Check the

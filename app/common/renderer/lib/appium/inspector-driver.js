@@ -272,14 +272,14 @@ export default class InspectorDriver {
 
     // First get the current context (or the error, if one appears)
     try {
-      currentContext = await this.driver.getContext();
+      currentContext = await this.driver.getAppiumContext();
     } catch (e) {
       currentContextError = e;
     }
 
     // The retrieval of all contexts and webview position adjustments require some native context use
     if (currentContext !== NATIVE_APP) {
-      await this.driver.switchContext(NATIVE_APP);
+      await this.driver.switchAppiumContext(NATIVE_APP);
     }
 
     const isAndroid = this.driver.client.isAndroid;
@@ -375,7 +375,7 @@ export default class InspectorDriver {
       }
 
       // Native context calculation part is done - switch back to webview context
-      await this.driver.switchContext(currentContext);
+      await this.driver.switchAppiumContext(currentContext);
 
       // Adjust all elements by the calculated offsets
       await this.driver.executeScript(
@@ -413,7 +413,7 @@ export default class InspectorDriver {
    */
   async hasContextsCommand() {
     try {
-      await this.driver.getContexts();
+      await this.driver.getAppiumContexts();
       return true;
     } catch {}
 

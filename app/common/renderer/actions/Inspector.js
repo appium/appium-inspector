@@ -712,7 +712,7 @@ export function selectAppMode(mode) {
       await action(dispatch, getState);
     }
     if (appMode !== mode && mode === APP_MODE.NATIVE) {
-      const action = applyClientMethod({methodName: 'switchContext', args: [NATIVE_APP]});
+      const action = applyClientMethod({methodName: 'switchAppiumContext', args: [NATIVE_APP]});
       await action(dispatch, getState);
     }
   };

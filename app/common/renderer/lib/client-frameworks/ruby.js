@@ -150,15 +150,15 @@ driver.quit`;
 
   // Context
 
-  codeFor_getContext() {
+  codeFor_getAppiumContext() {
     return `context = driver.current_context`;
   }
 
-  codeFor_getContexts() {
+  codeFor_getAppiumContexts() {
     return `contexts = driver.available_contexts`;
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+  codeFor_switchAppiumContext(varNameIgnore, varIndexIgnore, name) {
     return `driver.context = '${name}'`;
   }
 

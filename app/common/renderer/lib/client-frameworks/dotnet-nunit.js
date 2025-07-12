@@ -224,15 +224,15 @@ let timeouts = new Dictionary<string, TimeSpan>()
 
   // Context
 
-  codeFor_getContext() {
+  codeFor_getAppiumContext() {
     return `var context = _driver.Context;`;
   }
 
-  codeFor_getContexts() {
+  codeFor_getAppiumContexts() {
     return `var contexts = _driver.Contexts;`;
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+  codeFor_switchAppiumContext(varNameIgnore, varIndexIgnore, name) {
     return `_driver.Context = "${name}";`;
   }
 

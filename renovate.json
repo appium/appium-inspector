@@ -17,9 +17,9 @@
       "enabled": false
     },
     {
-      "matchPackageNames": ["web2driver"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "enabled": false
+      "matchPackageNames": ["webdriver", "@wdio/protocols"],
+      "groupName": "WebdriverIO-related packages",
+      "groupSlug": "webdriverio"
     },
     {
       "matchPackageNames": ["appium", "@appium/**", "!@appium/base-plugin"],
