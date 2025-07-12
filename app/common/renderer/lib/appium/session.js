@@ -16,22 +16,17 @@
  * limitations under the License.
  */
 
-import logger from '@wdio/logger';
 import AppiumProtocol from '@wdio/protocols/protocols/appium.json';
 import JsonWProtocol from '@wdio/protocols/protocols/jsonwp.json';
 import MJsonWProtocol from '@wdio/protocols/protocols/mjsonwp.json';
 import WebDriverProtocol from '@wdio/protocols/protocols/webdriver.json';
 import _ from 'lodash';
 
-import {DEFAULTS} from './driver';
 import {ELEMENT_CMDS, getElementFromResponse} from './element';
 
-const log = logger('web2driver');
-
 export default class Session {
-  constructor(wdSessionClient, logLevel = DEFAULTS.logLevel) {
+  constructor(wdSessionClient) {
     this.client = wdSessionClient;
-    log.setLevel(logLevel);
   }
 
   async cmd(commandName, ...args) {
