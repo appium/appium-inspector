@@ -16,30 +16,30 @@
  * limitations under the License.
  */
 
-import { includes, keys, toPairs } from 'lodash';
 import logger from '@wdio/logger';
-import { ELEMENT_CMDS, getElementFromResponse } from './element';
-import WebDriverProtocol from '@wdio/protocols/protocols/webdriver.json';
+import AppiumProtocol from '@wdio/protocols/protocols/appium.json';
 import JsonWProtocol from '@wdio/protocols/protocols/jsonwp.json';
 import MJsonWProtocol from '@wdio/protocols/protocols/mjsonwp.json';
-import AppiumProtocol from '@wdio/protocols/protocols/appium.json';
-import { DEFAULTS } from './driver';
+import WebDriverProtocol from '@wdio/protocols/protocols/webdriver.json';
+import {includes, keys, toPairs} from 'lodash';
+
+import {DEFAULTS} from './driver';
+import {ELEMENT_CMDS, getElementFromResponse} from './element';
 
 const log = logger('web2driver');
 
 const DIRECT_CONNECT_PREFIX = 'directConnect';
 let DIRECT_CONNECT_CAPS = ['Protocol', 'Host', 'Port', 'Path'];
-DIRECT_CONNECT_CAPS = DIRECT_CONNECT_CAPS.map(c => `${DIRECT_CONNECT_PREFIX}${c}`);
-const PREFIXED_DIRECT_CAPS = DIRECT_CONNECT_CAPS.map(c => `appium:${c}`);
+DIRECT_CONNECT_CAPS = DIRECT_CONNECT_CAPS.map((c) => `${DIRECT_CONNECT_PREFIX}${c}`);
+const PREFIXED_DIRECT_CAPS = DIRECT_CONNECT_CAPS.map((c) => `appium:${c}`);
 
 export default class Session {
-
-  constructor (wdSessionClient, logLevel = DEFAULTS.logLevel) {
+  constructor(wdSessionClient, logLevel = DEFAULTS.logLevel) {
     this.client = wdSessionClient;
     log.setLevel && log.setLevel(logLevel);
   }
 
-  async cmd (commandName, ...args) {
+  async cmd(commandName, ...args) {
     const res = await this.client[commandName](...args);
     if (res && res.error) {
       throw new Error(res.message ? res.message : res.error);
@@ -47,30 +47,30 @@ export default class Session {
     return res;
   }
 
-  get connectedUrl () {
+  get connectedUrl() {
     const {protocol, hostname, port, path} = this.client.options;
     return `${protocol}://${hostname}:${port}${path}`;
   }
 
-  get sessionId () {
+  get sessionId() {
     return this.client.sessionId;
   }
 
-  get capabilities () {
+  get capabilities() {
     return this.client.options.capabilities;
   }
 
-  async findElement (using, value) {
+  async findElement(using, value) {
     const res = await this.cmd('findElement', using, value);
     return getElementFromResponse(res, this);
   }
 
-  async findElements (using, value) {
+  async findElements(using, value) {
     const ress = await this.cmd('findElements', using, value);
-    return ress.map(res => getElementFromResponse(res, this));
+    return ress.map((res) => getElementFromResponse(res, this));
   }
 
-  async waitForElement (ms, using, value) {
+  async waitForElement(ms, using, value) {
     let el = null;
     const start = Date.now();
     const end = start + ms;
@@ -84,10 +84,12 @@ export default class Session {
       return el;
     }
 
-    throw new Error(`Could not find element using strategy ${using} and value '${value}' after ${ms}ms`);
+    throw new Error(
+      `Could not find element using strategy ${using} and value '${value}' after ${ms}ms`,
+    );
   }
 
-  async waitForElements (ms, using, value) {
+  async waitForElements(ms, using, value) {
     let els = [];
     const start = Date.now();
     const end = start + ms;
@@ -99,10 +101,12 @@ export default class Session {
       return els;
     }
 
-    throw new Error(`Could not find any elements using strategy ${using} and value '${value}' after ${ms}ms`);
+    throw new Error(
+      `Could not find any elements using strategy ${using} and value '${value}' after ${ms}ms`,
+    );
   }
 
-  async executeBase (cmd, script, args) {
+  async executeBase(cmd, script, args) {
     args = args.map((a) => {
       if (a.__is_w2d_element) {
         return a.executeObj;
@@ -112,28 +116,28 @@ export default class Session {
     return await this.cmd(cmd, script, args);
   }
 
-  async executeScript (script, args) {
+  async executeScript(script, args) {
     return await this.executeBase('executeScript', script, args);
   }
 
-  async executeAsyncScript (script, args) {
+  async executeAsyncScript(script, args) {
     return await this.executeBase('executeAsyncScript', script, args);
   }
 }
 
 const AVOID_CMDS = [
-  "newSession",
-  "findElement",
-  "findElements",
-  "findElementFromElement",
-  "findElementsFromElement",
-  "executeScript",
-  "executeAsyncScript",
+  'newSession',
+  'findElement',
+  'findElements',
+  'findElementFromElement',
+  'findElementsFromElement',
+  'executeScript',
+  'executeAsyncScript',
 ];
 
 const ALIAS_CMDS = {
-  deleteSession: "quit"
-}
+  deleteSession: 'quit',
+};
 
 // here we walk through the protocol specification from the webdriver package
 // and simply put all the methods on Session (except for element methods and
@@ -153,13 +157,13 @@ for (const proto of [WebDriverProtocol, JsonWProtocol, MJsonWProtocol, AppiumPro
       }
 
       // give the command a new name if we so desire
-      const cmdName = keys(ALIAS_CMDS).includes(cmdData.command) ?
-                      ALIAS_CMDS[cmdData.command] :
-                      cmdData.command;
+      const cmdName = keys(ALIAS_CMDS).includes(cmdData.command)
+        ? ALIAS_CMDS[cmdData.command]
+        : cmdData.command;
 
       Session.prototype[cmdName] = async function (...args) {
         return await this.cmd(cmdData.command, ...args);
-      }
+      };
     }
   }
 }
