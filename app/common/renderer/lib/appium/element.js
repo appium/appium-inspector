@@ -46,12 +46,7 @@ export default class UIElement {
 }
 
 export function getElementFromResponse(res, parent) {
-  let elementKey;
-  if (res[W3C_ELEMENT_KEY]) {
-    elementKey = W3C_ELEMENT_KEY;
-  } else {
-    elementKey = JWP_ELEMENT_KEY;
-  }
+  const elementKey = res[W3C_ELEMENT_KEY] ? W3C_ELEMENT_KEY : JWP_ELEMENT_KEY;
 
   if (!res[elementKey]) {
     throw new Error(

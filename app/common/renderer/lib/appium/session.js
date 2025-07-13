@@ -27,6 +27,9 @@ export default class Session {
   }
 
   async cmd(commandName, ...args) {
+    if (!(commandName in this.client)) {
+      throw new Error(`Command '${commandName}' is not available on this client`);
+    }
     const res = await this.client[commandName](...args);
     if (res && res.error) {
       throw new Error(res.message ? res.message : res.error);
@@ -94,12 +97,7 @@ export default class Session {
   }
 
   async executeBase(cmd, script, args) {
-    args = args.map((a) => {
-      if (a.__is_w2d_element) {
-        return a.executeObj;
-      }
-      return a;
-    });
+    args = args.map((a) => a.__is_w2d_element ? a.executeObj : a);
     return await this.cmd(cmd, script, args);
   }
 
@@ -144,7 +142,7 @@ for (const proto of [WebDriverProtocol, MJsonWProtocol, AppiumProtocol]) {
       }
 
       // give the command a new name if we so desire
-      const cmdName = _.keys(ALIAS_CMDS).includes(cmdData.command)
+      const cmdName = cmdData.command in ALIAS_CMDS
         ? ALIAS_CMDS[cmdData.command]
         : cmdData.command;
 
