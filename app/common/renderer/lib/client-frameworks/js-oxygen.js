@@ -126,15 +126,15 @@ ${code}`;
 
   // Context
 
-  codeFor_getContext() {
+  codeFor_getAppiumContext() {
     return `let context = ${this.type}.getDriver().getContext();`;
   }
 
-  codeFor_getContexts() {
+  codeFor_getAppiumContexts() {
     return `let contexts = ${this.type}.getDriver().getContexts();`;
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+  codeFor_switchAppiumContext(varNameIgnore, varIndexIgnore, name) {
     return `${this.type}.setContext("${name}");`;
   }
 

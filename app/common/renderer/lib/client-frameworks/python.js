@@ -165,15 +165,15 @@ actions.perform()
 
   // Context
 
-  codeFor_getContext() {
+  codeFor_getAppiumContext() {
     return `context = driver.current_context`;
   }
 
-  codeFor_getContexts() {
+  codeFor_getAppiumContexts() {
     return `contexts = driver.contexts`;
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+  codeFor_switchAppiumContext(varNameIgnore, varIndexIgnore, name) {
     return `driver.switch_to.context('${name}')`;
   }
 

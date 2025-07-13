@@ -5,7 +5,7 @@ export default class JsWdIoFramework extends CommonClientFramework {
   static highlightLang = 'js';
 
   wrapWithBoilerplate(code) {
-    return `// This sample code supports WebdriverIO client >=8
+    return `// This sample code supports WebdriverIO client >=9.7.0
 // (npm i --save webdriverio)
 // Then paste this into a .js file and run with Node:
 // node <file>.js
@@ -135,16 +135,16 @@ main().catch(console.log);`;
 
   // Context
 
-  codeFor_getContext() {
-    return `let context = await driver.getContext();`;
+  codeFor_getAppiumContext() {
+    return `let context = await driver.getAppiumContext();`;
   }
 
-  codeFor_getContexts() {
-    return `let contexts = await driver.getContexts();`;
+  codeFor_getAppiumContexts() {
+    return `let contexts = await driver.getAppiumContexts();`;
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
-    return `await driver.switchContext("${name}");`;
+  codeFor_switchAppiumContext(varNameIgnore, varIndexIgnore, name) {
+    return `await driver.switchAppiumContext("${name}");`;
   }
 
   // Device Interaction
