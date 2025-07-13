@@ -136,15 +136,15 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
 
   // Context
 
-  codeFor_getContext() {
+  codeFor_getAppiumContext() {
     return '${context} =    Get Current Context';
   }
 
-  codeFor_getContexts() {
+  codeFor_getAppiumContexts() {
     return '${contexts} =    Get Contexts';
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+  codeFor_switchAppiumContext(varNameIgnore, varIndexIgnore, name) {
     return `Switch To Context    ${name}`;
   }
 

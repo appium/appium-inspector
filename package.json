@@ -64,12 +64,12 @@
     "electron": "./node_modules/.bin/electron"
   },
   "//dependencies": {
-    "react": "V19: requires antd 5",
-    "web2driver": "3.0.5: does not load"
+    "react": "V19: requires antd 5"
   },
   "dependencies": {
     "@ant-design/pro-components": "2.8.9",
     "@reduxjs/toolkit": "2.8.2",
+    "@wdio/protocols": "9.16.2",
     "@xmldom/xmldom": "0.9.8",
     "antd": "5.26.4",
     "axios": "1.10.0",
@@ -91,7 +91,7 @@
     "react-icons": "5.5.0",
     "react-redux": "9.2.0",
     "react-router": "7.6.3",
-    "web2driver": "3.0.4",
+    "webdriver": "9.17.0",
     "xpath": "0.0.34"
   },
   "devDependencies": {
