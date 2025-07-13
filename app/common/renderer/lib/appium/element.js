@@ -59,15 +59,7 @@ export function getElementFromResponse(res, parent) {
 }
 
 export const ELEMENT_CMDS = {
-  isElementSelected: 'isSelected',
-  isElementDisplayed: 'isDisplayed',
-  getElementAttribute: 'getAttribute',
-  getElementCSSValue: 'getCSSValue',
-  getElementText: 'getText',
-  getElementTagName: 'getTagName',
-  getElementProperty: 'getProperty',
   getElementRect: 'getRect',
-  getElementEnabled: 'getEnabled',
   elementClick: 'click',
   elementClear: 'clear',
   elementSendKeys: 'sendKeys',
