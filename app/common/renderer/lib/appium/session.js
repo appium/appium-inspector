@@ -37,11 +37,6 @@ export default class Session {
     return res;
   }
 
-  get connectedUrl() {
-    const {protocol, hostname, port, path} = this.client.options;
-    return `${protocol}://${hostname}:${port}${path}`;
-  }
-
   get sessionId() {
     return this.client.sessionId;
   }
@@ -58,42 +53,6 @@ export default class Session {
   async findElements(using, value) {
     const ress = await this.cmd('findElements', using, value);
     return ress.map((res) => getElementFromResponse(res, this));
-  }
-
-  async waitForElement(ms, using, value) {
-    let el = null;
-    const start = Date.now();
-    const end = start + ms;
-    while (el === null && Date.now() < end) {
-      try {
-        el = await this.findElement(using, value);
-      } catch {}
-    }
-
-    if (el) {
-      return el;
-    }
-
-    throw new Error(
-      `Could not find element using strategy ${using} and value '${value}' after ${ms}ms`,
-    );
-  }
-
-  async waitForElements(ms, using, value) {
-    let els = [];
-    const start = Date.now();
-    const end = start + ms;
-    while (els.length === 0 && Date.now() < end) {
-      els = await this.findElements(using, value);
-    }
-
-    if (els.length) {
-      return els;
-    }
-
-    throw new Error(
-      `Could not find any elements using strategy ${using} and value '${value}' after ${ms}ms`,
-    );
   }
 
   async executeBase(cmd, script, args) {
