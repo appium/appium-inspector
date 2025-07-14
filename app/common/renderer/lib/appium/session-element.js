@@ -30,7 +30,6 @@ class WDSessionElement {
   constructor(elementKey, findRes, parent) {
     this.elementKey = elementKey;
     this.elementId = this[elementKey] = findRes[elementKey];
-    this.__is_w2d_element = true;
     this.parent = parent;
     this.session = parent.session || parent;
   }

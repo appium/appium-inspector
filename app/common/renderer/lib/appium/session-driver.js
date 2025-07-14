@@ -60,8 +60,10 @@ export default class WDSessionDriver {
     return ress.map((res) => getElementFromResponse(res, this));
   }
 
+  // Execute method arguments may have WDSessionElement objects,
+  // so first convert them to standard webdriver Element objects
   async executeBase(cmd, script, args) {
-    args = args.map((a) => (a.__is_w2d_element ? a.executeObj : a));
+    args = args.map((a) => ('elementKey' in a ? a.executeObj : a));
     return await this.cmd(cmd, script, args);
   }
 
