@@ -40,7 +40,7 @@ const SelectedElement = (props) => {
 
   const downloadElementScreenshot = async (elementId) => {
     const elemScreenshot = await applyClientMethod({
-      methodName: 'takeScreenshot',
+      methodName: 'takeElementScreenshot',
       elementId,
       skipRefresh: true,
     });

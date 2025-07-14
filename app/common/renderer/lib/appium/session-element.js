@@ -67,7 +67,7 @@ export const ELEMENT_CMDS = {
   elementClick: 'click',
   elementClear: 'clear',
   elementSendKeys: 'sendKeys',
-  takeElementScreenshot: 'takeScreenshot',
+  takeElementScreenshot: 'takeElementScreenshot',
 };
 
 // Walk through all webdriver protocol element methods and add them to WDSessionElement
