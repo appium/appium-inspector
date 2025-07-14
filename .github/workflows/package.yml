@@ -6,6 +6,11 @@ on:
     tags:
       - '*'
 
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
 jobs:
   electron:
     strategy:

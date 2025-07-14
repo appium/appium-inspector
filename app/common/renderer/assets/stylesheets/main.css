@@ -1,5 +1,8 @@
 @import 'antd/dist/reset.css';
-@import 'highlight.js/styles/intellij-light.css';
+
+body.dark {
+  color-scheme: dark;
+}
 
 body {
   min-height: 610px;
@@ -63,4 +66,27 @@ body::-webkit-scrollbar-corner {
 
 .ant-input-group .select-container {
   height: 32px;
+}
+
+.ant-btn-icon {
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+}
+
+.anticon {
+  font-size: 14px !important;
+}
+
+.ant-switch .anticon {
+  font-size: 12px !important;
+}
+
+.ant-steps-icon .anticon {
+  font-size: 20px !important;
+}
+
+.ant-switch-inner-checked,
+.ant-switch-inner-unchecked {
+  font-size: 12px !important;
 }

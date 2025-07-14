@@ -10,7 +10,7 @@ import {
   SearchOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
-import {Button, Select, Space, Tooltip} from 'antd';
+import {Button, Divider, Select, Space, Tooltip} from 'antd';
 import {BiCircle, BiSquare} from 'react-icons/bi';
 import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
 import {IoChevronBackOutline} from 'react-icons/io5';
@@ -146,7 +146,7 @@ const HeaderButtons = (props) => {
             popupMatchSelectWidth={false}
             onChange={(value) => {
               setContext(value);
-              applyClientMethod({methodName: 'switchContext', args: [value]});
+              applyClientMethod({methodName: 'switchAppiumContext', args: [value]});
             }}
           >
             {contexts.map(({id, title}) => (
@@ -217,7 +217,8 @@ const HeaderButtons = (props) => {
           <Button
             id="btnPause"
             icon={<VideoCameraOutlined />}
-            type={BUTTON.DANGER}
+            type={BUTTON.PRIMARY}
+            danger
             onClick={pauseRecording}
           />
         </Tooltip>
@@ -239,6 +240,7 @@ const HeaderButtons = (props) => {
         {generalControls}
         {quitSessionButton}
       </Space>
+      <Divider />
     </div>
   );
 };

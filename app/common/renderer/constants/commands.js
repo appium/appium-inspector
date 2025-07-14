@@ -39,9 +39,9 @@ export const COMMAND_DEFINITIONS = {
     },
   },
   Context: {
-    getContext: {},
-    getContexts: {},
-    switchContext: {
+    getAppiumContext: {},
+    getAppiumContexts: {},
+    switchAppiumContext: {
       args: [['name', STRING]],
       refresh: true,
     },
