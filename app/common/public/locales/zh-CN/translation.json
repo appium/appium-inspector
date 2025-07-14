@@ -292,5 +292,10 @@
   "AccessToken": "访问令牌",
   "Token": "令牌",
   "Key": "密钥",
-  "Secret": "密钥"
+  "Secret": "密钥",
+  "webmateApiKey": "webmate API key",
+  "yourProjectId": "Your project id",
+  "webmateProjectId": "webmate project id",
+  "specifyWebmateHostExplicitly": "Specify webmate host explicitly",
+  "webmateHost": "webmate host"
 }

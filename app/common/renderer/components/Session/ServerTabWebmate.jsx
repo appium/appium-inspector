@@ -14,7 +14,7 @@ const ServerTabWebmate = ({server, setServerParam, t}) => (
                 ? t('usingDataFoundIn', {environmentVariable: 'WEBMATE_APIKEY'})
                 : t('yourAccessKey')
             }
-            addonBefore={'webmate API key'}
+            addonBefore={t('webmateApiKey')}
             value={server.webmate.apiKey}
             onChange={(e) => setServerParam('apiKey', e.target.value)}
           />
@@ -26,9 +26,9 @@ const ServerTabWebmate = ({server, setServerParam, t}) => (
             placeholder={
               process.env.WEBMATE_PROJECT
                 ? t('usingDataFoundIn', {environmentVariable: 'WEBMATE_PROJECT'})
-                : 'Your project id'
+                : t('yourProjectId')
             }
-            addonBefore={'webmate project id'}
+            addonBefore={t('webmateProjectId')}
             value={server.webmate.projectId}
             onChange={(e) => setServerParam('projectId', e.target.value)}
           />
@@ -41,7 +41,7 @@ const ServerTabWebmate = ({server, setServerParam, t}) => (
           <Checkbox
             checked={!!server.webmate.useCustomHost}
             onChange={(e) => setServerParam('useCustomHost', e.target.checked)}
-          >Specify webmate host explicitly</Checkbox>
+          >{t('specifyWebmateHostExplicitly')}</Checkbox>
         </Form.Item>
       </Col>
       <Col span={12}>
@@ -52,7 +52,7 @@ const ServerTabWebmate = ({server, setServerParam, t}) => (
                 ? t('usingDataFoundIn', {environmentVariable: 'WEBMATE_HOST'})
                 : 'selenium.webmate.io'
             }
-            addonBefore={'webmate host'}
+            addonBefore={t('webmateHost')}
             disabled={!server.webmate.useCustomHost}
             value={server.webmate.seleniumHost}
             onChange={(e) => setServerParam('seleniumHost', e.target.value)}

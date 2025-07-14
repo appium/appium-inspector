@@ -292,5 +292,10 @@
   "AccessToken": "AccessToken",
   "Token": "Token",
   "Key": "Key",
-  "Secret": "Secret"
+  "Secret": "Secret",
+  "webmateApiKey": "webmate API-Key",
+  "yourProjectId": "Ihre Projekt-ID",
+  "webmateProjectId": "webmate Projekt-ID",
+  "specifyWebmateHostExplicitly": "webmate-Host explizit angeben",
+  "webmateHost": "webmate-Host"
 }
