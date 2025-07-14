@@ -8,7 +8,7 @@ export class WebmateVendor extends BaseVendor {
     const webmate = this._server.webmate;
     const vendorName = 'webmate';
 
-    const apiKey = webmate.apiKey || process.env.WEBMATE_API_KEY;
+    const apiKey = webmate.apiKey || process.env.WEBMATE_APIKEY;
     const projectId = webmate.projectId || process.env.WEBMATE_PROJECT;
     this._checkInputPropertyPresence(vendorName, [
       {name: 'API key', val: apiKey},

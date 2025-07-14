@@ -10,8 +10,8 @@ const ServerTabWebmate = ({server, setServerParam, t}) => (
           <Input
             type={INPUT.PASSWORD}
             placeholder={
-              process.env.WEBMATE_API_KEY
-                ? t('usingDataFoundIn', {environmentVariable: 'WEBMATE_API_KEY'})
+              process.env.WEBMATE_APIKEY
+                ? t('usingDataFoundIn', {environmentVariable: 'WEBMATE_APIKEY'})
                 : t('yourAccessKey')
             }
             addonBefore={'webmate API key'}
