@@ -143,7 +143,10 @@ const LocatedElements = (props) => {
                       id="btnClearElement"
                       icon={<ClearOutlined />}
                       onClick={() =>
-                        applyClientMethod({methodName: 'clear', elementId: locatorTestElement})
+                        applyClientMethod({
+                          methodName: 'elementClear',
+                          elementId: locatorTestElement,
+                        })
                       }
                     />
                   </Tooltip>

@@ -235,7 +235,9 @@ const SelectedElement = (props) => {
               disabled={isDisabled}
               id="btnClearElement"
               icon={<ClearOutlined />}
-              onClick={() => applyClientMethod({methodName: 'clear', elementId: selectedElementId})}
+              onClick={() =>
+                applyClientMethod({methodName: 'elementClear', elementId: selectedElementId})
+              }
             />
           </Tooltip>
         </Space.Compact>
