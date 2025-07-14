@@ -18,10 +18,10 @@
 
 import _ from 'lodash';
 
-export const W3C_ELEMENT_KEY = 'element-6066-11e4-a52e-4f735466cecf';
-export const JWP_ELEMENT_KEY = 'ELEMENT';
+const W3C_ELEMENT_KEY = 'element-6066-11e4-a52e-4f735466cecf';
+const JWP_ELEMENT_KEY = 'ELEMENT';
 
-export default class UIElement {
+class UIElement {
   constructor(elementKey, findRes, parent) {
     this.elementKey = elementKey;
     this.elementId = this[elementKey] = findRes[elementKey];
