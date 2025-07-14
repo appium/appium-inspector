@@ -21,7 +21,12 @@ import _ from 'lodash';
 const W3C_ELEMENT_KEY = 'element-6066-11e4-a52e-4f735466cecf';
 const JWP_ELEMENT_KEY = 'ELEMENT';
 
-class UIElement {
+/**
+ * Class used as a wrapper for a webdriver element
+ * in order to allow calling element-related methods on it directly,
+ * instead of needing to use WDSessionDriver
+ */
+class WDSessionElement {
   constructor(elementKey, findRes, parent) {
     this.elementKey = elementKey;
     this.elementId = this[elementKey] = findRes[elementKey];
@@ -55,7 +60,7 @@ export function getElementFromResponse(res, parent) {
     );
   }
 
-  return new UIElement(elementKey, res, parent);
+  return new WDSessionElement(elementKey, res, parent);
 }
 
 export const ELEMENT_CMDS = {
@@ -67,7 +72,7 @@ export const ELEMENT_CMDS = {
 };
 
 for (const [protoCmd, newCmd] of _.toPairs(ELEMENT_CMDS)) {
-  UIElement.prototype[newCmd] = async function (...args) {
+  WDSessionElement.prototype[newCmd] = async function (...args) {
     return await this.session.cmd(protoCmd, this.elementId, ...args);
   };
 }

@@ -19,9 +19,14 @@
 import {AppiumProtocol, MJsonWProtocol, WebDriverProtocol} from '@wdio/protocols';
 import _ from 'lodash';
 
-import {ELEMENT_CMDS, getElementFromResponse} from './element';
+import {ELEMENT_CMDS, getElementFromResponse} from './session-element.js';
 
-export default class Session {
+/**
+ * Class used as a wrapper for the webdriver session client,
+ * with separated handling for element-related methods,
+ * as they are called on WDSessionElement
+ */
+export default class WDSessionDriver {
   constructor(wdSessionClient) {
     this.client = wdSessionClient;
   }
@@ -79,10 +84,8 @@ const AVOID_CMDS = [
   'executeAsyncScript',
 ];
 
-// here we walk through the protocol specification from the webdriver package
-// and simply put all the methods on Session (except for element methods and
-// edge cases)
-
+// Walk through the webdriver protocol methods and add them to WDSessionDriver
+// (except for element methods and edge cases)
 for (const proto of [WebDriverProtocol, MJsonWProtocol, AppiumProtocol]) {
   for (const [, methods] of _.toPairs(proto)) {
     for (const [, cmdData] of _.toPairs(methods)) {
@@ -92,12 +95,12 @@ for (const proto of [WebDriverProtocol, MJsonWProtocol, AppiumProtocol]) {
       if (AVOID_CMDS.includes(cmdName)) {
         continue;
       }
-      // likewise skip element commands; those are handled by element.js
+      // likewise skip element commands
       if (_.keys(ELEMENT_CMDS).includes(cmdName)) {
         continue;
       }
 
-      Session.prototype[cmdName] = async function (...args) {
+      WDSessionDriver.prototype[cmdName] = async function (...args) {
         return await this.cmd(cmdName, ...args);
       };
     }

@@ -2,8 +2,8 @@ import {startServer as startAppiumFakeDriverServer} from '@appium/fake-driver';
 import path from 'path';
 import {afterAll, beforeAll, describe, expect, it} from 'vitest';
 
-import Web2Driver from '../../app/common/renderer/lib/appium/driver';
-import InspectorDriver from '../../app/common/renderer/lib/appium/inspector-driver';
+import InspectorDriver from '../../app/common/renderer/lib/appium/inspector-driver.js';
+import WDSessionStarter from '../../app/common/renderer/lib/appium/session-starter.js';
 
 const FAKE_DRIVER_PORT = 12121;
 
@@ -21,7 +21,7 @@ describe('Appium client actions', function () {
 
   beforeAll(async function () {
     server = await startAppiumFakeDriverServer(FAKE_DRIVER_PORT, '127.0.0.1');
-    driver = await Web2Driver.remote(
+    driver = await WDSessionStarter.newSession(
       {
         hostname: '127.0.0.1',
         port: FAKE_DRIVER_PORT,

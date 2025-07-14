@@ -18,7 +18,7 @@
 
 import webdriver from 'webdriver';
 
-import Session from './session';
+import WDSessionDriver from './session-driver.js';
 
 const DEFAULTS = {
   protocol: 'http',
@@ -28,8 +28,13 @@ const DEFAULTS = {
   logLevel: typeof window === 'undefined' ? 'silent' : 'info',
 };
 
-export default class Web2Driver {
-  static async remote(
+/**
+ * Class used to retrieve a webdriver session,
+ * either by creating a new one, or finding an existing one,
+ * with additional safeguards for session parameters
+ */
+export default class WDSessionStarter {
+  static async newSession(
     {
       protocol = DEFAULTS.protocol,
       hostname = DEFAULTS.hostname,
@@ -42,7 +47,7 @@ export default class Web2Driver {
   ) {
     const params = {protocol, hostname, port, path, capabilities, logLevel, ...otherParams};
     const sessionClient = await webdriver.newSession(params);
-    return new Session(sessionClient);
+    return new WDSessionDriver(sessionClient);
   }
 
   static attachToSession(
@@ -73,6 +78,6 @@ export default class Web2Driver {
       ...otherParams,
     };
     const sessionClient = webdriver.attachToSession(params);
-    return new Session(sessionClient);
+    return new WDSessionDriver(sessionClient);
   }
 }

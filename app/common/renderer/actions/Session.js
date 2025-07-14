@@ -10,7 +10,7 @@ import {
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder';
 import {APP_MODE} from '../constants/session-inspector';
 import i18n from '../i18next';
-import Web2Driver from '../lib/appium/driver.js';
+import WDSessionStarter from '../lib/appium/session-starter.js';
 import {VENDOR_MAP} from '../lib/vendor/map.js';
 import {getSetting, ipcRenderer, setSetting} from '../polyfills';
 import {fetchSessionInformation, formatSeleniumGridSessions} from '../utils/attaching-to-session';
@@ -326,10 +326,10 @@ export function newSession(originalCaps, attachSessId = null) {
         const platformName = attachedSessionCaps.platformName || attachedSessionCaps.platform;
         serverOpts.isIOS = Boolean(platformName.match(/iOS/i));
         serverOpts.isAndroid = Boolean(platformName.match(/Android/i));
-        driver = Web2Driver.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
+        driver = WDSessionStarter.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
         driver._isAttachedSession = true;
       } else {
-        driver = await Web2Driver.remote(serverOpts, sessionCaps);
+        driver = await WDSessionStarter.newSession(serverOpts, sessionCaps);
       }
     } catch (err) {
       showError(err, {secs: 0, url: serverUrl});
