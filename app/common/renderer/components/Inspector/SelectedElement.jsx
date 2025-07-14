@@ -205,7 +205,9 @@ const SelectedElement = (props) => {
             disabled={isDisabled}
             icon={tapIcon}
             id="btnTapElement"
-            onClick={() => applyClientMethod({methodName: 'click', elementId: selectedElementId})}
+            onClick={() =>
+              applyClientMethod({methodName: 'elementClick', elementId: selectedElementId})
+            }
           />
         </Tooltip>
         <Space.Compact className={styles.elementKeyInputActions}>

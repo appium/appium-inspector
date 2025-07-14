@@ -112,7 +112,7 @@ const LocatedElements = (props) => {
                     disabled={!locatorTestElement}
                     icon={<AimOutlined />}
                     onClick={() =>
-                      applyClientMethod({methodName: 'click', elementId: locatorTestElement})
+                      applyClientMethod({methodName: 'elementClick', elementId: locatorTestElement})
                     }
                   />
                 </Tooltip>

@@ -64,7 +64,7 @@ export function getElementFromResponse(res, parent) {
 
 export const ELEMENT_CMDS = {
   getElementRect: 'getElementRect',
-  elementClick: 'click',
+  elementClick: 'elementClick',
   elementClear: 'elementClear',
   elementSendKeys: 'elementSendKeys',
   takeElementScreenshot: 'takeElementScreenshot',

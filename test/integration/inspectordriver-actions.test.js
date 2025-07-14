@@ -82,7 +82,7 @@ describe('InspectorDriver actions', function () {
     });
   });
   describe('.executeMethod', function () {
-    it('should be able to call the click method on a single element', async function () {
+    it('should be able to call the elementClick method on a single element', async function () {
       const {id, variableName, variableType} = await inspectorDriver.fetchElement({
         strategy: 'xpath',
         selector: '//MockListItem',
@@ -94,14 +94,14 @@ describe('InspectorDriver actions', function () {
         variableName: repeatedVariableName,
         variableType: repeatedVariableType,
         id: repeatedId,
-      } = await inspectorDriver.executeMethod({elementId: id, methodName: 'click'});
+      } = await inspectorDriver.executeMethod({elementId: id, methodName: 'elementClick'});
       expect(repeatedVariableName).toBeTruthy();
       expect(variableType).toBe(repeatedVariableType);
       expect(id).toBe(repeatedId);
       expect(source).toBeTruthy();
       expect(screenshot).toBeTruthy();
     });
-    it('should be able to call the click method on multiple elements', async function () {
+    it('should be able to call the elementClick method on multiple elements', async function () {
       const {elements} = await inspectorDriver.fetchElements({
         strategy: 'xpath',
         selector: '//MockListItem',
@@ -114,7 +114,7 @@ describe('InspectorDriver actions', function () {
           variableName: repeatedVariableName,
           variableType: repeatedVariableType,
           id: repeatedId,
-        } = await inspectorDriver.executeMethod({elementId: id, methodName: 'click'});
+        } = await inspectorDriver.executeMethod({elementId: id, methodName: 'elementClick'});
         expect(variableName).toBe(repeatedVariableName);
         expect(variableType).toBe(repeatedVariableType);
         expect(id).toBe(repeatedId);

@@ -328,8 +328,7 @@ export function applyClientMethod(params) {
       return commandRes;
     } catch (error) {
       log.error(error);
-      let methodName = params.methodName === 'click' ? 'tap' : params.methodName;
-      showError(error, {methodName, secs: 10});
+      showError(error, {methodName: params.methodName, secs: 10});
       dispatch({type: METHOD_CALL_DONE});
     }
   };
