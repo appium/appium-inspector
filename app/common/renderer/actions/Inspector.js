@@ -896,8 +896,8 @@ export function callClientMethod(params) {
     log.info(params);
     const action = keepSessionAlive();
     action(dispatch, getState);
-    const client = InspectorDriver.instance(driver);
-    const res = await client.run(params);
+    const inspectorDriver = InspectorDriver.instance(driver);
+    const res = await inspectorDriver.run(params);
     let {commandRes} = res;
 
     // Ignore empty objects
