@@ -34,7 +34,7 @@ describe('Appium client actions', function () {
   });
   afterAll(async function () {
     try {
-      await driver.quit();
+      await driver.deleteSession();
     } catch {}
     await server.close();
   });

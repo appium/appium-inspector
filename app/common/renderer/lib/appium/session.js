@@ -79,10 +79,6 @@ const AVOID_CMDS = [
   'executeAsyncScript',
 ];
 
-const ALIAS_CMDS = {
-  deleteSession: 'quit',
-};
-
 // here we walk through the protocol specification from the webdriver package
 // and simply put all the methods on Session (except for element methods and
 // edge cases)
@@ -90,23 +86,19 @@ const ALIAS_CMDS = {
 for (const proto of [WebDriverProtocol, MJsonWProtocol, AppiumProtocol]) {
   for (const [, methods] of _.toPairs(proto)) {
     for (const [, cmdData] of _.toPairs(methods)) {
+      const cmdName = cmdData.command;
+
       // if we've explicitly asked not to include the command, skip it
-      if (AVOID_CMDS.includes(cmdData.command)) {
+      if (AVOID_CMDS.includes(cmdName)) {
         continue;
       }
-
       // likewise skip element commands; those are handled by element.js
-      if (_.keys(ELEMENT_CMDS).includes(cmdData.command)) {
+      if (_.keys(ELEMENT_CMDS).includes(cmdName)) {
         continue;
       }
-
-      // give the command a new name if we so desire
-      const cmdName = cmdData.command in ALIAS_CMDS
-        ? ALIAS_CMDS[cmdData.command]
-        : cmdData.command;
 
       Session.prototype[cmdName] = async function (...args) {
-        return await this.cmd(cmdData.command, ...args);
+        return await this.cmd(cmdName, ...args);
       };
     }
   }

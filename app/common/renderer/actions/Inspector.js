@@ -268,7 +268,7 @@ export function unselectHoveredElement() {
 export function applyClientMethod(params) {
   return async (dispatch, getState) => {
     const isRecording =
-      params.methodName !== 'quit' &&
+      params.methodName !== 'deleteSession' &&
       params.methodName !== 'getPageSource' &&
       params.methodName !== 'gesture' &&
       getState().inspector.isRecording;
@@ -354,7 +354,7 @@ export function quitSession(reason, killedByUser = true) {
   return async (dispatch, getState) => {
     const killAction = killKeepAliveLoop();
     killAction(dispatch, getState);
-    const applyAction = applyClientMethod({methodName: 'quit'});
+    const applyAction = applyClientMethod({methodName: 'deleteSession'});
     await applyAction(dispatch, getState);
     dispatch({type: QUIT_SESSION_DONE});
     if (!killedByUser) {

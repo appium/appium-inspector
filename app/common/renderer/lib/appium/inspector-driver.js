@@ -46,9 +46,9 @@ export default class InspectorDriver {
       appMode = APP_MODE.NATIVE, // Optional. Whether we're in a native or hybrid mode
     } = params;
 
-    if (methodName === 'quit') {
+    if (methodName === 'deleteSession') {
       try {
-        await this.driver.quit();
+        await this.driver.deleteSession();
       } catch {}
 
       _instance = null;
