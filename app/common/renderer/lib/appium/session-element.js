@@ -60,12 +60,23 @@ export function getElementFromResponse(res, parent) {
   return new WDSessionElement(elementKey, res, parent);
 }
 
+// https://webdriver.io/docs/api/webdriver
 export const ELEMENT_CMDS = [
+  'isElementSelected',
+  'isElementDisplayed',
+  'getElementAttribute',
+  'getElementProperty',
+  'getElementCSSValue',
+  'getElementText',
+  'getElementTagName',
   'getElementRect',
+  'getElementEnabled',
   'elementClick',
   'elementClear',
   'elementSendKeys',
   'takeElementScreenshot',
+  'getElementComputedRole',
+  'getElementComputedLabel',
 ];
 
 // Walk through all webdriver protocol element methods and add them to WDSessionElement
