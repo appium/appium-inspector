@@ -21,6 +21,7 @@ import TestingBotLogo from '../../assets/images/testingbot_logo.svg';
 import TVLabsLogo from '../../assets/images/tvlabs_logo.svg';
 import TVLabsLogoDark from '../../assets/images/tvlabs_logo_dark.svg';
 import WebmateLogo from '../../assets/images/webmate_logo.svg';
+import WebmateLogoDark from '../../assets/images/webmate_logo_dark.svg';
 import {SERVER_TYPES} from '../../constants/session-builder.js';
 import {useTheme} from '../../hooks/use-theme';
 import ServerTabBitbar from './ServerTabBitbar.jsx';
@@ -151,7 +152,7 @@ const providers = {
     tab: ServerTabWebmate,
     logos: {
       light: WebmateLogo,
-      dark: null,
+      dark: WebmateLogoDark,
     },
   },
 };
