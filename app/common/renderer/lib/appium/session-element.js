@@ -16,8 +16,6 @@
  * limitations under the License.
  */
 
-import _ from 'lodash';
-
 const W3C_ELEMENT_KEY = 'element-6066-11e4-a52e-4f735466cecf';
 const JWP_ELEMENT_KEY = 'ELEMENT';
 
@@ -62,17 +60,17 @@ export function getElementFromResponse(res, parent) {
   return new WDSessionElement(elementKey, res, parent);
 }
 
-export const ELEMENT_CMDS = {
-  getElementRect: 'getElementRect',
-  elementClick: 'elementClick',
-  elementClear: 'elementClear',
-  elementSendKeys: 'elementSendKeys',
-  takeElementScreenshot: 'takeElementScreenshot',
-};
+export const ELEMENT_CMDS = [
+  'getElementRect',
+  'elementClick',
+  'elementClear',
+  'elementSendKeys',
+  'takeElementScreenshot',
+];
 
 // Walk through all webdriver protocol element methods and add them to WDSessionElement
-for (const [protoCmd, newCmd] of _.toPairs(ELEMENT_CMDS)) {
-  WDSessionElement.prototype[newCmd] = async function (...args) {
-    return await this.session.cmd(protoCmd, this.elementId, ...args);
+for (const cmdName of ELEMENT_CMDS) {
+  WDSessionElement.prototype[cmdName] = async function (...args) {
+    return await this.session.cmd(cmdName, this.elementId, ...args);
   };
 }

@@ -98,7 +98,7 @@ for (const proto of [WebDriverProtocol, MJsonWProtocol, AppiumProtocol]) {
         continue;
       }
       // likewise skip element commands
-      if (_.keys(ELEMENT_CMDS).includes(cmdName)) {
+      if (ELEMENT_CMDS.includes(cmdName)) {
         continue;
       }
 
