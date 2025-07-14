@@ -4,7 +4,7 @@ import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-d
 import {POINTER_TYPES} from '../constants/gestures';
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import i18n from '../i18next';
-import InspectorDriver from '../lib/appium/inspector-driver';
+import InspectorDriver from '../lib/appium/inspector-driver.js';
 import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map';
 import {getSetting, setSetting} from '../polyfills';
 import {readTextFromUploadedFiles} from '../utils/file-handling';

@@ -61,7 +61,7 @@ export default class WDSessionDriver {
   }
 
   async executeBase(cmd, script, args) {
-    args = args.map((a) => a.__is_w2d_element ? a.executeObj : a);
+    args = args.map((a) => (a.__is_w2d_element ? a.executeObj : a));
     return await this.cmd(cmd, script, args);
   }
 
