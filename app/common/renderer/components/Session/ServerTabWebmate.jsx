@@ -41,7 +41,9 @@ const ServerTabWebmate = ({server, setServerParam, t}) => (
           <Checkbox
             checked={!!server.webmate.useCustomHost}
             onChange={(e) => setServerParam('useCustomHost', e.target.checked)}
-          >{t('specifyWebmateHostExplicitly')}</Checkbox>
+          >
+            {t('specifyWebmateHostExplicitly')}
+          </Checkbox>
         </Form.Item>
       </Col>
       <Col span={12}>
