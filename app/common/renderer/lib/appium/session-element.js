@@ -66,7 +66,7 @@ export const ELEMENT_CMDS = {
   getElementRect: 'getElementRect',
   elementClick: 'click',
   elementClear: 'clear',
-  elementSendKeys: 'sendKeys',
+  elementSendKeys: 'elementSendKeys',
   takeElementScreenshot: 'takeElementScreenshot',
 };
 

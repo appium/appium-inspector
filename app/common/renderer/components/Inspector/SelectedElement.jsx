@@ -223,7 +223,7 @@ const SelectedElement = (props) => {
               icon={<SendOutlined />}
               onClick={() =>
                 applyClientMethod({
-                  methodName: 'sendKeys',
+                  methodName: 'elementSendKeys',
                   elementId: selectedElementId,
                   args: [sendKeys.current || ''],
                 })

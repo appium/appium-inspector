@@ -130,7 +130,7 @@ const LocatedElements = (props) => {
                       icon={<SendOutlined />}
                       onClick={() =>
                         applyClientMethod({
-                          methodName: 'sendKeys',
+                          methodName: 'elementSendKeys',
                           elementId: locatorTestElement,
                           args: [sendKeys.current || ''],
                         })
