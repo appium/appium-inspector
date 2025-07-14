@@ -558,7 +558,7 @@ export function setLocatorTestElement(elementId) {
       try {
         const action = callClientMethod({
           elementId,
-          methodName: 'getRect',
+          methodName: 'getElementRect',
           skipRefresh: true,
           skipRecord: true,
           ignoreResult: true,

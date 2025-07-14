@@ -63,13 +63,14 @@ export function getElementFromResponse(res, parent) {
 }
 
 export const ELEMENT_CMDS = {
-  getElementRect: 'getRect',
+  getElementRect: 'getElementRect',
   elementClick: 'click',
   elementClear: 'clear',
   elementSendKeys: 'sendKeys',
   takeElementScreenshot: 'takeScreenshot',
 };
 
+// Walk through all webdriver protocol element methods and add them to WDSessionElement
 for (const [protoCmd, newCmd] of _.toPairs(ELEMENT_CMDS)) {
   WDSessionElement.prototype[newCmd] = async function (...args) {
     return await this.session.cmd(protoCmd, this.elementId, ...args);

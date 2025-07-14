@@ -302,7 +302,7 @@ export default class InspectorDriver {
           selector: ANDROID_WEBVIEW_SELECTOR,
         });
         if (webview.el) {
-          const {x, y} = await webview.el.getRect();
+          const {x, y} = await webview.el.getElementRect();
           webviewTopOffset = y;
           webviewLeftOffset = x;
         } else {
@@ -334,7 +334,7 @@ export default class InspectorDriver {
             selector: IOS_TOP_CONTROLS_SELECTOR,
           });
           if (topBar.el) {
-            const {y, height} = await topBar.el.getRect();
+            const {y, height} = await topBar.el.getElementRect();
             webviewTopOffset = y + height;
           }
           // in landscape mode, there is empty space on both sides (at default zoom level), so add offset for that too
@@ -361,7 +361,7 @@ export default class InspectorDriver {
             selector: 'XCUIElementTypeWebView',
           });
           if (wv.el) {
-            const {x, y} = await wv.el.getRect();
+            const {x, y} = await wv.el.getElementRect();
             webviewTopOffset = y;
             webviewLeftOffset = x;
           }
