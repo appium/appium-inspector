@@ -19,7 +19,8 @@
 import {AppiumProtocol, MJsonWProtocol, WebDriverProtocol} from '@wdio/protocols';
 import _ from 'lodash';
 
-import {ELEMENT_CMDS, getElementFromResponse} from './session-element.js';
+import {AVOID_CMDS, BROWSER_PROPERTIES, ELEMENT_CMDS} from '../../constants/webdriver.js';
+import {getElementFromResponse} from './session-element.js';
 
 /**
  * Class used as a wrapper for the webdriver session client,
@@ -78,16 +79,6 @@ export default class WDSessionDriver {
   }
 }
 
-const AVOID_CMDS = [
-  'newSession',
-  'findElement',
-  'findElements',
-  'findElementFromElement',
-  'findElementsFromElement',
-  'executeScript',
-  'executeAsyncScript',
-];
-
 // Walk through the webdriver protocol methods and add them to WDSessionDriver
 // (except for element methods and edge cases)
 for (const proto of [WebDriverProtocol, MJsonWProtocol, AppiumProtocol]) {
@@ -111,26 +102,5 @@ for (const proto of [WebDriverProtocol, MJsonWProtocol, AppiumProtocol]) {
   }
 }
 
-// https://webdriver.io/docs/api/browser
-const WDIO_BROWSER_PROPERTIES = [
-  'capabilities',
-  'requestedCapabilities',
-  'sessionId',
-  'options',
-  'commandList',
-  'isW3C',
-  'isChrome',
-  'isFirefox',
-  'isBidi',
-  'isSauce',
-  'isMacApp',
-  'isWindowsApp',
-  'isMobile',
-  'isIOS',
-  'isAndroid',
-  'isNativeContext',
-  'mobileContext',
-];
-
 // Walk through the webdriver browser object properties and add them to WDSessionDriver
-WDSessionDriver.addProperties(WDIO_BROWSER_PROPERTIES);
+WDSessionDriver.addProperties(BROWSER_PROPERTIES);

@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+import {ELEMENT_CMDS} from '../../constants/webdriver.js';
+
 const W3C_ELEMENT_KEY = 'element-6066-11e4-a52e-4f735466cecf';
 const JWP_ELEMENT_KEY = 'ELEMENT';
 
@@ -60,26 +62,8 @@ export function getElementFromResponse(res, parent) {
   return new WDSessionElement(elementKey, res, parent);
 }
 
-// https://webdriver.io/docs/api/webdriver
-export const ELEMENT_CMDS = [
-  'isElementSelected',
-  'isElementDisplayed',
-  'getElementAttribute',
-  'getElementProperty',
-  'getElementCSSValue',
-  'getElementText',
-  'getElementTagName',
-  'getElementRect',
-  'getElementEnabled',
-  'elementClick',
-  'elementClear',
-  'elementSendKeys',
-  'takeElementScreenshot',
-  'getElementComputedRole',
-  'getElementComputedLabel',
-];
-
 // Walk through all webdriver protocol element methods and add them to WDSessionElement
+// (except for edge cases)
 for (const cmdName of ELEMENT_CMDS) {
   WDSessionElement.prototype[cmdName] = async function (...args) {
     return await this.session.cmd(cmdName, this.elementId, ...args);
