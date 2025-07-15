@@ -327,7 +327,6 @@ export function newSession(originalCaps, attachSessId = null) {
         serverOpts.isIOS = Boolean(platformName.match(/iOS/i));
         serverOpts.isAndroid = Boolean(platformName.match(/Android/i));
         driver = WDSessionStarter.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
-        driver._isAttachedSession = true;
       } else {
         driver = await WDSessionStarter.newSession(serverOpts, sessionCaps);
       }
