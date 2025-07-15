@@ -31,6 +31,16 @@ export default class WDSessionDriver {
     this.client = wdSessionClient;
   }
 
+  static addProperties(keys) {
+    for (const key of keys) {
+      Object.defineProperty(this.prototype, key, {
+        get() {
+          return this.client[key];
+        },
+      });
+    }
+  }
+
   async cmd(commandName, ...args) {
     if (!(commandName in this.client)) {
       throw new Error(`Command '${commandName}' is not available on this client`);
@@ -40,14 +50,6 @@ export default class WDSessionDriver {
       throw new Error(res.message ? res.message : res.error);
     }
     return res;
-  }
-
-  get sessionId() {
-    return this.client.sessionId;
-  }
-
-  get capabilities() {
-    return this.client.options.capabilities;
   }
 
   async findElement(using, value) {
@@ -108,3 +110,27 @@ for (const proto of [WebDriverProtocol, MJsonWProtocol, AppiumProtocol]) {
     }
   }
 }
+
+// https://webdriver.io/docs/api/browser
+const WDIO_BROWSER_PROPERTIES = [
+  'capabilities',
+  'requestedCapabilities',
+  'sessionId',
+  'options',
+  'commandList',
+  'isW3C',
+  'isChrome',
+  'isFirefox',
+  'isBidi',
+  'isSauce',
+  'isMacApp',
+  'isWindowsApp',
+  'isMobile',
+  'isIOS',
+  'isAndroid',
+  'isNativeContext',
+  'mobileContext',
+];
+
+// Walk through the webdriver browser object properties and add them to WDSessionDriver
+WDSessionDriver.addProperties(WDIO_BROWSER_PROPERTIES);

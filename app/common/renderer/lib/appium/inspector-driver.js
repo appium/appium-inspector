@@ -282,7 +282,7 @@ export default class InspectorDriver {
       await this.driver.switchAppiumContext(NATIVE_APP);
     }
 
-    const isAndroid = this.driver.client.isAndroid;
+    const isAndroid = this.driver.isAndroid;
 
     // Get all available contexts (or the error, if one appears)
     try {
@@ -319,14 +319,8 @@ export default class InspectorDriver {
             } catch {}
           }
         }
-      } else if (this.driver.client.isIOS) {
-        let browserName = '';
-        try {
-          // emulate optional chaining of deeply embedded property which might not exist using
-          // a try catch
-          browserName = this.driver.client.capabilities.browserName.toLowerCase();
-        } catch {}
-        const isSafari = browserName === 'safari';
+      } else if (this.driver.isIOS) {
+        const isSafari = this.driver.capabilities?.browserName?.toLowerCase() === 'safari';
         if (isSafari) {
           // on iOS, if we're in Safari simply find the top status bar and address bar and use its Y endpoint
           const topBar = await this.fetchElement({

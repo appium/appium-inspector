@@ -93,7 +93,7 @@ const SessionInfo = (props) => {
 
   useEffect(() => {
     const {getActiveAppId, getServerStatus, getFlatSessionCaps, sessionStartTime} = props;
-    const {isIOS, isAndroid} = driver.client;
+    const {isIOS, isAndroid} = driver;
 
     getActiveAppId(isIOS, isAndroid);
     getServerStatus();
