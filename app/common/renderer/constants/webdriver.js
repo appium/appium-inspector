@@ -1,3 +1,11 @@
+export const DEFAULT_SERVER_PROPS = {
+  protocol: 'http',
+  hostname: '127.0.0.1',
+  port: 4723,
+  path: '/',
+  logLevel: process.env.NODE_ENV === 'development' ? 'info' : 'warn',
+};
+
 // All properties defined on the WDIO browser object
 // https://webdriver.io/docs/api/browser
 export const BROWSER_PROPERTIES = [

@@ -18,15 +18,8 @@
 
 import webdriver from 'webdriver';
 
+import {DEFAULT_SERVER_PROPS} from '../../constants/webdriver.js';
 import WDSessionDriver from './session-driver.js';
-
-const DEFAULTS = {
-  protocol: 'http',
-  hostname: '0.0.0.0',
-  port: 4444,
-  path: '/wd/hub',
-  logLevel: typeof window === 'undefined' ? 'silent' : 'info',
-};
 
 /**
  * Class used to retrieve a webdriver session,
@@ -34,50 +27,19 @@ const DEFAULTS = {
  * with additional safeguards for session parameters
  */
 export default class WDSessionStarter {
-  static async newSession(
-    {
-      protocol = DEFAULTS.protocol,
-      hostname = DEFAULTS.hostname,
-      port = DEFAULTS.port,
-      path = DEFAULTS.path,
-      logLevel = DEFAULTS.logLevel,
-      ...otherParams
-    },
-    capabilities = {},
-  ) {
-    const params = {protocol, hostname, port, path, capabilities, logLevel, ...otherParams};
-    const sessionClient = await webdriver.newSession(params);
+  static async newSession(serverOpts, capabilities = {}) {
+    const safeServerOpts = {...DEFAULT_SERVER_PROPS, ...serverOpts, capabilities};
+    const sessionClient = await webdriver.newSession(safeServerOpts);
     return new WDSessionDriver(sessionClient);
   }
 
-  static attachToSession(
-    sessionId,
-    {
-      protocol = DEFAULTS.protocol,
-      hostname = DEFAULTS.hostname,
-      port = DEFAULTS.port,
-      path = DEFAULTS.path,
-      logLevel = DEFAULTS.logLevel,
-      ...otherParams
-    },
-    capabilities = {},
-    isW3C = true,
-  ) {
+  static attachToSession(sessionId, serverOpts, capabilities = {}) {
     if (!sessionId) {
       throw new Error("Can't attach to a session without a session id");
     }
-    const params = {
-      sessionId,
-      isW3C,
-      protocol,
-      hostname,
-      port,
-      path,
-      capabilities,
-      logLevel,
-      ...otherParams,
-    };
-    const sessionClient = webdriver.attachToSession(params);
+    const isW3C = true;
+    const safeServerOpts = {sessionId, isW3C, ...DEFAULT_SERVER_PROPS, ...serverOpts, capabilities};
+    const sessionClient = webdriver.attachToSession(safeServerOpts);
     return new WDSessionDriver(sessionClient);
   }
 }
