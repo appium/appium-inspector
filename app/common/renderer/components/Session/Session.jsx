@@ -77,7 +77,6 @@ const Session = (props) => {
         bindWindowClose();
         switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER);
         await getSavedSessions();
-        await setVisibleProviders();
         await setSavedServerParams();
         await setLocalServerParams();
         initFromQueryString(loadNewSession);
