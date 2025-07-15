@@ -42,7 +42,7 @@ import {
 } from '../actions/Session';
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder';
 
-const visibleProviders = []; // Pull this from the VISIBLE_PROVIDERS setting
+const visibleProviders = [SERVER_TYPES.HEADSPIN];
 
 const server = {};
 for (const serverType of _.values(SERVER_TYPES)) {
@@ -53,7 +53,7 @@ for (const serverType of _.values(SERVER_TYPES)) {
 const INITIAL_STATE = {
   savedSessions: [],
   tabKey: SESSION_BUILDER_TABS.CAPS_BUILDER,
-  serverType: SERVER_TYPES.REMOTE,
+  serverType: SERVER_TYPES.HEADSPIN,
   visibleProviders,
   server,
   attachSessId: null,

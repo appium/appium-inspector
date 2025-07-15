@@ -118,9 +118,5 @@
     "vite": "6.2.2",
     "vite-plugin-electron-renderer": "0.14.6",
     "vitest": "3.0.9"
-  },
-  "engines": {
-    "node": ">=20.x",
-    "npm": ">=10.x"
   }
 }
