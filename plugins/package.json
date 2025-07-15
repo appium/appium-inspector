@@ -1,0 +1,50 @@
+{
+  "name": "appium-inspector-plugin",
+  "version": "2025.3.1",
+  "description": "An app inspector for use with an Appium server",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appium/appium-inspector.git"
+  },
+  "author": {
+    "name": "Appium Developers",
+    "url": "https://github.com/appium"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/appium/appium-inspector/issues"
+  },
+  "keywords": [
+    "appium"
+  ],
+  "homepage": "https://github.com/appium/appium-inspector",
+  "main": "index.mjs",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "peerDependencies": {
+    "appium": "^2.0.0 || ^3.0.0-beta.0"
+  },
+  "files": [
+    "index.mjs",
+    "package.json",
+    "dist-browser",
+    "README.md"
+  ],
+  "dependencies": {
+    "@appium/base-plugin": "2.3.5"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=20.x",
+    "npm": ">=10.x"
+  },
+  "appium": {
+    "pluginName": "inspector",
+    "mainClass": "AppiumInspectorPlugin"
+  }
+}

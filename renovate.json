@@ -1,22 +1,45 @@
 {
-  "extends": ["config:base", ":semanticCommitTypeAll(chore)", ":pinAllExceptPeerDependencies"],
+  "extends": [
+    "config:recommended",
+    ":semanticCommitTypeAll(chore)",
+    ":pinAllExceptPeerDependencies"
+  ],
   "labels": ["dependencies"],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "matchDepTypes": ["dependencies", "devDependencies"],
+      "matchCurrentVersion": "!/^0/",
       "automerge": true
     },
     {
-      "matchPackageNames": [],
+      "matchPackageNames": [
+        "@types/react",
+        "@types/react-dom",
+        "antd",
+        "cheerio",
+        "react",
+        "react-dom"
+      ],
       "matchUpdateTypes": ["major"],
       "enabled": false
+    },
+    {
+      "matchPackageNames": ["web2driver"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["appium", "@appium/**", "!@appium/base-plugin"],
+      "groupName": "Appium-related packages",
+      "groupSlug": "appium"
+    },
+    {
+      "matchPackageNames": ["@appium/base-plugin"],
+      "updateLockFiles": false
     }
   ],
   "baseBranches": ["main"],
-  "ignorePaths": ["assets", "build", "release", "sample-session-files"],
   "semanticCommits": "enabled",
-  "schedule": ["after 10pm and before 5:00am"],
-  "timezone": "America/Vancouver",
-  "transitiveRemediation": true
+  "schedule": ["after 10pm", "before 5:00am"],
+  "timezone": "America/Vancouver"
 }

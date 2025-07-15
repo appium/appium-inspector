@@ -1,6 +1,6 @@
 {
   "name": "appium-inspector",
-  "version": "2024.3.3",
+  "version": "2025.3.1",
   "description": "An app inspector for use with an Appium server",
   "repository": {
     "type": "git",
@@ -17,224 +17,106 @@
   "keywords": [
     "appium"
   ],
-  "assetsPath": "assets",
   "homepage": "https://github.com/appium/appium-inspector",
-  "main": "dist/main.js",
+  "main": "./dist/main/main.js",
+  "type": "module",
   "scripts": {
+    "lint": "eslint . --fix",
+    "prettier": "prettier . -w",
     "test": "npm run test:lint && npm run test:unit && npm run test:integration",
     "test:lint": "eslint .",
-    "test:lint:fix": "eslint . --fix",
     "test:format": "prettier . -c",
-    "test:format:fix": "prettier . -w",
-    "test:unit": "cross-env BUILD_BROWSER=1 E2E_TIMEOUT=600000 NODE_ENV=test RUNNING_IN_SPECTRON=true mocha --reporter mocha-multi-reporters --reporter-options configFile=./test/mochareporters.json ./test/unit",
-    "test:integration": "cross-env BUILD_BROWSER=1 E2E_TIMEOUT=600000 NODE_ENV=test RUNNING_IN_SPECTRON=true mocha --reporter mocha-multi-reporters --reporter-options configFile=./test/mochareporters.json ./test/integration",
-    "e2e": "cross-env E2E_TIMEOUT=600000 NODE_ENV=test RUNNING_IN_SPECTRON=true mocha --reporter mocha-multi-reporters --reporter-options configFile=./test/mochareporters.json ./test/e2e",
-    "build": "npm run build:prod:main && npm run build:prod:renderer && npm run build:prod:browser",
-    "build:main": "parcel build --target node --public-url . --out-dir ./dist --out-file main.js ./app/main.js",
-    "build:renderer": "parcel build --no-content-hash --out-dir ./dist --target electron --public-url . ./app/renderer/*.html",
-    "build:browser": "cross-env PUBLIC_URL=. npm run build:browser:url",
-    "build:browser:url": "cross-env parcel build --no-minify --out-dir ./dist-browser --target browser --public-url $PUBLIC_URL ./app/renderer/index.html",
-    "watch:main": "parcel watch --target node --public-url . --out-dir ./dist --out-file main.js ./app/main.js",
-    "watch:renderer": "parcel watch --out-dir ./dist --target electron --public-url . ./app/renderer/*.html",
-    "watch:browser": "cross-env BUILD_BROWSER=1 NODE_ENV=development parcel serve --target browser ./app/renderer/index.html",
-    "build:prod:main": "cross-env NODE_ENV=production npm run build:main",
-    "build:prod:renderer": "cross-env NODE_ENV=production npm run build:renderer",
-    "build:prod:browser": "cross-env BUILD_BROWSER=1 NODE_ENV=production npm run build:browser",
-    "build:dev:main": "cross-env NODE_ENV=development npm run build:main",
-    "build:dev:renderer": "cross-env NODE_ENV=development npm run build:renderer",
-    "start": "cross-env RUNNING_LOCALLY=true electron ./",
-    "start:dev": "cross-env RUNNING_LOCALLY=true FORCE_NO_WRONG_FOLDER=true NODE_ENV=development electron --inspect ./",
-    "dev": "npm run build:dev:main && npm run build:dev:renderer && cross-env NODE_ENV=development concurrently --kill-others npm:start:dev npm:watch:main npm:watch:renderer",
-    "clean": "npm run clean:electron && npm run clean:browser && npm run clean:npm",
-    "clean:electron": "rimraf dist/ && rimraf .cache",
-    "clean:browser": "rimraf dist-browser/ && rimraf .cache",
+    "test:unit": "vitest run unit",
+    "test:integration": "vitest run integration",
+    "test:e2e": "echo 'Currently not functional - TODO: fixme'",
+    "dev:browser": "vite",
+    "dev:electron": "electron-vite -w",
+    "build": "npm run build:browser && npm run build:electron && npm run build:plugin",
+    "build:browser": "vite build",
+    "build:browser:url": "vite build --base $PUBLIC_URL",
+    "build:plugin": "vite build --base /inspector --outDir ../../plugins/dist-browser",
+    "build:electron": "electron-vite build",
+    "preview:browser": "npm run build:browser && vite preview",
+    "preview:electron": "electron-vite preview",
+    "pack:electron": "electron-builder build --publish never",
+    "clean": "npm run clean:electron && npm run clean:browser && npm run clean:npm && npm run clean:plugin",
+    "clean:electron": "rimraf dist/ && rimraf node_modules/.vite/ && rimraf node_modules/.vite-electron-renderer/",
+    "clean:browser": "rimraf dist-browser/ && rimraf node_modules/.vite/",
+    "clean:plugin": "rimraf plugins/dist-browser",
     "clean:npm": "rimraf package-lock.json && rimraf node_modules && npm install",
     "build:docs": "appium-docs build",
     "dev:docs": "appium-docs build --serve",
+    "plugin:sync:version": "node ./scripts/sync-plugin.mjs",
     "publish:docs": "appium-docs build --deploy --push -b docs-site -m 'docs: build docs for appium-inspector@%s' --alias latest",
     "install-docs-deps": "appium-docs init --no-mkdocs",
+    "version": "npm run plugin:sync:version && git add plugins/package.json",
     "postversion": "git pull --tags && git push && git push --tags",
-    "crowdin-sync": "node ./ci-jobs/crowdin-sync-translations.mjs",
-    "crowdin-update": "node ./ci-jobs/crowdin-update-resources.mjs"
+    "crowdin-sync": "node ./scripts/crowdin-sync-translations.mjs",
+    "crowdin-update": "node ./scripts/crowdin-update-resources.mjs"
   },
   "prettier": {
     "bracketSpacing": false,
     "printWidth": 100,
     "singleQuote": true
   },
-  "build": {
-    "productName": "Appium Inspector",
-    "appId": "io.appium.inspector",
-    "asar": true,
-    "directories": {
-      "output": "release"
-    },
-    "fileAssociations": [
-      {
-        "ext": "appiumsession",
-        "name": "Appium",
-        "role": "Editor",
-        "icon": "./build/icon.ico"
-      }
-    ],
-    "mac": {
-      "category": "public.app-category.developer-tools",
-      "target": [
-        {
-          "target": "dmg",
-          "arch": "universal"
-        },
-        {
-          "target": "zip",
-          "arch": "universal"
-        }
-      ]
-    },
-    "dmg": {
-      "artifactName": "${productName}-mac-${version}.${ext}",
-      "contents": [
-        {
-          "x": 410,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
-        },
-        {
-          "x": 130,
-          "y": 150,
-          "type": "file"
-        }
-      ]
-    },
-    "files": [
-      "dist/",
-      "node_modules/**/*",
-      "main.js",
-      "main.js.map",
-      "package.json"
-    ],
-    "win": {
-      "artifactName": "${productName}-windows-${version}-${arch}.${ext}",
-      "target": [
-        "nsis",
-        "zip"
-      ],
-      "icon": "build/icon.ico"
-    },
-    "nsisWeb": {
-      "oneClick": false
-    },
-    "nsis": {
-      "oneClick": false
-    },
-    "linux": {
-      "artifactName": "${productName}-linux-${version}.${ext}",
-      "target": [
-        "AppImage"
-      ],
-      "category": "Development"
-    },
-    "publish": {
-      "provider": "github",
-      "owner": "appium",
-      "vPrefixedTagName": true
-    }
-  },
   "bin": {
     "electron": "./node_modules/.bin/electron"
   },
   "//dependencies": {
     "antd": "V5: significant rewrite required",
-    "bluebird": "Deprecated: recommended to replace with native promises",
-    "cheerio": "1.0.0-rc.11: errors with export namespace",
-    "electron-settings": "V5: need to rewrite to IPC while keeping browser version working",
-    "htmlparser2": "8.0.0: errors with export namespace",
-    "uuid": "Obsolete: can be replaced with crypto.randomUUID in Electron 14+"
+    "cheerio": "V1: requires Node 18",
+    "react": "V19: requires antd 5",
+    "web2driver": "3.0.5: does not load"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "2.2.1",
-    "@xmldom/xmldom": "0.8.10",
-    "antd": "4.24.15",
-    "axios": "1.6.7",
-    "bluebird": "3.7.2",
-    "cheerio": "1.0.0-rc.10",
-    "electron-log": "4.4.8",
-    "electron-settings": "4.0.2",
-    "electron-updater": "6.1.8",
-    "highlight.js": "11.9.0",
-    "htmlparser2": "7.2.0",
-    "i18next": "23.10.1",
+    "@reduxjs/toolkit": "2.6.1",
+    "@xmldom/xmldom": "0.9.8",
+    "antd": "4.24.16",
+    "axios": "1.8.3",
+    "cheerio": "1.0.0-rc.12",
+    "electron-debug": "4.1.0",
+    "electron-settings": "4.0.4",
+    "electron-updater": "6.3.9",
+    "highlight.js": "11.11.1",
+    "i18next": "24.2.3",
     "i18next-chained-backend": "4.6.2",
-    "i18next-fs-backend": "2.3.1",
-    "i18next-http-backend": "2.5.0",
+    "i18next-fs-backend": "2.6.0",
+    "i18next-http-backend": "3.0.2",
     "i18next-localstorage-backend": "4.2.0",
     "lodash": "4.17.21",
     "moment": "2.30.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-i18next": "14.1.0",
-    "react-icons": "5.0.1",
-    "react-redux": "9.1.0",
-    "react-router-dom": "6.22.3",
-    "semver": "7.6.0",
-    "uuid": "9.0.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-i18next": "15.4.1",
+    "react-icons": "5.5.0",
+    "react-redux": "9.2.0",
+    "react-router": "7.3.0",
     "web2driver": "3.0.4",
     "xpath": "0.0.34"
   },
-  "//devDependencies": {
-    "chai-as-promised": "Abandoned",
-    "cross-env": "Maintenance mode",
-    "devtron": "Abandoned",
-    "electron": "V14: breaks electron-settings",
-    "mocha-multi-reporters": "Appears to be abandoned",
-    "node-libs-browser": "Deprecated",
-    "parcel-bundler": "V2: significant rewrite required",
-    "postcss-modules": "V4: requires updating to Parcel v2",
-    "redux-logger": "Appears to be abandoned",
-    "spectron": "Deprecated. Newer V16 also requires Electron 14"
-  },
   "devDependencies": {
-    "@appium/docutils": "1.0.4",
-    "@appium/eslint-config-appium": "8.0.5",
-    "@appium/fake-driver": "5.5.1",
-    "@appium/support": "4.2.2",
-    "@babel/core": "7.24.0",
-    "@babel/eslint-parser": "7.23.10",
-    "@babel/eslint-plugin": "7.23.5",
-    "@babel/plugin-proposal-class-properties": "7.18.6",
-    "@babel/plugin-transform-runtime": "7.24.0",
-    "@babel/preset-env": "7.24.0",
-    "@babel/preset-react": "7.23.3",
-    "@babel/register": "7.23.7",
+    "@appium/docutils": "1.0.34",
+    "@appium/eslint-config-appium-ts": "1.0.3",
+    "@appium/fake-driver": "5.7.2",
+    "@appium/support": "6.0.8",
+    "@types/lodash": "4.17.16",
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5",
+    "@vitejs/plugin-react": "4.3.4",
     "asyncbox": "3.0.0",
-    "chai": "4.4.1",
-    "chai-as-promised": "7.1.1",
-    "check-engines": "1.6.0",
-    "concurrently": "8.2.2",
-    "cross-env": "7.0.3",
-    "devtron": "1.4.0",
-    "electron": "13.6.9",
-    "electron-builder": "24.13.3",
-    "electron-debug": "3.2.0",
-    "electron-extension-installer": "1.2.0",
-    "eslint": "8.57.0",
-    "eslint-plugin-import": "2.29.1",
-    "eslint-plugin-mocha": "10.4.1",
-    "eslint-plugin-promise": "6.1.1",
-    "eslint-plugin-react": "7.34.0",
-    "eslint-plugin-react-native": "4.1.0",
-    "less": "4.2.0",
-    "mocha": "10.3.0",
-    "mocha-junit-reporter": "2.2.1",
-    "mocha-multi-reporters": "1.5.1",
-    "node-libs-browser": "2.2.1",
-    "parcel-bundler": "1.12.5",
-    "parcel-plugin-asset-copier": "1.1.1",
-    "postcss-modules": "3.2.2",
-    "prettier": "3.2.5",
-    "redux-logger": "3.0.6",
-    "rimraf": "5.0.5",
-    "sinon": "17.0.1",
-    "spectron": "15.0.0"
+    "electron": "35.0.2",
+    "electron-builder": "25.1.8",
+    "electron-devtools-installer": "4.0.0",
+    "electron-vite": "3.0.0",
+    "eslint": "9.22.0",
+    "eslint-plugin-react": "7.37.4",
+    "eslint-plugin-simple-import-sort": "12.1.1",
+    "globals": "16.0.0",
+    "less": "4.2.2",
+    "prettier": "3.5.3",
+    "rimraf": "6.0.1",
+    "vite": "6.2.2",
+    "vite-plugin-electron-renderer": "0.14.6",
+    "vitest": "3.0.9"
   }
 }

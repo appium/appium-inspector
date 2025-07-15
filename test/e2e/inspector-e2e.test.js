@@ -1,13 +1,9 @@
 import {startServer as startAppiumFakeDriverServer} from '@appium/fake-driver';
 import {retryInterval} from 'asyncbox';
-import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import path from 'path';
+import {expect} from 'vitest';
 
 import InspectorPage from './pages/inspector-page-object';
-
-chai.should();
-chai.use(chaiAsPromised);
 
 const FAKE_DRIVER_PORT = 12121;
 
@@ -56,43 +52,43 @@ describe('inspector window', function () {
   });
 
   it('shows content in "Selected Element" pane when clicking on an item in the Source inspector', async function () {
-    await (await client.$(inspector.selectedElementBody))
-      .getHTML()
-      .should.eventually.contain('Select an element');
+    expect(await (await client.$(inspector.selectedElementBody)).getHTML()).toContain(
+      'Select an element',
+    );
     await (await client.$(inspector.sourceTreeNode)).waitForExist({timeout: 3000});
     await (await client.$(inspector.sourceTreeNode)).click();
     await (await client.$(inspector.tapSelectedElementButton)).waitForExist({timeout: 3000});
     await (await client.$(inspector.tapSelectedElementButton)).waitForEnabled({timeout: 4000});
-    await (await client.$(inspector.selectedElementBody))
-      .getHTML()
-      .should.eventually.contain('btnTapElement');
+    expect(await (await client.$(inspector.selectedElementBody)).getHTML()).toContain(
+      'btnTapElement',
+    );
     await (await client.$(inspector.tapSelectedElementButton)).click();
   });
 
   it('shows a loading indicator in screenshot after clicking "Refresh" and then indicator goes away when refresh is complete', async function () {
     await inspector.reload();
     const spinDots = await client.$$(inspector.screenshotLoadingIndicator);
-    spinDots.length.should.equal(1);
+    expect(spinDots).toHaveLength(1);
     await retryInterval(15, 1000, async function () {
       const spinDots = await client.$$(inspector.screenshotLoadingIndicator);
-      spinDots.length.should.equal(0);
+      expect(spinDots).toHaveLength(0);
     });
   });
 
   it('shows a new pane when click "Start Recording" button and then the pane disappears when clicking "Pause"', async function () {
     // Check that there's no recorded actions pane
     let recordedPanes = await client.$$(inspector.recordedActionsPane);
-    recordedPanes.length.should.equal(0);
+    expect(recordedPanes).toHaveLength(0);
 
     // Start a recording and check that there is a recorded actions pane
     await inspector.startRecording();
     await (await client.$(inspector.recordedActionsPane)).waitForExist({timeout: 2000});
     recordedPanes = await client.$$(inspector.recordedActionsPane);
-    recordedPanes.length.should.equal(1);
+    expect(recordedPanes).toHaveLength(1);
 
     // Pause the recording and check that the recorded actions pane is gone again
     await inspector.pauseRecording();
     recordedPanes = await client.$$(inspector.recordedActionsPane);
-    recordedPanes.length.should.equal(0);
+    expect(recordedPanes).toHaveLength(0);
   });
 });

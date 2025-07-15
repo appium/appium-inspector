@@ -1,0 +1,318 @@
+.active-session {
+  background-color: #662d91;
+  color: white;
+}
+
+.sessionContainer {
+  width: 100%;
+  height: 100%;
+  padding: 1em;
+  background: linear-gradient(180deg, #f9f9f9, #f2f2f2, 5%, #f2f2f2, 95%, #d9d9d9);
+  display: flex;
+  flex-flow: column;
+}
+
+.sessionContainer :global(.ant-tabs-tab .anticon.anticon-close-square) {
+  color: red;
+  margin-left: 10px;
+}
+
+.sessionContainer :global(.addCloudProviderTab) {
+  font-style: italic;
+}
+
+.cloudProviderModal {
+  min-width: 600px;
+  max-width: 100%;
+}
+
+.cloudProviderModal :global(.ant-row) {
+  margin-bottom: 16px;
+}
+
+.cloudProviderModal :global(.ant-modal-body button) {
+  width: 100%;
+  padding: 4px;
+}
+
+.cloudProviderModal :global(.ant-modal-body button img) {
+  height: 100%;
+}
+.sessionFooter {
+  text-align: right;
+  height: 30px;
+}
+
+.sessionFooter .desiredCapsLink {
+  float: left;
+}
+
+.tabText img {
+  height: 20px;
+  filter: grayscale(100%);
+}
+
+:global(.ant-tabs-tab-active) .tabText img {
+  filter: none;
+}
+
+.serverTabs {
+  padding-bottom: 8px;
+}
+
+.serverTabs :global(.ant-tabs-bar) {
+  padding-top: 2em;
+  margin-top: -1em;
+}
+
+.serverTabs :global(.ant-tabs-nav-wrap) {
+  -webkit-app-region: drag;
+}
+
+.serverTabs :global(.ant-tabs-tab) {
+  -webkit-app-region: no-drag;
+}
+
+.serverTabs :global(.ant-form > .ant-row > div) {
+  padding-bottom: 12px;
+}
+
+.serverTabs :global(.ant-form-item) {
+  margin: 0;
+}
+
+.scrollingTabCont {
+  border-bottom: 1px solid #d9d9d9;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.scrollingTabCont :global(.ant-tabs-bar) {
+  margin-bottom: 0px;
+}
+
+.scrollingTabCont :global(.ant-tabs-content) {
+  height: 100%;
+}
+
+.scrollingTab {
+  scrollbar-width: none; /* -webkit-scrollbar for Firefox */
+  overflow-y: scroll;
+  height: 100%;
+}
+
+.scrollingTab::-webkit-scrollbar {
+  width: 0px;
+}
+
+:global(.ant-badge-count) {
+  background-color: #1890ff;
+}
+
+.savedSessions,
+.savedSessions :global(.ant-table),
+.savedSessions :global(.ant-table-wrapper) {
+  height: 100%;
+}
+
+.savedSessions :global(.ant-col) {
+  height: calc(100% - 15px);
+}
+
+.savedSessions :global(.ant-table) {
+  overflow-y: auto;
+}
+
+.savedSessions :global(.ant-table-body .ant-table-cell) {
+  padding: 8px 16px;
+}
+
+.savedSessions :global(.ant-table::-webkit-scrollbar) {
+  width: 0px;
+}
+
+.newSessionForm {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+.newSessionForm::-webkit-scrollbar {
+  width: 0px;
+}
+
+.capsFormattedCol {
+  padding-left: 12px;
+}
+
+.formattedCaps,
+.formattedCapsBody {
+  height: 100%;
+}
+.formattedCaps :global(.ant-row) {
+  width: 100%;
+}
+
+.formattedCaps :global(.ant-card-head-title) {
+  padding-right: 10px;
+  height: 65px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.formattedCaps :global(.ant-card-body) {
+  height: calc(100% - 66px);
+  padding: 0 14px 0 24px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.formattedCaps :global(.ant-card-extra) {
+  padding: 15px 0;
+}
+
+.formattedCapsBody pre {
+  height: 100%;
+  margin: 0;
+  padding: 24px 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.start-session-button {
+  margin-left: 1em;
+}
+
+.capsFormCol {
+  min-width: 420px;
+  height: 100%;
+}
+
+.capsFormRow {
+  font-size: 14px;
+  height: 100%;
+}
+
+.capsFormRow :global(.ant-col) {
+  height: calc(100% - 15px);
+}
+
+.capsBoxFont {
+  font-family: monospace;
+}
+
+.capsFormRow :global(.ant-form-item) {
+  margin-bottom: 0.5em;
+}
+
+.capsValueControl {
+  width: 142px;
+}
+
+.capsValueControl textarea {
+  max-width: 142px;
+}
+
+.localDesc {
+  font-style: italic;
+  color: #666;
+  margin: 0;
+  padding: 6px 8px 0 8px;
+}
+
+.selected {
+  background-color: #d6e8ff;
+}
+
+.capsNameEditorButton {
+  margin: 0 8px 0 0;
+  padding: 0;
+}
+
+.capsEditorControls {
+  position: absolute;
+  right: 0;
+  padding: 28px;
+}
+
+.capsEditorButton {
+  margin: 0 0 0 4px;
+}
+
+.capsEditor {
+  width: 100%;
+  height: 100%;
+  padding: 24px 0;
+}
+
+.capsEditorTitle {
+  width: 100%;
+  height: 22px;
+  padding: 0;
+  margin: 0;
+  resize: none;
+}
+
+.capsEditorBody {
+  width: 100%;
+  padding: 0;
+  margin: -1px;
+  resize: none;
+  border-color: lightgray;
+  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+}
+
+.capsEditorBodyFull {
+  height: 100%;
+}
+
+.capsEditorBodyResized {
+  height: calc(100% - 40px);
+}
+
+.advancedSettingsContainerCol {
+  width: 100%;
+}
+
+.advancedSettingsContainer :global(.ant-form-item) {
+  margin: 0;
+}
+
+.add-desired-capability-button {
+  float: right;
+}
+
+.btnReload {
+  float: right;
+  margin-left: 8px;
+}
+
+.btnDeleteCap {
+  float: right;
+}
+
+.inputDataCenter {
+  margin-left: 8px;
+}
+
+.addonDataCenter {
+  height: 32px;
+  border-right: 1px solid #d9d9d9 !important;
+}
+
+.addonDataCenterRadioContainer {
+  display: table-cell;
+  padding-top: 4px;
+  padding-left: 11px;
+}
+
+.errorMessage {
+  padding-top: 1px;
+  color: #ff4d4f;
+  font-size: 12px;
+}

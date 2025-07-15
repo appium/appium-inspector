@@ -1,0 +1,27 @@
+# Code validation job, executed on pull request
+# Runs linting and formatting tests
+
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint & Format
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run test:lint
+      - name: Format
+        run: npm run test:format

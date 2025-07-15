@@ -12,10 +12,10 @@ of the Inspector's functionality.
 
 The user interface here can be divided into several groups:
 
--   [Header (buttons and more)](./header.md)
--   [The Screenshot panel](./screenshot.md)
--   [Source tab](./source.md)
--   [Commands tab](./commands.md)
--   [Gestures tab](./gestures.md)
--   [Recorder tab](./recorder.md)
--   [Session Information tab](./session-info.md)
+- [Header (buttons and more)](./header.md)
+- [The Screenshot panel](./screenshot.md)
+- [Source tab](./source.md)
+- [Commands tab](./commands.md)
+- [Gestures tab](./gestures.md)
+- [Recorder tab](./recorder.md)
+- [Session Information tab](./session-info.md)
