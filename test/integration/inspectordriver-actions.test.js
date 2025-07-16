@@ -2,8 +2,8 @@ import {startServer as startAppiumFakeDriverServer} from '@appium/fake-driver';
 import path from 'path';
 import {afterAll, beforeAll, describe, expect, it} from 'vitest';
 
-import Web2Driver from '../../app/common/renderer/lib/appium/driver';
-import InspectorDriver from '../../app/common/renderer/lib/appium/inspector-driver';
+import InspectorDriver from '../../app/common/renderer/lib/appium/inspector-driver.js';
+import WDSessionStarter from '../../app/common/renderer/lib/appium/session-starter.js';
 
 const FAKE_DRIVER_PORT = 12121;
 
@@ -16,12 +16,12 @@ const DEFAULT_CAPS = {
   'appium:app': TEST_APP,
 };
 
-describe('Appium client actions', function () {
-  let driver, server, client;
+describe('InspectorDriver actions', function () {
+  let driver, server, inspectorDriver;
 
   beforeAll(async function () {
     server = await startAppiumFakeDriverServer(FAKE_DRIVER_PORT, '127.0.0.1');
-    driver = await Web2Driver.remote(
+    driver = await WDSessionStarter.newSession(
       {
         hostname: '127.0.0.1',
         port: FAKE_DRIVER_PORT,
@@ -30,36 +30,40 @@ describe('Appium client actions', function () {
       },
       DEFAULT_CAPS,
     );
-    client = InspectorDriver.instance(driver);
+    inspectorDriver = InspectorDriver.instance(driver);
   });
   afterAll(async function () {
     try {
-      await driver.quit();
+      await driver.deleteSession();
     } catch {}
     await server.close();
   });
 
   describe('.fetchElement, .fetchElements', function () {
     it('should return empty object if selector is null', async function () {
-      const res = await client.fetchElement({strategy: 'xpath', selctor: '//BadXPath'});
+      const res = await inspectorDriver.fetchElement({strategy: 'xpath', selctor: '//BadXPath'});
       expect(res).toEqual({});
     });
     it('should fetchElement and cache it', async function () {
-      const {id, variableName, variableType, strategy, selector} = await client.fetchElement({
-        strategy: 'xpath',
-        selector: '//MockListItem',
-      });
+      const {id, variableName, variableType, strategy, selector} =
+        await inspectorDriver.fetchElement({
+          strategy: 'xpath',
+          selector: '//MockListItem',
+        });
       expect(id).toBeTruthy();
       expect(strategy).toBe('xpath');
       expect(selector).toBe('//MockListItem');
       expect(variableName).toBeUndefined(); // Shouldn't have a variable name until a method is performed on it
       expect(variableType).toBe('string');
-      expect(client.elementCache[id]).toBeTruthy();
-      expect(client.elementCache[id].variableName).toBeUndefined();
-      expect(client.elementCache[id].variableType).toBe('string');
+      expect(inspectorDriver.elementCache[id]).toBeTruthy();
+      expect(inspectorDriver.elementCache[id].variableName).toBeUndefined();
+      expect(inspectorDriver.elementCache[id].variableType).toBe('string');
     });
     it('should fetchElements and cache all of them', async function () {
-      const res = await client.fetchElements({strategy: 'xpath', selector: '//MockListItem'});
+      const res = await inspectorDriver.fetchElements({
+        strategy: 'xpath',
+        selector: '//MockListItem',
+      });
       expect(res.elements.length).toBeGreaterThan(0);
       expect(res.variableName).toBe('els1');
       expect(res.variableType).toBe('array');
@@ -71,15 +75,15 @@ describe('Appium client actions', function () {
       expect(res.elements[1].id).toBeTruthy();
       expect(res.strategy).toBe('xpath');
       expect(res.selector).toBe('//MockListItem');
-      expect(client.elementCache[res.elements[0].id].variableName).toBe('els1');
-      expect(client.elementCache[res.elements[0].id].variableType).toBe('string');
-      expect(client.elementCache[res.elements[1].id].variableName).toBe('els1');
-      expect(client.elementCache[res.elements[1].id].variableType).toBe('string');
+      expect(inspectorDriver.elementCache[res.elements[0].id].variableName).toBe('els1');
+      expect(inspectorDriver.elementCache[res.elements[0].id].variableType).toBe('string');
+      expect(inspectorDriver.elementCache[res.elements[1].id].variableName).toBe('els1');
+      expect(inspectorDriver.elementCache[res.elements[1].id].variableType).toBe('string');
     });
   });
   describe('.executeMethod', function () {
-    it('should be able to call the click method on a single element', async function () {
-      const {id, variableName, variableType} = await client.fetchElement({
+    it('should be able to call the elementClick method on a single element', async function () {
+      const {id, variableName, variableType} = await inspectorDriver.fetchElement({
         strategy: 'xpath',
         selector: '//MockListItem',
       });
@@ -90,15 +94,15 @@ describe('Appium client actions', function () {
         variableName: repeatedVariableName,
         variableType: repeatedVariableType,
         id: repeatedId,
-      } = await client.executeMethod({elementId: id, methodName: 'click'});
+      } = await inspectorDriver.executeMethod({elementId: id, methodName: 'elementClick'});
       expect(repeatedVariableName).toBeTruthy();
       expect(variableType).toBe(repeatedVariableType);
       expect(id).toBe(repeatedId);
       expect(source).toBeTruthy();
       expect(screenshot).toBeTruthy();
     });
-    it('should be able to call the click method on multiple elements', async function () {
-      const {elements} = await client.fetchElements({
+    it('should be able to call the elementClick method on multiple elements', async function () {
+      const {elements} = await inspectorDriver.fetchElements({
         strategy: 'xpath',
         selector: '//MockListItem',
       });
@@ -110,7 +114,7 @@ describe('Appium client actions', function () {
           variableName: repeatedVariableName,
           variableType: repeatedVariableType,
           id: repeatedId,
-        } = await client.executeMethod({elementId: id, methodName: 'click'});
+        } = await inspectorDriver.executeMethod({elementId: id, methodName: 'elementClick'});
         expect(variableName).toBe(repeatedVariableName);
         expect(variableType).toBe(repeatedVariableType);
         expect(id).toBe(repeatedId);
@@ -119,20 +123,20 @@ describe('Appium client actions', function () {
       }
     });
     it('should call "setGeolocation" method and get result plus source and screenshot', async function () {
-      const res = await client.executeMethod({
+      const res = await inspectorDriver.executeMethod({
         methodName: 'setGeoLocation',
         args: [{latitude: 100, longitude: 200, altitude: 0}],
       });
       expect(res.screenshot).toBeTruthy();
       expect(res.source).toBeTruthy();
-      const getGeoLocationRes = await client.executeMethod({methodName: 'getGeoLocation'});
+      const getGeoLocationRes = await inspectorDriver.executeMethod({methodName: 'getGeoLocation'});
       expect(getGeoLocationRes.commandRes.latitude).toBe(100);
       expect(getGeoLocationRes.commandRes.longitude).toBe(200);
     });
   });
   describe('parseAndroidContexts methods', function () {
     it('should parse the android contexts into a proper format', async function () {
-      const res = await client.parseAndroidContexts([
+      const res = await inspectorDriver.parseAndroidContexts([
         {
           proc: '@webview_devtools_remote_8960',
           webview: 'WEBVIEW_8960',

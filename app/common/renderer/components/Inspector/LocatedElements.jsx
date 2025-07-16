@@ -112,7 +112,7 @@ const LocatedElements = (props) => {
                     disabled={!locatorTestElement}
                     icon={<AimOutlined />}
                     onClick={() =>
-                      applyClientMethod({methodName: 'click', elementId: locatorTestElement})
+                      applyClientMethod({methodName: 'elementClick', elementId: locatorTestElement})
                     }
                   />
                 </Tooltip>
@@ -130,7 +130,7 @@ const LocatedElements = (props) => {
                       icon={<SendOutlined />}
                       onClick={() =>
                         applyClientMethod({
-                          methodName: 'sendKeys',
+                          methodName: 'elementSendKeys',
                           elementId: locatorTestElement,
                           args: [sendKeys.current || ''],
                         })
@@ -143,7 +143,10 @@ const LocatedElements = (props) => {
                       id="btnClearElement"
                       icon={<ClearOutlined />}
                       onClick={() =>
-                        applyClientMethod({methodName: 'clear', elementId: locatorTestElement})
+                        applyClientMethod({
+                          methodName: 'elementClear',
+                          elementId: locatorTestElement,
+                        })
                       }
                     />
                   </Tooltip>

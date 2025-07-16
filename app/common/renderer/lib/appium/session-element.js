@@ -16,16 +16,20 @@
  * limitations under the License.
  */
 
-import _ from 'lodash';
+import {ELEMENT_CMDS} from '../../constants/webdriver.js';
 
-export const W3C_ELEMENT_KEY = 'element-6066-11e4-a52e-4f735466cecf';
-export const JWP_ELEMENT_KEY = 'ELEMENT';
+const W3C_ELEMENT_KEY = 'element-6066-11e4-a52e-4f735466cecf';
+const JWP_ELEMENT_KEY = 'ELEMENT';
 
-export default class UIElement {
+/**
+ * Class used as a wrapper for a webdriver element
+ * in order to allow calling element-related methods on it directly,
+ * instead of needing to use WDSessionDriver
+ */
+class WDSessionElement {
   constructor(elementKey, findRes, parent) {
     this.elementKey = elementKey;
     this.elementId = this[elementKey] = findRes[elementKey];
-    this.__is_w2d_element = true;
     this.parent = parent;
     this.session = parent.session || parent;
   }
@@ -46,12 +50,7 @@ export default class UIElement {
 }
 
 export function getElementFromResponse(res, parent) {
-  let elementKey;
-  if (res[W3C_ELEMENT_KEY]) {
-    elementKey = W3C_ELEMENT_KEY;
-  } else {
-    elementKey = JWP_ELEMENT_KEY;
-  }
+  const elementKey = res[W3C_ELEMENT_KEY] ? W3C_ELEMENT_KEY : JWP_ELEMENT_KEY;
 
   if (!res[elementKey]) {
     throw new Error(
@@ -60,27 +59,13 @@ export function getElementFromResponse(res, parent) {
     );
   }
 
-  return new UIElement(elementKey, res, parent);
+  return new WDSessionElement(elementKey, res, parent);
 }
 
-export const ELEMENT_CMDS = {
-  isElementSelected: 'isSelected',
-  isElementDisplayed: 'isDisplayed',
-  getElementAttribute: 'getAttribute',
-  getElementCSSValue: 'getCSSValue',
-  getElementText: 'getText',
-  getElementTagName: 'getTagName',
-  getElementProperty: 'getProperty',
-  getElementRect: 'getRect',
-  getElementEnabled: 'getEnabled',
-  elementClick: 'click',
-  elementClear: 'clear',
-  elementSendKeys: 'sendKeys',
-  takeElementScreenshot: 'takeScreenshot',
-};
-
-for (const [protoCmd, newCmd] of _.toPairs(ELEMENT_CMDS)) {
-  UIElement.prototype[newCmd] = async function (...args) {
-    return await this.session.cmd(protoCmd, this.elementId, ...args);
+// Walk through all webdriver protocol element methods and add them to WDSessionElement
+// (except for edge cases)
+for (const cmdName of ELEMENT_CMDS) {
+  WDSessionElement.prototype[cmdName] = async function (...args) {
+    return await this.session.cmd(cmdName, this.elementId, ...args);
   };
 }

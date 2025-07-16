@@ -314,7 +314,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {...state, showBoilerplate: action.show};
 
     case SET_SESSION_DETAILS: {
-      const automationName = action.driver.client.capabilities.automationName;
+      const automationName = action.driver.capabilities.automationName;
       return {
         ...state,
         serverDetails: action.serverDetails,
