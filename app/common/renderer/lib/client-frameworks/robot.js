@@ -117,6 +117,18 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
     return '# Not supported: getSession';
   }
 
+  codeFor_getAppiumCommands() {
+    return `# Not supported: getAppiumCommands`;
+  }
+
+  codeFor_getAppiumExtensions() {
+    return `# Not supported: getAppiumExtensions`;
+  }
+
+  codeFor_getAppiumSessionCapabilities() {
+    return `# Not supported: getAppiumSessionCapabilities`;
+  }
+
   codeFor_getTimeouts() {
     return '# Not supported: getTimeouts';
   }

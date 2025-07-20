@@ -25,6 +25,9 @@ export const COMMAND_DEFINITIONS = {
   Session: {
     status: {},
     getSession: {},
+    getAppiumCommands: {},
+    getAppiumExtensions: {},
+    getAppiumSessionCapabilities: {},
     getTimeouts: {},
     setTimeouts: {
       args: [
