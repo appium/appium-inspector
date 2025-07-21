@@ -117,7 +117,7 @@ ${code}`;
   }
 
   codeFor_getAppiumSessionCapabilities() {
-    return `let sessionCaps = ${this.type}.getDriver().getSessionCapabilities();`;
+    return `let sessionCaps = ${this.type}.getDriver().getAppiumSessionCapabilities();`;
   }
 
   codeFor_getTimeouts() {

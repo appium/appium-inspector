@@ -126,7 +126,7 @@ main().catch(console.log);`;
   }
 
   codeFor_getAppiumSessionCapabilities() {
-    return `let sessionCaps = await driver.getSessionCapabilities();`;
+    return `let sessionCaps = await driver.getAppiumSessionCapabilities();`;
   }
 
   codeFor_getTimeouts() {
