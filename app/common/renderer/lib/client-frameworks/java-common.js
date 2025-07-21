@@ -169,6 +169,18 @@ driver.perform(Arrays.asList(swipe));
     return `var caps = driver.getSessionDetails();`;
   }
 
+  codeFor_getAppiumCommands() {
+    return `// Not supported: getAppiumCommands`;
+  }
+
+  codeFor_getAppiumExtensions() {
+    return `// Not supported: getAppiumExtensions`;
+  }
+
+  codeFor_getAppiumSessionCapabilities() {
+    return `// Not supported: getAppiumSessionCapabilities`;
+  }
+
   codeFor_getTimeouts() {
     return `
 var implicitTimeout = driver.manage().timeouts().getImplicitWaitTimeout();
