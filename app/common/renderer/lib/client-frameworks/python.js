@@ -147,6 +147,18 @@ actions.perform()
     return `desired_caps = driver.desired_capabilities()`;
   }
 
+  codeFor_getAppiumCommands() {
+    return `# Not supported: getAppiumCommands`;
+  }
+
+  codeFor_getAppiumExtensions() {
+    return `# Not supported: getAppiumExtensions`;
+  }
+
+  codeFor_getAppiumSessionCapabilities() {
+    return `# Not supported: getAppiumSessionCapabilities`;
+  }
+
   codeFor_getTimeouts() {
     return 'timeouts = driver.timeouts()';
   }

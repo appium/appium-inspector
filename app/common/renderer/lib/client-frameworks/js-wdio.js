@@ -117,6 +117,18 @@ main().catch(console.log);`;
     return `let sessionDetails = await driver.getSession();`;
   }
 
+  codeFor_getAppiumCommands() {
+    return `let appiumCommands = await driver.getAppiumCommands();`;
+  }
+
+  codeFor_getAppiumExtensions() {
+    return `let appiumExtensions = await driver.getAppiumExtensions();`;
+  }
+
+  codeFor_getAppiumSessionCapabilities() {
+    return `let sessionCaps = await driver.getAppiumSessionCapabilities();`;
+  }
+
   codeFor_getTimeouts() {
     return `let timeouts = await driver.getTimeouts();`;
   }

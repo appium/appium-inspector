@@ -132,6 +132,18 @@ driver.quit`;
     return `session_capabilities = driver.session_capabilities`;
   }
 
+  codeFor_getAppiumCommands() {
+    return `# Not supported: getAppiumCommands`;
+  }
+
+  codeFor_getAppiumExtensions() {
+    return `# Not supported: getAppiumExtensions`;
+  }
+
+  codeFor_getAppiumSessionCapabilities() {
+    return `# Not supported: getAppiumSessionCapabilities`;
+  }
+
   codeFor_getTimeouts() {
     return `timeouts = driver.get_timeouts`;
   }
