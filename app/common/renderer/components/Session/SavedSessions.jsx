@@ -1,5 +1,5 @@
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
-import {Button, Card, Col, Popconfirm, Row, Space, Table, Tooltip} from 'antd';
+import {Button, Card, Popconfirm, Space, Splitter, Table, Tooltip} from 'antd';
 import moment from 'moment';
 
 import {SAVED_SESSIONS_TABLE_VALUES, SESSION_BUILDER_TABS} from '../../constants/session-builder';
@@ -104,9 +104,9 @@ const SavedSessions = (props) => {
   ];
 
   return (
-    <Row className={SessionStyles.savedSessions}>
-      <Col span={12}>
-        <Card className={SessionStyles.savedCaps}>
+    <Splitter>
+      <Splitter.Panel min={430}>
+        <Card className={SessionStyles.savedSessions}>
           <Table
             pagination={false}
             sticky={true}
@@ -121,14 +121,14 @@ const SavedSessions = (props) => {
             }}
           />
         </Card>
-      </Col>
-      <Col span={12} className={SessionStyles.capsFormattedCol}>
+      </Splitter.Panel>
+      <Splitter.Panel min={400}>
         <FormattedCaps
           {...props}
           title={capsUUID ? getSessionById(savedSessions, capsUUID, t).name : null}
         />
-      </Col>
-    </Row>
+      </Splitter.Panel>
+    </Splitter>
   );
 };
 

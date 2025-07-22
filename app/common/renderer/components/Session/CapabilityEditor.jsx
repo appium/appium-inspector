@@ -1,8 +1,7 @@
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
-import {Button, Checkbox, Col, Form, Input, Modal, Row, Select, Tooltip} from 'antd';
+import {Button, Checkbox, Col, Form, Input, Modal, Row, Select, Splitter, Tooltip} from 'antd';
 import {useEffect, useRef} from 'react';
 
-import {ROW} from '../../constants/antd-types';
 import {CAPABILITY_TYPES} from '../../constants/session-builder';
 import CapabilityControl from './CapabilityControl.jsx';
 import FormattedCaps from './FormattedCaps.jsx';
@@ -80,12 +79,12 @@ const CapabilityEditor = (props) => {
   }, [caps.length, latestCapField]);
 
   return (
-    <Row type={ROW.FLEX} align="top" justify="start" className={SessionStyles.capsFormRow}>
-      <Col order={1} span={12} className={SessionStyles.capsFormCol}>
+    <Splitter>
+      <Splitter.Panel collapsible resizable={false}>
         <Form className={SessionStyles.newSessionForm}>
           {caps.map((cap, index) => (
             <Row gutter={8} key={index}>
-              <Col span={7}>
+              <Col md={7} lg={8} xl={8} xxl={9}>
                 <Form.Item>
                   <Tooltip title={whitespaceMsg(cap.name, t)} open={whitespaces.test(cap.name)}>
                     <Input
@@ -100,7 +99,7 @@ const CapabilityEditor = (props) => {
                   </Tooltip>
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col flex="auto">
                 <Form.Item>
                   <Select
                     disabled={isEditingDesiredCaps}
@@ -116,7 +115,7 @@ const CapabilityEditor = (props) => {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col span={7}>
+              <Col md={7} lg={8} xl={9} xxl={10}>
                 <Form.Item>
                   <Tooltip title={whitespaceMsg(cap.value, t)} open={whitespaces.test(cap.value)}>
                     <CapabilityControl
@@ -129,7 +128,7 @@ const CapabilityEditor = (props) => {
                   </Tooltip>
                 </Form.Item>
               </Col>
-              <Col span={2}>
+              <Col flex="40px">
                 <div className={SessionStyles.btnDeleteCap}>
                   <Form.Item>
                     <Tooltip title={t('Delete')} placement="right">
@@ -144,8 +143,8 @@ const CapabilityEditor = (props) => {
               </Col>
             </Row>
           ))}
-          <Row>
-            <Col span={22}>
+          <Row gutter={8}>
+            <Col flex="auto">
               <Form.Item>
                 <Checkbox
                   checked={addVendorPrefixes}
@@ -155,7 +154,7 @@ const CapabilityEditor = (props) => {
                 </Checkbox>
               </Form.Item>
             </Col>
-            <Col span={2}>
+            <Col flex="40px">
               <Form.Item>
                 <Tooltip title={t('Add')} placement="right">
                   <Button
@@ -170,8 +169,8 @@ const CapabilityEditor = (props) => {
             </Col>
           </Row>
         </Form>
-      </Col>
-      <Col order={2} span={12} className={SessionStyles.capsFormattedCol}>
+      </Splitter.Panel>
+      <Splitter.Panel collapsible>
         <FormattedCaps {...props} />
         <Modal
           open={showSaveAsModal}
@@ -192,8 +191,8 @@ const CapabilityEditor = (props) => {
             <p className={SessionStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>
           )}
         </Modal>
-      </Col>
-    </Row>
+      </Splitter.Panel>
+    </Splitter>
   );
 };
 
