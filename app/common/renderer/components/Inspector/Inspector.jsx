@@ -12,7 +12,7 @@ import {
   TagOutlined,
   ThunderboltOutlined,
 } from '@ant-design/icons';
-import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip} from 'antd';
+import {Button, Card, Modal, Space, Spin, Splitter, Switch, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router';
@@ -279,7 +279,7 @@ const Inspector = (props) => {
           </Spin>
         )}
       </div>
-      <div id="sourceTreeContainer" className={InspectorStyles['interaction-tab-container']}>
+      <div className={InspectorStyles['inspector-tabs-container']}>
         <Tabs
           activeKey={selectedInspectorTab}
           size="small"
@@ -290,8 +290,8 @@ const Inspector = (props) => {
               key: INSPECTOR_TABS.SOURCE,
               disabled: !showScreenshot,
               children: (
-                <div className="action-row">
-                  <div className="action-col">
+                <Splitter>
+                  <Splitter.Panel collapsible defaultSize="50%" min="25%" max="80%">
                     <Card
                       title={
                         <span>
@@ -329,11 +329,8 @@ const Inspector = (props) => {
                     >
                       <Source {...props} />
                     </Card>
-                  </div>
-                  <div
-                    id="selectedElementContainer"
-                    className={`${InspectorStyles['interaction-tab-container']} ${InspectorStyles['element-detail-container']} action-col`}
-                  >
+                  </Splitter.Panel>
+                  <Splitter.Panel collapsible>
                     <Card
                       title={
                         <span>
@@ -345,8 +342,8 @@ const Inspector = (props) => {
                       {selectedElement.path && <SelectedElement {...props} />}
                       {!selectedElement.path && <i>{t('selectElementInSource')}</i>}
                     </Card>
-                  </div>
-                </div>
+                  </Splitter.Panel>
+                </Splitter>
               ),
             },
             {

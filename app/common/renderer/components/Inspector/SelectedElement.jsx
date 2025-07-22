@@ -105,6 +105,7 @@ const SelectedElement = (props) => {
       dataIndex: 'name',
       key: 'name',
       fixed: 'left',
+      width: 150,
       render: (text) => selectedElementTableCell(text, false),
     },
     {
@@ -134,6 +135,7 @@ const SelectedElement = (props) => {
       dataIndex: 'find',
       key: 'find',
       fixed: 'left',
+      width: 150,
       render: (text) => selectedElementTableCell(text, false),
     },
     {
