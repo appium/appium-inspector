@@ -90,3 +90,7 @@ body::-webkit-scrollbar-corner {
 .ant-switch-inner-unchecked {
   font-size: 12px !important;
 }
+
+.ant-splitter-bar {
+  margin: 6px;
+}
