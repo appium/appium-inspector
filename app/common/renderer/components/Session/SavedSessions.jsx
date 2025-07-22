@@ -122,7 +122,7 @@ const SavedSessions = (props) => {
           />
         </Card>
       </Splitter.Panel>
-      <Splitter.Panel min={400}>
+      <Splitter.Panel collapsible min={400}>
         <FormattedCaps
           {...props}
           title={capsUUID ? getSessionById(savedSessions, capsUUID, t).name : null}
