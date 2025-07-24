@@ -72,7 +72,7 @@
     "@wdio/protocols": "9.16.2",
     "@xmldom/xmldom": "0.9.8",
     "antd": "5.26.6",
-    "axios": "1.10.0",
+    "axios": "1.11.0",
     "cheerio": "1.1.2",
     "electron-debug": "4.1.0",
     "electron-settings": "4.0.4",
