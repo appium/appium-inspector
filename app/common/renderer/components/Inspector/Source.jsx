@@ -1,3 +1,4 @@
+import {CaretDownOutlined} from '@ant-design/icons';
 import {Spin, Tree} from 'antd';
 
 import {IMPORTANT_SOURCE_ATTRS} from '../../constants/source';
@@ -84,6 +85,8 @@ const Source = (props) => {
         {treeData ? (
           <Tree
             defaultExpandAll={true}
+            showLine={true}
+            switcherIcon={<CaretDownOutlined />}
             onExpand={setExpandedPaths}
             expandedKeys={expandedPaths}
             onSelect={(selectedPaths) => handleSelectElement(selectedPaths[0])}
