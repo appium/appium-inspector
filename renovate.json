@@ -31,7 +31,6 @@
       "updateLockFiles": false
     }
   ],
-  "baseBranches": ["main"],
   "semanticCommits": "enabled",
   "schedule": ["after 10pm", "before 5:00am"],
   "timezone": "America/Vancouver"
