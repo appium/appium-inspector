@@ -12,7 +12,12 @@
       "automerge": true
     },
     {
-      "matchPackageNames": ["@types/react", "@types/react-dom", "react", "react-dom"],
+      "matchPackageNames": [
+        "@types/react",
+        "@types/react-dom",
+        "react",
+        "react-dom"
+      ],
       "matchUpdateTypes": ["major"],
       "enabled": false
     },
@@ -31,7 +36,7 @@
       "updateLockFiles": false
     }
   ],
-  "baseBranches": ["main"],
+  "baseBranchPatterns": ["main"],
   "semanticCommits": "enabled",
   "schedule": ["after 10pm", "before 5:00am"],
   "timezone": "America/Vancouver"
