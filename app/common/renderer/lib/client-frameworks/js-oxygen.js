@@ -108,6 +108,18 @@ ${code}`;
     return `let caps = ${this.type}.getDriver().getSession();`;
   }
 
+  codeFor_getAppiumCommands() {
+    return `let appiumCommands = ${this.type}.getDriver().getAppiumCommands();`;
+  }
+
+  codeFor_getAppiumExtensions() {
+    return `let appiumExtensions = ${this.type}.getDriver().getAppiumExtensions();`;
+  }
+
+  codeFor_getAppiumSessionCapabilities() {
+    return `let sessionCaps = ${this.type}.getDriver().getAppiumSessionCapabilities();`;
+  }
+
   codeFor_getTimeouts() {
     return `let timeouts = ${this.type}.getDriver().getTimeouts();`;
   }
@@ -126,15 +138,15 @@ ${code}`;
 
   // Context
 
-  codeFor_getContext() {
+  codeFor_getAppiumContext() {
     return `let context = ${this.type}.getDriver().getContext();`;
   }
 
-  codeFor_getContexts() {
+  codeFor_getAppiumContexts() {
     return `let contexts = ${this.type}.getDriver().getContexts();`;
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+  codeFor_switchAppiumContext(varNameIgnore, varIndexIgnore, name) {
     return `${this.type}.setContext("${name}");`;
   }
 

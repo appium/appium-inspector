@@ -46,9 +46,9 @@ export default class InspectorDriver {
       appMode = APP_MODE.NATIVE, // Optional. Whether we're in a native or hybrid mode
     } = params;
 
-    if (methodName === 'quit') {
+    if (methodName === 'deleteSession') {
       try {
-        await this.driver.quit();
+        await this.driver.deleteSession();
       } catch {}
 
       _instance = null;
@@ -272,17 +272,17 @@ export default class InspectorDriver {
 
     // First get the current context (or the error, if one appears)
     try {
-      currentContext = await this.driver.getContext();
+      currentContext = await this.driver.getAppiumContext();
     } catch (e) {
       currentContextError = e;
     }
 
     // The retrieval of all contexts and webview position adjustments require some native context use
     if (currentContext !== NATIVE_APP) {
-      await this.driver.switchContext(NATIVE_APP);
+      await this.driver.switchAppiumContext(NATIVE_APP);
     }
 
-    const isAndroid = this.driver.client.isAndroid;
+    const isAndroid = this.driver.isAndroid;
 
     // Get all available contexts (or the error, if one appears)
     try {
@@ -302,7 +302,7 @@ export default class InspectorDriver {
           selector: ANDROID_WEBVIEW_SELECTOR,
         });
         if (webview.el) {
-          const {x, y} = await webview.el.getRect();
+          const {x, y} = await webview.el.getElementRect();
           webviewTopOffset = y;
           webviewLeftOffset = x;
         } else {
@@ -319,14 +319,8 @@ export default class InspectorDriver {
             } catch {}
           }
         }
-      } else if (this.driver.client.isIOS) {
-        let browserName = '';
-        try {
-          // emulate optional chaining of deeply embedded property which might not exist using
-          // a try catch
-          browserName = this.driver.client.capabilities.browserName.toLowerCase();
-        } catch {}
-        const isSafari = browserName === 'safari';
+      } else if (this.driver.isIOS) {
+        const isSafari = this.driver.capabilities?.browserName?.toLowerCase() === 'safari';
         if (isSafari) {
           // on iOS, if we're in Safari simply find the top status bar and address bar and use its Y endpoint
           const topBar = await this.fetchElement({
@@ -334,7 +328,7 @@ export default class InspectorDriver {
             selector: IOS_TOP_CONTROLS_SELECTOR,
           });
           if (topBar.el) {
-            const {y, height} = await topBar.el.getRect();
+            const {y, height} = await topBar.el.getElementRect();
             webviewTopOffset = y + height;
           }
           // in landscape mode, there is empty space on both sides (at default zoom level), so add offset for that too
@@ -361,7 +355,7 @@ export default class InspectorDriver {
             selector: 'XCUIElementTypeWebView',
           });
           if (wv.el) {
-            const {x, y} = await wv.el.getRect();
+            const {x, y} = await wv.el.getElementRect();
             webviewTopOffset = y;
             webviewLeftOffset = x;
           }
@@ -375,7 +369,7 @@ export default class InspectorDriver {
       }
 
       // Native context calculation part is done - switch back to webview context
-      await this.driver.switchContext(currentContext);
+      await this.driver.switchAppiumContext(currentContext);
 
       // Adjust all elements by the calculated offsets
       await this.driver.executeScript(
@@ -413,7 +407,7 @@ export default class InspectorDriver {
    */
   async hasContextsCommand() {
     try {
-      await this.driver.getContexts();
+      await this.driver.getAppiumContexts();
       return true;
     } catch {}
 

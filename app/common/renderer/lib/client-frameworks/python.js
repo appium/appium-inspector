@@ -147,6 +147,18 @@ actions.perform()
     return `desired_caps = driver.desired_capabilities()`;
   }
 
+  codeFor_getAppiumCommands() {
+    return `# Not supported: getAppiumCommands`;
+  }
+
+  codeFor_getAppiumExtensions() {
+    return `# Not supported: getAppiumExtensions`;
+  }
+
+  codeFor_getAppiumSessionCapabilities() {
+    return `# Not supported: getAppiumSessionCapabilities`;
+  }
+
   codeFor_getTimeouts() {
     return 'timeouts = driver.timeouts()';
   }
@@ -165,15 +177,15 @@ actions.perform()
 
   // Context
 
-  codeFor_getContext() {
+  codeFor_getAppiumContext() {
     return `context = driver.current_context`;
   }
 
-  codeFor_getContexts() {
+  codeFor_getAppiumContexts() {
     return `contexts = driver.contexts`;
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+  codeFor_switchAppiumContext(varNameIgnore, varIndexIgnore, name) {
     return `driver.switch_to.context('${name}')`;
   }
 

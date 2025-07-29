@@ -25,6 +25,9 @@ export const COMMAND_DEFINITIONS = {
   Session: {
     status: {},
     getSession: {},
+    getAppiumCommands: {},
+    getAppiumExtensions: {},
+    getAppiumSessionCapabilities: {},
     getTimeouts: {},
     setTimeouts: {
       args: [
@@ -39,9 +42,9 @@ export const COMMAND_DEFINITIONS = {
     },
   },
   Context: {
-    getContext: {},
-    getContexts: {},
-    switchContext: {
+    getAppiumContext: {},
+    getAppiumContexts: {},
+    switchAppiumContext: {
       args: [['name', STRING]],
       refresh: true,
     },

@@ -1,6 +1,6 @@
 import {Checkbox, Col, Form, Input, Row} from 'antd';
 
-import {DEFAULT_SERVER_HOST, DEFAULT_SERVER_PATH, DEFAULT_SERVER_PORT} from '../../actions/Session';
+import {DEFAULT_SERVER_PROPS} from '../../constants/webdriver.js';
 
 const ServerTabCustom = ({server, setServerParam, t}) => (
   <Form>
@@ -9,7 +9,7 @@ const ServerTabCustom = ({server, setServerParam, t}) => (
         <Form.Item>
           <Input
             id="customServerHost"
-            placeholder={DEFAULT_SERVER_HOST}
+            placeholder={DEFAULT_SERVER_PROPS.hostname}
             addonBefore={t('Remote Host')}
             value={server.remote.hostname}
             onChange={(e) => setServerParam('hostname', e.target.value)}
@@ -20,7 +20,7 @@ const ServerTabCustom = ({server, setServerParam, t}) => (
         <Form.Item>
           <Input
             id="customServerPort"
-            placeholder={DEFAULT_SERVER_PORT}
+            placeholder={DEFAULT_SERVER_PROPS.port}
             addonBefore={t('Remote Port')}
             value={server.remote.port}
             onChange={(e) => setServerParam('port', e.target.value)}
@@ -31,7 +31,7 @@ const ServerTabCustom = ({server, setServerParam, t}) => (
         <Form.Item>
           <Input
             id="customServerPath"
-            placeholder={DEFAULT_SERVER_PATH}
+            placeholder={DEFAULT_SERVER_PROPS.path}
             addonBefore={t('Remote Path')}
             value={server.remote.path}
             onChange={(e) => setServerParam('path', e.target.value)}

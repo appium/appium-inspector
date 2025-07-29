@@ -292,5 +292,9 @@
   "AccessToken": "Token de Acesso",
   "Token": "Token",
   "Key": "Chave",
-  "Secret": "Segredo"
+  "Secret": "Segredo",
+  "Toggle Theme": "Toggle Theme",
+  "Light Theme": "Light Theme",
+  "Dark Theme": "Dark Theme",
+  "System Theme": "System Theme"
 }

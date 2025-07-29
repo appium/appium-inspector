@@ -199,6 +199,18 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
     return `let sessionDetails = _driver.SessionDetails;`;
   }
 
+  codeFor_getAppiumCommands() {
+    return `// Not supported: getAppiumCommands`;
+  }
+
+  codeFor_getAppiumExtensions() {
+    return `// Not supported: getAppiumExtensions`;
+  }
+
+  codeFor_getAppiumSessionCapabilities() {
+    return `// Not supported: getAppiumSessionCapabilities`;
+  }
+
   codeFor_getTimeouts() {
     return `
 let timeouts = new Dictionary<string, TimeSpan>()
@@ -224,15 +236,15 @@ let timeouts = new Dictionary<string, TimeSpan>()
 
   // Context
 
-  codeFor_getContext() {
+  codeFor_getAppiumContext() {
     return `var context = _driver.Context;`;
   }
 
-  codeFor_getContexts() {
+  codeFor_getAppiumContexts() {
     return `var contexts = _driver.Contexts;`;
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+  codeFor_switchAppiumContext(varNameIgnore, varIndexIgnore, name) {
     return `_driver.Context = "${name}";`;
   }
 

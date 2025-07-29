@@ -1,4 +1,4 @@
-import {SearchOutlined} from '@ant-design/icons';
+import {CaretDownOutlined, SearchOutlined} from '@ant-design/icons';
 import {Input, Spin, Tooltip, Tree} from 'antd';
 import {useState} from 'react';
 
@@ -158,6 +158,8 @@ const Source = (props) => {
             />
             <Tree
               defaultExpandAll={true}
+              showLine={true}
+              switcherIcon={<CaretDownOutlined />}
               onExpand={onExpand}
               expandedKeys={expandedPaths}
               autoExpandParent={autoExpandParent}

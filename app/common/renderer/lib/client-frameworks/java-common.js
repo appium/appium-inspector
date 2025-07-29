@@ -169,6 +169,18 @@ driver.perform(Arrays.asList(swipe));
     return `var caps = driver.getSessionDetails();`;
   }
 
+  codeFor_getAppiumCommands() {
+    return `// Not supported: getAppiumCommands`;
+  }
+
+  codeFor_getAppiumExtensions() {
+    return `// Not supported: getAppiumExtensions`;
+  }
+
+  codeFor_getAppiumSessionCapabilities() {
+    return `// Not supported: getAppiumSessionCapabilities`;
+  }
+
   codeFor_getTimeouts() {
     return `
 var implicitTimeout = driver.manage().timeouts().getImplicitWaitTimeout();
@@ -196,15 +208,15 @@ var timeouts = Map.ofEntries(
 
   // Context
 
-  codeFor_getContext() {
+  codeFor_getAppiumContext() {
     return `var context = driver.getContext();`;
   }
 
-  codeFor_getContexts() {
+  codeFor_getAppiumContexts() {
     return `var contexts = driver.getContextHandles();`;
   }
 
-  codeFor_switchContext(varNameIgnore, varIndexIgnore, name) {
+  codeFor_switchAppiumContext(varNameIgnore, varIndexIgnore, name) {
     return `driver.context("${name}");`;
   }
 

@@ -40,7 +40,7 @@ const SelectedElement = (props) => {
 
   const downloadElementScreenshot = async (elementId) => {
     const elemScreenshot = await applyClientMethod({
-      methodName: 'takeScreenshot',
+      methodName: 'takeElementScreenshot',
       elementId,
       skipRefresh: true,
     });
@@ -105,6 +105,7 @@ const SelectedElement = (props) => {
       dataIndex: 'name',
       key: 'name',
       fixed: 'left',
+      width: 150,
       render: (text) => selectedElementTableCell(text, false),
     },
     {
@@ -134,6 +135,7 @@ const SelectedElement = (props) => {
       dataIndex: 'find',
       key: 'find',
       fixed: 'left',
+      width: 150,
       render: (text) => selectedElementTableCell(text, false),
     },
     {
@@ -205,7 +207,9 @@ const SelectedElement = (props) => {
             disabled={isDisabled}
             icon={tapIcon}
             id="btnTapElement"
-            onClick={() => applyClientMethod({methodName: 'click', elementId: selectedElementId})}
+            onClick={() =>
+              applyClientMethod({methodName: 'elementClick', elementId: selectedElementId})
+            }
           />
         </Tooltip>
         <Space.Compact className={styles.elementKeyInputActions}>
@@ -223,7 +227,7 @@ const SelectedElement = (props) => {
               icon={<SendOutlined />}
               onClick={() =>
                 applyClientMethod({
-                  methodName: 'sendKeys',
+                  methodName: 'elementSendKeys',
                   elementId: selectedElementId,
                   args: [sendKeys.current || ''],
                 })
@@ -235,7 +239,9 @@ const SelectedElement = (props) => {
               disabled={isDisabled}
               id="btnClearElement"
               icon={<ClearOutlined />}
-              onClick={() => applyClientMethod({methodName: 'clear', elementId: selectedElementId})}
+              onClick={() =>
+                applyClientMethod({methodName: 'elementClear', elementId: selectedElementId})
+              }
             />
           </Tooltip>
         </Space.Compact>

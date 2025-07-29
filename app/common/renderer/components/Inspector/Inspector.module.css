@@ -69,21 +69,6 @@
   overflow: hidden;
 }
 
-.inspector-main .interaction-tab-container :global(.ant-tabs-tabpane) {
-  height: 100%;
-}
-
-.inspector-main .interaction-tab-container {
-  position: relative;
-  flex-grow: 1;
-  flex-basis: 550px;
-  min-width: 380px;
-  padding-left: 1em;
-  display: flex;
-  flex-flow: column;
-  height: 100%;
-}
-
 .inspector-main :global(.ant-card-head-wrapper) {
   max-height: 48px;
 }
@@ -100,29 +85,65 @@
   scrollbar-width: none; /* -webkit-scrollbar for Firefox */
 }
 
-.inspector-main .interaction-tab-container :global(.ant-tabs) {
-  height: 100%;
+.inspector-main :global(.ant-card-body::-webkit-scrollbar) {
+  background: transparent;
+  width: 14px;
 }
 
-.inspector-main .interaction-tab-container :global(.ant-tabs-content) {
-  height: 100%;
-}
-
-.inspector-main .interaction-tab-container :global(.action-row) {
+.inspector-tabs-container {
+  position: relative;
+  flex-grow: 1;
+  flex-basis: 550px;
+  min-width: 380px;
+  padding-left: 1em;
   display: flex;
+  flex-flow: column;
   height: 100%;
 }
 
-.inspector-main .interaction-tab-container :global(.action-col) {
-  min-width: 50%;
-  max-width: 50%;
-}
-
-.inspector-main .interaction-tab-container :global(.ant-card) {
+.inspector-tabs-container :global(.ant-tabs) {
   height: 100%;
 }
 
-.inspector-main .tree-container {
+.inspector-tabs-container :global(.ant-tabs-content) {
+  height: 100%;
+}
+
+.inspector-tabs-container :global(.ant-tabs-tabpane) {
+  height: 100%;
+}
+
+.inspector-tabs-container :global(.ant-card) {
+  height: 100%;
+}
+
+.inspector-tabs-container .scroll-buttons {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-left: 1em;
+  padding-bottom: 1em;
+}
+
+.inspector-tabs-container .scroll-buttons :global(button) {
+  margin: 1em;
+}
+
+.inspector-tabs-container .scroll-buttons .scroll-right {
+  float: right;
+}
+
+.interaction-tab-card :global(.ant-card-body) {
+  overflow: scroll;
+}
+
+.interaction-tab-card {
+  flex: 2;
+  height: 100%;
+}
+
+.tree-container {
   height: 100%;
   overflow: auto;
 }
@@ -134,45 +155,6 @@
 
 .session-inner-table :global(.ant-table-body)::-webkit-scrollbar {
   width: 0px;
-}
-
-.inspector-main .interaction-tab-container .scroll-buttons {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding-left: 1em;
-  padding-bottom: 1em;
-}
-
-.inspector-main .interaction-tab-container .scroll-buttons :global(button) {
-  margin: 1em;
-}
-
-.inspector-main .interaction-tab-container .scroll-buttons .scroll-right {
-  float: right;
-}
-
-._inspector-main_0387c .ant-card-body {
-  height: 100%;
-  padding: 12px;
-}
-
-.inspector-main .interaction-tab-card :global(.ant-card-body) {
-  overflow: scroll;
-}
-
-.inspector-main .interaction-tab-card {
-  flex: 2;
-}
-
-.inspector-main :global(.ant-card-body::-webkit-scrollbar) {
-  background: transparent;
-  width: 14px;
-}
-
-.inspector-main .interaction-tab-container .interaction-tab-card {
-  height: 100%;
 }
 
 .highlighter-box {
@@ -379,12 +361,8 @@
 }
 
 .elementKeyInputActions {
-  max-width: 300px;
+  max-width: 400px;
   flex: 1;
-}
-
-.inspector-main #selectedElementContainer {
-  padding-bottom: 0px;
 }
 
 .selected-element-table-cells {

@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import {Web2Driver} from 'web2driver';
 
 import {
   SAVED_SESSIONS,
@@ -10,7 +9,9 @@ import {
 } from '../../shared/setting-defs';
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder';
 import {APP_MODE} from '../constants/session-inspector';
+import {DEFAULT_SERVER_PROPS} from '../constants/webdriver.js';
 import i18n from '../i18next';
+import WDSessionStarter from '../lib/appium/session-starter.js';
 import {VENDOR_MAP} from '../lib/vendor/map.js';
 import {getSetting, ipcRenderer, setSetting} from '../polyfills';
 import {fetchSessionInformation, formatSeleniumGridSessions} from '../utils/attaching-to-session';
@@ -93,10 +94,6 @@ const CONN_TIMEOUT = 5 * 60 * 1000;
 const NEW_COMMAND_TIMEOUT_SEC = 3600;
 
 let isFirstRun = true; // we only want to auto start a session on a first run
-
-export const DEFAULT_SERVER_PATH = '/';
-export const DEFAULT_SERVER_HOST = '127.0.0.1';
-export const DEFAULT_SERVER_PORT = 4723;
 
 const JSON_TYPES = ['object', 'number', 'boolean'];
 
@@ -236,24 +233,20 @@ export function newSession(originalCaps, attachSessId = null) {
       return false;
     }
 
-    let {host, port, username, accessKey, https, path, headers} = vendorProperties;
-
-    // if the server path is '' (or any other kind of falsy) set it to default
-    path = path || DEFAULT_SERVER_PATH;
-    host = host || DEFAULT_SERVER_HOST;
-    port = port || DEFAULT_SERVER_PORT;
-
-    // TODO W2D handle proxy and rejectUnauthorized cases
-    //let rejectUnauthorized = !session.server.advanced.allowUnauthorized;
-    //let proxy;
-    //if (session.server.advanced.useProxy && session.server.advanced.proxy) {
-    //  proxy = session.server.advanced.proxy;
-    //}
-
     dispatch({type: NEW_SESSION_LOADING});
 
+    // Assemble server options from the vendor properties
+
+    let {host, port, username, accessKey, https, path, headers} = vendorProperties;
     const protocol = https ? 'https' : 'http';
+
+    // if the server path is '' (or any other kind of falsy) set it to default
+    path = path || DEFAULT_SERVER_PROPS.path;
+    host = host || DEFAULT_SERVER_PROPS.hostname;
+    port = port || DEFAULT_SERVER_PROPS.port;
+
     const serverUrl = `${protocol}://${host}:${port}${path === '/' ? '' : path}`;
+
     const serverOpts = {
       hostname: host,
       port: parseInt(port, 10),
@@ -262,8 +255,8 @@ export function newSession(originalCaps, attachSessId = null) {
       headers,
       connectionRetryCount: CONN_RETRIES,
       connectionRetryTimeout: CONN_TIMEOUT,
+      logLevel: DEFAULT_SERVER_PROPS.logLevel,
     };
-
     if (username && accessKey) {
       serverOpts.user = username;
       serverOpts.key = accessKey;
@@ -281,8 +274,6 @@ export function newSession(originalCaps, attachSessId = null) {
     if (_.isUndefined(sessionCaps[CAPS_CONNECT_HARDWARE_KEYBOARD])) {
       sessionCaps[CAPS_CONNECT_HARDWARE_KEYBOARD] = true;
     }
-
-    serverOpts.logLevel = process.env.NODE_ENV === 'development' ? 'info' : 'warn';
 
     let driver = null;
     try {
@@ -326,10 +317,9 @@ export function newSession(originalCaps, attachSessId = null) {
         const platformName = attachedSessionCaps.platformName || attachedSessionCaps.platform;
         serverOpts.isIOS = Boolean(platformName.match(/iOS/i));
         serverOpts.isAndroid = Boolean(platformName.match(/Android/i));
-        driver = await Web2Driver.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
-        driver._isAttachedSession = true;
+        driver = WDSessionStarter.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
       } else {
-        driver = await Web2Driver.remote(serverOpts, sessionCaps);
+        driver = await WDSessionStarter.newSession(serverOpts, sessionCaps);
       }
     } catch (err) {
       showError(err, {secs: 0, url: serverUrl});
@@ -602,7 +592,7 @@ export function setSavedServerParams() {
 export function initFromSessionFile() {
   return async (dispatch) => {
     const lastArg = process.argv[process.argv.length - 1];
-    if (!lastArg.startsWith('filename=')) {
+    if (!lastArg?.startsWith('filename=')) {
       return null;
     }
     const filePath = lastArg.split('=')[1];
@@ -710,9 +700,9 @@ export function getRunningSessions() {
     // if we have a standard remote server, fill out connection info based on placeholder defaults
     // in case the user hasn't adjusted those fields
     if (serverType === SERVER_TYPES.REMOTE) {
-      host = host || DEFAULT_SERVER_HOST;
-      port = port || DEFAULT_SERVER_PORT;
-      path = path || DEFAULT_SERVER_PATH;
+      host = host || DEFAULT_SERVER_PROPS.hostname;
+      port = port || DEFAULT_SERVER_PROPS.port;
+      path = path || DEFAULT_SERVER_PROPS.path;
     }
 
     // no need to get sessions if we don't have complete server info

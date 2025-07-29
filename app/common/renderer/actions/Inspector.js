@@ -4,7 +4,7 @@ import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-d
 import {POINTER_TYPES} from '../constants/gestures';
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import i18n from '../i18next';
-import InspectorDriver from '../lib/appium/inspector-driver';
+import InspectorDriver from '../lib/appium/inspector-driver.js';
 import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map';
 import {getSetting, setSetting} from '../polyfills';
 import {readTextFromUploadedFiles} from '../utils/file-handling';
@@ -268,7 +268,7 @@ export function unselectHoveredElement() {
 export function applyClientMethod(params) {
   return async (dispatch, getState) => {
     const isRecording =
-      params.methodName !== 'quit' &&
+      params.methodName !== 'deleteSession' &&
       params.methodName !== 'getPageSource' &&
       params.methodName !== 'gesture' &&
       getState().inspector.isRecording;
@@ -328,8 +328,7 @@ export function applyClientMethod(params) {
       return commandRes;
     } catch (error) {
       log.error(error);
-      let methodName = params.methodName === 'click' ? 'tap' : params.methodName;
-      showError(error, {methodName, secs: 10});
+      showError(error, {methodName: params.methodName, secs: 10});
       dispatch({type: METHOD_CALL_DONE});
     }
   };
@@ -354,7 +353,7 @@ export function quitSession(reason, killedByUser = true) {
   return async (dispatch, getState) => {
     const killAction = killKeepAliveLoop();
     killAction(dispatch, getState);
-    const applyAction = applyClientMethod({methodName: 'quit'});
+    const applyAction = applyClientMethod({methodName: 'deleteSession'});
     await applyAction(dispatch, getState);
     dispatch({type: QUIT_SESSION_DONE});
     if (!killedByUser) {
@@ -558,7 +557,7 @@ export function setLocatorTestElement(elementId) {
       try {
         const action = callClientMethod({
           elementId,
-          methodName: 'getRect',
+          methodName: 'getElementRect',
           skipRefresh: true,
           skipRecord: true,
           ignoreResult: true,
@@ -712,7 +711,7 @@ export function selectAppMode(mode) {
       await action(dispatch, getState);
     }
     if (appMode !== mode && mode === APP_MODE.NATIVE) {
-      const action = applyClientMethod({methodName: 'switchContext', args: [NATIVE_APP]});
+      const action = applyClientMethod({methodName: 'switchAppiumContext', args: [NATIVE_APP]});
       await action(dispatch, getState);
     }
   };
@@ -896,8 +895,8 @@ export function callClientMethod(params) {
     log.info(params);
     const action = keepSessionAlive();
     action(dispatch, getState);
-    const client = InspectorDriver.instance(driver);
-    const res = await client.run(params);
+    const inspectorDriver = InspectorDriver.instance(driver);
+    const res = await inspectorDriver.run(params);
     let {commandRes} = res;
 
     // Ignore empty objects

@@ -44,7 +44,7 @@ const HeaderButtons = (props) => {
 
   const deviceControls = (
     <Space.Compact>
-      {driver && driver.client.isIOS && (
+      {driver && driver.isIOS && (
         <>
           <Tooltip title={t('Press Home Button')}>
             <Button
@@ -67,7 +67,7 @@ const HeaderButtons = (props) => {
           </Tooltip>
         </>
       )}
-      {driver && driver.client.isAndroid && (
+      {driver && driver.isAndroid && (
         <>
           <Tooltip title={t('Press Back Button')}>
             <Button
@@ -146,7 +146,7 @@ const HeaderButtons = (props) => {
             popupMatchSelectWidth={false}
             onChange={(value) => {
               setContext(value);
-              applyClientMethod({methodName: 'switchContext', args: [value]});
+              applyClientMethod({methodName: 'switchAppiumContext', args: [value]});
             }}
           >
             {contexts.map(({id, title}) => (
