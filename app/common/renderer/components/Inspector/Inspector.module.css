@@ -145,7 +145,6 @@
 
 .tree-container {
   height: 100%;
-  overflow: auto;
 }
 
 .session-inner-table :global(.ant-table-body) {
@@ -728,4 +727,9 @@
 
 :global(.dark) .tree-search-highlight {
   background-color: #dba400;
+}
+
+.source-tree {
+  flex: 1;
+  overflow: auto;
 }

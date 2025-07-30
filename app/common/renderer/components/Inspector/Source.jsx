@@ -166,6 +166,7 @@ const Source = (props) => {
               onSelect={(selectedPaths) => handleSelectElement(selectedPaths[0])}
               selectedKeys={[selectedElement.path]}
               treeData={treeData}
+              className={InspectorStyles['source-tree']}
             />
           </div>
         ) : (
