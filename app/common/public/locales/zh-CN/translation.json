@@ -282,7 +282,7 @@
   "TestcribeAPIKey": "Testcribe API 密钥",
   "sessionTestcribeApiKeyDescription": "你可以从 https://app.testcribe.com/settings/apiKeys 获取你的 API 密钥",
   "missingVendorProperties": "请提供以下 {{vendorName}} 的服务器详细信息：{{vendorProps}}",
-  "missingServerInfo": "Missing server info, could not query sessions",
+  "missingServerInfo": "",
   "Username": "用户名",
   "URL": "URL",
   "WebDriver URL": "WebDriver URL",
