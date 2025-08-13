@@ -25,7 +25,6 @@ const Source = (props) => {
   } = props;
 
   const [searchValue, setSearchValue] = useState('');
-  const [matchingElements, setMatchingElements] = useState(0);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
 
   const getHighlightedText = (text) => {
@@ -110,26 +109,26 @@ const Source = (props) => {
   const flatTreeData = sourceJSON && flatten(sourceJSON);
 
   const elementMatchesSearch = (element, searchValue) =>
-    (element.tagName + Object.entries(element.attributes).map(([name, value]) => name + value))
+    (
+      element.tagName +
+      Object.entries(element.attributes)
+        .filter(([name]) => IMPORTANT_SOURCE_ATTRS.includes(name) || showSourceAttrs)
+        .map(([name, value]) => name + value)
+    )
       .toLowerCase()
       .includes(searchValue.toLowerCase());
 
+  const matchingElements = searchValue
+    ? flatTreeData.filter((el) => elementMatchesSearch(el, searchValue))
+    : [];
+
+  const expandedKeys =
+    matchingElements.length > 0 ? matchingElements.map((el) => el.path) : expandedPaths;
+
   const onChange = (e) => {
     const {value} = e.target;
-    const matchingElements = value
-      ? flatTreeData.filter((el) => elementMatchesSearch(el, value))
-      : [];
-    const newExpandedPaths = matchingElements.length > 0 && matchingElements.map((el) => el.path);
-    setMatchingElements(matchingElements.length);
-    if (newExpandedPaths) {
-      setExpandedPaths(newExpandedPaths);
-    }
     setSearchValue(value);
     setAutoExpandParent(true);
-  };
-
-  const onClear = () => {
-    setMatchingElements(0);
   };
 
   const onExpand = (expandedPaths) => {
@@ -149,19 +148,20 @@ const Source = (props) => {
             <Input
               placeholder={t('Search Source')}
               onChange={onChange}
-              onClear={onClear}
               value={searchValue}
               allowClear
               className={InspectorStyles['tree-search-input']}
               prefix={<SearchOutlined />}
-              addonAfter={<Tooltip title={t('Matching Elements')}>{matchingElements}</Tooltip>}
+              addonAfter={
+                <Tooltip title={t('Matching Elements')}>{matchingElements.length}</Tooltip>
+              }
             />
             <Tree
               defaultExpandAll={true}
               showLine={true}
               switcherIcon={<CaretDownOutlined />}
               onExpand={onExpand}
-              expandedKeys={expandedPaths}
+              expandedKeys={expandedKeys}
               autoExpandParent={autoExpandParent}
               onSelect={(selectedPaths) => handleSelectElement(selectedPaths[0])}
               selectedKeys={[selectedElement.path]}
