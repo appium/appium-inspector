@@ -95,6 +95,7 @@
 
 .scrollingTabCont {
   margin-top: 15px;
+  margin-bottom: 15px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -129,8 +130,9 @@
   height: 100%;
 }
 
-.savedSessions :global(.ant-col) {
-  height: calc(100% - 15px);
+.savedSessions :global(.ant-card-body) {
+  height: 100%;
+  padding: 0;
 }
 
 .savedSessions :global(.ant-table) {
@@ -155,23 +157,13 @@
   width: 0px;
 }
 
-.capsFormattedCol {
-  padding-left: 12px;
+.newSessionForm :global(.ant-form-item) {
+  margin-bottom: 0.5em;
 }
 
-.savedCaps,
 .formattedCaps,
 .formattedCapsBody {
   height: 100%;
-}
-
-.savedCaps :global(.ant-card-body) {
-  height: 100%;
-  padding: 0;
-}
-
-.formattedCaps :global(.ant-row) {
-  width: 100%;
 }
 
 .formattedCaps :global(.ant-card-head-title) {
@@ -205,26 +197,8 @@
   margin-left: 1em;
 }
 
-.capsFormCol {
-  min-width: 420px;
-  height: 100%;
-}
-
-.capsFormRow {
-  font-size: 14px;
-  height: 100%;
-}
-
-.capsFormRow :global(.ant-col) {
-  height: calc(100% - 15px);
-}
-
 .capsBoxFont {
   font-family: monospace;
-}
-
-.capsFormRow :global(.ant-form-item) {
-  margin-bottom: 0.5em;
 }
 
 .capsValueControl {

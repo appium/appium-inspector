@@ -108,6 +108,18 @@ ${code}`;
     return `let caps = ${this.type}.getDriver().getSession();`;
   }
 
+  codeFor_getAppiumCommands() {
+    return `let appiumCommands = ${this.type}.getDriver().getAppiumCommands();`;
+  }
+
+  codeFor_getAppiumExtensions() {
+    return `let appiumExtensions = ${this.type}.getDriver().getAppiumExtensions();`;
+  }
+
+  codeFor_getAppiumSessionCapabilities() {
+    return `let sessionCaps = ${this.type}.getDriver().getAppiumSessionCapabilities();`;
+  }
+
   codeFor_getTimeouts() {
     return `let timeouts = ${this.type}.getDriver().getTimeouts();`;
   }
