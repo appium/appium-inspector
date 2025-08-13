@@ -128,7 +128,7 @@ const Source = (props) => {
   const onChange = (e) => {
     const {value} = e.target;
     setSearchValue(value);
-    setAutoExpandParent(true);
+    setAutoExpandParent(value !== '');
   };
 
   const onExpand = (expandedPaths) => {
