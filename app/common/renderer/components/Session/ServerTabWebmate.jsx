@@ -12,7 +12,7 @@ const ServerTabWebmate = ({server, setServerParam, t}) => (
             placeholder={
               process.env.WEBMATE_APIKEY
                 ? t('usingDataFoundIn', {environmentVariable: 'WEBMATE_APIKEY'})
-                : t('yourAccessKey')
+                : t('yourApiKey')
             }
             addonBefore={t('webmateApiKey')}
             value={server.webmate.apiKey}

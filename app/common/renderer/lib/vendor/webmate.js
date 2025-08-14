@@ -10,12 +10,13 @@ export class WebmateVendor extends BaseVendor {
 
     const apiKey = webmate.apiKey || process.env.WEBMATE_APIKEY;
     const projectId = webmate.projectId || process.env.WEBMATE_PROJECT;
-    this._checkInputPropertyPresence(vendorName, [{name: 'API key', val: apiKey}]);
+    this._checkInputPropertyPresence(vendorName, [{name: 'API Key', val: apiKey}]);
 
-    const host =
-      (webmate.useCustomHost && webmate.seleniumHost) ||
-      process.env.WEBMATE_HOST ||
-      'selenium.webmate.io';
+    let host = process.env.WEBMATE_HOST || 'selenium.webmate.io';
+    if (webmate.useCustomHost) {
+      this._checkInputPropertyPresence(vendorName, [{name: 'Host', val: webmate.seleniumHost}]);
+      host = this._validateUrl(webmate.seleniumHost).hostname;
+    }
     const path = '/wd/hub';
     const port = 443;
     const https = true;

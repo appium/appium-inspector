@@ -297,9 +297,9 @@
   "Light Theme": "Light Theme",
   "Dark Theme": "Dark Theme",
   "System Theme": "System Theme",
-  "webmateApiKey": "webmate API key",
-  "yourProjectId": "Your project id",
-  "webmateProjectId": "webmate project id",
+  "webmateApiKey": "webmate API Key",
+  "yourProjectId": "Your Project ID",
+  "webmateProjectId": "webmate Project ID",
   "specifyWebmateHostExplicitly": "Specify webmate host explicitly",
-  "webmateHost": "webmate host"
+  "webmateHost": "webmate Host"
 }
