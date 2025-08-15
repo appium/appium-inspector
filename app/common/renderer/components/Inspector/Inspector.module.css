@@ -145,7 +145,6 @@
 
 .tree-container {
   height: 100%;
-  overflow: auto;
 }
 
 .session-inner-table :global(.ant-table-body) {
@@ -703,4 +702,34 @@
 .error-icon {
   color: red;
   margin: 5px;
+}
+
+.tree-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 8px;
+}
+
+.tree-search-input {
+  max-width: 400px;
+  align-self: center;
+}
+
+.tree-search-input :global(.ant-input-group-addon) {
+  min-width: 46px;
+}
+
+.tree-search-highlight {
+  background-color: #ffeb3b;
+  border-radius: 2px;
+}
+
+:global(.dark) .tree-search-highlight {
+  background-color: #dba400;
+}
+
+.source-tree {
+  flex: 1;
+  overflow: auto;
 }
