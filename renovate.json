@@ -28,7 +28,7 @@
     },
     {
       "matchPackageNames": ["@appium/base-plugin"],
-      "updateLockFiles": false
+      "skipArtifactsUpdate": true
     }
   ],
   "semanticCommits": "enabled",
