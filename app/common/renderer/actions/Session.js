@@ -100,15 +100,17 @@ const JSON_TYPES = ['object', 'number', 'boolean'];
 export function getCapsObject(caps) {
   return Object.assign(
     {},
-    ...caps.map((cap) => {
-      if (JSON_TYPES.indexOf(cap.type) !== -1) {
-        try {
-          let obj = JSON.parse(cap.value);
-          return {[cap.name]: obj};
-        } catch {}
-      }
-      return {[cap.name]: cap.value};
-    }),
+    ...caps
+      .filter((cap) => cap.enabled)
+      .map((cap) => {
+        if (JSON_TYPES.indexOf(cap.type) !== -1) {
+          try {
+            let obj = JSON.parse(cap.value);
+            return {[cap.name]: obj};
+          } catch {}
+        }
+        return {[cap.name]: cap.value};
+      }),
   );
 }
 
@@ -808,8 +810,8 @@ export function saveRawDesiredCaps() {
 
       // Transform the current caps array to an object
       let caps = {};
-      for (let {type, name, value} of capsArray) {
-        caps[name] = {type, value};
+      for (let {type, name, value, enabled} of capsArray) {
+        caps[name] = {type, value, enabled};
       }
 
       // Translate the caps JSON to array format
@@ -828,6 +830,7 @@ export function saveRawDesiredCaps() {
         })(),
         name,
         value,
+        enabled: caps[name] ? caps[name].enabled : true,
       }));
       dispatch({type: SAVE_RAW_DESIRED_CAPS, caps: newCapsArray});
     } catch (e) {

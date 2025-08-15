@@ -62,6 +62,7 @@ const INITIAL_STATE = {
   caps: [
     {
       type: 'text',
+      enabled: true,
     },
   ],
 
@@ -100,7 +101,7 @@ export default function session(state = INITIAL_STATE, action) {
     case ADD_CAPABILITY:
       return {
         ...state,
-        caps: [...state.caps, {type: 'text'}],
+        caps: [...state.caps, {type: 'text', enabled: true}],
       };
 
     case REMOVE_CAPABILITY:
@@ -129,7 +130,10 @@ export default function session(state = INITIAL_STATE, action) {
         ...state,
         server: action.server,
         serverType: action.serverType,
-        caps: action.caps,
+        caps: action.caps.map((cap) => ({
+          ...cap,
+          enabled: cap.enabled !== undefined ? cap.enabled : true,
+        })),
         capsUUID: action.uuid,
         capsName: action.name,
       };

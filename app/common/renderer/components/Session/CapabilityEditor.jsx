@@ -1,5 +1,17 @@
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
-import {Button, Checkbox, Col, Form, Input, Modal, Row, Select, Splitter, Tooltip} from 'antd';
+import {
+  Button,
+  Checkbox,
+  Col,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Space,
+  Splitter,
+  Tooltip,
+} from 'antd';
 import {useEffect, useRef} from 'react';
 
 import {CAPABILITY_TYPES} from '../../constants/session-builder';
@@ -129,8 +141,15 @@ const CapabilityEditor = (props) => {
                 </Form.Item>
               </Col>
               <Col flex="40px">
-                <div className={SessionStyles.btnDeleteCap}>
-                  <Form.Item>
+                <Form.Item>
+                  <Space>
+                    <Tooltip title={t('Include')} placement="right">
+                      <Checkbox
+                        disabled={isEditingDesiredCaps}
+                        checked={cap.enabled}
+                        onChange={(e) => setCapabilityParam(index, 'enabled', e.target.checked)}
+                      />
+                    </Tooltip>
                     <Tooltip title={t('Delete')} placement="right">
                       <Button
                         {...{disabled: caps.length <= 1 || isEditingDesiredCaps}}
@@ -138,8 +157,8 @@ const CapabilityEditor = (props) => {
                         onClick={() => removeCapability(index)}
                       />
                     </Tooltip>
-                  </Form.Item>
-                </div>
+                  </Space>
+                </Form.Item>
               </Col>
             </Row>
           ))}
