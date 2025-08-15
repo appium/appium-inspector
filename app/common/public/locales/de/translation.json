@@ -296,5 +296,10 @@
   "Toggle Theme": "Toggle Theme",
   "Light Theme": "Light Theme",
   "Dark Theme": "Dark Theme",
-  "System Theme": "System Theme"
+  "System Theme": "System Theme",
+  "webmateApiKey": "webmate API-Key",
+  "yourProjectId": "Ihre Projekt-ID",
+  "webmateProjectId": "webmate Projekt-ID",
+  "specifyWebmateHostExplicitly": "webmate-Host explizit angeben",
+  "webmateHost": "webmate-Host"
 }

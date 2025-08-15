@@ -150,6 +150,11 @@ The Inspector has built-in integrations with various cloud service provider plat
         <img width="200" height="50" alt="Testcribe" src="app/common/renderer/assets/images/testcribe_logo.svg">
       </a>
     </td>
+    <td align="center" valign="center">
+      <a href="https://docs.webmate.io/app-testing/appium-inspector/">
+        <img width="200" height="50" alt="webmate" src="app/common/renderer/assets/images/webmate_logo.svg">
+      </a>
+    </td>
   </tr>
 </table>
 

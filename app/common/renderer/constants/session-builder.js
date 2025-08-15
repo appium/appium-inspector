@@ -23,6 +23,7 @@ export const SERVER_TYPES = {
   MOBITRU: 'mobitru',
   TVLABS: 'tvlabs',
   TESTCRIBE: 'testcribe',
+  WEBMATE: 'webmate',
 };
 
 export const SAVED_SESSIONS_TABLE_VALUES = {
