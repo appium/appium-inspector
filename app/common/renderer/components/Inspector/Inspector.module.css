@@ -712,7 +712,8 @@
 }
 
 .tree-search-input {
-  max-width: 300px;
+  max-width: 400px;
+  align-self: center;
 }
 
 .tree-search-input :global(.ant-input-group-addon) {
