@@ -296,10 +296,5 @@
   "Toggle Theme": "Перемкнути тему",
   "Light Theme": "Світла тема",
   "Dark Theme": "Темна тема",
-  "System Theme": "Тема системи",
-  "webmateApiKey": "webmate API key",
-  "yourProjectId": "Your project id",
-  "webmateProjectId": "webmate project id",
-  "specifyWebmateHostExplicitly": "Specify webmate host explicitly",
-  "webmateHost": "webmate host"
+  "System Theme": "Тема системи"
 }
