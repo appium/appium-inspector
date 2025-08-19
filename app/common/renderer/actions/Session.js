@@ -830,7 +830,7 @@ export function saveRawDesiredCaps() {
         })(),
         name,
         value,
-        enabled: caps[name] ? caps[name].enabled : true,
+        enabled: caps[name]?.enabled ?? true,
       }));
       dispatch({type: SAVE_RAW_DESIRED_CAPS, caps: newCapsArray});
     } catch (e) {

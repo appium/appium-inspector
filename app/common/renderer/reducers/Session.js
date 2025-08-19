@@ -132,7 +132,7 @@ export default function session(state = INITIAL_STATE, action) {
         serverType: action.serverType,
         caps: action.caps.map((cap) => ({
           ...cap,
-          enabled: cap.enabled !== undefined ? cap.enabled : true,
+          enabled: cap.enabled ?? true,
         })),
         capsUUID: action.uuid,
         capsName: action.name,
