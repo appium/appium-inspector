@@ -127,7 +127,7 @@ const CapabilityEditor = (props) => {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col md={8} lg={9} xl={9} xxl={10}>
+              <Col flex="1">
                 <Form.Item>
                   <Tooltip title={whitespaceMsg(cap.value, t)} open={whitespaces.test(cap.value)}>
                     <CapabilityControl
@@ -140,9 +140,9 @@ const CapabilityEditor = (props) => {
                   </Tooltip>
                 </Form.Item>
               </Col>
-              <Col md={4} lg={3} xl={3} xxl={2}>
+              <Col>
                 <Form.Item>
-                  <Space className={SessionStyles.capActions}>
+                  <Space>
                     <Tooltip title={t('Enable')} placement="right">
                       <Checkbox
                         disabled={isEditingDesiredCaps}
