@@ -304,5 +304,5 @@
   "webmateProjectId": "webmate Project ID",
   "specifyWebmateHostExplicitly": "Specify webmate host explicitly",
   "webmateHost": "webmate Host",
-  "Include": "Include"
+  "Enable": "Enable"
 }

@@ -143,7 +143,7 @@ const CapabilityEditor = (props) => {
               <Col flex="40px">
                 <Form.Item>
                   <Space>
-                    <Tooltip title={t('Include')} placement="right">
+                    <Tooltip title={t('Enable')} placement="right">
                       <Checkbox
                         disabled={isEditingDesiredCaps}
                         checked={cap.enabled}
