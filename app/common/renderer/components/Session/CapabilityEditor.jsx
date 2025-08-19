@@ -96,7 +96,7 @@ const CapabilityEditor = (props) => {
         <Form className={SessionStyles.newSessionForm}>
           {caps.map((cap, index) => (
             <Row gutter={8} key={index}>
-              <Col md={7} lg={7} xl={7} xxl={7}>
+              <Col span={7}>
                 <Form.Item>
                   <Tooltip title={whitespaceMsg(cap.name, t)} open={whitespaces.test(cap.name)}>
                     <Input
@@ -111,7 +111,7 @@ const CapabilityEditor = (props) => {
                   </Tooltip>
                 </Form.Item>
               </Col>
-              <Col md={5} lg={5} xl={5} xxl={5}>
+              <Col span={5}>
                 <Form.Item>
                   <Select
                     disabled={isEditingDesiredCaps}
@@ -127,7 +127,7 @@ const CapabilityEditor = (props) => {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col md={8} lg={9} xl={9} xxl={9}>
+              <Col md={8} lg={9} xl={9} xxl={10}>
                 <Form.Item>
                   <Tooltip title={whitespaceMsg(cap.value, t)} open={whitespaces.test(cap.value)}>
                     <CapabilityControl
@@ -140,7 +140,7 @@ const CapabilityEditor = (props) => {
                   </Tooltip>
                 </Form.Item>
               </Col>
-              <Col md={4} lg={3} xl={3} xxl={3}>
+              <Col md={4} lg={3} xl={3} xxl={2}>
                 <Form.Item>
                   <Space className={SessionStyles.capActions}>
                     <Tooltip title={t('Enable')} placement="right">
