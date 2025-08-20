@@ -1,5 +1,17 @@
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
-import {Button, Checkbox, Col, Form, Input, Modal, Row, Select, Splitter, Tooltip} from 'antd';
+import {
+  Button,
+  Checkbox,
+  Col,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Space,
+  Splitter,
+  Tooltip,
+} from 'antd';
 import {useEffect, useRef} from 'react';
 
 import {CAPABILITY_TYPES} from '../../constants/session-builder';
@@ -84,7 +96,7 @@ const CapabilityEditor = (props) => {
         <Form className={SessionStyles.newSessionForm}>
           {caps.map((cap, index) => (
             <Row gutter={8} key={index}>
-              <Col md={7} lg={8} xl={8} xxl={9}>
+              <Col span={7}>
                 <Form.Item>
                   <Tooltip title={whitespaceMsg(cap.name, t)} open={whitespaces.test(cap.name)}>
                     <Input
@@ -99,7 +111,7 @@ const CapabilityEditor = (props) => {
                   </Tooltip>
                 </Form.Item>
               </Col>
-              <Col flex="auto">
+              <Col span={5}>
                 <Form.Item>
                   <Select
                     disabled={isEditingDesiredCaps}
@@ -115,7 +127,7 @@ const CapabilityEditor = (props) => {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col md={7} lg={8} xl={9} xxl={10}>
+              <Col flex="1">
                 <Form.Item>
                   <Tooltip title={whitespaceMsg(cap.value, t)} open={whitespaces.test(cap.value)}>
                     <CapabilityControl
@@ -128,9 +140,16 @@ const CapabilityEditor = (props) => {
                   </Tooltip>
                 </Form.Item>
               </Col>
-              <Col flex="40px">
-                <div className={SessionStyles.btnDeleteCap}>
-                  <Form.Item>
+              <Col>
+                <Form.Item>
+                  <Space>
+                    <Tooltip title={t('Enable')} placement="right">
+                      <Checkbox
+                        disabled={isEditingDesiredCaps}
+                        checked={cap.enabled}
+                        onChange={(e) => setCapabilityParam(index, 'enabled', e.target.checked)}
+                      />
+                    </Tooltip>
                     <Tooltip title={t('Delete')} placement="right">
                       <Button
                         {...{disabled: caps.length <= 1 || isEditingDesiredCaps}}
@@ -138,8 +157,8 @@ const CapabilityEditor = (props) => {
                         onClick={() => removeCapability(index)}
                       />
                     </Tooltip>
-                  </Form.Item>
-                </div>
+                  </Space>
+                </Form.Item>
               </Col>
             </Row>
           ))}
