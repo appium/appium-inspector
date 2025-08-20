@@ -64,7 +64,7 @@
     "electron": "./node_modules/.bin/electron"
   },
   "//dependencies": {
-    "react": "V19: requires antd 5"
+    "react": "V19: requires antd 6"
   },
   "dependencies": {
     "@ant-design/pro-components": "2.8.10",
@@ -119,7 +119,7 @@
     "vitest": "3.2.4"
   },
   "engines": {
-    "node": "^20.19.0 || >=22.12.0",
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0",
     "npm": ">=10.x"
   }
 }

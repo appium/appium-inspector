@@ -27,7 +27,7 @@
     "./package.json": "./package.json"
   },
   "peerDependencies": {
-    "appium": "^2.0.0 || ^3.0.0-beta.0"
+    "appium": "^3.0.0-beta.0"
   },
   "files": [
     "index.mjs",
@@ -36,11 +36,11 @@
     "README.md"
   ],
   "dependencies": {
-    "@appium/base-plugin": "2.3.7"
+    "@appium/base-plugin": "3.0.0"
   },
   "devDependencies": {},
   "engines": {
-    "node": "^20.19.0 || >=22.12.0",
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0",
     "npm": ">=10.x"
   },
   "appium": {
