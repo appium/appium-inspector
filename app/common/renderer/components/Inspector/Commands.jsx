@@ -1,4 +1,5 @@
-import {Alert, Button, Col, Collapse, Input, Modal, Row, Space, Switch, Tooltip} from 'antd';
+import {ThunderboltOutlined} from '@ant-design/icons';
+import {Alert, Button, Card, Col, Collapse, Input, Modal, Row, Space, Switch, Tooltip} from 'antd';
 import _ from 'lodash';
 
 import {ALERT, INPUT} from '../../constants/antd-types';
@@ -117,100 +118,109 @@ const Commands = (props) => {
     notes.map((note) => (_.isArray(note) ? `${t(note[0])}: ${note[1]}` : t(note))).join('; ');
 
   return (
-    <div className={InspectorStyles['commands-container']}>
-      <Space className={InspectorStyles.spaceContainer} direction="vertical" size="middle">
-        {t('commandsDescription')}
-        <Row>
-          {_.toPairs(TOP_LEVEL_COMMANDS).map(([commandName, command], index) => (
-            <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
-              <div className={InspectorStyles['btn-container']}>
-                <Button onClick={() => startPerformingCommand(commandName, command)}>
-                  {commandName}
-                </Button>
-              </div>
-            </Col>
-          ))}
-        </Row>
-        <Collapse
-          items={_.toPairs(COMMAND_DEFINITIONS).map(([commandGroup, commands]) => ({
-            key: commandGroup,
-            label: t(commandGroup),
-            children: (
-              <Row>
-                {_.toPairs(commands).map(
-                  ([commandName, command], index) =>
-                    (!command.drivers || command.drivers.includes(automationName)) && (
-                      <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
-                        <div className={InspectorStyles['btn-container']}>
-                          <Tooltip
-                            title={
-                              command.notes && !command.args
-                                ? generateCommandNotes(command.notes)
-                                : null
-                            }
-                          >
-                            <Button onClick={() => startPerformingCommand(commandName, command)}>
-                              {commandName}
-                            </Button>
-                          </Tooltip>
-                        </div>
-                      </Col>
-                    ),
-                )}
-              </Row>
-            ),
-          }))}
-        />
-      </Space>
-      {!!pendingCommand && (
-        <Modal
-          title={`${t('Enter Parameters for:')} ${t(pendingCommand.commandName)}`}
-          okText={t('Execute Command')}
-          cancelText={t('Cancel')}
-          open={!!pendingCommand}
-          onOk={() => executeCommand()}
-          onCancel={() => cancelPendingCommand()}
-        >
-          {pendingCommand.command.notes && (
-            <Alert
-              message={generateCommandNotes(pendingCommand.command.notes)}
-              type={ALERT.INFO}
-              showIcon
-            />
-          )}
-          {!_.isEmpty(pendingCommand.command.args) &&
-            _.map(pendingCommand.command.args, ([argName, argType], index) => (
-              <Row key={index} gutter={16}>
-                <Col span={24} className={InspectorStyles['arg-container']}>
-                  {argType === COMMAND_ARG_TYPES.NUMBER && (
-                    <Input
-                      type={INPUT.NUMBER}
-                      value={pendingCommand.args[index]}
-                      addonBefore={t(argName)}
-                      onChange={(e) => setCommandArg(index, _.toNumber(e.target.value))}
-                    />
-                  )}
-                  {argType === COMMAND_ARG_TYPES.BOOLEAN && (
-                    <div>
-                      {t(argName)}{' '}
-                      <Switch
-                        checked={pendingCommand.args[index]}
-                        onChange={(v) => setCommandArg(index, v)}
-                      />
-                    </div>
-                  )}
-                  {argType === COMMAND_ARG_TYPES.STRING && (
-                    <Input
-                      addonBefore={t(argName)}
-                      onChange={(e) => setCommandArg(index, e.target.value)}
-                    />
-                  )}
-                </Col>
-              </Row>
+    <Card
+      title={
+        <span>
+          <ThunderboltOutlined /> {t('Execute Commands')}
+        </span>
+      }
+      className={InspectorStyles['interaction-tab-card']}
+    >
+      <div className={InspectorStyles['commands-container']}>
+        <Space className={InspectorStyles.spaceContainer} direction="vertical" size="middle">
+          {t('commandsDescription')}
+          <Row>
+            {_.toPairs(TOP_LEVEL_COMMANDS).map(([commandName, command], index) => (
+              <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
+                <div className={InspectorStyles['btn-container']}>
+                  <Button onClick={() => startPerformingCommand(commandName, command)}>
+                    {commandName}
+                  </Button>
+                </div>
+              </Col>
             ))}
-        </Modal>
-      )}
-    </div>
+          </Row>
+          <Collapse
+            items={_.toPairs(COMMAND_DEFINITIONS).map(([commandGroup, commands]) => ({
+              key: commandGroup,
+              label: t(commandGroup),
+              children: (
+                <Row>
+                  {_.toPairs(commands).map(
+                    ([commandName, command], index) =>
+                      (!command.drivers || command.drivers.includes(automationName)) && (
+                        <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
+                          <div className={InspectorStyles['btn-container']}>
+                            <Tooltip
+                              title={
+                                command.notes && !command.args
+                                  ? generateCommandNotes(command.notes)
+                                  : null
+                              }
+                            >
+                              <Button onClick={() => startPerformingCommand(commandName, command)}>
+                                {commandName}
+                              </Button>
+                            </Tooltip>
+                          </div>
+                        </Col>
+                      ),
+                  )}
+                </Row>
+              ),
+            }))}
+          />
+        </Space>
+        {!!pendingCommand && (
+          <Modal
+            title={`${t('Enter Parameters for:')} ${t(pendingCommand.commandName)}`}
+            okText={t('Execute Command')}
+            cancelText={t('Cancel')}
+            open={!!pendingCommand}
+            onOk={() => executeCommand()}
+            onCancel={() => cancelPendingCommand()}
+          >
+            {pendingCommand.command.notes && (
+              <Alert
+                message={generateCommandNotes(pendingCommand.command.notes)}
+                type={ALERT.INFO}
+                showIcon
+              />
+            )}
+            {!_.isEmpty(pendingCommand.command.args) &&
+              _.map(pendingCommand.command.args, ([argName, argType], index) => (
+                <Row key={index} gutter={16}>
+                  <Col span={24} className={InspectorStyles['arg-container']}>
+                    {argType === COMMAND_ARG_TYPES.NUMBER && (
+                      <Input
+                        type={INPUT.NUMBER}
+                        value={pendingCommand.args[index]}
+                        addonBefore={t(argName)}
+                        onChange={(e) => setCommandArg(index, _.toNumber(e.target.value))}
+                      />
+                    )}
+                    {argType === COMMAND_ARG_TYPES.BOOLEAN && (
+                      <div>
+                        {t(argName)}{' '}
+                        <Switch
+                          checked={pendingCommand.args[index]}
+                          onChange={(v) => setCommandArg(index, v)}
+                        />
+                      </div>
+                    )}
+                    {argType === COMMAND_ARG_TYPES.STRING && (
+                      <Input
+                        addonBefore={t(argName)}
+                        onChange={(e) => setCommandArg(index, e.target.value)}
+                      />
+                    )}
+                  </Col>
+                </Row>
+              ))}
+          </Modal>
+        )}
+      </div>
+    </Card>
   );
 };
 

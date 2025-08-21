@@ -9,7 +9,6 @@ import {
   PlusSquareOutlined,
   SelectOutlined,
   TagOutlined,
-  ThunderboltOutlined,
 } from '@ant-design/icons';
 import {Button, Card, Modal, Space, Spin, Splitter, Switch, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
@@ -349,18 +348,7 @@ const Inspector = (props) => {
               label: t('Commands'),
               key: INSPECTOR_TABS.COMMANDS,
               disabled: !showScreenshot,
-              children: (
-                <Card
-                  title={
-                    <span>
-                      <ThunderboltOutlined /> {t('Execute Commands')}
-                    </span>
-                  }
-                  className={InspectorStyles['interaction-tab-card']}
-                >
-                  <Commands {...props} />
-                </Card>
-              ),
+              children: <Commands {...props} />,
             },
             {
               label: t('Gestures'),
