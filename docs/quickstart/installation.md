@@ -10,13 +10,12 @@ Like all Appium plugins, the Inspector plugin can be installed and activated usi
 [the Appium command line](https://appium.io/docs/en/latest/cli/).
 
 1.  Install the plugin:
-
     1. For Appium 3:
-    
+
         ```bash
         appium plugin install inspector
         ```
-    
+
     2. For Appium 2 (last compatible version):
 
         ```bash
