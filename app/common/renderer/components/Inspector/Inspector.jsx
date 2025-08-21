@@ -26,7 +26,8 @@ import InspectorStyles from './Inspector.module.css';
 import Recorder from './Recorder.jsx';
 import SavedGestures from './SavedGestures.jsx';
 import Screenshot from './Screenshot.jsx';
-import SelectedElementContainer from './SelectedElementContainer.jsx';
+import SelectAnElement from './SelectAnElement.jsx';
+import SelectedElement from './SelectedElement.jsx';
 import SessionInfo from './SessionInfo.jsx';
 import Source from './Source.jsx';
 
@@ -42,6 +43,7 @@ const Inspector = (props) => {
   const {
     screenshot,
     screenshotError,
+    selectedElement = {},
     quitSession,
     screenshotInteractionMode,
     visibleCommandMethod,
@@ -278,7 +280,8 @@ const Inspector = (props) => {
                     <Source {...props} />
                   </Splitter.Panel>
                   <Splitter.Panel collapsible>
-                    <SelectedElementContainer {...props} />
+                    {selectedElement.path && <SelectedElement {...props} />}
+                    {!selectedElement.path && <SelectAnElement {...props} />}
                   </Splitter.Panel>
                 </Splitter>
               ),
