@@ -5,7 +5,6 @@ import {
   CopyOutlined,
   DownloadOutlined,
   FileTextOutlined,
-  HighlightOutlined,
   PlusSquareOutlined,
   SelectOutlined,
   TagOutlined,
@@ -355,27 +354,9 @@ const Inspector = (props) => {
               key: INSPECTOR_TABS.GESTURES,
               disabled: !showScreenshot,
               children: isGestureEditorVisible ? (
-                <Card
-                  title={
-                    <span>
-                      <HighlightOutlined /> {t('Gesture Builder')}
-                    </span>
-                  }
-                  className={InspectorStyles['interaction-tab-card']}
-                >
-                  <GestureEditor {...props} />
-                </Card>
+                <GestureEditor {...props} />
               ) : (
-                <Card
-                  title={
-                    <span>
-                      <HighlightOutlined /> {t('Saved Gestures')}
-                    </span>
-                  }
-                  className={InspectorStyles['interaction-tab-card']}
-                >
-                  <SavedGestures {...props} />
-                </Card>
+                <SavedGestures {...props} />
               ),
             },
             {
