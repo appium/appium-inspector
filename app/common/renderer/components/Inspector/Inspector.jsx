@@ -7,7 +7,6 @@ import {
   FileTextOutlined,
   PlusSquareOutlined,
   SelectOutlined,
-  TagOutlined,
 } from '@ant-design/icons';
 import {Button, Card, Modal, Space, Spin, Splitter, Switch, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
@@ -31,7 +30,7 @@ import InspectorStyles from './Inspector.module.css';
 import Recorder from './Recorder.jsx';
 import SavedGestures from './SavedGestures.jsx';
 import Screenshot from './Screenshot.jsx';
-import SelectedElement from './SelectedElement.jsx';
+import SelectedElementContainer from './SelectedElementContainer.jsx';
 import SessionInfo from './SessionInfo.jsx';
 import Source from './Source.jsx';
 
@@ -53,7 +52,6 @@ const Inspector = (props) => {
   const {
     screenshot,
     screenshotError,
-    selectedElement = {},
     quitSession,
     screenshotInteractionMode,
     visibleCommandMethod,
@@ -328,17 +326,7 @@ const Inspector = (props) => {
                     </Card>
                   </Splitter.Panel>
                   <Splitter.Panel collapsible>
-                    <Card
-                      title={
-                        <span>
-                          <TagOutlined /> {t('selectedElement')}
-                        </span>
-                      }
-                      className={InspectorStyles['selected-element-card']}
-                    >
-                      {selectedElement.path && <SelectedElement {...props} />}
-                      {!selectedElement.path && <i>{t('selectElementInSource')}</i>}
-                    </Card>
+                    <SelectedElementContainer {...props} />
                   </Splitter.Panel>
                 </Splitter>
               ),
