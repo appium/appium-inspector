@@ -6,7 +6,6 @@ import {
   DownloadOutlined,
   FileTextOutlined,
   HighlightOutlined,
-  InfoCircleOutlined,
   PlusSquareOutlined,
   SelectOutlined,
   TagOutlined,
@@ -401,18 +400,7 @@ const Inspector = (props) => {
               label: t('Session Information'),
               key: INSPECTOR_TABS.SESSION_INFO,
               disabled: !showScreenshot,
-              children: (
-                <Card
-                  title={
-                    <span>
-                      <InfoCircleOutlined /> {t('Session Information')}
-                    </span>
-                  }
-                  className={InspectorStyles['interaction-tab-card']}
-                >
-                  <SessionInfo {...props} />
-                </Card>
-              ),
+              children: <SessionInfo {...props} />,
             },
           ]}
         />
