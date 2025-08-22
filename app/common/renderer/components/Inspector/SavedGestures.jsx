@@ -3,10 +3,11 @@ import {
   DownloadOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
+  HighlightOutlined,
   PlayCircleOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-import {Button, Collapse, Modal, Popconfirm, Row, Space, Table, Tooltip} from 'antd';
+import {Button, Card, Collapse, Modal, Popconfirm, Row, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
 import {useEffect} from 'react';
@@ -198,30 +199,39 @@ const SavedGestures = (props) => {
   }, []);
 
   return (
-    <Space className={InspectorStyles.spaceContainer} direction="vertical" size="middle">
-      {t('gesturesDescription')}
-      <Table
-        onRow={(row) => onRowMouseOver(row.key)}
-        pagination={false}
-        dataSource={dataSource(savedGestures, t)}
-        columns={columns}
-        scroll={{y: 'calc(100vh - 32em)'}}
-        footer={() => (
-          <Space.Compact>
-            <Tooltip title={t('Create New Gesture')}>
-              <Button onClick={showGestureEditor} icon={<PlusOutlined />} />
-            </Tooltip>
-            <FileUploader
-              tooltipTitle={t('Upload Gesture File')}
-              onUpload={uploadGesturesFromFile}
-              multiple={true}
-              type="application/json"
-            />
-          </Space.Compact>
-        )}
-      />
-      {gestureUploadErrors && showGestureUploadErrorsModal()}
-    </Space>
+    <Card
+      title={
+        <span>
+          <HighlightOutlined /> {t('Saved Gestures')}
+        </span>
+      }
+      className={InspectorStyles['interaction-tab-card']}
+    >
+      <Space className={InspectorStyles.spaceContainer} direction="vertical" size="middle">
+        {t('gesturesDescription')}
+        <Table
+          onRow={(row) => onRowMouseOver(row.key)}
+          pagination={false}
+          dataSource={dataSource(savedGestures, t)}
+          columns={columns}
+          scroll={{y: 'calc(100vh - 32em)'}}
+          footer={() => (
+            <Space.Compact>
+              <Tooltip title={t('Create New Gesture')}>
+                <Button onClick={showGestureEditor} icon={<PlusOutlined />} />
+              </Tooltip>
+              <FileUploader
+                tooltipTitle={t('Upload Gesture File')}
+                onUpload={uploadGesturesFromFile}
+                multiple={true}
+                type="application/json"
+              />
+            </Space.Compact>
+          )}
+        />
+        {gestureUploadErrors && showGestureUploadErrorsModal()}
+      </Space>
+    </Card>
   );
 };
 

@@ -1,4 +1,5 @@
-import {Space, Table} from 'antd';
+import {InfoCircleOutlined} from '@ant-design/icons';
+import {Card, Space, Table} from 'antd';
 import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 
@@ -6,7 +7,7 @@ import InspectorStyles from './Inspector.module.css';
 import SessionCodeBox from './SessionCodeBox.jsx';
 
 const SessionInfo = (props) => {
-  const {driver} = props;
+  const {driver, t} = props;
 
   const interval = useRef();
   const [sessionLength, setSessionLength] = useState(0);
@@ -107,17 +108,26 @@ const SessionInfo = (props) => {
   }, []);
 
   return (
-    <Space direction="vertical" size="middle">
-      <Table
-        columns={columns}
-        dataSource={outerDataSource()}
-        pagination={false}
-        showHeader={false}
-        bordered={true}
-        size="small"
-      />
-      <SessionCodeBox {...props} />
-    </Space>
+    <Card
+      title={
+        <span>
+          <InfoCircleOutlined /> {t('Session Information')}
+        </span>
+      }
+      className={InspectorStyles['interaction-tab-card']}
+    >
+      <Space direction="vertical" size="middle">
+        <Table
+          columns={columns}
+          dataSource={outerDataSource()}
+          pagination={false}
+          showHeader={false}
+          bordered={true}
+          size="small"
+        />
+        <SessionCodeBox {...props} />
+      </Space>
+    </Card>
   );
 };
 

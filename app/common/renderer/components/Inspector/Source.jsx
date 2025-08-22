@@ -1,11 +1,26 @@
-import {CaretDownOutlined, SearchOutlined} from '@ant-design/icons';
-import {Input, Spin, Tooltip, Tree} from 'antd';
+import {
+  CaretDownOutlined,
+  CodeOutlined,
+  CopyOutlined,
+  DownloadOutlined,
+  FileTextOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
+import {Button, Card, Input, Spin, Tooltip, Tree} from 'antd';
 import {useState} from 'react';
 
 import {IMPORTANT_SOURCE_ATTRS} from '../../constants/source';
+import {copyToClipboard} from '../../polyfills';
+import {downloadFile} from '../../utils/file-handling';
 import InspectorStyles from './Inspector.module.css';
 import LocatorTestModal from './LocatorTestModal.jsx';
 import SiriCommandModal from './SiriCommandModal.jsx';
+
+const downloadXML = (sourceXML) => {
+  const href = 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML);
+  const filename = `app-source-${new Date().toJSON()}.xml`;
+  downloadFile(href, filename);
+};
 
 /**
  * Shows the 'source' of the app as a Tree
@@ -21,6 +36,8 @@ const Source = (props) => {
     methodCallInProgress,
     isUsingMjpegMode,
     isSourceRefreshOn,
+    sourceXML,
+    toggleShowAttributes,
     t,
   } = props;
 
@@ -137,45 +154,84 @@ const Source = (props) => {
   };
 
   return (
-    <div id="sourceContainer" className={InspectorStyles['tree-container']} tabIndex="0">
-      {!sourceJSON && !sourceError && <i>{t('Gathering initial app source…')}</i>}
-      {sourceError && t('couldNotObtainSource', {errorMsg: JSON.stringify(sourceError)})}
-      {/* Show loading indicator in MJPEG mode if a method call is in progress and source refresh is on */}
-      <Spin size="large" spinning={!!methodCallInProgress && isUsingMjpegMode && isSourceRefreshOn}>
-        {/* Must switch to a new antd Tree component when there's changes to treeData  */}
-        {treeData ? (
-          <div className={InspectorStyles['tree-wrapper']}>
-            <Input
-              placeholder={t('Search Source')}
-              onChange={onChange}
-              value={searchValue}
-              allowClear
-              className={InspectorStyles['tree-search-input']}
-              prefix={<SearchOutlined />}
-              addonAfter={
-                <Tooltip title={t('Matching Elements')}>{matchingElements.length}</Tooltip>
-              }
+    <Card
+      title={
+        <span>
+          <FileTextOutlined /> {t('App Source')}{' '}
+        </span>
+      }
+      extra={
+        <span>
+          <Tooltip title={t('Toggle Attributes')}>
+            <Button
+              type="text"
+              id="btnToggleAttrs"
+              icon={<CodeOutlined />}
+              onClick={toggleShowAttributes}
             />
-            <Tree
-              defaultExpandAll={true}
-              showLine={true}
-              switcherIcon={<CaretDownOutlined />}
-              onExpand={onExpand}
-              expandedKeys={expandedKeys}
-              autoExpandParent={autoExpandParent}
-              onSelect={(selectedPaths) => handleSelectElement(selectedPaths[0])}
-              selectedKeys={[selectedElement.path]}
-              treeData={treeData}
-              className={InspectorStyles['source-tree']}
+          </Tooltip>
+          <Tooltip title={t('Copy XML Source to Clipboard')}>
+            <Button
+              type="text"
+              id="btnSourceXML"
+              icon={<CopyOutlined />}
+              onClick={() => copyToClipboard(sourceXML)}
             />
-          </div>
-        ) : (
-          <Tree treeData={[]} />
-        )}
-      </Spin>
-      <LocatorTestModal {...props} />
-      <SiriCommandModal {...props} />
-    </div>
+          </Tooltip>
+          <Tooltip title={t('Download Source as .XML File')}>
+            <Button
+              type="text"
+              id="btnDownloadSourceXML"
+              icon={<DownloadOutlined />}
+              onClick={() => downloadXML(sourceXML)}
+            />
+          </Tooltip>
+        </span>
+      }
+    >
+      <div id="sourceContainer" className={InspectorStyles['tree-container']} tabIndex="0">
+        {!sourceJSON && !sourceError && <i>{t('Gathering initial app source…')}</i>}
+        {sourceError && t('couldNotObtainSource', {errorMsg: JSON.stringify(sourceError)})}
+        {/* Show loading indicator in MJPEG mode if a method call is in progress and source refresh is on */}
+        <Spin
+          size="large"
+          spinning={!!methodCallInProgress && isUsingMjpegMode && isSourceRefreshOn}
+        >
+          {/* Must switch to a new antd Tree component when there's changes to treeData  */}
+          {treeData ? (
+            <div className={InspectorStyles['tree-wrapper']}>
+              <Input
+                placeholder={t('Search Source')}
+                onChange={onChange}
+                value={searchValue}
+                allowClear
+                className={InspectorStyles['tree-search-input']}
+                prefix={<SearchOutlined />}
+                addonAfter={
+                  <Tooltip title={t('Matching Elements')}>{matchingElements.length}</Tooltip>
+                }
+              />
+              <Tree
+                defaultExpandAll={true}
+                showLine={true}
+                switcherIcon={<CaretDownOutlined />}
+                onExpand={onExpand}
+                expandedKeys={expandedKeys}
+                autoExpandParent={autoExpandParent}
+                onSelect={(selectedPaths) => handleSelectElement(selectedPaths[0])}
+                selectedKeys={[selectedElement.path]}
+                treeData={treeData}
+                className={InspectorStyles['source-tree']}
+              />
+            </div>
+          ) : (
+            <Tree treeData={[]} />
+          )}
+        </Spin>
+        <LocatorTestModal {...props} />
+        <SiriCommandModal {...props} />
+      </div>
+    </Card>
   );
 };
 
