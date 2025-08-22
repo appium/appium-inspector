@@ -6,9 +6,10 @@ import {
   FileTextOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
-import {Button, Card, Input, Spin, Tooltip, Tree} from 'antd';
+import {Button, Card, Input, Row, Spin, Tooltip, Tree} from 'antd';
 import {useState} from 'react';
 
+import {BUTTON, ROW} from '../../constants/antd-types';
 import {IMPORTANT_SOURCE_ATTRS} from '../../constants/source';
 import {copyToClipboard} from '../../polyfills';
 import {downloadFile} from '../../utils/file-handling';
@@ -162,14 +163,6 @@ const Source = (props) => {
       }
       extra={
         <span>
-          <Tooltip title={t('Toggle Attributes')}>
-            <Button
-              type="text"
-              id="btnToggleAttrs"
-              icon={<CodeOutlined />}
-              onClick={toggleShowAttributes}
-            />
-          </Tooltip>
           <Tooltip title={t('Copy XML Source to Clipboard')}>
             <Button
               type="text"
@@ -200,17 +193,27 @@ const Source = (props) => {
           {/* Must switch to a new antd Tree component when there's changes to treeData  */}
           {treeData ? (
             <div className={InspectorStyles['tree-wrapper']}>
-              <Input
-                placeholder={t('Search Source')}
-                onChange={onChange}
-                value={searchValue}
-                allowClear
-                className={InspectorStyles['tree-search-input']}
-                prefix={<SearchOutlined />}
-                addonAfter={
-                  <Tooltip title={t('Matching Elements')}>{matchingElements.length}</Tooltip>
-                }
-              />
+              <Row justify="center" type={ROW.FLEX} align="middle">
+                <Tooltip title={t('Toggle Attributes')}>
+                  <Button
+                    id="btnToggleAttrs"
+                    icon={<CodeOutlined />}
+                    onClick={toggleShowAttributes}
+                    type={showSourceAttrs ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+                  />
+                </Tooltip>
+                <Input
+                  placeholder={t('Search Source')}
+                  onChange={onChange}
+                  value={searchValue}
+                  allowClear
+                  className={InspectorStyles['tree-search-input']}
+                  prefix={<SearchOutlined />}
+                  addonAfter={
+                    <Tooltip title={t('Matching Elements')}>{matchingElements.length}</Tooltip>
+                  }
+                />
+              </Row>
               <Tree
                 defaultExpandAll={true}
                 showLine={true}
