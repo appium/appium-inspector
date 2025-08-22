@@ -193,7 +193,12 @@ const Source = (props) => {
           {/* Must switch to a new antd Tree component when there's changes to treeData  */}
           {treeData ? (
             <div className={InspectorStyles['tree-wrapper']}>
-              <Row justify="center" type={ROW.FLEX} align="middle" className={InspectorStyles['tree-actions']}>
+              <Row
+                justify="center"
+                type={ROW.FLEX}
+                align="middle"
+                className={InspectorStyles['tree-actions']}
+              >
                 <Tooltip title={t('Toggle Attributes')}>
                   <Button
                     id="btnToggleAttrs"
