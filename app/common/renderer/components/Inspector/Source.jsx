@@ -141,8 +141,7 @@ const Source = (props) => {
     ? flatTreeData.filter((el) => elementMatchesSearch(el, searchValue))
     : [];
 
-  const expandedKeys =
-    matchingElements.length > 0 ? matchingElements.map((el) => el.path) : expandedPaths;
+  const expandedKeys = [...matchingElements.map((el) => el.path), ...expandedPaths];
 
   const onChange = (e) => {
     const {value} = e.target;
