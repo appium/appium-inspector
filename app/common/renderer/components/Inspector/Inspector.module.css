@@ -711,6 +711,10 @@
   gap: 8px;
 }
 
+.tree-actions {
+  gap: 8px;
+}
+
 .tree-search-input {
   max-width: 400px;
   flex: 1;
