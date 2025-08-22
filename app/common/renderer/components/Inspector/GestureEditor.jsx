@@ -2,6 +2,7 @@ import {
   AimOutlined,
   CloseOutlined,
   DownCircleOutlined,
+  HighlightOutlined,
   PauseCircleOutlined,
   PlayCircleOutlined,
   PlusOutlined,
@@ -696,7 +697,14 @@ const GestureEditor = (props) => {
   }));
 
   return (
-    <>
+    <Card
+      title={
+        <span>
+          <HighlightOutlined /> {t('Gesture Builder')}
+        </span>
+      }
+      className={InspectorCSS['interaction-tab-card']}
+    >
       <PageHeader
         className={InspectorCSS['gesture-header']}
         onBack={() => onBack()}
@@ -722,7 +730,7 @@ const GestureEditor = (props) => {
         tabBarGutter={10}
         items={pointerTabs}
       />
-    </>
+    </Card>
   );
 };
 

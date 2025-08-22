@@ -6,8 +6,9 @@ import {
   HourglassOutlined,
   LoadingOutlined,
   SendOutlined,
+  TagOutlined,
 } from '@ant-design/icons';
-import {Alert, Button, Col, Input, Row, Space, Spin, Table, Tooltip} from 'antd';
+import {Alert, Button, Card, Col, Input, Row, Space, Spin, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useRef} from 'react';
 
@@ -192,114 +193,123 @@ const SelectedElement = (props) => {
   }
 
   return (
-    <Space className={styles.spaceContainer} direction="vertical" size="middle">
-      {showSnapshotMaxDepthReachedMessage()}
-      {elementInteractionsNotAvailable && (
-        <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemInfoMessage}>
-          <Col>
-            <Alert type={ALERT.INFO} message={t('interactionsNotAvailable')} showIcon />
-          </Col>
+    <Card
+      title={
+        <span>
+          <TagOutlined /> {t('selectedElement')}
+        </span>
+      }
+      className={styles['selected-element-card']}
+    >
+      <Space className={styles.spaceContainer} direction="vertical" size="middle">
+        {showSnapshotMaxDepthReachedMessage()}
+        {elementInteractionsNotAvailable && (
+          <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemInfoMessage}>
+            <Col>
+              <Alert type={ALERT.INFO} message={t('interactionsNotAvailable')} showIcon />
+            </Col>
+          </Row>
+        )}
+        <Row justify="center" type={ROW.FLEX} align="middle" className={styles.selectedElemActions}>
+          <Tooltip title={t('Tap')}>
+            <Button
+              disabled={isDisabled}
+              icon={tapIcon}
+              id="btnTapElement"
+              onClick={() =>
+                applyClientMethod({methodName: 'elementClick', elementId: selectedElementId})
+              }
+            />
+          </Tooltip>
+          <Space.Compact className={styles.elementKeyInputActions}>
+            <Input
+              className={styles.elementKeyInput}
+              disabled={isDisabled}
+              placeholder={t('Enter Keys to Send')}
+              allowClear={true}
+              onChange={(e) => (sendKeys.current = e.target.value)}
+            />
+            <Tooltip title={t('Send Keys')}>
+              <Button
+                disabled={isDisabled}
+                id="btnSendKeysToElement"
+                icon={<SendOutlined />}
+                onClick={() =>
+                  applyClientMethod({
+                    methodName: 'elementSendKeys',
+                    elementId: selectedElementId,
+                    args: [sendKeys.current || ''],
+                  })
+                }
+              />
+            </Tooltip>
+            <Tooltip title={t('Clear')}>
+              <Button
+                disabled={isDisabled}
+                id="btnClearElement"
+                icon={<ClearOutlined />}
+                onClick={() =>
+                  applyClientMethod({methodName: 'elementClear', elementId: selectedElementId})
+                }
+              />
+            </Tooltip>
+          </Space.Compact>
+          <Space.Compact>
+            <Tooltip title={t('Copy Attributes to Clipboard')}>
+              <Button
+                disabled={isDisabled}
+                id="btnCopyAttributes"
+                icon={<CopyOutlined />}
+                onClick={() => copyToClipboard(JSON.stringify(dataSource))}
+              />
+            </Tooltip>
+            <Tooltip title={t('Download Screenshot')}>
+              <Button
+                disabled={isDisabled}
+                icon={<DownloadOutlined />}
+                id="btnDownloadElemScreenshot"
+                onClick={() => downloadElementScreenshot(selectedElementId)}
+              />
+            </Tooltip>
+            <Tooltip title={t('Get Timing')}>
+              <Button
+                disabled={isDisabled}
+                id="btnGetTiming"
+                icon={<HourglassOutlined />}
+                onClick={() => getFindElementsTimes(findDataSource)}
+              />
+            </Tooltip>
+          </Space.Compact>
         </Row>
-      )}
-      <Row justify="center" type={ROW.FLEX} align="middle" className={styles.selectedElemActions}>
-        <Tooltip title={t('Tap')}>
-          <Button
-            disabled={isDisabled}
-            icon={tapIcon}
-            id="btnTapElement"
-            onClick={() =>
-              applyClientMethod({methodName: 'elementClick', elementId: selectedElementId})
-            }
-          />
-        </Tooltip>
-        <Space.Compact className={styles.elementKeyInputActions}>
-          <Input
-            className={styles.elementKeyInput}
-            disabled={isDisabled}
-            placeholder={t('Enter Keys to Send')}
-            allowClear={true}
-            onChange={(e) => (sendKeys.current = e.target.value)}
-          />
-          <Tooltip title={t('Send Keys')}>
-            <Button
-              disabled={isDisabled}
-              id="btnSendKeysToElement"
-              icon={<SendOutlined />}
-              onClick={() =>
-                applyClientMethod({
-                  methodName: 'elementSendKeys',
-                  elementId: selectedElementId,
-                  args: [sendKeys.current || ''],
-                })
-              }
-            />
-          </Tooltip>
-          <Tooltip title={t('Clear')}>
-            <Button
-              disabled={isDisabled}
-              id="btnClearElement"
-              icon={<ClearOutlined />}
-              onClick={() =>
-                applyClientMethod({methodName: 'elementClear', elementId: selectedElementId})
-              }
-            />
-          </Tooltip>
-        </Space.Compact>
-        <Space.Compact>
-          <Tooltip title={t('Copy Attributes to Clipboard')}>
-            <Button
-              disabled={isDisabled}
-              id="btnCopyAttributes"
-              icon={<CopyOutlined />}
-              onClick={() => copyToClipboard(JSON.stringify(dataSource))}
-            />
-          </Tooltip>
-          <Tooltip title={t('Download Screenshot')}>
-            <Button
-              disabled={isDisabled}
-              icon={<DownloadOutlined />}
-              id="btnDownloadElemScreenshot"
-              onClick={() => downloadElementScreenshot(selectedElementId)}
-            />
-          </Tooltip>
-          <Tooltip title={t('Get Timing')}>
-            <Button
-              disabled={isDisabled}
-              id="btnGetTiming"
-              icon={<HourglassOutlined />}
-              onClick={() => getFindElementsTimes(findDataSource)}
-            />
-          </Tooltip>
-        </Space.Compact>
-      </Row>
-      {findDataSource.length > 0 && (
-        <Row className={styles.selectedElemContentRow}>
-          <Spin spinning={isFindingElementsTimes}>
+        {findDataSource.length > 0 && (
+          <Row className={styles.selectedElemContentRow}>
+            <Spin spinning={isFindingElementsTimes}>
+              <Table
+                columns={findColumns}
+                dataSource={findDataSource}
+                size="small"
+                scroll={{x: 'max-content'}}
+                pagination={false}
+              />
+            </Spin>
+          </Row>
+        )}
+        {currentContext === NATIVE_APP && showXpathWarning && (
+          <Alert message={t('usingXPathNotRecommended')} type={ALERT.WARNING} showIcon />
+        )}
+        {dataSource.length > 0 && (
+          <Row className={styles.selectedElemContentRow}>
             <Table
-              columns={findColumns}
-              dataSource={findDataSource}
+              columns={attributeColumns}
+              dataSource={dataSource}
               size="small"
               scroll={{x: 'max-content'}}
               pagination={false}
             />
-          </Spin>
-        </Row>
-      )}
-      {currentContext === NATIVE_APP && showXpathWarning && (
-        <Alert message={t('usingXPathNotRecommended')} type={ALERT.WARNING} showIcon />
-      )}
-      {dataSource.length > 0 && (
-        <Row className={styles.selectedElemContentRow}>
-          <Table
-            columns={attributeColumns}
-            dataSource={dataSource}
-            size="small"
-            scroll={{x: 'max-content'}}
-            pagination={false}
-          />
-        </Row>
-      )}
-    </Space>
+          </Row>
+        )}
+      </Space>
+    </Card>
   );
 };
 

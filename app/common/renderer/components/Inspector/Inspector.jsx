@@ -1,18 +1,11 @@
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
-  CodeOutlined,
-  CopyOutlined,
   DownloadOutlined,
-  FileTextOutlined,
-  HighlightOutlined,
-  InfoCircleOutlined,
   PlusSquareOutlined,
   SelectOutlined,
-  TagOutlined,
-  ThunderboltOutlined,
 } from '@ant-design/icons';
-import {Button, Card, Modal, Space, Spin, Splitter, Switch, Tabs, Tooltip} from 'antd';
+import {Button, Modal, Space, Spin, Splitter, Switch, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router';
@@ -25,7 +18,6 @@ import {
   MJPEG_STREAM_CHECK_INTERVAL,
   SESSION_EXPIRY_PROMPT_TIMEOUT,
 } from '../../constants/session-inspector';
-import {copyToClipboard} from '../../polyfills';
 import {downloadFile} from '../../utils/file-handling';
 import Commands from './Commands.jsx';
 import GestureEditor from './GestureEditor.jsx';
@@ -34,17 +26,12 @@ import InspectorStyles from './Inspector.module.css';
 import Recorder from './Recorder.jsx';
 import SavedGestures from './SavedGestures.jsx';
 import Screenshot from './Screenshot.jsx';
+import SelectAnElement from './SelectAnElement.jsx';
 import SelectedElement from './SelectedElement.jsx';
 import SessionInfo from './SessionInfo.jsx';
 import Source from './Source.jsx';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
-
-const downloadXML = (sourceXML) => {
-  const href = 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML);
-  const filename = `app-source-${new Date().toJSON()}.xml`;
-  downloadFile(href, filename);
-};
 
 const downloadScreenshot = (screenshot) => {
   const href = `data:image/png;base64,${screenshot}`;
@@ -66,7 +53,6 @@ const Inspector = (props) => {
     setUserWaitTimeout,
     showKeepAlivePrompt,
     keepSessionAlive,
-    sourceXML,
     visibleCommandResult,
     serverDetails,
     isUsingMjpegMode,
@@ -74,7 +60,6 @@ const Inspector = (props) => {
     toggleShowCentroids,
     showCentroids,
     isGestureEditorVisible,
-    toggleShowAttributes,
     isSourceRefreshOn,
     windowSize,
     t,
@@ -292,56 +277,11 @@ const Inspector = (props) => {
               children: (
                 <Splitter>
                   <Splitter.Panel collapsible defaultSize="50%" min="25%" max="80%">
-                    <Card
-                      title={
-                        <span>
-                          <FileTextOutlined /> {t('App Source')}{' '}
-                        </span>
-                      }
-                      extra={
-                        <span>
-                          <Tooltip title={t('Toggle Attributes')}>
-                            <Button
-                              type="text"
-                              id="btnToggleAttrs"
-                              icon={<CodeOutlined />}
-                              onClick={toggleShowAttributes}
-                            />
-                          </Tooltip>
-                          <Tooltip title={t('Copy XML Source to Clipboard')}>
-                            <Button
-                              type="text"
-                              id="btnSourceXML"
-                              icon={<CopyOutlined />}
-                              onClick={() => copyToClipboard(sourceXML)}
-                            />
-                          </Tooltip>
-                          <Tooltip title={t('Download Source as .XML File')}>
-                            <Button
-                              type="text"
-                              id="btnDownloadSourceXML"
-                              icon={<DownloadOutlined />}
-                              onClick={() => downloadXML(sourceXML)}
-                            />
-                          </Tooltip>
-                        </span>
-                      }
-                    >
-                      <Source {...props} />
-                    </Card>
+                    <Source {...props} />
                   </Splitter.Panel>
                   <Splitter.Panel collapsible>
-                    <Card
-                      title={
-                        <span>
-                          <TagOutlined /> {t('selectedElement')}
-                        </span>
-                      }
-                      className={InspectorStyles['selected-element-card']}
-                    >
-                      {selectedElement.path && <SelectedElement {...props} />}
-                      {!selectedElement.path && <i>{t('selectElementInSource')}</i>}
-                    </Card>
+                    {selectedElement.path && <SelectedElement {...props} />}
+                    {!selectedElement.path && <SelectAnElement {...props} />}
                   </Splitter.Panel>
                 </Splitter>
               ),
@@ -350,45 +290,16 @@ const Inspector = (props) => {
               label: t('Commands'),
               key: INSPECTOR_TABS.COMMANDS,
               disabled: !showScreenshot,
-              children: (
-                <Card
-                  title={
-                    <span>
-                      <ThunderboltOutlined /> {t('Execute Commands')}
-                    </span>
-                  }
-                  className={InspectorStyles['interaction-tab-card']}
-                >
-                  <Commands {...props} />
-                </Card>
-              ),
+              children: <Commands {...props} />,
             },
             {
               label: t('Gestures'),
               key: INSPECTOR_TABS.GESTURES,
               disabled: !showScreenshot,
               children: isGestureEditorVisible ? (
-                <Card
-                  title={
-                    <span>
-                      <HighlightOutlined /> {t('Gesture Builder')}
-                    </span>
-                  }
-                  className={InspectorStyles['interaction-tab-card']}
-                >
-                  <GestureEditor {...props} />
-                </Card>
+                <GestureEditor {...props} />
               ) : (
-                <Card
-                  title={
-                    <span>
-                      <HighlightOutlined /> {t('Saved Gestures')}
-                    </span>
-                  }
-                  className={InspectorStyles['interaction-tab-card']}
-                >
-                  <SavedGestures {...props} />
-                </Card>
+                <SavedGestures {...props} />
               ),
             },
             {
@@ -401,18 +312,7 @@ const Inspector = (props) => {
               label: t('Session Information'),
               key: INSPECTOR_TABS.SESSION_INFO,
               disabled: !showScreenshot,
-              children: (
-                <Card
-                  title={
-                    <span>
-                      <InfoCircleOutlined /> {t('Session Information')}
-                    </span>
-                  }
-                  className={InspectorStyles['interaction-tab-card']}
-                >
-                  <SessionInfo {...props} />
-                </Card>
-              ),
+              children: <SessionInfo {...props} />,
             },
           ]}
         />
