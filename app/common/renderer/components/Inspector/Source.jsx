@@ -4,9 +4,10 @@ import {
   CopyOutlined,
   DownloadOutlined,
   FileTextOutlined,
+  NodeCollapseOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
-import {Button, Card, Input, Row, Spin, Tooltip, Tree} from 'antd';
+import {Button, Card, Input, Row, Space, Spin, Tooltip, Tree} from 'antd';
 import {useState} from 'react';
 
 import {BUTTON, ROW} from '../../constants/antd-types';
@@ -154,6 +155,11 @@ const Source = (props) => {
     setAutoExpandParent(false);
   };
 
+  const collapseAll = () => {
+    setExpandedPaths([]);
+    setAutoExpandParent(false);
+  };
+
   return (
     <Card
       title={
@@ -199,14 +205,23 @@ const Source = (props) => {
                 align="middle"
                 className={InspectorStyles['tree-actions']}
               >
-                <Tooltip title={t('Toggle Attributes')}>
-                  <Button
-                    id="btnToggleAttrs"
-                    icon={<CodeOutlined />}
-                    onClick={toggleShowAttributes}
-                    type={showSourceAttrs ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-                  />
-                </Tooltip>
+                <Space.Compact>
+                  <Tooltip title={t('Collapse All')}>
+                    <Button
+                      id="btnCollapseAll"
+                      icon={<NodeCollapseOutlined />}
+                      onClick={collapseAll}
+                    />
+                  </Tooltip>
+                  <Tooltip title={t('Toggle Attributes')}>
+                    <Button
+                      id="btnToggleAttrs"
+                      icon={<CodeOutlined />}
+                      onClick={toggleShowAttributes}
+                      type={showSourceAttrs ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+                    />
+                  </Tooltip>
+                </Space.Compact>
                 <Input
                   placeholder={t('Search Source')}
                   onChange={onChange}
