@@ -8,6 +8,9 @@ changelog:
     - title: 🚀 New Features
       labels:
         - enhancement
+    - title: 🎨 Design Changes
+      labels:
+        - style
     - title: 🛠 Fixes
       labels:
         - fix
