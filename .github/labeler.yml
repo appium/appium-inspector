@@ -5,6 +5,10 @@ labels:
     matcher:
       title: '^feat.*?:'
 
+  - label: 'style'
+    matcher:
+      title: '^style.*?:'
+
   - label: 'fix'
     matcher:
       title: '^fix.*?:'
