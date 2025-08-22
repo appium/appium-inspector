@@ -711,9 +711,13 @@
   gap: 8px;
 }
 
+.tree-actions {
+  gap: 8px;
+}
+
 .tree-search-input {
   max-width: 400px;
-  align-self: center;
+  flex: 1;
 }
 
 .tree-search-input :global(.ant-input-group-addon) {

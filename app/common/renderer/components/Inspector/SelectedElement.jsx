@@ -200,6 +200,28 @@ const SelectedElement = (props) => {
         </span>
       }
       className={styles['selected-element-card']}
+      extra={
+        <span>
+          <Tooltip title={t('Copy Attributes to Clipboard')}>
+            <Button
+              type="text"
+              disabled={isDisabled}
+              id="btnCopyAttributes"
+              icon={<CopyOutlined />}
+              onClick={() => copyToClipboard(JSON.stringify(dataSource))}
+            />
+          </Tooltip>
+          <Tooltip title={t('Download Screenshot')}>
+            <Button
+              type="text"
+              disabled={isDisabled}
+              icon={<DownloadOutlined />}
+              id="btnDownloadElemScreenshot"
+              onClick={() => downloadElementScreenshot(selectedElementId)}
+            />
+          </Tooltip>
+        </span>
+      }
     >
       <Space className={styles.spaceContainer} direction="vertical" size="middle">
         {showSnapshotMaxDepthReachedMessage()}
@@ -254,32 +276,14 @@ const SelectedElement = (props) => {
               />
             </Tooltip>
           </Space.Compact>
-          <Space.Compact>
-            <Tooltip title={t('Copy Attributes to Clipboard')}>
-              <Button
-                disabled={isDisabled}
-                id="btnCopyAttributes"
-                icon={<CopyOutlined />}
-                onClick={() => copyToClipboard(JSON.stringify(dataSource))}
-              />
-            </Tooltip>
-            <Tooltip title={t('Download Screenshot')}>
-              <Button
-                disabled={isDisabled}
-                icon={<DownloadOutlined />}
-                id="btnDownloadElemScreenshot"
-                onClick={() => downloadElementScreenshot(selectedElementId)}
-              />
-            </Tooltip>
-            <Tooltip title={t('Get Timing')}>
-              <Button
-                disabled={isDisabled}
-                id="btnGetTiming"
-                icon={<HourglassOutlined />}
-                onClick={() => getFindElementsTimes(findDataSource)}
-              />
-            </Tooltip>
-          </Space.Compact>
+          <Tooltip title={t('Get Timing')}>
+            <Button
+              disabled={isDisabled}
+              id="btnGetTiming"
+              icon={<HourglassOutlined />}
+              onClick={() => getFindElementsTimes(findDataSource)}
+            />
+          </Tooltip>
         </Row>
         {findDataSource.length > 0 && (
           <Row className={styles.selectedElemContentRow}>
