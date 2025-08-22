@@ -8,7 +8,7 @@ import {
   SearchOutlined,
 } from '@ant-design/icons';
 import {Button, Card, Input, Row, Space, Spin, Tooltip, Tree} from 'antd';
-import {useState} from 'react';
+import {useMemo, useState} from 'react';
 
 import {BUTTON, ROW} from '../../constants/antd-types';
 import {IMPORTANT_SOURCE_ATTRS} from '../../constants/source';
@@ -141,7 +141,11 @@ const Source = (props) => {
     ? flatTreeData.filter((el) => elementMatchesSearch(el, searchValue))
     : [];
 
-  const expandedKeys = [...matchingElements.map((el) => el.path), ...expandedPaths];
+  // No need to recalculate if e.g. attribute visibility is toggled
+  const expandedKeys = useMemo(
+    () => [...matchingElements.map((el) => el.path), ...expandedPaths],
+    [matchingElements, expandedPaths],
+  );
 
   const onChange = (e) => {
     const {value} = e.target;
