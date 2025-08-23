@@ -61,15 +61,15 @@ ${this.indent(code, 4)}
     return `$\{${localVar}} =    Set Variable     ${suffixMap[strategy]}=${locator}`;
   }
 
-  codeFor_click(varName, varIndex) {
+  codeFor_elementClick(varName, varIndex) {
     return `Click Element    $\{${this.getVarName(varName, varIndex)}}`;
   }
 
-  codeFor_clear(varName, varIndex) {
+  codeFor_elementClear(varName, varIndex) {
     return `Clear Text    $\{${this.getVarName(varName, varIndex)}}`;
   }
 
-  codeFor_sendKeys(varName, varIndex, text) {
+  codeFor_elementSendKeys(varName, varIndex, text) {
     return `Input Text    $\{${this.getVarName(varName, varIndex)}}    ${text}`;
   }
 
