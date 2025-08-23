@@ -121,15 +121,15 @@ ${this.indent(code, 8)}
     }
   }
 
-  codeFor_click(varName, varIndex) {
+  codeFor_elementClick(varName, varIndex) {
     return `${this.getVarName(varName, varIndex)}.Click();`;
   }
 
-  codeFor_clear(varName, varIndex) {
+  codeFor_elementClear(varName, varIndex) {
     return `${this.getVarName(varName, varIndex)}.Clear();`;
   }
 
-  codeFor_sendKeys(varName, varIndex, text) {
+  codeFor_elementSendKeys(varName, varIndex, text) {
     return `${this.getVarName(varName, varIndex)}.SendKeys(${JSON.stringify(text)});`;
   }
 

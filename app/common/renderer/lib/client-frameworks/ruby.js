@@ -69,15 +69,15 @@ driver.quit`;
     }
   }
 
-  codeFor_click(varName, varIndex) {
+  codeFor_elementClick(varName, varIndex) {
     return `${this.getVarName(varName, varIndex)}.click`;
   }
 
-  codeFor_clear(varName, varIndex) {
+  codeFor_elementClear(varName, varIndex) {
     return `${this.getVarName(varName, varIndex)}.clear`;
   }
 
-  codeFor_sendKeys(varName, varIndex, text) {
+  codeFor_elementSendKeys(varName, varIndex, text) {
     return `${this.getVarName(varName, varIndex)}.send_keys ${JSON.stringify(text)}`;
   }
 
