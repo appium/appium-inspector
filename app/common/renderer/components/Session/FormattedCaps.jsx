@@ -37,7 +37,7 @@ const FormattedCaps = (props) => {
       return title;
     } else {
       return (
-        <Row>
+        <Row className={SessionStyles.capsEditorTitle}>
           <Input
             onChange={(e) => setDesiredCapsName(e.target.value)}
             value={desiredCapsName}
