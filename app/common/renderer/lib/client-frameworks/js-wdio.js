@@ -55,15 +55,15 @@ main().catch(console.log);`;
     }
   }
 
-  codeFor_click(varName, varIndex) {
+  codeFor_elementClick(varName, varIndex) {
     return `await ${this.getVarName(varName, varIndex)}.click();`;
   }
 
-  codeFor_clear(varName, varIndex) {
+  codeFor_elementClear(varName, varIndex) {
     return `await ${this.getVarName(varName, varIndex)}.clearValue();`;
   }
 
-  codeFor_sendKeys(varName, varIndex, text) {
+  codeFor_elementSendKeys(varName, varIndex, text) {
     return `await ${this.getVarName(varName, varIndex)}.addValue(${JSON.stringify(text)});`;
   }
 
