@@ -91,6 +91,7 @@
   "Pause Recording": "Kaydı Duraklat",
   "Search for element": "Öğe Ara",
   "App Source": "Uygulama kaynağı",
+  "Collapse All": "Collapse All",
   "Toggle Attributes": "Nitelikleri Değiştir",
   "Copy XML Source to Clipboard": "Copy XML Source to Clipboard",
   "Download Source as .XML File": "Download Source as .XML File",
@@ -296,5 +297,13 @@
   "Toggle Theme": "Toggle Theme",
   "Light Theme": "Light Theme",
   "Dark Theme": "Dark Theme",
-  "System Theme": "System Theme"
+  "System Theme": "System Theme",
+  "Search Source": "Search Source",
+  "Matching Elements": "Matching Elements",
+  "webmateApiKey": "webmate API Key",
+  "yourProjectId": "Your Project ID",
+  "webmateProjectId": "webmate Project ID",
+  "specifyWebmateHostExplicitly": "Specify webmate host explicitly",
+  "webmateHost": "webmate Host",
+  "Enable": "Enable"
 }
