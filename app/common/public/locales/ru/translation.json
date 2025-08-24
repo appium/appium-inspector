@@ -91,6 +91,7 @@
   "Pause Recording": "Приостановить запись",
   "Search for element": "Поиск элемента",
   "App Source": "Источник приложения",
+  "Collapse All": "Свернуть все",
   "Toggle Attributes": "Свернуть/развернуть атрибуты",
   "Copy XML Source to Clipboard": "Копировать XML в буфер обмена",
   "Download Source as .XML File": "Скачать исходный код как .XML файл",
@@ -296,5 +297,13 @@
   "Toggle Theme": "Переключить тему",
   "Light Theme": "Светлая тема",
   "Dark Theme": "Тёмная тема",
-  "System Theme": "Системная тема"
+  "System Theme": "Системная тема",
+  "Search Source": "Искать в источнике",
+  "Matching Elements": "Совпадающие элементы",
+  "webmateApiKey": "API ключ webmate",
+  "yourProjectId": "ID вашего проекта",
+  "webmateProjectId": "ID проекта webmate",
+  "specifyWebmateHostExplicitly": "Указать конкретный хост webmate",
+  "webmateHost": "Хост webmate",
+  "Enable": "Включить"
 }

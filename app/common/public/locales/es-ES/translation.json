@@ -91,6 +91,7 @@
   "Pause Recording": "Pausar grabación",
   "Search for element": "Buscar elemento",
   "App Source": "App Source",
+  "Collapse All": "Collapse All",
   "Toggle Attributes": "Toggle Attributes",
   "Copy XML Source to Clipboard": "Copiar fuente XML al portapapeles",
   "Download Source as .XML File": "Download Source as .XML File",
@@ -296,5 +297,13 @@
   "Toggle Theme": "Toggle Theme",
   "Light Theme": "Light Theme",
   "Dark Theme": "Dark Theme",
-  "System Theme": "System Theme"
+  "System Theme": "System Theme",
+  "Search Source": "Search Source",
+  "Matching Elements": "Matching Elements",
+  "webmateApiKey": "webmate API Key",
+  "yourProjectId": "Your Project ID",
+  "webmateProjectId": "webmate Project ID",
+  "specifyWebmateHostExplicitly": "Specify webmate host explicitly",
+  "webmateHost": "webmate Host",
+  "Enable": "Enable"
 }
