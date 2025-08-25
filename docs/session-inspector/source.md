@@ -29,7 +29,7 @@ The panel can be divided into 3 parts: header buttons, source actions, and the s
 ### Source Action Buttons
 
 | Icon                                                                             | Description                                   |
-| -------------------------------------------------------------------------------- | ----------------------------------------------|
+| -------------------------------------------------------------------------------- | --------------------------------------------- |
 | ![Collapse All Button](./assets/images/source/collapse-all-button.png)           | Collapse all nodes in the source tree         |
 | ![Toggle Attributes Button](./assets/images/source/toggle-attributes-button.png) | Toggle all non-'important' element attributes |
 | ![Search Source Field](./assets/images/source/search-source.png)                 | Perform a plaintext search in the source XML  |
