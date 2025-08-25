@@ -10,6 +10,9 @@ To learn more about capabilities, [please visit the Appium documentation](https:
 
 ![Capability Builder](assets/images/capability-builder/capability-builder.png)
 
+The divider line in the middle of the tab can be used to collapse/expand either half of
+this tab.
+
 ## Capability Fields
 
 The left side of the Capability Builder shows the capability fields editor. It provides several form
@@ -36,10 +39,14 @@ Selecting a different option may change the value input field.
 
 To add or remove capabilities, use the add and delete buttons on the right side.
 
-There is also a checkbox that allows automatically adding the Appium vendor prefix to capabilities
-that do not have them, when starting a new session. This means that if you have a non-W3C capability
-without a vendor prefix (e.g. `deviceName`), the Inspector will automatically add the `appium:`
-prefix to it when starting the session (e.g. `appium:deviceName`). This checkbox is checked by default.
+The checkbox next to the delete button can also be used to enable/disable the capability, which may
+be useful when testing session behavior with/without specific capabilities.
+
+Finally, below the list of capabilites there is a checkbox that allows automatically adding the
+Appium vendor prefix to capabilities that do not have them, when starting a new session. This means
+that if you have a non-W3C capability without a vendor prefix (e.g. `deviceName`), the Inspector will
+automatically add the `appium:` prefix to it when starting the session (e.g. `appium:deviceName`).
+This checkbox is checked by default.
 
 ## Capability JSON Structure
 

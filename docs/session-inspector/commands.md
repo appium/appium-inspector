@@ -9,7 +9,7 @@ The Commands tab provides a way to execute various Appium driver commands throug
 
 ![Commands Tab](./assets/images/commands/commands-tab.png)
 
-All commands are grouped into various categories. Opening any category shows several buttons, each
+Most commands are grouped into various categories. Opening any category shows several buttons, each
 of which corresponds to an Appium driver command.
 
 ![Opened Commands Category](./assets/images/commands/opened-category.png)

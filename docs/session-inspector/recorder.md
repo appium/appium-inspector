@@ -19,7 +19,7 @@ interactions that can be recorded.
 
 !!! tip
 
-    The recording of Inspector actions does not require the Recorder tab to remain opened.
+    The Recorder tab does not need to remain opened in order to record actions.
 
 Once recording is enabled and a few actions are recorded, the tab contents are populated with the
 generated code.

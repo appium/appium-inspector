@@ -11,9 +11,9 @@ at the bottom.
 
 ## Informational Tables
 
-![Session Information Tables](assets/images/session-info/sesion-overall-info.png)
+![Session Information Tables](assets/images/session-info/session-overall-info.png)
 
-These tables provide general information about the session, such as its ID, URL, server details,
+These tables provide general information about the session, such as its URL, server details,
 capabilities, and so on. The _Server Details_ and _Session Details_ sub-tables can be scrolled for
 further information.
 
