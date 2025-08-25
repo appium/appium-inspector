@@ -7,17 +7,39 @@ two connected parts: the Application Source panel, and the Selected Element pane
 
 ![Source Tab](./assets/images/source/source-tab.png)
 
+The divider line in the middle of the tab can be used to adjust the widths of both halves of this
+tab, as well as collapse/expand them.
+
 ## Application Source
 
-The Application Source is the central panel of the Source Tab. It shows the application source XML
-in a tree-like structure, and provides a few additional buttons in the top right corner.
+The Application Source is the central panel of the Source Tab, and shows the application source XML
+in a tree-like structure.
 
 ![Application Source](./assets/images/source/app-source.png)
 
-The application source tree is generated from the XML data returned by the Appium driver. By
-default, the tree only shows the class name for each element entry, along with several 'important'
-attributes such as `value` and `content-desc`. All non-'important' attributes are hidden by default
-for ease of navigation, but can be revealed with the [Toggle Attributes button](#toggle-attributes-button).
+The panel can be divided into 3 parts: header buttons, source actions, and the source tree.
+
+### Source Header Buttons
+
+| Icon                                                               | Description                               |
+| ------------------------------------------------------------------ | ----------------------------------------- |
+| ![Copy XML Button](./assets/images/source/copy-button.png)         | Copy the application XML to the clipboard |
+| ![Download XML Button](./assets/images/source/download-button.png) | Download the source as an `.xml` file     |
+
+### Source Action Buttons
+
+| Icon                                                                             | Description                                   |
+| -------------------------------------------------------------------------------- | --------------------------------------------- |
+| ![Collapse All Button](./assets/images/source/collapse-all-button.png)           | Collapse all nodes in the source tree         |
+| ![Toggle Attributes Button](./assets/images/source/toggle-attributes-button.png) | Toggle all non-'important' element attributes |
+| ![Search Source Field](./assets/images/source/search-source.png)                 | Perform a plaintext search in the source XML  |
+
+### Source Tree
+
+The application source tree is generated from the XML data returned by the Appium driver. By default,
+the tree only shows the class name for each element entry, along with several 'important' attributes
+such as `value` and `content-desc`. All non-'important' attributes are hidden by default for ease of
+navigation, but can be revealed with the [Toggle Attributes button](#source-action-buttons).
 
 All elements in the XML tree are interactable, and clicking on one causes 3 actions:
 
@@ -51,26 +73,6 @@ behavior. While the default source refresh behavior in MJPEG mode stays the same
 [automatic source refresh button](./header.md#toggle-automatic-source-refresh) in the application
 header, which allows to disable automatic refreshing.
 
-### Toggle Attributes Button
-
-![Toggle Attributes Button](./assets/images/source/toggle-attributes-button.png)
-
-This button allows to show/hide all non-'important' element attributes in the source tree:
-
-![Source With All Attributes Shown](./assets/images/source/app-source-expanded.png)
-
-### Copy XML Button
-
-![Copy XML Button](./assets/images/source/copy-xml-button.png)
-
-This button copies the full application XML source to the clipboard.
-
-### Download XML Button
-
-![Download XML Button](./assets/images/source/download-xml-button.png)
-
-This button allows to download the full application source as an `.xml` file.
-
 ## Selected Element
 
 The Selected Element panel is shown on the right side of the Source tab. It is empty by default, but
@@ -84,8 +86,15 @@ In order to populate the panel, an element can be selected in one of the followi
 - Selecting a highlighter in the [Screenshot panel](./screenshot.md)
 - Clicking the [Reveal Element in Source button in the Search Results](./header.md#search-for-element)
 
-The panel can be divided into 3 parts: element action buttons, suggested locators, and element
-attributes.
+The panel can be divided into 4 parts: header buttons, element action buttons, suggested locators,
+and element attributes.
+
+### Element Header Buttons
+
+| Icon                                                                       | Description                                                              |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| ![Copy Attributes Button](./assets/images/source/copy-button.png)          | Copy the element attributes to the clipboard as an array of JSON objects |
+| ![Download Element Screenshot](./assets/images/source/download-button.png) | Download a screenshot of the element as a `.PNG` file                    |
 
 ### Element Action Buttons
 
@@ -93,8 +102,6 @@ attributes.
 | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | ![Tap Element](./assets/images/header/search-tap-element.png)                            | Tap the element                                                                   |
 | ![Send or Clear Element Text](./assets/images/header/search-send-clear-element-text.png) | Enter text to send to the element, or clear its text                              |
-| ![Copy Attributes](./assets/images/source/copy-attributes.png)                           | Copy the element attributes to the clipboard as an array of JSON objects          |
-| ![Download Element Screenshot](./assets/images/source/download-elem-screenshot.png)      | Download a screenshot of the element as a `.PNG` file                             |
 | ![Get Element Timings](./assets/images/source/get-timings.png)                           | Run a timing comparison for the [suggested element locators](#suggested-locators) |
 
 ### Suggested Locators

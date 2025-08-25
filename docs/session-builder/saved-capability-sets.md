@@ -8,6 +8,9 @@ Parts of this tab are similar to the Capability Builder tab.
 
 ![Saved Capability Sets](assets/images/saved-capability-sets/saved-caps-sets.png)
 
+The divider line in the middle of the tab can be used to adjust the widths of both halves of this
+tab, as well as collapse/expand the right half.
+
 ## List of Saved Capability Sets
 
 The left side of this screen contains a list of all saved capability sets. The number of saved sets

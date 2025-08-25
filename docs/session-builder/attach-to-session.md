@@ -20,11 +20,22 @@ discovered, the dropdown will also auto-populate with the details of that sessio
 
 Additionally, a refresh button is available to retry the session discovery process.
 
-!!! note
+!!! tip
 
     The session discovery process uses the current [server details](./server-details.md). Make sure
     to select the correct server tab and enter the expected server details before selecting the
     Attach to Server tab or pressing the refresh button.
+
+!!! warning
+
+    Discovering sessions from servers running Appium 3 or later requires the server to have enabled
+    the `session_discovery` [insecure feature](https://appium.io/docs/en/latest/guides/security/).
+
+!!! info
+
+    Support for discovering sessions from cloud provider-hosted servers depends on the provider. If
+    the Inspector does not discover any sessions for your cloud provider, contact them to check
+    whether they support this functionality.
 
 The footer of this screen contains a link the Appium documentation, and a single button for
 connecting to the selected session.
