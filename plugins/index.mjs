@@ -39,6 +39,6 @@ export class AppiumInspectorPlugin extends BasePlugin {
    */
   static async updateServer(expressApp) {
     // Handle both /inspector and /inspector/* paths
-    expressApp.all(['/inspector', '/inspector/*'], AppiumInspectorPlugin.openInspector);
+    expressApp.all(['/inspector', '/inspector/*all'], AppiumInspectorPlugin.openInspector);
   }
 }
