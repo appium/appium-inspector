@@ -137,7 +137,7 @@ const Source = (props) => {
       .toLowerCase()
       .includes(searchValue.toLowerCase());
 
-  const matchingElements = searchValue
+  const matchingElements = searchValue && flatTreeData
     ? flatTreeData.filter((el) => elementMatchesSearch(el, searchValue))
     : [];
 
