@@ -137,9 +137,10 @@ const Source = (props) => {
       .toLowerCase()
       .includes(searchValue.toLowerCase());
 
-  const matchingElements = searchValue
-    ? flatTreeData.filter((el) => elementMatchesSearch(el, searchValue))
-    : [];
+  const matchingElements =
+    searchValue && flatTreeData
+      ? flatTreeData.filter((el) => elementMatchesSearch(el, searchValue))
+      : [];
 
   // No need to recalculate if e.g. attribute visibility is toggled
   const expandedKeys = useMemo(
