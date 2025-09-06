@@ -252,7 +252,8 @@ const Inspector = (props) => {
       const attemptedImgWidth = (containerRect.height / imgRect.height) * imgRect.width;
       // get the maximum image width as a fraction of the current window width
       const maxImgWidth = window.innerWidth * WINDOW_DIMENSIONS.MAX_IMAGE_WIDTH_FRACTION;
-      const curMaxImgWidth = Math.min(maxImgWidth, attemptedImgWidth);
+      // make sure not to exceed both the maximum allowed width and the full screenshot width
+      const curMaxImgWidth = Math.min(maxImgWidth, attemptedImgWidth, windowSize.width);
       screenshotContainer.style.maxWidth = `${curMaxImgWidth}px`;
     } else if (imgRect.width < containerRect.width) {
       screenshotContainer.style.maxWidth = `${imgRect.width}px`;
