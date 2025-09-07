@@ -240,7 +240,7 @@
   "Session": "Session会话",
   "Web": "Web",
   "Context": "上下文",
-  "simulatorOnly": "模拟器/仅模拟器",
+  "simulatorOnly": "Emulator/simulator only",
   "minAndroidSDK": "最小的Android SDK版本",
   "Error": "错误",
   "findingElementInSourceFailed": "找不到指定的元素。 当前应用程序来源或元素 ID 可能已经改变，或者可能有太多具有相同坐标的元素。",
