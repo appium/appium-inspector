@@ -95,10 +95,10 @@
     "xpath": "0.0.34"
   },
   "devDependencies": {
-    "@appium/docutils": "2.0.1",
-    "@appium/eslint-config-appium-ts": "2.0.1",
+    "@appium/docutils": "2.1.0",
+    "@appium/eslint-config-appium-ts": "2.0.2",
     "@appium/fake-driver": "6.0.0",
-    "@appium/support": "7.0.0",
+    "@appium/support": "7.0.1",
     "@types/lodash": "4.17.20",
     "@types/react": "18.3.24",
     "@types/react-dom": "18.3.7",
