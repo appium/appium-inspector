@@ -737,3 +737,13 @@
   flex: 1;
   overflow: auto;
 }
+
+.command-result-table :global(.ant-table-tbody) {
+  vertical-align: top;
+}
+
+.clickable-cell {
+  margin: 0;
+  white-space: pre-wrap;
+  cursor: pointer;
+}

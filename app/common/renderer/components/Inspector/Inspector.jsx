@@ -5,7 +5,7 @@ import {
   PlusSquareOutlined,
   SelectOutlined,
 } from '@ant-design/icons';
-import {Button, Modal, Space, Spin, Splitter, Switch, Table, Tabs, Tooltip} from 'antd';
+import {Button, Modal, Space, Spin, Splitter, Switch, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router';
@@ -18,8 +18,8 @@ import {
   MJPEG_STREAM_CHECK_INTERVAL,
   SESSION_EXPIRY_PROMPT_TIMEOUT,
 } from '../../constants/session-inspector';
-import {copyToClipboard} from '../../polyfills';
 import {downloadFile} from '../../utils/file-handling';
+import CommandResultTable from './CommandResultTable.jsx';
 import Commands from './Commands.jsx';
 import GestureEditor from './GestureEditor.jsx';
 import HeaderButtons from './HeaderButtons.jsx';
@@ -38,160 +38,6 @@ const downloadScreenshot = (screenshot) => {
   const href = `data:image/png;base64,${screenshot}`;
   const filename = `appium-inspector-${new Date().toJSON()}.png`;
   downloadFile(href, filename);
-};
-
-const isTimestampKey = (key) => key === 'timestamp';
-
-const formatTimestamp = (timestamp) => {
-  const date = new Date(timestamp);
-  const offset = date.getTimezoneOffset() * 60000;
-  const localDate = new Date(timestamp - offset);
-  return localDate.toISOString().slice(0, -1);
-};
-
-const formatValueWithTimestamp = (value, key = null) =>
-  isTimestampKey(key) ? formatTimestamp(value) : value;
-
-const ClickableCellContent = ({text, dataIndex}) => {
-  const [isCopied, setIsCopied] = useState(false);
-  const displayText = String(formatValueWithTimestamp(text, dataIndex));
-
-  const handleCopy = async () => {
-    await copyToClipboard(text);
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
-  };
-
-  return (
-    <Tooltip placement="topLeft" title={isCopied ? 'Copied' : 'Click to copy'}>
-      <pre style={{margin: 0, whiteSpace: 'pre-wrap', cursor: 'pointer'}} onClick={handleCopy}>
-        {displayText}
-      </pre>
-    </Tooltip>
-  );
-};
-
-const createColumn = (data, title, dataIndex, options = {}) => ({
-  title,
-  dataIndex,
-  key: dataIndex,
-  ellipsis: {showTitle: false},
-  render: (text) => <ClickableCellContent text={text} dataIndex={dataIndex} />,
-  sorter: (a, b) =>
-    formatValueWithTimestamp(a[dataIndex], dataIndex).localeCompare(
-      formatValueWithTimestamp(b[dataIndex], dataIndex),
-      undefined,
-      {numeric: true},
-    ),
-  filters: data.map((item) => ({
-    text: item[dataIndex],
-    value: item[dataIndex],
-  })),
-  onFilter: (value, record) => record[dataIndex] === value,
-  ...options,
-});
-
-const createTableResult = (data) => {
-  let flattenedData = [];
-  let columns = [];
-
-  // Flatten data based on type
-  if (Array.isArray(data)) {
-    if (
-      data.length > 0 &&
-      data.every((item) => typeof item === 'object' && item !== null && !Array.isArray(item))
-    ) {
-      // Array of objects - each object becomes a row, columns from keys
-      const allKeys = new Set();
-      data.forEach((item) => {
-        Object.keys(item).forEach((key) => allKeys.add(key));
-      });
-
-      flattenedData = data.map((item) => ({...item}));
-
-      columns = Array.from(allKeys).map((key) =>
-        createColumn(flattenedData, key, key, {
-          minWidth: 100,
-        }),
-      );
-    } else {
-      // Array of primitives - single "Value" column
-      flattenedData = data.map((item) => ({value: formatValueWithTimestamp(item)}));
-
-      columns = [
-        createColumn(flattenedData, 'Value', 'value', {
-          minWidth: 120,
-        }),
-      ];
-    }
-  } else if (typeof data === 'object' && data !== null) {
-    // Single object - "Property" and "Value" columns
-    flattenedData = Object.entries(data).map(([key, value]) => ({
-      property: key,
-      value:
-        value == null
-          ? 'null'
-          : typeof value === 'object'
-            ? JSON.stringify(value, null, 2)
-            : formatValueWithTimestamp(value, key),
-    }));
-
-    columns = [
-      createColumn(flattenedData, 'Property', 'property', {
-        width: '30%',
-        minWidth: 120,
-      }),
-      createColumn(flattenedData, 'Value', 'value', {
-        width: '70%',
-        minWidth: 200,
-      }),
-    ];
-  } else {
-    // Primitive value - single "Value" column
-    flattenedData = [{value: formatValueWithTimestamp(data)}];
-
-    columns = [
-      createColumn(flattenedData, 'Value', 'value', {
-        minWidth: 120,
-      }),
-    ];
-  }
-
-  // Add keys to dataSource
-  const dataSource = flattenedData.map((item, index) => ({
-    key: index.toString(),
-    ...item,
-  }));
-
-  return {dataSource, columns};
-};
-
-const formatCommandResultForTable = (result) => {
-  if (!result) {
-    return null;
-  }
-
-  const parsedResult = JSON.parse(result);
-
-  return createTableResult(parsedResult);
-};
-
-const renderCommandResultTable = (result) => {
-  const tableData = formatCommandResultForTable(result);
-  if (!tableData) {
-    return <div>No data to display</div>;
-  }
-  return (
-    <Table
-      dataSource={tableData.dataSource}
-      columns={tableData.columns}
-      pagination={false}
-      size="small"
-      scroll={{y: 400, x: 'max-content'}}
-      bordered
-      tableLayout="auto"
-    />
-  );
 };
 
 const Inspector = (props) => {
@@ -497,7 +343,7 @@ const Inspector = (props) => {
         onCancel={() => setVisibleCommandResult(null)}
         width={900}
       >
-        {renderCommandResultTable(visibleCommandResult)}
+        <CommandResultTable result={visibleCommandResult} />
       </Modal>
     </div>
   );
