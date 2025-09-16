@@ -1,7 +1,7 @@
-import * as inspectorActions from './Inspector';
-import * as sessionActions from './Session';
+import * as sessionBuilderActions from './SessionBuilder.js';
+import * as sessionInspectorActions from './SessionInspector.js';
 
 export default {
-  ...inspectorActions,
-  ...sessionActions,
+  ...sessionInspectorActions,
+  ...sessionBuilderActions,
 };
