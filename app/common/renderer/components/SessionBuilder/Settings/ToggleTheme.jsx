@@ -2,7 +2,7 @@ import {BgColorsOutlined, MoonOutlined, SunOutlined} from '@ant-design/icons';
 import {Button, Dropdown, Tooltip} from 'antd';
 
 import {useTheme} from '../../../hooks/use-theme.jsx';
-import SessionStyles from '../SessionBuilder.module.css';
+import styles from './Settings.module.css';
 
 const ToggleTheme = ({t}) => {
   const {preferredTheme, updateTheme} = useTheme();
@@ -26,7 +26,7 @@ const ToggleTheme = ({t}) => {
   ];
 
   return (
-    <div className={SessionStyles.toggleTheme}>
+    <div className={styles.toggleTheme}>
       <Tooltip title={t('Toggle Theme')}>
         <Dropdown
           menu={{

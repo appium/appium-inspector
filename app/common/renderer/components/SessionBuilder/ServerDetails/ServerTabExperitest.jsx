@@ -1,7 +1,6 @@
 import {Col, Form, Input, Row} from 'antd';
 
 import {PROVIDER_VALUES} from '../../../constants/session-builder.js';
-import SessionStyles from '../SessionBuilder.module.css';
 
 const ServerTabExperitest = ({server, setServerParam, t}) => (
   <Form>
@@ -9,7 +8,6 @@ const ServerTabExperitest = ({server, setServerParam, t}) => (
       <Col span={12}>
         <Form.Item>
           <Input
-            className={SessionStyles.customServerInputLeft}
             id="ExperitestServerUrl"
             placeholder={PROVIDER_VALUES.EXPERITEST_URL}
             addonBefore={t('experitestUrl')}
@@ -21,7 +19,6 @@ const ServerTabExperitest = ({server, setServerParam, t}) => (
       <Col span={12}>
         <Form.Item>
           <Input
-            className={SessionStyles.customServerInputLeft}
             id="ExperitestServerAccessKey"
             placeholder={PROVIDER_VALUES.EXPERITEST_ACCESS_KEY}
             addonBefore={t('experitestAccessKey')}

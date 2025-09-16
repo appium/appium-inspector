@@ -3,8 +3,9 @@ import {Card, Space, Table} from 'antd';
 import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 
-import InspectorStyles from '../SessionInspector.module.css';
+import inspectorStyles from '../SessionInspector.module.css';
 import SessionCodeBox from './SessionCodeBox.jsx';
+import styles from './SessionInfo.module.css';
 
 const SessionInfo = (props) => {
   const {driver, t} = props;
@@ -44,7 +45,7 @@ const SessionInfo = (props) => {
 
   const getInnerTable = (dataObject) => (
     <Table
-      className={InspectorStyles['session-inner-table']}
+      className={styles.sessionInnerTable}
       columns={columns}
       dataSource={innerDataSource(dataObject)}
       pagination={false}
@@ -114,7 +115,7 @@ const SessionInfo = (props) => {
           <InfoCircleOutlined /> {t('Session Information')}
         </span>
       }
-      className={InspectorStyles['interaction-tab-card']}
+      className={inspectorStyles.interactionTabCard}
     >
       <Space direction="vertical" size="middle">
         <Table

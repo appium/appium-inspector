@@ -3,7 +3,8 @@ import {Alert, Badge, Button, Input, Row, Space, Spin, Table, Tooltip} from 'ant
 import {useRef} from 'react';
 
 import {ALERT} from '../../../constants/antd-types.js';
-import InspectorStyles from '../SessionInspector.module.css';
+import inspectorStyles from '../SessionInspector.module.css';
+import styles from './Header.module.css';
 
 const LocatedElements = (props) => {
   const {
@@ -43,7 +44,7 @@ const LocatedElements = (props) => {
   return (
     <>
       {locatedElements.length === 0 && (
-        <Space className={InspectorStyles.spaceContainer} direction="vertical" size="small">
+        <Space className={inspectorStyles.spaceContainer} direction="vertical" size="small">
           <Row>
             <i>{t('couldNotFindAnyElements')}</i>
           </Row>
@@ -57,7 +58,7 @@ const LocatedElements = (props) => {
       )}
       {locatedElements.length > 0 && (
         <Spin spinning={isFindingLocatedElementInSource}>
-          <Space className={InspectorStyles.spaceContainer} direction="vertical" size="small">
+          <Space className={inspectorStyles.spaceContainer} direction="vertical" size="small">
             <Row justify="space-between">
               <span>
                 {t('elementsCount')} <Badge count={locatedElements.length} offset={[0, -2]} />
@@ -69,7 +70,7 @@ const LocatedElements = (props) => {
             <Row>
               <Table
                 pagination={false}
-                className={InspectorStyles.searchResultsList}
+                className={styles.searchResultsList}
                 dataSource={locatedElements.map((elementId) => ({
                   key: elementId,
                   id: elementId,
@@ -116,9 +117,9 @@ const LocatedElements = (props) => {
                     }
                   />
                 </Tooltip>
-                <Space.Compact className={InspectorStyles.searchResultsActions}>
+                <Space.Compact className={styles.searchResultsActions}>
                   <Input
-                    className={InspectorStyles.searchResultsKeyInput}
+                    className={styles.searchResultsKeyInput}
                     disabled={!locatorTestElement}
                     placeholder={t('Enter Keys to Send')}
                     allowClear={true}

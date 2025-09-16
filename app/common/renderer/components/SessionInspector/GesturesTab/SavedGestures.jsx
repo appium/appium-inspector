@@ -16,8 +16,9 @@ import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../../constants/gestures.js
 import {SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
 import {downloadFile} from '../../../utils/file-handling.js';
 import {percentageToPixels} from '../../../utils/other.js';
-import InspectorStyles from '../SessionInspector.module.css';
+import inspectorStyles from '../SessionInspector.module.css';
 import FileUploader from './FileUploader.jsx';
+import styles from './Gestures.module.css';
 
 const dataSource = (savedGestures, t) => {
   if (!savedGestures) {
@@ -165,8 +166,7 @@ const SavedGestures = (props) => {
     <Modal
       title={
         <Row align="start">
-          <ExclamationCircleOutlined className={InspectorStyles['error-icon']} />{' '}
-          {t('errorLoadingGestures')}
+          <ExclamationCircleOutlined className={styles.errorIcon} /> {t('errorLoadingGestures')}
         </Row>
       }
       open={!!gestureUploadErrors}
@@ -205,9 +205,9 @@ const SavedGestures = (props) => {
           <HighlightOutlined /> {t('Saved Gestures')}
         </span>
       }
-      className={InspectorStyles['interaction-tab-card']}
+      className={inspectorStyles.interactionTabCard}
     >
-      <Space className={InspectorStyles.spaceContainer} direction="vertical" size="middle">
+      <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
         {t('gesturesDescription')}
         <Table
           onRow={(row) => onRowMouseOver(row.key)}

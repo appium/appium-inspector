@@ -8,8 +8,9 @@ import {
   SCREENSHOT_INTERACTION_MODE,
 } from '../../../constants/screenshot.js';
 import {INSPECTOR_TABS} from '../../../constants/session-inspector.js';
-import styles from '../SessionInspector.module.css';
+import inspectorStyles from '../SessionInspector.module.css';
 import HighlighterRects from './HighlighterRects.jsx';
+import styles from './Screenshot.module.css';
 
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
 const {TAP, SELECT, SWIPE, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
@@ -183,7 +184,7 @@ const Screenshot = (props) => {
           onMouseOver={handleScreenshotCoordsUpdate}
           onMouseLeave={handleScreenshotLeave}
           onClick={handleScreenshotClick}
-          className={styles.screenshotBox}
+          className={inspectorStyles.screenshotBox}
         >
           {screenshotInteractionMode !== SELECT && (
             <div className={styles.coordinatesContainer}>
@@ -235,7 +236,7 @@ const Screenshot = (props) => {
                       />
                     )}
                     <circle
-                      className={styles[`circle-${tick.type}`]}
+                      className={styles[`${tick.type}Circle`]}
                       key={`${tick.id}.circle`}
                       cx={tick.x / scaleRatio}
                       cy={tick.y / scaleRatio}

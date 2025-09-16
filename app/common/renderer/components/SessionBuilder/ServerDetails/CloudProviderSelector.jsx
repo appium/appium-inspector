@@ -2,8 +2,8 @@ import {Button, Col, Modal, Row} from 'antd';
 import _ from 'lodash';
 
 import {BUTTON} from '../../../constants/antd-types.js';
-import SessionStyles from '../SessionBuilder.module.css';
 import CloudProviders from './CloudProviders.jsx';
+import styles from './ServerDetails.module.css';
 
 const CloudProviderSelector = (props) => {
   const {visibleProviders = [], isAddingCloudProvider, stopAddCloudProvider, t} = props;
@@ -27,7 +27,7 @@ const CloudProviderSelector = (props) => {
   return (
     <Modal
       key="modal"
-      className={SessionStyles.cloudProviderModal}
+      className={styles.cloudProviderModal}
       open={isAddingCloudProvider}
       onCancel={stopAddCloudProvider}
       footer={footer}

@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import {CLIENT_FRAMEWORK_MAP} from '../../../lib/client-frameworks/map.js';
 import {copyToClipboard} from '../../../polyfills.js';
-import InspectorStyles from '../SessionInspector.module.css';
+import inspectorStyles from '../SessionInspector.module.css';
 
 const SessionCodeBox = (props) => {
   const {clientFramework, setClientFramework, t} = props;
@@ -33,7 +33,7 @@ const SessionCodeBox = (props) => {
         defaultValue={clientFramework}
         value={clientFramework}
         onChange={setClientFramework}
-        className={InspectorStyles['framework-dropdown']}
+        className={inspectorStyles.frameworkDropdown}
         options={_.map(CLIENT_FRAMEWORK_MAP, (fwClass, fwId) => ({
           value: fwId,
           label: fwClass.readableName,
@@ -51,7 +51,7 @@ const SessionCodeBox = (props) => {
       }
       extra={actionBar()}
     >
-      <pre className={InspectorStyles['recorded-code']}>
+      <pre className={inspectorStyles.recordedCode}>
         <code dangerouslySetInnerHTML={{__html: code(false)}} />
       </pre>
     </Card>

@@ -1,7 +1,7 @@
 import {TagOutlined} from '@ant-design/icons';
 import {Card} from 'antd';
 
-import InspectorStyles from '../SessionInspector.module.css';
+import styles from './Source.module.css';
 
 /**
  * Empty card shown in place of the Selected Element panel,
@@ -14,7 +14,7 @@ const SelectAnElement = ({t}) => (
         <TagOutlined /> {t('selectedElement')}
       </span>
     }
-    className={InspectorStyles['selected-element-card']}
+    className={styles.selectedElementCard}
   >
     <i>{t('selectElementInSource')}</i>
   </Card>

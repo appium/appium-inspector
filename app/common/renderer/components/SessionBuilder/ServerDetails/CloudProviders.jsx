@@ -24,7 +24,7 @@ import WebmateLogo from '../../../assets/images/webmate_logo.svg';
 import WebmateLogoDark from '../../../assets/images/webmate_logo_dark.svg';
 import {SERVER_TYPES} from '../../../constants/session-builder.js';
 import {useTheme} from '../../../hooks/use-theme.jsx';
-import SessionStyles from '../SessionBuilder.module.css';
+import styles from './ServerDetails.module.css';
 import ServerTabBitbar from './ServerTabBitbar.jsx';
 import ServerTabBrowserstack from './ServerTabBrowserstack.jsx';
 import ServerTabExperitest from './ServerTabExperitest.jsx';
@@ -174,7 +174,7 @@ const CloudProviders = Object.entries(providers).reduce((acc, [serverType, provi
   const logo = <ProviderLogo serverType={serverType} />;
 
   acc[serverType] = {
-    tabhead: () => <span className={SessionStyles.tabText}>{logo}</span>,
+    tabhead: () => <span className={styles.tabText}>{logo}</span>,
     tab: (props) => <provider.tab {...props} />,
     logo,
   };
