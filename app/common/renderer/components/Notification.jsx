@@ -1,7 +1,7 @@
 import {App} from 'antd';
 import {useEffect} from 'react';
 
-import {NOTIFICATION_EVENT} from '../utils/notification';
+import {NOTIFICATION_EVENT} from '../utils/notification.js';
 
 export default function Notification() {
   const {notification} = App.useApp();

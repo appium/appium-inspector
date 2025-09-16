@@ -1,10 +1,10 @@
 import {App, ConfigProvider, Layout, theme} from 'antd';
 import {createContext, useEffect, useState} from 'react';
 
-import {PREFERRED_THEME} from '../../shared/setting-defs';
-import Notification from '../components/Notification';
-import {getSetting, setSetting, setTheme} from '../polyfills';
-import {loadHighlightTheme} from '../utils/highlight-theme';
+import {PREFERRED_THEME} from '../../shared/setting-defs.js';
+import Notification from '../components/Notification.jsx';
+import {getSetting, setSetting, setTheme} from '../polyfills.js';
+import {loadHighlightTheme} from '../utils/highlight-theme.js';
 
 const systemPrefersDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
 

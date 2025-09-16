@@ -1,7 +1,7 @@
 import axios from 'axios';
 import _ from 'lodash';
 
-import {SERVER_TYPES} from '../constants/session-builder';
+import {SERVER_TYPES} from '../constants/session-builder.js';
 
 class DefaultSessionDescription {
   constructor(caps) {

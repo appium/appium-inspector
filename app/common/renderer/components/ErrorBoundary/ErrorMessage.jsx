@@ -1,10 +1,10 @@
 import {CopyOutlined} from '@ant-design/icons';
 import {Alert, Button, Tooltip} from 'antd';
 
-import {ALERT} from '../../constants/antd-types';
-import {LINKS} from '../../constants/common';
-import {withTranslation} from '../../i18next';
-import {openLink} from '../../polyfills';
+import {ALERT} from '../../constants/antd-types.js';
+import {LINKS} from '../../constants/common.js';
+import {withTranslation} from '../../i18next.js';
+import {openLink} from '../../polyfills.js';
 import styles from './ErrorMessage.module.css';
 
 const ErrorMessage = ({error, copyTrace, t}) => (

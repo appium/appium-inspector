@@ -6,7 +6,7 @@
 
 import {settings} from '#local-polyfills'; // eslint-disable-line import/no-unresolved
 
-import {DEFAULT_SETTINGS} from '../shared/setting-defs';
+import {DEFAULT_SETTINGS} from '../shared/setting-defs.js';
 
 export async function getSetting(setting) {
   if (await settings.has(setting)) {

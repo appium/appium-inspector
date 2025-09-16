@@ -2,7 +2,7 @@ import {promises as fs} from 'fs';
 import {join} from 'path';
 import {describe, expect, it} from 'vitest';
 
-import {parseHtmlSource} from '../../app/common/renderer/utils/webview';
+import {parseHtmlSource} from '../../app/common/renderer/utils/webview.js';
 
 describe('webview-helpers.js', function () {
   describe('#parseHtmlSource', function () {

@@ -2,7 +2,7 @@ import {clipboard, ipcMain, nativeTheme, shell} from 'electron';
 import settings from 'electron-settings';
 import fs from 'fs';
 
-import i18n from './i18next';
+import i18n from './i18next.js';
 
 export const isDev = process.env.NODE_ENV === 'development';
 

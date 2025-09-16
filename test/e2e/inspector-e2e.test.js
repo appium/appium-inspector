@@ -3,7 +3,7 @@ import {retryInterval} from 'asyncbox';
 import path from 'path';
 import {expect} from 'vitest';
 
-import InspectorPage from './pages/inspector-page-object';
+import InspectorPage from './pages/inspector-page-object.js';
 
 const FAKE_DRIVER_PORT = 12121;
 
