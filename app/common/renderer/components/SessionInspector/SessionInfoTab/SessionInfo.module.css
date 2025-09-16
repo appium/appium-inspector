@@ -1,0 +1,8 @@
+.sessionInnerTable :global(.ant-table-body) {
+  scrollbar-width: none; /* -webkit-scrollbar for Firefox */
+  margin-left: -32px;
+}
+
+.sessionInnerTable :global(.ant-table-body)::-webkit-scrollbar {
+  width: 0px;
+}

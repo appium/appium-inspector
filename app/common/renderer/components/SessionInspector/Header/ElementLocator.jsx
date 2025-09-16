@@ -2,7 +2,8 @@ import {Alert, Input, Radio, Row, Space} from 'antd';
 
 import {ALERT} from '../../../constants/antd-types.js';
 import {LOCATOR_STRATEGY_MAP as STRAT} from '../../../constants/session-inspector.js';
-import InspectorStyles from '../SessionInspector.module.css';
+import inspectorStyles from '../SessionInspector.module.css';
+import styles from './Header.module.css';
 
 const locatorStrategies = (automationName) => {
   let strategies = [STRAT.ID, STRAT.XPATH, STRAT.NAME, STRAT.CLASS_NAME, STRAT.ACCESSIBILITY_ID];
@@ -32,7 +33,7 @@ const ElementLocator = (props) => {
   } = props;
 
   return (
-    <Space className={InspectorStyles.spaceContainer} direction="vertical" size="small">
+    <Space className={inspectorStyles.spaceContainer} direction="vertical" size="small">
       {t('locatorStrategy')}
       <Row justify="center">
         <Radio.Group
@@ -43,7 +44,7 @@ const ElementLocator = (props) => {
           <Row justify="center">
             {locatorStrategies(automationName).map(([strategyValue, strategyName]) => (
               <Radio.Button
-                className={InspectorStyles.locatorStrategyBtn}
+                className={styles.locatorStrategyBtn}
                 value={strategyValue}
                 key={strategyValue}
               >
@@ -58,7 +59,7 @@ const ElementLocator = (props) => {
       )}
       {t('selector')}
       <Input.TextArea
-        className={InspectorStyles.locatorSelectorTextArea}
+        className={styles.locatorSelectorTextArea}
         onChange={(e) => setLocatorTestValue(e.target.value)}
         value={locatorTestValue}
         allowClear={true}

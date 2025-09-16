@@ -1,0 +1,48 @@
+.advancedSettingsContainerCol {
+  width: 100%;
+}
+
+.advancedSettingsContainer :global(.ant-form-item) {
+  margin: 0;
+}
+
+.tabText img {
+  height: 20px;
+  filter: grayscale(100%);
+}
+
+:global(.ant-tabs-tab-active) .tabText img {
+  filter: none;
+}
+
+.cloudProviderModal {
+  min-width: 600px;
+  max-width: 100%;
+}
+
+.cloudProviderModal :global(.ant-row) {
+  margin-bottom: 16px;
+}
+
+.cloudProviderModal :global(.ant-modal-body button) {
+  width: 100%;
+  padding: 4px;
+}
+
+.cloudProviderModal :global(.ant-modal-body button img) {
+  height: 100%;
+}
+
+.inputDataCenter {
+  margin-left: 8px;
+}
+
+.addonDataCenter {
+  height: 32px;
+}
+
+.addonDataCenterRadioContainer {
+  display: table-cell;
+  padding-top: 4px;
+  padding-left: 11px;
+}

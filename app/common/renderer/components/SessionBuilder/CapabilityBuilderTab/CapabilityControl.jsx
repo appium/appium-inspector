@@ -2,7 +2,7 @@ import {Input, Switch} from 'antd';
 
 import {INPUT} from '../../../constants/antd-types.js';
 import {CAPABILITY_TYPES} from '../../../constants/session-builder.js';
-import SessionStyles from '../SessionBuilder.module.css';
+import styles from './CapabilityBuilderTab.module.css';
 
 const CapabilityControl = ({
   cap,
@@ -23,7 +23,7 @@ const CapabilityControl = ({
           value={cap.value}
           onChange={(e) => onSetCapabilityParam(e.target.value)}
           onPressEnter={onPressEnter}
-          className={SessionStyles.capsBoxFont}
+          className={styles.capsBoxFont}
         />
       );
     case CAPABILITY_TYPES.BOOL:
@@ -51,7 +51,7 @@ const CapabilityControl = ({
               : onSetCapabilityParam(undefined)
           }
           onPressEnter={onPressEnter}
-          className={SessionStyles.capsBoxFont}
+          className={styles.capsBoxFont}
         />
       );
     case CAPABILITY_TYPES.OBJECT:
@@ -65,7 +65,7 @@ const CapabilityControl = ({
           placeholder={t('Value')}
           value={cap.value}
           onChange={(e) => onSetCapabilityParam(e.target.value)}
-          className={SessionStyles.capsBoxFont}
+          className={styles.capsBoxFont}
         />
       );
     default:

@@ -9,7 +9,8 @@ import {
   TOP_LEVEL_COMMANDS,
 } from '../../../constants/commands.js';
 import {notification} from '../../../utils/notification.js';
-import InspectorStyles from '../SessionInspector.module.css';
+import inspectorStyles from '../SessionInspector.module.css';
+import styles from './Commands.module.css';
 
 const Commands = (props) => {
   const {
@@ -128,15 +129,15 @@ const Commands = (props) => {
           <ThunderboltOutlined /> {t('Execute Commands')}
         </span>
       }
-      className={InspectorStyles['interaction-tab-card']}
+      className={inspectorStyles.interactionTabCard}
     >
-      <div className={InspectorStyles['commands-container']}>
-        <Space className={InspectorStyles.spaceContainer} direction="vertical" size="middle">
+      <div className={styles.commandsContainer}>
+        <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
           {t('commandsDescription')}
           <Row>
             {_.toPairs(TOP_LEVEL_COMMANDS).map(([commandName, command], index) => (
               <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
-                <div className={InspectorStyles['btn-container']}>
+                <div className={styles.btnContainer}>
                   <Button onClick={() => startPerformingCommand(commandName, command)}>
                     {commandName}
                   </Button>
@@ -154,7 +155,7 @@ const Commands = (props) => {
                     ([commandName, command], index) =>
                       (!command.drivers || command.drivers.includes(automationName)) && (
                         <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
-                          <div className={InspectorStyles['btn-container']}>
+                          <div className={styles.btnContainer}>
                             <Tooltip
                               title={
                                 command.notes && !command.args
@@ -194,7 +195,7 @@ const Commands = (props) => {
             {!_.isEmpty(pendingCommand.command.args) &&
               _.map(pendingCommand.command.args, ([argName, argType], index) => (
                 <Row key={index} gutter={16}>
-                  <Col span={24} className={InspectorStyles['arg-container']}>
+                  <Col span={24} className={styles.argContainer}>
                     {argType === COMMAND_ARG_TYPES.NUMBER && (
                       <Input
                         type={INPUT.NUMBER}

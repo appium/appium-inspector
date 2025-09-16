@@ -17,7 +17,8 @@ import {LINKS} from '../../../constants/common.js';
 import {NATIVE_APP} from '../../../constants/session-inspector.js';
 import {copyToClipboard, openLink} from '../../../polyfills.js';
 import {downloadFile} from '../../../utils/file-handling.js';
-import styles from '../SessionInspector.module.css';
+import inspectorStyles from '../SessionInspector.module.css';
+import styles from './Source.module.css';
 
 /**
  * Shows details of the currently selected element and shows methods that can
@@ -74,7 +75,7 @@ const SelectedElement = (props) => {
   const selectedElementTableCell = (text, copyToClipBoard) => {
     if (copyToClipBoard) {
       return (
-        <div className={styles['selected-element-table-cells']}>
+        <div className={styles.selectedElemTableCells}>
           <Tooltip title={t('Copied!')} trigger="click">
             <span className={styles['element-cell-copy']} onClick={() => copyToClipboard(text)}>
               {text}
@@ -83,7 +84,7 @@ const SelectedElement = (props) => {
         </div>
       );
     } else {
-      return <div className={styles['selected-element-table-cells']}>{text}</div>;
+      return <div className={styles.selectedElemTableCells}>{text}</div>;
     }
   };
 
@@ -199,7 +200,7 @@ const SelectedElement = (props) => {
           <TagOutlined /> {t('selectedElement')}
         </span>
       }
-      className={styles['selected-element-card']}
+      className={styles.selectedElementCard}
       extra={
         <span>
           <Tooltip title={t('Copy Attributes to Clipboard')}>
@@ -223,7 +224,7 @@ const SelectedElement = (props) => {
         </span>
       }
     >
-      <Space className={styles.spaceContainer} direction="vertical" size="middle">
+      <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
         {showSnapshotMaxDepthReachedMessage()}
         {elementInteractionsNotAvailable && (
           <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemInfoMessage}>
