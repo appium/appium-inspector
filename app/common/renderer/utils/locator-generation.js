@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import XPath, {select as xpathSelect} from 'xpath';
 
-import {log} from './logger';
-import {childNodesOf, domToXML, findDOMNodeByPath, xmlToDOM} from './source-parsing';
+import {log} from './logger.js';
+import {childNodesOf, domToXML, findDOMNodeByPath, xmlToDOM} from './source-parsing.js';
 
 // Attributes on nodes that are likely to be unique to the node so we should consider first when
 // suggesting xpath locators. These are considered IN ORDER.

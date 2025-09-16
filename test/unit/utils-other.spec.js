@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 
-import {addVendorPrefixes} from '../../app/common/renderer/utils/other';
+import {addVendorPrefixes} from '../../app/common/renderer/utils/other.js';
 
 describe('utils/other.js', function () {
   describe('#addVendorPrefixes', function () {

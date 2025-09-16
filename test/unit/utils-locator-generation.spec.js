@@ -8,8 +8,8 @@ import {
   getOptimalUiAutomatorSelector,
   getOptimalXPath,
   getSimpleSuggestedLocators,
-} from '../../app/common/renderer/utils/locator-generation';
-import {xmlToDOM} from '../../app/common/renderer/utils/source-parsing';
+} from '../../app/common/renderer/utils/locator-generation.js';
+import {xmlToDOM} from '../../app/common/renderer/utils/source-parsing.js';
 
 // Helper that checks that the optimal xpath for a node is the one that we expect and also
 // checks that the XPath successfully locates the node in it's doc

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import {STANDARD_W3C_CAPS} from '../constants/session-builder';
+import {STANDARD_W3C_CAPS} from '../constants/session-builder.js';
 
 export function addVendorPrefixes(caps) {
   return caps.map((cap) => {

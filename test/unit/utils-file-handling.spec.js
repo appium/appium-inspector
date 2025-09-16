@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 
-import {parseSessionFileContents} from '../../app/common/renderer/utils/file-handling';
+import {parseSessionFileContents} from '../../app/common/renderer/utils/file-handling.js';
 
 describe('utils/file-handling.js', function () {
   describe('#parseSessionFileContents', function () {

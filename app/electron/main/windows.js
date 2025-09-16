@@ -2,11 +2,11 @@ import {BrowserWindow, Menu, nativeTheme, webContents} from 'electron';
 import settings from 'electron-settings';
 import {join} from 'path';
 
-import {PREFERRED_LANGUAGE, PREFERRED_THEME} from '../../common/shared/setting-defs';
-import {isDev} from './helpers';
-import i18n from './i18next';
-import {openFilePath} from './main';
-import {rebuildMenus} from './menus';
+import {PREFERRED_LANGUAGE, PREFERRED_THEME} from '../../common/shared/setting-defs.js';
+import {isDev} from './helpers.js';
+import i18n from './i18next.js';
+import {openFilePath} from './main.js';
+import {rebuildMenus} from './menus.js';
 
 const mainPath = isDev
   ? process.env.ELECTRON_RENDERER_URL
