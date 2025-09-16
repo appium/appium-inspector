@@ -51,10 +51,7 @@ const ServerTabSauce = ({server, setServerParam, t}) => (
             {t('SauceLabs Data Center')}
           </div>
           <Radio.Group
-            className={[
-              styles.inputDataCenter,
-              styles.addonDataCenterRadioContainer,
-            ].join(' ')}
+            className={[styles.inputDataCenter, styles.addonDataCenterRadioContainer].join(' ')}
             buttonStyle="solid"
             defaultValue="us-west-1"
             id="sauceObjectDataCenter"

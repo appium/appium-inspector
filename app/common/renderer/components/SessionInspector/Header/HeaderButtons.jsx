@@ -127,13 +127,8 @@ const HeaderButtons = (props) => {
         />
       </Tooltip>
       {contexts && contexts.length === 1 && (
-        <Tooltip
-          title={t('noAdditionalContextsFound')}
-          classNames={{root: styles.wideTooltip}}
-        >
-          <div
-            className={`${styles.contextsInfoBtn} ${styles.noContextsInfoIcon}`}
-          >
+        <Tooltip title={t('noAdditionalContextsFound')} classNames={{root: styles.wideTooltip}}>
+          <div className={`${styles.contextsInfoBtn} ${styles.noContextsInfoIcon}`}>
             <ExclamationCircleOutlined className={styles.headerBtnIcon} />
           </div>
         </Tooltip>
@@ -166,9 +161,7 @@ const HeaderButtons = (props) => {
             }
             classNames={{root: styles.wideTooltip}}
           >
-            <div
-              className={`${styles.contextsInfoBtn} ${styles.contextsInfoIcon}`}
-            >
+            <div className={`${styles.contextsInfoBtn} ${styles.contextsInfoIcon}`}>
               <InfoCircleOutlined className={styles.headerBtnIcon} />
             </div>
           </Tooltip>

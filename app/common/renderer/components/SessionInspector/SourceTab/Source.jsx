@@ -79,9 +79,7 @@ const Source = (props) => {
           <span key={attr}>
             &nbsp;
             <i className={styles.sourceAttrName}>{getHighlightedText(attr)}</i>=
-            <span>
-              &quot;{getHighlightedText(attributes[attr])}&quot;
-            </span>
+            <span>&quot;{getHighlightedText(attributes[attr])}&quot;</span>
           </span>,
         );
       }
@@ -203,12 +201,7 @@ const Source = (props) => {
           {/* Must switch to a new antd Tree component when there's changes to treeData  */}
           {treeData ? (
             <div className={styles.treeWrapper}>
-              <Row
-                justify="center"
-                type={ROW.FLEX}
-                align="middle"
-                className={styles.treeActions}
-              >
+              <Row justify="center" type={ROW.FLEX} align="middle" className={styles.treeActions}>
                 <Space.Compact>
                   <Tooltip title={t('Collapse All')}>
                     <Button

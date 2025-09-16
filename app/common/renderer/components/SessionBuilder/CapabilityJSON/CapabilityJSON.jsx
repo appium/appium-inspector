@@ -95,11 +95,7 @@ const CapabilityJSON = (props) => {
 
   return (
     caps && (
-      <Card
-        className={styles.formattedCaps}
-        title={setCapsTitle()}
-        extra={setCapsTitleButtons()}
-      >
+      <Card className={styles.formattedCaps} title={setCapsTitle()} extra={setCapsTitleButtons()}>
         <div className={styles.capsEditorControls}>
           {isEditingDesiredCaps && (
             <Tooltip title={t('Cancel')}>
@@ -131,9 +127,7 @@ const CapabilityJSON = (props) => {
               onChange={(e) => setRawDesiredCaps(e.target.value)}
               value={rawDesiredCaps}
               className={`${styles.capsEditorBody} ${
-                isValidCapsJson
-                  ? styles.capsEditorBodyFull
-                  : styles.capsEditorBodyResized
+                isValidCapsJson ? styles.capsEditorBodyFull : styles.capsEditorBodyResized
               }`}
             />
             {!isValidCapsJson && <Alert message={invalidCapsJsonReason} type={ALERT.ERROR} />}

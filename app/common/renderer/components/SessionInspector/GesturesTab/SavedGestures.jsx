@@ -166,8 +166,7 @@ const SavedGestures = (props) => {
     <Modal
       title={
         <Row align="start">
-          <ExclamationCircleOutlined className={styles.errorIcon} />{' '}
-          {t('errorLoadingGestures')}
+          <ExclamationCircleOutlined className={styles.errorIcon} /> {t('errorLoadingGestures')}
         </Row>
       }
       open={!!gestureUploadErrors}

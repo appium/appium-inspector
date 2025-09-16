@@ -73,9 +73,7 @@ const Recorder = (props) => {
       extra={actionBar()}
     >
       {!recordedActions.length && (
-        <div className={styles.noRecordedActions}>
-          {t('enableRecordingAndPerformActions')}
-        </div>
+        <div className={styles.noRecordedActions}>{t('enableRecordingAndPerformActions')}</div>
       )}
       {!!recordedActions.length && (
         <pre className={inspectorStyles.recordedCode}>

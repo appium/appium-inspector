@@ -494,10 +494,7 @@ const GestureEditor = (props) => {
           <PauseCircleOutlined className={styles.gestureHeaderIcon} style={iconStyle} />
         )}
         {type === undefined && (
-          <QuestionCircleOutlined
-            className={styles.gestureHeaderIcon}
-            style={iconStyle}
-          />
+          <QuestionCircleOutlined className={styles.gestureHeaderIcon} style={iconStyle} />
         )}
       </Popover>
     );
