@@ -20,7 +20,7 @@ import AdvancedServerParams from './ServerDetails/AdvancedServerParams.jsx';
 import CloudProviders from './ServerDetails/CloudProviders.jsx';
 import CloudProviderSelector from './ServerDetails/CloudProviderSelector.jsx';
 import ServerTabCustom from './ServerDetails/ServerTabCustom.jsx';
-import builderStyles from './SessionBuilder.module.css';
+import styles from './SessionBuilder.module.css';
 import ToggleTheme from './Settings/ToggleTheme.jsx';
 
 const Session = (props) => {
@@ -97,12 +97,12 @@ const Session = (props) => {
 
   return [
     <Spin spinning={!!newSessionLoading} key="main">
-      <div className={builderStyles.sessionContainer}>
-        <div className={builderStyles.sessionHeader}>
+      <div className={styles.sessionContainer}>
+        <div className={styles.sessionHeader}>
           <Tabs
             activeKey={serverType}
             onChange={(tab) => handleSelectServerTab(tab)}
-            className={builderStyles.serverTabs}
+            className={styles.serverTabs}
             items={[
               {
                 label: t('Appium Server'),
@@ -132,12 +132,12 @@ const Session = (props) => {
         <Tabs
           activeKey={tabKey}
           onChange={switchTabs}
-          className={builderStyles.scrollingTabCont}
+          className={styles.scrollingTabCont}
           items={[
             {
               label: t('Capability Builder'),
               key: SESSION_BUILDER_TABS.CAPS_BUILDER,
-              className: builderStyles.scrollingTab,
+              className: styles.scrollingTab,
               children: <CapabilityEditor {...props} />,
             },
             {
@@ -148,21 +148,21 @@ const Session = (props) => {
                 </span>
               ),
               key: SESSION_BUILDER_TABS.SAVED_CAPS,
-              className: builderStyles.scrollingTab,
+              className: styles.scrollingTab,
               disabled: savedSessions.length === 0,
               children: <SavedCapabilitySets {...props} />,
             },
             {
               label: t('Attach to Session'),
               key: SESSION_BUILDER_TABS.ATTACH_TO_SESSION,
-              className: builderStyles.scrollingTab,
+              className: styles.scrollingTab,
               children: <AttachToSession {...props} />,
             },
           ]}
         />
         <Divider />
-        <div className={builderStyles.sessionFooter}>
-          <div className={builderStyles.desiredCapsLink}>
+        <div className={styles.sessionFooter}>
+          <div className={styles.desiredCapsLink}>
             <a href="#" onClick={(e) => e.preventDefault() || openLink(LINKS.CAPS_DOCS)}>
               <LinkOutlined />
               &nbsp;
@@ -189,7 +189,7 @@ const Session = (props) => {
               type={BUTTON.PRIMARY}
               id="btnStartSession"
               onClick={() => loadNewSession(caps)}
-              className={builderStyles.startSessionBtn}
+              className={styles.startSessionBtn}
             >
               {t('startSession')}
             </Button>
