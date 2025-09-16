@@ -16,7 +16,7 @@ import {copyToClipboard} from '../../../polyfills.js';
 import {downloadFile} from '../../../utils/file-handling.js';
 import LocatorTestModal from '../Header/LocatorTestModal.jsx';
 import SiriCommandModal from '../Header/SiriCommandModal.jsx';
-import InspectorStyles from '../SessionInspector.module.css';
+import styles from './Source.module.css';
 
 const downloadXML = (sourceXML) => {
   const href = 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML);
@@ -63,7 +63,7 @@ const Source = (props) => {
     return (
       <>
         {prefix}
-        <span className={InspectorStyles['tree-search-highlight']}>{matchedWord}</span>
+        <span className={styles.treeSearchHighlight}>{matchedWord}</span>
         {suffix}
       </>
     );
@@ -78,8 +78,8 @@ const Source = (props) => {
         attrs.push(
           <span key={attr}>
             &nbsp;
-            <i className={InspectorStyles.sourceAttrName}>{getHighlightedText(attr)}</i>=
-            <span className={InspectorStyles.sourceAttrValue}>
+            <i className={styles.sourceAttrName}>{getHighlightedText(attr)}</i>=
+            <span>
               &quot;{getHighlightedText(attributes[attr])}&quot;
             </span>
           </span>,
@@ -88,7 +88,7 @@ const Source = (props) => {
     }
     return (
       <span>
-        &lt;<b className={InspectorStyles.sourceTag}>{getHighlightedText(tagName)}</b>
+        &lt;<b className={styles.sourceTag}>{getHighlightedText(tagName)}</b>
         {attrs}&gt;
       </span>
     );
@@ -192,7 +192,7 @@ const Source = (props) => {
         </span>
       }
     >
-      <div id="sourceContainer" className={InspectorStyles['tree-container']} tabIndex="0">
+      <div id="sourceContainer" className={styles.treeContainer} tabIndex="0">
         {!sourceJSON && !sourceError && <i>{t('Gathering initial app source…')}</i>}
         {sourceError && t('couldNotObtainSource', {errorMsg: JSON.stringify(sourceError)})}
         {/* Show loading indicator in MJPEG mode if a method call is in progress and source refresh is on */}
@@ -202,12 +202,12 @@ const Source = (props) => {
         >
           {/* Must switch to a new antd Tree component when there's changes to treeData  */}
           {treeData ? (
-            <div className={InspectorStyles['tree-wrapper']}>
+            <div className={styles.treeWrapper}>
               <Row
                 justify="center"
                 type={ROW.FLEX}
                 align="middle"
-                className={InspectorStyles['tree-actions']}
+                className={styles.treeActions}
               >
                 <Space.Compact>
                   <Tooltip title={t('Collapse All')}>
@@ -231,7 +231,7 @@ const Source = (props) => {
                   onChange={onChange}
                   value={searchValue}
                   allowClear
-                  className={InspectorStyles['tree-search-input']}
+                  className={styles.treeSearchInput}
                   prefix={<SearchOutlined />}
                   addonAfter={
                     <Tooltip title={t('Matching Elements')}>{matchingElements.length}</Tooltip>
@@ -248,7 +248,7 @@ const Source = (props) => {
                 onSelect={(selectedPaths) => handleSelectElement(selectedPaths[0])}
                 selectedKeys={[selectedElement.path]}
                 treeData={treeData}
-                className={InspectorStyles['source-tree']}
+                className={styles.sourceTree}
               />
             </div>
           ) : (

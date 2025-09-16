@@ -26,7 +26,7 @@ import HeaderButtons from './Header/HeaderButtons.jsx';
 import Recorder from './RecorderTab/Recorder.jsx';
 import Screenshot from './Screenshot/Screenshot.jsx';
 import SessionInfo from './SessionInfoTab/SessionInfo.jsx';
-import InspectorStyles from './SessionInspector.module.css';
+import inspectorStyles from './SessionInspector.module.css';
 import SelectAnElement from './SourceTab/SelectAnElement.jsx';
 import SelectedElement from './SourceTab/SelectedElement.jsx';
 import Source from './SourceTab/Source.jsx';
@@ -208,7 +208,7 @@ const Inspector = (props) => {
   }, [showKeepAlivePrompt]);
 
   const screenShotControls = (
-    <div className={InspectorStyles['screenshot-controls']}>
+    <div className={inspectorStyles.screenshotControls}>
       <Space size="middle">
         <Tooltip
           title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')}
@@ -250,10 +250,10 @@ const Inspector = (props) => {
   );
 
   const main = (
-    <div className={InspectorStyles['inspector-main']}>
+    <div className={inspectorStyles.inspectorMain}>
       <div
         id="screenshotContainer"
-        className={InspectorStyles['screenshot-container']}
+        className={inspectorStyles.screenshotContainer}
         ref={screenshotContainerEl}
       >
         {screenShotControls}
@@ -261,11 +261,11 @@ const Inspector = (props) => {
         {screenshotError && t('couldNotObtainScreenshot', {screenshotError})}
         {!showScreenshot && (
           <Spin size="large" spinning={true}>
-            <div className={InspectorStyles.screenshotBox} />
+            <div className={inspectorStyles.screenshotBox} />
           </Spin>
         )}
       </div>
-      <div className={InspectorStyles['inspector-tabs-container']}>
+      <div className={inspectorStyles.inspectorTabsContainer}>
         <Tabs
           activeKey={selectedInspectorTab}
           size="small"
@@ -322,7 +322,7 @@ const Inspector = (props) => {
   );
 
   return (
-    <div className={InspectorStyles['inspector-container']}>
+    <div className={inspectorStyles.inspectorContainer}>
       <HeaderButtons quitCurrentSession={quitCurrentSession} {...props} />
       {main}
       <Modal

@@ -1,4 +1,4 @@
-import InspectorCSS from '../SessionInspector.module.css';
+import styles from './Screenshot.module.css';
 
 /**
  * Single absolute positioned div that overlays the app screenshot and highlights the bounding
@@ -6,7 +6,7 @@ import InspectorCSS from '../SessionInspector.module.css';
  */
 const HighlighterRectForBounds = ({elSize, elLocation, scaleRatio, xOffset}) => (
   <div
-    className={`${InspectorCSS['highlighter-box']} ${InspectorCSS['inspected-element-box']}`}
+    className={`${styles.highlighterBox} ${styles.inspectedElementBox}`}
     // Unique keys are assigned to elements by their x & y coordinates
     key={`searchedForElement{x: ${elLocation.x}, y: ${elLocation.y}}`}
     style={{

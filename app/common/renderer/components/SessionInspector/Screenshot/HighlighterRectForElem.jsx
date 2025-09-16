@@ -1,4 +1,4 @@
-import InspectorCSS from '../SessionInspector.module.css';
+import styles from './Screenshot.module.css';
 
 /**
  * Absolute positioned divs that overlay the app screenshot and highlight the bounding
@@ -18,14 +18,14 @@ const HighlighterRectForElem = (props) => {
 
   const {width, height, left, top} = dimensions;
   const key = element.path;
-  let highlighterClasses = [InspectorCSS['highlighter-box']];
+  let highlighterClasses = [styles.highlighterBox];
 
   // Add class + special classes to hovered and selected elements
   if (hoveredElement.path === element.path) {
-    highlighterClasses.push(InspectorCSS['hovered-element-box']);
+    highlighterClasses.push(styles.hoveredElementBox);
   }
   if (selectedElement.path === element.path) {
-    highlighterClasses.push(InspectorCSS['inspected-element-box']);
+    highlighterClasses.push(styles.inspectedElementBox);
   }
 
   return (

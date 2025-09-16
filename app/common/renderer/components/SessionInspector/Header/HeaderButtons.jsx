@@ -19,7 +19,7 @@ import {BUTTON} from '../../../constants/antd-types.js';
 import {LINKS} from '../../../constants/common.js';
 import {APP_MODE} from '../../../constants/session-inspector.js';
 import {openLink} from '../../../polyfills.js';
-import InspectorStyles from '../SessionInspector.module.css';
+import styles from './Header.module.css';
 
 const HeaderButtons = (props) => {
   const {
@@ -49,7 +49,7 @@ const HeaderButtons = (props) => {
           <Tooltip title={t('Press Home Button')}>
             <Button
               id="btnPressHomeButton"
-              icon={<HiOutlineHome className={InspectorStyles['custom-button-icon']} />}
+              icon={<HiOutlineHome className={styles.headerBtnIcon} />}
               onClick={() =>
                 applyClientMethod({
                   methodName: 'executeScript',
@@ -61,7 +61,7 @@ const HeaderButtons = (props) => {
           <Tooltip title={t('Execute Siri Command')}>
             <Button
               id="siriCommand"
-              icon={<HiOutlineMicrophone className={InspectorStyles['custom-button-icon']} />}
+              icon={<HiOutlineMicrophone className={styles.headerBtnIcon} />}
               onClick={showSiriCommandModal}
             />
           </Tooltip>
@@ -72,7 +72,7 @@ const HeaderButtons = (props) => {
           <Tooltip title={t('Press Back Button')}>
             <Button
               id="btnPressHomeButton"
-              icon={<IoChevronBackOutline className={InspectorStyles['custom-button-icon']} />}
+              icon={<IoChevronBackOutline className={styles.headerBtnIcon} />}
               onClick={() =>
                 applyClientMethod({
                   methodName: 'executeScript',
@@ -84,7 +84,7 @@ const HeaderButtons = (props) => {
           <Tooltip title={t('Press Home Button')}>
             <Button
               id="btnPressHomeButton"
-              icon={<BiCircle className={InspectorStyles['custom-button-icon']} />}
+              icon={<BiCircle className={styles.headerBtnIcon} />}
               onClick={() =>
                 applyClientMethod({
                   methodName: 'executeScript',
@@ -96,7 +96,7 @@ const HeaderButtons = (props) => {
           <Tooltip title={t('Press App Switch Button')}>
             <Button
               id="btnPressHomeButton"
-              icon={<BiSquare className={InspectorStyles['custom-button-icon']} />}
+              icon={<BiSquare className={styles.headerBtnIcon} />}
               onClick={() =>
                 applyClientMethod({
                   methodName: 'executeScript',
@@ -129,19 +129,19 @@ const HeaderButtons = (props) => {
       {contexts && contexts.length === 1 && (
         <Tooltip
           title={t('noAdditionalContextsFound')}
-          classNames={{root: InspectorStyles['wide-tooltip']}}
+          classNames={{root: styles.wideTooltip}}
         >
           <div
-            className={`${InspectorStyles['contexts-custom-btn']} ${InspectorStyles['no-contexts-info-icon']}`}
+            className={`${styles.contextsInfoBtn} ${styles.noContextsInfoIcon}`}
           >
-            <ExclamationCircleOutlined className={InspectorStyles['custom-button-icon']} />
+            <ExclamationCircleOutlined className={styles.headerBtnIcon} />
           </div>
         </Tooltip>
       )}
       {contexts && contexts.length > 1 && (
         <>
           <Select
-            className={InspectorStyles['header-context-selector']}
+            className={styles.headerContextSelector}
             value={currentContext}
             popupMatchSelectWidth={false}
             onChange={(value) => {
@@ -164,12 +164,12 @@ const HeaderButtons = (props) => {
                 </a>
               </>
             }
-            classNames={{root: InspectorStyles['wide-tooltip']}}
+            classNames={{root: styles.wideTooltip}}
           >
             <div
-              className={`${InspectorStyles['contexts-custom-btn']} ${InspectorStyles['contexts-info-icon']}`}
+              className={`${styles.contextsInfoBtn} ${styles.contextsInfoIcon}`}
             >
-              <InfoCircleOutlined className={InspectorStyles['custom-button-icon']} />
+              <InfoCircleOutlined className={styles.headerBtnIcon} />
             </div>
           </Tooltip>
         </>
@@ -233,7 +233,7 @@ const HeaderButtons = (props) => {
   );
 
   return (
-    <div className={InspectorStyles['inspector-toolbar']}>
+    <div className={styles.headerButtons}>
       <Space size="middle">
         {deviceControls}
         {appModeControls}

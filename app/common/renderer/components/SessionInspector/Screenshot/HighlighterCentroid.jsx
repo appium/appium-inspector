@@ -1,5 +1,5 @@
 import {CENTROID_STYLES, RENDER_CENTROID_AS} from '../../../constants/screenshot.js';
-import InspectorCSS from '../SessionInspector.module.css';
+import styles from './Screenshot.module.css';
 
 const {CENTROID, OVERLAP, EXPAND} = RENDER_CENTROID_AS;
 
@@ -62,26 +62,26 @@ const HighlighterCentroid = (props) => {
     }
   };
 
-  const centroidClasses = [InspectorCSS['centroid-box']];
-  centroidClasses.push(InspectorCSS[centroidType]);
+  const centroidClasses = [styles.centroidBox];
+  centroidClasses.push(styles[centroidType]);
 
   // Highlight centroids that represent elements
   if (centroidType !== EXPAND) {
     if (hoveredElement.path === path) {
-      centroidClasses.push(InspectorCSS['hovered-element-box']);
+      centroidClasses.push(styles.hoveredElementBox);
     }
     if (selectedElementPath === path) {
-      centroidClasses.push(InspectorCSS['inspected-element-box']);
+      centroidClasses.push(styles.inspectedElementBox);
     }
   }
 
   // Highlight +/- centroids
   if (centroidType !== CENTROID) {
     if (hoveredCentroid === keyCode) {
-      centroidClasses.push(InspectorCSS['hovered-element-box']);
+      centroidClasses.push(styles.hoveredElementBox);
     }
     if (selectedCentroid === keyCode && !element) {
-      centroidClasses.push(InspectorCSS['inspected-element-box']);
+      centroidClasses.push(styles.inspectedElementBox);
     }
   }
 
@@ -98,7 +98,7 @@ const HighlighterCentroid = (props) => {
 
   const placeHolder =
     centroidType === EXPAND ? (
-      <div className={InspectorCSS['plus-minus']}>{keyCode === selectedCentroid ? '-' : '+'}</div>
+      <div className={styles.plusMinus}>{keyCode === selectedCentroid ? '-' : '+'}</div>
     ) : (
       <div></div>
     );

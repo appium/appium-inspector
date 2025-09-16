@@ -6,7 +6,8 @@ import _ from 'lodash';
 import {BUTTON} from '../../../constants/antd-types.js';
 import {CLIENT_FRAMEWORK_MAP} from '../../../lib/client-frameworks/map.js';
 import {copyToClipboard} from '../../../polyfills.js';
-import InspectorStyles from '../SessionInspector.module.css';
+import inspectorStyles from '../SessionInspector.module.css';
+import styles from './Recorder.module.css';
 
 const Recorder = (props) => {
   const {showBoilerplate, recordedActions, clientFramework, t} = props;
@@ -51,7 +52,7 @@ const Recorder = (props) => {
           defaultValue={clientFramework}
           value={clientFramework}
           onChange={setClientFramework}
-          className={InspectorStyles['framework-dropdown']}
+          className={inspectorStyles.frameworkDropdown}
           options={_.map(CLIENT_FRAMEWORK_MAP, (fwClass, fwId) => ({
             value: fwId,
             label: fwClass.readableName,
@@ -68,16 +69,16 @@ const Recorder = (props) => {
           <CodeOutlined /> {t('Recorder')}
         </span>
       }
-      className={InspectorStyles['interaction-tab-card']}
+      className={inspectorStyles.interactionTabCard}
       extra={actionBar()}
     >
       {!recordedActions.length && (
-        <div className={InspectorStyles['no-recorded-actions']}>
+        <div className={styles.noRecordedActions}>
           {t('enableRecordingAndPerformActions')}
         </div>
       )}
       {!!recordedActions.length && (
-        <pre className={InspectorStyles['recorded-code']}>
+        <pre className={inspectorStyles.recordedCode}>
           <code dangerouslySetInnerHTML={{__html: code(false)}} />
         </pre>
       )}

@@ -1,0 +1,96 @@
+.selectedElementCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.selectedElementCard :global(.ant-card-body) {
+  flex: 1;
+  overflow: auto;
+}
+
+.selectedElemInfoMessage {
+  justify-content: center;
+}
+
+.selectedElemTableCells {
+  word-wrap: break-all;
+  word-break: break-all;
+}
+
+.element-cell-copy {
+  cursor: pointer;
+}
+
+.selectedElemActions {
+  gap: 8px;
+}
+
+.elementKeyInputActions {
+  max-width: 400px;
+  flex: 1;
+}
+
+.elementKeyInput {
+  height: 32px;
+  width: calc(100% - 64px);
+}
+
+.selectedElemContentRow {
+  display: block;
+}
+
+.treeSearchHighlight {
+  background-color: #ffeb3b;
+  border-radius: 2px;
+}
+
+:global(.dark) .treeSearchHighlight {
+  background-color: #dba400;
+}
+
+.sourceAttrName {
+  color: #864da1;
+  font-style: italic;
+}
+
+:global(.dark) .sourceAttrName {
+  color: #c96dc6;
+}
+
+.sourceTag {
+  color: #7d2020;
+  font-weight: normal;
+}
+
+:global(.dark) .sourceTag {
+  color: #b31b1b;
+}
+
+.treeContainer {
+  height: 100%;
+}
+
+.treeWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 8px;
+}
+
+.treeActions {
+  gap: 8px;
+}
+
+.treeSearchInput {
+  max-width: 400px;
+  flex: 1;
+}
+
+.treeSearchInput :global(.ant-input-group-addon) {
+  min-width: 46px;
+}
+
+.sourceTree {
+  flex: 1;
+  overflow: auto;
+}

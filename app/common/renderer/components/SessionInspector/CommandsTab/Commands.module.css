@@ -1,0 +1,15 @@
+.commandsContainer :global(.ant-select) {
+  width: 100%;
+}
+
+.commandsContainer :global(.ant-btn) {
+  width: 100%;
+}
+
+.btnContainer {
+  padding: 8px;
+}
+
+.argContainer {
+  padding: 4px 4px 0 0;
+}
