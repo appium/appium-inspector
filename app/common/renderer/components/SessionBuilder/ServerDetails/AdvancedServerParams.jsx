@@ -1,7 +1,7 @@
 import {Checkbox, Col, Collapse, Form, Input, Row} from 'antd';
 
 import {SERVER_TYPES} from '../../../constants/session-builder.js';
-import styles from '../SessionBuilder.module.css';
+import styles from './ServerDetails.module.css';
 
 const AdvancedServerParams = ({server, setServerParam, serverType, t}) => (
   <Row gutter={8}>

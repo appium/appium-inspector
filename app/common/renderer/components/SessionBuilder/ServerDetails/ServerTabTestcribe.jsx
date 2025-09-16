@@ -1,7 +1,7 @@
 import {Col, Form, Input, Row} from 'antd';
 
 import {PROVIDER_VALUES} from '../../../constants/session-builder.js';
-import SessionStyles from '../SessionBuilder.module.css';
+import builderStyles from '../SessionBuilder.module.css';
 
 const ServerTabTestcribe = ({server, setServerParam, t}) => (
   <Form>
@@ -9,14 +9,13 @@ const ServerTabTestcribe = ({server, setServerParam, t}) => (
       <Col span={24}>
         <Form.Item>
           <Input
-            className={SessionStyles.customServerInputLeft}
             id="testcribeServerHost"
             placeholder={PROVIDER_VALUES.TESTCRIBE_API_KEY}
             addonBefore={t('TestcribeAPIKey')}
             value={server.testcribe.apiKey}
             onChange={(e) => setServerParam('apiKey', e.target.value)}
           />
-          <p className={SessionStyles.localDesc}>{t('sessionTestcribeApiKeyDescription')}</p>
+          <p className={builderStyles.localDesc}>{t('sessionTestcribeApiKeyDescription')}</p>
         </Form.Item>
       </Col>
     </Row>

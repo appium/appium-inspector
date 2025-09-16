@@ -16,7 +16,8 @@ import {useEffect, useRef} from 'react';
 
 import {CAPABILITY_TYPES} from '../../../constants/session-builder.js';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
-import SessionStyles from '../SessionBuilder.module.css';
+import builderStyles from '../SessionBuilder.module.css';
+import styles from './CapabilityBuilderTab.module.css';
 import CapabilityControl from './CapabilityControl.jsx';
 
 const whitespaces = /^\s|\s$/;
@@ -93,7 +94,7 @@ const CapabilityEditor = (props) => {
   return (
     <Splitter>
       <Splitter.Panel collapsible resizable={false}>
-        <Form className={SessionStyles.newSessionForm}>
+        <Form className={styles.newSessionForm}>
           {caps.map((cap, index) => (
             <Row gutter={8} key={index}>
               <Col span={7}>
@@ -106,7 +107,7 @@ const CapabilityEditor = (props) => {
                       value={cap.name}
                       onChange={(e) => setCapabilityParam(index, 'name', e.target.value)}
                       ref={index === caps.length - 1 ? latestCapField : ''}
-                      className={SessionStyles.capsBoxFont}
+                      className={styles.capsBoxFont}
                     />
                   </Tooltip>
                 </Form.Item>
@@ -181,7 +182,7 @@ const CapabilityEditor = (props) => {
                     id="btnAddDesiredCapability"
                     icon={<PlusOutlined />}
                     onClick={addCapability}
-                    className={SessionStyles['add-desired-capability-button']}
+                    className={styles.addCapabilityButton}
                   />
                 </Tooltip>
               </Form.Item>
@@ -207,7 +208,7 @@ const CapabilityEditor = (props) => {
             status={isDuplicateCapsName ? 'error' : ''}
           />
           {isDuplicateCapsName && (
-            <p className={SessionStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>
+            <p className={builderStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>
           )}
         </Modal>
       </Splitter.Panel>

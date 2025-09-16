@@ -1,0 +1,21 @@
+.capsBoxFont {
+  font-family: monospace;
+}
+
+.newSessionForm {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+.newSessionForm::-webkit-scrollbar {
+  width: 0px;
+}
+
+.newSessionForm :global(.ant-form-item) {
+  margin-bottom: 0.5em;
+}
+
+.addCapabilityButton {
+  float: right;
+}

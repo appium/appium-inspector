@@ -7,7 +7,7 @@ import {
   SESSION_BUILDER_TABS,
 } from '../../../constants/session-builder.js';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
-import SessionStyles from '../SessionBuilder.module.css';
+import styles from './SavedCapabilitySets.module.css';
 
 const dataSource = (savedSessions, t) => {
   if (!savedSessions) {
@@ -109,7 +109,7 @@ const SavedCapabilitySets = (props) => {
   return (
     <Splitter>
       <Splitter.Panel min={430}>
-        <Card className={SessionStyles.savedSessions}>
+        <Card className={styles.savedSessions}>
           <Table
             pagination={false}
             sticky={true}

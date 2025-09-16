@@ -1,7 +1,6 @@
 import {Checkbox, Col, Form, Input, Row} from 'antd';
 
 import {PROVIDER_VALUES} from '../../../constants/session-builder.js';
-import SessionStyles from '../SessionBuilder.module.css';
 
 const portPlaceholder = (server) => (server.perfecto.ssl ? '443' : '80');
 
@@ -18,7 +17,6 @@ const ServerTabPerfecto = ({server, setServerParam, t}) => (
       <Col span={9}>
         <Form.Item>
           <Input
-            className={SessionStyles.customServerInputLeft}
             id="PerfectoServerHost"
             placeholder={PROVIDER_VALUES.PERFECTO_URL}
             addonBefore={t('Perfecto Host')}

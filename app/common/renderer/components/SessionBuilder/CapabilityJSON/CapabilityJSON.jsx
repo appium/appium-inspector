@@ -4,7 +4,8 @@ import hljs from 'highlight.js';
 
 import {getCapsObject} from '../../../actions/SessionBuilder.js';
 import {ALERT} from '../../../constants/antd-types.js';
-import SessionStyles from '../SessionBuilder.module.css';
+import builderStyles from '../SessionBuilder.module.css';
+import styles from './CapabilityJSON.module.css';
 
 const CapabilityJSON = (props) => {
   const {
@@ -37,16 +38,16 @@ const CapabilityJSON = (props) => {
       return title;
     } else {
       return (
-        <Row className={SessionStyles.capsEditorTitle}>
+        <Row className={styles.capsEditorTitle}>
           <Input
             onChange={(e) => setDesiredCapsName(e.target.value)}
             value={desiredCapsName}
-            className={SessionStyles.capsEditorTitle}
+            className={styles.capsEditorTitle}
             onPressEnter={saveDesiredCapsName}
             status={isDuplicateCapsName ? 'error' : ''}
           />
           {isDuplicateCapsName && (
-            <p className={SessionStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>
+            <p className={builderStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>
           )}
         </Row>
       );
@@ -64,7 +65,7 @@ const CapabilityJSON = (props) => {
             size="small"
             onClick={startDesiredCapsNameEditor}
             icon={<EditOutlined />}
-            className={SessionStyles.capsNameEditorButton}
+            className={styles.capsNameEditorButton}
           />
         </Tooltip>
       );
@@ -76,7 +77,7 @@ const CapabilityJSON = (props) => {
               size="small"
               onClick={abortDesiredCapsNameEditor}
               icon={<CloseOutlined />}
-              className={SessionStyles.capsNameEditorButton}
+              className={styles.capsNameEditorButton}
             />
           </Tooltip>
           <Tooltip title={t('Save')}>
@@ -84,7 +85,7 @@ const CapabilityJSON = (props) => {
               size="small"
               onClick={saveDesiredCapsName}
               icon={<SaveOutlined />}
-              className={SessionStyles.capsNameEditorButton}
+              className={styles.capsNameEditorButton}
             />
           </Tooltip>
         </div>
@@ -95,17 +96,17 @@ const CapabilityJSON = (props) => {
   return (
     caps && (
       <Card
-        className={SessionStyles.formattedCaps}
+        className={styles.formattedCaps}
         title={setCapsTitle()}
         extra={setCapsTitleButtons()}
       >
-        <div className={SessionStyles.capsEditorControls}>
+        <div className={styles.capsEditorControls}>
           {isEditingDesiredCaps && (
             <Tooltip title={t('Cancel')}>
               <Button
                 onClick={abortDesiredCapsEditor}
                 icon={<CloseOutlined />}
-                className={SessionStyles.capsEditorButton}
+                className={styles.capsEditorButton}
               />
             </Tooltip>
           )}
@@ -114,7 +115,7 @@ const CapabilityJSON = (props) => {
               <Button
                 onClick={saveRawDesiredCaps}
                 icon={<SaveOutlined />}
-                className={SessionStyles.capsEditorButton}
+                className={styles.capsEditorButton}
               />
             </Tooltip>
           )}
@@ -125,21 +126,21 @@ const CapabilityJSON = (props) => {
           )}
         </div>
         {isEditingDesiredCaps && (
-          <div className={SessionStyles.capsEditor}>
+          <div className={styles.capsEditor}>
             <Input.TextArea
               onChange={(e) => setRawDesiredCaps(e.target.value)}
               value={rawDesiredCaps}
-              className={`${SessionStyles.capsEditorBody} ${
+              className={`${styles.capsEditorBody} ${
                 isValidCapsJson
-                  ? SessionStyles.capsEditorBodyFull
-                  : SessionStyles.capsEditorBodyResized
+                  ? styles.capsEditorBodyFull
+                  : styles.capsEditorBodyResized
               }`}
             />
             {!isValidCapsJson && <Alert message={invalidCapsJsonReason} type={ALERT.ERROR} />}
           </div>
         )}
         {!isEditingDesiredCaps && (
-          <div className={SessionStyles.formattedCapsBody}>
+          <div className={styles.formattedCapsBody}>
             <pre>
               <code dangerouslySetInnerHTML={{__html: getHighlightedCaps(caps)}} />
             </pre>

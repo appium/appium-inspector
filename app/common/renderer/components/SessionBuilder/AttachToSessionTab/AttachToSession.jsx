@@ -2,7 +2,8 @@ import {ReloadOutlined} from '@ant-design/icons';
 import {Button, Card, Col, Form, Row, Select, Tooltip} from 'antd';
 
 import {getSessionInfo} from '../../../utils/attaching-to-session.js';
-import SessionStyles from '../SessionBuilder.module.css';
+import builderStyles from '../SessionBuilder.module.css';
+import styles from './AttachToSession.module.css';
 
 const AttachToSession = ({
   serverType,
@@ -15,7 +16,7 @@ const AttachToSession = ({
   <Form>
     <Form.Item>
       <Card>
-        <p className={SessionStyles.localDesc}>
+        <p className={builderStyles.localDesc}>
           {t('connectToExistingSessionInstructions')}
           <br />
           {t('selectSessionIDInDropdown')}
@@ -47,7 +48,7 @@ const AttachToSession = ({
         <Col span={1}>
           <Tooltip title={t('Reload')}>
             <Button
-              className={SessionStyles.btnReload}
+              className={styles.btnReload}
               onClick={getRunningSessions}
               icon={<ReloadOutlined />}
             />

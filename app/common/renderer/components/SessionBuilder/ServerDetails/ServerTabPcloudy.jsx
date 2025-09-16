@@ -2,7 +2,6 @@ import {Col, Form, Input, Row} from 'antd';
 
 import {INPUT} from '../../../constants/antd-types.js';
 import {PROVIDER_VALUES} from '../../../constants/session-builder.js';
-import SessionStyles from '../SessionBuilder.module.css';
 
 const ServerTabPcloudy = ({server, setServerParam, t}) => (
   <Form>
@@ -10,7 +9,6 @@ const ServerTabPcloudy = ({server, setServerParam, t}) => (
       <Col span={8}>
         <Form.Item>
           <Input
-            className={SessionStyles.customServerInputLeft}
             id="PcloudyServerHost"
             placeholder={PROVIDER_VALUES.PCLOUDY_HOST}
             addonBefore={t('Pcloudy Host')}

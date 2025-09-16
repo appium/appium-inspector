@@ -1,7 +1,7 @@
 import {Checkbox, Col, Form, Input, Radio, Row} from 'antd';
 
 import {INPUT} from '../../../constants/antd-types.js';
-import SessionStyles from '../SessionBuilder.module.css';
+import styles from './ServerDetails.module.css';
 
 const sauceUsernamePlaceholder = (t) => {
   if (process.env.SAUCE_USERNAME) {
@@ -47,13 +47,13 @@ const ServerTabSauce = ({server, setServerParam, t}) => (
     <Row gutter={8}>
       <Col span={8}>
         <Form.Item>
-          <div className={['ant-input-group-addon', SessionStyles.addonDataCenter].join(' ')}>
+          <div className={['ant-input-group-addon', styles.addonDataCenter].join(' ')}>
             {t('SauceLabs Data Center')}
           </div>
           <Radio.Group
             className={[
-              SessionStyles.inputDataCenter,
-              SessionStyles.addonDataCenterRadioContainer,
+              styles.inputDataCenter,
+              styles.addonDataCenterRadioContainer,
             ].join(' ')}
             buttonStyle="solid"
             defaultValue="us-west-1"
