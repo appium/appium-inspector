@@ -19,8 +19,8 @@ import {
   SESSION_EXPIRY_PROMPT_TIMEOUT,
 } from '../../constants/session-inspector.js';
 import {downloadFile} from '../../utils/file-handling.js';
-import CommandResultTable from './CommandsTab/CommandResultTable.jsx';
 import Commands from './CommandsTab/Commands.jsx';
+import CommandsResultTable from './CommandsTab/CommandsResultTable.jsx';
 import GestureEditor from './GesturesTab/GestureEditor.jsx';
 import SavedGestures from './GesturesTab/SavedGestures.jsx';
 import HeaderButtons from './Header/HeaderButtons.jsx';
@@ -343,7 +343,7 @@ const Inspector = (props) => {
         onCancel={() => setVisibleCommandResult(null)}
         width={900}
       >
-        <CommandResultTable result={visibleCommandResult} />
+        <CommandsResultTable result={visibleCommandResult} />
       </Modal>
     </div>
   );

@@ -35,7 +35,7 @@ const ClickableCellContent = ({text, dataIndex}) => {
   );
 };
 
-const CommandResultTable = ({result}) => {
+const CommandsResultTable = ({result}) => {
   const createColumn = (data, dataIndex, options = {}) => ({
     title: dataIndex,
     dataIndex,
@@ -147,4 +147,4 @@ const CommandResultTable = ({result}) => {
   );
 };
 
-export default CommandResultTable;
+export default CommandsResultTable;
