@@ -18,7 +18,7 @@ const formatValueWithTimestamp = (value, key = null) =>
 
 const CommandResultTableCell = ({value, dataIndex}) => {
   const [isCopied, setIsCopied] = useState(false);
-  const displayText = String(formatValueWithTimestamp(value, dataIndex));
+  const displayText = String(formatValueWithTimestamp(value, dataIndex)).trim();
 
   const handleCopy = async () => {
     await copyToClipboard(displayText);
