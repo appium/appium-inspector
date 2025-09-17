@@ -16,32 +16,32 @@ const formatTimestamp = (timestamp) => {
 const formatValueWithTimestamp = (value, key = null) =>
   isTimestampKey(key) ? formatTimestamp(value) : value;
 
-const ClickableCellContent = ({text, dataIndex}) => {
+const CommandResultTableCell = ({value, dataIndex}) => {
   const [isCopied, setIsCopied] = useState(false);
-  const displayText = String(formatValueWithTimestamp(text, dataIndex));
+  const displayText = String(formatValueWithTimestamp(value, dataIndex));
 
   const handleCopy = async () => {
-    await copyToClipboard(text);
+    await copyToClipboard(displayText);
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
   };
 
   return (
     <Tooltip placement="topLeft" title={isCopied ? 'Copied' : 'Click to copy'}>
-      <pre className={styles['clickable-cell']} onClick={handleCopy}>
+      <pre className={styles['command-result-table-cell']} onClick={handleCopy}>
         {displayText}
       </pre>
     </Tooltip>
   );
 };
 
-const CommandsResultTable = ({result}) => {
+const CommandResultTable = ({result}) => {
   const createColumn = (data, dataIndex, options = {}) => ({
     title: dataIndex,
     dataIndex,
     key: dataIndex,
     ellipsis: {showTitle: false},
-    render: (text) => <ClickableCellContent text={text} dataIndex={dataIndex} />,
+    render: (value) => <CommandResultTableCell value={value} dataIndex={dataIndex} />,
     sorter: (a, b) =>
       formatValueWithTimestamp(a[dataIndex], dataIndex).localeCompare(
         formatValueWithTimestamp(b[dataIndex], dataIndex),
@@ -147,4 +147,4 @@ const CommandsResultTable = ({result}) => {
   );
 };
 
-export default CommandsResultTable;
+export default CommandResultTable;

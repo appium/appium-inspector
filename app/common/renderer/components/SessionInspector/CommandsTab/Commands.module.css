@@ -18,7 +18,7 @@
   vertical-align: top;
 }
 
-.clickable-cell {
+.command-result-table-cell {
   margin: 0;
   white-space: pre-wrap;
   cursor: pointer;
