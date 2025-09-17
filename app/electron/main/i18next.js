@@ -3,8 +3,8 @@ import i18n from 'i18next';
 import i18NextBackend from 'i18next-fs-backend';
 import {join} from 'path';
 
-import {commonI18NextOptions, fallbackLng} from '../../common/shared/i18next.config';
-import {PREFERRED_LANGUAGE} from '../../common/shared/setting-defs';
+import {commonI18NextOptions, fallbackLng} from '../../common/shared/i18next.config.js';
+import {PREFERRED_LANGUAGE} from '../../common/shared/setting-defs.js';
 
 const localesPath =
   process.env.NODE_ENV === 'development'

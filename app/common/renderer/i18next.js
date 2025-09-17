@@ -2,9 +2,9 @@ import i18n from 'i18next';
 import _ from 'lodash';
 import {initReactI18next, withTranslation as wt} from 'react-i18next';
 
-import {commonI18NextOptions} from '../shared/i18next.config';
-import {PREFERRED_LANGUAGE} from '../shared/setting-defs';
-import {getSetting, i18NextBackend, i18NextBackendOptions} from './polyfills';
+import {commonI18NextOptions} from '../shared/i18next.config.js';
+import {PREFERRED_LANGUAGE} from '../shared/setting-defs.js';
+import {getSetting, i18NextBackend, i18NextBackendOptions} from './polyfills.js';
 
 const i18nextOptions = {
   ...commonI18NextOptions,

@@ -5,7 +5,7 @@ import {
   findJSONElementByPath,
   xmlToDOM,
   xmlToJSON,
-} from '../../app/common/renderer/utils/source-parsing';
+} from '../../app/common/renderer/utils/source-parsing.js';
 
 describe('utils/source-parsing.js', function () {
   describe('#findDOMNodeByPath', function () {

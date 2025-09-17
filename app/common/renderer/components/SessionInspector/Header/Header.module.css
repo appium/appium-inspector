@@ -1,0 +1,89 @@
+.locatorStrategyBtn {
+  margin-top: -1px;
+  min-width: 25%;
+  text-align: center;
+}
+
+.locatorSelectorTextArea {
+  width: 100%;
+}
+
+.headerBtnIcon {
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.wideTooltip {
+  max-width: 400px;
+}
+
+.contextsInfoBtn {
+  height: 30px;
+  width: 30px;
+  color: #ffffff;
+  margin-top: 1px;
+  padding: 3px 0 0 7px;
+}
+
+.noContextsInfoIcon {
+  background-color: #faad14;
+}
+
+.headerContextSelector {
+  width: 350px;
+}
+
+.contextsInfoIcon {
+  background-color: #1890ff;
+}
+
+.headerButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  gap: 10px;
+  width: 100%;
+  height: 50px;
+  -webkit-app-region: drag;
+}
+
+.headerButtons :global(.ant-divider-horizontal) {
+  margin: 0px;
+}
+
+.headerButtons .ant-btn {
+  height: auto !important;
+  width: auto !important;
+}
+
+.headerButtons :global(.ant-space-item) {
+  -webkit-app-region: no-drag;
+}
+
+.searchResultsList {
+  width: 100%;
+  flex: 1;
+  min-height: 24px;
+  max-height: 150px;
+  overflow: auto;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #303030;
+  border-radius: 6px 6px 0 0;
+}
+
+.searchResultsList :global(.ant-table-cell) {
+  padding: 4px 6px !important;
+  height: 25px;
+  text-align: left;
+}
+
+.searchResultsActions {
+  width: 350px;
+}
+
+.searchResultsKeyInput {
+  height: 32px;
+  width: calc(100% - 64px);
+}

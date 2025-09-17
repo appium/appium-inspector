@@ -1,7 +1,7 @@
 import {configureStore} from '@reduxjs/toolkit';
 
-import actions from './actions';
-import createRootReducer from './reducers';
+import actions from './actions/index.js';
+import createRootReducer from './reducers/index.js';
 
 const store = configureStore({
   reducer: createRootReducer(),

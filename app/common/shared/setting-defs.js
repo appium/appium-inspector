@@ -1,6 +1,6 @@
 // Definitions for all the persistent settings used in the app
 
-import {fallbackLng} from './i18next.config';
+import {fallbackLng} from './i18next.config.js';
 
 export const PREFERRED_LANGUAGE = 'PREFERRED_LANGUAGE';
 export const PREFERRED_THEME = 'PREFERRED_THEME';

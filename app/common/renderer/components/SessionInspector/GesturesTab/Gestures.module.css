@@ -1,0 +1,138 @@
+.errorIcon {
+  color: red;
+  margin: 5px;
+}
+
+.gestureHeaderTitle {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.gestureHeaderCoordBtn {
+  width: 30px;
+  height: 32px;
+}
+
+.gestureHeaderDescription {
+  font-size: 15px;
+  font-weight: 400;
+  color: #636363;
+  margin-left: 30px;
+  margin-top: 5px;
+}
+
+.timelineTickTitle {
+  text-align: center;
+}
+
+.gestureHeaderIcon {
+  font-size: 20px;
+}
+
+.gestureHeaderTimeline {
+  width: 90%;
+  margin-top: -15px;
+  min-height: 36px;
+}
+
+.gestureHeaderTimeline
+  :global(
+    .ant-steps-item-wait
+      > .ant-steps-item-container
+      > .ant-steps-item-content
+      > .ant-steps-item-title::after
+  ) {
+  background-color: #fffefe;
+}
+
+.gestureHeaderTimeline
+  :global(
+    .ant-steps-item-finish
+      .ant-steps-item-container
+      .ant-steps-item-content
+      .ant-steps-item-title::after
+  ) {
+  background-color: var(--timelineColor);
+}
+
+.tickButtonGroup {
+  display: block;
+}
+
+.tickButtonInput {
+  width: 73px;
+}
+
+.tickInputBox {
+  width: 145px;
+}
+
+.tickInputBox :global(.ant-input-group-addon) {
+  position: sticky;
+  width: 50px;
+}
+
+.tickCoordBox {
+  width: 72px;
+  text-align: center;
+}
+
+.tickPointerInput {
+  width: 145px;
+}
+
+.optionInput {
+  text-align: center;
+}
+
+.tickCard {
+  overflow: hidden;
+}
+
+.tickCard :global(.ant-card-head) {
+  margin-top: -16px;
+  padding-right: 0px;
+  border-bottom: none;
+}
+
+.tickCard :global(.ant-card-body) {
+  margin-top: -12px;
+  min-height: 167px;
+  margin-right: -12px;
+}
+
+.tickPlusCard {
+  min-height: 220px;
+}
+
+.tickPlusBtn {
+  position: absolute;
+  top: 40%;
+}
+
+.pointerTitle {
+  max-width: 65px;
+  padding: 0 0 0 0;
+  text-align: center;
+  text-decoration: underline;
+  text-decoration-thickness: 20%;
+}
+
+.gestureHeader {
+  padding: 0 0 0 0;
+  margin-right: -12px;
+}
+
+.gestureHeader :global(.ant-page-header-footer) {
+  margin-top: 0px;
+  padding-bottom: 5px;
+}
+
+.gestureHeader :global(.ant-typography) {
+  margin-bottom: 0px;
+}
+
+.gestureHeader :global(.ant-input) {
+  box-shadow: none;
+  border-width: 0px;
+}

@@ -1,12 +1,12 @@
 import {combineReducers} from '@reduxjs/toolkit';
 
-import inspector from './Inspector';
-import session from './Session';
+import builder from './SessionBuilder.js';
+import inspector from './SessionInspector.js';
 
 // create our root reducer
 export default function createRootReducer() {
   return combineReducers({
-    session,
+    builder,
     inspector,
   });
 }

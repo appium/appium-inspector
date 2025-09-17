@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import {CAPABILITY_TYPES, SERVER_TYPES} from '../constants/session-builder';
+import {CAPABILITY_TYPES, SERVER_TYPES} from '../constants/session-builder.js';
 
 export function downloadFile(href, filename) {
   let element = document.createElement('a');

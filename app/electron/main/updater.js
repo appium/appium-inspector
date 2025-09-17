@@ -3,7 +3,7 @@ import pkg from 'electron-updater';
 // eslint-disable-next-line import/no-named-as-default-member -- module is CJS
 const {autoUpdater} = pkg;
 
-import {t} from './helpers';
+import {t} from './helpers.js';
 
 const RELEASES_LINK = 'https://github.com/appium/appium-inspector/releases';
 
