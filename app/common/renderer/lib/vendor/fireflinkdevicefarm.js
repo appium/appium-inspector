@@ -6,12 +6,13 @@ export class FireflinkDeviceFarmVendor extends BaseVendor {
    */
   async configureProperties() {
     const fireflinkdevicefarm = this._server.fireflinkdevicefarm;
-    const vendorName = 'DeviceFarm';
+    const vendorName = 'FireflinkDeviceFarm';
 
-    const host = fireflinkdevicefarm.host || process.env.DEVICEFARM_DOMAIN;
-    const accessKey = fireflinkdevicefarm.accessKey || process.env.DEVICEFARM_ACCESS_KEY;
-    const licenseId = fireflinkdevicefarm.licenseId || process.env.DEVICEFARM_LICENSE_ID;
-    const projectName = fireflinkdevicefarm.projectName || process.env.DEVICEFARM_PROJECT_ID;
+    const host = fireflinkdevicefarm.host || process.env.FIREFLINKDEVICEFARM_DOMAIN;
+    const accessKey = fireflinkdevicefarm.accessKey || process.env.FIREFLINKDEVICEFARM_ACCESS_KEY;
+    const licenseId = fireflinkdevicefarm.licenseId || process.env.FIREFLINKDEVICEFARM_LICENSE_ID;
+    const projectName =
+      fireflinkdevicefarm.projectName || process.env.FIREFLINKDEVICEFARM_PROJECT_ID;
 
     this._checkInputPropertyPresence(vendorName, [
       {name: 'Host', val: host},

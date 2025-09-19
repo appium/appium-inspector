@@ -306,7 +306,7 @@
   "specifyWebmateHostExplicitly": "Specify webmate host explicitly",
   "webmateHost": "webmate Host",
   "Enable": "Enable",
-  "yourFireflinkDevicefarmDomain": "Your DeviceFarm Domain (e.g., cloud.fireflink.com)",
+  "yourFireflinkDevicefarmDomain": "Your Fireflink DeviceFarm Domain (e.g., cloud.fireflink.com)",
   "yourLicenseId": "Your License ID",
   "yourProjectName": "Your Project Name",
   "License ID": "License ID",

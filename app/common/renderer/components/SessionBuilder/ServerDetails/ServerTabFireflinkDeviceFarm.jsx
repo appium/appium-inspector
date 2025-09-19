@@ -5,28 +5,28 @@ import {INPUT} from '../../../constants/antd-types.js';
 // Placeholders using environment variables if available
 
 const fireflinkDeviceFarmDomainPlaceholder = (t) => {
-  if (process.env.DEVICEFARM_DOMAIN) {
-    return t('usingDataFoundIn', {environmentVariable: 'DEVICEFARM_DOMAIN'});
+  if (process.env.FIREFLINKDEVICEFARM_DOMAIN) {
+    return t('usingDataFoundIn', {environmentVariable: 'FIREFLINKDEVICEFARM_DOMAIN'});
   }
   return t('yourFireflinkDevicefarmDomain');
 };
 const fireflinkDeviceFarmAccessKeyPlaceholder = (t) => {
-  if (process.env.DEVICEFARM_ACCESS_KEY) {
-    return t('usingDataFoundIn', {environmentVariable: 'DEVICEFARM_ACCESS_KEY'});
+  if (process.env.FIREFLINKDEVICEFARM_ACCESS_KEY) {
+    return t('usingDataFoundIn', {environmentVariable: 'FIREFLINKDEVICEFARM_ACCESS_KEY'});
   }
   return t('yourAccessKey');
 };
 
 const fireflinkDeviceFarmLicenseIdPlaceholder = (t) => {
-  if (process.env.DEVICEFARM_LICENSE_ID) {
-    return t('usingDataFoundIn', {environmentVariable: 'DEVICEFARM_LICENSE_ID'});
+  if (process.env.FIREFLINKDEVICEFARM_LICENSE_ID) {
+    return t('usingDataFoundIn', {environmentVariable: 'FIREFLINKDEVICEFARM_LICENSE_ID'});
   }
   return t('yourLicenseId');
 };
 
 const fireflinkDeviceFarmprojectNamePlaceholder = (t) => {
-  if (process.env.DEVICEFARM_PROJECT_ID) {
-    return t('usingDataFoundIn', {environmentVariable: 'DEVICEFARM_PROJECT_ID'});
+  if (process.env.FIREFLINKDEVICEFARM_PROJECT_ID) {
+    return t('usingDataFoundIn', {environmentVariable: 'FIREFLINKDEVICEFARM_PROJECT_ID'});
   }
   return t('yourProjectName');
 };
@@ -39,7 +39,7 @@ const ServerTabFireflinkDeviceFarm = ({server, setServerParam, t}) => (
           <Input
             id="fireflinkDeviceFarmDomain"
             placeholder={fireflinkDeviceFarmDomainPlaceholder(t)}
-            addonBefore={t('DeviceFarm Domain')}
+            addonBefore={t('FireflinkDeviceFarm Domain')}
             value={server.fireflinkdevicefarm.host}
             onChange={(e) => setServerParam('host', e.target.value)}
           />
@@ -51,7 +51,7 @@ const ServerTabFireflinkDeviceFarm = ({server, setServerParam, t}) => (
             id="fireflinkDeviceFarmAccessKey"
             type={INPUT.PASSWORD}
             placeholder={fireflinkDeviceFarmAccessKeyPlaceholder(t)}
-            addonBefore={t('DeviceFarm Access Key')}
+            addonBefore={t('FireflinkDeviceFarm Access Key')}
             value={server.fireflinkdevicefarm.accessKey}
             onChange={(e) => setServerParam('accessKey', e.target.value)}
           />
@@ -62,7 +62,7 @@ const ServerTabFireflinkDeviceFarm = ({server, setServerParam, t}) => (
           <Input
             id="fireflinkDeviceFarmLicenseId"
             placeholder={fireflinkDeviceFarmLicenseIdPlaceholder(t)}
-            addonBefore={t('DeviceFarm License ID')}
+            addonBefore={t('FireflinkDeviceFarm License ID')}
             value={server.fireflinkdevicefarm.licenseId}
             onChange={(e) => setServerParam('licenseId', e.target.value)}
           />
@@ -73,7 +73,7 @@ const ServerTabFireflinkDeviceFarm = ({server, setServerParam, t}) => (
           <Input
             id="fireflinkDeviceFarmprojectName"
             placeholder={fireflinkDeviceFarmprojectNamePlaceholder(t)}
-            addonBefore={t('DeviceFarm Project Name')}
+            addonBefore={t('FireflinkDeviceFarm Project Name')}
             value={server.fireflinkdevicefarm.projectName}
             onChange={(e) => setServerParam('projectName', e.target.value)}
           />
