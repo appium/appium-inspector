@@ -351,10 +351,15 @@ export function newSession(originalCaps, attachSessId = null) {
     let mjpegScreenshotUrl =
       driver.capabilities[`appium:${MJPEG_CAP}`] || driver.capabilities[MJPEG_CAP] || null;
 
-    const mjpegScreenshotPort =
+    let mjpegScreenshotPort =
       driver.capabilities[`appium:${MJPEG_PORT_CAP}`] ||
       driver.capabilities[MJPEG_PORT_CAP] ||
       null;
+
+        if (session.serverType === SERVER_TYPES.DEVICEFARM) {
+      mjpegScreenshotUrl = null;
+      mjpegScreenshotPort = null;
+    }
 
     // Build mjpegScreenshotUrl if mjpegServerPort in session capabilities
     if (!mjpegScreenshotUrl && mjpegScreenshotPort) {
