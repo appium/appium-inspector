@@ -1,8 +1,8 @@
 import {SERVER_TYPES} from '../../constants/session-builder';
 import {BitbarVendor} from './bitbar.js';
 import {BrowserstackVendor} from './browserstack.js';
-import {DeviceFarmVendor} from './devicefarm.js';
 import {ExperitestVendor} from './experitest.js';
+import {FireflinkDeviceFarmVendor} from './fireflinkdevicefarm.js';
 import {HeadspinVendor} from './headspin.js';
 import {KobitonVendor} from './kobiton.js';
 import {LambdatestVendor} from './lambdatest.js';
@@ -38,5 +38,5 @@ export const VENDOR_MAP = {
   [SERVER_TYPES.TVLABS]: TvlabsVendor,
   [SERVER_TYPES.TESTCRIBE]: TestcribeVendor,
   [SERVER_TYPES.WEBMATE]: WebmateVendor,
-  [SERVER_TYPES.DEVICEFARM]: DeviceFarmVendor,
+  [SERVER_TYPES.FIREFLINKDEVICEFARM]: FireflinkDeviceFarmVendor,
 };

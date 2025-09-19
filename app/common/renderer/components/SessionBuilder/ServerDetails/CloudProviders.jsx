@@ -1,8 +1,8 @@
 import BitBarLogo from '../../../assets/images/bitbar_logo.svg';
 import BrowserStackLogo from '../../../assets/images/browserstack_logo.svg';
 import BrowserStackLogoDark from '../../../assets/images/browserstack_logo_dark.svg';
-import DeviceFarmWhite from '../../../assets/images/deviceFarm.svg';
-import DeviceFarmColor from '../../../assets/images/deviceFarm_logo.svg';
+import FireflinkDeviceFarmWhite from '../../../assets/images/deviceFarm.svg';
+import FireflinkDeviceFarmColor from '../../../assets/images/deviceFarm_logo.svg';
 import ExperitestLogo from '../../../assets/images/experitest_logo.svg';
 import HeadSpinLogo from '../../../assets/images/headspin_logo.svg';
 import KobitonLogo from '../../../assets/images/kobiton_logo.svg';
@@ -29,8 +29,8 @@ import {useTheme} from '../../../hooks/use-theme.jsx';
 import styles from './ServerDetails.module.css';
 import ServerTabBitbar from './ServerTabBitbar.jsx';
 import ServerTabBrowserstack from './ServerTabBrowserstack.jsx';
-import ServerTabDeviceFarm from './ServerTabDeviceFarm.jsx';
 import ServerTabExperitest from './ServerTabExperitest.jsx';
+import ServerTabFireflinkDeviceFarm from './ServerTabFireflinkDeviceFarm.jsx';
 import ServerTabHeadspin from './ServerTabHeadspin.jsx';
 import ServerTabKobiton from './ServerTabKobiton.jsx';
 import ServerTabLambdatest from './ServerTabLambdatest.jsx';
@@ -158,11 +158,11 @@ const providers = {
       dark: WebmateLogoDark,
     },
   },
-  [SERVER_TYPES.DEVICEFARM]: {
-    tab: ServerTabDeviceFarm,
+  [SERVER_TYPES.FIREFLINKDEVICEFARM]: {
+    tab: ServerTabFireflinkDeviceFarm,
     logos: {
-      light: DeviceFarmColor,
-      dark: DeviceFarmWhite,
+      light: FireflinkDeviceFarmColor,
+      dark: FireflinkDeviceFarmWhite,
     },
   },
 };

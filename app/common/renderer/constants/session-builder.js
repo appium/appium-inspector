@@ -24,7 +24,7 @@ export const SERVER_TYPES = {
   TVLABS: 'tvlabs',
   TESTCRIBE: 'testcribe',
   WEBMATE: 'webmate',
-  DEVICEFARM: 'devicefarm',
+  FIREFLINKDEVICEFARM: 'fireflinkdevicefarm',
 };
 
 export const SAVED_SESSIONS_TABLE_VALUES = {

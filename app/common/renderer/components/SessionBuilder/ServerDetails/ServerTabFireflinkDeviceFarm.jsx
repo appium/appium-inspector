@@ -4,43 +4,43 @@ import {INPUT} from '../../../constants/antd-types.js';
 
 // Placeholders using environment variables if available
 
-const deviceFarmDomainPlaceholder = (t) => {
+const fireflinkDeviceFarmDomainPlaceholder = (t) => {
   if (process.env.DEVICEFARM_DOMAIN) {
     return t('usingDataFoundIn', {environmentVariable: 'DEVICEFARM_DOMAIN'});
   }
-  return t('yourDevicefarmDomain');
+  return t('yourFireflinkDevicefarmDomain');
 };
-const deviceFarmAccessKeyPlaceholder = (t) => {
+const fireflinkDeviceFarmAccessKeyPlaceholder = (t) => {
   if (process.env.DEVICEFARM_ACCESS_KEY) {
     return t('usingDataFoundIn', {environmentVariable: 'DEVICEFARM_ACCESS_KEY'});
   }
   return t('yourAccessKey');
 };
 
-const deviceFarmLicenseIdPlaceholder = (t) => {
+const fireflinkDeviceFarmLicenseIdPlaceholder = (t) => {
   if (process.env.DEVICEFARM_LICENSE_ID) {
     return t('usingDataFoundIn', {environmentVariable: 'DEVICEFARM_LICENSE_ID'});
   }
   return t('yourLicenseId');
 };
 
-const deviceFarmprojectNamePlaceholder = (t) => {
+const fireflinkDeviceFarmprojectNamePlaceholder = (t) => {
   if (process.env.DEVICEFARM_PROJECT_ID) {
     return t('usingDataFoundIn', {environmentVariable: 'DEVICEFARM_PROJECT_ID'});
   }
   return t('yourProjectName');
 };
 
-const ServerTabDeviceFarm = ({server, setServerParam, t}) => (
+const ServerTabFireflinkDeviceFarm = ({server, setServerParam, t}) => (
   <Form>
     <Row gutter={8}>
       <Col span={12}>
         <Form.Item>
           <Input
-            id="deviceFarmDomain"
-            placeholder={deviceFarmDomainPlaceholder(t)}
+            id="fireflinkDeviceFarmDomain"
+            placeholder={fireflinkDeviceFarmDomainPlaceholder(t)}
             addonBefore={t('DeviceFarm Domain')}
-            value={server.devicefarm.host}
+            value={server.fireflinkdevicefarm.host}
             onChange={(e) => setServerParam('host', e.target.value)}
           />
         </Form.Item>
@@ -48,11 +48,11 @@ const ServerTabDeviceFarm = ({server, setServerParam, t}) => (
       <Col span={12}>
         <Form.Item>
           <Input
-            id="deviceFarmAccessKey"
+            id="fireflinkDeviceFarmAccessKey"
             type={INPUT.PASSWORD}
-            placeholder={deviceFarmAccessKeyPlaceholder(t)}
+            placeholder={fireflinkDeviceFarmAccessKeyPlaceholder(t)}
             addonBefore={t('DeviceFarm Access Key')}
-            value={server.devicefarm.accessKey}
+            value={server.fireflinkdevicefarm.accessKey}
             onChange={(e) => setServerParam('accessKey', e.target.value)}
           />
         </Form.Item>
@@ -60,10 +60,10 @@ const ServerTabDeviceFarm = ({server, setServerParam, t}) => (
       <Col span={12}>
         <Form.Item>
           <Input
-            id="deviceFarmLicenseId"
-            placeholder={deviceFarmLicenseIdPlaceholder(t)}
+            id="fireflinkDeviceFarmLicenseId"
+            placeholder={fireflinkDeviceFarmLicenseIdPlaceholder(t)}
             addonBefore={t('DeviceFarm License ID')}
-            value={server.devicefarm.licenseId}
+            value={server.fireflinkdevicefarm.licenseId}
             onChange={(e) => setServerParam('licenseId', e.target.value)}
           />
         </Form.Item>
@@ -71,10 +71,10 @@ const ServerTabDeviceFarm = ({server, setServerParam, t}) => (
       <Col span={12}>
         <Form.Item>
           <Input
-            id="deviceFarmprojectName"
-            placeholder={deviceFarmprojectNamePlaceholder(t)}
+            id="fireflinkDeviceFarmprojectName"
+            placeholder={fireflinkDeviceFarmprojectNamePlaceholder(t)}
             addonBefore={t('DeviceFarm Project Name')}
-            value={server.devicefarm.projectName}
+            value={server.fireflinkdevicefarm.projectName}
             onChange={(e) => setServerParam('projectName', e.target.value)}
           />
         </Form.Item>
@@ -83,4 +83,4 @@ const ServerTabDeviceFarm = ({server, setServerParam, t}) => (
   </Form>
 );
 
-export default ServerTabDeviceFarm;
+export default ServerTabFireflinkDeviceFarm;
