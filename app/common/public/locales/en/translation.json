@@ -310,5 +310,9 @@
   "yourLicenseId": "Your License ID",
   "yourProjectName": "Your Project Name",
   "License ID": "License ID",
-  "Project Name": "Project Name"
+  "Project Name": "Project Name",
+  "Fireflink DeviceFarm Domain": "Fireflink DeviceFarm Domain",
+  "Fireflink DeviceFarm Access Key": "Fireflink DeviceFarm Access Key",
+  "Fireflink DeviceFarm License ID": "Fireflink DeviceFarm License ID",
+  "Fireflink DeviceFarm Project Name": "Fireflink DeviceFarm Project Name"
 }
