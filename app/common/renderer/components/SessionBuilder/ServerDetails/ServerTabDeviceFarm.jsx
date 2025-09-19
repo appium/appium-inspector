@@ -8,7 +8,7 @@ const deviceFarmDomainPlaceholder = (t) => {
   if (process.env.DEVICEFARM_DOMAIN) {
     return t('usingDataFoundIn', {environmentVariable: 'DEVICEFARM_DOMAIN'});
   }
-  return t('Your DeviceFarm Domain (e.g., cloud.fireflink.com)');
+  return t('yourDevicefarmDomain');
 };
 const deviceFarmAccessKeyPlaceholder = (t) => {
   if (process.env.DEVICEFARM_ACCESS_KEY) {
@@ -21,20 +21,20 @@ const deviceFarmLicenseIdPlaceholder = (t) => {
   if (process.env.DEVICEFARM_LICENSE_ID) {
     return t('usingDataFoundIn', {environmentVariable: 'DEVICEFARM_LICENSE_ID'});
   }
-  return t('Your LicenseId');
+  return t('yourLicenseId');
 };
 
 const deviceFarmprojectNamePlaceholder = (t) => {
   if (process.env.DEVICEFARM_PROJECT_ID) {
     return t('usingDataFoundIn', {environmentVariable: 'DEVICEFARM_PROJECT_ID'});
   }
-  return t('Your Project Name');
+  return t('yourProjectName');
 };
 
 const ServerTabDeviceFarm = ({server, setServerParam, t}) => (
   <Form>
     <Row gutter={8}>
-      <Col span={8}>
+      <Col span={12}>
         <Form.Item>
           <Input
             id="deviceFarmDomain"
@@ -45,7 +45,7 @@ const ServerTabDeviceFarm = ({server, setServerParam, t}) => (
           />
         </Form.Item>
       </Col>
-      <Col span={8}>
+      <Col span={12}>
         <Form.Item>
           <Input
             id="deviceFarmAccessKey"
@@ -57,7 +57,7 @@ const ServerTabDeviceFarm = ({server, setServerParam, t}) => (
           />
         </Form.Item>
       </Col>
-      <Col span={8}>
+      <Col span={12}>
         <Form.Item>
           <Input
             id="deviceFarmLicenseId"
@@ -68,7 +68,7 @@ const ServerTabDeviceFarm = ({server, setServerParam, t}) => (
           />
         </Form.Item>
       </Col>
-      <Col span={8}>
+      <Col span={12}>
         <Form.Item>
           <Input
             id="deviceFarmprojectName"

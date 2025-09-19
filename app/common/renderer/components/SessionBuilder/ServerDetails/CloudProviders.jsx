@@ -46,13 +46,6 @@ import ServerTabTVLabs from './ServerTabTVLabs.jsx';
 import ServerTabWebmate from './ServerTabWebmate.jsx';
 
 const providers = {
-  [SERVER_TYPES.DEVICEFARM]: {
-    tab: ServerTabDeviceFarm,
-    logos: {
-      light: DeviceFarmColor,
-      dark: DeviceFarmWhite,
-    },
-  },
   [SERVER_TYPES.SAUCE]: {
     tab: ServerTabSauce,
     logos: {
@@ -163,6 +156,13 @@ const providers = {
     logos: {
       light: WebmateLogo,
       dark: WebmateLogoDark,
+    },
+  },
+    [SERVER_TYPES.DEVICEFARM]: {
+    tab: ServerTabDeviceFarm,
+    logos: {
+      light: DeviceFarmColor,
+      dark: DeviceFarmWhite,
     },
   },
 };

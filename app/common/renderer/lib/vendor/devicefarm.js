@@ -8,21 +8,21 @@ export class DeviceFarmVendor extends BaseVendor {
     const devicefarm = this._server.devicefarm;
     const vendorName = 'DeviceFarm';
 
-    const host = devicefarm.host;
-    const accessKey = devicefarm.accessKey;
-    const licenseId = devicefarm.licenseId;
-    const projectName = devicefarm.projectName;
+    const host = devicefarm.host || process.env.DEVICEFARM_DOMAIN;
+    const accessKey = devicefarm.accessKey || process.env.DEVICEFARM_ACCESS_KEY;
+    const licenseId = devicefarm.licenseId || process.env.DEVICEFARM_LICENSE_ID;
+    const projectName = devicefarm.projectName || process.env.DEVICEFARM_PROJECT_ID;
 
     this._checkInputPropertyPresence(vendorName, [
-      {name: 'Server Host', val: host},
+      {name: 'Host', val: host},
       {name: 'Access Key', val: accessKey},
       {name: 'License ID', val: licenseId},
-      {name: 'Project ID', val: projectName},
+      {name: 'Project Name', val: projectName},
     ]);
 
-    const port = devicefarm.port || 443;
+    const port = 443;
+    const https = true;
     const path = `/backend/fireflinkcloud/wd/hub?accessKey=${accessKey}&licenseId=${licenseId}&projectName=${projectName}`;
-    const https = parseInt(port, 10) === 443;
 
     this._saveProperties(devicefarm, {
       host,
@@ -30,9 +30,6 @@ export class DeviceFarmVendor extends BaseVendor {
       port,
       https,
       accessKey,
-      licenseId,
-      projectName,
-      vendor: 'devicefarm',
     });
   }
 }
