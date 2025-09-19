@@ -39,7 +39,7 @@ const ServerTabFireflinkDeviceFarm = ({server, setServerParam, t}) => (
           <Input
             id="fireflinkDeviceFarmDomain"
             placeholder={fireflinkDeviceFarmDomainPlaceholder(t)}
-            addonBefore={t('FireflinkDeviceFarm Domain')}
+            addonBefore={t('Fireflink DeviceFarm Domain')}
             value={server.fireflinkdevicefarm.host}
             onChange={(e) => setServerParam('host', e.target.value)}
           />
@@ -51,7 +51,7 @@ const ServerTabFireflinkDeviceFarm = ({server, setServerParam, t}) => (
             id="fireflinkDeviceFarmAccessKey"
             type={INPUT.PASSWORD}
             placeholder={fireflinkDeviceFarmAccessKeyPlaceholder(t)}
-            addonBefore={t('FireflinkDeviceFarm Access Key')}
+            addonBefore={t('Fireflink DeviceFarm Access Key')}
             value={server.fireflinkdevicefarm.accessKey}
             onChange={(e) => setServerParam('accessKey', e.target.value)}
           />
@@ -62,7 +62,7 @@ const ServerTabFireflinkDeviceFarm = ({server, setServerParam, t}) => (
           <Input
             id="fireflinkDeviceFarmLicenseId"
             placeholder={fireflinkDeviceFarmLicenseIdPlaceholder(t)}
-            addonBefore={t('FireflinkDeviceFarm License ID')}
+            addonBefore={t('Fireflink DeviceFarm License ID')}
             value={server.fireflinkdevicefarm.licenseId}
             onChange={(e) => setServerParam('licenseId', e.target.value)}
           />
@@ -73,7 +73,7 @@ const ServerTabFireflinkDeviceFarm = ({server, setServerParam, t}) => (
           <Input
             id="fireflinkDeviceFarmprojectName"
             placeholder={fireflinkDeviceFarmprojectNamePlaceholder(t)}
-            addonBefore={t('FireflinkDeviceFarm Project Name')}
+            addonBefore={t('Fireflink DeviceFarm Project Name')}
             value={server.fireflinkdevicefarm.projectName}
             onChange={(e) => setServerParam('projectName', e.target.value)}
           />
