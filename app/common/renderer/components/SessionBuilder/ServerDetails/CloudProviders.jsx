@@ -158,7 +158,7 @@ const providers = {
       dark: WebmateLogoDark,
     },
   },
-    [SERVER_TYPES.DEVICEFARM]: {
+  [SERVER_TYPES.DEVICEFARM]: {
     tab: ServerTabDeviceFarm,
     logos: {
       light: DeviceFarmColor,
