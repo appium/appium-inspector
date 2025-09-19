@@ -45,9 +45,8 @@ import ServerTabTestingbot from './ServerTabTestingbot.jsx';
 import ServerTabTVLabs from './ServerTabTVLabs.jsx';
 import ServerTabWebmate from './ServerTabWebmate.jsx';
 
-
 const providers = {
-      [SERVER_TYPES.DEVICEFARM]: {
+  [SERVER_TYPES.DEVICEFARM]: {
     tab: ServerTabDeviceFarm,
     logos: {
       light: DeviceFarmColor,

@@ -356,7 +356,7 @@ export function newSession(originalCaps, attachSessId = null) {
       driver.capabilities[MJPEG_PORT_CAP] ||
       null;
 
-        if (session.serverType === SERVER_TYPES.DEVICEFARM) {
+    if (session.serverType === SERVER_TYPES.DEVICEFARM) {
       mjpegScreenshotUrl = null;
       mjpegScreenshotPort = null;
     }
