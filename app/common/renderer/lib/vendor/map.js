@@ -1,6 +1,7 @@
 import {SERVER_TYPES} from '../../constants/session-builder';
 import {BitbarVendor} from './bitbar.js';
 import {BrowserstackVendor} from './browserstack.js';
+import {DeviceFarmVendor} from './devicefarm.js';
 import {ExperitestVendor} from './experitest.js';
 import {HeadspinVendor} from './headspin.js';
 import {KobitonVendor} from './kobiton.js';
@@ -17,7 +18,6 @@ import {TestcribeVendor} from './testcribe.js';
 import {TestingbotVendor} from './testingbot.js';
 import {TvlabsVendor} from './tvlabs.js';
 import {WebmateVendor} from './webmate.js';
-import {DeviceFarmVendor} from './devicefarm.js';
 
 export const VENDOR_MAP = {
   [SERVER_TYPES.LOCAL]: LocalVendor,

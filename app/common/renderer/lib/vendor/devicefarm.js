@@ -1,4 +1,4 @@
-import { BaseVendor } from "./base.js";
+import { BaseVendor } from './base.js';
 
 export class DeviceFarmVendor extends BaseVendor {
   /**
@@ -6,7 +6,7 @@ export class DeviceFarmVendor extends BaseVendor {
    */
   async configureProperties() {
     const devicefarm = this._server.devicefarm;
-    const vendorName = "DeviceFarm";
+    const vendorName = 'DeviceFarm';
 
     const host = devicefarm.host;
     const accessKey = devicefarm.accessKey;
@@ -14,10 +14,10 @@ export class DeviceFarmVendor extends BaseVendor {
     const projectName = devicefarm.projectName;
 
     this._checkInputPropertyPresence(vendorName, [
-      { name: "Server Host", val: host },
-      { name: "Access Key", val: accessKey },
-      { name: "License ID", val: licenseId },
-      { name: "Project ID", val: projectName },
+      { name: 'Server Host', val: host },
+      { name: 'Access Key', val: accessKey },
+      { name: 'License ID', val: licenseId },
+      { name: 'Project ID', val: projectName },
     ]);
 
     const port = devicefarm.port || 443;
