@@ -2,6 +2,8 @@ import BitBarLogo from '../../../assets/images/bitbar_logo.svg';
 import BrowserStackLogo from '../../../assets/images/browserstack_logo.svg';
 import BrowserStackLogoDark from '../../../assets/images/browserstack_logo_dark.svg';
 import ExperitestLogo from '../../../assets/images/experitest_logo.svg';
+import FireflinkDeviceFarmWhite from '../../../assets/images/fireflink_deviceFarm.svg';
+import FireflinkDeviceFarmColor from '../../../assets/images/fireflink_deviceFarm_logo.svg';
 import HeadSpinLogo from '../../../assets/images/headspin_logo.svg';
 import KobitonLogo from '../../../assets/images/kobiton_logo.svg';
 import KobitonLogoDark from '../../../assets/images/kobiton_logo_dark.svg';
@@ -28,6 +30,7 @@ import styles from './ServerDetails.module.css';
 import ServerTabBitbar from './ServerTabBitbar.jsx';
 import ServerTabBrowserstack from './ServerTabBrowserstack.jsx';
 import ServerTabExperitest from './ServerTabExperitest.jsx';
+import ServerTabFireflinkDeviceFarm from './ServerTabFireflinkDeviceFarm.jsx';
 import ServerTabHeadspin from './ServerTabHeadspin.jsx';
 import ServerTabKobiton from './ServerTabKobiton.jsx';
 import ServerTabLambdatest from './ServerTabLambdatest.jsx';
@@ -153,6 +156,13 @@ const providers = {
     logos: {
       light: WebmateLogo,
       dark: WebmateLogoDark,
+    },
+  },
+  [SERVER_TYPES.FIREFLINKDEVICEFARM]: {
+    tab: ServerTabFireflinkDeviceFarm,
+    logos: {
+      light: FireflinkDeviceFarmColor,
+      dark: FireflinkDeviceFarmWhite,
     },
   },
 };
