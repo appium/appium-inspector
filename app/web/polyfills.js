@@ -33,17 +33,38 @@ const browserUtils = {
   },
 };
 
+// --- In-memory fallback for Node/non-browser environments ---
+const memoryStorage = {};
+
+function isLocalStorageAvailable() {
+  try {
+    return typeof localStorage !== 'undefined' && localStorage !== null;
+  } catch {
+    return false;
+  }
+}
+
 class BrowserSettings {
   has(key) {
     return this.get(key) !== null;
   }
 
   set(key, val) {
-    return localStorage.setItem(key, JSON.stringify(val));
+    if (isLocalStorageAvailable()) {
+      localStorage.setItem(key, JSON.stringify(val));
+    } else {
+      memoryStorage[key] = JSON.stringify(val);
+    }
   }
 
   get(key) {
-    return JSON.parse(localStorage.getItem(key));
+    if (isLocalStorageAvailable()) {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : null;
+    } else {
+      const item = memoryStorage[key];
+      return item ? JSON.parse(item) : null;
+    }
   }
 }
 

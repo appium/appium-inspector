@@ -2,25 +2,6 @@ import {startServer as startAppiumFakeDriverServer} from '@appium/fake-driver';
 import path from 'path';
 import {afterAll, beforeAll, describe, expect, it} from 'vitest';
 
-// Node.js test environment polyfill for localStorage
-if (typeof global.localStorage === 'undefined' || global.localStorage === null) {
-  global.localStorage = {
-    _data: {},
-    setItem(key, val) {
-      this._data[key] = String(val);
-    },
-    getItem(key) {
-      return Object.prototype.hasOwnProperty.call(this._data, key) ? this._data[key] : null;
-    },
-    removeItem(key) {
-      delete this._data[key];
-    },
-    clear() {
-      this._data = {};
-    },
-  };
-}
-
 import InspectorDriver from '../../app/common/renderer/lib/appium/inspector-driver.js';
 import WDSessionStarter from '../../app/common/renderer/lib/appium/session-starter.js';
 
