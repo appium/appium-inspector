@@ -3,7 +3,7 @@ import path from 'path';
 import {afterAll, beforeAll, describe, expect, it} from 'vitest';
 
 // Node.js test environment polyfill for localStorage
-if (typeof localStorage === 'undefined' || localStorage === null) {
+if (typeof global.localStorage === 'undefined' || global.localStorage === null) {
   global.localStorage = {
     _data: {},
     setItem(key, val) {
