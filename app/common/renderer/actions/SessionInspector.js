@@ -16,7 +16,7 @@ import {
   xmlToDOM,
   xmlToJSON,
 } from '../utils/source-parsing.js';
-import {showError} from './SessionBuilder.js';
+import {newSession, showError} from './SessionBuilder.js';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
 export const SET_SOURCE_AND_SCREENSHOT = 'SET_SOURCE_AND_SCREENSHOT';
@@ -328,8 +328,29 @@ export function applyClientMethod(params) {
       return commandRes;
     } catch (error) {
       log.error(error);
-      showError(error, {methodName: params.methodName, secs: 10});
+      showError(
+        {
+          message:
+            'Please wait while the page refreshes. The session was restarted because the connection was lost.',
+        },
+        {methodName: params.methodName, secs: 3},
+      );
       dispatch({type: METHOD_CALL_DONE});
+      const quitSes = quitSession('Window closed');
+      const newSes = newSession(getState().builder.caps);
+      const getPageSrc = applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
+      const storeSessionSet = storeSessionSettings();
+      const getSavedClientFrame = getSavedClientFramework();
+      const runKeepAliveLp = runKeepAliveLoop();
+      const setSesTime = setSessionTime(Date.now());
+
+      await quitSes(dispatch, getState);
+      await newSes(dispatch, getState);
+      await getPageSrc(dispatch, getState);
+      await storeSessionSet(dispatch, getState);
+      await getSavedClientFrame(dispatch);
+      runKeepAliveLp(dispatch, getState);
+      setSesTime(dispatch);
     }
   };
 }
