@@ -1,5 +1,6 @@
 import _ from 'lodash';
 
+import {quitSession} from '../../actions/SessionInspector.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot.js';
 import {APP_MODE, NATIVE_APP, REFRESH_DELAY_MILLIS} from '../../constants/session-inspector.js';
 import {log} from '../../utils/logger.js';
@@ -395,6 +396,8 @@ export default class InspectorDriver {
       const screenshot = await this.driver.takeScreenshot();
       return {screenshot};
     } catch (err) {
+      const quitSes = quitSession('Window closed');
+      await quitSes();
       return {screenshotError: err};
     }
   }
