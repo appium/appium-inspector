@@ -6,12 +6,21 @@ import {afterAll, beforeAll, describe, expect, it} from 'vitest';
 if (typeof localStorage === 'undefined' || localStorage === null) {
   global.localStorage = {
     _data: {},
-    setItem: function (key, val) { this._data[key] = String(val); },
-    getItem: function (key) { return this._data.hasOwnProperty(key) ? this._data[key] : null; },
-    removeItem: function (key) { delete this._data[key]; },
-    clear: function () { this._data = {}; }
+    setItem(key, val) {
+      this._data[key] = String(val);
+    },
+    getItem(key) {
+      return Object.prototype.hasOwnProperty.call(this._data, key) ? this._data[key] : null;
+    },
+    removeItem(key) {
+      delete this._data[key];
+    },
+    clear() {
+      this._data = {};
+    },
   };
 }
+
 import InspectorDriver from '../../app/common/renderer/lib/appium/inspector-driver.js';
 import WDSessionStarter from '../../app/common/renderer/lib/appium/session-starter.js';
 
