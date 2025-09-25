@@ -39,6 +39,7 @@ import {
   SET_STATE_FROM_URL,
   SHOW_DESIRED_CAPS_JSON_ERROR,
   SWITCHED_TABS,
+  SET_AUTO_SESSION_RESTART,
 } from '../actions/SessionBuilder.js';
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder.js';
 
@@ -76,6 +77,7 @@ const INITIAL_STATE = {
   isValidatingCapsJson: false,
   isAddingCloudProvider: false,
   addVendorPrefixes: true,
+  autoSessionRestart: true
 };
 
 let nextState;
@@ -392,6 +394,12 @@ export default function builder(state = INITIAL_STATE, action) {
         },
         serverType: action.sessionJSON.serverType,
         visibleProviders: action.sessionJSON.visibleProviders || [],
+      };
+
+    case SET_AUTO_SESSION_RESTART:
+      return {
+        ...state,
+        autoSessionRestart: action.autoSessionRestart,
       };
 
     default:

@@ -117,6 +117,7 @@ export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
 export const TOGGLE_REFRESHING_STATE = 'TOGGLE_REFRESHING_STATE';
 
 export const SET_GESTURE_UPLOAD_ERROR = 'SET_GESTURE_UPLOAD_ERROR';
+export const SET_AUTO_SESSION_RESTART = 'SET_AUTO_SESSION_RESTART';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -327,11 +328,16 @@ export function applyClientMethod(params) {
       window.dispatchEvent(new Event('resize'));
       return commandRes;
     } catch (error) {
+      if(!getState().inspector.autoSessionRestart){
+        log.error(error);
+        showError(error, {methodName: params.methodName, secs: 10});
+        dispatch({type: METHOD_CALL_DONE});
+      }else{
       log.error(error);
       showError(
         {
           message:
-            'Please wait while the page refreshes. The session was restarted because the connection was lost.',
+            i18n.t('RestartSessionMessage'),
         },
         {methodName: params.methodName, secs: 3},
       );
@@ -351,6 +357,7 @@ export function applyClientMethod(params) {
       await getSavedClientFrame(dispatch);
       runKeepAliveLp(dispatch, getState);
       setSesTime(dispatch);
+    }
     }
   };
 }
@@ -899,9 +906,10 @@ export function keepSessionAlive() {
 
 export function callClientMethod(params) {
   return async (dispatch, getState) => {
-    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn} = getState().inspector;
+    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} = getState().inspector;
     const {methodName, ignoreResult = true} = params;
     params.appMode = appMode;
+    params.autoSessionRestart = autoSessionRestart;
 
     // don't retrieve screenshot if we're already using the mjpeg stream
     if (isUsingMjpegMode) {
@@ -1115,5 +1123,19 @@ export function tapTickCoordinates(x, y) {
 export function toggleShowAttributes() {
   return (dispatch) => {
     dispatch({type: TOGGLE_SHOW_ATTRIBUTES});
+  };
+}
+
+export function getAutoSessionState() {
+  return (dispatch, getState) => {
+    const autoSessionRestart=getState().builder.autoSessionRestart;
+    dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart});
+  };
+}
+
+export function toggleAutoSessionRestart() {
+  return (dispatch, getState) => {
+    const autoSessionRestart = !getState().inspector.autoSessionRestart;
+    dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart});
   };
 }

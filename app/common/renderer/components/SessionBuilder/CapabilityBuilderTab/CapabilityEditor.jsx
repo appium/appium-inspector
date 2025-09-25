@@ -78,6 +78,8 @@ const CapabilityEditor = (props) => {
     server,
     serverType,
     isDuplicateCapsName,
+    autoSessionRestart,
+    setAutoSessionRestart,
   } = props;
 
   const onSaveAsOk = () => saveSession(server, serverType, caps, {name: saveAsText});
@@ -171,6 +173,15 @@ const CapabilityEditor = (props) => {
                   onChange={(e) => setAddVendorPrefixes(e.target.checked)}
                 >
                   {t('autoAddPrefixes')}
+                </Checkbox>
+              </Form.Item>
+
+              <Form.Item>
+                <Checkbox
+                  checked={autoSessionRestart}
+                  onChange={(e) => setAutoSessionRestart(e.target.checked)}
+                >
+                  {t('AutomaticRestartSession')}
                 </Checkbox>
               </Form.Item>
             </Col>

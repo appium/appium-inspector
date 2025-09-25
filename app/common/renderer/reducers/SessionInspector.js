@@ -85,6 +85,7 @@ import {
   UNSELECT_HOVERED_CENTROID,
   UNSELECT_HOVERED_ELEMENT,
   UNSELECT_TICK_ELEMENT,
+  SET_AUTO_SESSION_RESTART
 } from '../actions/SessionInspector.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot.js';
 import {
@@ -133,6 +134,7 @@ const INITIAL_STATE = {
   isAwaitingMjpegStream: true,
   showSourceAttrs: false,
   gestureUploadErrors: null,
+  autoSessionRestart: true
 };
 
 let nextState;
@@ -669,6 +671,12 @@ export default function inspector(state = INITIAL_STATE, action) {
 
     case SET_GESTURE_UPLOAD_ERROR:
       return {...state, gestureUploadErrors: action.errors};
+    
+    case SET_AUTO_SESSION_RESTART:
+      return {
+        ...state,
+        autoSessionRestart: action.autoSessionRestart,
+      };
 
     default:
       return {...state};
