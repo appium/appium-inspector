@@ -152,7 +152,7 @@ const Inspector = (props) => {
       runKeepAliveLoop,
       setSessionTime,
       storeSessionSettings,
-      getAutoSessionState
+      getAutoSessionState,
     } = props;
     getAutoSessionState();
     const curHeight = window.innerHeight;

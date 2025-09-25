@@ -42,6 +42,7 @@ import {
   SESSION_DONE,
   SET_APP_ID,
   SET_APP_MODE,
+  SET_AUTO_SESSION_RESTART,
   SET_AWAITING_MJPEG_STREAM,
   SET_CLIENT_FRAMEWORK,
   SET_COMMAND_ARG,
@@ -85,7 +86,6 @@ import {
   UNSELECT_HOVERED_CENTROID,
   UNSELECT_HOVERED_ELEMENT,
   UNSELECT_TICK_ELEMENT,
-  SET_AUTO_SESSION_RESTART
 } from '../actions/SessionInspector.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot.js';
 import {
@@ -134,7 +134,7 @@ const INITIAL_STATE = {
   isAwaitingMjpegStream: true,
   showSourceAttrs: false,
   gestureUploadErrors: null,
-  autoSessionRestart: true
+  autoSessionRestart: true,
 };
 
 let nextState;
@@ -671,7 +671,7 @@ export default function inspector(state = INITIAL_STATE, action) {
 
     case SET_GESTURE_UPLOAD_ERROR:
       return {...state, gestureUploadErrors: action.errors};
-    
+
     case SET_AUTO_SESSION_RESTART:
       return {
         ...state,

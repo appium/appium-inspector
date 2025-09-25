@@ -45,7 +45,7 @@ export default class InspectorDriver {
       skipRefresh = false, // Optional. Do we want the updated source and screenshot?
       skipScreenshot = false, // Optional. Do we want to skip getting screenshot alone?
       appMode = APP_MODE.NATIVE, // Optional. Whether we're in a native or hybrid mode
-      autoSessionRestart
+      autoSessionRestart,
     } = params;
 
     if (methodName === 'deleteSession') {
@@ -79,14 +79,21 @@ export default class InspectorDriver {
           skipRefresh,
           skipScreenshot,
           appMode,
-          autoSessionRestart
+          autoSessionRestart,
         });
       } else {
         log.info(
           `Handling client method request with method '${methodName}' ` +
             `and args ${JSON.stringify(args)}`,
         );
-        res = await this.executeMethod({methodName, args, skipRefresh, skipScreenshot, appMode, autoSessionRestart});
+        res = await this.executeMethod({
+          methodName,
+          args,
+          skipRefresh,
+          skipScreenshot,
+          appMode,
+          autoSessionRestart,
+        });
       }
     } else if (strategy && selector) {
       if (fetchArray) {
@@ -101,7 +108,15 @@ export default class InspectorDriver {
     return res;
   }
 
-  async executeMethod({elementId, methodName, args, skipRefresh, skipScreenshot, appMode, autoSessionRestart}) {
+  async executeMethod({
+    elementId,
+    methodName,
+    args,
+    skipRefresh,
+    skipScreenshot,
+    appMode,
+    autoSessionRestart,
+  }) {
     let cachedEl;
     let res = {};
     if (!_.isArray(args) && !_.isUndefined(args)) {
@@ -398,8 +413,8 @@ export default class InspectorDriver {
       const screenshot = await this.driver.takeScreenshot();
       return {screenshot};
     } catch (err) {
-      if(autoSessionRestart){
-              const quitSes = quitSession('Window closed');
+      if (autoSessionRestart) {
+        const quitSes = quitSession('Window closed');
         await quitSes();
       }
       return {screenshotError: err};

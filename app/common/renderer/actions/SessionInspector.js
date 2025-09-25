@@ -328,36 +328,35 @@ export function applyClientMethod(params) {
       window.dispatchEvent(new Event('resize'));
       return commandRes;
     } catch (error) {
-      if(!getState().inspector.autoSessionRestart){
+      if (!getState().inspector.autoSessionRestart) {
         log.error(error);
         showError(error, {methodName: params.methodName, secs: 10});
         dispatch({type: METHOD_CALL_DONE});
-      }else{
-      log.error(error);
-      showError(
-        {
-          message:
-            i18n.t('RestartSessionMessage'),
-        },
-        {methodName: params.methodName, secs: 3},
-      );
-      dispatch({type: METHOD_CALL_DONE});
-      const quitSes = quitSession('Window closed');
-      const newSes = newSession(getState().builder.caps);
-      const getPageSrc = applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
-      const storeSessionSet = storeSessionSettings();
-      const getSavedClientFrame = getSavedClientFramework();
-      const runKeepAliveLp = runKeepAliveLoop();
-      const setSesTime = setSessionTime(Date.now());
+      } else {
+        log.error(error);
+        showError(
+          {
+            message: i18n.t('RestartSessionMessage'),
+          },
+          {methodName: params.methodName, secs: 3},
+        );
+        dispatch({type: METHOD_CALL_DONE});
+        const quitSes = quitSession('Window closed');
+        const newSes = newSession(getState().builder.caps);
+        const getPageSrc = applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
+        const storeSessionSet = storeSessionSettings();
+        const getSavedClientFrame = getSavedClientFramework();
+        const runKeepAliveLp = runKeepAliveLoop();
+        const setSesTime = setSessionTime(Date.now());
 
-      await quitSes(dispatch, getState);
-      await newSes(dispatch, getState);
-      await getPageSrc(dispatch, getState);
-      await storeSessionSet(dispatch, getState);
-      await getSavedClientFrame(dispatch);
-      runKeepAliveLp(dispatch, getState);
-      setSesTime(dispatch);
-    }
+        await quitSes(dispatch, getState);
+        await newSes(dispatch, getState);
+        await getPageSrc(dispatch, getState);
+        await storeSessionSet(dispatch, getState);
+        await getSavedClientFrame(dispatch);
+        runKeepAliveLp(dispatch, getState);
+        setSesTime(dispatch);
+      }
     }
   };
 }
@@ -906,7 +905,8 @@ export function keepSessionAlive() {
 
 export function callClientMethod(params) {
   return async (dispatch, getState) => {
-    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} = getState().inspector;
+    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} =
+      getState().inspector;
     const {methodName, ignoreResult = true} = params;
     params.appMode = appMode;
     params.autoSessionRestart = autoSessionRestart;
@@ -1128,7 +1128,7 @@ export function toggleShowAttributes() {
 
 export function getAutoSessionState() {
   return (dispatch, getState) => {
-    const autoSessionRestart=getState().builder.autoSessionRestart;
+    const autoSessionRestart = getState().builder.autoSessionRestart;
     dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart});
   };
 }

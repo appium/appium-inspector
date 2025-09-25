@@ -26,6 +26,7 @@ import {
   SAVE_SESSION_REQUESTED,
   SET_ADD_VENDOR_PREFIXES,
   SET_ATTACH_SESS_ID,
+  SET_AUTO_SESSION_RESTART,
   SET_CAPABILITY_NAME_ERROR,
   SET_CAPABILITY_PARAM,
   SET_CAPS_AND_SERVER,
@@ -39,7 +40,6 @@ import {
   SET_STATE_FROM_URL,
   SHOW_DESIRED_CAPS_JSON_ERROR,
   SWITCHED_TABS,
-  SET_AUTO_SESSION_RESTART,
 } from '../actions/SessionBuilder.js';
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder.js';
 
@@ -77,7 +77,7 @@ const INITIAL_STATE = {
   isValidatingCapsJson: false,
   isAddingCloudProvider: false,
   addVendorPrefixes: true,
-  autoSessionRestart: true
+  autoSessionRestart: true,
 };
 
 let nextState;
