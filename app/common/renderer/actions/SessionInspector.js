@@ -10,6 +10,7 @@ import {getSetting, setSetting} from '../polyfills.js';
 import {readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation.js';
 import {log} from '../utils/logger.js';
+import {notification} from '../utils/notification.js';
 import {
   findDOMNodeByPath,
   findJSONElementByPath,
@@ -328,18 +329,23 @@ export function applyClientMethod(params) {
       window.dispatchEvent(new Event('resize'));
       return commandRes;
     } catch (error) {
-      if (!getState().inspector.autoSessionRestart) {
-        log.error(error);
+      const {inspector} = getState();
+      const isWebDriverError = error
+        .toString()
+        .includes('process is not running (probably crashed)');
+      const isApplyError =
+        error.message === "Cannot read properties of undefined (reading 'apply')";
+      log.error(error);
+      if (!(inspector.autoSessionRestart && (isWebDriverError || isApplyError))) {
         showError(error, {methodName: params.methodName, secs: 10});
         dispatch({type: METHOD_CALL_DONE});
       } else {
-        log.error(error);
-        showError(
-          {
-            message: i18n.t('RestartSessionMessage'),
-          },
-          {methodName: params.methodName, secs: 3},
-        );
+        showError(error, {methodName: params.methodName, secs: 3});
+        notification.info({
+          message: i18n.t('Information'),
+          description: i18n.t('RestartSessionMessage'),
+          duration: 3,
+        });
         dispatch({type: METHOD_CALL_DONE});
         const quitSes = quitSession('Window closed');
         const newSes = newSession(getState().builder.caps);

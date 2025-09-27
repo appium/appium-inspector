@@ -1,6 +1,5 @@
 import _ from 'lodash';
 
-import {quitSession} from '../../actions/SessionInspector.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot.js';
 import {APP_MODE, NATIVE_APP, REFRESH_DELAY_MILLIS} from '../../constants/session-inspector.js';
 import {log} from '../../utils/logger.js';
@@ -166,7 +165,7 @@ export default class InspectorDriver {
       if (appMode === APP_MODE.WEB_HYBRID) {
         contextUpdate = await this.getContextUpdate(windowSizeUpdate);
       }
-      sourceUpdate = await this.getSourceUpdate();
+      sourceUpdate = await this.getSourceUpdate(autoSessionRestart);
     }
     return {
       ...cachedEl,
@@ -399,11 +398,14 @@ export default class InspectorDriver {
     return {contexts, contextsError, currentContext, currentContextError};
   }
 
-  async getSourceUpdate() {
+  async getSourceUpdate(autoSessionRestart) {
     try {
       const source = parseHtmlSource(await this.driver.getPageSource());
       return {source};
     } catch (err) {
+      if (autoSessionRestart) {
+        throw new Error(err);
+      }
       return {sourceError: err};
     }
   }
@@ -414,8 +416,7 @@ export default class InspectorDriver {
       return {screenshot};
     } catch (err) {
       if (autoSessionRestart) {
-        const quitSes = quitSession('Window closed');
-        await quitSes();
+        throw new Error(err);
       }
       return {screenshotError: err};
     }
