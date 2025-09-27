@@ -42,6 +42,7 @@ import {
   SESSION_DONE,
   SET_APP_ID,
   SET_APP_MODE,
+  SET_AUTO_SESSION_RESTART,
   SET_AWAITING_MJPEG_STREAM,
   SET_CLIENT_FRAMEWORK,
   SET_COMMAND_ARG,
@@ -669,6 +670,12 @@ export default function inspector(state = INITIAL_STATE, action) {
 
     case SET_GESTURE_UPLOAD_ERROR:
       return {...state, gestureUploadErrors: action.errors};
+
+    case SET_AUTO_SESSION_RESTART:
+      return {
+        ...state,
+        autoSessionRestart: action.autoSessionRestart,
+      };
 
     default:
       return {...state};

@@ -10,13 +10,14 @@ import {getSetting, setSetting} from '../polyfills.js';
 import {readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation.js';
 import {log} from '../utils/logger.js';
+import {notification} from '../utils/notification.js';
 import {
   findDOMNodeByPath,
   findJSONElementByPath,
   xmlToDOM,
   xmlToJSON,
 } from '../utils/source-parsing.js';
-import {showError} from './SessionBuilder.js';
+import {newSession, showError} from './SessionBuilder.js';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
 export const SET_SOURCE_AND_SCREENSHOT = 'SET_SOURCE_AND_SCREENSHOT';
@@ -117,6 +118,7 @@ export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
 export const TOGGLE_REFRESHING_STATE = 'TOGGLE_REFRESHING_STATE';
 
 export const SET_GESTURE_UPLOAD_ERROR = 'SET_GESTURE_UPLOAD_ERROR';
+export const SET_AUTO_SESSION_RESTART = 'SET_AUTO_SESSION_RESTART';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -327,9 +329,40 @@ export function applyClientMethod(params) {
       window.dispatchEvent(new Event('resize'));
       return commandRes;
     } catch (error) {
+      const {inspector} = getState();
+      const isWebDriverError = error
+        .toString()
+        .includes('process is not running (probably crashed)');
+      const isApplyError =
+        error.message === "Cannot read properties of undefined (reading 'apply')";
       log.error(error);
-      showError(error, {methodName: params.methodName, secs: 10});
-      dispatch({type: METHOD_CALL_DONE});
+      if (!(inspector.autoSessionRestart && (isWebDriverError || isApplyError))) {
+        showError(error, {methodName: params.methodName, secs: 10});
+        dispatch({type: METHOD_CALL_DONE});
+      } else {
+        showError(error, {methodName: params.methodName, secs: 3});
+        notification.info({
+          message: i18n.t('Information'),
+          description: i18n.t('RestartSessionMessage'),
+          duration: 3,
+        });
+        dispatch({type: METHOD_CALL_DONE});
+        const quitSes = quitSession('Window closed');
+        const newSes = newSession(getState().builder.caps);
+        const getPageSrc = applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
+        const storeSessionSet = storeSessionSettings();
+        const getSavedClientFrame = getSavedClientFramework();
+        const runKeepAliveLp = runKeepAliveLoop();
+        const setSesTime = setSessionTime(Date.now());
+
+        await quitSes(dispatch, getState);
+        await newSes(dispatch, getState);
+        await getPageSrc(dispatch, getState);
+        await storeSessionSet(dispatch, getState);
+        await getSavedClientFrame(dispatch);
+        runKeepAliveLp(dispatch, getState);
+        setSesTime(dispatch);
+      }
     }
   };
 }
@@ -878,9 +911,11 @@ export function keepSessionAlive() {
 
 export function callClientMethod(params) {
   return async (dispatch, getState) => {
-    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn} = getState().inspector;
+    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} =
+      getState().inspector;
     const {methodName, ignoreResult = true} = params;
     params.appMode = appMode;
+    params.autoSessionRestart = autoSessionRestart;
 
     // don't retrieve screenshot if we're already using the mjpeg stream
     if (isUsingMjpegMode) {
@@ -1094,5 +1129,19 @@ export function tapTickCoordinates(x, y) {
 export function toggleShowAttributes() {
   return (dispatch) => {
     dispatch({type: TOGGLE_SHOW_ATTRIBUTES});
+  };
+}
+
+export function getAutoSessionState() {
+  return (dispatch, getState) => {
+    const autoSessionRestart = getState().builder.autoSessionRestart;
+    dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart});
+  };
+}
+
+export function toggleAutoSessionRestart() {
+  return (dispatch, getState) => {
+    const autoSessionRestart = !getState().inspector.autoSessionRestart;
+    dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart});
   };
 }
