@@ -232,6 +232,7 @@ const Inspector = (props) => {
           placement="topRight"
         >
           <Switch
+            checked={autoSessionRestart}
             checkedChildren={<CheckCircleOutlined />}
             unCheckedChildren={<CloseCircleOutlined />}
             defaultChecked={autoSessionRestart}
