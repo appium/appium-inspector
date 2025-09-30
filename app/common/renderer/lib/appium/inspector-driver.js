@@ -422,6 +422,15 @@ export default class InspectorDriver {
     }
   }
 
+  async getSessionState() {
+    try {
+      const session = await this.driver.getSession();
+      return session;
+    } catch {
+      return 'Session Expired';
+    }
+  }
+
   /**
    * If the app under test can return contexts command.
    *

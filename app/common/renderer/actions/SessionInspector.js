@@ -329,13 +329,13 @@ export function applyClientMethod(params) {
       window.dispatchEvent(new Event('resize'));
       return commandRes;
     } catch (error) {
+      log.error(error);
       const {inspector} = getState();
-      const isWebDriverError = error
-        .toString()
-        .includes('process is not running (probably crashed)');
       const isApplyError =
         error.message === "Cannot read properties of undefined (reading 'apply')";
-      log.error(error);
+      const inspectorDriver = InspectorDriver.instance(inspector.driver);
+      const sesState = await inspectorDriver.getSessionState();
+      const isWebDriverError = !!sesState && sesState === 'Session Expired';
       if (!(inspector.autoSessionRestart && (isWebDriverError || isApplyError))) {
         showError(error, {methodName: params.methodName, secs: 10});
         dispatch({type: METHOD_CALL_DONE});
@@ -346,7 +346,6 @@ export function applyClientMethod(params) {
           description: i18n.t('RestartSessionMessage'),
           duration: 3,
         });
-        dispatch({type: METHOD_CALL_DONE});
         const quitSes = quitSession('Window closed');
         const newSes = newSession(getState().builder.caps);
         const getPageSrc = applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
@@ -362,6 +361,8 @@ export function applyClientMethod(params) {
         await getSavedClientFrame(dispatch);
         runKeepAliveLp(dispatch, getState);
         setSesTime(dispatch);
+        dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart: true});
+        dispatch({type: METHOD_CALL_DONE});
       }
     }
   };
