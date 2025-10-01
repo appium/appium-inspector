@@ -330,44 +330,44 @@ export function applyClientMethod(params) {
       return commandRes;
     } catch (error) {
       log.error(error);
-      const {inspector} = getState();
-      const isApplyError =
-        error.message === "Cannot read properties of undefined (reading 'apply')";
-      const inspectorDriver = InspectorDriver.instance(inspector.driver);
-      const sesState = await inspectorDriver.getSessionState();
-      const isWebDriverError = !!sesState && sesState === 'Session Expired';
       showError(error, {methodName: params.methodName, secs: 10});
       dispatch({type: METHOD_CALL_DONE});
-      if (inspector.autoSessionRestart && (isWebDriverError || isApplyError)) {
-        notification.info({
-          message: i18n.t('RestartSessionMessage'),
-          duration: 10,
-        });
-        const restartSes = restartSession();
+      if (getState().inspector.autoSessionRestart) {
+        const restartSes = restartSession(error);
         await restartSes(dispatch, getState);
       }
     }
   };
 }
 
-export function restartSession() {
+export function restartSession(error) {
   return async (dispatch, getState) => {
-    const quitSes = quitSession('Window closed');
-    const newSes = newSession(getState().builder.caps);
-    const getPageSrc = applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
-    const storeSessionSet = storeSessionSettings();
-    const getSavedClientFrame = getSavedClientFramework();
-    const runKeepAliveLp = runKeepAliveLoop();
-    const setSesTime = setSessionTime(Date.now());
+    const isApplyError = error.message === "Cannot read properties of undefined (reading 'apply')";
+    const inspectorDriver = InspectorDriver.instance(getState().inspector.driver);
+    const sesState = await inspectorDriver.getSessionState();
+    const isWebDriverError = !!sesState && sesState === 'Session Expired';
+    if (isWebDriverError || isApplyError) {
+      notification.info({
+        message: i18n.t('RestartSessionMessage'),
+        duration: 10,
+      });
+      const quitSes = quitSession('Window closed');
+      const newSes = newSession(getState().builder.caps);
+      const getPageSrc = applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
+      const storeSessionSet = storeSessionSettings();
+      const getSavedClientFrame = getSavedClientFramework();
+      const runKeepAliveLp = runKeepAliveLoop();
+      const setSesTime = setSessionTime(Date.now());
 
-    await quitSes(dispatch, getState);
-    await newSes(dispatch, getState);
-    await getPageSrc(dispatch, getState);
-    await storeSessionSet(dispatch, getState);
-    await getSavedClientFrame(dispatch);
-    runKeepAliveLp(dispatch, getState);
-    setSesTime(dispatch);
-    dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart: true});
+      await quitSes(dispatch, getState);
+      await newSes(dispatch, getState);
+      await getPageSrc(dispatch, getState);
+      await storeSessionSet(dispatch, getState);
+      await getSavedClientFrame(dispatch);
+      runKeepAliveLp(dispatch, getState);
+      setSesTime(dispatch);
+      dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart: true});
+    }
   };
 }
 
