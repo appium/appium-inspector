@@ -315,6 +315,7 @@
   "Fireflink DeviceFarm Access Key": "Fireflink DeviceFarm Access Key",
   "Fireflink DeviceFarm License ID": "Fireflink DeviceFarm License ID",
   "Fireflink DeviceFarm Project Name": "Fireflink DeviceFarm Project Name",
-  "RestartSessionMessage": "Device connection lost - restarting the session...",
-  "ToggleRestartSession": "Toggle Session Reload Upon Device Disconnect"
+  "ToggleRestartSession": "Toggle Session Reload Upon Device Disconnect",
+  "RestartSessionMessage": "Device connection lost - restarting the session..."
+  
 }
