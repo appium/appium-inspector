@@ -71,7 +71,6 @@ export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
 export const SET_CAPABILITY_NAME_ERROR = 'SET_CAPABILITY_NAME_ERROR';
 export const SET_STATE_FROM_URL = 'SET_STATE_FROM_URL';
 export const SET_STATE_FROM_FILE = 'SET_STATE_FROM_FILE';
-export const SET_AUTO_SESSION_RESTART = 'SET_AUTO_SESSION_RESTART';
 
 const APPIUM_SESSION_FILE_VERSION = '1.0';
 
@@ -955,12 +954,6 @@ export function bindWindowClose() {
 export function setAddVendorPrefixes(addVendorPrefixes) {
   return (dispatch) => {
     dispatch({type: SET_ADD_VENDOR_PREFIXES, addVendorPrefixes});
-  };
-}
-
-export function setAutoSessionRestart(autoSessionRestart) {
-  return (dispatch) => {
-    dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart});
   };
 }
 

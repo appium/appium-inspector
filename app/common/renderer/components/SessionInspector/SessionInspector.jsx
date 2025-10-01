@@ -63,8 +63,6 @@ const Inspector = (props) => {
     isSourceRefreshOn,
     windowSize,
     t,
-    autoSessionRestart,
-    toggleAutoSessionRestart,
   } = props;
 
   const screenshotContainerEl = useRef(null);
@@ -152,9 +150,7 @@ const Inspector = (props) => {
       runKeepAliveLoop,
       setSessionTime,
       storeSessionSettings,
-      getAutoSessionState,
     } = props;
-    getAutoSessionState();
     const curHeight = window.innerHeight;
     const curWidth = window.innerWidth;
     if (curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT || curWidth < WINDOW_DIMENSIONS.MIN_WIDTH) {
@@ -224,19 +220,6 @@ const Inspector = (props) => {
             defaultChecked={false}
             onChange={() => toggleShowCentroids()}
             disabled={isGestureEditorVisible}
-          />
-        </Tooltip>
-
-        <Tooltip
-          title={t(autoSessionRestart ? 'DisableRestartSession' : 'EnableRestartSession')}
-          placement="topRight"
-        >
-          <Switch
-            checked={autoSessionRestart}
-            checkedChildren={<CheckCircleOutlined />}
-            unCheckedChildren={<CloseCircleOutlined />}
-            defaultChecked={autoSessionRestart}
-            onChange={() => toggleAutoSessionRestart()}
           />
         </Tooltip>
         <Space.Compact>

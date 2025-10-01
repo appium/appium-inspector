@@ -26,7 +26,6 @@ import {
   SAVE_SESSION_REQUESTED,
   SET_ADD_VENDOR_PREFIXES,
   SET_ATTACH_SESS_ID,
-  SET_AUTO_SESSION_RESTART,
   SET_CAPABILITY_NAME_ERROR,
   SET_CAPABILITY_PARAM,
   SET_CAPS_AND_SERVER,
@@ -77,7 +76,6 @@ const INITIAL_STATE = {
   isValidatingCapsJson: false,
   isAddingCloudProvider: false,
   addVendorPrefixes: true,
-  autoSessionRestart: true,
 };
 
 let nextState;
@@ -394,12 +392,6 @@ export default function builder(state = INITIAL_STATE, action) {
         },
         serverType: action.sessionJSON.serverType,
         visibleProviders: action.sessionJSON.visibleProviders || [],
-      };
-
-    case SET_AUTO_SESSION_RESTART:
-      return {
-        ...state,
-        autoSessionRestart: action.autoSessionRestart,
       };
 
     default:

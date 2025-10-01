@@ -134,6 +134,7 @@ const INITIAL_STATE = {
   isAwaitingMjpegStream: true,
   showSourceAttrs: false,
   gestureUploadErrors: null,
+  autoSessionRestart: true,
 };
 
 let nextState;

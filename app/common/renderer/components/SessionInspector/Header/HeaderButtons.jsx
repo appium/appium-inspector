@@ -7,6 +7,7 @@ import {
   PauseCircleOutlined,
   PlayCircleOutlined,
   ReloadOutlined,
+  RetweetOutlined,
   SearchOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
@@ -40,6 +41,8 @@ const HeaderButtons = (props) => {
     currentContext,
     setContext,
     t,
+    autoSessionRestart,
+    toggleAutoSessionRestart,
   } = props;
 
   const deviceControls = (
@@ -171,52 +174,79 @@ const HeaderButtons = (props) => {
   );
 
   const generalControls = (
-    <Space.Compact>
-      {isUsingMjpegMode && !isSourceRefreshOn && (
-        <Tooltip title={t('Start Refreshing Source')}>
+    <>
+      <Space.Compact>
+        {isUsingMjpegMode && !isSourceRefreshOn && (
+          <Tooltip title={t('Start Refreshing Source')}>
+            <Button
+              id="btnStartRefreshing"
+              icon={<PlayCircleOutlined />}
+              onClick={toggleRefreshingState}
+            />
+          </Tooltip>
+        )}
+        {isUsingMjpegMode && isSourceRefreshOn && (
+          <Tooltip title={t('Pause Refreshing Source')}>
+            <Button
+              id="btnPauseRefreshing"
+              icon={<PauseCircleOutlined />}
+              onClick={toggleRefreshingState}
+            />
+          </Tooltip>
+        )}
+        <Tooltip title={t('refreshSource')}>
           <Button
-            id="btnStartRefreshing"
-            icon={<PlayCircleOutlined />}
-            onClick={toggleRefreshingState}
+            id="btnReload"
+            icon={<ReloadOutlined />}
+            onClick={() => applyClientMethod({methodName: 'getPageSource'})}
           />
         </Tooltip>
-      )}
-      {isUsingMjpegMode && isSourceRefreshOn && (
-        <Tooltip title={t('Pause Refreshing Source')}>
-          <Button
-            id="btnPauseRefreshing"
-            icon={<PauseCircleOutlined />}
-            onClick={toggleRefreshingState}
-          />
+        <Tooltip title={t('Search for element')}>
+          <Button id="searchForElement" icon={<SearchOutlined />} onClick={showLocatorTestModal} />
         </Tooltip>
-      )}
-      <Tooltip title={t('refreshSource')}>
-        <Button
-          id="btnReload"
-          icon={<ReloadOutlined />}
-          onClick={() => applyClientMethod({methodName: 'getPageSource'})}
-        />
-      </Tooltip>
-      <Tooltip title={t('Search for element')}>
-        <Button id="searchForElement" icon={<SearchOutlined />} onClick={showLocatorTestModal} />
-      </Tooltip>
-      {!isRecording && (
-        <Tooltip title={t('Start Recording')}>
-          <Button id="btnStartRecording" icon={<VideoCameraOutlined />} onClick={startRecording} />
-        </Tooltip>
-      )}
-      {isRecording && (
-        <Tooltip title={t('Pause Recording')}>
-          <Button
-            id="btnPause"
-            icon={<VideoCameraOutlined />}
-            type={BUTTON.PRIMARY}
-            danger
-            onClick={pauseRecording}
-          />
-        </Tooltip>
-      )}
-    </Space.Compact>
+        {!isRecording && (
+          <Tooltip title={t('Start Recording')}>
+            <Button
+              id="btnStartRecording"
+              icon={<VideoCameraOutlined />}
+              onClick={startRecording}
+            />
+          </Tooltip>
+        )}
+        {isRecording && (
+          <Tooltip title={t('Pause Recording')}>
+            <Button
+              id="btnPause"
+              icon={<VideoCameraOutlined />}
+              type={BUTTON.PRIMARY}
+              danger
+              onClick={pauseRecording}
+            />
+          </Tooltip>
+        )}
+      </Space.Compact>
+      <Space.Compact>
+        {!autoSessionRestart && (
+          <Tooltip title={t('EnableRestartSession')}>
+            <Button
+              id="btnStartRecording"
+              icon={<RetweetOutlined />}
+              onClick={toggleAutoSessionRestart}
+            />
+          </Tooltip>
+        )}
+        {autoSessionRestart && (
+          <Tooltip title={t('DisableRestartSession')}>
+            <Button
+              id="btnPause"
+              icon={<RetweetOutlined />}
+              type={BUTTON.PRIMARY}
+              onClick={toggleAutoSessionRestart}
+            />
+          </Tooltip>
+        )}
+      </Space.Compact>
+    </>
   );
 
   const quitSessionButton = (
