@@ -352,7 +352,6 @@ export function restartSession(error, params) {
         message: i18n.t('RestartSessionMessage'),
         duration: 3,
       });
-      dispatch({type: METHOD_CALL_DONE});
       const quitSes = quitSession('Window closed');
       const newSes = newSession(getState().builder.caps);
       const getPageSrc = applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
@@ -369,7 +368,10 @@ export function restartSession(error, params) {
       runKeepAliveLp(dispatch, getState);
       setSesTime(dispatch);
       dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart: true});
+    } else {
+      showError(error, {methodName: params.methodName, secs: 10});
     }
+    dispatch({type: METHOD_CALL_DONE});
   };
 }
 
