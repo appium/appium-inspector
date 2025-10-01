@@ -330,27 +330,29 @@ export function applyClientMethod(params) {
       return commandRes;
     } catch (error) {
       log.error(error);
+      if (getState().inspector.autoSessionRestart) {
+        const restartSes = restartSession(error, params);
+        return await restartSes(dispatch, getState);
+      }
       showError(error, {methodName: params.methodName, secs: 10});
       dispatch({type: METHOD_CALL_DONE});
-      if (getState().inspector.autoSessionRestart) {
-        const restartSes = restartSession(error);
-        await restartSes(dispatch, getState);
-      }
     }
   };
 }
 
-export function restartSession(error) {
+export function restartSession(error, params) {
   return async (dispatch, getState) => {
     const isApplyError = error.message === "Cannot read properties of undefined (reading 'apply')";
     const inspectorDriver = InspectorDriver.instance(getState().inspector.driver);
     const sesState = await inspectorDriver.getSessionState();
     const isWebDriverError = !!sesState && sesState === 'Session Expired';
     if (isWebDriverError || isApplyError) {
+      showError(error, {methodName: params.methodName, secs: 3});
       notification.info({
         message: i18n.t('RestartSessionMessage'),
-        duration: 10,
+        duration: 3,
       });
+      dispatch({type: METHOD_CALL_DONE});
       const quitSes = quitSession('Window closed');
       const newSes = newSession(getState().builder.caps);
       const getPageSrc = applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
