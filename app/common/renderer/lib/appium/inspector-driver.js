@@ -44,7 +44,6 @@ export default class InspectorDriver {
       skipRefresh = false, // Optional. Do we want the updated source and screenshot?
       skipScreenshot = false, // Optional. Do we want to skip getting screenshot alone?
       appMode = APP_MODE.NATIVE, // Optional. Whether we're in a native or hybrid mode
-      autoSessionRestart,
     } = params;
 
     if (methodName === 'deleteSession') {
@@ -78,7 +77,6 @@ export default class InspectorDriver {
           skipRefresh,
           skipScreenshot,
           appMode,
-          autoSessionRestart,
         });
       } else {
         log.info(
@@ -91,7 +89,6 @@ export default class InspectorDriver {
           skipRefresh,
           skipScreenshot,
           appMode,
-          autoSessionRestart,
         });
       }
     } else if (strategy && selector) {
@@ -107,15 +104,7 @@ export default class InspectorDriver {
     return res;
   }
 
-  async executeMethod({
-    elementId,
-    methodName,
-    args,
-    skipRefresh,
-    skipScreenshot,
-    appMode,
-    autoSessionRestart,
-  }) {
+  async executeMethod({elementId, methodName, args, skipRefresh, skipScreenshot, appMode}) {
     let cachedEl;
     let res = {};
     if (!_.isArray(args) && !_.isUndefined(args)) {
@@ -158,14 +147,14 @@ export default class InspectorDriver {
       // Give the source/screenshot time to change before taking the screenshot
       await new Promise((resolve) => setTimeout(resolve, REFRESH_DELAY_MILLIS));
       if (!skipScreenshot) {
-        screenshotUpdate = await this.getScreenshotUpdate(autoSessionRestart);
+        screenshotUpdate = await this.getScreenshotUpdate();
       }
       windowSizeUpdate = await this.getWindowUpdate();
       // only do context updates if user has selected web/hybrid mode (takes forever)
       if (appMode === APP_MODE.WEB_HYBRID) {
         contextUpdate = await this.getContextUpdate(windowSizeUpdate);
       }
-      sourceUpdate = await this.getSourceUpdate(autoSessionRestart);
+      sourceUpdate = await this.getSourceUpdate();
     }
     return {
       ...cachedEl,
@@ -269,6 +258,9 @@ export default class InspectorDriver {
         }
       }
     } catch (e) {
+      if (e.name === 'unknown error') {
+        throw {...e, customError: 'Session Expired'};
+      }
       windowSizeError = e;
     }
 
@@ -398,36 +390,27 @@ export default class InspectorDriver {
     return {contexts, contextsError, currentContext, currentContextError};
   }
 
-  async getSourceUpdate(autoSessionRestart) {
+  async getSourceUpdate() {
     try {
       const source = parseHtmlSource(await this.driver.getPageSource());
       return {source};
     } catch (err) {
-      if (autoSessionRestart) {
-        throw new Error(err);
+      if (err.name === 'unknown error') {
+        throw {...err, customError: 'Session Expired'};
       }
       return {sourceError: err};
     }
   }
 
-  async getScreenshotUpdate(autoSessionRestart) {
+  async getScreenshotUpdate() {
     try {
       const screenshot = await this.driver.takeScreenshot();
       return {screenshot};
     } catch (err) {
-      if (autoSessionRestart) {
-        throw new Error(err);
+      if (err.name === 'unknown error') {
+        throw {...err, customError: 'Session Expired'};
       }
       return {screenshotError: err};
-    }
-  }
-
-  async getSessionState() {
-    try {
-      const session = await this.driver.getSession();
-      return session;
-    } catch {
-      return 'Session Expired';
     }
   }
 
