@@ -13,3 +13,14 @@
 .argContainer {
   padding: 4px 4px 0 0;
 }
+
+.command-result-table :global(.ant-table-tbody) {
+  vertical-align: top;
+}
+
+.command-result-table-cell {
+  margin: 0;
+  white-space: pre-wrap;
+  cursor: pointer;
+  max-width: 500px;
+}
