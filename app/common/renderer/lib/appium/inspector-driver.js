@@ -83,7 +83,13 @@ export default class InspectorDriver {
           `Handling client method request with method '${methodName}' ` +
             `and args ${JSON.stringify(args)}`,
         );
-        res = await this.executeMethod({methodName, args, skipRefresh, skipScreenshot, appMode});
+        res = await this.executeMethod({
+          methodName,
+          args,
+          skipRefresh,
+          skipScreenshot,
+          appMode,
+        });
       }
     } else if (strategy && selector) {
       if (fetchArray) {
@@ -252,6 +258,9 @@ export default class InspectorDriver {
         }
       }
     } catch (e) {
+      if (e.name === 'unknown error') {
+        throw {...e, customError: 'Session Expired'};
+      }
       windowSizeError = e;
     }
 
@@ -386,6 +395,9 @@ export default class InspectorDriver {
       const source = parseHtmlSource(await this.driver.getPageSource());
       return {source};
     } catch (err) {
+      if (err.name === 'unknown error') {
+        throw {...err, customError: 'Session Expired'};
+      }
       return {sourceError: err};
     }
   }
@@ -395,6 +407,9 @@ export default class InspectorDriver {
       const screenshot = await this.driver.takeScreenshot();
       return {screenshot};
     } catch (err) {
+      if (err.name === 'unknown error') {
+        throw {...err, customError: 'Session Expired'};
+      }
       return {screenshotError: err};
     }
   }
