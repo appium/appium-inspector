@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs.js';
 import {POINTER_TYPES} from '../constants/gestures.js';
-import {APP_MODE, NATIVE_APP} from '../constants/session-inspector.js';
+import {APP_MODE, NATIVE_APP, SESSION_EXPIRED} from '../constants/session-inspector.js';
 import i18n from '../i18next.js';
 import InspectorDriver from '../lib/appium/inspector-driver.js';
 import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map.js';
@@ -342,7 +342,7 @@ export function applyClientMethod(params) {
 
 export function restartSession(error, params) {
   return async (dispatch, getState) => {
-    if (error?.customError !== 'Session Expired') {
+    if (error?.customError !== SESSION_EXPIRED) {
       showError(error, {methodName: params.methodName, secs: 10});
       return dispatch({type: METHOD_CALL_DONE});
     }

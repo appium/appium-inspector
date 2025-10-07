@@ -1,7 +1,13 @@
 import _ from 'lodash';
 
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot.js';
-import {APP_MODE, NATIVE_APP, REFRESH_DELAY_MILLIS} from '../../constants/session-inspector.js';
+import {
+  APP_MODE,
+  NATIVE_APP,
+  REFRESH_DELAY_MILLIS,
+  SESSION_EXPIRED,
+  UNKNOWN_ERROR,
+} from '../../constants/session-inspector.js';
 import {log} from '../../utils/logger.js';
 import {parseHtmlSource, setHtmlElementAttributes} from '../../utils/webview.js';
 
@@ -102,8 +108,8 @@ export default class InspectorDriver {
         }
       }
     } catch (err) {
-      if (err.name === 'unknown error') {
-        throw {...err, customError: 'Session Expired'};
+      if (err.name === UNKNOWN_ERROR) {
+        throw {...err, customError: SESSION_EXPIRED};
       }
       throw err;
     }
@@ -265,8 +271,8 @@ export default class InspectorDriver {
         }
       }
     } catch (e) {
-      if (e.name === 'unknown error') {
-        throw {...e, customError: 'Session Expired'};
+      if (e.name === UNKNOWN_ERROR) {
+        throw {...e, customError: SESSION_EXPIRED};
       }
       windowSizeError = e;
     }
@@ -402,8 +408,8 @@ export default class InspectorDriver {
       const source = parseHtmlSource(await this.driver.getPageSource());
       return {source};
     } catch (err) {
-      if (err.name === 'unknown error') {
-        throw {...err, customError: 'Session Expired'};
+      if (err.name === UNKNOWN_ERROR) {
+        throw {...err, customError: SESSION_EXPIRED};
       }
       return {sourceError: err};
     }
@@ -414,8 +420,8 @@ export default class InspectorDriver {
       const screenshot = await this.driver.takeScreenshot();
       return {screenshot};
     } catch (err) {
-      if (err.name === 'unknown error') {
-        throw {...err, customError: 'Session Expired'};
+      if (err.name === UNKNOWN_ERROR) {
+        throw {...err, customError: SESSION_EXPIRED};
       }
       return {screenshotError: err};
     }
