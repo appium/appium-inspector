@@ -64,41 +64,48 @@ export default class InspectorDriver {
     }
 
     let res = {};
-    if (methodName) {
-      if (elementId) {
-        log.info(
-          `Handling client method request with method '${methodName}', ` +
-            `args ${JSON.stringify(args)} and elementId ${elementId}`,
-        );
-        res = await this.executeMethod({
-          elementId,
-          methodName,
-          args,
-          skipRefresh,
-          skipScreenshot,
-          appMode,
-        });
-      } else {
-        log.info(
-          `Handling client method request with method '${methodName}' ` +
-            `and args ${JSON.stringify(args)}`,
-        );
-        res = await this.executeMethod({
-          methodName,
-          args,
-          skipRefresh,
-          skipScreenshot,
-          appMode,
-        });
+    try {
+      if (methodName) {
+        if (elementId) {
+          log.info(
+            `Handling client method request with method '${methodName}', ` +
+              `args ${JSON.stringify(args)} and elementId ${elementId}`,
+          );
+          res = await this.executeMethod({
+            elementId,
+            methodName,
+            args,
+            skipRefresh,
+            skipScreenshot,
+            appMode,
+          });
+        } else {
+          log.info(
+            `Handling client method request with method '${methodName}' ` +
+              `and args ${JSON.stringify(args)}`,
+          );
+          res = await this.executeMethod({
+            methodName,
+            args,
+            skipRefresh,
+            skipScreenshot,
+            appMode,
+          });
+        }
+      } else if (strategy && selector) {
+        if (fetchArray) {
+          log.info(`Fetching elements with selector '${selector}' and strategy ${strategy}`);
+          res = await this.fetchElements({strategy, selector});
+        } else {
+          log.info(`Fetching an element with selector '${selector}' and strategy ${strategy}`);
+          res = await this.fetchElement({strategy, selector});
+        }
       }
-    } else if (strategy && selector) {
-      if (fetchArray) {
-        log.info(`Fetching elements with selector '${selector}' and strategy ${strategy}`);
-        res = await this.fetchElements({strategy, selector});
-      } else {
-        log.info(`Fetching an element with selector '${selector}' and strategy ${strategy}`);
-        res = await this.fetchElement({strategy, selector});
+    } catch (err) {
+      if (err.name === 'unknown error') {
+        throw {...err, customError: 'Session Expired'};
       }
+      throw err;
     }
 
     return res;

@@ -7,12 +7,11 @@ import {
   PauseCircleOutlined,
   PlayCircleOutlined,
   ReloadOutlined,
-  RetweetOutlined,
   SearchOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import {Button, Divider, Select, Space, Tooltip} from 'antd';
-import {BiCircle, BiSquare} from 'react-icons/bi';
+import {BiCircle, BiRecycle, BiSquare} from 'react-icons/bi';
 import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
 import {IoChevronBackOutline} from 'react-icons/io5';
 
@@ -232,7 +231,7 @@ const HeaderButtons = (props) => {
     <Tooltip title={t('ToggleRestartSession')}>
       <Button
         id={autoSessionRestart ? 'btnDisableRestartSession' : 'btnEnableRestartSession'}
-        icon={<RetweetOutlined />}
+        icon={<BiRecycle />}
         type={autoSessionRestart ? BUTTON.PRIMARY : undefined}
         onClick={toggleAutoSessionRestart}
       />

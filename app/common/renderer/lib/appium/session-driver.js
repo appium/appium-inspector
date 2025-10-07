@@ -46,18 +46,11 @@ export default class WDSessionDriver {
     if (!(commandName in this.client)) {
       throw new Error(`Command '${commandName}' is not available on this client`);
     }
-    try {
-      const res = await this.client[commandName](...args);
-      if (res && res.error) {
-        throw new Error(res.message ? res.message : res.error);
-      }
-      return res;
-    } catch (err) {
-      if (err.name === 'unknown error') {
-        throw {...err, customError: 'Session Expired'};
-      }
-      throw err;
+    const res = await this.client[commandName](...args);
+    if (res && res.error) {
+      throw new Error(res.message ? res.message : res.error);
     }
+    return res;
   }
 
   async findElement(using, value) {
