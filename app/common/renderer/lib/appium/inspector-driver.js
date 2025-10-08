@@ -21,6 +21,12 @@ const IOS_TOP_CONTROLS_SELECTOR =
 
 let _instance = null;
 
+class WebdriverUnknownError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = UNKNOWN_ERROR;
+  }
+}
 /**
  * Wrapper class providing access to the currently active Appium driver methods,
  * with additional Inspector-specific handling
@@ -127,6 +133,9 @@ export default class InspectorDriver {
         cachedEl.variableName = `el${this.elVarCount}`;
       }
 
+      if (typeof cachedEl.el[methodName] !== 'function') {
+        throw new WebdriverUnknownError('Session Expired');
+      }
       // and then execute whatever method we requested on the actual element
       res = await cachedEl.el[methodName].apply(cachedEl.el, args);
     } else {
@@ -140,6 +149,9 @@ export default class InspectorDriver {
         }));
         res = await this.driver.performActions(actions);
       } else if (methodName !== 'getPageSource') {
+        if (typeof this.driver[methodName] !== 'function') {
+          throw new WebdriverUnknownError('Session Expired');
+        }
         res = await this.driver[methodName].apply(this.driver, args);
       }
     }
