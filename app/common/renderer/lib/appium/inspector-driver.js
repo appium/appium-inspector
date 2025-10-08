@@ -6,6 +6,7 @@ import {
   NATIVE_APP,
   REFRESH_DELAY_MILLIS,
   UNKNOWN_ERROR,
+  SESSION_EXPIRED
 } from '../../constants/session-inspector.js';
 import {log} from '../../utils/logger.js';
 import {parseHtmlSource, setHtmlElementAttributes} from '../../utils/webview.js';
@@ -138,7 +139,7 @@ export default class InspectorDriver {
       }
 
       if (typeof cachedEl.el[methodName] !== 'function') {
-        throw new WebdriverUnknownError('Session Expired');
+        throw new WebdriverUnknownError(SESSION_EXPIRED);
       }
       // and then execute whatever method we requested on the actual element
       res = await cachedEl.el[methodName].apply(cachedEl.el, args);
@@ -154,7 +155,7 @@ export default class InspectorDriver {
         res = await this.driver.performActions(actions);
       } else if (methodName !== 'getPageSource') {
         if (typeof this.driver[methodName] !== 'function') {
-          throw new WebdriverUnknownError('Session Expired');
+          throw new WebdriverUnknownError(SESSION_EXPIRED);
         }
         res = await this.driver[methodName].apply(this.driver, args);
       }

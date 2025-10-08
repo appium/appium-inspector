@@ -10,6 +10,7 @@ export const APP_MODE = {
 export const NATIVE_APP = 'NATIVE_APP';
 
 export const UNKNOWN_ERROR = 'unknown error';
+export const SESSION_EXPIRED = 'Session Expired';
 
 export const LOCATOR_STRATEGIES = {
   ID: 'id',
