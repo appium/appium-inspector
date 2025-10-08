@@ -5,9 +5,8 @@ import {
   APP_MODE,
   NATIVE_APP,
   REFRESH_DELAY_MILLIS,
-  UNKNOWN_ERROR,
-  SESSION_EXPIRED
-} from '../../constants/session-inspector.js';
+  SESSION_EXPIRED,
+  UNKNOWN_ERROR} from '../../constants/session-inspector.js';
 import {log} from '../../utils/logger.js';
 import {parseHtmlSource, setHtmlElementAttributes} from '../../utils/webview.js';
 
