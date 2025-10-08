@@ -274,69 +274,59 @@ export function applyClientMethod(params) {
       params.methodName !== 'getPageSource' &&
       params.methodName !== 'gesture' &&
       getState().inspector.isRecording;
-    try {
-      dispatch({type: METHOD_CALL_REQUESTED});
-      const callAction = callClientMethod(params);
-      const {
+    dispatch({type: METHOD_CALL_REQUESTED});
+    const callAction = callClientMethod(params);
+    const {
+      contexts,
+      contextsError,
+      commandRes,
+      currentContext,
+      currentContextError,
+      source,
+      screenshot,
+      windowSize,
+      sourceError,
+      screenshotError,
+      windowSizeError,
+      variableName,
+      variableIndex,
+      strategy,
+      selector,
+    } = await callAction(dispatch, getState);
+
+    // TODO: Implement recorder code for gestures
+    if (isRecording) {
+      // Add 'findAndAssign' line of code. Don't do it for arrays though. Arrays already have 'find' expression
+      if (strategy && selector && !variableIndex && variableIndex !== 0) {
+        const findAction = findAndAssign(strategy, selector, variableName, false);
+        findAction(dispatch, getState);
+      }
+
+      // now record the actual action
+      let args = [variableName, variableIndex];
+      args = args.concat(params.args || []);
+      dispatch({type: RECORD_ACTION, action: params.methodName, params: args});
+    }
+    dispatch({type: METHOD_CALL_DONE});
+
+    if (source) {
+      dispatch({
+        type: SET_SOURCE_AND_SCREENSHOT,
         contexts,
-        contextsError,
-        commandRes,
         currentContext,
-        currentContextError,
-        source,
+        sourceJSON: xmlToJSON(source),
+        sourceXML: source,
         screenshot,
         windowSize,
+        contextsError,
+        currentContextError,
         sourceError,
         screenshotError,
         windowSizeError,
-        variableName,
-        variableIndex,
-        strategy,
-        selector,
-      } = await callAction(dispatch, getState);
-
-      // TODO: Implement recorder code for gestures
-      if (isRecording) {
-        // Add 'findAndAssign' line of code. Don't do it for arrays though. Arrays already have 'find' expression
-        if (strategy && selector && !variableIndex && variableIndex !== 0) {
-          const findAction = findAndAssign(strategy, selector, variableName, false);
-          findAction(dispatch, getState);
-        }
-
-        // now record the actual action
-        let args = [variableName, variableIndex];
-        args = args.concat(params.args || []);
-        dispatch({type: RECORD_ACTION, action: params.methodName, params: args});
-      }
-      dispatch({type: METHOD_CALL_DONE});
-
-      if (source) {
-        dispatch({
-          type: SET_SOURCE_AND_SCREENSHOT,
-          contexts,
-          currentContext,
-          sourceJSON: xmlToJSON(source),
-          sourceXML: source,
-          screenshot,
-          windowSize,
-          contextsError,
-          currentContextError,
-          sourceError,
-          screenshotError,
-          windowSizeError,
-        });
-      }
-      window.dispatchEvent(new Event('resize'));
-      return commandRes;
-    } catch (error) {
-      log.error(error);
-      if (getState().inspector.autoSessionRestart) {
-        const restartSes = restartSession(error, params);
-        return await restartSes(dispatch, getState);
-      }
-      showError(error, {methodName: params.methodName, secs: 10});
-      dispatch({type: METHOD_CALL_DONE});
+      });
     }
+    window.dispatchEvent(new Event('resize'));
+    return commandRes;
   };
 }
 
@@ -915,45 +905,55 @@ export function keepSessionAlive() {
 
 export function callClientMethod(params) {
   return async (dispatch, getState) => {
-    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} =
-      getState().inspector;
-    const {methodName, ignoreResult = true} = params;
-    params.appMode = appMode;
-    params.autoSessionRestart = autoSessionRestart;
+    try {
+      const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} =
+        getState().inspector;
+      const {methodName, ignoreResult = true} = params;
+      params.appMode = appMode;
+      params.autoSessionRestart = autoSessionRestart;
 
-    // don't retrieve screenshot if we're already using the mjpeg stream
-    if (isUsingMjpegMode) {
-      params.skipScreenshot = true;
+      // don't retrieve screenshot if we're already using the mjpeg stream
+      if (isUsingMjpegMode) {
+        params.skipScreenshot = true;
+      }
+
+      if (!isSourceRefreshOn) {
+        params.skipRefresh = true;
+      }
+
+      log.info(`Calling client method with params:`);
+      log.info(params);
+      const action = keepSessionAlive();
+      action(dispatch, getState);
+      const inspectorDriver = InspectorDriver.instance(driver);
+      const res = await inspectorDriver.run(params);
+      let {commandRes} = res;
+
+      // Ignore empty objects
+      if (_.isObject(res) && _.isEmpty(res)) {
+        commandRes = null;
+      }
+
+      if (!ignoreResult) {
+        // if the user is running actions manually, we want to show the full response with the
+        // ability to scroll etc...
+        const result = JSON.stringify(commandRes, null, '  ');
+        const truncatedResult = _.truncate(result, {length: 2000});
+        log.info(`Result of client command was:`);
+        log.info(truncatedResult);
+        setVisibleCommandResult(result, methodName)(dispatch);
+      }
+      res.elementId = res.id;
+      return res;
+    } catch (error) {
+      log.error(error);
+      if (getState().inspector.autoSessionRestart) {
+        const restartSes = restartSession(error, params);
+        return await restartSes(dispatch, getState);
+      }
+      showError(error, {methodName: params.methodName, secs: 10});
+      dispatch({type: METHOD_CALL_DONE});
     }
-
-    if (!isSourceRefreshOn) {
-      params.skipRefresh = true;
-    }
-
-    log.info(`Calling client method with params:`);
-    log.info(params);
-    const action = keepSessionAlive();
-    action(dispatch, getState);
-    const inspectorDriver = InspectorDriver.instance(driver);
-    const res = await inspectorDriver.run(params);
-    let {commandRes} = res;
-
-    // Ignore empty objects
-    if (_.isObject(res) && _.isEmpty(res)) {
-      commandRes = null;
-    }
-
-    if (!ignoreResult) {
-      // if the user is running actions manually, we want to show the full response with the
-      // ability to scroll etc...
-      const result = JSON.stringify(commandRes, null, '  ');
-      const truncatedResult = _.truncate(result, {length: 2000});
-      log.info(`Result of client command was:`);
-      log.info(truncatedResult);
-      setVisibleCommandResult(result, methodName)(dispatch);
-    }
-    res.elementId = res.id;
-    return res;
   };
 }
 

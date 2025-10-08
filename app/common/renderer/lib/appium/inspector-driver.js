@@ -21,12 +21,16 @@ const IOS_TOP_CONTROLS_SELECTOR =
 
 let _instance = null;
 
+/**
+ * Represents an unexpected or unknown WebDriver/Appium error.
+ */
 class WebdriverUnknownError extends Error {
   constructor(message) {
     super(message);
     this.name = UNKNOWN_ERROR;
   }
 }
+
 /**
  * Wrapper class providing access to the currently active Appium driver methods,
  * with additional Inspector-specific handling
@@ -185,7 +189,15 @@ export default class InspectorDriver {
 
   async fetchElements({strategy, selector}) {
     const start = Date.now();
-    const els = await this.driver.findElements(strategy, selector);
+    let els = null;
+    try {
+      els = await this.driver.findElements(strategy, selector);
+    } catch (err) {
+      if (err.name === UNKNOWN_ERROR) {
+        throw err;
+      }
+      return {};
+    }
     const executionTime = Date.now() - start;
 
     this.elArrayVarCount += 1;
@@ -225,7 +237,10 @@ export default class InspectorDriver {
     let element = null;
     try {
       element = await this.driver.findElement(strategy, selector);
-    } catch {
+    } catch (err) {
+      if (err.name === UNKNOWN_ERROR) {
+        throw err;
+      }
       return {};
     }
 
