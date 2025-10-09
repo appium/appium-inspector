@@ -190,15 +190,7 @@ export default class InspectorDriver {
 
   async fetchElements({strategy, selector}) {
     const start = Date.now();
-    let els = null;
-    try {
-      els = await this.driver.findElements(strategy, selector);
-    } catch (err) {
-      if (err.name === UNKNOWN_ERROR) {
-        throw err;
-      }
-      return {};
-    }
+    const els = await this.driver.findElements(strategy, selector);
     const executionTime = Date.now() - start;
 
     this.elArrayVarCount += 1;

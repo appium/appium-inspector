@@ -905,24 +905,24 @@ export function keepSessionAlive() {
 
 export function callClientMethod(params) {
   return async (dispatch, getState) => {
+    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} =
+      getState().inspector;
+    const {methodName, ignoreResult = true} = params;
+    params.appMode = appMode;
+    params.autoSessionRestart = autoSessionRestart;
+
+    // don't retrieve screenshot if we're already using the mjpeg stream
+    if (isUsingMjpegMode) {
+      params.skipScreenshot = true;
+    }
+
+    if (!isSourceRefreshOn) {
+      params.skipRefresh = true;
+    }
+
+    log.info(`Calling client method with params:`);
+    log.info(params);
     try {
-      const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} =
-        getState().inspector;
-      const {methodName, ignoreResult = true} = params;
-      params.appMode = appMode;
-      params.autoSessionRestart = autoSessionRestart;
-
-      // don't retrieve screenshot if we're already using the mjpeg stream
-      if (isUsingMjpegMode) {
-        params.skipScreenshot = true;
-      }
-
-      if (!isSourceRefreshOn) {
-        params.skipRefresh = true;
-      }
-
-      log.info(`Calling client method with params:`);
-      log.info(params);
       const action = keepSessionAlive();
       action(dispatch, getState);
       const inspectorDriver = InspectorDriver.instance(driver);
