@@ -11,7 +11,7 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import {Button, Divider, Select, Space, Tooltip} from 'antd';
-import {BiCircle, BiSquare} from 'react-icons/bi';
+import {BiCircle, BiRecycle, BiSquare} from 'react-icons/bi';
 import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
 import {IoChevronBackOutline} from 'react-icons/io5';
 
@@ -40,6 +40,8 @@ const HeaderButtons = (props) => {
     currentContext,
     setContext,
     t,
+    autoSessionRestart,
+    toggleAutoSessionRestart,
   } = props;
 
   const deviceControls = (
@@ -225,12 +227,24 @@ const HeaderButtons = (props) => {
     </Tooltip>
   );
 
+  const sessionReloadButton = (
+    <Tooltip title={t('ToggleRestartSession')}>
+      <Button
+        id={autoSessionRestart ? 'btnDisableRestartSession' : 'btnEnableRestartSession'}
+        icon={<BiRecycle />}
+        type={autoSessionRestart ? BUTTON.PRIMARY : undefined}
+        onClick={toggleAutoSessionRestart}
+      />
+    </Tooltip>
+  );
+
   return (
     <div className={styles.headerButtons}>
       <Space size="middle">
         {deviceControls}
         {appModeControls}
         {generalControls}
+        {sessionReloadButton}
         {quitSessionButton}
       </Space>
       <Divider />

@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs.js';
 import {POINTER_TYPES} from '../constants/gestures.js';
-import {APP_MODE, NATIVE_APP} from '../constants/session-inspector.js';
+import {APP_MODE, NATIVE_APP, UNKNOWN_ERROR} from '../constants/session-inspector.js';
 import i18n from '../i18next.js';
 import InspectorDriver from '../lib/appium/inspector-driver.js';
 import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map.js';
@@ -10,13 +10,14 @@ import {getSetting, setSetting} from '../polyfills.js';
 import {readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation.js';
 import {log} from '../utils/logger.js';
+import {notification} from '../utils/notification.js';
 import {
   findDOMNodeByPath,
   findJSONElementByPath,
   xmlToDOM,
   xmlToJSON,
 } from '../utils/source-parsing.js';
-import {showError} from './SessionBuilder.js';
+import {newSession, showError} from './SessionBuilder.js';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
 export const SET_SOURCE_AND_SCREENSHOT = 'SET_SOURCE_AND_SCREENSHOT';
@@ -117,6 +118,7 @@ export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
 export const TOGGLE_REFRESHING_STATE = 'TOGGLE_REFRESHING_STATE';
 
 export const SET_GESTURE_UPLOAD_ERROR = 'SET_GESTURE_UPLOAD_ERROR';
+export const SET_AUTO_SESSION_RESTART = 'SET_AUTO_SESSION_RESTART';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -272,65 +274,90 @@ export function applyClientMethod(params) {
       params.methodName !== 'getPageSource' &&
       params.methodName !== 'gesture' &&
       getState().inspector.isRecording;
-    try {
-      dispatch({type: METHOD_CALL_REQUESTED});
-      const callAction = callClientMethod(params);
-      const {
+    dispatch({type: METHOD_CALL_REQUESTED});
+    const callAction = callClientMethod(params);
+    const {
+      contexts,
+      contextsError,
+      commandRes,
+      currentContext,
+      currentContextError,
+      source,
+      screenshot,
+      windowSize,
+      sourceError,
+      screenshotError,
+      windowSizeError,
+      variableName,
+      variableIndex,
+      strategy,
+      selector,
+    } = await callAction(dispatch, getState);
+
+    // TODO: Implement recorder code for gestures
+    if (isRecording) {
+      // Add 'findAndAssign' line of code. Don't do it for arrays though. Arrays already have 'find' expression
+      if (strategy && selector && !variableIndex && variableIndex !== 0) {
+        const findAction = findAndAssign(strategy, selector, variableName, false);
+        findAction(dispatch, getState);
+      }
+
+      // now record the actual action
+      let args = [variableName, variableIndex];
+      args = args.concat(params.args || []);
+      dispatch({type: RECORD_ACTION, action: params.methodName, params: args});
+    }
+    dispatch({type: METHOD_CALL_DONE});
+
+    if (source) {
+      dispatch({
+        type: SET_SOURCE_AND_SCREENSHOT,
         contexts,
-        contextsError,
-        commandRes,
         currentContext,
-        currentContextError,
-        source,
+        sourceJSON: xmlToJSON(source),
+        sourceXML: source,
         screenshot,
         windowSize,
+        contextsError,
+        currentContextError,
         sourceError,
         screenshotError,
         windowSizeError,
-        variableName,
-        variableIndex,
-        strategy,
-        selector,
-      } = await callAction(dispatch, getState);
-
-      // TODO: Implement recorder code for gestures
-      if (isRecording) {
-        // Add 'findAndAssign' line of code. Don't do it for arrays though. Arrays already have 'find' expression
-        if (strategy && selector && !variableIndex && variableIndex !== 0) {
-          const findAction = findAndAssign(strategy, selector, variableName, false);
-          findAction(dispatch, getState);
-        }
-
-        // now record the actual action
-        let args = [variableName, variableIndex];
-        args = args.concat(params.args || []);
-        dispatch({type: RECORD_ACTION, action: params.methodName, params: args});
-      }
-      dispatch({type: METHOD_CALL_DONE});
-
-      if (source) {
-        dispatch({
-          type: SET_SOURCE_AND_SCREENSHOT,
-          contexts,
-          currentContext,
-          sourceJSON: xmlToJSON(source),
-          sourceXML: source,
-          screenshot,
-          windowSize,
-          contextsError,
-          currentContextError,
-          sourceError,
-          screenshotError,
-          windowSizeError,
-        });
-      }
-      window.dispatchEvent(new Event('resize'));
-      return commandRes;
-    } catch (error) {
-      log.error(error);
-      showError(error, {methodName: params.methodName, secs: 10});
-      dispatch({type: METHOD_CALL_DONE});
+      });
     }
+    window.dispatchEvent(new Event('resize'));
+    return commandRes;
+  };
+}
+
+export function restartSession(error, params) {
+  return async (dispatch, getState) => {
+    if (error?.name !== UNKNOWN_ERROR) {
+      showError(error, {methodName: params.methodName, secs: 10});
+      return dispatch({type: METHOD_CALL_DONE});
+    }
+    showError(error, {methodName: params.methodName, secs: 3});
+    notification.info({
+      message: i18n.t('RestartSessionMessage'),
+      duration: 3,
+    });
+    const quitSes = quitSession('Window closed');
+    const newSes = newSession(getState().builder.caps);
+    const getPageSrc = applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
+    const storeSessionSet = storeSessionSettings();
+    const getSavedClientFrame = getSavedClientFramework();
+    const runKeepAliveLp = runKeepAliveLoop();
+    const setSesTime = setSessionTime(Date.now());
+
+    await quitSes(dispatch, getState);
+    await newSes(dispatch, getState);
+    await getPageSrc(dispatch, getState);
+    await storeSessionSet(dispatch, getState);
+    await getSavedClientFrame(dispatch);
+    runKeepAliveLp(dispatch, getState);
+    setSesTime(dispatch);
+    dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart: true});
+    dispatch({type: METHOD_CALL_DONE});
   };
 }
 
@@ -878,9 +905,11 @@ export function keepSessionAlive() {
 
 export function callClientMethod(params) {
   return async (dispatch, getState) => {
-    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn} = getState().inspector;
+    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} =
+      getState().inspector;
     const {methodName, ignoreResult = true} = params;
     params.appMode = appMode;
+    params.autoSessionRestart = autoSessionRestart;
 
     // don't retrieve screenshot if we're already using the mjpeg stream
     if (isUsingMjpegMode) {
@@ -893,28 +922,38 @@ export function callClientMethod(params) {
 
     log.info(`Calling client method with params:`);
     log.info(params);
-    const action = keepSessionAlive();
-    action(dispatch, getState);
-    const inspectorDriver = InspectorDriver.instance(driver);
-    const res = await inspectorDriver.run(params);
-    let {commandRes} = res;
+    try {
+      const action = keepSessionAlive();
+      action(dispatch, getState);
+      const inspectorDriver = InspectorDriver.instance(driver);
+      const res = await inspectorDriver.run(params);
+      let {commandRes} = res;
 
-    // Ignore empty objects
-    if (_.isObject(res) && _.isEmpty(res)) {
-      commandRes = null;
-    }
+      // Ignore empty objects
+      if (_.isObject(res) && _.isEmpty(res)) {
+        commandRes = null;
+      }
 
-    if (!ignoreResult) {
-      // if the user is running actions manually, we want to show the full response with the
-      // ability to scroll etc...
-      const result = JSON.stringify(commandRes, null, '  ');
-      const truncatedResult = _.truncate(result, {length: 2000});
-      log.info(`Result of client command was:`);
-      log.info(truncatedResult);
-      setVisibleCommandResult(result, methodName)(dispatch);
+      if (!ignoreResult) {
+        // if the user is running actions manually, we want to show the full response with the
+        // ability to scroll etc...
+        const result = JSON.stringify(commandRes, null, '  ');
+        const truncatedResult = _.truncate(result, {length: 2000});
+        log.info(`Result of client command was:`);
+        log.info(truncatedResult);
+        setVisibleCommandResult(result, methodName)(dispatch);
+      }
+      res.elementId = res.id;
+      return res;
+    } catch (error) {
+      log.error(error);
+      if (getState().inspector.autoSessionRestart) {
+        const restartSes = restartSession(error, params);
+        return await restartSes(dispatch, getState);
+      }
+      showError(error, {methodName: params.methodName, secs: 10});
+      dispatch({type: METHOD_CALL_DONE});
     }
-    res.elementId = res.id;
-    return res;
   };
 }
 
@@ -1094,5 +1133,12 @@ export function tapTickCoordinates(x, y) {
 export function toggleShowAttributes() {
   return (dispatch) => {
     dispatch({type: TOGGLE_SHOW_ATTRIBUTES});
+  };
+}
+
+export function toggleAutoSessionRestart() {
+  return (dispatch, getState) => {
+    const autoSessionRestart = !getState().inspector.autoSessionRestart;
+    dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart});
   };
 }
