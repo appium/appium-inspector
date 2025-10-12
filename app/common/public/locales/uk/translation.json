@@ -314,5 +314,7 @@
   "Fireflink DeviceFarm Domain": "Домен Fireflink DeviceFarm",
   "Fireflink DeviceFarm Access Key": "Ключ доступу на Fireflink DeviceFarm",
   "Fireflink DeviceFarm License ID": "Ідентифікатор ліцензії на DeviceFarm Fireflink",
-  "Fireflink DeviceFarm Project Name": "Назва проекту Fireflink DeviceFarm"
+  "Fireflink DeviceFarm Project Name": "Назва проекту Fireflink DeviceFarm",
+  "RestartSessionMessage": "Device Connection Lost – Restarting the Session…",
+  "ToggleRestartSession": "Toggle Session Reload Upon Device Disconnect"
 }
