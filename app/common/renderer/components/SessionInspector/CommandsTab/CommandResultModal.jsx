@@ -130,7 +130,7 @@ const CommandResult = ({
     open={!!visibleCommandResult}
     onOk={() => setVisibleCommandResult(null)}
     onCancel={() => setVisibleCommandResult(null)}
-    width={900}
+    width={{md: '80%', lg: '70%', xl: '60%', xxl: '50%'}}
   >
     <CommandResultTable result={visibleCommandResult} t={t} />
   </Modal>
