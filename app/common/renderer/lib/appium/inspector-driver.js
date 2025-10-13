@@ -1,7 +1,13 @@
 import _ from 'lodash';
 
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot.js';
-import {APP_MODE, NATIVE_APP, REFRESH_DELAY_MILLIS} from '../../constants/session-inspector.js';
+import {
+  APP_MODE,
+  NATIVE_APP,
+  REFRESH_DELAY_MILLIS,
+  SESSION_EXPIRED,
+  UNKNOWN_ERROR,
+} from '../../constants/session-inspector.js';
 import {log} from '../../utils/logger.js';
 import {parseHtmlSource, setHtmlElementAttributes} from '../../utils/webview.js';
 
@@ -15,6 +21,16 @@ const IOS_TOP_CONTROLS_SELECTOR =
   '/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[1]';
 
 let _instance = null;
+
+/**
+ * Represents an unexpected or unknown WebDriver/Appium error.
+ */
+class WebdriverUnknownError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = UNKNOWN_ERROR;
+  }
+}
 
 /**
  * Wrapper class providing access to the currently active Appium driver methods,
@@ -83,7 +99,13 @@ export default class InspectorDriver {
           `Handling client method request with method '${methodName}' ` +
             `and args ${JSON.stringify(args)}`,
         );
-        res = await this.executeMethod({methodName, args, skipRefresh, skipScreenshot, appMode});
+        res = await this.executeMethod({
+          methodName,
+          args,
+          skipRefresh,
+          skipScreenshot,
+          appMode,
+        });
       }
     } else if (strategy && selector) {
       if (fetchArray) {
@@ -116,6 +138,9 @@ export default class InspectorDriver {
         cachedEl.variableName = `el${this.elVarCount}`;
       }
 
+      if (typeof cachedEl.el[methodName] !== 'function') {
+        throw new WebdriverUnknownError(SESSION_EXPIRED);
+      }
       // and then execute whatever method we requested on the actual element
       res = await cachedEl.el[methodName].apply(cachedEl.el, args);
     } else {
@@ -129,6 +154,9 @@ export default class InspectorDriver {
         }));
         res = await this.driver.performActions(actions);
       } else if (methodName !== 'getPageSource') {
+        if (typeof this.driver[methodName] !== 'function') {
+          throw new WebdriverUnknownError(SESSION_EXPIRED);
+        }
         res = await this.driver[methodName].apply(this.driver, args);
       }
     }
@@ -202,7 +230,10 @@ export default class InspectorDriver {
     let element = null;
     try {
       element = await this.driver.findElement(strategy, selector);
-    } catch {
+    } catch (err) {
+      if (err.name === UNKNOWN_ERROR) {
+        throw err;
+      }
       return {};
     }
 
@@ -252,6 +283,9 @@ export default class InspectorDriver {
         }
       }
     } catch (e) {
+      if (e.name === UNKNOWN_ERROR) {
+        throw e;
+      }
       windowSizeError = e;
     }
 
@@ -386,6 +420,9 @@ export default class InspectorDriver {
       const source = parseHtmlSource(await this.driver.getPageSource());
       return {source};
     } catch (err) {
+      if (err.name === UNKNOWN_ERROR) {
+        throw err;
+      }
       return {sourceError: err};
     }
   }
@@ -395,6 +432,9 @@ export default class InspectorDriver {
       const screenshot = await this.driver.takeScreenshot();
       return {screenshot};
     } catch (err) {
+      if (err.name === UNKNOWN_ERROR) {
+        throw err;
+      }
       return {screenshotError: err};
     }
   }

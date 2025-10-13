@@ -305,5 +305,16 @@
   "webmateProjectId": "webmate Project ID",
   "specifyWebmateHostExplicitly": "Specify webmate host explicitly",
   "webmateHost": "webmate Host",
-  "Enable": "Enable"
+  "Enable": "Enable",
+  "yourFireflinkDevicefarmDomain": "Your Fireflink DeviceFarm Domain (e.g., cloud.fireflink.com)",
+  "yourLicenseId": "Your License ID",
+  "yourProjectName": "Your Project Name",
+  "License ID": "License ID",
+  "Project Name": "Project Name",
+  "Fireflink DeviceFarm Domain": "Fireflink DeviceFarm Domain",
+  "Fireflink DeviceFarm Access Key": "Fireflink DeviceFarm Access Key",
+  "Fireflink DeviceFarm License ID": "Fireflink DeviceFarm License ID",
+  "Fireflink DeviceFarm Project Name": "Fireflink DeviceFarm Project Name",
+  "RestartSessionMessage": "Device Connection Lost – Restarting the Session…",
+  "ToggleRestartSession": "Toggle Session Reload Upon Device Disconnect"
 }
