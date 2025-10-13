@@ -1,4 +1,4 @@
-import {Table, Tooltip} from 'antd';
+import {Modal, Table, Tooltip} from 'antd';
 import {useState} from 'react';
 
 import {copyToClipboard} from '../../../polyfills.js';
@@ -28,7 +28,7 @@ const CommandResultTableCell = ({value, dataIndex}) => {
 
   return (
     <Tooltip placement="topLeft" title={isCopied ? 'Copied' : 'Click to copy'}>
-      <pre className={styles['command-result-table-cell']} onClick={handleCopy}>
+      <pre className={styles.commandResultTableCell} onClick={handleCopy}>
         {displayText}
       </pre>
     </Tooltip>
@@ -142,9 +142,26 @@ const CommandResultTable = ({result}) => {
       scroll={{y: 400, x: 'max-content'}}
       bordered
       tableLayout="auto"
-      className={styles['command-result-table']}
+      className={styles.commandResultTable}
     />
   );
 };
 
-export default CommandResultTable;
+const CommandResult = ({
+  visibleCommandMethod,
+  visibleCommandResult,
+  setVisibleCommandResult,
+  t,
+}) => (
+  <Modal
+    title={t('methodCallResult', {methodName: visibleCommandMethod})}
+    open={!!visibleCommandResult}
+    onOk={() => setVisibleCommandResult(null)}
+    onCancel={() => setVisibleCommandResult(null)}
+    width={900}
+  >
+    <CommandResultTable result={visibleCommandResult} />
+  </Modal>
+);
+
+export default CommandResult;

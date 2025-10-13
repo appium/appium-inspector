@@ -19,7 +19,7 @@ import {
   SESSION_EXPIRY_PROMPT_TIMEOUT,
 } from '../../constants/session-inspector.js';
 import {downloadFile} from '../../utils/file-handling.js';
-import CommandResultTable from './CommandsTab/CommandResultTable.jsx';
+import CommandResultModal from './CommandsTab/CommandResultModal.jsx';
 import Commands from './CommandsTab/Commands.jsx';
 import GestureEditor from './GesturesTab/GestureEditor.jsx';
 import SavedGestures from './GesturesTab/SavedGestures.jsx';
@@ -47,14 +47,11 @@ const Inspector = (props) => {
     selectedElement = {},
     quitSession,
     screenshotInteractionMode,
-    visibleCommandMethod,
     selectedInspectorTab,
     selectInspectorTab,
-    setVisibleCommandResult,
     setUserWaitTimeout,
     showKeepAlivePrompt,
     keepSessionAlive,
-    visibleCommandResult,
     serverDetails,
     isUsingMjpegMode,
     isAwaitingMjpegStream,
@@ -336,15 +333,7 @@ const Inspector = (props) => {
       >
         <p>{t('Your session is about to expire')}</p>
       </Modal>
-      <Modal
-        title={t('methodCallResult', {methodName: visibleCommandMethod})}
-        open={!!visibleCommandResult}
-        onOk={() => setVisibleCommandResult(null)}
-        onCancel={() => setVisibleCommandResult(null)}
-        width={900}
-      >
-        <CommandResultTable result={visibleCommandResult} />
-      </Modal>
+      <CommandResultModal {...props} />
     </div>
   );
 };
