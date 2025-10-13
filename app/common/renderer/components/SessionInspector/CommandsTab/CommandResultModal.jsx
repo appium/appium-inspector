@@ -1,35 +1,27 @@
 import {Modal, Table, Tooltip} from 'antd';
-import {useState} from 'react';
 
 import {copyToClipboard} from '../../../polyfills.js';
 import styles from './Commands.module.css';
 
-const CommandResultTableCell = ({value}) => {
-  const [isCopied, setIsCopied] = useState(false);
+const CommandResultTableCell = ({value, t}) => {
   const displayText = String(value).trim();
 
-  const handleCopy = async () => {
-    await copyToClipboard(displayText);
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
-  };
-
   return (
-    <Tooltip placement="topLeft" title={isCopied ? 'Copied' : 'Click to copy'}>
-      <pre className={styles.commandResultTableCell} onClick={handleCopy}>
+    <Tooltip placement="topLeft" title={t('Copied!')} trigger="click">
+      <code className={styles.commandResultTableCell} onClick={() => copyToClipboard(displayText)}>
         {displayText}
-      </pre>
+      </code>
     </Tooltip>
   );
 };
 
-const CommandResultTable = ({result}) => {
+const CommandResultTable = ({result, t}) => {
   const createColumn = (data, dataIndex, options = {}) => ({
     title: dataIndex,
     dataIndex,
     key: dataIndex,
     ellipsis: {showTitle: false},
-    render: (value) => <CommandResultTableCell value={value} />,
+    render: (value) => <CommandResultTableCell value={value} t={t} />,
     sorter: (a, b) => a[dataIndex].localeCompare(b[dataIndex], undefined, {numeric: true}),
     filters: data.map((item) => ({
       text: item[dataIndex],
@@ -140,7 +132,7 @@ const CommandResult = ({
     onCancel={() => setVisibleCommandResult(null)}
     width={900}
   >
-    <CommandResultTable result={visibleCommandResult} />
+    <CommandResultTable result={visibleCommandResult} t={t} />
   </Modal>
 );
 
