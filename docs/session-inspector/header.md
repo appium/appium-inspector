@@ -119,6 +119,15 @@ Interactions that can be recorded include:
 While recording is enabled, the [Recorder tab](./recorder.md) contents are automatically populated
 with Appium client code for all supported interactions.
 
+## Reload on Disconnect
+
+![Reload on Disconnect Button](./assets/images/header/reload-on-disconnect-button.png)
+
+This button, which is enabled by default, controls the ability to automatically reload the session
+if the device under test temporarily disconnects. The session reload is triggered upon any
+interaction with the Appium session (selecting an element, interacting with the screenshot,
+searching for elements, etc.) that returns a failed response.
+
 ## Quit Session
 
 ![Quit Button](./assets/images/header/quit-button.png)
