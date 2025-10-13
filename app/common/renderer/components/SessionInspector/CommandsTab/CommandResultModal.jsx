@@ -4,21 +4,9 @@ import {useState} from 'react';
 import {copyToClipboard} from '../../../polyfills.js';
 import styles from './Commands.module.css';
 
-const isTimestampKey = (key) => key === 'timestamp';
-
-const formatTimestamp = (timestamp) => {
-  const date = new Date(timestamp);
-  const offset = date.getTimezoneOffset() * 60000;
-  const localDate = new Date(timestamp - offset);
-  return localDate.toISOString().slice(0, -1);
-};
-
-const formatValueWithTimestamp = (value, key = null) =>
-  isTimestampKey(key) ? formatTimestamp(value) : value;
-
-const CommandResultTableCell = ({value, dataIndex}) => {
+const CommandResultTableCell = ({value}) => {
   const [isCopied, setIsCopied] = useState(false);
-  const displayText = String(formatValueWithTimestamp(value, dataIndex)).trim();
+  const displayText = String(value).trim();
 
   const handleCopy = async () => {
     await copyToClipboard(displayText);
@@ -41,13 +29,8 @@ const CommandResultTable = ({result}) => {
     dataIndex,
     key: dataIndex,
     ellipsis: {showTitle: false},
-    render: (value) => <CommandResultTableCell value={value} dataIndex={dataIndex} />,
-    sorter: (a, b) =>
-      formatValueWithTimestamp(a[dataIndex], dataIndex).localeCompare(
-        formatValueWithTimestamp(b[dataIndex], dataIndex),
-        undefined,
-        {numeric: true},
-      ),
+    render: (value) => <CommandResultTableCell value={value} />,
+    sorter: (a, b) => a[dataIndex].localeCompare(b[dataIndex], undefined, {numeric: true}),
     filters: data.map((item) => ({
       text: item[dataIndex],
       value: item[dataIndex],
@@ -57,7 +40,7 @@ const CommandResultTable = ({result}) => {
   });
 
   const handlePrimitiveData = (data) => {
-    const flattenedData = [{value: formatValueWithTimestamp(data)}];
+    const flattenedData = [{value: data}];
     const columns = [createColumn(flattenedData, 'value', {minWidth: 120})];
     return {flattenedData, columns};
   };
@@ -65,10 +48,7 @@ const CommandResultTable = ({result}) => {
   const handleObjectData = (data) => {
     const flattenedData = Object.entries(data).map(([key, value]) => ({
       property: key,
-      value:
-        typeof value === 'object'
-          ? JSON.stringify(value, null, 2)
-          : formatValueWithTimestamp(value, key),
+      value: typeof value === 'object' ? JSON.stringify(value, null, 2) : value,
     }));
     const columns = [
       createColumn(flattenedData, 'property', {width: '30%', minWidth: 120}),
@@ -78,7 +58,7 @@ const CommandResultTable = ({result}) => {
   };
 
   const handleArrayOfPrimitives = (data) => {
-    const flattenedData = data.map((item) => ({value: formatValueWithTimestamp(item)}));
+    const flattenedData = data.map((item) => ({value: item}));
     const columns = [createColumn(flattenedData, 'value', {minWidth: 120})];
     return {flattenedData, columns};
   };
