@@ -34,7 +34,8 @@ const CommandResultTable = ({result, t}) => {
     key: dataIndex,
     ellipsis: {showTitle: false},
     render: (value) => <CommandResultTableCell value={value} t={t} />,
-    sorter: (a, b) => a[dataIndex].localeCompare(b[dataIndex], undefined, {numeric: true}),
+    sorter: (a, b) =>
+      a[dataIndex].toString().localeCompare(b[dataIndex].toString(), undefined, {numeric: true}),
     filters: data.map((item) => ({
       text: item[dataIndex],
       value: item[dataIndex],
