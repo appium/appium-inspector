@@ -46,7 +46,7 @@ The popup also has several buttons for interacting with the result.
 ![Toggle Table Formatting Button](./assets/images/commands/table-formatting-button.png)
 
 Formats the result as a table, which provides sorting and filtering capabilities. Filters are not
-shown for array or object values. Clicking on the contents of any table cell allows to copy them to
+shown for array or object values. Clicking on the contents of any table cell allows copying them to
 the clipboard.
 
 This button is enabled only if the command result is an array or object. While the button is toggled
