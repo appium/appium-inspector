@@ -39,9 +39,21 @@ command result.
 
 ![Command Result](./assets/images/commands/command-result.png)
 
-The popup also has buttons for interacting with the result:
+The popup also has several buttons for interacting with the result.
 
-| Icon                                                                                    | Description                               |
-| --------------------------------------------------------------------------------------- | ----------------------------------------- |
-| ![Toggle Table Formatting Button](./assets/images/commands/table-formatting-button.png) | Format the result as a table, which provides sorting and filtering capabilities, and allows clicking on the contents of any table cell to copy them to the clipboard. Enabled only if the command result is an array or object. Disables the copy result button while active. |
-| ![Copy Result Button](./assets/images/commands/copy-button.png)                         | Copy the result to the clipboard. Disabled while table formatting is active. |
+### Toggle Table Formatting
+
+![Toggle Table Formatting Button](./assets/images/commands/table-formatting-button.png)
+
+Formats the result as a table, which provides sorting and filtering capabilities. Filters are not
+shown for array or object values. Clicking on the contents of any table cell allows to copy them to
+the clipboard.
+
+This button is enabled only if the command result is an array or object. While the button is toggled
+on, the copy result button is disabled.
+
+### Copy Result
+
+![Copy Result Button](./assets/images/commands/copy-button.png)
+
+Copies the result to the clipboard. Disabled while table formatting is active.
