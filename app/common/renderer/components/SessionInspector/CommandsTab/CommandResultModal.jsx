@@ -10,11 +10,13 @@ import styles from './Commands.module.css';
 const LABEL_PROPERTY = 'property';
 const LABEL_VALUE = 'value';
 
+const isObject = (val) => typeof val === 'object';
+
 // Parse result as JSON (if possible) and detect whether it is a primitive type
 const parseCommandResult = (result) => {
   try {
     const parsedResult = JSON.parse(result);
-    const isPrimitive = parsedResult === null || typeof parsedResult !== 'object';
+    const isPrimitive = parsedResult === null || !isObject(parsedResult);
     return {parsedResult, isPrimitive};
   } catch {
     return {parsedResult: result, isPrimitive: true};
@@ -25,7 +27,7 @@ const CommandResultTableCell = ({value, t}) => {
   const displayText =
     typeof value === 'string'
       ? `"${value}"`
-      : typeof value === 'object'
+      : isObject(value)
         ? JSON.stringify(value, null, 2)
         : String(value);
 
@@ -40,7 +42,7 @@ const CommandResultTableCell = ({value, t}) => {
 
 const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
   // Specify properties for each column
-  const createColumn = (data, colName, options = {}) => ({
+  const createColumn = (colDataArray, colName, options = {}) => ({
     title: t(_.capitalize(colName)),
     dataIndex: colName,
     key: colName,
@@ -48,11 +50,14 @@ const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
     render: (value) => <CommandResultTableCell value={value} t={t} />,
     sorter: (a, b) =>
       a[colName].toString().localeCompare(b[colName].toString(), undefined, {numeric: true}),
-    filters: data.map((item) => ({
-      text: item[colName],
-      value: item[colName],
-    })),
-    onFilter: (value, record) => record[colName] === value,
+    // hide filters for object values, and convert all others to strings to handle booleans
+    filters: [...new Set(colDataArray)]
+      .filter((item) => !isObject(item))
+      .map((item) => ({
+        text: String(item),
+        value: String(item),
+      })),
+    onFilter: (value, record) => String(record[colName]) === value,
     ...options,
   });
 
@@ -60,7 +65,7 @@ const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
   // The table header will also be hidden due to `isPrimitive`.
   const handlePrimitiveData = (data) => {
     const flattenedData = [{value: data}];
-    const columns = [createColumn(flattenedData, LABEL_VALUE, {minWidth: 120})];
+    const columns = [createColumn([data], LABEL_VALUE, {minWidth: 120})];
     return {flattenedData, columns};
   };
 
@@ -71,8 +76,8 @@ const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
       value,
     }));
     const columns = [
-      createColumn(flattenedData, LABEL_PROPERTY, {width: '30%', minWidth: 120}),
-      createColumn(flattenedData, LABEL_VALUE, {width: '70%', minWidth: 200}),
+      createColumn(Object.keys(data), LABEL_PROPERTY, {width: '30%', minWidth: 120}),
+      createColumn(Object.values(data), LABEL_VALUE, {width: '70%', minWidth: 200}),
     ];
     return {flattenedData, columns};
   };
@@ -80,15 +85,20 @@ const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
   // Render an array of non-objects (primitives or arrays): create a single column
   const handleArrayOfNonObjects = (data) => {
     const flattenedData = data.map((item) => ({value: item}));
-    const columns = [createColumn(flattenedData, LABEL_VALUE, {minWidth: 120})];
+    const columns = [createColumn(data, LABEL_VALUE, {minWidth: 120})];
     return {flattenedData, columns};
   };
 
   // Render array of objects: assume all objects use the same keys,
   // and create a separate column for each key
   const handleArrayOfObjects = (data) => {
-    const columns = [...new Set(data.flatMap(Object.keys))].map((key) =>
-      createColumn(data, key, {minWidth: 100}),
+    const allObjectKeys = [...new Set(data.flatMap(Object.keys))];
+    const columns = allObjectKeys.map((key) =>
+      createColumn(
+        data.map((entry) => entry[key]),
+        key,
+        {minWidth: 100},
+      ),
     );
     return {flattenedData: data, columns};
   };
@@ -97,12 +107,12 @@ const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
   const createTableResult = (data) => {
     let tableContents;
     if (Array.isArray(data)) {
-      if (typeof data[0] === 'object' && !Array.isArray(data[0])) {
+      if (isObject(data[0]) && !Array.isArray(data[0])) {
         tableContents = handleArrayOfObjects(data);
       } else {
         tableContents = handleArrayOfNonObjects(data);
       }
-    } else if (typeof data === 'object') {
+    } else if (isObject(data)) {
       tableContents = handleObjectData(data);
     } else {
       tableContents = handlePrimitiveData(data);
