@@ -91,18 +91,20 @@ const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
     return {flattenedData, columns};
   };
 
-  // Render array of objects: assume all objects use the same keys,
-  // and create a separate column for each key
+  // Render array of objects: create a separate column for each key
+  // Will not render any non-object entries!
   const handleArrayOfObjects = (data) => {
-    const allObjectKeys = [...new Set(data.flatMap(Object.keys))];
+    // Filter to only objects (excluding arrays) to avoid runtime errors
+    const safeData = data.filter((entry) => _.isObject(entry) && !Array.isArray(entry));
+    const allObjectKeys = [...new Set(safeData.flatMap(Object.keys))];
     const columns = allObjectKeys.map((key) =>
       createColumn(
-        data.map((entry) => entry[key]),
+        safeData.map((entry) => entry[key]),
         key,
         {minWidth: 100},
       ),
     );
-    return {flattenedData: data, columns};
+    return {flattenedData: safeData, columns};
   };
 
   // Render a different type of table depending on the result type
