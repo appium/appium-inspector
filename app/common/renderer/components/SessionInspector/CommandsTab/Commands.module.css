@@ -27,7 +27,7 @@
   margin: 0;
 }
 
-.commandResultTable :global(.ant-table-tbody) {
+.commandResultTable :global(.ant-table-tbody > tr > td) {
   vertical-align: top;
 }
 
