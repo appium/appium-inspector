@@ -137,7 +137,7 @@ const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
       scroll={{y: 400, x: 'max-content'}}
       bordered
       showHeader={!isPrimitive}
-      tableLayout="auto"
+      tableLayout="auto" // required for minWidth
       className={styles.commandResultTable}
     />
   );
@@ -162,6 +162,7 @@ const CommandResultRawTable = ({result}) => {
       scroll={{y: 400, x: 'max-content'}}
       bordered
       showHeader={false}
+      tableLayout="auto" // required for minWidth
       className={styles.commandResultTable}
     />
   );
