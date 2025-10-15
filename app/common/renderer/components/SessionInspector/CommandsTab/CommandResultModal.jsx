@@ -193,7 +193,7 @@ const CommandResultModalFooter = ({
   </Row>
 );
 
-const CommandResult = ({
+const CommandResultModal = ({
   visibleCommandMethod,
   visibleCommandResult,
   setVisibleCommandResult,
@@ -235,4 +235,4 @@ const CommandResult = ({
   );
 };
 
-export default CommandResult;
+export default CommandResultModal;
