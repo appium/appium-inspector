@@ -160,8 +160,8 @@ const CommandResultRawTable = ({result}) => {
 const CommandResultModalFooter = ({
   visibleCommandResult,
   closeCommandModal,
-  setRenderAsTable,
-  renderAsTable,
+  setFormatResult,
+  formatResult,
   isPrimitive,
   t,
 }) => (
@@ -172,14 +172,14 @@ const CommandResultModalFooter = ({
           <Button
             icon={<TableOutlined />}
             disabled={isPrimitive}
-            type={renderAsTable ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-            onClick={() => setRenderAsTable(!renderAsTable)}
+            type={formatResult ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+            onClick={() => setFormatResult(!formatResult)}
           />
         </Tooltip>
         <Tooltip title={t('copyResultToClipboard')}>
           <Button
             icon={<CopyOutlined />}
-            disabled={renderAsTable}
+            disabled={formatResult}
             onClick={() => copyToClipboard(visibleCommandResult)}
           />
         </Tooltip>
@@ -199,13 +199,13 @@ const CommandResult = ({
   setVisibleCommandResult,
   t,
 }) => {
-  const [renderAsTable, setRenderAsTable] = useState(false);
+  const [formatResult, setFormatResult] = useState(false);
 
   const {parsedResult, isPrimitive} = parseCommandResult(visibleCommandResult);
 
   const closeCommandModal = () => {
     setVisibleCommandResult(null);
-    setRenderAsTable(false);
+    setFormatResult(false);
   };
 
   return (
@@ -219,14 +219,14 @@ const CommandResult = ({
         <CommandResultModalFooter
           visibleCommandResult={visibleCommandResult}
           closeCommandModal={closeCommandModal}
-          setRenderAsTable={setRenderAsTable}
-          renderAsTable={renderAsTable}
+          setFormatResult={setFormatResult}
+          formatResult={formatResult}
           isPrimitive={isPrimitive}
           t={t}
         />
       }
     >
-      {renderAsTable ? (
+      {formatResult ? (
         <CommandResultFormattedTable result={parsedResult} isPrimitive={isPrimitive} t={t} />
       ) : (
         <CommandResultRawTable result={visibleCommandResult} />
