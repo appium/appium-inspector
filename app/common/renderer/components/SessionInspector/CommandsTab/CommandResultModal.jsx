@@ -41,7 +41,8 @@ const CommandResultTableCell = ({value, t}) => {
 const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
   // Specify properties for each column
   const createColumn = (colDataArray, colName, options = {}) => ({
-    title: t(_.capitalize(colName)),
+    title:
+      colName === LABEL_PROPERTY ? t('Property') : colName === LABEL_VALUE ? t('Value') : colName,
     dataIndex: colName,
     key: colName,
     ellipsis: {showTitle: false},
