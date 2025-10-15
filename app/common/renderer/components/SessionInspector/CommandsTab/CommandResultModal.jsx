@@ -10,13 +10,11 @@ import styles from './Commands.module.css';
 const LABEL_PROPERTY = 'property';
 const LABEL_VALUE = 'value';
 
-const isObject = (val) => typeof val === 'object';
-
 // Parse result as JSON (if possible) and detect whether it is a primitive type
 const parseCommandResult = (result) => {
   try {
     const parsedResult = JSON.parse(result);
-    const isPrimitive = parsedResult === null || !isObject(parsedResult);
+    const isPrimitive = !_.isObject(parsedResult);
     return {parsedResult, isPrimitive};
   } catch {
     return {parsedResult: result, isPrimitive: true};
@@ -27,7 +25,7 @@ const CommandResultTableCell = ({value, t}) => {
   const displayText =
     typeof value === 'string'
       ? `"${value}"`
-      : isObject(value)
+      : _.isObject(value)
         ? JSON.stringify(value, null, 2)
         : String(value);
 
@@ -52,7 +50,7 @@ const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
       a[colName].toString().localeCompare(b[colName].toString(), undefined, {numeric: true}),
     // hide filters for object values, and convert all others to strings to handle booleans
     filters: [...new Set(colDataArray)]
-      .filter((item) => !isObject(item))
+      .filter((item) => !_.isObject(item))
       .map((item) => ({
         text: String(item),
         value: String(item),
@@ -107,12 +105,12 @@ const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
   const createTableResult = (data) => {
     let tableContents;
     if (Array.isArray(data)) {
-      if (isObject(data[0]) && !Array.isArray(data[0])) {
+      if (_.isObject(data[0]) && !Array.isArray(data[0])) {
         tableContents = handleArrayOfObjects(data);
       } else {
         tableContents = handleArrayOfNonObjects(data);
       }
-    } else if (isObject(data)) {
+    } else if (_.isObject(data)) {
       tableContents = handleObjectData(data);
     } else {
       tableContents = handlePrimitiveData(data);
