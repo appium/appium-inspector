@@ -136,7 +136,7 @@ const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
       columns={columns}
       pagination={false}
       size="small"
-      scroll={{y: 400, x: 'max-content'}}
+      scroll={{y: 350, x: 'max-content'}}
       bordered
       showHeader={!isPrimitive}
       tableLayout="auto" // required for minWidth
@@ -161,7 +161,7 @@ const CommandResultRawTable = ({result}) => {
       columns={columns}
       pagination={false}
       size="small"
-      scroll={{y: 400, x: 'max-content'}}
+      scroll={{y: 350, x: 'max-content'}}
       bordered
       showHeader={false}
       tableLayout="auto" // required for minWidth
