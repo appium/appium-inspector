@@ -318,5 +318,6 @@
   "RestartSessionMessage": "Device Connection Lost – Restarting the Session…",
   "ToggleRestartSession": "Toggle Session Reload Upon Device Disconnect",
   "toggleTableFormatting": "Toggle Table Formatting",
-  "copyResultToClipboard": "Copy Result to Clipboard"
+  "copyResultToClipboard": "Copy Result to Clipboard",
+  "Property": "Property"
 }

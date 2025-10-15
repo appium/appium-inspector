@@ -23,6 +23,10 @@
   justify-content: flex-end;
 }
 
+.commandResultRawPreBlock {
+  margin: 0;
+}
+
 .commandResultTable :global(.ant-table-tbody) {
   vertical-align: top;
 }

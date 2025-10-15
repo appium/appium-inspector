@@ -1,9 +1,14 @@
 import {CopyOutlined, TableOutlined} from '@ant-design/icons';
 import {Button, Col, Modal, Row, Space, Table, Tooltip} from 'antd';
+import _ from 'lodash';
+import {useState} from 'react';
 
 import {BUTTON} from '../../../constants/antd-types.js';
 import {copyToClipboard} from '../../../polyfills.js';
 import styles from './Commands.module.css';
+
+const LABEL_PROPERTY = 'property';
+const LABEL_VALUE = 'value';
 
 // Parse result as JSON (if possible) and detect whether it is a primitive type
 const parseCommandResult = (result) => {
@@ -28,23 +33,21 @@ const CommandResultTableCell = ({value, t}) => {
   );
 };
 
-const CommandResultTable = ({result, t}) => {
-  const {parsedResult, isPrimitive} = parseCommandResult(result);
-
+const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
   // Specify properties for each column
-  const createColumn = (data, dataIndex, options = {}) => ({
-    title: dataIndex,
-    dataIndex,
-    key: dataIndex,
+  const createColumn = (data, colName, options = {}) => ({
+    title: t(_.capitalize(colName)),
+    dataIndex: colName,
+    key: colName,
     ellipsis: {showTitle: false},
     render: (value) => <CommandResultTableCell value={value} t={t} />,
     sorter: (a, b) =>
-      a[dataIndex].toString().localeCompare(b[dataIndex].toString(), undefined, {numeric: true}),
+      a[colName].toString().localeCompare(b[colName].toString(), undefined, {numeric: true}),
     filters: data.map((item) => ({
-      text: item[dataIndex],
-      value: item[dataIndex],
+      text: item[colName],
+      value: item[colName],
     })),
-    onFilter: (value, record) => record[dataIndex] === value,
+    onFilter: (value, record) => record[colName] === value,
     ...options,
   });
 
@@ -52,7 +55,7 @@ const CommandResultTable = ({result, t}) => {
   // The table header will also be hidden due to `isPrimitive`.
   const handlePrimitiveData = (data) => {
     const flattenedData = [{value: data}];
-    const columns = [createColumn(flattenedData, 'value', {minWidth: 120})];
+    const columns = [createColumn(flattenedData, LABEL_VALUE, {minWidth: 120})];
     return {flattenedData, columns};
   };
 
@@ -63,8 +66,8 @@ const CommandResultTable = ({result, t}) => {
       value: typeof value === 'object' ? JSON.stringify(value, null, 2) : value,
     }));
     const columns = [
-      createColumn(flattenedData, 'property', {width: '30%', minWidth: 120}),
-      createColumn(flattenedData, 'value', {width: '70%', minWidth: 200}),
+      createColumn(flattenedData, LABEL_PROPERTY, {width: '30%', minWidth: 120}),
+      createColumn(flattenedData, LABEL_VALUE, {width: '70%', minWidth: 200}),
     ];
     return {flattenedData, columns};
   };
@@ -72,7 +75,7 @@ const CommandResultTable = ({result, t}) => {
   // Render an array of non-objects (primitives or arrays): create a single column
   const handleArrayOfNonObjects = (data) => {
     const flattenedData = data.map((item) => ({value: item}));
-    const columns = [createColumn(flattenedData, 'value', {minWidth: 120})];
+    const columns = [createColumn(flattenedData, LABEL_VALUE, {minWidth: 120})];
     return {flattenedData, columns};
   };
 
@@ -87,19 +90,19 @@ const CommandResultTable = ({result, t}) => {
 
   // Render a different type of table depending on the result type
   const createTableResult = (data) => {
-    let result;
+    let tableContents;
     if (Array.isArray(data)) {
       if (typeof data[0] === 'object' && !Array.isArray(data[0])) {
-        result = handleArrayOfObjects(data);
+        tableContents = handleArrayOfObjects(data);
       } else {
-        result = handleArrayOfNonObjects(data);
+        tableContents = handleArrayOfNonObjects(data);
       }
     } else if (typeof data === 'object') {
-      result = handleObjectData(data);
+      tableContents = handleObjectData(data);
     } else {
-      result = handlePrimitiveData(data);
+      tableContents = handlePrimitiveData(data);
     }
-    const {flattenedData, columns} = result;
+    const {flattenedData, columns} = tableContents;
     const dataSource = flattenedData.map((item, index) => ({
       key: index.toString(),
       ...item,
@@ -108,7 +111,7 @@ const CommandResultTable = ({result, t}) => {
     return {dataSource, columns};
   };
 
-  const {dataSource, columns} = createTableResult(parsedResult);
+  const {dataSource, columns} = createTableResult(result);
 
   return (
     <Table
@@ -125,20 +128,60 @@ const CommandResultTable = ({result, t}) => {
   );
 };
 
-const CommandResultModalFooter = ({visibleCommandResult, setVisibleCommandResult, t}) => (
+const CommandResultRawTable = ({result}) => {
+  const dataSource = [{key: 0, rawValue: result}];
+  const columns = [
+    {
+      dataIndex: 'rawValue',
+      key: 'rawValue',
+      minWidth: 120,
+      render: (value) => <pre className={styles.commandResultRawPreBlock}>{value}</pre>,
+    },
+  ];
+  return (
+    <Table
+      dataSource={dataSource}
+      columns={columns}
+      pagination={false}
+      size="small"
+      scroll={{y: 400, x: 'max-content'}}
+      bordered
+      showHeader={false}
+      className={styles.commandResultTable}
+    />
+  );
+};
+
+const CommandResultModalFooter = ({
+  visibleCommandResult,
+  closeCommandModal,
+  setRenderAsTable,
+  renderAsTable,
+  isPrimitive,
+  t,
+}) => (
   <Row>
     <Col span={12}>
       <Space>
         <Tooltip title={t('toggleTableFormatting')}>
-          <Button icon={<TableOutlined />} />
+          <Button
+            icon={<TableOutlined />}
+            disabled={isPrimitive}
+            type={renderAsTable ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+            onClick={() => setRenderAsTable(!renderAsTable)}
+          />
         </Tooltip>
         <Tooltip title={t('copyResultToClipboard')}>
-          <Button icon={<CopyOutlined />} onClick={() => copyToClipboard(visibleCommandResult)} />
+          <Button
+            icon={<CopyOutlined />}
+            disabled={renderAsTable}
+            onClick={() => copyToClipboard(visibleCommandResult)}
+          />
         </Tooltip>
       </Space>
     </Col>
     <Col span={12} className={styles.commandResultModalOkButtonCol}>
-      <Button onClick={() => setVisibleCommandResult(null)} type={BUTTON.PRIMARY}>
+      <Button onClick={() => closeCommandModal()} type={BUTTON.PRIMARY}>
         {t('OK')}
       </Button>
     </Col>
@@ -150,23 +193,41 @@ const CommandResult = ({
   visibleCommandResult,
   setVisibleCommandResult,
   t,
-}) => (
-  <Modal
-    title={t('methodCallResult', {methodName: visibleCommandMethod})}
-    open={!!visibleCommandResult}
-    onCancel={() => setVisibleCommandResult(null)}
-    width={{md: '80%', lg: '70%', xl: '60%', xxl: '50%'}}
-    className={styles.commandResultModal}
-    footer={
-      <CommandResultModalFooter
-        visibleCommandResult={visibleCommandResult}
-        setVisibleCommandResult={setVisibleCommandResult}
-        t={t}
-      />
-    }
-  >
-    <CommandResultTable result={visibleCommandResult} t={t} />
-  </Modal>
-);
+}) => {
+  const [renderAsTable, setRenderAsTable] = useState(false);
+
+  const {parsedResult, isPrimitive} = parseCommandResult(visibleCommandResult);
+
+  const closeCommandModal = () => {
+    setVisibleCommandResult(null);
+    setRenderAsTable(false);
+  };
+
+  return (
+    <Modal
+      title={t('methodCallResult', {methodName: visibleCommandMethod})}
+      open={!!visibleCommandResult}
+      onCancel={() => closeCommandModal()}
+      width={{md: '80%', lg: '70%', xl: '60%', xxl: '50%'}}
+      className={styles.commandResultModal}
+      footer={
+        <CommandResultModalFooter
+          visibleCommandResult={visibleCommandResult}
+          closeCommandModal={closeCommandModal}
+          setRenderAsTable={setRenderAsTable}
+          renderAsTable={renderAsTable}
+          isPrimitive={isPrimitive}
+          t={t}
+        />
+      }
+    >
+      {renderAsTable ? (
+        <CommandResultFormattedTable result={parsedResult} isPrimitive={isPrimitive} t={t} />
+      ) : (
+        <CommandResultRawTable result={visibleCommandResult} />
+      )}
+    </Modal>
+  );
+};
 
 export default CommandResult;
