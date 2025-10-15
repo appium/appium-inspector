@@ -1,17 +1,19 @@
 import {CopyOutlined, TableOutlined} from '@ant-design/icons';
 import {Button, Col, Modal, Row, Space, Table, Tooltip} from 'antd';
-import _ from 'lodash';
 
 import {BUTTON} from '../../../constants/antd-types.js';
 import {copyToClipboard} from '../../../polyfills.js';
 import styles from './Commands.module.css';
 
+// Parse result as JSON (if possible) and detect whether it is a primitive type
 const parseCommandResult = (result) => {
-  if (_.isNil(result)) {
+  try {
+    const parsedResult = JSON.parse(result);
+    const isPrimitive = parsedResult === null || typeof parsedResult !== 'object';
+    return {parsedResult, isPrimitive};
+  } catch {
     return {parsedResult: result, isPrimitive: true};
   }
-  const parsedResult = JSON.parse(result);
-  return {parsedResult, isPrimitive: typeof parsedResult !== 'object'};
 };
 
 const CommandResultTableCell = ({value, t}) => {
