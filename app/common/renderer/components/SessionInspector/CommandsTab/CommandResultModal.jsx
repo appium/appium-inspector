@@ -22,7 +22,12 @@ const parseCommandResult = (result) => {
 };
 
 const CommandResultTableCell = ({value, t}) => {
-  const displayText = String(value).trim();
+  const displayText =
+    typeof value === 'string'
+      ? `"${value}"`
+      : typeof value === 'object'
+        ? JSON.stringify(value, null, 2)
+        : String(value);
 
   return (
     <Tooltip placement="topLeft" title={t('Copied!')} trigger="click">
@@ -63,7 +68,7 @@ const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
   const handleObjectData = (data) => {
     const flattenedData = Object.entries(data).map(([key, value]) => ({
       property: key,
-      value: typeof value === 'object' ? JSON.stringify(value, null, 2) : value,
+      value,
     }));
     const columns = [
       createColumn(flattenedData, LABEL_PROPERTY, {width: '30%', minWidth: 120}),
