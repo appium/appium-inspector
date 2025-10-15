@@ -46,8 +46,11 @@ const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
     key: colName,
     ellipsis: {showTitle: false},
     render: (value) => <CommandResultTableCell value={value} t={t} />,
-    sorter: (a, b) =>
-      a[colName].toString().localeCompare(b[colName].toString(), undefined, {numeric: true}),
+    sorter: (a, b) => {
+      const av = String(a[colName] ?? '');
+      const bv = String(b[colName] ?? '');
+      return av.localeCompare(bv, undefined, {numeric: true});
+    },
     // hide filters for object values, and convert all others to strings to handle booleans
     filters: [...new Set(colDataArray)]
       .filter((item) => !_.isObject(item))
