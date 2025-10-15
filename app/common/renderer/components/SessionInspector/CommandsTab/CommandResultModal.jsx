@@ -1,6 +1,8 @@
-import {Modal, Table, Tooltip} from 'antd';
+import {CopyOutlined, TableOutlined} from '@ant-design/icons';
+import {Button, Col, Modal, Row, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 
+import {BUTTON} from '../../../constants/antd-types.js';
 import {copyToClipboard} from '../../../polyfills.js';
 import styles from './Commands.module.css';
 
@@ -121,6 +123,26 @@ const CommandResultTable = ({result, t}) => {
   );
 };
 
+const CommandResultModalFooter = ({visibleCommandResult, setVisibleCommandResult, t}) => (
+  <Row>
+    <Col span={12}>
+      <Space>
+        <Tooltip title={t('toggleTableFormatting')}>
+          <Button icon={<TableOutlined />} />
+        </Tooltip>
+        <Tooltip title={t('copyResultToClipboard')}>
+          <Button icon={<CopyOutlined />} onClick={() => copyToClipboard(visibleCommandResult)} />
+        </Tooltip>
+      </Space>
+    </Col>
+    <Col span={12} className={styles.commandResultModalOkButtonCol}>
+      <Button onClick={() => setVisibleCommandResult(null)} type={BUTTON.PRIMARY}>
+        {t('OK')}
+      </Button>
+    </Col>
+  </Row>
+);
+
 const CommandResult = ({
   visibleCommandMethod,
   visibleCommandResult,
@@ -130,9 +152,16 @@ const CommandResult = ({
   <Modal
     title={t('methodCallResult', {methodName: visibleCommandMethod})}
     open={!!visibleCommandResult}
-    onOk={() => setVisibleCommandResult(null)}
     onCancel={() => setVisibleCommandResult(null)}
     width={{md: '80%', lg: '70%', xl: '60%', xxl: '50%'}}
+    className={styles.commandResultModal}
+    footer={
+      <CommandResultModalFooter
+        visibleCommandResult={visibleCommandResult}
+        setVisibleCommandResult={setVisibleCommandResult}
+        t={t}
+      />
+    }
   >
     <CommandResultTable result={visibleCommandResult} t={t} />
   </Modal>
