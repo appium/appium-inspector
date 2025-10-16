@@ -1,7 +1,4 @@
 ---
-hide:
-    - toc
-
 title: Commands Tab
 ---
 
@@ -19,22 +16,44 @@ of which corresponds to an Appium driver command.
     Commands may be driver-specific, in which case their buttons may not be visible when using
     other drivers.
 
-The available buttons may correspond to commands without parameters, and commands with parameters:
+## Parameters and Conditions
+
+A command may support additional parameters, which affects the behavior of its button:
 
 - For a command without parameters, clicking its button will execute the command
-- For a command with parameters, clicking its button will open the parameter popup:
+- For a command with parameters, clicking its button will open the parameters popup:
 
     ![Command Parameters](./assets/images/commands/command-params.png)
 
-Some commands may require special conditions (e.g. they are only supported in simulators). This
-additional information, if present, is shown as follows:
+A command may also have special conditions (e.g. its functionality is only supported in simulators).
+This additional information, if present, is shown as follows:
 
-- For a command without parameters, this is shown by hovering over the button
-- For a command with parameters, this is listed inside the parameter popup
+- For a command without parameters - in a tooltip visible by hovering over the button
+- For a command with parameters - inside the parameters popup
 
-Regardless of the command type, once it is run and its execution finishes, a new popup will show the
-result returned by the command.
+## Command Result
+
+Upon execution, certain commands may trigger a refresh for the application screenshot and source.
+However, any command will always trigger a new popup upon finishing execution, which shows the
+command result.
 
 ![Command Result](./assets/images/commands/command-result.png)
 
-Depending on the command, it may also trigger a refresh for the application screenshot and source.
+The popup also has several buttons for interacting with the result.
+
+### Toggle Table Formatting
+
+![Toggle Table Formatting Button](./assets/images/commands/table-formatting-button.png)
+
+Formats the result as a table, which provides sorting and filtering capabilities. Filters are not
+shown for array or object values. Clicking on the contents of any table cell allows copying them to
+the clipboard.
+
+This button is enabled only if the command result is an array or object. While the button is toggled
+on, the copy result button is disabled.
+
+### Copy Result
+
+![Copy Result Button](./assets/images/commands/copy-button.png)
+
+Copies the result to the clipboard. Disabled while table formatting is active.
