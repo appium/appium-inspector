@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "@ant-design/pro-components": "2.8.10",
-    "@reduxjs/toolkit": "2.9.0",
+    "@reduxjs/toolkit": "2.9.1",
     "@wdio/protocols": "9.16.2",
     "@xmldom/xmldom": "0.9.8",
     "antd": "5.27.5",
