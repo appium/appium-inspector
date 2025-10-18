@@ -161,30 +161,35 @@ export default class InspectorDriver {
       }
     }
 
-    let contextUpdate = {},
-      sourceUpdate = {},
-      screenshotUpdate = {},
-      windowSizeUpdate = {};
-    if (!skipRefresh) {
-      // Give the source/screenshot time to change before taking the screenshot
-      await new Promise((resolve) => setTimeout(resolve, REFRESH_DELAY_MILLIS));
-      if (!skipScreenshot) {
-        screenshotUpdate = await this.getScreenshotUpdate();
-      }
-      windowSizeUpdate = await this.getWindowUpdate();
-      // only do context updates if user has selected web/hybrid mode (takes forever)
-      if (appMode === APP_MODE.WEB_HYBRID) {
-        contextUpdate = await this.getContextUpdate(windowSizeUpdate);
-      }
-      sourceUpdate = await this.getSourceUpdate();
-    }
+    const refreshUpdate = skipRefresh ? {} : await this.handleRefresh(skipScreenshot, appMode);
+
     return {
       ...cachedEl,
+      ...refreshUpdate,
+      commandRes: res,
+    };
+  }
+
+  async handleRefresh(skipScreenshot, appMode) {
+    // Give the source/screenshot time to change
+    await new Promise((resolve) => setTimeout(resolve, REFRESH_DELAY_MILLIS));
+
+    const screenshotPromise = skipScreenshot ? {} : this.getScreenshotUpdate();
+    const windowSizePromise = this.getWindowUpdate();
+    const sourcePromise = this.getSourceUpdate();
+    const [screenshotUpdate, windowSizeUpdate, sourceUpdate] = await Promise.all([
+      screenshotPromise,
+      windowSizePromise,
+      sourcePromise,
+    ]);
+    // only do context updates if user has selected web/hybrid mode (takes forever)
+    const contextUpdate =
+      appMode === APP_MODE.WEB_HYBRID ? await this.getContextUpdate(windowSizeUpdate) : {};
+    return {
       ...contextUpdate,
       ...sourceUpdate,
       ...screenshotUpdate,
       ...windowSizeUpdate,
-      commandRes: res,
     };
   }
 
