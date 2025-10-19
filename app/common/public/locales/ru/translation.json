@@ -316,5 +316,8 @@
   "Fireflink DeviceFarm License ID": "ID лицензии Fireflink DeviceFarm",
   "Fireflink DeviceFarm Project Name": "Имя проекта Fireflink DeviceFarm",
   "RestartSessionMessage": "Device Connection Lost – Restarting the Session…",
-  "ToggleRestartSession": "Toggle Session Reload Upon Device Disconnect"
+  "ToggleRestartSession": "Toggle Session Reload Upon Device Disconnect",
+  "toggleTableFormatting": "Toggle Table Formatting",
+  "copyResultToClipboard": "Copy Result to Clipboard",
+  "Property": "Property"
 }
