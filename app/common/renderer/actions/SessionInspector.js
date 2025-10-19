@@ -159,7 +159,7 @@ const checkErrorsInAction = ({ticks}) => {
       );
     } else if (
       tick.type === POINTER_TYPES.POINTER_MOVE &&
-      (typeof tick.duration === 'undefined' || !tick.x || !tick.y)
+      (tick.duration === undefined || !tick.x || !tick.y)
     ) {
       errors.push(
         i18n.t('gestureRequiredFieldsError', {
@@ -169,7 +169,7 @@ const checkErrorsInAction = ({ticks}) => {
       );
     } else if (
       [POINTER_TYPES.POINTER_DOWN, POINTER_TYPES.POINTER_UP].includes(tick.type) &&
-      typeof tick.button === 'undefined'
+      tick.button === undefined
     ) {
       errors.push(
         i18n.t('gestureRequiredFieldsError', {
@@ -177,7 +177,7 @@ const checkErrorsInAction = ({ticks}) => {
           eventType: tick.type,
         }),
       );
-    } else if (tick.type === POINTER_TYPES.PAUSE && typeof tick.duration === 'undefined') {
+    } else if (tick.type === POINTER_TYPES.PAUSE && tick.duration === undefined) {
       errors.push(
         i18n.t('gestureRequiredFieldsError', {
           fields: 'duration',
