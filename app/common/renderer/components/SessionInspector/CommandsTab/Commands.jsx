@@ -1,16 +1,13 @@
 import {ThunderboltOutlined} from '@ant-design/icons';
-import {Alert, Button, Card, Col, Collapse, Input, Modal, Row, Space, Switch, Tooltip} from 'antd';
+import {Alert, Card, Col, Input, Modal, Row, Switch} from 'antd';
 import _ from 'lodash';
 
 import {ALERT, INPUT} from '../../../constants/antd-types.js';
-import {
-  COMMAND_ARG_TYPES,
-  COMMAND_DEFINITIONS,
-  TOP_LEVEL_COMMANDS,
-} from '../../../constants/commands.js';
+import {COMMAND_ARG_TYPES} from '../../../constants/commands.js';
 import {notification} from '../../../utils/notification.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
+import StaticCommandsList from './StaticCommandsList.jsx';
 
 const Commands = (props) => {
   const {
@@ -132,50 +129,11 @@ const Commands = (props) => {
       className={inspectorStyles.interactionTabCard}
     >
       <div className={styles.commandsContainer}>
-        <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
-          {t('commandsDescription')}
-          <Row>
-            {_.toPairs(TOP_LEVEL_COMMANDS).map(([commandName, command], index) => (
-              <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
-                <div className={styles.btnContainer}>
-                  <Button onClick={() => startPerformingCommand(commandName, command)}>
-                    {commandName}
-                  </Button>
-                </div>
-              </Col>
-            ))}
-          </Row>
-          <Collapse
-            items={_.toPairs(COMMAND_DEFINITIONS).map(([commandGroup, commands]) => ({
-              key: commandGroup,
-              label: t(commandGroup),
-              children: (
-                <Row>
-                  {_.toPairs(commands).map(
-                    ([commandName, command], index) =>
-                      (!command.drivers || command.drivers.includes(automationName)) && (
-                        <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
-                          <div className={styles.btnContainer}>
-                            <Tooltip
-                              title={
-                                command.notes && !command.args
-                                  ? generateCommandNotes(command.notes)
-                                  : null
-                              }
-                            >
-                              <Button onClick={() => startPerformingCommand(commandName, command)}>
-                                {commandName}
-                              </Button>
-                            </Tooltip>
-                          </div>
-                        </Col>
-                      ),
-                  )}
-                </Row>
-              ),
-            }))}
-          />
-        </Space>
+        <StaticCommandsList
+          automationName={automationName}
+          startPerformingCommand={startPerformingCommand}
+          t={t}
+        />
         {!!pendingCommand && (
           <Modal
             title={`${t('Enter Parameters for:')} ${t(pendingCommand.commandName)}`}
