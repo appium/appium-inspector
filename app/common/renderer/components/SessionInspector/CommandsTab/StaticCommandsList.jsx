@@ -8,10 +8,7 @@ import styles from './Commands.module.css';
 // Static list of driver commands, shown only for drivers that do not support
 // the listCommands/listExtensions endpoints
 const StaticCommandsList = (props) => {
-  const {automationName, startPerformingCommand, t} = props;
-
-  const generateCommandNotes = (notes) =>
-    notes.map((note) => (_.isArray(note) ? `${t(note[0])}: ${note[1]}` : t(note))).join('; ');
+  const {automationName, startPerformingCommand, generateCommandNotes, t} = props;
 
   return (
     <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">

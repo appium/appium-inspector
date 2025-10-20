@@ -132,6 +132,7 @@ const Commands = (props) => {
         <StaticCommandsList
           automationName={automationName}
           startPerformingCommand={startPerformingCommand}
+          generateCommandNotes={generateCommandNotes}
           t={t}
         />
         {!!pendingCommand && (
