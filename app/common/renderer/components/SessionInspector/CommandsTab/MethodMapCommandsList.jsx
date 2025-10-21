@@ -3,31 +3,35 @@ import _ from 'lodash';
 
 import styles from './Commands.module.css';
 
+const filterEmpty = (itemMap) => _.pickBy(itemMap, (v) => !_.isEmpty(v));
+
 const CommandsButtonGrid = ({restDriverCommands}) => (
   <Collapse
-    items={_.toPairs(restDriverCommands).map(([commandSource, commandPathsToMethodsMap]) => ({
-      key: commandSource,
-      label: _.capitalize(commandSource),
-      children: (
-        <Row>
-          {Object.values(commandPathsToMethodsMap).map((commandMethodsMap) =>
-            Object.values(commandMethodsMap).map((commandItem, index) => (
-              <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
-                <div className={styles.btnContainer}>
-                  <Button>{commandItem.command}</Button>
-                </div>
-              </Col>
-            )),
-          )}
-        </Row>
-      ),
-    }))}
+    items={_.toPairs(filterEmpty(restDriverCommands)).map(
+      ([commandSource, commandPathsToMethodsMap]) => ({
+        key: commandSource,
+        label: _.capitalize(commandSource),
+        children: (
+          <Row>
+            {Object.values(filterEmpty(commandPathsToMethodsMap)).map((commandMethodsMap) =>
+              Object.values(filterEmpty(commandMethodsMap)).map((commandItem, index) => (
+                <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
+                  <div className={styles.btnContainer}>
+                    <Button>{commandItem.command}</Button>
+                  </div>
+                </Col>
+              )),
+            )}
+          </Row>
+        ),
+      }),
+    )}
   />
 );
 
 const ExecuteMethodsButtonGrid = ({executeMethods}) => (
   <Collapse
-    items={_.toPairs(executeMethods).map(([methodSource, methodMap]) => ({
+    items={_.toPairs(filterEmpty(executeMethods)).map(([methodSource, methodMap]) => ({
       key: methodSource,
       label: _.capitalize(methodSource),
       children: (
