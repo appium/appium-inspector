@@ -319,5 +319,6 @@
   "ToggleRestartSession": "Toggle Session Reload Upon Device Disconnect",
   "toggleTableFormatting": "Toggle Table Formatting",
   "copyResultToClipboard": "Copy Result to Clipboard",
-  "Property": "Property"
+  "Property": "Property",
+  "executeMethods": "Execute Methods"
 }

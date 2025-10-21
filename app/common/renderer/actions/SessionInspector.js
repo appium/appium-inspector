@@ -824,22 +824,23 @@ export function selectInspectorTab(interaction) {
   };
 }
 
-export function getSupportedCommandsAndExtensions() {
+export function getSupportedSessionMethods() {
   return async (_dispatch, getState) => {
     async function safelyCallCommand(methodName) {
       try {
         const action = executeDriverCommand({methodName});
-        return await action(getState);
+        const {commandRes} = await action(getState);
+        return commandRes;
       } catch {
         return [];
       }
     }
 
-    const [commands, extensions] = await Promise.all([
+    const [commands, executeMethods] = await Promise.all([
       safelyCallCommand('getAppiumCommands'),
       safelyCallCommand('getAppiumExtensions'),
     ]);
-    return {commands, extensions};
+    return {commands, executeMethods};
   };
 }
 

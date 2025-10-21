@@ -8,6 +8,7 @@ import {COMMAND_ARG_TYPES} from '../../../constants/commands.js';
 import {notification} from '../../../utils/notification.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
+import MethodMapCommandsList from './MethodMapCommandsList.jsx';
 import StaticCommandsList from './StaticCommandsList.jsx';
 
 const Commands = (props) => {
@@ -22,6 +23,8 @@ const Commands = (props) => {
   } = props;
 
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
+  const [driverCommands, setDriverCommands] = useState(null);
+  const [driverExecuteMethods, setDriverExecuteMethods] = useState(null);
 
   const startPerformingCommand = (commandName, command) => {
     const {startEnteringCommandArgs} = props;
@@ -123,10 +126,12 @@ const Commands = (props) => {
     notes.map((note) => (_.isArray(note) ? `${t(note[0])}: ${note[1]}` : t(note))).join('; ');
 
   useEffect(() => {
-    const {getSupportedCommandsAndExtensions} = props;
+    const {getSupportedSessionMethods} = props;
     (async () => {
-      const {commands, extensions} = await getSupportedCommandsAndExtensions();
-      setHasMethodsMap(!(_.isEmpty(commands) && _.isEmpty(extensions)));
+      const {commands, executeMethods} = await getSupportedSessionMethods();
+      setHasMethodsMap(!(_.isEmpty(commands) && _.isEmpty(executeMethods)));
+      setDriverCommands(commands);
+      setDriverExecuteMethods(executeMethods);
     })();
   }, []);
 
@@ -145,6 +150,14 @@ const Commands = (props) => {
             automationName={automationName}
             startPerformingCommand={startPerformingCommand}
             generateCommandNotes={generateCommandNotes}
+            t={t}
+          />
+        )}
+        {hasMethodsMap && (
+          <MethodMapCommandsList
+            driverCommands={driverCommands}
+            driverExecuteMethods={driverExecuteMethods}
+            startPerformingCommand={startPerformingCommand}
             t={t}
           />
         )}
