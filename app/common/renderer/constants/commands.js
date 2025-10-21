@@ -1,21 +1,10 @@
-export const COMMAND_ARG_TYPES = {
-  STRING: 'string',
-  NUMBER: 'number',
-  BOOLEAN: 'boolean',
-};
-
-const {STRING, NUMBER} = COMMAND_ARG_TYPES;
-
 // Commonly used commands not hidden under a collapse
 export const TOP_LEVEL_COMMANDS = {
   executeScript: {
-    args: [
-      ['executeScriptCommand', STRING],
-      ['jsonArgument', STRING],
-    ],
+    args: [['executeScriptCommand'], ['jsonArgument']],
   },
   updateSettings: {
-    args: [['settingsJson', STRING]],
+    args: [['settingsJson']],
   },
   getSettings: {},
 };
@@ -30,22 +19,18 @@ export const COMMAND_DEFINITIONS = {
     getAppiumSessionCapabilities: {},
     getTimeouts: {},
     setTimeouts: {
-      args: [
-        ['implicitTimeout', NUMBER],
-        ['pageLoadTimeout', NUMBER],
-        ['scriptTimeout', NUMBER],
-      ],
+      args: [['implicitTimeout'], ['pageLoadTimeout'], ['scriptTimeout']],
     },
     getLogTypes: {},
     getLogs: {
-      args: [['logType', STRING]],
+      args: [['logType']],
     },
   },
   Context: {
     getAppiumContext: {},
     getAppiumContexts: {},
     switchAppiumContext: {
-      args: [['name', STRING]],
+      args: [['name']],
       refresh: true,
     },
   },
@@ -59,68 +44,54 @@ export const COMMAND_DEFINITIONS = {
     isKeyboardShown: {},
     getOrientation: {},
     setOrientation: {
-      args: [['orientation', STRING]],
+      args: [['orientation']],
       refresh: true,
     },
     getGeoLocation: {},
     setGeoLocation: {
-      args: [
-        ['latitude', NUMBER],
-        ['longitude', NUMBER],
-        ['altitude', NUMBER],
-      ],
+      args: [['latitude'], ['longitude'], ['altitude']],
     },
     rotateDevice: {
-      args: [
-        ['x', NUMBER],
-        ['y', NUMBER],
-        ['duration', NUMBER],
-        ['radius', NUMBER],
-        ['rotation', NUMBER],
-        ['touchCount', NUMBER],
-      ],
+      args: [['x'], ['y'], ['duration'], ['radius'], ['rotation'], ['touchCount']],
       refresh: true,
     },
   },
   'App Management': {
     installApp: {
-      args: [['appPathOrUrl', STRING]],
+      args: [['appPathOrUrl']],
     },
     isAppInstalled: {
-      args: [['appId', STRING]],
+      args: [['appId']],
     },
     activateApp: {
-      args: [['appId', STRING]],
+      args: [['appId']],
       refresh: true,
     },
     terminateApp: {
-      args: [['appId', STRING]],
+      args: [['appId']],
       refresh: true,
     },
     removeApp: {
-      args: [['appId', STRING]],
+      args: [['appId']],
     },
     queryAppState: {
-      args: [['appId', STRING]],
+      args: [['appId']],
     },
   },
   'File Transfer': {
     pushFile: {
-      args: [
-        ['pathToInstallTo', STRING],
-        ['fileContentString', STRING],
-      ],
+      args: [['pathToInstallTo'], ['fileContentString']],
     },
     pullFile: {
-      args: [['pathToPullFrom', STRING]],
+      args: [['pathToPullFrom']],
     },
     pullFolder: {
-      args: [['folderToPullFrom', STRING]],
+      args: [['folderToPullFrom']],
     },
   },
   Web: {
     navigateTo: {
-      args: [['url', STRING]],
+      args: [['url']],
       refresh: true,
     },
     getUrl: {},
@@ -139,12 +110,12 @@ export const COMMAND_DEFINITIONS = {
       refresh: true,
     },
     switchToWindow: {
-      args: [['handle', STRING]],
+      args: [['handle']],
       refresh: true,
     },
     getWindowHandles: {},
     createWindow: {
-      args: [['type', STRING]],
+      args: [['type']],
       refresh: true,
     },
   },

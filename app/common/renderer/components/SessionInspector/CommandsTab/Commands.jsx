@@ -1,15 +1,30 @@
 import {ThunderboltOutlined} from '@ant-design/icons';
-import {Alert, Card, Col, Input, Modal, Row, Switch} from 'antd';
+import {Alert, Card, Col, Input, Modal, Row} from 'antd';
 import _ from 'lodash';
 import {useEffect, useState} from 'react';
 
-import {ALERT, INPUT} from '../../../constants/antd-types.js';
-import {COMMAND_ARG_TYPES} from '../../../constants/commands.js';
+import {ALERT} from '../../../constants/antd-types.js';
 import {notification} from '../../../utils/notification.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
 import MethodMapCommandsList from './MethodMapCommandsList.jsx';
 import StaticCommandsList from './StaticCommandsList.jsx';
+
+// Try to detect if the input value should be a boolean/number/object,
+// and if so, convert it to that
+const adjustValueType = (value) => {
+  if (Number(value).toString() === value) {
+    return Number(value);
+  } else if (['true', 'false'].includes(value)) {
+    return value === 'true';
+  } else {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return value;
+    }
+  }
+};
 
 const Commands = (props) => {
   const {
@@ -178,32 +193,13 @@ const Commands = (props) => {
               />
             )}
             {!_.isEmpty(pendingCommand.command.args) &&
-              _.map(pendingCommand.command.args, ([argName, argType], index) => (
+              _.map(pendingCommand.command.args, ([argName], index) => (
                 <Row key={index} gutter={16}>
                   <Col span={24} className={styles.argContainer}>
-                    {argType === COMMAND_ARG_TYPES.NUMBER && (
-                      <Input
-                        type={INPUT.NUMBER}
-                        value={pendingCommand.args[index]}
-                        addonBefore={t(argName)}
-                        onChange={(e) => setCommandArg(index, _.toNumber(e.target.value))}
-                      />
-                    )}
-                    {argType === COMMAND_ARG_TYPES.BOOLEAN && (
-                      <div>
-                        {t(argName)}{' '}
-                        <Switch
-                          checked={pendingCommand.args[index]}
-                          onChange={(v) => setCommandArg(index, v)}
-                        />
-                      </div>
-                    )}
-                    {argType === COMMAND_ARG_TYPES.STRING && (
-                      <Input
-                        addonBefore={t(argName)}
-                        onChange={(e) => setCommandArg(index, e.target.value)}
-                      />
-                    )}
+                    <Input
+                      addonBefore={t(argName)}
+                      onChange={(e) => setCommandArg(index, adjustValueType(e.target.value))}
+                    />
                   </Col>
                 </Row>
               ))}
