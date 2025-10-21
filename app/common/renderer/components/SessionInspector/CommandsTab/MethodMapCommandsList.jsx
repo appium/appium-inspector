@@ -32,7 +32,7 @@ const CommandsButtonGrid = ({restDriverCommands}) => (
 const ExecuteMethodsButtonGrid = ({executeMethods}) => {
   const InnerGrid = ({methodMap}) => (
     <Row>
-      {_.toPairs(methodMap).map(([methodName], index) => (
+      {_.toPairs(filterEmpty(methodMap)).map(([methodName], index) => (
         <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
           <div className={styles.btnContainer}>
             <Button>{methodName}</Button>
