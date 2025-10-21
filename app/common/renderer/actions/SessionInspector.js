@@ -824,6 +824,25 @@ export function selectInspectorTab(interaction) {
   };
 }
 
+export function getSupportedCommandsAndExtensions() {
+  return async (_dispatch, getState) => {
+    async function safelyCallCommand(methodName) {
+      try {
+        const action = executeDriverCommand({methodName});
+        return await action(getState);
+      } catch {
+        return [];
+      }
+    }
+
+    const [commands, extensions] = await Promise.all([
+      safelyCallCommand('getAppiumCommands'),
+      safelyCallCommand('getAppiumExtensions'),
+    ]);
+    return {commands, extensions};
+  };
+}
+
 export function startEnteringCommandArgs(commandName, command) {
   return (dispatch) => {
     dispatch({type: ENTERING_COMMAND_ARGS, commandName, command});
@@ -954,6 +973,17 @@ export function callClientMethod(params) {
       showError(error, {methodName: params.methodName, secs: 10});
       dispatch({type: METHOD_CALL_DONE});
     }
+  };
+}
+
+// Simple alternative to callClientMethod, for when we only want to
+// run the command without any side-effects
+export function executeDriverCommand(params) {
+  return async (getState) => {
+    const {driver} = getState().inspector;
+    params.skipRefresh = true;
+    const inspectorDriver = InspectorDriver.instance(driver);
+    return await inspectorDriver.run(params);
   };
 }
 

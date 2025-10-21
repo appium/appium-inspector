@@ -1,6 +1,7 @@
 import {ThunderboltOutlined} from '@ant-design/icons';
 import {Alert, Card, Col, Input, Modal, Row, Switch} from 'antd';
 import _ from 'lodash';
+import {useEffect, useState} from 'react';
 
 import {ALERT, INPUT} from '../../../constants/antd-types.js';
 import {COMMAND_ARG_TYPES} from '../../../constants/commands.js';
@@ -19,6 +20,8 @@ const Commands = (props) => {
     storeSessionSettings,
     t,
   } = props;
+
+  const [hasMethodsMap, setHasMethodsMap] = useState(null);
 
   const startPerformingCommand = (commandName, command) => {
     const {startEnteringCommandArgs} = props;
@@ -119,6 +122,14 @@ const Commands = (props) => {
   const generateCommandNotes = (notes) =>
     notes.map((note) => (_.isArray(note) ? `${t(note[0])}: ${note[1]}` : t(note))).join('; ');
 
+  useEffect(() => {
+    const {getSupportedCommandsAndExtensions} = props;
+    (async () => {
+      const {commands, extensions} = await getSupportedCommandsAndExtensions();
+      setHasMethodsMap(!(_.isEmpty(commands) && _.isEmpty(extensions)));
+    })();
+  }, []);
+
   return (
     <Card
       title={
@@ -129,12 +140,14 @@ const Commands = (props) => {
       className={inspectorStyles.interactionTabCard}
     >
       <div className={styles.commandsContainer}>
-        <StaticCommandsList
-          automationName={automationName}
-          startPerformingCommand={startPerformingCommand}
-          generateCommandNotes={generateCommandNotes}
-          t={t}
-        />
+        {hasMethodsMap === false && (
+          <StaticCommandsList
+            automationName={automationName}
+            startPerformingCommand={startPerformingCommand}
+            generateCommandNotes={generateCommandNotes}
+            t={t}
+          />
+        )}
         {!!pendingCommand && (
           <Modal
             title={`${t('Enter Parameters for:')} ${t(pendingCommand.commandName)}`}
