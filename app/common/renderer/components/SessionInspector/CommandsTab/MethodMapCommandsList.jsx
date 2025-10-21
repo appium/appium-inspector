@@ -29,25 +29,32 @@ const CommandsButtonGrid = ({restDriverCommands}) => (
   />
 );
 
-const ExecuteMethodsButtonGrid = ({executeMethods}) => (
-  <Collapse
-    items={_.toPairs(filterEmpty(executeMethods)).map(([methodSource, methodMap]) => ({
-      key: methodSource,
-      label: _.capitalize(methodSource),
-      children: (
-        <Row>
-          {_.toPairs(methodMap).map(([methodName], index) => (
-            <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
-              <div className={styles.btnContainer}>
-                <Button>{methodName}</Button>
-              </div>
-            </Col>
-          ))}
-        </Row>
-      ),
-    }))}
-  />
-);
+const ExecuteMethodsButtonGrid = ({executeMethods}) => {
+  const InnerGrid = ({methodMap}) => (
+    <Row>
+      {_.toPairs(methodMap).map(([methodName], index) => (
+        <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
+          <div className={styles.btnContainer}>
+            <Button>{methodName}</Button>
+          </div>
+        </Col>
+      ))}
+    </Row>
+  );
+
+  const filteredMethodMap = filterEmpty(executeMethods);
+  return _.size(filteredMethodMap) === 1 ? (
+    <InnerGrid methodMap={Object.values(filteredMethodMap)[0]} />
+  ) : (
+    <Collapse
+      items={_.toPairs(filteredMethodMap).map(([methodSource, methodMap]) => ({
+        key: methodSource,
+        label: _.capitalize(methodSource),
+        children: <InnerGrid methodMap={methodMap} />,
+      }))}
+    />
+  );
+};
 
 // Dynamic list of driver commands, generated from the driver's method map responses
 const MethodMapCommandsList = (props) => {
