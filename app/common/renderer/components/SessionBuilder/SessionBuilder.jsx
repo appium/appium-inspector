@@ -58,6 +58,12 @@ const Session = (props) => {
   };
 
   const loadNewSession = async (caps, attachSessId = null) => {
+    const {showError} = props;
+    const noCapsEntered =
+      _.isEmpty(caps) || (caps.length === 1 && !('name' in caps[0]) && !('value' in caps[0]));
+    if (noCapsEntered && !attachSessId) {
+      showError(new Error(t('noCapsFound', {url: LINKS.ADD_CAPS_DOCS})), {secs: 0});
+    }
     if (await newSession(_.cloneDeep(caps), attachSessId)) {
       navigate('/inspector', {replace: true});
     }
