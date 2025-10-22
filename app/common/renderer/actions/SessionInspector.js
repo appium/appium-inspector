@@ -844,9 +844,9 @@ export function getSupportedSessionMethods() {
   };
 }
 
-export function startEnteringCommandArgs(commandName, command) {
+export function startEnteringCommandArgs(commandName, commandProps) {
   return (dispatch) => {
-    dispatch({type: ENTERING_COMMAND_ARGS, commandName, command});
+    dispatch({type: ENTERING_COMMAND_ARGS, commandName, commandProps});
   };
 }
 

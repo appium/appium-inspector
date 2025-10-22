@@ -1,9 +1,8 @@
 import {ThunderboltOutlined} from '@ant-design/icons';
-import {Alert, Card, Col, Input, Modal, Row} from 'antd';
+import {Card, Col, Input, Modal, Row} from 'antd';
 import _ from 'lodash';
 import {useEffect, useState} from 'react';
 
-import {ALERT} from '../../../constants/antd-types.js';
 import {notification} from '../../../utils/notification.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
@@ -32,7 +31,6 @@ const Commands = (props) => {
     cancelPendingCommand,
     setCommandArg,
     applyClientMethod,
-    automationName,
     storeSessionSettings,
     t,
   } = props;
@@ -41,17 +39,17 @@ const Commands = (props) => {
   const [driverCommands, setDriverCommands] = useState(null);
   const [driverExecuteMethods, setDriverExecuteMethods] = useState(null);
 
-  const startPerformingCommand = (commandName, command) => {
+  const startPerformingCommand = (commandName, commandProps) => {
     const {startEnteringCommandArgs} = props;
-    if (_.isEmpty(command.args)) {
+    if (_.isEmpty(commandProps.params)) {
       applyClientMethod({
         methodName: commandName,
         args: [],
-        skipRefresh: !command.refresh,
+        skipRefresh: !commandProps.refresh,
         ignoreResult: false,
       });
     } else {
-      startEnteringCommandArgs(commandName, command);
+      startEnteringCommandArgs(commandName, commandProps);
     }
   };
 
@@ -69,29 +67,29 @@ const Commands = (props) => {
   };
 
   const executeCommand = () => {
-    const {args, commandName, command} = pendingCommand;
-    const {refresh} = command;
+    const {params, commandName, commandProps} = pendingCommand;
+    const {refresh} = commandProps;
 
-    // Make a copy of the arguments to avoid state mutation
-    let copiedArgs = _.cloneDeep(args);
+    // Make a copy of the parameters to avoid state mutation
+    let copiedParams = _.cloneDeep(params);
 
     let isJsonValid = true;
 
     // Special case for 'rotateDevice'
     if (commandName === 'rotateDevice') {
-      copiedArgs = {
-        x: args[0],
-        y: args[1],
-        duration: args[2],
-        radius: args[3],
-        rotation: args[4],
-        touchCount: args[5],
+      copiedParams = {
+        x: params[0],
+        y: params[1],
+        duration: params[2],
+        radius: params[3],
+        rotation: params[4],
+        touchCount: params[5],
       };
     }
 
     // Special case for 'setGeoLocation'
     if (commandName === 'setGeoLocation') {
-      copiedArgs = {latitude: args[0], longitude: args[1], altitude: args[2]};
+      copiedParams = {latitude: params[0], longitude: params[1], altitude: params[2]};
     }
 
     // Special case for 'executeScript'
@@ -99,23 +97,23 @@ const Commands = (props) => {
     // but we should still allow omitting the array to avoid confusion for non-WDIO users.
     // So we can have 4 cases for the argument: undefined, "[]", "{...}", "[{...}]"
     if (commandName === 'executeScript') {
-      if (_.isEmpty(args[1])) {
-        copiedArgs[1] = [];
+      if (_.isEmpty(params[1])) {
+        copiedParams[1] = [];
       } else {
-        copiedArgs[1] = parseJsonString(args[1]);
-        if (copiedArgs[1] === null) {
+        copiedParams[1] = parseJsonString(params[1]);
+        if (copiedParams[1] === null) {
           isJsonValid = false;
-        } else if (!_.isArray(copiedArgs[1])) {
-          copiedArgs[1] = [copiedArgs[1]];
+        } else if (!_.isArray(copiedParams[1])) {
+          copiedParams[1] = [copiedParams[1]];
         }
       }
     }
 
     // Special case for 'updateSettings'
     if (commandName === 'updateSettings') {
-      if (_.isString(args[0])) {
-        copiedArgs[0] = parseJsonString(args[0]);
-        if (copiedArgs[0] === null) {
+      if (_.isString(params[0])) {
+        copiedParams[0] = parseJsonString(params[0]);
+        if (copiedParams[0] === null) {
           isJsonValid = false;
         }
       }
@@ -124,21 +122,18 @@ const Commands = (props) => {
     if (isJsonValid) {
       applyClientMethod({
         methodName: commandName,
-        args: copiedArgs,
+        args: copiedParams,
         skipRefresh: !refresh,
         ignoreResult: false,
       });
       // if updating settings, store the updated values
       if (commandName === 'updateSettings') {
-        storeSessionSettings(...copiedArgs);
+        storeSessionSettings(...copiedParams);
       }
     }
 
     cancelPendingCommand();
   };
-
-  const generateCommandNotes = (notes) =>
-    notes.map((note) => (_.isArray(note) ? `${t(note[0])}: ${note[1]}` : t(note))).join('; ');
 
   useEffect(() => {
     const {getSupportedSessionMethods} = props;
@@ -161,12 +156,7 @@ const Commands = (props) => {
     >
       <div className={styles.commandsContainer}>
         {hasMethodsMap === false && (
-          <StaticCommandsList
-            automationName={automationName}
-            startPerformingCommand={startPerformingCommand}
-            generateCommandNotes={generateCommandNotes}
-            t={t}
-          />
+          <StaticCommandsList startPerformingCommand={startPerformingCommand} t={t} />
         )}
         {hasMethodsMap && (
           <MethodMapCommandsList
@@ -185,19 +175,12 @@ const Commands = (props) => {
             onOk={() => executeCommand()}
             onCancel={() => cancelPendingCommand()}
           >
-            {pendingCommand.command.notes && (
-              <Alert
-                message={generateCommandNotes(pendingCommand.command.notes)}
-                type={ALERT.INFO}
-                showIcon
-              />
-            )}
-            {!_.isEmpty(pendingCommand.command.args) &&
-              _.map(pendingCommand.command.args, ([argName], index) => (
+            {!_.isEmpty(pendingCommand.commandProps.params) &&
+              _.map(pendingCommand.commandProps.params, ({name: argName}, index) => (
                 <Row key={index} gutter={16}>
                   <Col span={24} className={styles.argContainer}>
                     <Input
-                      addonBefore={t(argName)}
+                      addonBefore={argName}
                       onChange={(e) => setCommandArg(index, adjustValueType(e.target.value))}
                     />
                   </Col>

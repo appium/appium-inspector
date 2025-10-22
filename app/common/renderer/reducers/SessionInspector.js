@@ -512,8 +512,8 @@ export default function inspector(state = INITIAL_STATE, action) {
         ...state,
         pendingCommand: {
           commandName: action.commandName,
-          command: action.command,
-          args: [],
+          commandProps: action.commandProps,
+          params: [],
         },
       };
 
@@ -522,7 +522,7 @@ export default function inspector(state = INITIAL_STATE, action) {
         ...state,
         pendingCommand: {
           ...state.pendingCommand,
-          args: Object.assign([], state.pendingCommand.args, {[action.index]: action.value}), // Replace 'value' at 'index'
+          params: Object.assign([], state.pendingCommand.params, {[action.index]: action.value}), // replace the value at index
         },
       };
 
