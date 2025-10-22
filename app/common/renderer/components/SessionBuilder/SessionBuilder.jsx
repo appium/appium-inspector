@@ -1,5 +1,5 @@
 import {LinkOutlined} from '@ant-design/icons';
-import {Badge, Button, Divider, Spin, Tabs} from 'antd';
+import {Badge, Button, Divider, Space, Spin, Tabs} from 'antd';
 import _ from 'lodash';
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router';
@@ -169,25 +169,28 @@ const Session = (props) => {
               {t('desiredCapabilitiesDocumentation')}
             </a>
           </div>
-          {!isAttaching && capsUUID && (
-            <Button
-              onClick={() =>
-                saveSession(server, serverType, caps, {name: capsName, uuid: capsUUID})
-              }
-              disabled={!isCapsDirty || isEditingDesiredCaps}
-            >
-              {t('Save')}
-            </Button>
-          )}
           {!isAttaching && (
-            <Button onClick={requestSaveAsModal} disabled={isEditingDesiredCaps}>
-              {t('saveAs')}
-            </Button>
+            <Space.Compact>
+              {capsUUID && (
+                <Button
+                  onClick={() =>
+                    saveSession(server, serverType, caps, {name: capsName, uuid: capsUUID})
+                  }
+                  disabled={!isCapsDirty || isEditingDesiredCaps}
+                >
+                  {t('Save')}
+                </Button>
+              )}
+              <Button onClick={requestSaveAsModal} disabled={isEditingDesiredCaps}>
+                {t('saveAs')}
+              </Button>
+            </Space.Compact>
           )}
           {!isAttaching && (
             <Button
               type={BUTTON.PRIMARY}
               id="btnStartSession"
+              disabled={isEditingDesiredCaps}
               onClick={() => loadNewSession(caps)}
               className={styles.startSessionBtn}
             >
