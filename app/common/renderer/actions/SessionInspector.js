@@ -81,10 +81,6 @@ export const HIDE_PROMPT_KEEP_ALIVE = 'HIDE_PROMPT_KEEP_ALIVE';
 
 export const SELECT_INSPECTOR_TAB = 'SELECT_INSPECTOR_TAB';
 
-export const ENTERING_COMMAND_ARGS = 'ENTERING_COMMAND_ARGS';
-export const CANCEL_PENDING_COMMAND = 'CANCEL_PENDING_COMMAND';
-export const SET_COMMAND_ARG = 'SET_COMMAND_ARG';
-
 export const SET_CONTEXT = 'SET_CONTEXT';
 
 export const SET_APP_ID = 'SET_APP_ID';
@@ -841,24 +837,6 @@ export function getSupportedSessionMethods() {
       safelyCallCommand('getAppiumExtensions'),
     ]);
     return {commands, executeMethods};
-  };
-}
-
-export function startEnteringCommandArgs(commandName, commandProps) {
-  return (dispatch) => {
-    dispatch({type: ENTERING_COMMAND_ARGS, commandName, commandProps});
-  };
-}
-
-export function cancelPendingCommand() {
-  return (dispatch) => {
-    dispatch({type: CANCEL_PENDING_COMMAND});
-  };
-}
-
-export function setCommandArg(index, value) {
-  return (dispatch) => {
-    dispatch({type: SET_COMMAND_ARG, index, value});
   };
 }
 

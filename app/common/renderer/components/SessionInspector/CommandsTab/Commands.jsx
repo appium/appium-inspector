@@ -3,13 +3,12 @@ import {Card, Col, Input, Modal, Row} from 'antd';
 import _ from 'lodash';
 import {useEffect, useState} from 'react';
 
-import {notification} from '../../../utils/notification.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
 import MethodMapCommandsList from './MethodMapCommandsList.jsx';
 import StaticCommandsList from './StaticCommandsList.jsx';
 
-// Try to detect if the input value should be a boolean/number/object,
+// Try to detect if the input value should be a boolean/number/array/object,
 // and if so, convert it to that
 const adjustValueType = (value) => {
   if (Number(value).toString() === value) {
@@ -26,21 +25,17 @@ const adjustValueType = (value) => {
 };
 
 const Commands = (props) => {
-  const {
-    pendingCommand,
-    cancelPendingCommand,
-    setCommandArg,
-    applyClientMethod,
-    storeSessionSettings,
-    t,
-  } = props;
+  const {applyClientMethod, storeSessionSettings, t} = props;
 
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
   const [driverCommands, setDriverCommands] = useState(null);
   const [driverExecuteMethods, setDriverExecuteMethods] = useState(null);
 
+  const [curCommandName, setCurCommandName] = useState(null);
+  const [curCommandProps, setCurCommandProps] = useState(null);
+  const [curCommandParams, setCurCommandParams] = useState([]);
+
   const startPerformingCommand = (commandName, commandProps) => {
-    const {startEnteringCommandArgs} = props;
     if (_.isEmpty(commandProps.params)) {
       applyClientMethod({
         methodName: commandName,
@@ -49,90 +44,74 @@ const Commands = (props) => {
         ignoreResult: false,
       });
     } else {
-      startEnteringCommandArgs(commandName, commandProps);
+      setCurCommandProps(commandProps);
+      setCurCommandName(commandName);
     }
   };
 
-  const parseJsonString = (jsonString) => {
-    try {
-      return JSON.parse(jsonString);
-    } catch (err) {
-      notification.error({
-        message: t('invalidJson'),
-        description: err.message,
-        duration: 5,
-      });
-      return null;
-    }
+  const updateCommandParam = (index, value) => {
+    const newCommandParams = [...curCommandParams];
+    newCommandParams[index] = value;
+    setCurCommandParams(newCommandParams);
+  };
+
+  const clearCurrentCommand = () => {
+    setCurCommandName(null);
+    setCurCommandProps(null);
+    setCurCommandParams([]);
   };
 
   const executeCommand = () => {
-    const {params, commandName, commandProps} = pendingCommand;
-    const {refresh} = commandProps;
+    const {refresh} = curCommandProps;
 
     // Make a copy of the parameters to avoid state mutation
-    let copiedParams = _.cloneDeep(params);
-
-    let isJsonValid = true;
+    let copiedParams = _.cloneDeep(curCommandParams);
 
     // Special case for 'rotateDevice'
-    if (commandName === 'rotateDevice') {
+    if (curCommandName === 'rotateDevice') {
       copiedParams = {
-        x: params[0],
-        y: params[1],
-        duration: params[2],
-        radius: params[3],
-        rotation: params[4],
-        touchCount: params[5],
+        x: curCommandParams[0],
+        y: curCommandParams[1],
+        duration: curCommandParams[2],
+        radius: curCommandParams[3],
+        rotation: curCommandParams[4],
+        touchCount: curCommandParams[5],
       };
     }
 
     // Special case for 'setGeoLocation'
-    if (commandName === 'setGeoLocation') {
-      copiedParams = {latitude: params[0], longitude: params[1], altitude: params[2]};
+    if (curCommandName === 'setGeoLocation') {
+      copiedParams = {
+        latitude: curCommandParams[0],
+        longitude: curCommandParams[1],
+        altitude: curCommandParams[2],
+      };
     }
 
     // Special case for 'executeScript'
     // Unlike other clients, webdriver/WDIO requires the argument object to be wrapped in an array,
     // but we should still allow omitting the array to avoid confusion for non-WDIO users.
-    // So we can have 4 cases for the argument: undefined, "[]", "{...}", "[{...}]"
-    if (commandName === 'executeScript') {
-      if (_.isEmpty(params[1])) {
+    // So we can have 4 cases for the argument: undefined, [], {...}, [{...}]
+    if (curCommandName === 'executeScript') {
+      if (_.isEmpty(curCommandParams[1])) {
         copiedParams[1] = [];
-      } else {
-        copiedParams[1] = parseJsonString(params[1]);
-        if (copiedParams[1] === null) {
-          isJsonValid = false;
-        } else if (!_.isArray(copiedParams[1])) {
-          copiedParams[1] = [copiedParams[1]];
-        }
+      } else if (typeof curCommandParams[1] === 'object') {
+        copiedParams[1] = !_.isArray(copiedParams[1]) ? [curCommandParams[1]] : curCommandParams[1];
       }
     }
 
-    // Special case for 'updateSettings'
-    if (commandName === 'updateSettings') {
-      if (_.isString(params[0])) {
-        copiedParams[0] = parseJsonString(params[0]);
-        if (copiedParams[0] === null) {
-          isJsonValid = false;
-        }
-      }
+    applyClientMethod({
+      methodName: curCommandName,
+      args: copiedParams,
+      skipRefresh: !refresh,
+      ignoreResult: false,
+    });
+    // if updating settings, store the updated values
+    if (curCommandName === 'updateSettings') {
+      storeSessionSettings(...copiedParams);
     }
 
-    if (isJsonValid) {
-      applyClientMethod({
-        methodName: commandName,
-        args: copiedParams,
-        skipRefresh: !refresh,
-        ignoreResult: false,
-      });
-      // if updating settings, store the updated values
-      if (commandName === 'updateSettings') {
-        storeSessionSettings(...copiedParams);
-      }
-    }
-
-    cancelPendingCommand();
+    clearCurrentCommand();
   };
 
   useEffect(() => {
@@ -166,22 +145,22 @@ const Commands = (props) => {
             t={t}
           />
         )}
-        {!!pendingCommand && (
+        {!!curCommandName && (
           <Modal
-            title={`${t('Enter Parameters for:')} ${t(pendingCommand.commandName)}`}
+            title={`${t('Enter Parameters for:')} ${t(curCommandName)}`}
             okText={t('Execute Command')}
             cancelText={t('Cancel')}
-            open={!!pendingCommand}
+            open={!!curCommandName}
             onOk={() => executeCommand()}
-            onCancel={() => cancelPendingCommand()}
+            onCancel={() => clearCurrentCommand()}
           >
-            {!_.isEmpty(pendingCommand.commandProps.params) &&
-              _.map(pendingCommand.commandProps.params, ({name: argName}, index) => (
+            {!_.isEmpty(curCommandProps.params) &&
+              _.map(curCommandProps.params, ({name: argName}, index) => (
                 <Row key={index} gutter={16}>
                   <Col span={24} className={styles.argContainer}>
                     <Input
                       addonBefore={argName}
-                      onChange={(e) => setCommandArg(index, adjustValueType(e.target.value))}
+                      onChange={(e) => updateCommandParam(index, adjustValueType(e.target.value))}
                     />
                   </Col>
                 </Row>

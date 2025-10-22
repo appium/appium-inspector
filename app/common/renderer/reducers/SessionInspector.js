@@ -2,7 +2,6 @@ import _ from 'lodash';
 
 import {
   ADD_ASSIGNED_VAR_CACHE,
-  CANCEL_PENDING_COMMAND,
   CLEAR_ASSIGNED_VAR_CACHE,
   CLEAR_COORD_ACTION,
   CLEAR_RECORDING,
@@ -11,7 +10,6 @@ import {
   CLEAR_TAP_COORDINATES,
   DELETE_SAVED_GESTURES_DONE,
   DELETE_SAVED_GESTURES_REQUESTED,
-  ENTERING_COMMAND_ARGS,
   FINDING_ELEMENT_IN_SOURCE,
   FINDING_ELEMENT_IN_SOURCE_COMPLETED,
   GET_FIND_ELEMENTS_TIMES,
@@ -45,7 +43,6 @@ import {
   SET_AUTO_SESSION_RESTART,
   SET_AWAITING_MJPEG_STREAM,
   SET_CLIENT_FRAMEWORK,
-  SET_COMMAND_ARG,
   SET_CONTEXT,
   SET_COORD_END,
   SET_COORD_START,
@@ -125,7 +122,6 @@ const INITIAL_STATE = {
   searchedForElementBounds: null,
   selectedInspectorTab: INSPECTOR_TABS.SOURCE,
   appMode: APP_MODE.NATIVE,
-  pendingCommand: null,
   findElementsExecutionTimes: [],
   isFindingElementsTimes: false,
   isFindingLocatedElementInSource: false,
@@ -505,31 +501,6 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         showCentroids: action.show,
-      };
-
-    case ENTERING_COMMAND_ARGS:
-      return {
-        ...state,
-        pendingCommand: {
-          commandName: action.commandName,
-          commandProps: action.commandProps,
-          params: [],
-        },
-      };
-
-    case SET_COMMAND_ARG:
-      return {
-        ...state,
-        pendingCommand: {
-          ...state.pendingCommand,
-          params: Object.assign([], state.pendingCommand.params, {[action.index]: action.value}), // replace the value at index
-        },
-      };
-
-    case CANCEL_PENDING_COMMAND:
-      return {
-        ...state,
-        pendingCommand: null,
       };
 
     case SET_CONTEXT:
