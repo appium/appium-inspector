@@ -23,6 +23,13 @@ import ServerTabCustom from './ServerDetails/ServerTabCustom.jsx';
 import styles from './SessionBuilder.module.css';
 import ToggleTheme from './Settings/ToggleTheme.jsx';
 
+// There are 3 possible cases for an empty capability set:
+// * Default Inspector state, which has 1 predefined capability without name or value
+// * User-modified state with all capabilities manually removed (empty list)
+// * null, if attachSessId is provided
+const isCapabilitySetEmpty = (caps) =>
+  _.isEmpty(caps) || (caps.length === 1 && !('name' in caps[0]) && !('value' in caps[0]));
+
 const Session = (props) => {
   const {
     tabKey,
@@ -59,10 +66,8 @@ const Session = (props) => {
 
   const loadNewSession = async (caps, attachSessId = null) => {
     const {showError} = props;
-    const noCapsEntered =
-      _.isEmpty(caps) || (caps.length === 1 && !('name' in caps[0]) && !('value' in caps[0]));
-    if (noCapsEntered && !attachSessId) {
-      showError(new Error(t('noCapsFound', {url: LINKS.ADD_CAPS_DOCS})), {secs: 0});
+    if (isCapabilitySetEmpty(caps) && !attachSessId) {
+      return showError(new Error(t('noCapsFound', {url: LINKS.ADD_CAPS_DOCS})), {secs: 0});
     }
     if (await newSession(_.cloneDeep(caps), attachSessId)) {
       navigate('/inspector', {replace: true});
