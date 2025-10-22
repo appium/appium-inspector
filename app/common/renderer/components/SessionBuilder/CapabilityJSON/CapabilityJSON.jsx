@@ -75,6 +75,8 @@ const CapabilityJSON = (props) => {
           <Tooltip title={t('Cancel')}>
             <Button
               size="small"
+              color="danger"
+              variant="outlined"
               onClick={abortDesiredCapsNameEditor}
               icon={<CloseOutlined />}
               className={styles.capsNameEditorButton}
@@ -83,6 +85,8 @@ const CapabilityJSON = (props) => {
           <Tooltip title={t('Save')}>
             <Button
               size="small"
+              color="primary"
+              variant="outlined"
               onClick={saveDesiredCapsName}
               icon={<SaveOutlined />}
               className={styles.capsNameEditorButton}
@@ -100,6 +104,8 @@ const CapabilityJSON = (props) => {
           {isEditingDesiredCaps && (
             <Tooltip title={t('Cancel')}>
               <Button
+                color="danger"
+                variant="outlined"
                 onClick={abortDesiredCapsEditor}
                 icon={<CloseOutlined />}
                 className={styles.capsEditorButton}
@@ -109,6 +115,8 @@ const CapabilityJSON = (props) => {
           {isEditingDesiredCaps && (
             <Tooltip title={t('Save')}>
               <Button
+                color="primary"
+                variant="outlined"
                 onClick={saveRawDesiredCaps}
                 icon={<SaveOutlined />}
                 className={styles.capsEditorButton}
