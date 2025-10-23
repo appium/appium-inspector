@@ -31,21 +31,13 @@ const Commands = (props) => {
   const [driverCommands, setDriverCommands] = useState(null);
   const [driverExecuteMethods, setDriverExecuteMethods] = useState(null);
 
-  const [curCommandName, setCurCommandName] = useState(null);
-  const [curCommandProps, setCurCommandProps] = useState(null);
+  const [curCommandDetails, setCurCommandDetails] = useState(null);
   const [curCommandParams, setCurCommandParams] = useState([]);
 
-  const startPerformingCommand = (commandName, commandProps) => {
-    if (_.isEmpty(commandProps.params)) {
-      applyClientMethod({
-        methodName: commandName,
-        args: [],
-        skipRefresh: !commandProps.refresh,
-        ignoreResult: false,
-      });
-    } else {
-      setCurCommandProps(commandProps);
-      setCurCommandName(commandName);
+  const prepareCommand = (commandDetails) => {
+    setCurCommandDetails(commandDetails);
+    if (_.isEmpty(commandDetails.props.params)) {
+      runCommand(commandDetails);
     }
   };
 
@@ -55,21 +47,31 @@ const Commands = (props) => {
     setCurCommandParams(newCommandParams);
   };
 
-  const clearCurrentCommand = () => {
-    setCurCommandName(null);
-    setCurCommandProps(null);
-    setCurCommandParams([]);
-  };
+  const runCommand = (commandDetails) => {
+    const {
+      name: cmdName,
+      props: {refresh = false},
+      isExecute = false,
+    } = commandDetails;
 
-  const executeCommand = () => {
-    const {refresh} = curCommandProps;
-
-    // Make a copy of the parameters to avoid state mutation
-    let copiedParams = _.cloneDeep(curCommandParams);
+    // The default behavior is to pass command parameters as a flat array,
+    // since they are sent using an apply() call.
+    // However, some commands expect an object, and will need adjustments.
+    let adjustedCmdName = cmdName;
+    let adjustedCmdParams = _.cloneDeep(curCommandParams);
+    // If we are about to run an execute method,
+    // the parameters array needs to be turned into an object,
+    // and the command name added as a separate parameter.
+    if (isExecute) {
+      adjustedCmdName = 'executeScript';
+      const cmdParamNames = _.map(commandDetails.props.params, 'name');
+      const mappedCmdParams = _.zipObject(cmdParamNames, adjustedCmdParams);
+      adjustedCmdParams = [cmdName, mappedCmdParams];
+    }
 
     // Special case for 'rotateDevice'
-    if (curCommandName === 'rotateDevice') {
-      copiedParams = {
+    if (adjustedCmdName === 'rotateDevice') {
+      adjustedCmdParams = {
         x: curCommandParams[0],
         y: curCommandParams[1],
         duration: curCommandParams[2],
@@ -80,8 +82,8 @@ const Commands = (props) => {
     }
 
     // Special case for 'setGeoLocation'
-    if (curCommandName === 'setGeoLocation') {
-      copiedParams = {
+    if (adjustedCmdName === 'setGeoLocation') {
+      adjustedCmdParams = {
         latitude: curCommandParams[0],
         longitude: curCommandParams[1],
         altitude: curCommandParams[2],
@@ -91,27 +93,32 @@ const Commands = (props) => {
     // Special case for 'executeScript'
     // Unlike other clients, webdriver/WDIO requires the argument object to be wrapped in an array,
     // but we should still allow omitting the array to avoid confusion for non-WDIO users.
-    // So we can have 4 cases for the argument: undefined, [], {...}, [{...}]
-    if (curCommandName === 'executeScript') {
-      if (_.isEmpty(curCommandParams[1])) {
-        copiedParams[1] = [];
-      } else if (typeof curCommandParams[1] === 'object') {
-        copiedParams[1] = !_.isArray(copiedParams[1]) ? [curCommandParams[1]] : curCommandParams[1];
+    // So we can have 5 cases for the argument: undefined, {}, [], {...}, [{...}]
+    if (adjustedCmdName === 'executeScript') {
+      if (_.isEmpty(adjustedCmdParams[1])) {
+        adjustedCmdParams[1] = [];
+      } else if (typeof adjustedCmdParams[1] === 'object' && !_.isArray(adjustedCmdParams[1])) {
+        adjustedCmdParams[1] = [adjustedCmdParams[1]];
       }
     }
 
     applyClientMethod({
-      methodName: curCommandName,
-      args: copiedParams,
+      methodName: adjustedCmdName,
+      args: adjustedCmdParams,
       skipRefresh: !refresh,
       ignoreResult: false,
     });
     // if updating settings, store the updated values
-    if (curCommandName === 'updateSettings') {
-      storeSessionSettings(...copiedParams);
+    if (adjustedCmdName === 'updateSettings') {
+      storeSessionSettings(adjustedCmdParams[0]);
     }
 
     clearCurrentCommand();
+  };
+
+  const clearCurrentCommand = () => {
+    setCurCommandDetails(null);
+    setCurCommandParams([]);
   };
 
   useEffect(() => {
@@ -134,37 +141,34 @@ const Commands = (props) => {
       className={inspectorStyles.interactionTabCard}
     >
       <div className={styles.commandsContainer}>
-        {hasMethodsMap === false && (
-          <StaticCommandsList startPerformingCommand={startPerformingCommand} t={t} />
-        )}
+        {hasMethodsMap === false && <StaticCommandsList prepareCommand={prepareCommand} t={t} />}
         {hasMethodsMap && (
           <MethodMapCommandsList
             driverCommands={driverCommands}
             driverExecuteMethods={driverExecuteMethods}
-            startPerformingCommand={startPerformingCommand}
+            prepareCommand={prepareCommand}
             t={t}
           />
         )}
-        {!!curCommandName && (
+        {!!curCommandDetails && (
           <Modal
-            title={`${t('Enter Parameters for:')} ${t(curCommandName)}`}
+            title={`${t('Enter Parameters for:')} ${t(curCommandDetails.name)}`}
             okText={t('Execute Command')}
             cancelText={t('Cancel')}
-            open={!!curCommandName}
-            onOk={() => executeCommand()}
+            open={!_.isEmpty(curCommandDetails.props.params)}
+            onOk={() => runCommand(curCommandDetails)}
             onCancel={() => clearCurrentCommand()}
           >
-            {!_.isEmpty(curCommandProps.params) &&
-              _.map(curCommandProps.params, ({name: argName}, index) => (
-                <Row key={index} gutter={16}>
-                  <Col span={24} className={styles.argContainer}>
-                    <Input
-                      addonBefore={argName}
-                      onChange={(e) => updateCommandParam(index, adjustValueType(e.target.value))}
-                    />
-                  </Col>
-                </Row>
-              ))}
+            {_.map(curCommandDetails.props.params, ({name: argName}, index) => (
+              <Row key={index} gutter={16}>
+                <Col span={24} className={styles.argContainer}>
+                  <Input
+                    addonBefore={argName}
+                    onChange={(e) => updateCommandParam(index, adjustValueType(e.target.value))}
+                  />
+                </Col>
+              </Row>
+            ))}
           </Modal>
         )}
       </div>

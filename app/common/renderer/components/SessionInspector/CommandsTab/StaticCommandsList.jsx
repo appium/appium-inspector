@@ -8,17 +8,17 @@ import styles from './Commands.module.css';
 // Static list of driver commands, shown only for drivers that do not support
 // the listCommands/listExtensions endpoints
 const StaticCommandsList = (props) => {
-  const {startPerformingCommand, t} = props;
+  const {prepareCommand, t} = props;
 
   return (
     <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
       {t('commandsDescription')}
       <Row>
-        {_.toPairs(TOP_LEVEL_COMMANDS).map(([commandName, commandProps], index) => (
+        {_.toPairs(TOP_LEVEL_COMMANDS).map(([cmdName, cmdProps], index) => (
           <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
             <div className={styles.btnContainer}>
-              <Button onClick={() => startPerformingCommand(commandName, commandProps)}>
-                {commandName}
+              <Button onClick={() => prepareCommand({name: cmdName, props: cmdProps})}>
+                {cmdName}
               </Button>
             </div>
           </Col>
@@ -30,11 +30,11 @@ const StaticCommandsList = (props) => {
           label: t(commandGroup),
           children: (
             <Row>
-              {_.toPairs(commands).map(([commandName, commandProps], index) => (
+              {_.toPairs(commands).map(([cmdName, cmdProps], index) => (
                 <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
                   <div className={styles.btnContainer}>
-                    <Button onClick={() => startPerformingCommand(commandName, commandProps)}>
-                      {commandName}
+                    <Button onClick={() => prepareCommand({name: cmdName, props: cmdProps})}>
+                      {cmdName}
                     </Button>
                   </div>
                 </Col>
