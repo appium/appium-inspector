@@ -5,7 +5,7 @@ import styles from './Commands.module.css';
 
 const filterEmpty = (itemMap) => _.pickBy(itemMap, (v) => !_.isEmpty(v));
 
-const CommandsButtonGrid = ({restDriverCommands}) => (
+const CommandsButtonGrid = ({restDriverCommands, prepareCommand}) => (
   <Collapse
     items={_.toPairs(filterEmpty(restDriverCommands)).map(
       ([commandSource, commandPathsToMethodsMap]) => ({
@@ -17,7 +17,13 @@ const CommandsButtonGrid = ({restDriverCommands}) => (
               Object.values(filterEmpty(commandMethodsMap)).map((commandItem, index) => (
                 <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
                   <div className={styles.btnContainer}>
-                    <Button>{commandItem.command}</Button>
+                    <Button
+                      onClick={() =>
+                        prepareCommand({name: commandItem.command, props: commandItem})
+                      }
+                    >
+                      {commandItem.command}
+                    </Button>
                   </div>
                 </Col>
               )),
@@ -79,7 +85,12 @@ const MethodMapCommandsList = (props) => {
           label: t('Commands'),
           key: '1',
           disabled: hasNoCommands,
-          children: <CommandsButtonGrid restDriverCommands={driverCommands.rest} />,
+          children: (
+            <CommandsButtonGrid
+              restDriverCommands={driverCommands.rest}
+              prepareCommand={prepareCommand}
+            />
+          ),
         },
         {
           label: t('executeMethods'),
