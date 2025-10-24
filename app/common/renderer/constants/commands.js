@@ -1,4 +1,26 @@
-// Commonly used commands not hidden under a collapse
+/**
+ * Only used for the dynamic commands map.
+ * Some Appium commands may not exist in WDIO, or the same command can have different names.
+ * Since the commands are retrieved using Appium endpoints, but executed using WDIO,
+ * they must be renamed first. This map is a reference list of all WebDriver/MJSONWP/Appium
+ * commands supported in WDIO, with the Appium command names mapped to them.
+ * Any commands not in this list are considered to be unsupported.
+ *
+ * NOTE: This map must be updated whenever:
+ * * WDIO or Appium adds a new command that already exists in the other tool
+ * * WDIO or Appium changes the name of any command in this list
+ */
+export const APPIUM_TO_WD_COMMANDS = {
+  // WebDriver standard protocol commands
+  createSession: 'newSession',
+  // Appium protocol commands
+  listExtensions: 'getAppiumExtensions',
+};
+
+/**
+ * Only used for the static commands map.
+ * Commonly used commands not hidden under a collapse.
+ */
 export const TOP_LEVEL_COMMANDS = {
   executeScript: {
     params: [
@@ -12,7 +34,12 @@ export const TOP_LEVEL_COMMANDS = {
   getSettings: {},
 };
 
-// Note: When changing COMMAND_DEFINITIONS categories, or 'notes' for any command, update `en/translation.json`
+/**
+ * Only used for the static commands map.
+ * Defines the full mapping of categories and commands.
+ *
+ * NOTE: When changing top-level categories, update `en/translation.json`
+ */
 export const COMMAND_DEFINITIONS = {
   Session: {
     status: {},

@@ -3,7 +3,11 @@ import {Card, Col, Input, Modal, Row} from 'antd';
 import _ from 'lodash';
 import {useEffect, useState} from 'react';
 
-import {adjustParamValueType, deepFilterEmpty} from '../../../utils/commands-tab.js';
+import {
+  adjustParamValueType,
+  deepFilterEmpty,
+  filterAvailableCommands,
+} from '../../../utils/commands-tab.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
 import MethodMapCommandsList from './MethodMapCommandsList.jsx';
@@ -107,11 +111,11 @@ const Commands = (props) => {
   };
 
   useEffect(() => {
-    const {getSupportedSessionMethods} = props;
+    const {getSupportedSessionMethods, driver} = props;
     (async () => {
       const {commands, executeMethods} = await getSupportedSessionMethods();
       setHasMethodsMap(!(_.isEmpty(commands) && _.isEmpty(executeMethods)));
-      setDriverCommands(commands);
+      setDriverCommands(filterAvailableCommands(commands, driver));
       setDriverExecuteMethods(deepFilterEmpty(executeMethods));
     })();
   }, []);
