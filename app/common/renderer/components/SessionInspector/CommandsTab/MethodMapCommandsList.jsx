@@ -38,7 +38,7 @@ const CommandsButtonGrid = ({restDriverCommands, prepareCommand}) => (
 const ExecuteMethodsButtonGrid = ({executeMethods, prepareCommand}) => {
   const InnerGrid = ({methodMap}) => (
     <Row>
-      {_.toPairs(filterEmpty(methodMap)).map(([methodName, methodProps], index) => (
+      {_.toPairs(methodMap).map(([methodName, methodProps], index) => (
         <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
           <div className={styles.btnContainer}>
             <Button
@@ -54,12 +54,11 @@ const ExecuteMethodsButtonGrid = ({executeMethods, prepareCommand}) => {
     </Row>
   );
 
-  const filteredMethodMap = filterEmpty(executeMethods);
-  return _.size(filteredMethodMap) === 1 ? (
-    <InnerGrid methodMap={Object.values(filteredMethodMap)[0]} />
+  return _.size(executeMethods) === 1 ? (
+    <InnerGrid methodMap={Object.values(executeMethods)[0]} />
   ) : (
     <Collapse
-      items={_.toPairs(filteredMethodMap).map(([methodSource, methodMap]) => ({
+      items={_.toPairs(executeMethods).map(([methodSource, methodMap]) => ({
         key: methodSource,
         label: _.capitalize(methodSource),
         children: <InnerGrid methodMap={methodMap} />,

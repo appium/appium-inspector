@@ -3,26 +3,11 @@ import {Card, Col, Input, Modal, Row} from 'antd';
 import _ from 'lodash';
 import {useEffect, useState} from 'react';
 
+import {adjustParamValueType, cleanupDriverExecuteMethods} from '../../../utils/commands-tab.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
 import MethodMapCommandsList from './MethodMapCommandsList.jsx';
 import StaticCommandsList from './StaticCommandsList.jsx';
-
-// Try to detect if the input value should be a boolean/number/array/object,
-// and if so, convert it to that
-const adjustValueType = (value) => {
-  if (Number(value).toString() === value) {
-    return Number(value);
-  } else if (['true', 'false'].includes(value)) {
-    return value === 'true';
-  } else {
-    try {
-      return JSON.parse(value);
-    } catch {
-      return value;
-    }
-  }
-};
 
 const Commands = (props) => {
   const {applyClientMethod, storeSessionSettings, t} = props;
@@ -127,7 +112,7 @@ const Commands = (props) => {
       const {commands, executeMethods} = await getSupportedSessionMethods();
       setHasMethodsMap(!(_.isEmpty(commands) && _.isEmpty(executeMethods)));
       setDriverCommands(commands);
-      setDriverExecuteMethods(executeMethods);
+      setDriverExecuteMethods(cleanupDriverExecuteMethods(executeMethods));
     })();
   }, []);
 
@@ -164,7 +149,9 @@ const Commands = (props) => {
                 <Col span={24} className={styles.argContainer}>
                   <Input
                     addonBefore={argName}
-                    onChange={(e) => updateCommandParam(index, adjustValueType(e.target.value))}
+                    onChange={(e) =>
+                      updateCommandParam(index, adjustParamValueType(e.target.value))
+                    }
                   />
                 </Col>
               </Row>
