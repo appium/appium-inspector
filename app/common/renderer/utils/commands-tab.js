@@ -22,38 +22,34 @@ export function adjustParamValueType(value) {
 }
 
 /**
- * Given an object, iterate through its properties and remove those with empty values
+ * Check if a value is an empty object or array ({} or [])
  *
- * @param {*} itemMap any object
- * @returns object with empty values filtered
+ * @param {*} value any value (object, array, primitive)
+ * @returns whether the item is an empty object/array or not
  */
-const filterEmpty = (itemMap) => _.pickBy(itemMap, (v) => !_.isEmpty(v));
+const isEmptyObject = (item) => _.isObjectLike(item) && _.isEmpty(item);
 
 /**
- * Cleanup the list of execute methods retrieved from the driver,
- * by removing parameters with empty values
+ * Recursively remove key/value pairs (or array entries) whose values are empty objects or arrays.
+ * If this causes the parent object/array to become empty,
+ * this parent will be removed from its own parent as well.
  *
- * @param {*} executeMethods object containing the supported execute methods
- *     (see {@link https://github.com/appium/appium/blob/master/packages/types/lib/command-maps.ts `ListExtensionsResponse`})
- * @returns object with all empty value pairs removed
+ * @param {*} value any value (object, array, primitive)
+ * @returns the value with empty entries removed
  */
-export function cleanupDriverExecuteMethods(executeMethods) {
-  // executeMethods: REST/BiDi protocol mapping
-  const cleanedMethodMap = filterEmpty(executeMethods);
-  if (!_.isEmpty(cleanedMethodMap)) {
-    for (const protocol in cleanedMethodMap) {
-      // cleanedMethodMap[protocol]: driver/plugin scope mapping
-      cleanedMethodMap[protocol] = filterEmpty(cleanedMethodMap[protocol]);
-      if (_.isEmpty(cleanedMethodMap[protocol])) {
-        continue;
-      }
-      for (const methodName in cleanedMethodMap[protocol]) {
-        // cleanedMethodMap[protocol][methodName]: execute method name to property map
-        cleanedMethodMap[protocol][methodName] = filterEmpty(
-          cleanedMethodMap[protocol][methodName],
-        );
-      }
-    }
+export function deepFilterEmpty(value) {
+  if (_.isArray(value)) {
+    // Recurse into each array element, then remove empty entries
+    const mapped = value.map((v) => deepFilterEmpty(v));
+    return mapped.filter((v) => !isEmptyObject(v));
   }
-  return cleanedMethodMap;
+
+  if (_.isPlainObject(value)) {
+    // Recurse into object properties, then pick only non-empty values
+    const mapped = _.mapValues(value, (v) => deepFilterEmpty(v));
+    return _.pickBy(mapped, (v) => !isEmptyObject(v));
+  }
+
+  // Primitives are returned as-is
+  return value;
 }
