@@ -319,5 +319,6 @@
   "ToggleRestartSession": "Toggle Session Reload Upon Device Disconnect",
   "toggleTableFormatting": "Toggle Table Formatting",
   "copyResultToClipboard": "Copy Result to Clipboard",
-  "Property": "Property"
+  "Property": "Property",
+  "noCapsFound": "No session capabilities found. Please use the Capability Builder to edit, add, and save your capability set. Refer to the tutorial at {{url}}"
 }
