@@ -12,8 +12,8 @@
 export const APPIUM_TO_WD_COMMANDS = {
   // WDIO WebDriver standard protocol commands
   // https://webdriver.io/docs/api/webdriver
-  createSession: 'newSession',
-  deleteSession: 'deleteSession',
+  // createSession: 'newSession',    // not applicable for Commands tab
+  // deleteSession: 'deleteSession', // not applicable for Commands tab
   getStatus: 'status',
   getTimeouts: 'getTimeouts',
   timeouts: 'setTimeouts',

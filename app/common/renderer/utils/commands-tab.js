@@ -77,16 +77,14 @@ export const extractParamsFromCommandPath = (path) => {
  * Filter the map of commands supported by the current driver using multiple criteria:
  *   * Remove entries with empty values (similarly to {@link deepFilterEmpty})
  *   * Remove commands not supported by WDIO
- *   * Remove commands already filtered from the driver object (see WDSessionDriver)
  *
  * In addition to filtering, the map is modified to remove the path and HTTP method,
  * resulting in a format more similar to `ListExtensionsResponse`.
  *
  * @param {Object} commandsResponse {@link https://github.com/appium/appium/blob/master/packages/types/lib/command-maps.ts `ListCommandsResponse`}
- * @param {*} driver instance of WDSessionDriver
  * @returns filtered object, formatted to match the {@link deepFilterEmpty} response
  */
-export function filterAvailableCommands(commandsResponse, driver) {
+export function filterAvailableCommands(commandsResponse) {
   // commandsResponse: REST/BiDi to commands map
   // only use the REST commands for now
   if (
@@ -113,12 +111,11 @@ export function filterAvailableCommands(commandsResponse, driver) {
           continue;
         }
         const cmdName = pathsCommandsMap[method].command;
-        if (
-          !(cmdName in APPIUM_TO_WD_COMMANDS) || // skip commands not supported by WDIO
-          typeof driver[APPIUM_TO_WD_COMMANDS[cmdName]] !== 'function' // skip commands omitted from WDSessionDriver
-        ) {
+        // Skip commands not supported by WDIO
+        if (!(cmdName in APPIUM_TO_WD_COMMANDS)) {
           continue;
         }
+        // Filter out any entries with empty values
         const commandDetails = deepFilterEmpty(pathsCommandsMap[method]);
         // For commands that include additional parameters in the path (e.g. /session/:sessionId/element/:elementId),
         // WDIO includes them in the method itself, so we need to extract their names from the path

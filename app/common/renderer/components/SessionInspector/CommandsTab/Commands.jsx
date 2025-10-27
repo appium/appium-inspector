@@ -111,11 +111,11 @@ const Commands = (props) => {
   };
 
   useEffect(() => {
-    const {getSupportedSessionMethods, driver} = props;
+    const {getSupportedSessionMethods} = props;
     (async () => {
       const {commands, executeMethods} = await getSupportedSessionMethods();
       setHasMethodsMap(!(_.isEmpty(commands) && _.isEmpty(executeMethods)));
-      setDriverCommands(filterAvailableCommands(commands, driver));
+      setDriverCommands(filterAvailableCommands(commands));
       setDriverExecuteMethods(deepFilterEmpty(executeMethods));
     })();
   }, []);
