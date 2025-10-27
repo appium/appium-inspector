@@ -14,10 +14,10 @@ const StaticCommandsList = (props) => {
     <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
       {t('commandsDescription')}
       <Row>
-        {_.toPairs(TOP_LEVEL_COMMANDS).map(([cmdName, cmdProps], index) => (
+        {_.toPairs(TOP_LEVEL_COMMANDS).map(([cmdName, cmdDetails], index) => (
           <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
             <div className={styles.btnContainer}>
-              <Button onClick={() => prepareCommand({name: cmdName, props: cmdProps})}>
+              <Button onClick={() => prepareCommand({name: cmdName, details: cmdDetails})}>
                 {cmdName}
               </Button>
             </div>
@@ -30,10 +30,10 @@ const StaticCommandsList = (props) => {
           label: t(commandGroup),
           children: (
             <Row>
-              {_.toPairs(commands).map(([cmdName, cmdProps], index) => (
+              {_.toPairs(commands).map(([cmdName, cmdDetails], index) => (
                 <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
                   <div className={styles.btnContainer}>
-                    <Button onClick={() => prepareCommand({name: cmdName, props: cmdProps})}>
+                    <Button onClick={() => prepareCommand({name: cmdName, details: cmdDetails})}>
                       {cmdName}
                     </Button>
                   </div>

@@ -25,7 +25,7 @@ const Commands = (props) => {
 
   const prepareCommand = (commandDetails) => {
     setCurCommandDetails(commandDetails);
-    if (_.isEmpty(commandDetails.props.params)) {
+    if (_.isEmpty(commandDetails.details.params)) {
       runCommand(commandDetails);
     }
   };
@@ -39,7 +39,7 @@ const Commands = (props) => {
   const runCommand = (commandDetails) => {
     const {
       name: cmdName,
-      props: {refresh = false},
+      details: {refresh = false},
       isExecute = false,
     } = commandDetails;
 
@@ -53,7 +53,7 @@ const Commands = (props) => {
     // and the command name added as a separate parameter.
     if (isExecute) {
       adjustedCmdName = 'executeScript';
-      const cmdParamNames = _.map(commandDetails.props.params, 'name');
+      const cmdParamNames = _.map(commandDetails.details.params, 'name');
       const mappedCmdParams = _.zipObject(cmdParamNames, adjustedCmdParams);
       adjustedCmdParams = [cmdName, mappedCmdParams];
     }
@@ -144,11 +144,11 @@ const Commands = (props) => {
             title={`${t('Enter Parameters for:')} ${t(curCommandDetails.name)}`}
             okText={t('Execute Command')}
             cancelText={t('Cancel')}
-            open={!_.isEmpty(curCommandDetails.props.params)}
+            open={!_.isEmpty(curCommandDetails.details.params)}
             onOk={() => runCommand(curCommandDetails)}
             onCancel={() => clearCurrentCommand()}
           >
-            {_.map(curCommandDetails.props.params, ({name: argName}, index) => (
+            {_.map(curCommandDetails.details.params, ({name: argName}, index) => (
               <Row key={index} gutter={16}>
                 <Col span={24} className={styles.argContainer}>
                   <Input

@@ -6,11 +6,11 @@ import styles from './Commands.module.css';
 const MethodMapButtonsGrid = ({driverCommands, prepareCommand, isExecute}) => {
   const InnerGrid = ({methodMap}) => (
     <Row>
-      {_.toPairs(methodMap).map(([methodName, methodProps], index) => (
+      {_.toPairs(methodMap).map(([methodName, methodDetails], index) => (
         <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
           <div className={styles.btnContainer}>
             <Button
-              onClick={() => prepareCommand({name: methodName, props: methodProps, isExecute})}
+              onClick={() => prepareCommand({name: methodName, details: methodDetails, isExecute})}
             >
               {methodName}
             </Button>
@@ -67,10 +67,7 @@ const MethodMapCommandsList = (props) => {
           key: '1',
           disabled: hasNoCommands,
           children: (
-            <CommandsButtonGrid
-              driverCommands={driverCommands}
-              prepareCommand={prepareCommand}
-            />
+            <CommandsButtonGrid driverCommands={driverCommands} prepareCommand={prepareCommand} />
           ),
         },
         {
