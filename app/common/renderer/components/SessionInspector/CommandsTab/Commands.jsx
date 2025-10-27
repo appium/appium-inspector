@@ -1,5 +1,5 @@
 import {ThunderboltOutlined} from '@ant-design/icons';
-import {Card, Col, Input, Modal, Row} from 'antd';
+import {Card, Col, Input, Modal, Row, Typography} from 'antd';
 import _ from 'lodash';
 import {useEffect, useState} from 'react';
 
@@ -12,6 +12,17 @@ import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
 import MethodMapCommandsList from './MethodMapCommandsList.jsx';
 import StaticCommandsList from './StaticCommandsList.jsx';
+
+const formatParamInputLabel = (param) => {
+  if (param.required) {
+    return (
+      <>
+        <Typography.Text type="danger">*</Typography.Text> {param.name}
+      </>
+    );
+  }
+  return param.name;
+};
 
 const Commands = (props) => {
   const {applyClientMethod, storeSessionSettings, t} = props;
@@ -148,11 +159,11 @@ const Commands = (props) => {
             onOk={() => runCommand(curCommandDetails)}
             onCancel={() => clearCurrentCommand()}
           >
-            {_.map(curCommandDetails.details.params, ({name: argName}, index) => (
+            {_.map(curCommandDetails.details.params, (param, index) => (
               <Row key={index} gutter={16}>
                 <Col span={24} className={styles.argContainer}>
                   <Input
-                    addonBefore={argName}
+                    addonBefore={formatParamInputLabel(param)}
                     onChange={(e) =>
                       updateCommandParam(index, adjustParamValueType(e.target.value))
                     }
