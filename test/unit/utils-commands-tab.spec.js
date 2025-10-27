@@ -1,6 +1,9 @@
 import {describe, expect, it} from 'vitest';
 
-import {deepFilterEmpty} from '../../app/common/renderer/utils/commands-tab.js';
+import {
+  deepFilterEmpty,
+  extractParamsFromCommandPath,
+} from '../../app/common/renderer/utils/commands-tab.js';
 
 describe('utils/commands-tab.js', function () {
   describe('#deepFilterEmpty', function () {
@@ -43,6 +46,24 @@ describe('utils/commands-tab.js', function () {
           },
         },
       });
+    });
+  });
+  describe('#extractParamsFromCommandPath', function () {
+    it('should return an empty array for paths without parameters', function () {
+      expect(extractParamsFromCommandPath('/session')).toEqual([]);
+    });
+    it('should return an empty array for paths with only sessionId', function () {
+      expect(extractParamsFromCommandPath('/session/:sessionId')).toEqual([]);
+    });
+    it('should extract all other parameters', function () {
+      expect(extractParamsFromCommandPath('/session/:sessionId/element/:elementId')).toEqual([
+        'elementId',
+      ]);
+      expect(
+        extractParamsFromCommandPath(
+          '/session/:sessionId/webauthn/authenticator/:authenticatorId/credentials/:credentialId',
+        ),
+      ).toEqual(['authenticatorId', 'credentialId']);
     });
   });
 });

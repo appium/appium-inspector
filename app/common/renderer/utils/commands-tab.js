@@ -57,6 +57,23 @@ export function deepFilterEmpty(value) {
 }
 
 /**
+ * Extract any parameter names (except sessionId) from a command path.
+ *
+ * @param {string} path command endpoint URL
+ * @returns {string[]} array of parameter names
+ */
+export const extractParamsFromCommandPath = (path) => {
+  const paramNames = [];
+  const pathParts = path.split('/');
+  for (const part of pathParts) {
+    if (part.startsWith(':') && part !== ':sessionId') {
+      paramNames.push(part.slice(1));
+    }
+  }
+  return paramNames;
+};
+
+/**
  * Filter the map of commands supported by the current driver using multiple criteria:
  *   * Remove entries with empty values (similarly to {@link deepFilterEmpty})
  *   * Remove commands not supported by WDIO
@@ -64,6 +81,7 @@ export function deepFilterEmpty(value) {
  *
  * In addition to filtering, the map is modified to remove the path and HTTP method,
  * resulting in a format more similar to `ListExtensionsResponse`.
+ *
  * @param {Object} commandsResponse {@link https://github.com/appium/appium/blob/master/packages/types/lib/command-maps.ts `ListCommandsResponse`}
  * @param {*} driver instance of WDSessionDriver
  * @returns filtered object, formatted to match the {@link deepFilterEmpty} response
@@ -101,10 +119,21 @@ export function filterAvailableCommands(commandsResponse, driver) {
         ) {
           continue;
         }
-        adjustedCommandsMap[source] ??= {};
-        adjustedCommandsMap[source][APPIUM_TO_WD_COMMANDS[cmdName]] = deepFilterEmpty(
-          pathsCommandsMap[method],
-        );
+        const commandDetails = deepFilterEmpty(pathsCommandsMap[method]);
+        // For commands that include additional parameters in the path (e.g. /session/:sessionId/element/:elementId),
+        // WDIO includes them in the method itself, so we need to extract their names from the path
+        // and add them to the parameters array
+        let commandPathParamEntries = [];
+        for (const paramName of extractParamsFromCommandPath(path)) {
+          commandPathParamEntries.push({name: paramName, required: true});
+        }
+        // Make sure to only set commandDetails.params if there are any parameters
+        if (commandPathParamEntries.length > 0) {
+          // Prepend the path parameters to the existing parameters array
+          commandDetails.params = [...commandPathParamEntries, ...(commandDetails.params || [])];
+        }
+        // Add the adjusted command details to the result map, using the WDIO command name
+        (adjustedCommandsMap[source] ??= {})[APPIUM_TO_WD_COMMANDS[cmdName]] = commandDetails;
       }
     }
   }
