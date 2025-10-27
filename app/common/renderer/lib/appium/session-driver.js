@@ -19,7 +19,7 @@
 import {AppiumProtocol, MJsonWProtocol, WebDriverProtocol} from '@wdio/protocols';
 import _ from 'lodash';
 
-import {AVOID_CMDS, BROWSER_PROPERTIES, ELEMENT_CMDS} from '../../constants/webdriver.js';
+import {AVOID_CMDS, BROWSER_PROPERTIES} from '../../constants/webdriver.js';
 import {getElementFromResponse} from './session-element.js';
 
 /**
@@ -88,10 +88,6 @@ for (const proto of [WebDriverProtocol, MJsonWProtocol, AppiumProtocol]) {
 
       // if we've explicitly asked not to include the command, skip it
       if (AVOID_CMDS.includes(cmdName)) {
-        continue;
-      }
-      // likewise skip element commands
-      if (ELEMENT_CMDS.includes(cmdName)) {
         continue;
       }
 
