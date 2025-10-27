@@ -101,7 +101,10 @@ export function filterAvailableCommands(commandsResponse, driver) {
         ) {
           continue;
         }
-        adjustedCommandsMap[cmdName] = deepFilterEmpty(pathsCommandsMap[method]);
+        adjustedCommandsMap[source] ??= {};
+        adjustedCommandsMap[source][APPIUM_TO_WD_COMMANDS[cmdName]] = deepFilterEmpty(
+          pathsCommandsMap[method],
+        );
       }
     }
   }

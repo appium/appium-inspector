@@ -98,9 +98,9 @@ export const APPIUM_TO_WD_COMMANDS = {
   getLog: 'getLogs',
   getLogTypes: 'getLogTypes',
   getSession: 'getSession',
-  getCurrentContext: 'getContext', // WDIO enhanced command
-  getContexts: 'getContexts', // WDIO enhanced command
-  setContext: 'switchContext', // WDIO enhanced command
+  getCurrentContext: 'getAppiumContext',
+  getContexts: 'getAppiumContexts',
+  setContext: 'switchAppiumContext',
   listCommands: 'getAppiumCommands',
   listExtensions: 'getAppiumExtensions',
   getAppiumSessionCapabilities: 'getAppiumSessionCapabilities',
