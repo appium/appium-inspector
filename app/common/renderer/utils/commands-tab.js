@@ -85,6 +85,7 @@ export const extractParamsFromCommandPath = (path) => {
  * @returns filtered object, formatted to match the {@link deepFilterEmpty} response
  */
 export function filterAvailableCommands(commandsResponse) {
+  const adjustedCommandsMap = {};
   // commandsResponse: REST/BiDi to commands map
   // only use the REST commands for now
   if (
@@ -92,9 +93,8 @@ export function filterAvailableCommands(commandsResponse) {
     !('rest' in commandsResponse) ||
     _.isEmpty(commandsResponse.rest)
   ) {
-    return commandsResponse;
+    return adjustedCommandsMap;
   }
-  const adjustedCommandsMap = {};
   const restCommandsMap = commandsResponse.rest;
   // restCommandsMap: base/driver/plugins source to command paths map
   for (const source in restCommandsMap) {
