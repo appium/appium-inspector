@@ -320,5 +320,6 @@
   "toggleTableFormatting": "Toggle Table Formatting",
   "copyResultToClipboard": "Copy Result to Clipboard",
   "Property": "Property",
-  "executeMethods": "Execute Methods"
+  "executeMethods": "Execute Methods",
+  "methodDeprecated": "This method is deprecated"
 }

@@ -36,3 +36,11 @@
   white-space: pre-wrap;
   cursor: pointer;
 }
+
+.deprecatedMethod {
+  background-color: #f0f0f0;
+}
+
+:global(.dark) .deprecatedMethod {
+  background-color: #292919;
+}

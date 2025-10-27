@@ -1,19 +1,24 @@
-import {Button, Col, Collapse, Row, Tabs} from 'antd';
+import {Button, Col, Collapse, Row, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 
 import styles from './Commands.module.css';
 
-const MethodMapButtonsGrid = ({driverCommands, prepareCommand, isExecute}) => {
+const MethodMapButtonsGrid = ({driverCommands, prepareCommand, isExecute, t}) => {
   const InnerGrid = ({methodMap}) => (
     <Row>
       {_.toPairs(methodMap).map(([methodName, methodDetails], index) => (
         <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
           <div className={styles.btnContainer}>
-            <Button
-              onClick={() => prepareCommand({name: methodName, details: methodDetails, isExecute})}
-            >
-              {methodName}
-            </Button>
+            <Tooltip title={methodDetails.deprecated ? t('methodDeprecated') : null}>
+              <Button
+                className={methodDetails.deprecated ? styles.deprecatedMethod : ''}
+                onClick={() =>
+                  prepareCommand({name: methodName, details: methodDetails, isExecute})
+                }
+              >
+                {methodName}
+              </Button>
+            </Tooltip>
           </div>
         </Col>
       ))}
@@ -33,19 +38,21 @@ const MethodMapButtonsGrid = ({driverCommands, prepareCommand, isExecute}) => {
   );
 };
 
-const CommandsButtonGrid = ({driverCommands, prepareCommand}) => (
+const CommandsButtonGrid = ({driverCommands, prepareCommand, t}) => (
   <MethodMapButtonsGrid
     driverCommands={driverCommands}
     prepareCommand={prepareCommand}
     isExecute={false}
+    t={t}
   />
 );
 
-const ExecuteMethodsButtonGrid = ({executeMethods, prepareCommand}) => (
+const ExecuteMethodsButtonGrid = ({executeMethods, prepareCommand, t}) => (
   <MethodMapButtonsGrid
     driverCommands={executeMethods}
     prepareCommand={prepareCommand}
     isExecute={true}
+    t={t}
   />
 );
 
@@ -67,7 +74,11 @@ const MethodMapCommandsList = (props) => {
           key: '1',
           disabled: hasNoCommands,
           children: (
-            <CommandsButtonGrid driverCommands={driverCommands} prepareCommand={prepareCommand} />
+            <CommandsButtonGrid
+              driverCommands={driverCommands}
+              prepareCommand={prepareCommand}
+              t={t}
+            />
           ),
         },
         {
@@ -78,6 +89,7 @@ const MethodMapCommandsList = (props) => {
             <ExecuteMethodsButtonGrid
               executeMethods={driverExecuteMethods.rest}
               prepareCommand={prepareCommand}
+              t={t}
             />
           ),
         },
