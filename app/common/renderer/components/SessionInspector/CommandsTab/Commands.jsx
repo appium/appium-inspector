@@ -9,6 +9,7 @@ import {
   filterAvailableCommands,
 } from '../../../utils/commands-tab.js';
 import inspectorStyles from '../SessionInspector.module.css';
+import CommandResultModal from './CommandResultModal.jsx';
 import styles from './Commands.module.css';
 import MethodMapCommandsList from './MethodMapCommandsList.jsx';
 import StaticCommandsList from './StaticCommandsList.jsx';
@@ -25,7 +26,14 @@ const formatParamInputLabel = (param) => {
 };
 
 const Commands = (props) => {
-  const {applyClientMethod, storeSessionSettings, t} = props;
+  const {
+    applyClientMethod,
+    storeSessionSettings,
+    visibleCommandMethod,
+    visibleCommandResult,
+    setVisibleCommandResult,
+    t,
+  } = props;
 
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
   const [driverCommands, setDriverCommands] = useState(null);
@@ -173,6 +181,12 @@ const Commands = (props) => {
             ))}
           </Modal>
         )}
+        <CommandResultModal
+          visibleCommandMethod={visibleCommandMethod}
+          visibleCommandResult={visibleCommandResult}
+          setVisibleCommandResult={setVisibleCommandResult}
+          t={t}
+        />
       </div>
     </Card>
   );
