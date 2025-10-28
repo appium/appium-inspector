@@ -116,7 +116,7 @@
     "rimraf": "6.0.1",
     "vite": "7.1.12",
     "vite-plugin-electron-renderer": "0.14.6",
-    "vitest": "4.0.3"
+    "vitest": "4.0.4"
   },
   "engines": {
     "node": "^20.19.0 || ^22.12.0 || >=24.0.0",
