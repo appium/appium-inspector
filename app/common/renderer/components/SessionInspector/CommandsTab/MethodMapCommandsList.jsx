@@ -16,7 +16,7 @@ const renderCommandTooltipText = (methodDetails, t) => {
   );
 };
 
-const MethodMapButtonsGrid = ({driverCommands, prepareCommand, isExecute, t}) => {
+const MethodMapButtonsGrid = ({driverCommands, startCommand, isExecute, t}) => {
   const InnerGrid = ({methodMap}) => (
     <Row>
       {_.toPairs(methodMap).map(([methodName, methodDetails], index) => (
@@ -25,9 +25,7 @@ const MethodMapButtonsGrid = ({driverCommands, prepareCommand, isExecute, t}) =>
             <Tooltip title={renderCommandTooltipText(methodDetails, t)}>
               <Button
                 className={methodDetails.deprecated ? styles.deprecatedMethod : ''}
-                onClick={() =>
-                  prepareCommand({name: methodName, details: methodDetails, isExecute})
-                }
+                onClick={() => startCommand({name: methodName, details: methodDetails, isExecute})}
               >
                 {methodName}
               </Button>
@@ -51,24 +49,24 @@ const MethodMapButtonsGrid = ({driverCommands, prepareCommand, isExecute, t}) =>
   );
 };
 
-const CommandsButtonGrid = ({driverCommands, prepareCommand, t}) => (
+const CommandsButtonGrid = ({driverCommands, startCommand, t}) => (
   <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
     {t('dynamicCommandsDescription')}
     <MethodMapButtonsGrid
       driverCommands={driverCommands}
-      prepareCommand={prepareCommand}
+      startCommand={startCommand}
       isExecute={false}
       t={t}
     />
   </Space>
 );
 
-const ExecuteMethodsButtonGrid = ({executeMethods, prepareCommand, t}) => (
+const ExecuteMethodsButtonGrid = ({executeMethods, startCommand, t}) => (
   <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
     {t('dynamicExecuteMethodsDescription')}
     <MethodMapButtonsGrid
       driverCommands={executeMethods}
-      prepareCommand={prepareCommand}
+      startCommand={startCommand}
       isExecute={true}
       t={t}
     />
@@ -77,7 +75,7 @@ const ExecuteMethodsButtonGrid = ({executeMethods, prepareCommand, t}) => (
 
 // Dynamic list of driver commands, generated from the driver's method map responses
 const MethodMapCommandsList = (props) => {
-  const {driverCommands, driverExecuteMethods, prepareCommand, t} = props;
+  const {driverCommands, driverExecuteMethods, startCommand, t} = props;
 
   const hasNoCommands = _.isEmpty(driverCommands);
   const hasNoExecuteMethods = _.isEmpty(driverExecuteMethods);
@@ -93,11 +91,7 @@ const MethodMapCommandsList = (props) => {
           key: '1',
           disabled: hasNoCommands,
           children: (
-            <CommandsButtonGrid
-              driverCommands={driverCommands}
-              prepareCommand={prepareCommand}
-              t={t}
-            />
+            <CommandsButtonGrid driverCommands={driverCommands} startCommand={startCommand} t={t} />
           ),
         },
         {
@@ -107,7 +101,7 @@ const MethodMapCommandsList = (props) => {
           children: (
             <ExecuteMethodsButtonGrid
               executeMethods={driverExecuteMethods.rest}
-              prepareCommand={prepareCommand}
+              startCommand={startCommand}
               t={t}
             />
           ),

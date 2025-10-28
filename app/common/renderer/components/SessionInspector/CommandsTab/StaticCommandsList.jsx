@@ -8,7 +8,7 @@ import styles from './Commands.module.css';
 // Static list of driver commands, shown only for drivers that do not support
 // the listCommands/listExtensions endpoints
 const StaticCommandsList = (props) => {
-  const {prepareCommand, t} = props;
+  const {startCommand, t} = props;
 
   return (
     <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
@@ -17,7 +17,7 @@ const StaticCommandsList = (props) => {
         {_.toPairs(TOP_LEVEL_COMMANDS).map(([cmdName, cmdDetails], index) => (
           <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
             <div className={styles.btnContainer}>
-              <Button onClick={() => prepareCommand({name: cmdName, details: cmdDetails})}>
+              <Button onClick={() => startCommand({name: cmdName, details: cmdDetails})}>
                 {cmdName}
               </Button>
             </div>
@@ -33,7 +33,7 @@ const StaticCommandsList = (props) => {
               {_.toPairs(commands).map(([cmdName, cmdDetails], index) => (
                 <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
                   <div className={styles.btnContainer}>
-                    <Button onClick={() => prepareCommand({name: cmdName, details: cmdDetails})}>
+                    <Button onClick={() => startCommand({name: cmdName, details: cmdDetails})}>
                       {cmdName}
                     </Button>
                   </div>

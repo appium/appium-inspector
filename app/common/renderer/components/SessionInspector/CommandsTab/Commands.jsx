@@ -40,39 +40,30 @@ const Commands = (props) => {
   const [driverExecuteMethods, setDriverExecuteMethods] = useState(null);
 
   const [curCommandDetails, setCurCommandDetails] = useState(null);
-  const [curCommandParams, setCurCommandParams] = useState([]);
+  const [curCommandParamVals, setCurCommandParamVals] = useState([]);
 
-  const prepareCommand = (commandDetails) => {
+  const startCommand = (commandDetails) => {
     setCurCommandDetails(commandDetails);
     if (_.isEmpty(commandDetails.details.params)) {
-      runCommand(commandDetails);
+      prepareAndRunCommand(commandDetails);
     }
   };
 
-  const updateCommandParam = (index, value) => {
-    const newCommandParams = [...curCommandParams];
-    newCommandParams[index] = value;
-    setCurCommandParams(newCommandParams);
+  const updateCommandParamVal = (index, value) => {
+    const newCommandParamVals = [...curCommandParamVals];
+    newCommandParamVals[index] = value;
+    setCurCommandParamVals(newCommandParamVals);
   };
 
-  const runCommand = (commandDetails) => {
-    const {
-      name: cmdName,
-      details: {refresh = false},
-      isExecute = false,
-    } = commandDetails;
-
-    // The default behavior is to pass command parameters as a flat array,
-    // since they are sent using an apply() call.
-    // However, some commands expect an object, and will need adjustments.
+  const prepareCommand = (cmdName, cmdParams, isExecute) => {
     let adjustedCmdName = cmdName;
-    let adjustedCmdParams = _.cloneDeep(curCommandParams);
+    let adjustedCmdParams = _.cloneDeep(curCommandParamVals);
     // If we are about to run an execute method,
     // the parameters array needs to be turned into an object,
     // and the command name added as a separate parameter.
     if (isExecute) {
       adjustedCmdName = 'executeScript';
-      const cmdParamNames = _.map(commandDetails.details.params, 'name');
+      const cmdParamNames = _.map(cmdParams, 'name');
       const mappedCmdParams = _.zipObject(cmdParamNames, adjustedCmdParams);
       adjustedCmdParams = [cmdName, mappedCmdParams];
     }
@@ -80,21 +71,21 @@ const Commands = (props) => {
     // Special case for 'rotateDevice'
     if (adjustedCmdName === 'rotateDevice') {
       adjustedCmdParams = {
-        x: curCommandParams[0],
-        y: curCommandParams[1],
-        duration: curCommandParams[2],
-        radius: curCommandParams[3],
-        rotation: curCommandParams[4],
-        touchCount: curCommandParams[5],
+        x: curCommandParamVals[0],
+        y: curCommandParamVals[1],
+        duration: curCommandParamVals[2],
+        radius: curCommandParamVals[3],
+        rotation: curCommandParamVals[4],
+        touchCount: curCommandParamVals[5],
       };
     }
 
     // Special case for 'setGeoLocation'
     if (adjustedCmdName === 'setGeoLocation') {
       adjustedCmdParams = {
-        latitude: curCommandParams[0],
-        longitude: curCommandParams[1],
-        altitude: curCommandParams[2],
+        latitude: curCommandParamVals[0],
+        longitude: curCommandParamVals[1],
+        altitude: curCommandParamVals[2],
       };
     }
 
@@ -109,16 +100,32 @@ const Commands = (props) => {
         adjustedCmdParams[1] = [adjustedCmdParams[1]];
       }
     }
+    return [adjustedCmdName, adjustedCmdParams];
+  };
 
-    applyClientMethod({
-      methodName: adjustedCmdName,
-      args: adjustedCmdParams,
-      skipRefresh: !refresh,
+  const runCommand = async (methodName, args, skipRefresh) => {
+    await applyClientMethod({
+      methodName,
+      args,
+      skipRefresh,
       ignoreResult: false,
     });
+  };
+
+  const prepareAndRunCommand = (commandDetails) => {
+    const {
+      name: cmdName,
+      details: {cmdParams, refresh = false},
+      isExecute = false,
+    } = commandDetails;
+
+    const [newCmdName, newCmdParams] = prepareCommand(cmdName, cmdParams, isExecute);
+    // Do not await - let the command run in the background without blocking the UI
+    runCommand(newCmdName, newCmdParams, !refresh);
+
     // if updating settings, store the updated values
-    if (adjustedCmdName === 'updateSettings') {
-      storeSessionSettings(adjustedCmdParams[0]);
+    if (newCmdName === 'updateSettings') {
+      storeSessionSettings(newCmdParams[0]);
     }
 
     clearCurrentCommand();
@@ -126,7 +133,7 @@ const Commands = (props) => {
 
   const clearCurrentCommand = () => {
     setCurCommandDetails(null);
-    setCurCommandParams([]);
+    setCurCommandParamVals([]);
   };
 
   useEffect(() => {
@@ -149,12 +156,12 @@ const Commands = (props) => {
       className={inspectorStyles.interactionTabCard}
     >
       <div className={styles.commandsContainer}>
-        {hasMethodsMap === false && <StaticCommandsList prepareCommand={prepareCommand} t={t} />}
+        {hasMethodsMap === false && <StaticCommandsList startCommand={startCommand} t={t} />}
         {hasMethodsMap && (
           <MethodMapCommandsList
             driverCommands={driverCommands}
             driverExecuteMethods={driverExecuteMethods}
-            prepareCommand={prepareCommand}
+            startCommand={startCommand}
             t={t}
           />
         )}
@@ -164,7 +171,7 @@ const Commands = (props) => {
             okText={t('Execute Command')}
             cancelText={t('Cancel')}
             open={!_.isEmpty(curCommandDetails.details.params)}
-            onOk={() => runCommand(curCommandDetails)}
+            onOk={() => prepareAndRunCommand(curCommandDetails)}
             onCancel={() => clearCurrentCommand()}
           >
             {_.map(curCommandDetails.details.params, (param, index) => (
@@ -173,7 +180,7 @@ const Commands = (props) => {
                   <Input
                     addonBefore={formatParamInputLabel(param)}
                     onChange={(e) =>
-                      updateCommandParam(index, adjustParamValueType(e.target.value))
+                      updateCommandParamVal(index, adjustParamValueType(e.target.value))
                     }
                   />
                 </Col>
