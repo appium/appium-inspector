@@ -1,6 +1,9 @@
-import {Button, Col, Collapse, Row, Space, Tabs, Tooltip} from 'antd';
+import {SearchOutlined} from '@ant-design/icons';
+import {Button, Col, Collapse, Input, Row, Space, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
+import {useState} from 'react';
 
+import {transformCommandsMap} from '../../../utils/commands-tab.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
 
@@ -20,13 +23,15 @@ const renderCommandTooltipText = (methodDetails, t) => {
 const MethodMapCommandsList = (props) => {
   const {driverCommands, driverExecuteMethods, startCommand, t} = props;
 
+  const [searchQuery, setSearchQuery] = useState('');
+
   const hasNoCommands = _.isEmpty(driverCommands);
   const hasNoExecuteMethods = _.isEmpty(driverExecuteMethods);
 
   const MethodMapButtonsGrid = ({driverCommands, isExecute}) => {
     const InnerGrid = ({methodMap}) => (
       <Row>
-        {_.toPairs(methodMap).map(([methodName, methodDetails], index) => (
+        {transformCommandsMap(methodMap, searchQuery).map(([methodName, methodDetails], index) => (
           <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
             <div className={styles.btnContainer}>
               <Tooltip title={renderCommandTooltipText(methodDetails, t)}>
@@ -91,6 +96,15 @@ const MethodMapCommandsList = (props) => {
           children: <ExecuteMethodsButtonGrid />,
         },
       ]}
+      tabBarExtraContent={
+        <Input
+          placeholder={t('Search')}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          value={searchQuery}
+          allowClear
+          prefix={<SearchOutlined />}
+        />
+      }
     />
   );
 };

@@ -24,6 +24,26 @@ export function adjustParamValueType(value) {
 }
 
 /**
+ * Filter the method map to only include methods matching the search query,
+ * if any, and then convert it to an array of [methodName, methodDetails] pairs.
+ *
+ * @param {*} methodMap map of methods and their details
+ * @param {*} searchQuery user-provided search query
+ * @returns array of [methodName, methodDetails] pairs
+ */
+export function transformCommandsMap(methodMap, searchQuery) {
+  const filterByQuery = (methodName) => {
+    if (!searchQuery) {
+      return true;
+    }
+    return methodName.toLowerCase().includes(searchQuery.toLowerCase());
+  };
+
+  const filteredMethodMap = _.pickBy(methodMap, (_v, k) => filterByQuery(k));
+  return _.toPairs(filteredMethodMap);
+}
+
+/**
  * Check if a value is an empty object or array ({} or [])
  *
  * @param {*} value any value (object, array, primitive)
