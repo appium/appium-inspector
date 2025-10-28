@@ -1,6 +1,7 @@
-import {Button, Col, Collapse, Row, Tabs, Tooltip} from 'antd';
+import {Button, Col, Collapse, Row, Space, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 
+import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
 
 const renderCommandTooltipText = (methodDetails, t) => {
@@ -51,21 +52,27 @@ const MethodMapButtonsGrid = ({driverCommands, prepareCommand, isExecute, t}) =>
 };
 
 const CommandsButtonGrid = ({driverCommands, prepareCommand, t}) => (
-  <MethodMapButtonsGrid
-    driverCommands={driverCommands}
-    prepareCommand={prepareCommand}
-    isExecute={false}
-    t={t}
-  />
+  <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
+    {t('dynamicCommandsDescription')}
+    <MethodMapButtonsGrid
+      driverCommands={driverCommands}
+      prepareCommand={prepareCommand}
+      isExecute={false}
+      t={t}
+    />
+  </Space>
 );
 
 const ExecuteMethodsButtonGrid = ({executeMethods, prepareCommand, t}) => (
-  <MethodMapButtonsGrid
-    driverCommands={executeMethods}
-    prepareCommand={prepareCommand}
-    isExecute={true}
-    t={t}
-  />
+  <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
+    {t('dynamicExecuteMethodsDescription')}
+    <MethodMapButtonsGrid
+      driverCommands={executeMethods}
+      prepareCommand={prepareCommand}
+      isExecute={true}
+      t={t}
+    />
+  </Space>
 );
 
 // Dynamic list of driver commands, generated from the driver's method map responses

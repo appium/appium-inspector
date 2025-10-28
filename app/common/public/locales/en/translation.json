@@ -321,5 +321,7 @@
   "copyResultToClipboard": "Copy Result to Clipboard",
   "Property": "Property",
   "executeMethods": "Execute Methods",
+  "dynamicCommandsDescription": "Run commands supported by the current driver. Note that some commands may only work in certain contexts.",
+  "dynamicExecuteMethodsDescription": "Run execute methods supported by the current driver.",
   "methodDeprecated": "This method is deprecated"
 }
