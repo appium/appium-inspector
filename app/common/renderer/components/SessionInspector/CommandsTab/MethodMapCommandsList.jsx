@@ -3,13 +3,25 @@ import _ from 'lodash';
 
 import styles from './Commands.module.css';
 
+const renderCommandTooltipText = (methodDetails, t) => {
+  if (!methodDetails.deprecated && !methodDetails.info) {
+    return null;
+  }
+  return (
+    <>
+      {methodDetails.deprecated && <div>{t('methodDeprecated')}</div>}
+      {methodDetails.info && <div>{methodDetails.info}</div>}
+    </>
+  );
+};
+
 const MethodMapButtonsGrid = ({driverCommands, prepareCommand, isExecute, t}) => {
   const InnerGrid = ({methodMap}) => (
     <Row>
       {_.toPairs(methodMap).map(([methodName, methodDetails], index) => (
         <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
           <div className={styles.btnContainer}>
-            <Tooltip title={methodDetails.deprecated ? t('methodDeprecated') : null}>
+            <Tooltip title={renderCommandTooltipText(methodDetails, t)}>
               <Button
                 className={methodDetails.deprecated ? styles.deprecatedMethod : ''}
                 onClick={() =>
