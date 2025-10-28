@@ -173,7 +173,7 @@ const CommandResultRawTable = ({result}) => {
 };
 
 const CommandResultModalFooter = ({
-  visibleCommandResult,
+  commandResult,
   closeCommandModal,
   setFormatResult,
   formatResult,
@@ -195,7 +195,7 @@ const CommandResultModalFooter = ({
           <Button
             icon={<CopyOutlined />}
             disabled={formatResult}
-            onClick={() => copyToClipboard(visibleCommandResult)}
+            onClick={() => copyToClipboard(commandResult)}
           />
         </Tooltip>
       </Space>
@@ -208,31 +208,26 @@ const CommandResultModalFooter = ({
   </Row>
 );
 
-const CommandResultModal = ({
-  visibleCommandMethod,
-  visibleCommandResult,
-  setVisibleCommandResult,
-  t,
-}) => {
+const CommandResultModal = ({commandName, commandResult, clearCurrentCommand, t}) => {
   const [formatResult, setFormatResult] = useState(false);
 
-  const {parsedResult, isPrimitive} = parseCommandResult(visibleCommandResult);
+  const {parsedResult, isPrimitive} = parseCommandResult(commandResult);
 
   const closeCommandModal = () => {
-    setVisibleCommandResult(null);
+    clearCurrentCommand();
     setFormatResult(false);
   };
 
   return (
     <Modal
-      title={t('methodCallResult', {methodName: visibleCommandMethod})}
-      open={!!visibleCommandResult}
+      title={t('methodCallResult', {methodName: commandName})}
+      open={!!commandResult}
       onCancel={() => closeCommandModal()}
       width={{md: '80%', lg: '70%', xl: '60%', xxl: '50%'}}
       className={styles.commandResultModal}
       footer={
         <CommandResultModalFooter
-          visibleCommandResult={visibleCommandResult}
+          commandResult={commandResult}
           closeCommandModal={closeCommandModal}
           setFormatResult={setFormatResult}
           formatResult={formatResult}
@@ -244,7 +239,7 @@ const CommandResultModal = ({
       {formatResult ? (
         <CommandResultFormattedTable result={parsedResult} isPrimitive={isPrimitive} t={t} />
       ) : (
-        <CommandResultRawTable result={visibleCommandResult} />
+        <CommandResultRawTable result={commandResult} />
       )}
     </Modal>
   );

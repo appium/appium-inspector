@@ -69,7 +69,6 @@ import {
   SET_SIRI_COMMAND_VALUE,
   SET_SOURCE_AND_SCREENSHOT,
   SET_USER_WAIT_TIMEOUT,
-  SET_VISIBLE_COMMAND_RESULT,
   SHOW_GESTURE_ACTION,
   SHOW_GESTURE_EDITOR,
   SHOW_LOCATOR_TEST_MODAL,
@@ -125,8 +124,6 @@ const INITIAL_STATE = {
   findElementsExecutionTimes: [],
   isFindingElementsTimes: false,
   isFindingLocatedElementInSource: false,
-  visibleCommandResult: null,
-  visibleCommandMethod: null,
   isAwaitingMjpegStream: true,
   showSourceAttrs: false,
   gestureUploadErrors: null,
@@ -525,13 +522,6 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         lastActiveMoment: action.lastActiveMoment,
-      };
-
-    case SET_VISIBLE_COMMAND_RESULT:
-      return {
-        ...state,
-        visibleCommandResult: action.result,
-        visibleCommandMethod: action.methodName,
       };
 
     case SET_SESSION_TIME:

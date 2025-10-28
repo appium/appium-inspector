@@ -26,14 +26,7 @@ const formatParamInputLabel = (param) => {
 };
 
 const Commands = (props) => {
-  const {
-    applyClientMethod,
-    storeSessionSettings,
-    visibleCommandMethod,
-    visibleCommandResult,
-    setVisibleCommandResult,
-    t,
-  } = props;
+  const {applyClientMethod, storeSessionSettings, t} = props;
 
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
   const [driverCommands, setDriverCommands] = useState(null);
@@ -41,6 +34,8 @@ const Commands = (props) => {
 
   const [curCommandDetails, setCurCommandDetails] = useState(null);
   const [curCommandParamVals, setCurCommandParamVals] = useState([]);
+
+  const [commandResult, setCommandResult] = useState(null);
 
   const startCommand = (commandDetails) => {
     setCurCommandDetails(commandDetails);
@@ -104,12 +99,14 @@ const Commands = (props) => {
   };
 
   const runCommand = async (methodName, args, skipRefresh) => {
-    await applyClientMethod({
+    const res = await applyClientMethod({
       methodName,
       args,
       skipRefresh,
-      ignoreResult: false,
     });
+    const formattedResult =
+      _.isObject(res) && _.isEmpty(res) ? null : JSON.stringify(res, null, '  ');
+    setCommandResult(formattedResult);
   };
 
   const prepareAndRunCommand = (commandDetails) => {
@@ -127,11 +124,10 @@ const Commands = (props) => {
     if (newCmdName === 'updateSettings') {
       storeSessionSettings(newCmdParams[0]);
     }
-
-    clearCurrentCommand();
   };
 
   const clearCurrentCommand = () => {
+    setCommandResult(null);
     setCurCommandDetails(null);
     setCurCommandParamVals([]);
   };
@@ -188,12 +184,14 @@ const Commands = (props) => {
             ))}
           </Modal>
         )}
-        <CommandResultModal
-          visibleCommandMethod={visibleCommandMethod}
-          visibleCommandResult={visibleCommandResult}
-          setVisibleCommandResult={setVisibleCommandResult}
-          t={t}
-        />
+        {commandResult && (
+          <CommandResultModal
+            commandName={curCommandDetails.name}
+            commandResult={commandResult}
+            clearCurrentCommand={clearCurrentCommand}
+            t={t}
+          />
+        )}
       </div>
     </Card>
   );

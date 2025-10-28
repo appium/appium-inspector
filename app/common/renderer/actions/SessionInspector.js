@@ -91,8 +91,6 @@ export const SET_KEEP_ALIVE_INTERVAL = 'SET_KEEP_ALIVE_INTERVAL';
 export const SET_USER_WAIT_TIMEOUT = 'SET_USER_WAIT_TIMEOUT';
 export const SET_LAST_ACTIVE_MOMENT = 'SET_LAST_ACTIVE_MOMENT';
 
-export const SET_VISIBLE_COMMAND_RESULT = 'SET_VISIBLE_COMMAND_RESULT';
-
 export const SET_AWAITING_MJPEG_STREAM = 'SET_AWAITING_MJPEG_STREAM';
 
 export const SHOW_GESTURE_EDITOR = 'SHOW_GESTURE_EDITOR';
@@ -339,7 +337,7 @@ export function restartSession(error, params) {
     });
     const quitSes = quitSession('Window closed');
     const newSes = newSession(getState().builder.caps);
-    const getPageSrc = applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
+    const getPageSrc = applyClientMethod({methodName: 'getPageSource'});
     const storeSessionSet = storeSessionSettings();
     const getSavedClientFrame = getSavedClientFramework();
     const runKeepAliveLp = runKeepAliveLoop();
@@ -454,7 +452,6 @@ export function storeSessionSettings(updatedSessionSettings = null) {
       const action = applyClientMethod({
         methodName: 'getSettings',
         skipRefresh: true,
-        ignoreResult: true,
       });
       sessionSettings = await action(dispatch, getState);
     }
@@ -583,7 +580,6 @@ export function setLocatorTestElement(elementId) {
           methodName: 'getElementRect',
           skipRefresh: true,
           skipRecord: true,
-          ignoreResult: true,
         });
         const {commandRes} = await action(dispatch, getState);
         dispatch({
@@ -905,7 +901,6 @@ export function callClientMethod(params) {
   return async (dispatch, getState) => {
     const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} =
       getState().inspector;
-    const {methodName, ignoreResult = true} = params;
     params.appMode = appMode;
     params.autoSessionRestart = autoSessionRestart;
 
@@ -925,22 +920,6 @@ export function callClientMethod(params) {
       action(dispatch, getState);
       const inspectorDriver = InspectorDriver.instance(driver);
       const res = await inspectorDriver.run(params);
-      let {commandRes} = res;
-
-      // Ignore empty objects
-      if (_.isObject(res) && _.isEmpty(res)) {
-        commandRes = null;
-      }
-
-      if (!ignoreResult) {
-        // if the user is running actions manually, we want to show the full response with the
-        // ability to scroll etc...
-        const result = JSON.stringify(commandRes, null, '  ');
-        const truncatedResult = _.truncate(result, {length: 2000});
-        log.info(`Result of client command was:`);
-        log.info(truncatedResult);
-        setVisibleCommandResult(result, methodName)(dispatch);
-      }
       res.elementId = res.id;
       return res;
     } catch (error) {
@@ -963,12 +942,6 @@ export function executeDriverCommand(params) {
     params.skipRefresh = true;
     const inspectorDriver = InspectorDriver.instance(driver);
     return await inspectorDriver.run(params);
-  };
-}
-
-export function setVisibleCommandResult(result, methodName) {
-  return (dispatch) => {
-    dispatch({type: SET_VISIBLE_COMMAND_RESULT, result, methodName});
   };
 }
 

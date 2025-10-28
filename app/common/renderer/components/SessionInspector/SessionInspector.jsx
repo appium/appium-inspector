@@ -158,7 +158,7 @@ const Inspector = (props) => {
       // resize width to something sensible for using the inspector on first run
       window.resizeTo(newWidth, newHeight);
     }
-    applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
+    applyClientMethod({methodName: 'getPageSource'});
     storeSessionSettings();
     getSavedClientFramework();
     runKeepAliveLoop();
