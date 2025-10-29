@@ -55,35 +55,25 @@ const Commands = (props) => {
     let adjustedCmdParams = _.cloneDeep(curCommandParamVals).map((val) =>
       adjustParamValueType(val),
     );
+
+    // For most commands, its WDIO version accepts the same individual parameters
+    // as the Appium version, so adjustedCmdParams can be used as-is.
+    // However, for some commands, the WDIO version accepts a single object
+    // with all individual parameters, which must be handled here.
+    const cmdParamNames = _.map(cmdParams, 'name');
+    const mappedCmdParams = _.zipObject(cmdParamNames, adjustedCmdParams);
+
     // If we are about to run an execute method,
     // the parameters array needs to be turned into an object,
     // and the command name added as a separate parameter.
     if (isExecute) {
       adjustedCmdName = 'executeScript';
-      const cmdParamNames = _.map(cmdParams, 'name');
-      const mappedCmdParams = _.zipObject(cmdParamNames, adjustedCmdParams);
       adjustedCmdParams = [cmdName, mappedCmdParams];
     }
 
-    // Special case for 'rotateDevice'
-    if (adjustedCmdName === 'rotateDevice') {
-      adjustedCmdParams = {
-        x: curCommandParamVals[0],
-        y: curCommandParamVals[1],
-        duration: curCommandParamVals[2],
-        radius: curCommandParamVals[3],
-        rotation: curCommandParamVals[4],
-        touchCount: curCommandParamVals[5],
-      };
-    }
-
-    // Special case for 'setGeoLocation'
-    if (adjustedCmdName === 'setGeoLocation') {
-      adjustedCmdParams = {
-        latitude: curCommandParamVals[0],
-        longitude: curCommandParamVals[1],
-        altitude: curCommandParamVals[2],
-      };
+    // Adjust for WDIO commands that require a single parameters object
+    if (['rotateDevice', 'setGeoLocation'].includes(adjustedCmdName)) {
+      adjustedCmdParams = mappedCmdParams;
     }
 
     // Special case for 'executeScript'
