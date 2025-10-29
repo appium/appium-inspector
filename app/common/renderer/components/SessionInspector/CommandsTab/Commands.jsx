@@ -52,7 +52,9 @@ const Commands = (props) => {
 
   const prepareCommand = (cmdName, cmdParams, isExecute) => {
     let adjustedCmdName = cmdName;
-    let adjustedCmdParams = _.cloneDeep(curCommandParamVals);
+    let adjustedCmdParams = _.cloneDeep(curCommandParamVals).map((val) =>
+      adjustParamValueType(val),
+    );
     // If we are about to run an execute method,
     // the parameters array needs to be turned into an object,
     // and the command name added as a separate parameter.
@@ -175,9 +177,7 @@ const Commands = (props) => {
                 <Col span={24} className={styles.argContainer}>
                   <Input
                     addonBefore={formatParamInputLabel(param)}
-                    onChange={(e) =>
-                      updateCommandParamVal(index, adjustParamValueType(e.target.value))
-                    }
+                    onChange={(e) => updateCommandParamVal(index, e.target.value)}
                   />
                 </Col>
               </Row>
