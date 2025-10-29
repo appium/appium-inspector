@@ -5,8 +5,8 @@ import {useEffect, useState} from 'react';
 
 import {
   adjustParamValueType,
-  deepFilterEmpty,
-  filterAvailableCommands,
+  transformCommandsMap,
+  transformExecMethodsMap,
 } from '../../../utils/commands-tab.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import CommandResultModal from './CommandResultModal.jsx';
@@ -137,8 +137,8 @@ const Commands = (props) => {
     (async () => {
       const {commands, executeMethods} = await getSupportedSessionMethods();
       setHasMethodsMap(!(_.isEmpty(commands) && _.isEmpty(executeMethods)));
-      setDriverCommands(filterAvailableCommands(commands));
-      setDriverExecuteMethods(deepFilterEmpty(executeMethods));
+      setDriverCommands(transformCommandsMap(commands));
+      setDriverExecuteMethods(transformExecMethodsMap(executeMethods));
     })();
   }, []);
 

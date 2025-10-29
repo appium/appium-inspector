@@ -1,9 +1,9 @@
 import {SearchOutlined} from '@ant-design/icons';
-import {Button, Col, Collapse, Input, Row, Space, Tabs, Tooltip} from 'antd';
+import {Button, Col, Input, Row, Space, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useState} from 'react';
 
-import {transformCommandsMap} from '../../../utils/commands-tab.js';
+import {transformMethodMap} from '../../../utils/commands-tab.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
 
@@ -28,52 +28,36 @@ const MethodMapCommandsList = (props) => {
   const hasNoCommands = _.isEmpty(driverCommands);
   const hasNoExecuteMethods = _.isEmpty(driverExecuteMethods);
 
-  const MethodMapButtonsGrid = ({driverCommands, isExecute}) => {
-    const InnerGrid = ({methodMap}) => (
-      <Row>
-        {transformCommandsMap(methodMap, searchQuery).map(([methodName, methodDetails], index) => (
-          <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
-            <div className={styles.btnContainer}>
-              <Tooltip title={renderCommandTooltipText(methodDetails, t)}>
-                <Button
-                  className={methodDetails.deprecated ? styles.deprecatedMethod : ''}
-                  onClick={() =>
-                    startCommand({name: methodName, details: methodDetails, isExecute})
-                  }
-                >
-                  {methodName}
-                </Button>
-              </Tooltip>
-            </div>
-          </Col>
-        ))}
-      </Row>
-    );
-
-    return _.size(driverCommands) === 1 ? (
-      <InnerGrid methodMap={Object.values(driverCommands)[0]} />
-    ) : (
-      <Collapse
-        items={_.toPairs(driverCommands).map(([methodSource, methodMap]) => ({
-          key: methodSource,
-          label: _.capitalize(methodSource),
-          children: <InnerGrid methodMap={methodMap} />,
-        }))}
-      />
-    );
-  };
+  const MethodMapButtonsGrid = ({driverMethods, isExecute}) => (
+    <Row>
+      {transformMethodMap(driverMethods, searchQuery).map(([methodName, methodDetails], index) => (
+        <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
+          <div className={styles.btnContainer}>
+            <Tooltip title={renderCommandTooltipText(methodDetails, t)}>
+              <Button
+                className={methodDetails.deprecated ? styles.deprecatedMethod : ''}
+                onClick={() => startCommand({name: methodName, details: methodDetails, isExecute})}
+              >
+                {methodName}
+              </Button>
+            </Tooltip>
+          </div>
+        </Col>
+      ))}
+    </Row>
+  );
 
   const CommandsButtonGrid = () => (
     <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
       {t('dynamicCommandsDescription')}
-      <MethodMapButtonsGrid driverCommands={driverCommands} isExecute={false} />
+      <MethodMapButtonsGrid driverMethods={driverCommands} isExecute={false} />
     </Space>
   );
 
   const ExecuteMethodsButtonGrid = () => (
     <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
       {t('dynamicExecuteMethodsDescription')}
-      <MethodMapButtonsGrid driverCommands={driverExecuteMethods.rest} isExecute={true} />
+      <MethodMapButtonsGrid driverMethods={driverExecuteMethods} isExecute={true} />
     </Space>
   );
 

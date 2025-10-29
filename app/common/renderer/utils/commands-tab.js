@@ -31,7 +31,7 @@ export function adjustParamValueType(value) {
  * @param {*} searchQuery user-provided search query
  * @returns array of [methodName, methodDetails] pairs
  */
-export function transformCommandsMap(methodMap, searchQuery) {
+export function transformMethodMap(methodMap, searchQuery) {
   const filterByQuery = (methodName) => {
     if (!searchQuery) {
       return true;
@@ -94,65 +94,132 @@ export const extractParamsFromCommandPath = (path) => {
 };
 
 /**
- * Filter the map of commands supported by the current driver using multiple criteria:
+ * Transform and filter a given map of command paths/methods/details.
+ *
+ * @param {*} pathsToCmdsMap map of command paths to their HTTP methods and details
+ * @returns flat map of command names to their details
+ */
+function transformInnerCommandsMap(pathsToCmdsMap) {
+  const transformedMap = {};
+  for (const path in pathsToCmdsMap) {
+    const pathsCmdsMap = pathsToCmdsMap[path];
+    // pathsCmdsMap: HTTP methods to commands map
+    for (const method in pathsCmdsMap) {
+      if (
+        _.isEmpty(pathsCmdsMap[method]) ||
+        !('command' in pathsCmdsMap[method]) // We need the command name, so skip commands that don't have it
+      ) {
+        continue;
+      }
+      const cmdName = pathsCmdsMap[method].command;
+      // Skip commands not supported by WDIO
+      if (!(cmdName in APPIUM_TO_WD_COMMANDS)) {
+        continue;
+      }
+      // Filter out any entries with empty values
+      const commandDetails = deepFilterEmpty(pathsCmdsMap[method]);
+      // For commands that include additional parameters in the path (e.g. /session/:sessionId/element/:elementId),
+      // WDIO includes them in the method itself, so we need to extract their names from the path
+      // and add them to the parameters array
+      let commandPathParamEntries = [];
+      for (const paramName of extractParamsFromCommandPath(path)) {
+        commandPathParamEntries.push({name: paramName, required: true});
+      }
+      // Make sure to only set commandDetails.params if there are any parameters
+      if (commandPathParamEntries.length > 0) {
+        // Prepend the path parameters to the existing parameters array
+        commandDetails.params = [...commandPathParamEntries, ...(commandDetails.params || [])];
+      }
+      // Add the adjusted command details to the result map, using the WDIO command name
+      transformedMap[APPIUM_TO_WD_COMMANDS[cmdName]] = commandDetails;
+    }
+  }
+  return transformedMap;
+}
+
+/**
+ * Filter the map of commands supported by the current driver using certain criteria:
  *   * Remove entries with empty values (similarly to {@link deepFilterEmpty})
  *   * Remove commands not supported by WDIO
  *
- * In addition to filtering, the map is modified to remove the path and HTTP method,
- * resulting in a format more similar to `ListExtensionsResponse`.
+ * In addition to filtering, the map is modified to remove the base/driver/plugin scopes,
+ * the path and the HTTP method.
  *
- * @param {Object} commandsResponse {@link https://github.com/appium/appium/blob/master/packages/types/lib/command-maps.ts `ListCommandsResponse`}
- * @returns filtered object, formatted to match the {@link deepFilterEmpty} response
+ * @param {Object} cmdsResponse {@link https://github.com/appium/appium/blob/master/packages/types/lib/command-maps.ts `ListCommandsResponse`}
+ * @returns flat map of command names to their details
  */
-export function filterAvailableCommands(commandsResponse) {
-  const adjustedCommandsMap = {};
-  // commandsResponse: REST/BiDi to commands map
+export function transformCommandsMap(cmdsResponse) {
+  let adjBaseCmdsMap = {},
+    adjDriverCmdsMap = {},
+    adjPluginCmdsMap = {};
+  // cmdsResponse: REST/BiDi to base/driver/plugins source map
   // only use the REST commands for now
-  if (
-    _.isEmpty(commandsResponse) ||
-    !('rest' in commandsResponse) ||
-    _.isEmpty(commandsResponse.rest)
-  ) {
-    return adjustedCommandsMap;
+  if (_.isEmpty(cmdsResponse) || !('rest' in cmdsResponse) || _.isEmpty(cmdsResponse.rest)) {
+    return adjBaseCmdsMap;
   }
-  const restCommandsMap = commandsResponse.rest;
-  // restCommandsMap: base/driver/plugins source to command paths map
-  for (const source in restCommandsMap) {
-    const sourceCommandsMap = restCommandsMap[source];
-    // sourceCommandsMap: command paths to HTTP methods map
-    for (const path in sourceCommandsMap) {
-      const pathsCommandsMap = sourceCommandsMap[path];
-      // pathsCommandsMap: HTTP methods to commands map
-      for (const method in pathsCommandsMap) {
-        if (
-          _.isEmpty(pathsCommandsMap[method]) ||
-          !('command' in pathsCommandsMap[method]) // We need the command name, so skip commands that don't have it
-        ) {
-          continue;
-        }
-        const cmdName = pathsCommandsMap[method].command;
-        // Skip commands not supported by WDIO
-        if (!(cmdName in APPIUM_TO_WD_COMMANDS)) {
-          continue;
-        }
-        // Filter out any entries with empty values
-        const commandDetails = deepFilterEmpty(pathsCommandsMap[method]);
-        // For commands that include additional parameters in the path (e.g. /session/:sessionId/element/:elementId),
-        // WDIO includes them in the method itself, so we need to extract their names from the path
-        // and add them to the parameters array
-        let commandPathParamEntries = [];
-        for (const paramName of extractParamsFromCommandPath(path)) {
-          commandPathParamEntries.push({name: paramName, required: true});
-        }
-        // Make sure to only set commandDetails.params if there are any parameters
-        if (commandPathParamEntries.length > 0) {
-          // Prepend the path parameters to the existing parameters array
-          commandDetails.params = [...commandPathParamEntries, ...(commandDetails.params || [])];
-        }
-        // Add the adjusted command details to the result map, using the WDIO command name
-        (adjustedCommandsMap[source] ??= {})[APPIUM_TO_WD_COMMANDS[cmdName]] = commandDetails;
+  const restCmdsMap = cmdsResponse.rest;
+  // restCmdsMap: base/driver/plugins source to command paths/plugin names map
+  for (const source in restCmdsMap) {
+    if (source === 'plugins') {
+      const pluginNamesMap = restCmdsMap[source];
+      // pluginNamesMap: plugin names to plugin command paths map
+      for (const pluginName in pluginNamesMap) {
+        const pluginCmdsMap = pluginNamesMap[pluginName];
+        // pluginCmdsMap: plugin command paths to HTTP methods map
+        // Use spread operator to handle multiple plugins
+        adjPluginCmdsMap = {...adjPluginCmdsMap, ...transformInnerCommandsMap(pluginCmdsMap)};
+      }
+    } else {
+      const sourceCmdsMap = restCmdsMap[source];
+      // sourceCmdsMap: base/driver command paths to HTTP methods map
+      if (source === 'base') {
+        adjBaseCmdsMap = transformInnerCommandsMap(sourceCmdsMap);
+      } else if (source === 'driver') {
+        adjDriverCmdsMap = transformInnerCommandsMap(sourceCmdsMap);
       }
     }
   }
-  return adjustedCommandsMap;
+  // Merge all maps in a logical priority order
+  return {...adjBaseCmdsMap, ...adjDriverCmdsMap, ...adjPluginCmdsMap};
+}
+
+/**
+ * Filter the map of execute methods supported by the current driver,
+ * by removing entries with empty values (similarly to {@link deepFilterEmpty})
+ *
+ * In addition to filtering, the map is modified to remove the driver/plugin scopes.
+ *
+ * @param {Object} execMethodsResponse {@link https://github.com/appium/appium/blob/master/packages/types/lib/command-maps.ts `ListExtensionsResponse`}
+ * @returns flat map of execute method names to their details
+ */
+export function transformExecMethodsMap(execMethodsResponse) {
+  let adjExecMethodsMap = {};
+  // execMethodsResponse: REST to driver/plugins source map
+  if (
+    _.isEmpty(execMethodsResponse) ||
+    !('rest' in execMethodsResponse) ||
+    _.isEmpty(execMethodsResponse.rest)
+  ) {
+    return adjExecMethodsMap;
+  }
+  const restExecMethodsMap = execMethodsResponse.rest;
+  // restExecMethodsMap: driver/plugins source to method names/execute methods map
+  for (const source in restExecMethodsMap) {
+    if (source === 'plugins') {
+      const pluginNamesMap = restExecMethodsMap[source];
+      // pluginNamesMap: plugin names to execute methods map
+      for (const pluginName in pluginNamesMap) {
+        const pluginExecMethodsMap = pluginNamesMap[pluginName];
+        // pluginExecMethodsMap: plugin execute method names to method details map
+        // Any plugin execute methods should override driver ones if there are name conflicts
+        adjExecMethodsMap = {...adjExecMethodsMap, ...deepFilterEmpty(pluginExecMethodsMap)};
+      }
+    } else if (source === 'driver') {
+      const driverExecMethodsMap = restExecMethodsMap[source];
+      // driverExecMethodsMap: driver execute method names to method details map
+      // Any plugin execute methods should override driver ones if there are name conflicts
+      adjExecMethodsMap = {...deepFilterEmpty(driverExecMethodsMap), ...adjExecMethodsMap};
+    }
+  }
+  return adjExecMethodsMap;
 }
