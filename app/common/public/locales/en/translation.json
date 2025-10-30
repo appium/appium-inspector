@@ -321,7 +321,7 @@
   "copyResultToClipboard": "Copy Result to Clipboard",
   "Property": "Property",
   "executeMethods": "Execute Methods",
-  "dynamicCommandsDescription": "Run commands provided by the currently active driver and any plugins. Commands not supported in WebdriverIO are excluded from this list. Note that some commands may only work in certain contexts.",
-  "dynamicExecuteMethodsDescription": "Run any execute method provided by the currently active driver and any plugins.",
+  "dynamicCommandsDescription": "Run commands provided by the currently active driver and plugin(s). Commands that are not supported in WebdriverIO are excluded from this list. Note that some commands may only work in certain contexts.",
+  "dynamicExecuteMethodsDescription": "Run any execute method provided by the currently active driver and plugin(s).",
   "methodDeprecated": "This method is deprecated"
 }
