@@ -320,6 +320,7 @@
   "toggleTableFormatting": "Toggle Table Formatting",
   "copyResultToClipboard": "Copy Result to Clipboard",
   "Property": "Property",
+  "noCapsFound": "No session capabilities found. Please use the Capability Builder to edit, add, and save your capability set. Refer to the tutorial at {{url}}",
   "executeMethods": "Execute Methods",
   "dynamicCommandsDescription": "Run commands provided by the currently active driver and plugin(s). Commands that are not supported in WebdriverIO are excluded from this list. Note that some commands may only work in certain contexts.",
   "dynamicExecuteMethodsDescription": "Run any execute method provided by the currently active driver and plugin(s).",
