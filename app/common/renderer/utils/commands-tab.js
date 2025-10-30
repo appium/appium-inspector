@@ -30,7 +30,7 @@ export function adjustParamValueType(value) {
  * if any, and then convert it to an array of [methodName, methodDetails] pairs.
  *
  * @param {*} methodMap map of methods and their details
- * @param {*} searchQuery user-provided search query
+ * @param {string} searchQuery user-provided search query
  * @returns array of [methodName, methodDetails] pairs
  */
 export function transformMethodMap(methodMap, searchQuery) {
@@ -81,8 +81,8 @@ export function deepFilterEmpty(value) {
 /**
  * Remove parameters with the specific names from the parameters array.
  *
- * @param {*} cmdParams array of parameter objects
- * @param {*} removableParams array of parameter names to be removed
+ * @param {*[]} cmdParams array of parameter objects
+ * @param {string[]} removableParams array of parameter names to be removed
  */
 function removeCommandParams(cmdParams, removableParams) {
   return cmdParams.filter((paramObj) => !removableParams.includes(paramObj.name));
@@ -92,7 +92,7 @@ function removeCommandParams(cmdParams, removableParams) {
  * Adjust the parameters of specific commands to be compatible with their WDIO method signature.
  *
  * @param {*} cmdDetails command details as received from Appium
- * @returns {*} the extracted and updated command parameters
+ * @returns the extracted and updated command parameters
  */
 function adjustSpecificCommandParams(cmdDetails) {
   let newCmdParams = cmdDetails.params;
@@ -129,7 +129,7 @@ function adjustSpecificCommandParams(cmdDetails) {
  * Extract any parameter names (except sessionId) from a command path.
  *
  * @param {string} path command endpoint URL
- * @returns {string[]} array of parameter names
+ * @returns array of parameter names
  */
 export function extractParamsFromCommandPath(path) {
   const paramNames = [];
@@ -145,7 +145,7 @@ export function extractParamsFromCommandPath(path) {
 /**
  * Transform and filter a given map of command paths/methods/details.
  *
- * @param {*} pathsToCmdsMap map of command paths to their HTTP methods and details
+ * @param pathsToCmdsMap map of command paths to their HTTP methods and details
  * @returns flat map of command names to their details
  */
 function transformInnerCommandsMap(pathsToCmdsMap) {
