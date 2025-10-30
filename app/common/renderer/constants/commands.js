@@ -12,8 +12,8 @@
 export const APPIUM_TO_WD_COMMANDS = {
   // WDIO WebDriver standard protocol commands
   // https://webdriver.io/docs/api/webdriver
-  // createSession: 'newSession',    // not applicable for Commands tab
-  // deleteSession: 'deleteSession', // not applicable for Commands tab
+  createSession: 'newSession',
+  deleteSession: 'deleteSession',
   getStatus: 'status',
   getTimeouts: 'getTimeouts',
   timeouts: 'setTimeouts',
@@ -191,6 +191,25 @@ export const APPIUM_TO_WD_COMMANDS = {
 };
 
 /**
+ * Only used for the dynamic commands map.
+ * Certain commands supported in both Appium & WDIO must still be excluded from the Commands list,
+ * either because they are not applicable, or have parameter mismatches that need complex workarounds
+ */
+export const EXCLUDED_COMMANDS = [
+  // not applicable for Commands tab
+  'createSession',
+  'deleteSession',
+  // Appium also supports non-W3C arguments, and has a different order,
+  // while WDIO doesn't support null values
+  'timeouts',
+  // WDIO is missing the isUserVerified property
+  'setUserAuthVerified',
+  // WDIO only supports 4 individual parameters instead of a single options object,
+  // like startRecordingScreen
+  'stopRecordingScreen',
+];
+
+/**
  * Only used for the static commands map.
  * Commonly used commands not hidden under a collapse.
  */
@@ -256,20 +275,13 @@ export const COMMAND_DEFINITIONS = {
     },
     getGeoLocation: {},
     setGeoLocation: {
-      params: [
-        {name: 'latitude', required: true},
-        {name: 'longitude', required: true},
-        {name: 'altitude', required: true},
-      ],
+      params: [{name: 'location', required: true}],
     },
     rotateDevice: {
       params: [
-        {name: 'x', required: false},
-        {name: 'y', required: false},
-        {name: 'duration', required: false},
-        {name: 'radius', required: false},
-        {name: 'rotation', required: false},
-        {name: 'touchCount', required: false},
+        {name: 'x', required: true},
+        {name: 'y', required: true},
+        {name: 'z', required: true},
       ],
       refresh: true,
     },

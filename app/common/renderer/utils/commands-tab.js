@@ -1,16 +1,18 @@
 import _ from 'lodash';
 
-import {APPIUM_TO_WD_COMMANDS} from '../constants/commands.js';
+import {APPIUM_TO_WD_COMMANDS, EXCLUDED_COMMANDS} from '../constants/commands.js';
 
 /**
  * Try to detect if the input value should be a boolean/number/array/object,
  * and if so, convert it to that
  *
- * @param {*} value the value of a command parameter
+ * @param {string} value the value of a command parameter
  * @returns the value converted to the type it matches best
  */
 export function adjustParamValueType(value) {
-  if (Number(value).toString() === value) {
+  if (value === '') {
+    return null;
+  } else if (Number(value).toString() === value) {
     return Number(value);
   } else if (['true', 'false'].includes(value)) {
     return value === 'true';
@@ -72,8 +74,55 @@ export function deepFilterEmpty(value) {
     return _.pickBy(mapped, (v) => !isEmptyObject(v));
   }
 
-  // Primitives are returned as-is
+  // Return primitives as-is
   return value;
+}
+
+/**
+ * Remove parameters with the specific names from the parameters array.
+ *
+ * @param {*} cmdParams array of parameter objects
+ * @param {*} removableParams array of parameter names to be removed
+ */
+function removeCommandParams(cmdParams, removableParams) {
+  return cmdParams.filter((paramObj) => !removableParams.includes(paramObj.name));
+}
+
+/**
+ * Adjust the parameters of specific commands to be compatible with their WDIO method signature.
+ *
+ * @param {*} cmdDetails command details as received from Appium
+ * @returns {*} the extracted and updated command parameters
+ */
+function adjustSpecificCommandParams(cmdDetails) {
+  let newCmdParams = cmdDetails.params;
+  switch (cmdDetails.command) {
+    case 'getDeviceTime': // WDIO only supports the GET endpoint
+      newCmdParams = [];
+      break;
+    case 'installApp': // WDIO only supports appPath
+      newCmdParams = removeCommandParams(newCmdParams, ['options']);
+      break;
+    case 'activateApp':
+    case 'removeApp': // WDIO only supports appId
+      newCmdParams = removeCommandParams(newCmdParams, ['bundleId', 'options']);
+      break;
+    case 'terminateApp':
+    case 'isAppInstalled':
+    case 'queryAppState': // WDIO only supports appId
+      newCmdParams = removeCommandParams(newCmdParams, ['bundleId']);
+      break;
+    case 'getLogEvents': // WDIO makes the type required
+      newCmdParams = [{name: 'type', required: true}];
+      break;
+    case 'addAuthCredential': // WDIO makes the userHandle & signCount required
+      ['userHandle', 'signCount'].forEach((param) => {
+        const paramIndex = _.findIndex(newCmdParams, ['name', param]);
+        newCmdParams[paramIndex] = {name: param, required: true};
+      });
+      break;
+  }
+  return newCmdParams;
 }
 
 /**
@@ -82,7 +131,7 @@ export function deepFilterEmpty(value) {
  * @param {string} path command endpoint URL
  * @returns {string[]} array of parameter names
  */
-export const extractParamsFromCommandPath = (path) => {
+export function extractParamsFromCommandPath(path) {
   const paramNames = [];
   const pathParts = path.split('/');
   for (const part of pathParts) {
@@ -91,7 +140,7 @@ export const extractParamsFromCommandPath = (path) => {
     }
   }
   return paramNames;
-};
+}
 
 /**
  * Transform and filter a given map of command paths/methods/details.
@@ -105,29 +154,28 @@ function transformInnerCommandsMap(pathsToCmdsMap) {
     const pathsCmdsMap = pathsToCmdsMap[path];
     // pathsCmdsMap: HTTP methods to commands map
     for (const method in pathsCmdsMap) {
-      if (
-        _.isEmpty(pathsCmdsMap[method]) ||
-        !('command' in pathsCmdsMap[method]) // We need the command name, so skip commands that don't have it
-      ) {
+      // Skip commands that don't have the command name
+      if (_.isEmpty(pathsCmdsMap[method]) || !('command' in pathsCmdsMap[method])) {
         continue;
       }
       const cmdName = pathsCmdsMap[method].command;
       // Skip commands not supported by WDIO
-      if (!(cmdName in APPIUM_TO_WD_COMMANDS)) {
+      if (!(cmdName in APPIUM_TO_WD_COMMANDS) || EXCLUDED_COMMANDS.includes(cmdName)) {
         continue;
       }
       // Filter out any entries with empty values
       const commandDetails = deepFilterEmpty(pathsCmdsMap[method]);
+      // Some commands require parameter adjustments due to WDIO method signature differences
+      commandDetails.params = adjustSpecificCommandParams(commandDetails);
       // For commands that include additional parameters in the path (e.g. /session/:sessionId/element/:elementId),
       // WDIO includes them in the method itself, so we need to extract their names from the path
-      // and add them to the parameters array
-      let commandPathParamEntries = [];
-      for (const paramName of extractParamsFromCommandPath(path)) {
-        commandPathParamEntries.push({name: paramName, required: true});
-      }
-      // Make sure to only set commandDetails.params if there are any parameters
-      if (commandPathParamEntries.length > 0) {
-        // Prepend the path parameters to the existing parameters array
+      // and add them to the start of the parameters array
+      const commandPathParamNames = extractParamsFromCommandPath(path);
+      if (commandPathParamNames.length > 0) {
+        const commandPathParamEntries = commandPathParamNames.map((paramName) => ({
+          name: paramName,
+          required: true,
+        }));
         commandDetails.params = [...commandPathParamEntries, ...(commandDetails.params || [])];
       }
       // Add the adjusted command details to the result map, using the WDIO command name
