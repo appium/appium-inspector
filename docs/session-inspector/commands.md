@@ -18,15 +18,15 @@ active during an Inspector session, their commands/methods are also included in 
 
 Note that there are two important limitations to this approach:
 
-* The Commands sub-tab ^^**only lists the commands supported by [the WebdriverIO client](https://webdriver.io/).**^^
-Under the hood, the Inspector uses WebdriverIO to run all commands, therefore any command that is
-not defined in WebdriverIO (for example, any custom third-party driver command) will not work. Due
-to this, the Inspector simply filters out all such commands from the Commands list. This limitation
-does not apply to execute methods.
+- The Commands sub-tab ^^**only lists the commands supported by [the WebdriverIO client](https://webdriver.io/).**^^
+  Under the hood, the Inspector uses WebdriverIO to run all commands, therefore any command that is
+  not defined in WebdriverIO (for example, any custom third-party driver command) will not work. Due
+  to this, the Inspector simply filters out all such commands from the Commands list. This limitation
+  does not apply to execute methods.
 
-* ^^**Appium `2.16.0` or later is required.**^^ For older Appium versions, a static predefined list of
-commands is shown instead. Please be aware that not all commands in the predefined list are
-compatible with all drivers.
+- ^^**Appium `2.16.0` or later is required.**^^ For older Appium versions, a static predefined list of
+  commands is shown instead. Please be aware that not all commands in the predefined list are
+  compatible with all drivers.
 
 ## Navigation
 
@@ -40,17 +40,17 @@ available, which can be used to filter both sub-tabs simultaneously.
 
 Commands and execute methods may have additional properties specified by their driver/plugin:
 
-* They may be marked as deprecated, in which case they are shown with a yellow-tinted background.
+- They may be marked as deprecated, in which case they are shown with a yellow-tinted background.
   Check the driver/plugin documentation for more details on these commands.
 
     ![Deprecated Command](./assets/images/commands/deprecated-command.png)
 
-* They may include additional information, which is shown upon mouseover:
+- They may include additional information, which is shown upon mouseover:
 
     ![Additional Command Information](./assets/images/commands/command-info.png)
 
-* They may support additional parameters, and clicking on them will open the parameters popup.
-Parameters can be either required or optional.
+- They may support additional parameters, and clicking on them will open the parameters popup.
+  Parameters can be either required or optional.
 
     ![Command Parameters](./assets/images/commands/command-params.png)
 
