@@ -38,7 +38,7 @@
 }
 
 .deprecatedMethod {
-  background-color: #f0f0f0;
+  background-color: #f8f8e3;
 }
 
 :global(.dark) .deprecatedMethod {
