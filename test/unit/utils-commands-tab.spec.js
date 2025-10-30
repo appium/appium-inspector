@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest';
 
 import {
+  adjustParamValueType,
   deepFilterEmpty,
   extractParamsFromCommandPath,
   transformCommandsMap,
@@ -9,6 +10,27 @@ import {
 } from '../../app/common/renderer/utils/commands-tab.js';
 
 describe('utils/commands-tab.js', function () {
+  describe('#adjustParamValueType', function () {
+    it('should detect the correct type for common examples', function () {
+      expect(adjustParamValueType('test')).toEqual('test');
+      expect(adjustParamValueType('109')).toEqual(109);
+      expect(adjustParamValueType('true')).toEqual(true);
+      expect(adjustParamValueType('false')).toEqual(false);
+      expect(adjustParamValueType('null')).toEqual(null);
+      expect(adjustParamValueType('[1, 2, 3]')).toEqual([1, 2, 3]);
+      expect(adjustParamValueType('{"a":1}')).toEqual({a: 1});
+    });
+    it('should detect the correct type for edge cases', function () {
+      // Leading zero numeric string should be left as string
+      expect(adjustParamValueType('01')).toEqual('01');
+      // Empty string -> null
+      expect(adjustParamValueType('')).toEqual(null);
+      // Invalid arrays/JSON stay as string
+      expect(adjustParamValueType('[invalid,]')).toEqual('[invalid,]');
+      expect(adjustParamValueType('{invalid:}')).toEqual('{invalid:}');
+    });
+  });
+
   describe('#transformMethodMap', function () {
     it('should only call toPairs if the search query is empty', function () {
       const methodMap = {method: {command: 'test'}};
@@ -214,6 +236,38 @@ describe('utils/commands-tab.js', function () {
         forward: {command: 'forward'},
       });
     });
+    it('should prefer driver commands over base commands in case of overrides', function () {
+      const getCmdsResponse = {
+        rest: {
+          base: {
+            '/session/:sessionId/forward': {POST: {command: 'forward', info: 'from-base'}},
+          },
+          driver: {
+            '/session/:sessionId/forward': {POST: {command: 'forward', info: 'from-driver'}},
+          },
+        },
+      };
+      expect(transformCommandsMap(getCmdsResponse)).toEqual({
+        forward: {command: 'forward', info: 'from-driver'},
+      });
+    });
+    it('should prefer plugin commands over driver commands in case of overrides', function () {
+      const getCmdsResponse = {
+        rest: {
+          driver: {
+            '/session/:sessionId/forward': {POST: {command: 'forward', info: 'from-driver'}},
+          },
+          plugins: {
+            pluginA: {
+              '/session/:sessionId/forward': {POST: {command: 'forward', info: 'from-plugin'}},
+            },
+          },
+        },
+      };
+      expect(transformCommandsMap(getCmdsResponse)).toEqual({
+        forward: {command: 'forward', info: 'from-plugin'},
+      });
+    });
   });
 
   describe('#transformExecMethodsMap', function () {
@@ -290,6 +344,23 @@ describe('utils/commands-tab.js', function () {
           command: 'mobilePerformEditorAction',
           params: [{name: 'action', required: true}],
         },
+      });
+    });
+    it('should prefer plugin commands over driver commands in case of overrides', function () {
+      const getExecMethodsResponse = {
+        rest: {
+          driver: {
+            'mobile: doThing': {command: 'doThing', info: 'from-driver'},
+          },
+          plugins: {
+            somePlugin: {
+              'mobile: doThing': {command: 'doThing', info: 'from-plugin'},
+            },
+          },
+        },
+      };
+      expect(transformExecMethodsMap(getExecMethodsResponse)).toEqual({
+        'mobile: doThing': {command: 'doThing', info: 'from-plugin'},
       });
     });
   });
