@@ -115,6 +115,19 @@ function adjustSpecificCommandParams(cmdDetails) {
     case 'getLogEvents': // WDIO makes the type required
       newCmdParams = [{name: 'type', required: true}];
       break;
+    case 'printPage': // WDIO does not accept page & margin but their parts directly
+      newCmdParams = removeCommandParams(newCmdParams, ['page', 'margin']);
+      newCmdParams.splice(
+        3,
+        0,
+        {name: 'width', required: false},
+        {name: 'height', required: false},
+        {name: 'top', required: false},
+        {name: 'bottom', required: false},
+        {name: 'left', required: false},
+        {name: 'right', required: false},
+      );
+      break;
     case 'addAuthCredential': // WDIO makes the userHandle & signCount required
       ['userHandle', 'signCount'].forEach((param) => {
         const paramIndex = _.findIndex(newCmdParams, ['name', param]);
