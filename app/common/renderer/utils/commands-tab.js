@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import {APPIUM_TO_WD_COMMANDS, EXCLUDED_COMMANDS} from '../constants/commands.js';
+import {APPIUM_TO_WD_COMMANDS, COMMANDS_WITH_MISMATCHED_PARAMS} from '../constants/commands.js';
 
 /**
  * Try to detect if the input value should be a boolean/number/array/object,
@@ -79,74 +79,6 @@ export function deepFilterEmpty(value) {
 }
 
 /**
- * Remove parameters with the specific names from the parameters array.
- *
- * @param {*[]} cmdParams array of parameter objects
- * @param {string[]} removableParams array of parameter names to be removed
- */
-function removeCommandParams(cmdParams, removableParams) {
-  return cmdParams.filter((paramObj) => !removableParams.includes(paramObj.name));
-}
-
-/**
- * Adjust the parameters of specific commands to be compatible with their WDIO method signature.
- *
- * @param {*} cmdDetails command details as received from Appium
- * @returns the extracted and updated command parameters
- */
-function adjustSpecificCommandParams(cmdDetails) {
-  let newCmdParams = cmdDetails.params;
-  switch (cmdDetails.command) {
-    case 'getDeviceTime': // WDIO only supports the GET endpoint
-      newCmdParams = [];
-      break;
-    case 'installApp': // WDIO only supports appPath
-      newCmdParams = removeCommandParams(newCmdParams, ['options']);
-      break;
-    case 'activateApp':
-    case 'removeApp': // WDIO only supports appId
-      newCmdParams = removeCommandParams(newCmdParams, ['bundleId', 'options']);
-      break;
-    case 'terminateApp':
-    case 'isAppInstalled':
-    case 'queryAppState': // WDIO only supports appId
-      newCmdParams = removeCommandParams(newCmdParams, ['bundleId']);
-      break;
-    case 'getLogEvents': // WDIO makes the type required
-      newCmdParams = [{name: 'type', required: true}];
-      break;
-    case 'stopRecordingScreen': // WDIO does not accept options but their parts directly
-      newCmdParams = [
-        {name: 'remotePath', required: false},
-        {name: 'username', required: false},
-        {name: 'password', required: false},
-        {name: 'method', required: false},
-      ];
-      break;
-    case 'printPage': // WDIO does not accept page & margin but their parts directly
-      newCmdParams = removeCommandParams(newCmdParams, ['page', 'margin']);
-      newCmdParams.splice(
-        3,
-        0,
-        {name: 'width', required: false},
-        {name: 'height', required: false},
-        {name: 'top', required: false},
-        {name: 'bottom', required: false},
-        {name: 'left', required: false},
-        {name: 'right', required: false},
-      );
-      break;
-    case 'addAuthCredential': // WDIO makes the userHandle & signCount required
-      ['userHandle', 'signCount'].forEach((param) => {
-        const paramIndex = _.findIndex(newCmdParams, ['name', param]);
-        newCmdParams[paramIndex] = {name: param, required: true};
-      });
-      break;
-  }
-  return newCmdParams;
-}
-
-/**
  * Extract any parameter names (except sessionId) from a command path.
  *
  * @param {string} path command endpoint URL
@@ -181,13 +113,15 @@ function transformInnerCommandsMap(pathsToCmdsMap) {
       }
       const cmdName = pathsCmdsMap[method].command;
       // Skip commands not supported by WDIO
-      if (!(cmdName in APPIUM_TO_WD_COMMANDS) || EXCLUDED_COMMANDS.includes(cmdName)) {
+      if (!(cmdName in APPIUM_TO_WD_COMMANDS)) {
         continue;
       }
       // Filter out any entries with empty values
       const commandDetails = deepFilterEmpty(pathsCmdsMap[method]);
       // Some commands require parameter adjustments due to WDIO method signature differences
-      commandDetails.params = adjustSpecificCommandParams(commandDetails);
+      if (cmdName in COMMANDS_WITH_MISMATCHED_PARAMS) {
+        commandDetails.params = COMMANDS_WITH_MISMATCHED_PARAMS[cmdName];
+      }
       // For commands that include additional parameters in the path (e.g. /session/:sessionId/element/:elementId),
       // WDIO includes them in the method itself, so we need to extract their names from the path
       // and add them to the start of the parameters array

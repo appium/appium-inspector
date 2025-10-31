@@ -12,8 +12,8 @@
 export const APPIUM_TO_WD_COMMANDS = {
   // WDIO WebDriver standard protocol commands
   // https://webdriver.io/docs/api/webdriver
-  createSession: 'newSession',
-  deleteSession: 'deleteSession',
+  // createSession: 'newSession', // not applicable for Commands tab
+  // deleteSession: 'deleteSession', // not applicable for Commands tab
   getStatus: 'status',
   getTimeouts: 'getTimeouts',
   timeouts: 'setTimeouts',
@@ -192,19 +192,58 @@ export const APPIUM_TO_WD_COMMANDS = {
 
 /**
  * Only used for the dynamic commands map.
- * Certain commands supported in both Appium & WDIO must still be excluded from the Commands list,
- * either because they are not applicable, or have parameter mismatches
+ * Certain commands differ in their signature between Appium and WDIO,
+ * so the WDIO formats must be explicitly defined.
+ * Any URL parameters are excluded, as they are handled separately.
  */
-export const EXCLUDED_COMMANDS = [
-  // not applicable for Commands tab
-  'createSession',
-  'deleteSession',
-  // Appium also supports non-W3C arguments, and has a different order,
-  // while WDIO doesn't support null values
-  'timeouts',
-  // WDIO is missing the isUserVerified property
-  'setUserAuthVerified',
-];
+export const COMMANDS_WITH_MISMATCHED_PARAMS = {
+  timeouts: [
+    // different order, no non-W3C params
+    {name: 'implicit', required: false},
+    {name: 'pageLoad', required: false},
+    {name: 'script', required: false},
+  ],
+  printPage: [
+    // page & margin separated into components
+    {name: 'orientation', required: false},
+    {name: 'scale', required: false},
+    {name: 'background', required: false},
+    {name: 'width', required: false},
+    {name: 'height', required: false},
+    {name: 'top', required: false},
+    {name: 'bottom', required: false},
+    {name: 'left', required: false},
+    {name: 'right', required: false},
+    {name: 'shrinkToFit', required: false},
+    {name: 'pageRanges', required: false},
+  ],
+  addAuthCredential: [
+    // userHandle & signCount are required
+    {name: 'credentialId', required: true},
+    {name: 'isResidentCredential', required: true},
+    {name: 'rpId', required: true},
+    {name: 'privateKey', required: true},
+    {name: 'userHandle', required: true},
+    {name: 'signCount', required: true},
+    {name: 'largeBlob', required: false},
+  ],
+  setUserAuthVerified: [], // no isUserVerified property
+  getDeviceTime: [], // only GET endpoint is supported
+  installApp: [{name: 'appPath', required: true}], // no options
+  activateApp: [{name: 'appId', required: true}], // no bundleId & options
+  removeApp: [{name: 'appId', required: true}], // no bundleId & options
+  terminateApp: [{name: 'appId', required: true}], // no bundleId
+  isAppInstalled: [{name: 'appId', required: true}], // no bundleId
+  queryAppState: [{name: 'appId', required: true}], // no bundleId
+  getLogEvents: [{name: 'type', required: true}], // type is required
+  stopRecordingScreen: [
+    // options separated into components
+    {name: 'remotePath', required: false},
+    {name: 'username', required: false},
+    {name: 'password', required: false},
+    {name: 'method', required: false},
+  ],
+};
 
 /**
  * Only used for the static commands map.
