@@ -115,6 +115,14 @@ function adjustSpecificCommandParams(cmdDetails) {
     case 'getLogEvents': // WDIO makes the type required
       newCmdParams = [{name: 'type', required: true}];
       break;
+    case 'stopRecordingScreen': // WDIO does not accept options but their parts directly
+      newCmdParams = [
+        {name: 'remotePath', required: false},
+        {name: 'username', required: false},
+        {name: 'password', required: false},
+        {name: 'method', required: false},
+      ];
+      break;
     case 'printPage': // WDIO does not accept page & margin but their parts directly
       newCmdParams = removeCommandParams(newCmdParams, ['page', 'margin']);
       newCmdParams.splice(

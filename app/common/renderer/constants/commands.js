@@ -193,7 +193,7 @@ export const APPIUM_TO_WD_COMMANDS = {
 /**
  * Only used for the dynamic commands map.
  * Certain commands supported in both Appium & WDIO must still be excluded from the Commands list,
- * either because they are not applicable, or have parameter mismatches that need complex workarounds
+ * either because they are not applicable, or have parameter mismatches
  */
 export const EXCLUDED_COMMANDS = [
   // not applicable for Commands tab
@@ -204,9 +204,6 @@ export const EXCLUDED_COMMANDS = [
   'timeouts',
   // WDIO is missing the isUserVerified property
   'setUserAuthVerified',
-  // WDIO only supports 4 individual parameters instead of a single options object,
-  // like startRecordingScreen
-  'stopRecordingScreen',
 ];
 
 /**
