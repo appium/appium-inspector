@@ -156,6 +156,7 @@ describe('utils/commands-tab.js', function () {
           base: {
             '/status': {GET: {notcommand: 'getStatus'}},
             '/session/:sessionId/appium/commands': {GET: {command: 'notListCommands'}},
+            '/session': {POST: {command: 'createSession'}},
             '/session/:sessionId/appium/extensions': {GET: {command: 'listExtensions'}},
           },
         },
