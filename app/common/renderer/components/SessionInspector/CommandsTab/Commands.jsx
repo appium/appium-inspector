@@ -93,7 +93,7 @@ const Commands = (props) => {
   const prepareAndRunCommand = (commandDetails) => {
     const {
       name: cmdName,
-      details: {cmdParams, refresh = false},
+      details: {params: cmdParams, refresh = false},
       isExecute = false,
     } = commandDetails;
 
