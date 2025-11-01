@@ -52,25 +52,25 @@ export function getComplexSuggestedLocators(path, sourceDoc, isNative, automatio
     switch (automationName) {
       case 'xcuitest':
       case 'mac2': {
-        const optimalClassChain = new ClassChainGenerator(sourceDoc, domNode).generate();
+        const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);
         complexLocators['-ios class chain'] = optimalClassChain ? '**' + optimalClassChain : null;
-        complexLocators['-ios predicate string'] = new PredicateStringGenerator(
+        complexLocators['-ios predicate string'] = getOptimalPredicateString(
           sourceDoc,
           domNode,
-        ).generate();
+        );
         break;
       }
       case 'uiautomator2': {
-        complexLocators['-android uiautomator'] = new UiAutomatorGenerator(
+        complexLocators['-android uiautomator'] = getOptimalUiAutomatorSelector(
           sourceDoc,
           domNode,
           path,
-        ).generate();
+        );
         break;
       }
     }
   }
-  complexLocators.xpath = new XPathGenerator(sourceDoc, domNode).generate();
+  complexLocators.xpath = getOptimalXPath(sourceDoc, domNode);
 
   // Remove entries for locators where the optimal selector could not be found
   return _.omitBy(complexLocators, _.isNil);
@@ -871,8 +871,7 @@ class SimpleLocatorGenerator {
    * @returns {Record<string, string>} mapping of strategies to selectors
    */
   generate() {
-    const res = {};
-    for (let [strategyAlias, strategy] of SimpleLocatorGenerator.STRATEGY_MAPPINGS) {
+    return SimpleLocatorGenerator.STRATEGY_MAPPINGS.reduce((res, [strategyAlias, strategy]) => {
       // accessibility id is only supported in native context
       if (!(strategy === 'accessibility id' && !this._isNative)) {
         const value = this._attributes[strategyAlias];
@@ -880,8 +879,8 @@ class SimpleLocatorGenerator {
           res[strategy] = value;
         }
       }
-    }
-    return res;
+      return res;
+    }, {});
   }
 }
 
