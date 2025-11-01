@@ -54,10 +54,7 @@ export function getComplexSuggestedLocators(path, sourceDoc, isNative, automatio
       case 'mac2': {
         const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);
         complexLocators['-ios class chain'] = optimalClassChain ? '**' + optimalClassChain : null;
-        complexLocators['-ios predicate string'] = getOptimalPredicateString(
-          sourceDoc,
-          domNode,
-        );
+        complexLocators['-ios predicate string'] = getOptimalPredicateString(sourceDoc, domNode);
         break;
       }
       case 'uiautomator2': {
