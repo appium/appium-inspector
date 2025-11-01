@@ -1,46 +1,47 @@
 import {SearchOutlined} from '@ant-design/icons';
-import {Button, Col, Input, Row, Space, Tabs, Tooltip} from 'antd';
+import {Button, Divider, Grid, Input, Table, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useMemo, useState} from 'react';
 
 import {transformMethodMap} from '../../../utils/commands-tab.js';
-import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
 
-const renderCommandTooltipText = (methodDetails, t) => {
-  if (!methodDetails.deprecated && !methodDetails.info) {
-    return null;
+const getGridColumnCount = (screens) => {
+  if (screens.xxl) {
+    return 6;
   }
-  return (
-    <>
-      {methodDetails.deprecated && <div>{t('methodDeprecated')}</div>}
-      {methodDetails.info && <div>{methodDetails.info}</div>}
-    </>
-  );
+  if (screens.xl) {
+    return 4;
+  }
+  if (screens.lg) {
+    return 3;
+  }
+  return 2;
 };
 
-const MethodMapButtonsGrid = ({driverMethods, isExecute, startCommand, t}) => (
-  <Row>
-    {driverMethods.map(([methodName, methodDetails]) => (
-      <Col key={methodName} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
-        <div className={styles.btnContainer}>
-          <Tooltip title={renderCommandTooltipText(methodDetails, t)}>
-            <Button
-              className={methodDetails.deprecated ? styles.deprecatedMethod : ''}
-              onClick={() => startCommand({name: methodName, details: methodDetails, isExecute})}
-            >
-              {methodName}
-            </Button>
-          </Tooltip>
-        </div>
-      </Col>
-    ))}
-  </Row>
-);
+const groupMethodsIntoRows = (driverMethods, colCount) => {
+  const groups = [];
+  for (let i = 0; i < driverMethods.length; i += colCount) {
+    groups.push({
+      key: `row-${i}`,
+      methods: driverMethods.slice(i, i + colCount),
+    });
+  }
+  return groups;
+};
 
-// Dynamic list of driver commands, generated from the driver's method map responses
+// Dynamic list of driver commands, generated from the driver's method map responses.
+// Unlike StaticCommandsList, we want to show a single grid of all methods.
+// However, antd has performance issues when rendering 100+ items under one parent
+// (https://github.com/ant-design/ant-design/issues/44039),
+// so use approaches like useMemo and manual column/row assembly
+// for a responsive design
 const MethodMapCommandsList = (props) => {
   const {driverCommands, driverExecuteMethods, startCommand, t} = props;
+
+  // Group methods into rows for better rendering performance
+  const screens = Grid.useBreakpoint();
+  const columnCount = useMemo(() => getGridColumnCount(screens), [screens]);
 
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -56,8 +57,84 @@ const MethodMapCommandsList = (props) => {
     [driverExecuteMethods, searchQuery],
   );
 
+  const MethodButton = ({methodName, methodDetails, isExecute}) => (
+    <div className={styles.btnContainer}>
+      {!methodDetails.deprecated && !methodDetails.info && (
+        <Button onClick={() => startCommand({name: methodName, details: methodDetails, isExecute})}>
+          {methodName}
+        </Button>
+      )}
+      {(methodDetails.deprecated || methodDetails.info) && (
+        <Tooltip
+          title={
+            <>
+              {methodDetails.deprecated && <div>{t('methodDeprecated')}</div>}
+              {methodDetails.info && <div>{methodDetails.info}</div>}
+            </>
+          }
+          destroyOnHidden={true}
+        >
+          <Button
+            className={styles.deprecatedMethod}
+            onClick={() => startCommand({name: methodName, details: methodDetails, isExecute})}
+          >
+            {methodName}
+          </Button>
+        </Tooltip>
+      )}
+    </div>
+  );
+
+  const MethodMapButtonsGrid = ({driverMethods, isExecute}) => {
+    const tableDataSource = useMemo(
+      () => groupMethodsIntoRows(driverMethods, columnCount),
+      [driverMethods, columnCount],
+    );
+
+    const columns = Array.from({length: columnCount}, (_, index) => ({
+      key: `col-${index}`,
+      render: (row) => {
+        // last row will likely have fewer items than columnCount
+        const methodEntry = row.methods[index];
+        if (!methodEntry) {
+          return null;
+        }
+        const [methodName, methodDetails] = methodEntry;
+        return (
+          <MethodButton
+            methodName={methodName}
+            methodDetails={methodDetails}
+            isExecute={isExecute}
+          />
+        );
+      },
+    }));
+
+    return (
+      <div className={styles.methodMapTable}>
+        <Table
+          dataSource={tableDataSource}
+          columns={columns}
+          pagination={false}
+          showHeader={false}
+          rowHoverable={false}
+          size="small"
+        />
+      </div>
+    );
+  };
+
+  const MethodMapTabContent = ({driverMethods, isExecute}) => (
+    <>
+      {isExecute ? t('dynamicExecuteMethodsDescription') : t('dynamicCommandsDescription')}
+      <Divider size="middle" />
+      <MethodMapButtonsGrid driverMethods={driverMethods} isExecute={isExecute} />
+    </>
+  );
+
   return (
     <Tabs
+      className={styles.methodMapTabs}
       defaultActiveKey={hasNoCommands ? '2' : '1'}
       size="small"
       centered
@@ -66,32 +143,18 @@ const MethodMapCommandsList = (props) => {
           label: t('Commands'),
           key: '1',
           disabled: hasNoCommands,
+          className: styles.methodMapTab,
           children: (
-            <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
-              {t('dynamicCommandsDescription')}
-              <MethodMapButtonsGrid
-                driverMethods={filteredDriverCommands}
-                isExecute={false}
-                startCommand={startCommand}
-                t={t}
-              />
-            </Space>
+            <MethodMapTabContent driverMethods={filteredDriverCommands} isExecute={false} />
           ),
         },
         {
           label: t('executeMethods'),
           key: '2',
           disabled: hasNoExecuteMethods,
+          className: styles.methodMapTab,
           children: (
-            <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
-              {t('dynamicExecuteMethodsDescription')}
-              <MethodMapButtonsGrid
-                driverMethods={filteredDriverExecuteMethods}
-                isExecute={true}
-                startCommand={startCommand}
-                t={t}
-              />
-            </Space>
+            <MethodMapTabContent driverMethods={filteredDriverExecuteMethods} isExecute={true} />
           ),
         },
       ]}

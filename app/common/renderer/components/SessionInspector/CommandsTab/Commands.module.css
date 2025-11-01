@@ -1,3 +1,7 @@
+.commandsContainer {
+  height: 100%;
+}
+
 .commandsContainer :global(.ant-select) {
   width: 100%;
 }
@@ -8,6 +12,21 @@
 
 .btnContainer {
   padding: 8px;
+}
+
+.methodMapTab {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.methodMapTab :global(.ant-table-cell) {
+  padding: 0 !important;
+  border: none !important;
+}
+
+.methodMapTable {
+  overflow-y: auto;
 }
 
 .argContainer {
