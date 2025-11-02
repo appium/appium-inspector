@@ -71,7 +71,7 @@
     "@reduxjs/toolkit": "2.9.2",
     "@wdio/protocols": "9.16.2",
     "@xmldom/xmldom": "0.9.8",
-    "antd": "5.27.6",
+    "antd": "5.28.0",
     "axios": "1.13.1",
     "cheerio": "1.1.2",
     "electron-debug": "4.1.0",
