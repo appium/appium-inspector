@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import {Button, Modal, Space, Spin, Splitter, Switch, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router';
 
 import {BUTTON} from '../../constants/antd-types.js';
@@ -136,10 +136,13 @@ const Inspector = (props) => {
     selectScreenshotInteractionMode(mode);
   };
 
-  const quitCurrentSession = async (reason, killedByUser = true) => {
-    await quitSession(reason, killedByUser);
-    navigate('/session', {replace: true});
-  };
+  const quitCurrentSession = useCallback(
+    async (reason, killedByUser = true) => {
+      await quitSession(reason, killedByUser);
+      navigate('/session', {replace: true});
+    },
+    [navigate, quitSession],
+  );
 
   useEffect(() => {
     const {
@@ -199,7 +202,7 @@ const Inspector = (props) => {
       }, SESSION_EXPIRY_PROMPT_TIMEOUT);
       setUserWaitTimeout(userWaitTimeout);
     }
-  }, [showKeepAlivePrompt]);
+  }, [quitCurrentSession, setUserWaitTimeout, showKeepAlivePrompt, t]);
 
   const screenShotControls = (
     <div className={styles.screenshotControls}>
