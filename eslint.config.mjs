@@ -1,5 +1,6 @@
 import appiumConfig from '@appium/eslint-config-appium-ts';
 import reactPlugin from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 
@@ -10,6 +11,7 @@ export default [
     files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
     ...reactPlugin.configs.flat.recommended,
     ...reactPlugin.configs.flat['jsx-runtime'],
+    ...reactHooks.configs.flat.recommended,
   },
   {
     name: 'JS/TS Files',
