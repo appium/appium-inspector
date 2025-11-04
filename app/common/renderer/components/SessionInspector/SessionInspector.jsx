@@ -173,26 +173,22 @@ const Inspector = (props) => {
    * would not update this value when invoked
    */
   useEffect(() => {
-    if (windowSize) {
-      updateScreenshotScaleDebounced();
-      window.addEventListener('resize', updateScreenshotScaleDebounced);
-      if (isUsingMjpegMode) {
-        mjpegStreamCheckInterval.current = setInterval(
-          checkMjpegStream,
-          MJPEG_STREAM_CHECK_INTERVAL,
-        );
-      }
+    if (!windowSize || !JSON.stringify(windowSize)) {
+      return;
+    }
+    updateScreenshotScaleDebounced();
+    window.addEventListener('resize', updateScreenshotScaleDebounced);
+    if (isUsingMjpegMode) {
+      mjpegStreamCheckInterval.current = setInterval(checkMjpegStream, MJPEG_STREAM_CHECK_INTERVAL);
     }
     return () => {
-      if (windowSize) {
-        window.removeEventListener('resize', updateScreenshotScaleDebounced);
-        if (mjpegStreamCheckInterval.current) {
-          clearInterval(mjpegStreamCheckInterval.current);
-          mjpegStreamCheckInterval.current = null;
-        }
+      window.removeEventListener('resize', updateScreenshotScaleDebounced);
+      if (mjpegStreamCheckInterval.current) {
+        clearInterval(mjpegStreamCheckInterval.current);
+        mjpegStreamCheckInterval.current = null;
       }
     };
-  }, [JSON.stringify(windowSize)]);
+  }, [windowSize]);
 
   // If session expiry prompt is shown, start timeout until session is automatically quit
   // Timeout is canceled if user selects either action in prompt (keep session alive or quit)
