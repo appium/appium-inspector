@@ -130,7 +130,7 @@ export default function builder(state = INITIAL_STATE, action) {
         ...state,
         server: {
           ...state.server,
-          [action.serverType]: action.server[action.serverType],
+          [action.serverType]: action.server[action.serverType] ?? {},
         },
         serverType: action.serverType,
         caps: action.caps.map((cap) => ({
