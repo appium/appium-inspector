@@ -1,7 +1,7 @@
 import {LinkOutlined} from '@ant-design/icons';
 import {Badge, Button, Divider, Space, Spin, Tabs} from 'antd';
 import _ from 'lodash';
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 import {useNavigate} from 'react-router';
 
 import {BUTTON} from '../../constants/antd-types.js';
@@ -48,6 +48,16 @@ const Session = (props) => {
     savedSessions,
     newSessionLoading,
     attachSessId,
+    setLocalServerParams,
+    getSavedSessions,
+    setSavedServerParams,
+    initFromSessionFile,
+    setStateFromSessionFile,
+    setVisibleProviders,
+    bindWindowClose,
+    initFromQueryString,
+    saveSessionAsFile,
+    showError,
     t,
   } = props;
 
@@ -64,28 +74,19 @@ const Session = (props) => {
     await changeServerType(tab);
   };
 
-  const loadNewSession = async (caps, attachSessId = null) => {
-    const {showError} = props;
-    if (isCapabilitySetEmpty(caps) && !attachSessId) {
-      return showError(new Error(t('noCapsFound', {url: LINKS.ADD_CAPS_DOCS})), {secs: 0});
-    }
-    if (await newSession(_.cloneDeep(caps), attachSessId)) {
-      navigate('/inspector', {replace: true});
-    }
-  };
+  const loadNewSession = useCallback(
+    async (caps, attachSessId = null) => {
+      if (isCapabilitySetEmpty(caps) && !attachSessId) {
+        return showError(new Error(t('noCapsFound', {url: LINKS.ADD_CAPS_DOCS})), {secs: 0});
+      }
+      if (await newSession(_.cloneDeep(caps), attachSessId)) {
+        navigate('/inspector', {replace: true});
+      }
+    },
+    [navigate, newSession, showError, t],
+  );
 
   useEffect(() => {
-    const {
-      setLocalServerParams,
-      getSavedSessions,
-      setSavedServerParams,
-      initFromSessionFile,
-      setStateFromSessionFile,
-      setVisibleProviders,
-      bindWindowClose,
-      initFromQueryString,
-      saveSessionAsFile,
-    } = props;
     (async () => {
       try {
         bindWindowClose();
@@ -104,7 +105,20 @@ const Session = (props) => {
         log.error(e);
       }
     })();
-  }, []);
+  }, [
+    // none of these will actually change, since they are coming from Redux
+    bindWindowClose,
+    getSavedSessions,
+    initFromQueryString,
+    initFromSessionFile,
+    loadNewSession,
+    saveSessionAsFile,
+    setLocalServerParams,
+    setSavedServerParams,
+    setStateFromSessionFile,
+    setVisibleProviders,
+    switchTabs,
+  ]);
 
   return [
     <Spin spinning={!!newSessionLoading} key="main">
