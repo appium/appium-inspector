@@ -34,6 +34,19 @@ import Source from './SourceTab/Source.jsx';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 
+// resize width to something sensible for using the inspector on first run
+const resizeWindowOnLaunch = () => {
+  const curHeight = window.innerHeight;
+  const curWidth = window.innerWidth;
+  if (curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT || curWidth < WINDOW_DIMENSIONS.MIN_WIDTH) {
+    const newWidth =
+      curWidth < WINDOW_DIMENSIONS.MIN_WIDTH ? WINDOW_DIMENSIONS.MIN_WIDTH : curWidth;
+    const newHeight =
+      curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT ? WINDOW_DIMENSIONS.MIN_HEIGHT : curHeight;
+    window.resizeTo(newWidth, newHeight);
+  }
+};
+
 const downloadScreenshot = (screenshot) => {
   const href = `data:image/png;base64,${screenshot}`;
   const filename = `appium-inspector-${new Date().toJSON()}.png`;
@@ -152,16 +165,7 @@ const Inspector = (props) => {
       setSessionTime,
       storeSessionSettings,
     } = props;
-    const curHeight = window.innerHeight;
-    const curWidth = window.innerWidth;
-    if (curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT || curWidth < WINDOW_DIMENSIONS.MIN_WIDTH) {
-      const newWidth =
-        curWidth < WINDOW_DIMENSIONS.MIN_WIDTH ? WINDOW_DIMENSIONS.MIN_WIDTH : curWidth;
-      const newHeight =
-        curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT ? WINDOW_DIMENSIONS.MIN_HEIGHT : curHeight;
-      // resize width to something sensible for using the inspector on first run
-      window.resizeTo(newWidth, newHeight);
-    }
+    resizeWindowOnLaunch();
     applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
     storeSessionSettings();
     getSavedClientFramework();
