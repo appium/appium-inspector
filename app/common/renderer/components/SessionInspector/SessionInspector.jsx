@@ -84,6 +84,8 @@ const Inspector = (props) => {
 
   const screenshotContainerEl = useRef(null);
   const mjpegStreamCheckInterval = useRef(null);
+  // Debounced updater stored in a ref to avoid creating it during render
+  const updateScreenshotScaleDebouncedRef = useRef();
 
   const [scaleRatio, setScaleRatio] = useState(1);
 
@@ -93,7 +95,7 @@ const Inspector = (props) => {
     (screenshot && !screenshotError) ||
     (isUsingMjpegMode && (!isSourceRefreshOn || !isAwaitingMjpegStream));
 
-  const updateScreenshotScale = () => {
+  const updateScreenshotScale = useCallback(() => {
     // If the screenshot has too much space to the right or bottom, adjust the max width
     // of its container, so the source tree always fills the remaining space.
     // This keeps everything looking tight.
@@ -125,9 +127,25 @@ const Inspector = (props) => {
     // (highlighter rectangles/circles, gestures, etc.)
     const newImgWidth = screenshotImg.getBoundingClientRect().width;
     setScaleRatio(windowSize.width / newImgWidth);
-  };
+  }, [windowSize]);
 
-  const updateScreenshotScaleDebounced = _.debounce(updateScreenshotScale, 50);
+  useEffect(() => {
+    const debounced = _.debounce(() => {
+      updateScreenshotScale();
+    }, 50);
+    updateScreenshotScaleDebouncedRef.current = debounced;
+    return () => {
+      debounced.cancel?.();
+      if (updateScreenshotScaleDebouncedRef.current === debounced) {
+        updateScreenshotScaleDebouncedRef.current = undefined;
+      }
+    };
+  }, [updateScreenshotScale]);
+
+  // Stable handler for events that calls the debounced function ref
+  const updateScreenshotScaleDebounced = useCallback(() => {
+    updateScreenshotScaleDebouncedRef.current?.();
+  }, []);
 
   const checkMjpegStream = useCallback(async () => {
     const img = new Image();
