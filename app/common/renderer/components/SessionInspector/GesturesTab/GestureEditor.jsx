@@ -387,10 +387,15 @@ const GestureEditor = (props) => {
   }, [displayGesture, getConvertedPointers, pointers]);
 
   // Retrieve coordinates when user taps screenshot
+  // Defer state updates to the next animation frame to avoid synchronous setState in effect
   useEffect(() => {
-    if (tickCoordinates) {
-      updateCoordinates(selectedTick, tickCoordinates.x, tickCoordinates.y);
+    if (!tickCoordinates || !selectedTick) {
+      return;
     }
+    let rafId = requestAnimationFrame(() => {
+      updateCoordinates(selectedTick, tickCoordinates.x, tickCoordinates.y);
+    });
+    return () => cancelAnimationFrame(rafId);
   }, [selectedTick, tickCoordinates, updateCoordinates]);
 
   const headerTitle = (
