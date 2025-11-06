@@ -73,6 +73,12 @@ const Inspector = (props) => {
     isGestureEditorVisible,
     isSourceRefreshOn,
     windowSize,
+    applyClientMethod,
+    getSavedClientFramework,
+    runKeepAliveLoop,
+    setSessionTime,
+    storeSessionSettings,
+    setAwaitingMjpegStream,
     t,
   } = props;
 
@@ -123,8 +129,7 @@ const Inspector = (props) => {
 
   const updateScreenshotScaleDebounced = _.debounce(updateScreenshotScale, 50);
 
-  const checkMjpegStream = async () => {
-    const {setAwaitingMjpegStream} = props;
+  const checkMjpegStream = useCallback(async () => {
     const img = new Image();
     img.src = serverDetails.mjpegScreenshotUrl;
     let imgReady = false;
@@ -141,7 +146,12 @@ const Inspector = (props) => {
     } else if (!imgReady && !isAwaitingMjpegStream) {
       setAwaitingMjpegStream(true);
     }
-  };
+  }, [
+    isAwaitingMjpegStream,
+    serverDetails.mjpegScreenshotUrl,
+    setAwaitingMjpegStream,
+    updateScreenshotScaleDebounced,
+  ]);
 
   const screenshotInteractionChange = (mode) => {
     const {selectScreenshotInteractionMode, clearCoordAction} = props;
@@ -158,20 +168,19 @@ const Inspector = (props) => {
   );
 
   useEffect(() => {
-    const {
-      applyClientMethod,
-      getSavedClientFramework,
-      runKeepAliveLoop,
-      setSessionTime,
-      storeSessionSettings,
-    } = props;
     resizeWindowOnLaunch();
     applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
     storeSessionSettings();
     getSavedClientFramework();
     runKeepAliveLoop();
     setSessionTime(Date.now());
-  }, []);
+  }, [
+    applyClientMethod,
+    getSavedClientFramework,
+    runKeepAliveLoop,
+    setSessionTime,
+    storeSessionSettings,
+  ]);
 
   /**
    * Ensures component dimensions are adjusted only once windowSize exists.
@@ -195,7 +204,7 @@ const Inspector = (props) => {
         mjpegStreamCheckInterval.current = null;
       }
     };
-  }, [windowSize]);
+  }, [checkMjpegStream, isUsingMjpegMode, updateScreenshotScaleDebounced, windowSize]);
 
   // If session expiry prompt is shown, start timeout until session is automatically quit
   // Timeout is canceled if user selects either action in prompt (keep session alive or quit)
