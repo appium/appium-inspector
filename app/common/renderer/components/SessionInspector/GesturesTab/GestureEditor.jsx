@@ -223,8 +223,8 @@ const GestureEditor = (props) => {
       const copiedPointers = _.cloneDeep(pointers);
       const currentPointer = copiedPointers.find((pointer) => pointer.id === tickKey[0]);
       const currentTick = currentPointer.ticks.find((tick) => tick.id === tickKey);
-      const x = parseFloat(updateX, 10);
-      const y = parseFloat(updateY, 10);
+      const x = parseFloat(updateX);
+      const y = parseFloat(updateY);
       if (coordType === POINTER_MOVE_COORDS_TYPE.PERCENTAGES) {
         currentTick.x = pixelsToPercentage(x, width);
         currentTick.y = pixelsToPercentage(y, height);
@@ -330,7 +330,7 @@ const GestureEditor = (props) => {
       };
     } else {
       // We just modify the existing tick values
-      currentTick[msg] = parseFloat(value, 10);
+      currentTick[msg] = parseFloat(value);
 
       // set default duration for if not set already
       if (
