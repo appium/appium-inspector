@@ -128,7 +128,10 @@ export default function builder(state = INITIAL_STATE, action) {
     case SET_CAPS_AND_SERVER:
       nextState = {
         ...state,
-        server: action.server,
+        server: {
+          ...state.server,
+          [action.serverType]: action.server[action.serverType] ?? {},
+        },
         serverType: action.serverType,
         caps: action.caps.map((cap) => ({
           ...cap,

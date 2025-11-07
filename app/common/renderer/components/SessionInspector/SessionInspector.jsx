@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import {Button, Modal, Space, Spin, Splitter, Switch, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router';
 
 import {BUTTON} from '../../constants/antd-types.js';
@@ -32,6 +32,19 @@ import SelectedElement from './SourceTab/SelectedElement.jsx';
 import Source from './SourceTab/Source.jsx';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
+
+// resize width to something sensible for using the inspector on first run
+const resizeWindowOnLaunch = () => {
+  const curHeight = window.innerHeight;
+  const curWidth = window.innerWidth;
+  if (curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT || curWidth < WINDOW_DIMENSIONS.MIN_WIDTH) {
+    const newWidth =
+      curWidth < WINDOW_DIMENSIONS.MIN_WIDTH ? WINDOW_DIMENSIONS.MIN_WIDTH : curWidth;
+    const newHeight =
+      curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT ? WINDOW_DIMENSIONS.MIN_HEIGHT : curHeight;
+    window.resizeTo(newWidth, newHeight);
+  }
+};
 
 const downloadScreenshot = (screenshot) => {
   const href = `data:image/png;base64,${screenshot}`;
@@ -59,11 +72,19 @@ const Inspector = (props) => {
     isGestureEditorVisible,
     isSourceRefreshOn,
     windowSize,
+    applyClientMethod,
+    getSavedClientFramework,
+    runKeepAliveLoop,
+    setSessionTime,
+    storeSessionSettings,
+    setAwaitingMjpegStream,
     t,
   } = props;
 
   const screenshotContainerEl = useRef(null);
   const mjpegStreamCheckInterval = useRef(null);
+  // Debounced updater stored in a ref to avoid creating it during render
+  const updateScreenshotScaleDebouncedRef = useRef();
 
   const [scaleRatio, setScaleRatio] = useState(1);
 
@@ -73,7 +94,7 @@ const Inspector = (props) => {
     (screenshot && !screenshotError) ||
     (isUsingMjpegMode && (!isSourceRefreshOn || !isAwaitingMjpegStream));
 
-  const updateScreenshotScale = () => {
+  const updateScreenshotScale = useCallback(() => {
     // If the screenshot has too much space to the right or bottom, adjust the max width
     // of its container, so the source tree always fills the remaining space.
     // This keeps everything looking tight.
@@ -105,12 +126,27 @@ const Inspector = (props) => {
     // (highlighter rectangles/circles, gestures, etc.)
     const newImgWidth = screenshotImg.getBoundingClientRect().width;
     setScaleRatio(windowSize.width / newImgWidth);
-  };
+  }, [windowSize]);
 
-  const updateScreenshotScaleDebounced = _.debounce(updateScreenshotScale, 50);
+  useEffect(() => {
+    const debounced = _.debounce(() => {
+      updateScreenshotScale();
+    }, 50);
+    updateScreenshotScaleDebouncedRef.current = debounced;
+    return () => {
+      debounced.cancel?.();
+      if (updateScreenshotScaleDebouncedRef.current === debounced) {
+        updateScreenshotScaleDebouncedRef.current = undefined;
+      }
+    };
+  }, [updateScreenshotScale]);
 
-  const checkMjpegStream = async () => {
-    const {setAwaitingMjpegStream} = props;
+  // Stable handler for events that calls the debounced function ref
+  const updateScreenshotScaleDebounced = useCallback(() => {
+    updateScreenshotScaleDebouncedRef.current?.();
+  }, []);
+
+  const checkMjpegStream = useCallback(async () => {
     const img = new Image();
     img.src = serverDetails.mjpegScreenshotUrl;
     let imgReady = false;
@@ -127,7 +163,12 @@ const Inspector = (props) => {
     } else if (!imgReady && !isAwaitingMjpegStream) {
       setAwaitingMjpegStream(true);
     }
-  };
+  }, [
+    isAwaitingMjpegStream,
+    serverDetails.mjpegScreenshotUrl,
+    setAwaitingMjpegStream,
+    updateScreenshotScaleDebounced,
+  ]);
 
   const screenshotInteractionChange = (mode) => {
     const {selectScreenshotInteractionMode, clearCoordAction} = props;
@@ -135,35 +176,28 @@ const Inspector = (props) => {
     selectScreenshotInteractionMode(mode);
   };
 
-  const quitCurrentSession = async (reason, killedByUser = true) => {
-    await quitSession(reason, killedByUser);
-    navigate('/session', {replace: true});
-  };
+  const quitCurrentSession = useCallback(
+    async (reason, killedByUser = true) => {
+      await quitSession(reason, killedByUser);
+      navigate('/session', {replace: true});
+    },
+    [navigate, quitSession],
+  );
 
   useEffect(() => {
-    const {
-      applyClientMethod,
-      getSavedClientFramework,
-      runKeepAliveLoop,
-      setSessionTime,
-      storeSessionSettings,
-    } = props;
-    const curHeight = window.innerHeight;
-    const curWidth = window.innerWidth;
-    if (curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT || curWidth < WINDOW_DIMENSIONS.MIN_WIDTH) {
-      const newWidth =
-        curWidth < WINDOW_DIMENSIONS.MIN_WIDTH ? WINDOW_DIMENSIONS.MIN_WIDTH : curWidth;
-      const newHeight =
-        curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT ? WINDOW_DIMENSIONS.MIN_HEIGHT : curHeight;
-      // resize width to something sensible for using the inspector on first run
-      window.resizeTo(newWidth, newHeight);
-    }
+    resizeWindowOnLaunch();
     applyClientMethod({methodName: 'getPageSource'});
     storeSessionSettings();
     getSavedClientFramework();
     runKeepAliveLoop();
     setSessionTime(Date.now());
-  }, []);
+  }, [
+    applyClientMethod,
+    getSavedClientFramework,
+    runKeepAliveLoop,
+    setSessionTime,
+    storeSessionSettings,
+  ]);
 
   /**
    * Ensures component dimensions are adjusted only once windowSize exists.
@@ -172,26 +206,22 @@ const Inspector = (props) => {
    * would not update this value when invoked
    */
   useEffect(() => {
-    if (windowSize) {
-      updateScreenshotScaleDebounced();
-      window.addEventListener('resize', updateScreenshotScaleDebounced);
-      if (isUsingMjpegMode) {
-        mjpegStreamCheckInterval.current = setInterval(
-          checkMjpegStream,
-          MJPEG_STREAM_CHECK_INTERVAL,
-        );
-      }
+    if (!windowSize || !JSON.stringify(windowSize)) {
+      return;
+    }
+    updateScreenshotScaleDebounced();
+    window.addEventListener('resize', updateScreenshotScaleDebounced);
+    if (isUsingMjpegMode) {
+      mjpegStreamCheckInterval.current = setInterval(checkMjpegStream, MJPEG_STREAM_CHECK_INTERVAL);
     }
     return () => {
-      if (windowSize) {
-        window.removeEventListener('resize', updateScreenshotScaleDebounced);
-        if (mjpegStreamCheckInterval.current) {
-          clearInterval(mjpegStreamCheckInterval.current);
-          mjpegStreamCheckInterval.current = null;
-        }
+      window.removeEventListener('resize', updateScreenshotScaleDebounced);
+      if (mjpegStreamCheckInterval.current) {
+        clearInterval(mjpegStreamCheckInterval.current);
+        mjpegStreamCheckInterval.current = null;
       }
     };
-  }, [JSON.stringify(windowSize)]);
+  }, [checkMjpegStream, isUsingMjpegMode, updateScreenshotScaleDebounced, windowSize]);
 
   // If session expiry prompt is shown, start timeout until session is automatically quit
   // Timeout is canceled if user selects either action in prompt (keep session alive or quit)
@@ -202,7 +232,7 @@ const Inspector = (props) => {
       }, SESSION_EXPIRY_PROMPT_TIMEOUT);
       setUserWaitTimeout(userWaitTimeout);
     }
-  }, [showKeepAlivePrompt]);
+  }, [quitCurrentSession, setUserWaitTimeout, showKeepAlivePrompt, t]);
 
   const screenShotControls = (
     <div className={styles.screenshotControls}>
