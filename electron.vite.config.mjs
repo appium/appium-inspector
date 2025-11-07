@@ -46,7 +46,21 @@ export default defineConfig({
         },
       },
     },
-    plugins: [react(), renderer()],
+    plugins: [
+      react({
+        babel: {
+          plugins: [
+            [
+              'babel-plugin-react-compiler',
+              {
+                target: '18',
+              },
+            ],
+          ],
+        },
+      }),
+      renderer(),
+    ],
     resolve: {
       alias: {
         '#local-polyfills': join(__dirname, 'app', 'electron', 'renderer', 'polyfills'),
