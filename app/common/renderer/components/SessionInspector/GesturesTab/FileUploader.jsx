@@ -1,22 +1,20 @@
 import {UploadOutlined} from '@ant-design/icons';
 import {Button, Tooltip, Upload} from 'antd';
-import {useEffect, useState} from 'react';
+import {useRef} from 'react';
 
 const FileUploader = (props) => {
   const {multiple, onUpload, type, icon, tooltipTitle} = props;
 
-  const [fileList, setFileList] = useState([]);
+  const fileCounter = useRef(1);
 
-  useEffect(() => {
-    if (fileList.length > 0) {
-      onUpload(fileList);
-      setFileList([]);
-    }
-  }, [fileList]);
-
-  const handleFileUpload = (_file, list) => {
-    if (fileList.length !== list.length) {
-      setFileList(list);
+  // If multiple files are uploaded at once, this function is called once for every file.
+  // In order to upload everything only once, use a counter to track invocation count.
+  const beforeUpload = (_file, list) => {
+    if (fileCounter.current >= list.length) {
+      onUpload(list);
+      fileCounter.current = 1;
+    } else {
+      fileCounter.current += 1;
     }
     return false;
   };
@@ -26,7 +24,7 @@ const FileUploader = (props) => {
       type="select"
       accept={type}
       multiple={!!multiple}
-      beforeUpload={handleFileUpload}
+      beforeUpload={beforeUpload}
       showUploadList={false}
     >
       <Tooltip title={tooltipTitle}>

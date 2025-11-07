@@ -196,7 +196,7 @@ const SavedGestures = (props) => {
 
   useEffect(() => {
     getSavedGestures();
-  }, []);
+  }, [getSavedGestures]);
 
   return (
     <Card

@@ -193,8 +193,8 @@ const Screenshot = (props) => {
             </div>
           )}
           {screenImg}
-          {screenshotInteractionMode === SELECT && containerEl.current && (
-            <HighlighterRects {...props} containerEl={containerEl.current} />
+          {screenshotInteractionMode === SELECT && (
+            <HighlighterRects {...props} containerEl={containerEl} />
           )}
           {screenshotInteractionMode === TAP_SWIPE && (
             <svg className={styles.swipeSvg}>
