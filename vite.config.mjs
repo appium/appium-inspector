@@ -17,7 +17,20 @@ export default defineConfig(({command}) => {
       'process.argv': [],
       'process.env': {},
     },
-    plugins: [react()],
+    plugins: [
+      react({
+        babel: {
+          plugins: [
+            [
+              'babel-plugin-react-compiler',
+              {
+                target: '18',
+              },
+            ],
+          ],
+        },
+      }),
+    ],
     resolve: {
       alias: {
         '#local-polyfills': join(__dirname, 'app', 'web', 'polyfills'),
