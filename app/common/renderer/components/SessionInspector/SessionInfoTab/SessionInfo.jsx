@@ -8,7 +8,7 @@ import SessionCodeBox from './SessionCodeBox.jsx';
 import styles from './SessionInfo.module.css';
 
 const SessionInfo = (props) => {
-  const {driver, t} = props;
+  const {driver, getActiveAppId, getServerStatus, getFlatSessionCaps, sessionStartTime, t} = props;
 
   const interval = useRef();
   const [sessionLength, setSessionLength] = useState(0);
@@ -94,9 +94,10 @@ const SessionInfo = (props) => {
   };
 
   useEffect(() => {
-    const {getActiveAppId, getServerStatus, getFlatSessionCaps, sessionStartTime} = props;
+    if (!driver) {
+      return;
+    }
     const {isIOS, isAndroid} = driver;
-
     getActiveAppId(isIOS, isAndroid);
     getServerStatus();
     getFlatSessionCaps();
@@ -104,9 +105,8 @@ const SessionInfo = (props) => {
     interval.current = setInterval(() => {
       setSessionLength(Date.now() - sessionStartTime);
     }, 1000);
-
     return () => clearInterval(interval.current);
-  }, []);
+  }, [driver, getActiveAppId, getServerStatus, getFlatSessionCaps, sessionStartTime]);
 
   return (
     <Card

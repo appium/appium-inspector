@@ -8,7 +8,7 @@ import {
   SearchOutlined,
 } from '@ant-design/icons';
 import {Button, Card, Input, Row, Space, Spin, Tooltip, Tree} from 'antd';
-import {useMemo, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 
 import {BUTTON, ROW} from '../../../constants/antd-types.js';
 import {IMPORTANT_SOURCE_ATTRS} from '../../../constants/source.js';
@@ -125,20 +125,24 @@ const Source = (props) => {
 
   const flatTreeData = sourceJSON && flatten(sourceJSON);
 
-  const elementMatchesSearch = (element, searchValue) =>
-    (
-      element.tagName +
-      Object.entries(element.attributes)
+  const elementMatchesSearch = useCallback(
+    (element, searchValue) => {
+      const checkedAttrTexts = Object.entries(element.attributes)
         .filter(([name]) => IMPORTANT_SOURCE_ATTRS.includes(name) || showSourceAttrs)
-        .map(([name, value]) => name + value)
-    )
-      .toLowerCase()
-      .includes(searchValue.toLowerCase());
+        .map(([name, value]) => name + value);
+      const allCheckedTexts = element.tagName + checkedAttrTexts;
+      return allCheckedTexts.toLowerCase().includes(searchValue.toLowerCase());
+    },
+    [showSourceAttrs],
+  );
 
-  const matchingElements =
-    searchValue && flatTreeData
-      ? flatTreeData.filter((el) => elementMatchesSearch(el, searchValue))
-      : [];
+  const matchingElements = useMemo(
+    () =>
+      searchValue && flatTreeData
+        ? flatTreeData.filter((el) => elementMatchesSearch(el, searchValue))
+        : [],
+    [searchValue, flatTreeData, elementMatchesSearch],
+  );
 
   // No need to recalculate if e.g. attribute visibility is toggled
   const expandedKeys = useMemo(

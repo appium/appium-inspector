@@ -23,7 +23,6 @@ const HighlighterRects = (props) => {
   const highlighterRects = [];
   const highlighterCentroids = [];
   let highlighterXOffset = 0;
-  let screenshotEl = null;
 
   const getElements = (sourceJSON) => {
     const elementsByOverlap = buildElementsWithProps(sourceJSON, null, [], {});
@@ -201,10 +200,10 @@ const HighlighterRects = (props) => {
   // Array of all element objects with properties to draw rectangles and/or centroids
   const elements = getElements(sourceJSON);
 
-  if (containerEl) {
-    screenshotEl = containerEl.querySelector('img');
+  if (containerEl.current) {
+    const screenshotEl = containerEl.current.querySelector('img');
     highlighterXOffset =
-      screenshotEl.getBoundingClientRect().left - containerEl.getBoundingClientRect().left;
+      screenshotEl.getBoundingClientRect().left - containerEl.current.getBoundingClientRect().left;
   }
 
   // If the user selected an element that they searched for, highlight that element
