@@ -33,7 +33,7 @@ const Commands = (props) => {
   const driverExecuteMethods = useRef(null);
 
   const [curCommandDetails, setCurCommandDetails] = useState(null);
-  const [curCommandParamVals, setCurCommandParamVals] = useState([]);
+  const curCommandParamVals = useRef([]);
 
   const [commandResult, setCommandResult] = useState(null);
 
@@ -44,15 +44,9 @@ const Commands = (props) => {
     }
   };
 
-  const updateCommandParamVal = (index, value) => {
-    const newCommandParamVals = [...curCommandParamVals];
-    newCommandParamVals[index] = value;
-    setCurCommandParamVals(newCommandParamVals);
-  };
-
   const prepareCommand = (cmdName, cmdParams, isExecute) => {
     const adjustedCmdName = isExecute ? 'executeScript' : cmdName;
-    let adjustedCmdParams = _.cloneDeep(curCommandParamVals).map((val) =>
+    let adjustedCmdParams = _.cloneDeep(curCommandParamVals.current).map((val) =>
       adjustParamValueType(val),
     );
 
@@ -110,7 +104,7 @@ const Commands = (props) => {
   const clearCurrentCommand = () => {
     setCommandResult(null);
     setCurCommandDetails(null);
-    setCurCommandParamVals([]);
+    curCommandParamVals.current = [];
   };
 
   useEffect(() => {
@@ -155,7 +149,7 @@ const Commands = (props) => {
                 <Col span={24} className={styles.argContainer}>
                   <Input
                     addonBefore={formatParamInputLabel(param)}
-                    onChange={(e) => updateCommandParamVal(index, e.target.value)}
+                    onChange={(e) => (curCommandParamVals.current[index] = e.target.value)}
                   />
                 </Col>
               </Row>
