@@ -13,7 +13,7 @@ support a set of [common protocol commands](https://appium.io/docs/en/latest/ref
 but they can also define their own commands and execute methods. The Inspector retrieves all of
 these commands/methods from the driver itself, and adjusts the list accordingly.
 
-Certain Appium plugins may also define their own commands and execute methods. If such plugins are
+Appium _plugins_ may also define their own commands and execute methods. If such plugins are
 active during an Inspector session, their commands/methods are also included in the Commands tab.
 
 Note that there are two important limitations to this approach:
@@ -24,7 +24,7 @@ Note that there are two important limitations to this approach:
   to this, the Inspector simply filters out all such commands from the Commands list. This limitation
   does not apply to execute methods.
 
-- ^^**Appium `2.16.0` or later is required.**^^ For older Appium versions, a static predefined list of
+- ^^**Appium `2.16.0` or later is required.**^^ For older Appium versions, a predefined list of
   commands is shown instead. Please be aware that not all commands in the predefined list are
   compatible with all drivers.
 
@@ -72,7 +72,7 @@ shown for array or object values. Clicking on the contents of any table cell all
 the clipboard.
 
 This button is enabled only if the command/method result is an array or object. While this button
-is toggled on, the copy result button is disabled.
+is toggled on, the Copy Result button is disabled.
 
 ### Copy Result
 
