@@ -26,7 +26,7 @@ const formatParamInputLabel = (param) => {
 };
 
 const Commands = (props) => {
-  const {applyClientMethod, storeSessionSettings, t} = props;
+  const {applyClientMethod, getSupportedSessionMethods, storeSessionSettings, t} = props;
 
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
   const [driverCommands, setDriverCommands] = useState(null);
@@ -114,14 +114,13 @@ const Commands = (props) => {
   };
 
   useEffect(() => {
-    const {getSupportedSessionMethods} = props;
     (async () => {
       const {commands, executeMethods} = await getSupportedSessionMethods();
       setHasMethodsMap(!(_.isEmpty(commands) && _.isEmpty(executeMethods)));
       setDriverCommands(transformCommandsMap(commands));
       setDriverExecuteMethods(transformExecMethodsMap(executeMethods));
     })();
-  }, []);
+  }, [getSupportedSessionMethods]);
 
   return (
     <Card

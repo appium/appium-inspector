@@ -88,7 +88,7 @@ const MethodMapCommandsList = (props) => {
   const MethodMapButtonsGrid = ({driverMethods, isExecute}) => {
     const tableDataSource = useMemo(
       () => groupMethodsIntoRows(driverMethods, columnCount),
-      [driverMethods, columnCount],
+      [driverMethods],
     );
 
     const columns = Array.from({length: columnCount}, (_, index) => ({
