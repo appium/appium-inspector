@@ -12,6 +12,7 @@
 
 .btnContainer {
   padding: 8px;
+  height: 100%;
 }
 
 .methodMapTab {
@@ -49,6 +50,13 @@
   margin: 0;
   white-space: pre-wrap;
   cursor: pointer;
+}
+
+.methodBtn {
+  white-space: normal;
+  word-break: break-all;
+  height: 100%;
+  min-height: 30px;
 }
 
 .deprecatedMethod {

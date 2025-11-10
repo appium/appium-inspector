@@ -23,7 +23,10 @@ const MethodMapCommandsList = (props) => {
   const methodButton = (methodName, methodDetails, isExecute) => (
     <div className={styles.btnContainer}>
       {!methodDetails.deprecated && !methodDetails.info && (
-        <Button onClick={() => startCommand({name: methodName, details: methodDetails, isExecute})}>
+        <Button
+          className={styles.methodBtn}
+          onClick={() => startCommand({name: methodName, details: methodDetails, isExecute})}
+        >
           {methodName}
         </Button>
       )}
@@ -52,7 +55,7 @@ const MethodMapCommandsList = (props) => {
     <>
       {isExecute ? t('dynamicExecuteMethodsDescription') : t('dynamicCommandsDescription')}
       <Divider size="middle" />
-      <div className={styles.methodMapGrid}>
+      <div className={`${styles.methodBtn} ${styles.methodMapGrid}`}>
         <Row>
           {driverMethods.map(([methodName, methodDetails]) => (
             <Col key={methodName} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
