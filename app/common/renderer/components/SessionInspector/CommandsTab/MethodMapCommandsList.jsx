@@ -3,7 +3,7 @@ import {Button, Divider, Grid, Input, Table, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useState} from 'react';
 
-import {transformMethodMap} from '../../../utils/commands-tab.js';
+import {filterMethodPairs} from '../../../utils/commands-tab.js';
 import styles from './Commands.module.css';
 
 const getGridColumnCount = (screens) => {
@@ -44,11 +44,8 @@ const MethodMapCommandsList = (props) => {
   const hasNoCommands = _.isEmpty(driverCommands.current);
   const hasNoExecuteMethods = _.isEmpty(driverExecuteMethods.current);
 
-  const filteredDriverCommands = transformMethodMap(driverCommands.current, searchQuery);
-  const filteredDriverExecuteMethods = transformMethodMap(
-    driverExecuteMethods.current,
-    searchQuery,
-  );
+  const filteredDriverCommands = filterMethodPairs(driverCommands.current, searchQuery);
+  const filteredDriverExecuteMethods = filterMethodPairs(driverExecuteMethods.current, searchQuery);
 
   const methodButton = (methodName, methodDetails, isExecute) => (
     <div className={styles.btnContainer}>

@@ -4,9 +4,9 @@ import {
   adjustParamValueType,
   deepFilterEmpty,
   extractParamsFromCommandPath,
+  filterMethodPairs,
   transformCommandsMap,
   transformExecMethodsMap,
-  transformMethodMap,
 } from '../../app/common/renderer/utils/commands-tab.js';
 
 describe('utils/commands-tab.js', function () {
@@ -31,19 +31,19 @@ describe('utils/commands-tab.js', function () {
     });
   });
 
-  describe('#transformMethodMap', function () {
-    it('should only call toPairs if the search query is empty', function () {
-      const methodMap = {method: {command: 'test'}};
-      expect(transformMethodMap(methodMap, '')).toEqual([['method', {command: 'test'}]]);
+  describe('#filterMethodPairs', function () {
+    it('should return the same array if the search query is empty', function () {
+      const methodPairs = [['method', {command: 'test'}]];
+      expect(filterMethodPairs(methodPairs, '')).toEqual([['method', {command: 'test'}]]);
     });
-    it('should only return methods that match the search query', function () {
-      const methodMap = {
-        method1: {command: 'test'},
-        method2: {command: 'rest'},
-      };
-      expect(transformMethodMap(methodMap, 'hod2')).toEqual([['method2', {command: 'rest'}]]);
-      expect(transformMethodMap(methodMap, 'method1')).toEqual([['method1', {command: 'test'}]]);
-      expect(transformMethodMap(methodMap, 'somethingelse')).toEqual([]);
+    it('should filter the array to methods that match the search query', function () {
+      const methodPairs = [
+        ['method1', {command: 'test'}],
+        ['method2', {command: 'rest'}],
+      ];
+      expect(filterMethodPairs(methodPairs, 'hod2')).toEqual([['method2', {command: 'rest'}]]);
+      expect(filterMethodPairs(methodPairs, 'method1')).toEqual([['method1', {command: 'test'}]]);
+      expect(filterMethodPairs(methodPairs, 'somethingelse')).toEqual([]);
     });
   });
 
@@ -110,13 +110,13 @@ describe('utils/commands-tab.js', function () {
   });
 
   describe('#transformCommandsMap', function () {
-    it('should return empty response if no REST command details are found', function () {
-      expect(transformCommandsMap({})).toEqual({});
-      expect(transformCommandsMap({notrest: {}})).toEqual({});
-      expect(transformCommandsMap({rest: {}})).toEqual({});
-      expect(transformCommandsMap({rest: {base: {}}})).toEqual({});
-      expect(transformCommandsMap({rest: {base: {'/status': {}}}})).toEqual({});
-      expect(transformCommandsMap({rest: {base: {'/status': {GET: {}}}}})).toEqual({});
+    it('should return empty array if no REST command details are found', function () {
+      expect(transformCommandsMap({})).toEqual([]);
+      expect(transformCommandsMap({notrest: {}})).toEqual([]);
+      expect(transformCommandsMap({rest: {}})).toEqual([]);
+      expect(transformCommandsMap({rest: {base: {}}})).toEqual([]);
+      expect(transformCommandsMap({rest: {base: {'/status': {}}}})).toEqual([]);
+      expect(transformCommandsMap({rest: {base: {'/status': {GET: {}}}}})).toEqual([]);
     });
     it('should transform a basic response whose command names match those in WDIO', function () {
       const getCmdsResponse = {
@@ -129,10 +129,10 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformCommandsMap(getCmdsResponse)).toEqual({
-        forward: {command: 'forward'},
-        pullFile: {command: 'pullFile', params: [{name: 'path', required: true}]},
-      });
+      expect(transformCommandsMap(getCmdsResponse)).toEqual([
+        ['forward', {command: 'forward'}],
+        ['pullFile', {command: 'pullFile', params: [{name: 'path', required: true}]}],
+      ]);
     });
     it('should translate supported command names if they differ between Appium and WDIO', function () {
       const getCmdsResponse = {
@@ -145,10 +145,10 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformCommandsMap(getCmdsResponse)).toEqual({
-        status: {command: 'getStatus'},
-        switchToFrame: {command: 'setFrame', params: [{name: 'id', required: true}]},
-      });
+      expect(transformCommandsMap(getCmdsResponse)).toEqual([
+        ['status', {command: 'getStatus'}],
+        ['switchToFrame', {command: 'setFrame', params: [{name: 'id', required: true}]}],
+      ]);
     });
     it('should filter out commands with missing or unsupported command names', function () {
       const getCmdsResponse = {
@@ -161,9 +161,9 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformCommandsMap(getCmdsResponse)).toEqual({
-        getAppiumExtensions: {command: 'listExtensions'},
-      });
+      expect(transformCommandsMap(getCmdsResponse)).toEqual([
+        ['getAppiumExtensions', {command: 'listExtensions'}],
+      ]);
     });
     it('should filter out empty command parameters', function () {
       const getCmdsResponse = {
@@ -176,10 +176,10 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformCommandsMap(getCmdsResponse)).toEqual({
-        status: {command: 'getStatus'},
-        pullFile: {command: 'pullFile', params: [{name: 'path', required: true}]},
-      });
+      expect(transformCommandsMap(getCmdsResponse)).toEqual([
+        ['status', {command: 'getStatus'}],
+        ['pullFile', {command: 'pullFile', params: [{name: 'path', required: true}]}],
+      ]);
     });
     it('should extract parameters from the command path', function () {
       const getCmdsResponse = {
@@ -194,22 +194,28 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformCommandsMap(getCmdsResponse)).toEqual({
-        elementSendKeys: {
-          command: 'setValue',
-          params: [
-            {name: 'elementId', required: true},
-            {name: 'text', required: true},
-          ],
-        },
-        getElementCSSValue: {
-          command: 'getCssProperty',
-          params: [
-            {name: 'elementId', required: true},
-            {name: 'name', required: true},
-          ],
-        },
-      });
+      expect(transformCommandsMap(getCmdsResponse)).toEqual([
+        [
+          'elementSendKeys',
+          {
+            command: 'setValue',
+            params: [
+              {name: 'elementId', required: true},
+              {name: 'text', required: true},
+            ],
+          },
+        ],
+        [
+          'getElementCSSValue',
+          {
+            command: 'getCssProperty',
+            params: [
+              {name: 'elementId', required: true},
+              {name: 'name', required: true},
+            ],
+          },
+        ],
+      ]);
     });
     it('should merge commands from all scopes into one', function () {
       const getCmdsResponse = {
@@ -230,12 +236,12 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformCommandsMap(getCmdsResponse)).toEqual({
-        status: {command: 'getStatus'},
-        getAppiumCommands: {command: 'listCommands'},
-        getAppiumExtensions: {command: 'listExtensions'},
-        forward: {command: 'forward'},
-      });
+      expect(transformCommandsMap(getCmdsResponse)).toEqual([
+        ['status', {command: 'getStatus'}],
+        ['getAppiumCommands', {command: 'listCommands'}],
+        ['getAppiumExtensions', {command: 'listExtensions'}],
+        ['forward', {command: 'forward'}],
+      ]);
     });
     it('should prefer driver commands over base commands in case of overrides', function () {
       const getCmdsResponse = {
@@ -248,9 +254,9 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformCommandsMap(getCmdsResponse)).toEqual({
-        forward: {command: 'forward', info: 'from-driver'},
-      });
+      expect(transformCommandsMap(getCmdsResponse)).toEqual([
+        ['forward', {command: 'forward', info: 'from-driver'}],
+      ]);
     });
     it('should prefer plugin commands over driver commands in case of overrides', function () {
       const getCmdsResponse = {
@@ -265,19 +271,19 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformCommandsMap(getCmdsResponse)).toEqual({
-        forward: {command: 'forward', info: 'from-plugin'},
-      });
+      expect(transformCommandsMap(getCmdsResponse)).toEqual([
+        ['forward', {command: 'forward', info: 'from-plugin'}],
+      ]);
     });
   });
 
   describe('#transformExecMethodsMap', function () {
     it('should return empty response if no REST method details are found', function () {
-      expect(transformExecMethodsMap({})).toEqual({});
-      expect(transformExecMethodsMap({notrest: {}})).toEqual({});
-      expect(transformExecMethodsMap({rest: {}})).toEqual({});
-      expect(transformExecMethodsMap({rest: {driver: {}}})).toEqual({});
-      expect(transformExecMethodsMap({rest: {driver: {'mobile: shell': {}}}})).toEqual({});
+      expect(transformExecMethodsMap({})).toEqual([]);
+      expect(transformExecMethodsMap({notrest: {}})).toEqual([]);
+      expect(transformExecMethodsMap({rest: {}})).toEqual([]);
+      expect(transformExecMethodsMap({rest: {driver: {}}})).toEqual([]);
+      expect(transformExecMethodsMap({rest: {driver: {'mobile: shell': {}}}})).toEqual([]);
     });
     it('should transform a basic response', function () {
       const getExecMethodsResponse = {
@@ -291,13 +297,16 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformExecMethodsMap(getExecMethodsResponse)).toEqual({
-        'mobile: startLogsBroadcast': {command: 'mobileStartLogsBroadcast'},
-        'mobile: performEditorAction': {
-          command: 'mobilePerformEditorAction',
-          params: [{name: 'action', required: true}],
-        },
-      });
+      expect(transformExecMethodsMap(getExecMethodsResponse)).toEqual([
+        ['mobile: startLogsBroadcast', {command: 'mobileStartLogsBroadcast'}],
+        [
+          'mobile: performEditorAction',
+          {
+            command: 'mobilePerformEditorAction',
+            params: [{name: 'action', required: true}],
+          },
+        ],
+      ]);
     });
     it('should filter out empty method parameters', function () {
       const getExecMethodsResponse = {
@@ -311,13 +320,16 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformExecMethodsMap(getExecMethodsResponse)).toEqual({
-        'mobile: startLogsBroadcast': {command: 'mobileStartLogsBroadcast'},
-        'mobile: performEditorAction': {
-          command: 'mobilePerformEditorAction',
-          params: [{name: 'action', required: true}],
-        },
-      });
+      expect(transformExecMethodsMap(getExecMethodsResponse)).toEqual([
+        ['mobile: startLogsBroadcast', {command: 'mobileStartLogsBroadcast'}],
+        [
+          'mobile: performEditorAction',
+          {
+            command: 'mobilePerformEditorAction',
+            params: [{name: 'action', required: true}],
+          },
+        ],
+      ]);
     });
     it('should merge methods from all scopes into one', function () {
       const getExecMethodsResponse = {
@@ -338,14 +350,17 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformExecMethodsMap(getExecMethodsResponse)).toEqual({
-        'mobile: startLogsBroadcast': {command: 'mobileStartLogsBroadcast'},
-        'mobile: getNotifications': {command: 'mobileGetNotifications'},
-        'mobile: performEditorAction': {
-          command: 'mobilePerformEditorAction',
-          params: [{name: 'action', required: true}],
-        },
-      });
+      expect(transformExecMethodsMap(getExecMethodsResponse)).toEqual([
+        ['mobile: startLogsBroadcast', {command: 'mobileStartLogsBroadcast'}],
+        ['mobile: getNotifications', {command: 'mobileGetNotifications'}],
+        [
+          'mobile: performEditorAction',
+          {
+            command: 'mobilePerformEditorAction',
+            params: [{name: 'action', required: true}],
+          },
+        ],
+      ]);
     });
     it('should prefer plugin commands over driver commands in case of overrides', function () {
       const getExecMethodsResponse = {
@@ -360,9 +375,9 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformExecMethodsMap(getExecMethodsResponse)).toEqual({
-        'mobile: doThing': {command: 'doThing', info: 'from-plugin'},
-      });
+      expect(transformExecMethodsMap(getExecMethodsResponse)).toEqual([
+        ['mobile: doThing', {command: 'doThing', info: 'from-plugin'}],
+      ]);
     });
   });
 });

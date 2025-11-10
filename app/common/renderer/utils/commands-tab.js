@@ -26,23 +26,19 @@ export function adjustParamValueType(value) {
 }
 
 /**
- * Filter the method map to only include methods matching the search query,
- * if any, and then convert it to an array of [methodName, methodDetails] pairs.
+ * Filter the array of method key-value pairs to only include methods matching the search query.
  *
- * @param {*} methodMap map of methods and their details
+ * @param {*} methodPairs array of [methodName, methodDetails] pairs
  * @param {string} searchQuery user-provided search query
- * @returns array of [methodName, methodDetails] pairs
+ * @returns filtered array of [methodName, methodDetails] pairs
  */
-export function transformMethodMap(methodMap, searchQuery) {
-  const filterByQuery = (methodName) => {
+export function filterMethodPairs(methodPairs, searchQuery) {
+  return _.filter(methodPairs, ([methodName]) => {
     if (!searchQuery) {
       return true;
     }
     return methodName.toLowerCase().includes(searchQuery.toLowerCase());
-  };
-
-  const filteredMethodMap = _.pickBy(methodMap, (_v, k) => filterByQuery(k));
-  return _.toPairs(filteredMethodMap);
+  });
 }
 
 /**
@@ -96,7 +92,7 @@ export function extractParamsFromCommandPath(path) {
 }
 
 /**
- * Transform and filter a given map of command paths/methods/details.
+ * Filter and transform a given map of command paths/methods/details.
  *
  * @param pathsToCmdsMap map of command paths to their HTTP methods and details
  * @returns flat map of command names to their details
@@ -141,7 +137,7 @@ function transformInnerCommandsMap(pathsToCmdsMap) {
 }
 
 /**
- * Filter the map of commands supported by the current driver using certain criteria:
+ * Filter and transform the map of commands supported by the current driver using certain criteria:
  *   * Remove entries with empty values (similarly to {@link deepFilterEmpty})
  *   * Remove commands not supported by WDIO
  *
@@ -149,7 +145,7 @@ function transformInnerCommandsMap(pathsToCmdsMap) {
  * the path and the HTTP method.
  *
  * @param {Object} cmdsResponse {@link https://github.com/appium/appium/blob/master/packages/types/lib/command-maps.ts `ListCommandsResponse`}
- * @returns flat map of command names to their details
+ * @returns array of key-value pairs with command names and their details
  */
 export function transformCommandsMap(cmdsResponse) {
   let adjBaseCmdsMap = {},
@@ -158,7 +154,7 @@ export function transformCommandsMap(cmdsResponse) {
   // cmdsResponse: REST/BiDi to base/driver/plugins source map
   // only use the REST commands for now
   if (_.isEmpty(cmdsResponse) || !('rest' in cmdsResponse) || _.isEmpty(cmdsResponse.rest)) {
-    return adjBaseCmdsMap;
+    return [];
   }
   const restCmdsMap = cmdsResponse.rest;
   // restCmdsMap: base/driver/plugins source to command paths/plugin names map
@@ -183,17 +179,17 @@ export function transformCommandsMap(cmdsResponse) {
     }
   }
   // Merge all maps in a logical priority order
-  return {...adjBaseCmdsMap, ...adjDriverCmdsMap, ...adjPluginCmdsMap};
+  return _.toPairs({...adjBaseCmdsMap, ...adjDriverCmdsMap, ...adjPluginCmdsMap});
 }
 
 /**
- * Filter the map of execute methods supported by the current driver,
+ * Filter and transform the map of execute methods supported by the current driver,
  * by removing entries with empty values (similarly to {@link deepFilterEmpty})
  *
  * In addition to filtering, the map is modified to remove the driver/plugin scopes.
  *
  * @param {Object} execMethodsResponse {@link https://github.com/appium/appium/blob/master/packages/types/lib/command-maps.ts `ListExtensionsResponse`}
- * @returns flat map of execute method names to their details
+ * @returns array of key-value pairs with execute method names and their details
  */
 export function transformExecMethodsMap(execMethodsResponse) {
   let adjExecMethodsMap = {};
@@ -203,7 +199,7 @@ export function transformExecMethodsMap(execMethodsResponse) {
     !('rest' in execMethodsResponse) ||
     _.isEmpty(execMethodsResponse.rest)
   ) {
-    return adjExecMethodsMap;
+    return [];
   }
   const restExecMethodsMap = execMethodsResponse.rest;
   // restExecMethodsMap: driver/plugins source to method names/execute methods map
@@ -224,5 +220,5 @@ export function transformExecMethodsMap(execMethodsResponse) {
       adjExecMethodsMap = {...deepFilterEmpty(driverExecMethodsMap), ...adjExecMethodsMap};
     }
   }
-  return adjExecMethodsMap;
+  return _.toPairs(adjExecMethodsMap);
 }
