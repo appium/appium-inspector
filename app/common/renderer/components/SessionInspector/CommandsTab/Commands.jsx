@@ -145,10 +145,10 @@ const Commands = (props) => {
           <Modal
             title={`${t('Enter Parameters for:')} ${t(curCommandDetails.name)}`}
             okText={t('Execute Command')}
-            cancelText={t('Cancel')}
             open={!_.isEmpty(curCommandDetails.details.params)}
             onOk={() => prepareAndRunCommand(curCommandDetails)}
             onCancel={() => clearCurrentCommand()}
+            footer={(_, {OkBtn}) => <OkBtn />}
           >
             {_.map(curCommandDetails.details.params, (param, index) => (
               <Row key={index} gutter={16}>
