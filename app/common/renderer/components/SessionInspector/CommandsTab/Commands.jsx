@@ -1,7 +1,7 @@
 import {ThunderboltOutlined} from '@ant-design/icons';
 import {Card, Col, Input, Modal, Row, Typography} from 'antd';
 import _ from 'lodash';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 import {
   adjustParamValueType,
@@ -29,8 +29,8 @@ const Commands = (props) => {
   const {applyClientMethod, getSupportedSessionMethods, storeSessionSettings, t} = props;
 
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
-  const [driverCommands, setDriverCommands] = useState(null);
-  const [driverExecuteMethods, setDriverExecuteMethods] = useState(null);
+  const driverCommands = useRef(null);
+  const driverExecuteMethods = useRef(null);
 
   const [curCommandDetails, setCurCommandDetails] = useState(null);
   const [curCommandParamVals, setCurCommandParamVals] = useState([]);
@@ -117,8 +117,8 @@ const Commands = (props) => {
     (async () => {
       const {commands, executeMethods} = await getSupportedSessionMethods();
       setHasMethodsMap(!(_.isEmpty(commands) && _.isEmpty(executeMethods)));
-      setDriverCommands(transformCommandsMap(commands));
-      setDriverExecuteMethods(transformExecMethodsMap(executeMethods));
+      driverCommands.current = transformCommandsMap(commands);
+      driverExecuteMethods.current = transformExecMethodsMap(executeMethods);
     })();
   }, [getSupportedSessionMethods]);
 

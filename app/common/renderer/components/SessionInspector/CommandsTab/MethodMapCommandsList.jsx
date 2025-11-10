@@ -45,15 +45,15 @@ const MethodMapCommandsList = (props) => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const hasNoCommands = _.isEmpty(driverCommands);
-  const hasNoExecuteMethods = _.isEmpty(driverExecuteMethods);
+  const hasNoCommands = _.isEmpty(driverCommands.current);
+  const hasNoExecuteMethods = _.isEmpty(driverExecuteMethods.current);
 
   const filteredDriverCommands = useMemo(
-    () => transformMethodMap(driverCommands, searchQuery),
+    () => transformMethodMap(driverCommands.current, searchQuery),
     [driverCommands, searchQuery],
   );
   const filteredDriverExecuteMethods = useMemo(
-    () => transformMethodMap(driverExecuteMethods, searchQuery),
+    () => transformMethodMap(driverExecuteMethods.current, searchQuery),
     [driverExecuteMethods, searchQuery],
   );
 
