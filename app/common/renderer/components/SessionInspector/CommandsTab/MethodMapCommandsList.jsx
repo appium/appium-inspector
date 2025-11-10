@@ -41,7 +41,7 @@ const MethodMapCommandsList = (props) => {
           destroyOnHidden={true}
         >
           <Button
-            className={styles.deprecatedMethod}
+            className={`${styles.methodBtn} ${styles.deprecatedMethod}`}
             onClick={() => startCommand({name: methodName, details: methodDetails, isExecute})}
           >
             {methodName}
@@ -55,7 +55,7 @@ const MethodMapCommandsList = (props) => {
     <>
       {isExecute ? t('dynamicExecuteMethodsDescription') : t('dynamicCommandsDescription')}
       <Divider size="middle" />
-      <div className={`${styles.methodBtn} ${styles.methodMapGrid}`}>
+      <div className={styles.methodMapGrid}>
         <Row>
           {driverMethods.map(([methodName, methodDetails]) => (
             <Col key={methodName} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
