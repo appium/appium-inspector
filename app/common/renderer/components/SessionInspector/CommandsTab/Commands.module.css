@@ -20,12 +20,7 @@
   flex-direction: column;
 }
 
-.methodMapTab :global(.ant-table-cell) {
-  padding: 0 !important;
-  border: none !important;
-}
-
-.methodMapTable {
+.methodMapGrid {
   overflow-y: auto;
 }
 
