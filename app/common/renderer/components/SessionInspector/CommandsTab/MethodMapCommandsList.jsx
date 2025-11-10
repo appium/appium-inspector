@@ -1,7 +1,7 @@
 import {SearchOutlined} from '@ant-design/icons';
 import {Button, Divider, Grid, Input, Table, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
-import {useMemo, useState} from 'react';
+import {useState} from 'react';
 
 import {transformMethodMap} from '../../../utils/commands-tab.js';
 import styles from './Commands.module.css';
@@ -32,32 +32,25 @@ const groupMethodsIntoRows = (driverMethods, colCount) => {
 
 // Dynamic list of driver commands, generated from the driver's method map responses.
 // Unlike StaticCommandsList, we want to show a single grid of all methods.
-// However, antd has performance issues when rendering 100+ items under one parent
-// (https://github.com/ant-design/ant-design/issues/44039),
-// so use approaches like useMemo and manual column/row assembly
-// for a responsive design
 const MethodMapCommandsList = (props) => {
   const {driverCommands, driverExecuteMethods, startCommand, t} = props;
 
   // Group methods into rows for better rendering performance
   const screens = Grid.useBreakpoint();
-  const columnCount = useMemo(() => getGridColumnCount(screens), [screens]);
+  const columnCount = getGridColumnCount(screens);
 
   const [searchQuery, setSearchQuery] = useState('');
 
   const hasNoCommands = _.isEmpty(driverCommands.current);
   const hasNoExecuteMethods = _.isEmpty(driverExecuteMethods.current);
 
-  const filteredDriverCommands = useMemo(
-    () => transformMethodMap(driverCommands.current, searchQuery),
-    [driverCommands, searchQuery],
-  );
-  const filteredDriverExecuteMethods = useMemo(
-    () => transformMethodMap(driverExecuteMethods.current, searchQuery),
-    [driverExecuteMethods, searchQuery],
+  const filteredDriverCommands = transformMethodMap(driverCommands.current, searchQuery);
+  const filteredDriverExecuteMethods = transformMethodMap(
+    driverExecuteMethods.current,
+    searchQuery,
   );
 
-  const MethodButton = ({methodName, methodDetails, isExecute}) => (
+  const methodButton = (methodName, methodDetails, isExecute) => (
     <div className={styles.btnContainer}>
       {!methodDetails.deprecated && !methodDetails.info && (
         <Button onClick={() => startCommand({name: methodName, details: methodDetails, isExecute})}>
@@ -85,11 +78,8 @@ const MethodMapCommandsList = (props) => {
     </div>
   );
 
-  const MethodMapButtonsGrid = ({driverMethods, isExecute}) => {
-    const tableDataSource = useMemo(
-      () => groupMethodsIntoRows(driverMethods, columnCount),
-      [driverMethods],
-    );
+  const methodMapButtonsGrid = (driverMethods, isExecute) => {
+    const tableDataSource = groupMethodsIntoRows(driverMethods, columnCount);
 
     const columns = Array.from({length: columnCount}, (_, index) => ({
       key: `col-${index}`,
@@ -100,13 +90,7 @@ const MethodMapCommandsList = (props) => {
           return null;
         }
         const [methodName, methodDetails] = methodEntry;
-        return (
-          <MethodButton
-            methodName={methodName}
-            methodDetails={methodDetails}
-            isExecute={isExecute}
-          />
-        );
+        return methodButton(methodName, methodDetails, isExecute);
       },
     }));
 
@@ -124,11 +108,11 @@ const MethodMapCommandsList = (props) => {
     );
   };
 
-  const MethodMapTabContent = ({driverMethods, isExecute}) => (
+  const methodMapContent = (driverMethods, isExecute) => (
     <>
       {isExecute ? t('dynamicExecuteMethodsDescription') : t('dynamicCommandsDescription')}
       <Divider size="middle" />
-      <MethodMapButtonsGrid driverMethods={driverMethods} isExecute={isExecute} />
+      {methodMapButtonsGrid(driverMethods, isExecute)}
     </>
   );
 
@@ -144,18 +128,14 @@ const MethodMapCommandsList = (props) => {
           key: '1',
           disabled: hasNoCommands,
           className: styles.methodMapTab,
-          children: (
-            <MethodMapTabContent driverMethods={filteredDriverCommands} isExecute={false} />
-          ),
+          children: methodMapContent(filteredDriverCommands, false),
         },
         {
           label: t('executeMethods'),
           key: '2',
           disabled: hasNoExecuteMethods,
           className: styles.methodMapTab,
-          children: (
-            <MethodMapTabContent driverMethods={filteredDriverExecuteMethods} isExecute={true} />
-          ),
+          children: methodMapContent(filteredDriverExecuteMethods, true),
         },
       ]}
       tabBarExtraContent={
