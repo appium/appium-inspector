@@ -28,7 +28,7 @@ export function adjustParamValueType(value) {
 /**
  * Filter the array of method key-value pairs to only include methods matching the search query.
  *
- * @param {*} methodPairs array of [methodName, methodDetails] pairs
+ * @param {[string, Object][]} methodPairs array of [methodName, methodDetails] pairs
  * @param {string} searchQuery user-provided search query
  * @returns filtered array of [methodName, methodDetails] pairs
  */
@@ -47,7 +47,7 @@ export function filterMethodPairs(methodPairs, searchQuery) {
  * @param {*} value any value (object, array, primitive)
  * @returns whether the item is an empty object/array or not
  */
-const isEmptyObject = (item) => _.isObjectLike(item) && _.isEmpty(item);
+const isEmptyObject = (value) => _.isObjectLike(value) && _.isEmpty(value);
 
 /**
  * Recursively remove key/value pairs (or array entries) whose values are empty objects or arrays.
@@ -94,7 +94,7 @@ export function extractParamsFromCommandPath(path) {
 /**
  * Filter and transform a given map of command paths/methods/details.
  *
- * @param pathsToCmdsMap map of command paths to their HTTP methods and details
+ * @param {Object} pathsToCmdsMap map of command paths to their HTTP methods and details
  * @returns flat map of command names to their details
  */
 function transformInnerCommandsMap(pathsToCmdsMap) {
