@@ -114,6 +114,11 @@ function transformInnerCommandsMap(pathsToCmdsMap) {
       }
       // Filter out any entries with empty values
       const commandDetails = deepFilterEmpty(pathsCmdsMap[method]);
+      // If we have multiple entries for the same method name in the same source (e.g. /execute
+      // and /execute/sync in Appium 2 are both named 'execute'), skip any deprecated entries
+      if (APPIUM_TO_WD_COMMANDS[cmdName] in transformedMap && 'deprecated' in commandDetails) {
+        continue;
+      }
       // Some commands require parameter adjustments due to WDIO method signature differences
       if (cmdName in COMMANDS_WITH_MISMATCHED_PARAMS) {
         commandDetails.params = COMMANDS_WITH_MISMATCHED_PARAMS[cmdName];
@@ -130,12 +135,7 @@ function transformInnerCommandsMap(pathsToCmdsMap) {
         commandDetails.params = [...commandPathParamEntries, ...(commandDetails.params || [])];
       }
       // Add the adjusted command details to the result map, using the WDIO command name.
-      // If we have multiple entries for the same method name in the same source
-      // (e.g. /execute and /execute/sync in Appium 2 are both named 'execute'),
-      // make sure not to override normal versions with deprecated versions
-      if (!(APPIUM_TO_WD_COMMANDS[cmdName] in transformedMap && 'deprecated' in commandDetails)) {
-        transformedMap[APPIUM_TO_WD_COMMANDS[cmdName]] = commandDetails;
-      }
+      transformedMap[APPIUM_TO_WD_COMMANDS[cmdName]] = commandDetails;
     }
   }
   return transformedMap;
