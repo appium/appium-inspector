@@ -275,6 +275,23 @@ describe('utils/commands-tab.js', function () {
         ['forward', {command: 'forward', info: 'from-plugin'}],
       ]);
     });
+    it('should not apply intra-source overrides using deprecated methods', function () {
+      const getCmdsResponse = {
+        rest: {
+          base: {
+            '/session/:sessionId/forward_1': {
+              POST: {command: 'forward', info: 'forward-supported'},
+            },
+            '/session/:sessionId/forward_2': {
+              POST: {command: 'forward', deprecated: true, info: 'forward-deprecated'},
+            },
+          },
+        },
+      };
+      expect(transformCommandsMap(getCmdsResponse)).toEqual([
+        ['forward', {command: 'forward', info: 'forward-supported'}],
+      ]);
+    });
   });
 
   describe('#transformExecMethodsMap', function () {
