@@ -14,6 +14,9 @@ import styles from './Commands.module.css';
 import MethodMapCommandsList from './MethodMapCommandsList.jsx';
 import StaticCommandsList from './StaticCommandsList.jsx';
 
+const COMMAND_EXECUTE_SCRIPT = 'executeScript';
+const COMMAND_UPDATE_SETTINGS = 'updateSettings';
+
 const formatParamInputLabel = (param) => {
   if (param.required) {
     return (
@@ -45,7 +48,7 @@ const Commands = (props) => {
   };
 
   const prepareCommand = (cmdName, cmdParams, isExecute) => {
-    const adjustedCmdName = isExecute ? 'executeScript' : cmdName;
+    const adjustedCmdName = isExecute ? COMMAND_EXECUTE_SCRIPT : cmdName;
     let adjustedCmdParams = _.cloneDeep(curCommandParamVals.current).map((val) =>
       adjustParamValueType(val),
     );
@@ -63,7 +66,7 @@ const Commands = (props) => {
     // Unlike other clients, webdriver/WDIO requires the argument object to be wrapped in an array,
     // but we should still allow omitting the array to avoid confusion for non-WDIO users.
     // So we can have 5 cases for the argument: undefined, {}, [], {...}, [{...}]
-    if (adjustedCmdName === 'executeScript') {
+    if (adjustedCmdName === COMMAND_EXECUTE_SCRIPT) {
       if (_.isEmpty(adjustedCmdParams[1])) {
         adjustedCmdParams[1] = [];
       } else if (typeof adjustedCmdParams[1] === 'object' && !_.isArray(adjustedCmdParams[1])) {
@@ -96,7 +99,7 @@ const Commands = (props) => {
     runCommand(newCmdName, newCmdParams, !refresh);
 
     // if updating settings, store the updated values
-    if (newCmdName === 'updateSettings') {
+    if (newCmdName === COMMAND_UPDATE_SETTINGS) {
       storeSessionSettings(newCmdParams[0]);
     }
   };
