@@ -11,23 +11,33 @@ import {
 
 describe('utils/commands-tab.js', function () {
   describe('#adjustParamValueType', function () {
-    it('should detect the correct type for common examples', function () {
-      expect(adjustParamValueType('test')).toEqual('test');
-      expect(adjustParamValueType('109')).toEqual(109);
-      expect(adjustParamValueType('true')).toEqual(true);
-      expect(adjustParamValueType('false')).toEqual(false);
-      expect(adjustParamValueType('null')).toEqual(null);
-      expect(adjustParamValueType('[1, 2, 3]')).toEqual([1, 2, 3]);
-      expect(adjustParamValueType('{"a":1}')).toEqual({a: 1});
+    const commonCases = [
+      ['test', 'test'],
+      ['109', 109],
+      ['true', true],
+      ['false', false],
+      ['null', null],
+      ['[1, 2, 3]', [1, 2, 3]],
+      ['{"a":1}', {a: 1}],
+    ];
+    commonCases.forEach(([input, expected]) => {
+      it(`should detect the correct type for common input "${input}"`, function () {
+        expect(adjustParamValueType(input)).toEqual(expected);
+      });
     });
-    it('should detect the correct type for edge cases', function () {
+    const edgeCases = [
       // Leading zero numeric string should be left as string
-      expect(adjustParamValueType('01')).toEqual('01');
+      ['01', '01'],
       // Empty string -> null
-      expect(adjustParamValueType('')).toEqual(null);
+      ['', null],
       // Invalid arrays/JSON stay as string
-      expect(adjustParamValueType('[invalid,]')).toEqual('[invalid,]');
-      expect(adjustParamValueType('{invalid:}')).toEqual('{invalid:}');
+      ['[invalid,]', '[invalid,]'],
+      ['{invalid:}', '{invalid:}'],
+    ];
+    edgeCases.forEach(([input, expected]) => {
+      it(`should detect the correct type for edge case input "${input}"`, function () {
+        expect(adjustParamValueType(input)).toEqual(expected);
+      });
     });
   });
 
@@ -41,23 +51,32 @@ describe('utils/commands-tab.js', function () {
         ['method1', {command: 'test'}],
         ['method2', {command: 'rest'}],
       ];
-      expect(filterMethodPairs(methodPairs, 'hod2')).toEqual([['method2', {command: 'rest'}]]);
-      expect(filterMethodPairs(methodPairs, 'method1')).toEqual([['method1', {command: 'test'}]]);
-      expect(filterMethodPairs(methodPairs, 'somethingelse')).toEqual([]);
+      const queriesToResults = [
+        ['hod2', [['method2', {command: 'rest'}]]],
+        ['method1', [['method1', {command: 'test'}]]],
+        ['somethingelse', []],
+      ];
+      queriesToResults.forEach(([input, expected]) => {
+        expect(filterMethodPairs(methodPairs, input)).toEqual(expected);
+      });
     });
   });
 
   describe('#deepFilterEmpty', function () {
     it('should not affect primitive values', function () {
-      expect(deepFilterEmpty(false)).toEqual(false);
-      expect(deepFilterEmpty(10)).toEqual(10);
-      expect(deepFilterEmpty('test')).toEqual('test');
+      const commonPrimitives = [false, 10, 'test'];
+      commonPrimitives.forEach((input) => expect(deepFilterEmpty(input)).toEqual(input));
     });
     it('should return empty object or array if all its leaf values are empty', function () {
-      expect(deepFilterEmpty([[], {}])).toEqual([]);
-      expect(deepFilterEmpty({rest: {}, best: []})).toEqual({});
-      expect(deepFilterEmpty([[[[[]]]]])).toEqual([]);
-      expect(deepFilterEmpty({first: {second: {third: {fourth: {fifth: {}}}}}})).toEqual({});
+      const emptyLeafCases = [
+        [[[], {}], []],
+        [{rest: {}, best: []}, {}],
+        [[[[[[]]]]], []],
+        [{first: {second: {third: {fourth: {fifth: {}}}}}}, {}],
+      ];
+      emptyLeafCases.forEach(([input, expected]) => {
+        expect(deepFilterEmpty(input)).toEqual(expected);
+      });
     });
     it('should apply correct filtering for arrays', function () {
       const testArray = [false, [], 10, {}, 'test', [20, true, []]];
@@ -111,12 +130,17 @@ describe('utils/commands-tab.js', function () {
 
   describe('#transformCommandsMap', function () {
     it('should return empty array if no REST command details are found', function () {
-      expect(transformCommandsMap({})).toEqual([]);
-      expect(transformCommandsMap({notrest: {}})).toEqual([]);
-      expect(transformCommandsMap({rest: {}})).toEqual([]);
-      expect(transformCommandsMap({rest: {base: {}}})).toEqual([]);
-      expect(transformCommandsMap({rest: {base: {'/status': {}}}})).toEqual([]);
-      expect(transformCommandsMap({rest: {base: {'/status': {GET: {}}}}})).toEqual([]);
+      const structsWithoutRestCmdDetails = [
+        {},
+        {notrest: {}},
+        {rest: {}},
+        {rest: {base: {}}},
+        {rest: {base: {'/status': {}}}},
+        {rest: {base: {'/status': {GET: {}}}}},
+      ];
+      structsWithoutRestCmdDetails.forEach((input) =>
+        expect(transformCommandsMap(input)).toEqual([]),
+      );
     });
     it('should transform a basic response whose command names match those in WDIO', function () {
       const getCmdsResponse = {
@@ -296,11 +320,16 @@ describe('utils/commands-tab.js', function () {
 
   describe('#transformExecMethodsMap', function () {
     it('should return empty response if no REST method details are found', function () {
-      expect(transformExecMethodsMap({})).toEqual([]);
-      expect(transformExecMethodsMap({notrest: {}})).toEqual([]);
-      expect(transformExecMethodsMap({rest: {}})).toEqual([]);
-      expect(transformExecMethodsMap({rest: {driver: {}}})).toEqual([]);
-      expect(transformExecMethodsMap({rest: {driver: {'mobile: shell': {}}}})).toEqual([]);
+      const structsWithoutRestCmdDetails = [
+        {},
+        {notrest: {}},
+        {rest: {}},
+        {rest: {driver: {}}},
+        {rest: {driver: {'mobile: shell': {}}}},
+      ];
+      structsWithoutRestCmdDetails.forEach((input) =>
+        expect(transformCommandsMap(input)).toEqual([]),
+      );
     });
     it('should transform a basic response', function () {
       const getExecMethodsResponse = {
