@@ -49,9 +49,7 @@ const Commands = (props) => {
 
   const prepareCommand = (cmdName, cmdParams, isExecute) => {
     const adjustedCmdName = isExecute ? COMMAND_EXECUTE_SCRIPT : cmdName;
-    let adjustedCmdParams = _.cloneDeep(curCommandParamVals.current).map((val) =>
-      adjustParamValueType(val),
-    );
+    let adjustedCmdParams = curCommandParamVals.current.map((val) => adjustParamValueType(val));
 
     // If we are about to run an execute method,
     // the parameters array needs to be turned into an object,
@@ -69,7 +67,7 @@ const Commands = (props) => {
     if (adjustedCmdName === COMMAND_EXECUTE_SCRIPT) {
       if (_.isEmpty(adjustedCmdParams[1])) {
         adjustedCmdParams[1] = [];
-      } else if (typeof adjustedCmdParams[1] === 'object' && !_.isArray(adjustedCmdParams[1])) {
+      } else if (_.isPlainObject(adjustedCmdParams[1])) {
         adjustedCmdParams[1] = [adjustedCmdParams[1]];
       }
     }
@@ -82,8 +80,7 @@ const Commands = (props) => {
       args,
       skipRefresh,
     });
-    const formattedResult =
-      _.isObject(res) && _.isEmpty(res) ? null : JSON.stringify(res, null, '  ');
+    const formattedResult = _.isObject(res) && _.isEmpty(res) ? null : JSON.stringify(res, null, 2);
     setCommandResult(formattedResult);
   };
 
