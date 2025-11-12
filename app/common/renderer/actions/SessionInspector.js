@@ -759,6 +759,7 @@ export function getActiveAppId(isIOS, isAndroid) {
         const action = applyClientMethod({
           methodName: 'executeScript',
           args: ['mobile:activeAppInfo', []],
+          skipRefresh: true,
         });
         const {bundleId} = await action(dispatch, getState);
         dispatch({type: SET_APP_ID, appId: bundleId});
@@ -767,6 +768,7 @@ export function getActiveAppId(isIOS, isAndroid) {
         const action = applyClientMethod({
           methodName: 'executeScript',
           args: ['mobile:getCurrentPackage', []],
+          skipRefresh: true,
         });
         const appPackage = await action(dispatch, getState);
         dispatch({type: SET_APP_ID, appId: appPackage});
@@ -779,7 +781,7 @@ export function getActiveAppId(isIOS, isAndroid) {
 
 export function getServerStatus() {
   return async (dispatch, getState) => {
-    const status = applyClientMethod({methodName: 'status'});
+    const status = applyClientMethod({methodName: 'status', skipRefresh: true});
     const {build} = await status(dispatch, getState);
     dispatch({type: SET_SERVER_STATUS, status: build});
   };
@@ -787,7 +789,7 @@ export function getServerStatus() {
 
 export function getFlatSessionCaps() {
   return async (dispatch, getState) => {
-    const action = applyClientMethod({methodName: 'getSession'});
+    const action = applyClientMethod({methodName: 'getSession', skipRefresh: true});
     const flatSessionCaps = await action(dispatch, getState);
     dispatch({type: SET_FLAT_SESSION_CAPS, flatSessionCaps});
   };
