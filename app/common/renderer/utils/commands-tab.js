@@ -33,12 +33,12 @@ export function adjustParamValueType(value) {
  * @returns filtered array of [methodName, methodDetails] pairs
  */
 export function filterMethodPairs(methodPairs, searchQuery) {
-  return _.filter(methodPairs, ([methodName]) => {
-    if (!searchQuery) {
-      return true;
-    }
-    return methodName.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  if (!searchQuery) {
+    return methodPairs;
+  }
+  return _.filter(methodPairs, ([methodName]) =>
+    methodName.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 }
 
 /**
@@ -60,14 +60,18 @@ const isEmptyObject = (value) => _.isObjectLike(value) && _.isEmpty(value);
 export function deepFilterEmpty(value) {
   if (_.isArray(value)) {
     // Recurse into each array element, then remove empty entries
-    const mapped = value.map((v) => deepFilterEmpty(v));
-    return mapped.filter((v) => !isEmptyObject(v));
+    const recurse = (arr) => arr.map(deepFilterEmpty);
+    const clean = (arr) => arr.filter(_.negate(isEmptyObject));
+    const recurseAndClean = _.flow([recurse, clean]);
+    return recurseAndClean(value);
   }
 
   if (_.isPlainObject(value)) {
     // Recurse into object properties, then pick only non-empty values
-    const mapped = _.mapValues(value, (v) => deepFilterEmpty(v));
-    return _.pickBy(mapped, (v) => !isEmptyObject(v));
+    const recurse = (obj) => _.mapValues(obj, deepFilterEmpty);
+    const clean = (obj) => _.pickBy(obj, _.negate(isEmptyObject));
+    const recurseAndClean = _.flow([recurse, clean]);
+    return recurseAndClean(value);
   }
 
   // Return primitives as-is
@@ -81,14 +85,11 @@ export function deepFilterEmpty(value) {
  * @returns array of parameter names
  */
 export function extractParamsFromCommandPath(path) {
-  const paramNames = [];
-  const pathParts = path.split('/');
-  for (const part of pathParts) {
-    if (part.startsWith(':') && part !== ':sessionId') {
-      paramNames.push(part.slice(1));
-    }
-  }
-  return paramNames;
+  return path
+    .split('/')
+    .flatMap((segment) =>
+      segment.startsWith(':') && segment !== ':sessionId' ? [segment.slice(1)] : [],
+    );
 }
 
 /**
