@@ -197,6 +197,14 @@ export const APPIUM_TO_WD_COMMANDS = {
  * Any URL parameters are excluded, as they are handled separately.
  */
 export const COMMANDS_WITH_MISMATCHED_PARAMS = {
+  execute: [
+    // The WebDriver spec requires 'args' to be an array
+    // (https://w3c.github.io/webdriver/#dfn-extract-the-script-arguments-from-a-request),
+    // but if the script doesn't use any arguments, we allow the user to omit it.
+    // This is handled in Commands.jsx:prepareCommand.
+    {name: 'script', required: true},
+    {name: 'args', required: false},
+  ],
   timeouts: [
     // different order, no non-W3C params
     {name: 'implicit', required: false},

@@ -60,10 +60,10 @@ const Commands = (props) => {
       adjustedCmdParams = [cmdName, mappedCmdParams];
     }
 
-    // Special case for 'executeScript'
-    // Unlike other clients, webdriver/WDIO requires the argument object to be wrapped in an array,
-    // but we should still allow omitting the array to avoid confusion for non-WDIO users.
-    // So we can have 5 cases for the argument: undefined, {}, [], {...}, [{...}]
+    // The WebDriver spec for 'executeScript' requires 'args' to be an array
+    // (https://w3c.github.io/webdriver/#dfn-extract-the-script-arguments-from-a-request),
+    // but if the script doesn't use any arguments, we allow the user to omit it.
+    // So we can have 5 cases for 'args': undefined, {}, [], {...}, [{...}]
     if (adjustedCmdName === COMMAND_EXECUTE_SCRIPT) {
       if (_.isEmpty(adjustedCmdParams[1])) {
         adjustedCmdParams[1] = [];
