@@ -49,7 +49,7 @@ const Commands = (props) => {
 
   const prepareCommand = (cmdName, cmdParams, isExecute) => {
     const adjustedCmdName = isExecute ? COMMAND_EXECUTE_SCRIPT : cmdName;
-    let adjustedCmdParams = curCommandParamVals.current.map((val) => adjustParamValueType(val));
+    let adjustedCmdParams = curCommandParamVals.current.map(adjustParamValueType);
 
     // If we are about to run an execute method,
     // the parameters array needs to be turned into an object,
