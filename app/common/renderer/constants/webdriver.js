@@ -33,8 +33,6 @@ export const AVOID_CMDS = [
   'newSession',
   'findElement',
   'findElements',
-  'findElementFromElement',
-  'findElementsFromElement',
   'executeScript',
   'executeAsyncScript',
 ];

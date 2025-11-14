@@ -19,7 +19,6 @@ import {
   SESSION_EXPIRY_PROMPT_TIMEOUT,
 } from '../../constants/session-inspector.js';
 import {downloadFile} from '../../utils/file-handling.js';
-import CommandResultModal from './CommandsTab/CommandResultModal.jsx';
 import Commands from './CommandsTab/Commands.jsx';
 import GestureEditor from './GesturesTab/GestureEditor.jsx';
 import SavedGestures from './GesturesTab/SavedGestures.jsx';
@@ -187,7 +186,7 @@ const Inspector = (props) => {
 
   useEffect(() => {
     resizeWindowOnLaunch();
-    applyClientMethod({methodName: 'getPageSource', ignoreResult: true});
+    applyClientMethod({methodName: 'getPageSource'});
     storeSessionSettings();
     getSavedClientFramework();
     runKeepAliveLoop();
@@ -363,7 +362,6 @@ const Inspector = (props) => {
       >
         <p>{t('Your session is about to expire')}</p>
       </Modal>
-      <CommandResultModal {...props} />
     </div>
   );
 };

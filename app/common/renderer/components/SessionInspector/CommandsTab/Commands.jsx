@@ -1,126 +1,120 @@
 import {ThunderboltOutlined} from '@ant-design/icons';
-import {Alert, Button, Card, Col, Collapse, Input, Modal, Row, Space, Switch, Tooltip} from 'antd';
+import {Card, Col, Input, Modal, Row, Typography} from 'antd';
 import _ from 'lodash';
+import {useEffect, useRef, useState} from 'react';
 
-import {ALERT, INPUT} from '../../../constants/antd-types.js';
 import {
-  COMMAND_ARG_TYPES,
-  COMMAND_DEFINITIONS,
-  TOP_LEVEL_COMMANDS,
-} from '../../../constants/commands.js';
-import {notification} from '../../../utils/notification.js';
+  adjustParamValueType,
+  transformCommandsMap,
+  transformExecMethodsMap,
+} from '../../../utils/commands-tab.js';
 import inspectorStyles from '../SessionInspector.module.css';
+import CommandResultModal from './CommandResultModal.jsx';
 import styles from './Commands.module.css';
+import MethodMapCommandsList from './MethodMapCommandsList.jsx';
+import StaticCommandsList from './StaticCommandsList.jsx';
+
+const COMMAND_EXECUTE_SCRIPT = 'executeScript';
+const COMMAND_UPDATE_SETTINGS = 'updateSettings';
+
+const formatParamInputLabel = (param) => {
+  if (param.required) {
+    return (
+      <>
+        <Typography.Text type="danger">*</Typography.Text> {param.name}
+      </>
+    );
+  }
+  return param.name;
+};
 
 const Commands = (props) => {
-  const {
-    pendingCommand,
-    cancelPendingCommand,
-    setCommandArg,
-    applyClientMethod,
-    automationName,
-    storeSessionSettings,
-    t,
-  } = props;
+  const {applyClientMethod, getSupportedSessionMethods, storeSessionSettings, t} = props;
 
-  const startPerformingCommand = (commandName, command) => {
-    const {startEnteringCommandArgs} = props;
-    if (_.isEmpty(command.args)) {
-      applyClientMethod({
-        methodName: commandName,
-        args: [],
-        skipRefresh: !command.refresh,
-        ignoreResult: false,
-      });
-    } else {
-      startEnteringCommandArgs(commandName, command);
+  const [hasMethodsMap, setHasMethodsMap] = useState(null);
+  const driverCommands = useRef(null);
+  const driverExecuteMethods = useRef(null);
+
+  const [curCommandDetails, setCurCommandDetails] = useState(null);
+  const curCommandParamVals = useRef([]);
+
+  const [commandResult, setCommandResult] = useState(null);
+
+  const startCommand = (commandDetails) => {
+    setCurCommandDetails(commandDetails);
+    if (_.isEmpty(commandDetails.details.params)) {
+      prepareAndRunCommand(commandDetails);
     }
   };
 
-  const parseJsonString = (jsonString) => {
-    try {
-      return JSON.parse(jsonString);
-    } catch (err) {
-      notification.error({
-        message: t('invalidJson'),
-        description: err.message,
-        duration: 5,
-      });
-      return null;
+  const prepareCommand = (cmdName, cmdParams, isExecute) => {
+    const adjustedCmdName = isExecute ? COMMAND_EXECUTE_SCRIPT : cmdName;
+    let adjustedCmdParams = curCommandParamVals.current.map(adjustParamValueType);
+
+    // If we are about to run an execute method,
+    // the parameters array needs to be turned into an object,
+    // and the command name added as a separate parameter.
+    if (isExecute) {
+      const cmdParamNames = _.map(cmdParams, 'name');
+      const mappedCmdParams = _.zipObject(cmdParamNames, adjustedCmdParams);
+      adjustedCmdParams = [cmdName, mappedCmdParams];
+    }
+
+    // The WebDriver spec for 'executeScript' requires 'args' to be an array
+    // (https://w3c.github.io/webdriver/#dfn-extract-the-script-arguments-from-a-request),
+    // but if the script doesn't use any arguments, we allow the user to omit it.
+    // So we can have 5 cases for 'args': undefined, {}, [], {...}, [{...}]
+    if (adjustedCmdName === COMMAND_EXECUTE_SCRIPT) {
+      if (_.isEmpty(adjustedCmdParams[1])) {
+        adjustedCmdParams[1] = [];
+      } else if (_.isPlainObject(adjustedCmdParams[1])) {
+        adjustedCmdParams[1] = [adjustedCmdParams[1]];
+      }
+    }
+    return [adjustedCmdName, adjustedCmdParams];
+  };
+
+  const runCommand = async (methodName, args, skipRefresh) => {
+    const res = await applyClientMethod({
+      methodName,
+      args,
+      skipRefresh,
+    });
+    const formattedResult = _.isObject(res) && _.isEmpty(res) ? null : JSON.stringify(res, null, 2);
+    setCommandResult(formattedResult);
+  };
+
+  const prepareAndRunCommand = (commandDetails) => {
+    const {
+      name: cmdName,
+      details: {params: cmdParams, refresh = false},
+      isExecute = false,
+    } = commandDetails;
+
+    const [newCmdName, newCmdParams] = prepareCommand(cmdName, cmdParams, isExecute);
+    // Do not await - let the command run in the background without blocking the UI
+    runCommand(newCmdName, newCmdParams, !refresh);
+
+    // if updating settings, store the updated values
+    if (newCmdName === COMMAND_UPDATE_SETTINGS) {
+      storeSessionSettings(newCmdParams[0]);
     }
   };
 
-  const executeCommand = () => {
-    const {args, commandName, command} = pendingCommand;
-    const {refresh} = command;
-
-    // Make a copy of the arguments to avoid state mutation
-    let copiedArgs = _.cloneDeep(args);
-
-    let isJsonValid = true;
-
-    // Special case for 'rotateDevice'
-    if (commandName === 'rotateDevice') {
-      copiedArgs = {
-        x: args[0],
-        y: args[1],
-        duration: args[2],
-        radius: args[3],
-        rotation: args[4],
-        touchCount: args[5],
-      };
-    }
-
-    // Special case for 'setGeoLocation'
-    if (commandName === 'setGeoLocation') {
-      copiedArgs = {latitude: args[0], longitude: args[1], altitude: args[2]};
-    }
-
-    // Special case for 'executeScript'
-    // Unlike other clients, webdriver/WDIO requires the argument object to be wrapped in an array,
-    // but we should still allow omitting the array to avoid confusion for non-WDIO users.
-    // So we can have 4 cases for the argument: undefined, "[]", "{...}", "[{...}]"
-    if (commandName === 'executeScript') {
-      if (_.isEmpty(args[1])) {
-        copiedArgs[1] = [];
-      } else {
-        copiedArgs[1] = parseJsonString(args[1]);
-        if (copiedArgs[1] === null) {
-          isJsonValid = false;
-        } else if (!_.isArray(copiedArgs[1])) {
-          copiedArgs[1] = [copiedArgs[1]];
-        }
-      }
-    }
-
-    // Special case for 'updateSettings'
-    if (commandName === 'updateSettings') {
-      if (_.isString(args[0])) {
-        copiedArgs[0] = parseJsonString(args[0]);
-        if (copiedArgs[0] === null) {
-          isJsonValid = false;
-        }
-      }
-    }
-
-    if (isJsonValid) {
-      applyClientMethod({
-        methodName: commandName,
-        args: copiedArgs,
-        skipRefresh: !refresh,
-        ignoreResult: false,
-      });
-      // if updating settings, store the updated values
-      if (commandName === 'updateSettings') {
-        storeSessionSettings(...copiedArgs);
-      }
-    }
-
-    cancelPendingCommand();
+  const clearCurrentCommand = () => {
+    setCommandResult(null);
+    setCurCommandDetails(null);
+    curCommandParamVals.current = [];
   };
 
-  const generateCommandNotes = (notes) =>
-    notes.map((note) => (_.isArray(note) ? `${t(note[0])}: ${note[1]}` : t(note))).join('; ');
+  useEffect(() => {
+    (async () => {
+      const {commands, executeMethods} = await getSupportedSessionMethods();
+      setHasMethodsMap(!(_.isEmpty(commands) && _.isEmpty(executeMethods)));
+      driverCommands.current = transformCommandsMap(commands);
+      driverExecuteMethods.current = transformExecMethodsMap(executeMethods);
+    })();
+  }, [getSupportedSessionMethods]);
 
   return (
     <Card
@@ -132,97 +126,43 @@ const Commands = (props) => {
       className={inspectorStyles.interactionTabCard}
     >
       <div className={styles.commandsContainer}>
-        <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
-          {t('commandsDescription')}
-          <Row>
-            {_.toPairs(TOP_LEVEL_COMMANDS).map(([commandName, command], index) => (
-              <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
-                <div className={styles.btnContainer}>
-                  <Button onClick={() => startPerformingCommand(commandName, command)}>
-                    {commandName}
-                  </Button>
-                </div>
-              </Col>
-            ))}
-          </Row>
-          <Collapse
-            items={_.toPairs(COMMAND_DEFINITIONS).map(([commandGroup, commands]) => ({
-              key: commandGroup,
-              label: t(commandGroup),
-              children: (
-                <Row>
-                  {_.toPairs(commands).map(
-                    ([commandName, command], index) =>
-                      (!command.drivers || command.drivers.includes(automationName)) && (
-                        <Col key={index} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
-                          <div className={styles.btnContainer}>
-                            <Tooltip
-                              title={
-                                command.notes && !command.args
-                                  ? generateCommandNotes(command.notes)
-                                  : null
-                              }
-                            >
-                              <Button onClick={() => startPerformingCommand(commandName, command)}>
-                                {commandName}
-                              </Button>
-                            </Tooltip>
-                          </div>
-                        </Col>
-                      ),
-                  )}
-                </Row>
-              ),
-            }))}
+        {hasMethodsMap === false && <StaticCommandsList startCommand={startCommand} t={t} />}
+        {hasMethodsMap && (
+          <MethodMapCommandsList
+            driverCommands={driverCommands}
+            driverExecuteMethods={driverExecuteMethods}
+            startCommand={startCommand}
+            t={t}
           />
-        </Space>
-        {!!pendingCommand && (
+        )}
+        {!!curCommandDetails && (
           <Modal
-            title={`${t('Enter Parameters for:')} ${t(pendingCommand.commandName)}`}
+            title={`${t('Enter Parameters for:')} ${t(curCommandDetails.name)}`}
             okText={t('Execute Command')}
-            cancelText={t('Cancel')}
-            open={!!pendingCommand}
-            onOk={() => executeCommand()}
-            onCancel={() => cancelPendingCommand()}
+            open={!_.isEmpty(curCommandDetails.details.params)}
+            onOk={() => prepareAndRunCommand(curCommandDetails)}
+            onCancel={() => clearCurrentCommand()}
+            footer={(_, {OkBtn}) => <OkBtn />}
           >
-            {pendingCommand.command.notes && (
-              <Alert
-                message={generateCommandNotes(pendingCommand.command.notes)}
-                type={ALERT.INFO}
-                showIcon
-              />
-            )}
-            {!_.isEmpty(pendingCommand.command.args) &&
-              _.map(pendingCommand.command.args, ([argName, argType], index) => (
-                <Row key={index} gutter={16}>
-                  <Col span={24} className={styles.argContainer}>
-                    {argType === COMMAND_ARG_TYPES.NUMBER && (
-                      <Input
-                        type={INPUT.NUMBER}
-                        value={pendingCommand.args[index]}
-                        addonBefore={t(argName)}
-                        onChange={(e) => setCommandArg(index, _.toNumber(e.target.value))}
-                      />
-                    )}
-                    {argType === COMMAND_ARG_TYPES.BOOLEAN && (
-                      <div>
-                        {t(argName)}{' '}
-                        <Switch
-                          checked={pendingCommand.args[index]}
-                          onChange={(v) => setCommandArg(index, v)}
-                        />
-                      </div>
-                    )}
-                    {argType === COMMAND_ARG_TYPES.STRING && (
-                      <Input
-                        addonBefore={t(argName)}
-                        onChange={(e) => setCommandArg(index, e.target.value)}
-                      />
-                    )}
-                  </Col>
-                </Row>
-              ))}
+            {_.map(curCommandDetails.details.params, (param, index) => (
+              <Row key={index} gutter={16}>
+                <Col span={24} className={styles.argContainer}>
+                  <Input
+                    addonBefore={formatParamInputLabel(param)}
+                    onChange={(e) => (curCommandParamVals.current[index] = e.target.value)}
+                  />
+                </Col>
+              </Row>
+            ))}
           </Modal>
+        )}
+        {commandResult && (
+          <CommandResultModal
+            commandName={curCommandDetails.name}
+            commandResult={commandResult}
+            clearCurrentCommand={clearCurrentCommand}
+            t={t}
+          />
         )}
       </div>
     </Card>
