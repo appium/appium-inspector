@@ -10,6 +10,7 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
+  id-token: write # to enable use of OIDC for trusted publishing and npm provenance
 
 jobs:
   electron:
@@ -52,10 +53,6 @@ jobs:
         with:
           node-version: lts/*
           cache: 'npm'
-      - name: Authenticate with npm registry
-        run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Install dependencies (Node.js)
         run: npm ci
       - name: generate contents
