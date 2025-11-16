@@ -320,5 +320,9 @@
   "toggleTableFormatting": "Перемкнути таблицю форматувань",
   "copyResultToClipboard": "Копіювати результат до буфера обміну",
   "Property": "Властивість",
-  "noCapsFound": "Можливості сеансу не знайдено. Будь ласка, скористайтеся Конструктором можливостей, щоб редагувати, додавати та зберігати свій набір можливостей. Див. навчальний посібник за адресою {{url}}"
+  "noCapsFound": "Можливості сеансу не знайдено. Будь ласка, скористайтеся Конструктором можливостей, щоб редагувати, додавати та зберігати свій набір можливостей. Див. навчальний посібник за адресою {{url}}",
+  "executeMethods": "Execute Methods",
+  "dynamicCommandsDescription": "Run commands supported by the currently active driver and plugin(s). Note that some commands may only work in specific contexts. Any commands not supported by WebdriverIO are not included in this list.",
+  "dynamicExecuteMethodsDescription": "Run any execute method supported by the currently active driver and plugin(s).",
+  "methodDeprecated": "This method is deprecated"
 }

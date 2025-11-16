@@ -283,7 +283,7 @@
   "TestcribeAPIKey": "Testcribe API 密钥",
   "sessionTestcribeApiKeyDescription": "你可以从 https://app.testcribe.com/settings/apiKeys 获取你的 API 密钥",
   "missingVendorProperties": "请提供以下 {{vendorName}} 的服务器详细信息：{{vendorProps}}",
-  "missingServerInfo": "Missing server info, could not query sessions",
+  "missingServerInfo": "缺少服务器信息，无法查询会话",
   "Username": "用户名",
   "URL": "URL",
   "WebDriver URL": "WebDriver URL",
@@ -295,7 +295,7 @@
   "Key": "密钥",
   "Secret": "密钥",
   "Toggle Theme": "Toggle Theme",
-  "Light Theme": "Light Theme",
+  "Light Theme": "浅色主题",
   "Dark Theme": "Dark Theme",
   "System Theme": "System Theme",
   "Search Source": "Search Source",
@@ -320,5 +320,9 @@
   "toggleTableFormatting": "Toggle Table Formatting",
   "copyResultToClipboard": "Copy Result to Clipboard",
   "Property": "Property",
-  "noCapsFound": "No session capabilities found. Please use the Capability Builder to edit, add, and save your capability set. Refer to the tutorial at {{url}}"
+  "noCapsFound": "No session capabilities found. Please use the Capability Builder to edit, add, and save your capability set. Refer to the tutorial at {{url}}",
+  "executeMethods": "Execute Methods",
+  "dynamicCommandsDescription": "Run commands supported by the currently active driver and plugin(s). Note that some commands may only work in specific contexts. Any commands not supported by WebdriverIO are not included in this list.",
+  "dynamicExecuteMethodsDescription": "Run any execute method supported by the currently active driver and plugin(s).",
+  "methodDeprecated": "This method is deprecated"
 }
