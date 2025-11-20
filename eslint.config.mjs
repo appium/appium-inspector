@@ -23,11 +23,7 @@ export default defineConfig([
     plugins: {
       'simple-import-sort': simpleImportSortPlugin,
     },
-    extends: [
-      appiumConfig,
-      eslintReact.configs.recommended,
-      reactHooks.configs.flat.recommended,
-    ],
+    extends: [appiumConfig, eslintReact.configs.recommended, reactHooks.configs.flat.recommended],
     settings: {
       react: {
         version: 'detect',
@@ -36,7 +32,6 @@ export default defineConfig([
   },
   {
     rules: {
-      'react/prop-types': 'off',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
     },
