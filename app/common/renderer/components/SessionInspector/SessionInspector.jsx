@@ -86,6 +86,9 @@ const Inspector = (props) => {
   // Debounced updater stored in a ref to avoid creating it during render
   const updateScreenshotScaleDebouncedRef = useRef();
 
+  // Ref to persist session expiry timeout without resetting on re-renders
+  const sessionExpiryTimeoutRef = useRef(null);
+
   const [scaleRatio, setScaleRatio] = useState(1);
 
   const navigate = useNavigate();
@@ -223,14 +226,22 @@ const Inspector = (props) => {
     };
   }, [checkMjpegStream, isUsingMjpegMode, updateScreenshotScaleDebounced, windowSize]);
 
-  // If session expiry prompt is shown, start timeout until session is automatically quit
-  // Timeout is canceled if user selects either action in prompt (keep session alive or quit)
+  // If session expiry prompt is shown, start timeout until session is automatically quit.
+  // Timeout should remain active until it fires or user acts (keep alive / quit).
   useEffect(() => {
     if (showKeepAlivePrompt) {
-      const userWaitTimeout = setTimeout(() => {
-        quitCurrentSession(t('Session closed due to inactivity'), false);
-      }, SESSION_EXPIRY_PROMPT_TIMEOUT);
-      setUserWaitTimeout(userWaitTimeout);
+      // Create timeout only once while prompt is visible
+      if (!sessionExpiryTimeoutRef.current) {
+        sessionExpiryTimeoutRef.current = setTimeout(() => {
+          quitCurrentSession(t('Session closed due to inactivity'), false);
+        }, SESSION_EXPIRY_PROMPT_TIMEOUT);
+        setUserWaitTimeout(sessionExpiryTimeoutRef.current);
+      }
+    } else if (sessionExpiryTimeoutRef.current) {
+      // Prompt dismissed by user action; clear timeout
+      clearTimeout(sessionExpiryTimeoutRef.current);
+      sessionExpiryTimeoutRef.current = null;
+      setUserWaitTimeout(null);
     }
   }, [quitCurrentSession, setUserWaitTimeout, showKeepAlivePrompt, t]);
 
