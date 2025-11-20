@@ -173,10 +173,10 @@ const HighlighterRects = (props) => {
       }
       highlighterRects.push(
         <HighlighterRectForElem
-          {...props}
           dimensions={elem.properties}
           element={elem.element}
           key={elem.properties.path}
+          {...props}
         />,
       );
     }
@@ -187,11 +187,11 @@ const HighlighterRects = (props) => {
     for (const elem of centroids) {
       highlighterCentroids.push(
         <HighlighterCentroid
-          {...props}
           centroidType={elem.type}
           elementProperties={elem.properties}
           element={elem.element}
           key={elem.properties.path}
+          {...props}
         />,
       );
     }

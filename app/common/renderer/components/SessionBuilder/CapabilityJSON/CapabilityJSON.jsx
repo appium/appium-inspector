@@ -144,6 +144,8 @@ const CapabilityJSON = (props) => {
         {!isEditingDesiredCaps && (
           <div className={styles.formattedCapsBody}>
             <pre>
+              {/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml --
+              We assume that the user considers their own input to be safe */}
               <code dangerouslySetInnerHTML={{__html: getHighlightedCaps(caps)}} />
             </pre>
           </div>

@@ -65,10 +65,13 @@ const GestureEditor = (props) => {
     t,
   } = props;
 
-  const [pointers, setPointers] = useState(loadedGesture ? loadedGesture.actions : DEFAULT_POINTER);
-  const [name, setName] = useState(loadedGesture ? loadedGesture.name : t('Untitled Gesture'));
+  const defaultGestureName = t('Untitled Gesture');
+  const defaultGestureDescription = t('Add Description');
+
+  const [pointers, setPointers] = useState(loadedGesture?.actions ?? DEFAULT_POINTER);
+  const [name, setName] = useState(loadedGesture?.name ?? defaultGestureName);
   const [description, setDescription] = useState(
-    loadedGesture ? loadedGesture.description : t('Add Description'),
+    loadedGesture?.description ?? defaultGestureDescription,
   );
   const [coordType, setCoordType] = useState(POINTER_MOVE_COORDS_TYPE.PERCENTAGES);
   const [activePointerId, setActivePointerId] = useState('1');
