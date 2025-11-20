@@ -96,7 +96,7 @@ const CapabilityEditor = (props) => {
       <Splitter.Panel collapsible resizable={false}>
         <Form className={styles.newSessionForm}>
           {caps.map((cap, index) => (
-            <Row gutter={8} key={cap.name}>
+            <Row gutter={8} key={index}>
               <Col span={7}>
                 <Form.Item>
                   <Tooltip title={whitespaceMsg(cap.name, t)} open={whitespaces.test(cap.name)}>
