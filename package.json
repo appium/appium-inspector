@@ -116,7 +116,7 @@
     "eslint-plugin-simple-import-sort": "12.1.1",
     "globals": "16.5.0",
     "prettier": "3.6.2",
-    "rimraf": "6.1.0",
+    "rimraf": "6.1.2",
     "vite": "7.2.2",
     "vite-plugin-electron-renderer": "0.14.6",
     "vitest": "4.0.10"
