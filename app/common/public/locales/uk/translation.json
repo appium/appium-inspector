@@ -321,8 +321,8 @@
   "copyResultToClipboard": "Копіювати результат до буфера обміну",
   "Property": "Властивість",
   "noCapsFound": "Можливості сеансу не знайдено. Будь ласка, скористайтеся Конструктором можливостей, щоб редагувати, додавати та зберігати свій набір можливостей. Див. навчальний посібник за адресою {{url}}",
-  "executeMethods": "Execute Methods",
-  "dynamicCommandsDescription": "Run commands supported by the currently active driver and plugin(s). Note that some commands may only work in specific contexts. Any commands not supported by WebdriverIO are not included in this list.",
-  "dynamicExecuteMethodsDescription": "Run any execute method supported by the currently active driver and plugin(s).",
-  "methodDeprecated": "This method is deprecated"
+  "executeMethods": "Виконати методи",
+  "dynamicCommandsDescription": "Запустити команди, які підтримуються зараз активним драйвером та плагінами. Зверніть увагу, що деякі команди можуть працювати лише в певних контекстах. Будь-які команди, які не підтримуються WebdriverIO не включені в цей список.",
+  "dynamicExecuteMethodsDescription": "Запустити будь-який процес, який підтримується активним драйвером та плагінами.",
+  "methodDeprecated": "Цей метод є застарілим"
 }
