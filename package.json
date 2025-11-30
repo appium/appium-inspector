@@ -115,7 +115,7 @@
     "eslint-plugin-react-hooks": "7.0.1",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "globals": "16.5.0",
-    "prettier": "3.7.2",
+    "prettier": "3.7.3",
     "rimraf": "6.1.2",
     "vite": "7.2.4",
     "vite-plugin-electron-renderer": "0.14.6",
