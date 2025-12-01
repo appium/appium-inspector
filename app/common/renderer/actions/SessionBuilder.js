@@ -637,7 +637,7 @@ export function saveSessionAsFile() {
     const state = getState().builder;
     const sessionFileDetails = {
       version: APPIUM_SESSION_FILE_VERSION,
-      caps: state.caps.map((cap) => ({..._.omit(cap, 'id')})),
+      caps: state.caps.map((cap) => _.omit(cap, 'id')),
       server: state.server,
       serverType: state.serverType,
       visibleProviders: state.visibleProviders,

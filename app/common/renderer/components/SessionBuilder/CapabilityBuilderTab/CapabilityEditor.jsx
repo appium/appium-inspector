@@ -116,7 +116,6 @@ const CapabilityEditor = (props) => {
                 <Form.Item>
                   <Select
                     disabled={isEditingDesiredCaps}
-                    defaultValue={cap.type}
                     value={cap.type}
                     onChange={(val) => handleSetType(setCapabilityParam, cap, val)}
                   >
