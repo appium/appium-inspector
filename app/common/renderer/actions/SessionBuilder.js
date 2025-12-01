@@ -193,18 +193,18 @@ export function addCapability() {
 /**
  * Update value of a capability parameter
  */
-export function setCapabilityParam(index, name, value) {
+export function setCapabilityParam(id, name, value) {
   return (dispatch) => {
-    dispatch({type: SET_CAPABILITY_PARAM, index, name, value});
+    dispatch({type: SET_CAPABILITY_PARAM, id, name, value});
   };
 }
 
 /**
  * Delete a capability from the list
  */
-export function removeCapability(index) {
+export function removeCapability(id) {
   return (dispatch) => {
-    dispatch({type: REMOVE_CAPABILITY, index});
+    dispatch({type: REMOVE_CAPABILITY, id});
   };
 }
 
@@ -637,7 +637,7 @@ export function saveSessionAsFile() {
     const state = getState().builder;
     const sessionFileDetails = {
       version: APPIUM_SESSION_FILE_VERSION,
-      caps: state.caps,
+      caps: state.caps.map((cap) => ({..._.omit(cap, 'id')})),
       server: state.server,
       serverType: state.serverType,
       visibleProviders: state.visibleProviders,
@@ -809,36 +809,34 @@ export function abortDesiredCapsEditor() {
   };
 }
 
-export function saveRawDesiredCaps() {
-  return (dispatch, getState) => {
-    const state = getState().builder;
-    const {rawDesiredCaps, caps: capsArray} = state;
+// Overwrite the current caps array with the raw data:
+// * New caps get a new id, type, and enabled state set to true;
+// * Existing caps keep their id and enabled state, but their type is updated.
+export function saveRawDesiredCaps(currentCapsArray, rawDesiredCaps) {
+  return (dispatch) => {
     try {
-      const newCaps = JSON.parse(rawDesiredCaps);
+      const rawCapsObj = JSON.parse(rawDesiredCaps);
 
-      // Transform the current caps array to an object
-      let caps = {};
-      for (let {type, name, value, enabled} of capsArray) {
-        caps[name] = {type, value, enabled};
-      }
+      // Since the user may change the order of existing caps in the raw array,
+      // we cannot use the element index - however, since the raw cap names are unique
+      // (due to being JSON keys), use that as the identifier.
+      // But if the user has changed the name of an existing cap, treat it as a new cap.
 
-      // Translate the caps JSON to array format
-      let newCapsArray = _.toPairs(newCaps).map(([name, value]) => ({
-        type: (() => {
-          let type = typeof value;
+      // First, convert the current caps array to an object, in order to use name indexing.
+      // This also removes any entries with duplicate names (the capability builder allows duplicates),
+      // which is fine, since JSON only allows the latest entry anyway.
+      const currentCapsObj = _.fromPairs(
+        currentCapsArray.map((cap) => [cap.name, _.omit(cap, 'name')]),
+      );
 
-          // If we already have this cap and it's file type, keep the type the same
-          if (caps[name] && caps[name].type === 'file' && type === 'string') {
-            return 'file';
-          } else if (type === 'string') {
-            return 'text';
-          } else {
-            return type;
-          }
-        })(),
+      // Translate the raw caps JSON to array format
+      const newCapsArray = Object.entries(rawCapsObj).map(([name, value]) => ({
+        id: crypto.randomUUID(),
+        enabled: true,
+        ...currentCapsObj[name], // overrides id and enabled, if present
+        type: typeof value === 'string' ? 'text' : typeof value,
         name,
         value,
-        enabled: caps[name]?.enabled ?? true,
       }));
       dispatch({type: SAVE_RAW_DESIRED_CAPS, caps: newCapsArray});
     } catch (e) {

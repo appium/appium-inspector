@@ -32,12 +32,12 @@ const whitespaceMsg = (value, t) => {
 };
 
 // Callback when the type of a capability is changed
-const handleSetType = (setCapabilityParam, caps, index, type) => {
-  setCapabilityParam(index, 'type', type);
+const handleSetType = (setCapabilityParam, cap, typeVal) => {
+  setCapabilityParam(cap.id, 'type', typeVal);
 
   // Translate the current value to the new type
-  let translatedValue = caps[index].value;
-  switch (type) {
+  let translatedValue = cap.value;
+  switch (typeVal) {
     case CAPABILITY_TYPES.BOOL:
       if (translatedValue === 'true') {
         translatedValue = true;
@@ -57,7 +57,7 @@ const handleSetType = (setCapabilityParam, caps, index, type) => {
     default:
       break;
   }
-  setCapabilityParam(index, 'value', translatedValue);
+  setCapabilityParam(cap.id, 'value', translatedValue);
 };
 
 const CapabilityEditor = (props) => {
@@ -96,16 +96,16 @@ const CapabilityEditor = (props) => {
       <Splitter.Panel collapsible resizable={false}>
         <Form className={styles.newSessionForm}>
           {caps.map((cap, index) => (
-            <Row gutter={8} key={index}>
+            <Row gutter={8} key={cap.id}>
               <Col span={7}>
                 <Form.Item>
                   <Tooltip title={whitespaceMsg(cap.name, t)} open={whitespaces.test(cap.name)}>
                     <Input
                       disabled={isEditingDesiredCaps}
-                      id={`desiredCapabilityName_${index}`}
+                      id={`desiredCapabilityName_${cap.id}`}
                       placeholder={t('Name')}
                       value={cap.name}
-                      onChange={(e) => setCapabilityParam(index, 'name', e.target.value)}
+                      onChange={(e) => setCapabilityParam(cap.id, 'name', e.target.value)}
                       ref={index === caps.length - 1 ? latestCapField : ''}
                       className={styles.capsBoxFont}
                     />
@@ -117,7 +117,8 @@ const CapabilityEditor = (props) => {
                   <Select
                     disabled={isEditingDesiredCaps}
                     defaultValue={cap.type}
-                    onChange={(val) => handleSetType(setCapabilityParam, caps, index, val)}
+                    value={cap.type}
+                    onChange={(val) => handleSetType(setCapabilityParam, cap, val)}
                   >
                     <Select.Option value={CAPABILITY_TYPES.TEXT}>{t('text')}</Select.Option>
                     <Select.Option value={CAPABILITY_TYPES.BOOL}>{t('boolean')}</Select.Option>
@@ -134,8 +135,8 @@ const CapabilityEditor = (props) => {
                     <CapabilityControl
                       {...props}
                       cap={cap}
-                      id={`desiredCapabilityValue_${index}`}
-                      onSetCapabilityParam={(value) => setCapabilityParam(index, 'value', value)}
+                      id={`desiredCapabilityValue_${cap.id}`}
+                      onSetCapabilityParam={(value) => setCapabilityParam(cap.id, 'value', value)}
                       onPressEnter={index === caps.length - 1 ? addCapability : () => {}}
                     />
                   </Tooltip>
@@ -148,14 +149,14 @@ const CapabilityEditor = (props) => {
                       <Checkbox
                         disabled={isEditingDesiredCaps}
                         checked={cap.enabled}
-                        onChange={(e) => setCapabilityParam(index, 'enabled', e.target.checked)}
+                        onChange={(e) => setCapabilityParam(cap.id, 'enabled', e.target.checked)}
                       />
                     </Tooltip>
                     <Tooltip title={t('Delete')} placement="right">
                       <Button
                         {...{disabled: caps.length <= 1 || isEditingDesiredCaps}}
                         icon={<DeleteOutlined />}
-                        onClick={() => removeCapability(index)}
+                        onClick={() => removeCapability(cap.id)}
                       />
                     </Tooltip>
                   </Space>
