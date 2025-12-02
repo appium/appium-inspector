@@ -4,6 +4,7 @@ export const DEFAULT_SERVER_PROPS = {
   port: 4723,
   path: '/',
   logLevel: process.env.NODE_ENV === 'development' ? 'info' : 'warn',
+  transformRequest: (opts) => ({ ...opts, credentials: 'include' }),
 };
 
 // All properties defined on the WDIO browser object

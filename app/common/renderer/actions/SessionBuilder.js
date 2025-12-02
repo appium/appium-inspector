@@ -968,6 +968,41 @@ export function initFromQueryString(loadNewSession) {
     const url = new URL(window.location.href);
     const initialState = url.searchParams.get('state');
     const autoStartSession = url.searchParams.get('autoStart');
+    const applicationId = url.searchParams.get('application_id');
+    const driverConfigurationId = url.searchParams.get('driver_configuration_id');
+
+    if (applicationId && driverConfigurationId) {
+      // Array of caps directly, because addVendorPrefixes expects an array of objects
+      const caps = [
+        { name: 'datatrue:applicationId', value: parseInt(applicationId, 10), type: 'number', enabled: true },
+        { name: 'datatrue:driverConfigurationId', value: parseInt(driverConfigurationId, 10), type: 'number', enabled: true },
+      ];
+
+      // shape the server payload as a **new object** (do not reuse references to existing state)
+      const serverPayload = {
+        remote: {
+          protocol: 'http',
+          host: import.meta.env.VITE_WEBDRIVER_PROXY_HOST,
+          hostname: import.meta.env.VITE_WEBDRIVER_PROXY_HOST,
+          port: Number(import.meta.env.VITE_WEBDRIVER_PROXY_PORT),
+          path: '/',
+          ssl: true,
+        },
+        advanced: {
+          allowUnauthorized: false,
+          useProxy: false,
+          proxy: '',
+        },
+      };
+
+      const serverClone = _.cloneDeep(serverPayload);
+
+      // Dispatch safely with deep clones
+      dispatch(setCapsAndServer(serverClone, 'remote', caps, null, 'Auto-started Session'));
+
+      // Start session using loadNewSession (already clones internally)
+      loadNewSession(caps);
+    }
 
     if (initialState) {
       try {
