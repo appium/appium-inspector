@@ -874,13 +874,9 @@ export function runKeepAliveLoop() {
  */
 export function killKeepAliveLoop() {
   return (dispatch, getState) => {
-    const {keepAliveInterval, userWaitTimeout} = getState().inspector;
+    const {keepAliveInterval} = getState().inspector;
     clearInterval(keepAliveInterval);
-    if (userWaitTimeout) {
-      clearTimeout(userWaitTimeout);
-    }
     dispatch({type: SET_KEEP_ALIVE_INTERVAL, keepAliveInterval: null});
-    dispatch({type: SET_USER_WAIT_TIMEOUT, userWaitTimeout: null});
   };
 }
 

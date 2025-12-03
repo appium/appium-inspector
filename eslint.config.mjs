@@ -1,20 +1,12 @@
 import appiumConfig from '@appium/eslint-config-appium-ts';
-import reactPlugin from 'eslint-plugin-react';
+import eslintReact from '@eslint-react/eslint-plugin';
+import {defineConfig, globalIgnores} from 'eslint/config';
 import reactHooks from 'eslint-plugin-react-hooks';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 
-export default [
-  ...appiumConfig,
+export default defineConfig([
   {
-    name: 'React Plugin',
-    files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
-    ...reactPlugin.configs.flat.recommended,
-    ...reactPlugin.configs.flat['jsx-runtime'],
-    ...reactHooks.configs.flat.recommended,
-  },
-  {
-    name: 'JS/TS Files',
     files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
     languageOptions: {
       globals: {
@@ -22,23 +14,27 @@ export default [
         ...globals.node,
         document: 'readonly',
       },
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
     },
     plugins: {
       'simple-import-sort': simpleImportSortPlugin,
     },
+    extends: [appiumConfig, eslintReact.configs.recommended, reactHooks.configs.flat.recommended],
     settings: {
       react: {
         version: 'detect',
       },
     },
+  },
+  {
     rules: {
-      'react/prop-types': 'off',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
     },
   },
-  {
-    name: 'Ignores',
-    ignores: ['**/*.xml', '**/*.html'],
-  },
-];
+  globalIgnores(['**/*.xml', '**/*.html']),
+]);
