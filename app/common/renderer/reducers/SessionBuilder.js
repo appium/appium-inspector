@@ -61,6 +61,7 @@ const INITIAL_STATE = {
   // Make sure there's always at least one cap
   caps: [
     {
+      id: crypto.randomUUID(),
       type: 'text',
       enabled: true,
     },
@@ -101,13 +102,13 @@ export default function builder(state = INITIAL_STATE, action) {
     case ADD_CAPABILITY:
       return {
         ...state,
-        caps: [...state.caps, {type: 'text', enabled: true}],
+        caps: [...state.caps, {id: crypto.randomUUID(), type: 'text', enabled: true}],
       };
 
     case REMOVE_CAPABILITY:
       return {
         ...state,
-        caps: state.caps.filter((cap, index) => index !== action.index),
+        caps: state.caps.filter((cap) => cap.id !== action.id),
         isCapsDirty: true,
       };
 
@@ -115,8 +116,8 @@ export default function builder(state = INITIAL_STATE, action) {
       return {
         ...state,
         isCapsDirty: true,
-        caps: state.caps.map((cap, index) =>
-          index !== action.index
+        caps: state.caps.map((cap) =>
+          cap.id !== action.id
             ? cap
             : {
                 ...cap,
@@ -134,8 +135,9 @@ export default function builder(state = INITIAL_STATE, action) {
         },
         serverType: action.serverType,
         caps: action.caps.map((cap) => ({
+          id: crypto.randomUUID(),
+          enabled: true,
           ...cap,
-          enabled: cap.enabled ?? true,
         })),
         capsUUID: action.uuid,
         capsName: action.name,
@@ -388,7 +390,12 @@ export default function builder(state = INITIAL_STATE, action) {
     case SET_STATE_FROM_FILE:
       return {
         ...state,
-        caps: action.sessionJSON.caps || [],
+        // caps will always be defined as per parseSessionFileContents
+        caps: action.sessionJSON.caps.map((cap) => ({
+          id: crypto.randomUUID(),
+          enabled: true,
+          ...cap,
+        })),
         server: {
           ...state.server,
           ...action.sessionJSON.server,
