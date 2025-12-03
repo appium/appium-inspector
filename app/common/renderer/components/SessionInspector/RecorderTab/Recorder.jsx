@@ -77,6 +77,8 @@ const Recorder = (props) => {
       )}
       {!!recordedActions.length && (
         <pre className={inspectorStyles.recordedCode}>
+          {/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml --
+          We assume that the user considers their own input and the connected server to be safe */}
           <code dangerouslySetInnerHTML={{__html: code(false)}} />
         </pre>
       )}

@@ -234,7 +234,7 @@ const Session = (props) => {
         </div>
       </div>
     </Spin>,
-    <CloudProviderSelector {...props} key="CloudProviderSelector" />,
+    <CloudProviderSelector key="CloudProviderSelector" {...props} />,
   ];
 };
 
