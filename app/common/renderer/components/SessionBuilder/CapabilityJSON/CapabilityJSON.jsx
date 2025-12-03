@@ -117,7 +117,7 @@ const CapabilityJSON = (props) => {
               <Button
                 color="primary"
                 variant="outlined"
-                onClick={saveRawDesiredCaps}
+                onClick={() => saveRawDesiredCaps(caps, rawDesiredCaps)}
                 icon={<SaveOutlined />}
                 className={styles.capsEditorButton}
               />
