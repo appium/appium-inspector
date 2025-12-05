@@ -1,6 +1,9 @@
-import moment from 'moment';
+import dayjs, {extend as dayjsExtend} from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 
 import {BaseVendor} from './base.js';
+
+dayjsExtend(localizedFormat);
 
 const SAUCE_OPTIONS_CAP = 'sauce:options';
 
@@ -30,7 +33,7 @@ export class SaucelabsVendor extends BaseVendor {
     this._saveProperties(sauce, {host, path, port, https, username, accessKey});
 
     if (!this._sessionCaps[SAUCE_OPTIONS_CAP]?.name) {
-      const dateTime = moment().format('lll');
+      const dateTime = dayjs().format('lll');
       this._updateSessionCap(SAUCE_OPTIONS_CAP, {
         name: `Appium Desktop Session -- ${dateTime}`,
       });
