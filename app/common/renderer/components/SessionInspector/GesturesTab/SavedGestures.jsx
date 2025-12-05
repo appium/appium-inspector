@@ -8,8 +8,8 @@ import {
   PlusOutlined,
 } from '@ant-design/icons';
 import {Button, Card, Collapse, Modal, Popconfirm, Row, Space, Table, Tooltip} from 'antd';
+import dayjs from 'dayjs';
 import _ from 'lodash';
-import moment from 'moment';
 import {useEffect} from 'react';
 
 import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../../constants/gestures.js';
@@ -27,7 +27,7 @@ const dataSource = (savedGestures, t) => {
   return savedGestures.map((gesture) => ({
     key: gesture.id,
     Name: gesture.name || t('unnamed'),
-    Created: moment(gesture.date).format('YYYY-MM-DD'),
+    Created: dayjs(gesture.date).format('YYYY-MM-DD'),
     Description: gesture.description || t('No Description'),
   }));
 };
