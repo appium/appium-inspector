@@ -223,17 +223,18 @@ const Source = (props) => {
                     />
                   </Tooltip>
                 </Space.Compact>
-                <Input
-                  placeholder={t('Search Source')}
-                  onChange={onChange}
-                  value={searchValue}
-                  allowClear
-                  className={styles.treeSearchInput}
-                  prefix={<SearchOutlined />}
-                  addonAfter={
+                <Space.Compact className={styles.treeSearchInput}>
+                  <Input
+                    placeholder={t('Search Source')}
+                    onChange={onChange}
+                    value={searchValue}
+                    allowClear
+                    prefix={<SearchOutlined />}
+                  />
+                  <Space.Addon className={styles.treeSearchInputAddon}>
                     <Tooltip title={t('Matching Elements')}>{matchingElements.length}</Tooltip>
-                  }
-                />
+                  </Space.Addon>
+                </Space.Compact>
               </Row>
               <Tree
                 defaultExpandAll={true}
