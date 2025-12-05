@@ -1,4 +1,4 @@
-import {Col, Form, Input, Row} from 'antd';
+import {Col, Flex, Input, Row, Space} from 'antd';
 
 import {INPUT} from '../../../constants/antd-types.js';
 
@@ -24,46 +24,46 @@ const mobitruAccessKeyPlaceholder = (t) => {
 };
 
 const ServerTabMobitru = ({server, setServerParam, t}) => (
-  <Form>
+  <Flex gap="small" vertical>
     <Row gutter={8}>
       <Col span={24}>
-        <Form.Item>
+        <Space.Compact block>
+          <Space.Addon>{t('Mobitru WebDriver URL')}</Space.Addon>
           <Input
             id="mobitruWebDriverUrl"
             placeholder={mobitrWebDriverUrlPlaceholder(t)}
-            addonBefore={t('Mobitru WebDriver URL')}
             value={server.mobitru.webDriverUrl}
             onChange={(e) => setServerParam('webDriverUrl', e.target.value)}
           />
-        </Form.Item>
+        </Space.Compact>
       </Col>
     </Row>
     <Row gutter={8}>
       <Col span={12}>
-        <Form.Item>
+        <Space.Compact block>
+          <Space.Addon>{t('Mobitru Billing Unit')}</Space.Addon>
           <Input
             id="mobitruBillingUnit"
             placeholder={mobitruBillingUnitPlaceholder(t)}
-            addonBefore={t('Mobitru Billing Unit')}
             value={server.mobitru.username}
             onChange={(e) => setServerParam('username', e.target.value)}
           />
-        </Form.Item>
+        </Space.Compact>
       </Col>
       <Col span={12}>
-        <Form.Item>
+        <Space.Compact block>
+          <Space.Addon>{t('Mobitru Access Key')}</Space.Addon>
           <Input
             id="mobitruAccessKey"
             type={INPUT.PASSWORD}
             placeholder={mobitruAccessKeyPlaceholder(t)}
-            addonBefore={t('Mobitru Access Key')}
             value={server.mobitru.accessKey}
             onChange={(e) => setServerParam('accessKey', e.target.value)}
           />
-        </Form.Item>
+        </Space.Compact>
       </Col>
     </Row>
-  </Form>
+  </Flex>
 );
 
 export default ServerTabMobitru;

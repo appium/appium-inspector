@@ -33,16 +33,12 @@
   height: 100%;
 }
 
-.inputDataCenter {
-  margin-left: 8px;
-}
-
-.addonDataCenter {
-  height: 32px;
-}
-
 .addonDataCenterRadioContainer {
-  display: table-cell;
-  padding-top: 4px;
-  padding-left: 11px;
+  padding-left: 8px;
+  min-height: 32px;
+}
+
+.addonCheckbox {
+  align-items: center;
+  min-height: 32px;
 }
