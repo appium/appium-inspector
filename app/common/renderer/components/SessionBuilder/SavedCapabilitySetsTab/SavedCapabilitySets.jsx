@@ -1,6 +1,6 @@
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import {Button, Card, Popconfirm, Space, Splitter, Table, Tooltip} from 'antd';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import {
   SAVED_SESSIONS_TABLE_VALUES,
@@ -16,7 +16,7 @@ const dataSource = (savedSessions, t) => {
   return savedSessions.map((session) => ({
     key: session.uuid,
     name: session.name || t('unnamed'),
-    date: moment(session.date).format('YYYY-MM-DD'),
+    date: dayjs(session.date).format('YYYY-MM-DD'),
   }));
 };
 
