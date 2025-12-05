@@ -1,5 +1,5 @@
 import {ThunderboltOutlined} from '@ant-design/icons';
-import {Card, Col, Input, Modal, Row, Typography} from 'antd';
+import {Card, Input, Modal, Space, Typography} from 'antd';
 import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 
@@ -21,7 +21,7 @@ const formatParamInputLabel = (param) => {
   if (param.required) {
     return (
       <>
-        <Typography.Text type="danger">*</Typography.Text> {param.name}
+        <Typography.Text type="danger">*</Typography.Text>&nbsp;{param.name}
       </>
     );
   }
@@ -145,14 +145,10 @@ const Commands = (props) => {
             footer={(_, {OkBtn}) => <OkBtn />}
           >
             {_.map(curCommandDetails.details.params, (param, index) => (
-              <Row key={index} gutter={16}>
-                <Col span={24} className={styles.argContainer}>
-                  <Input
-                    addonBefore={formatParamInputLabel(param)}
-                    onChange={(e) => (curCommandParamVals.current[index] = e.target.value)}
-                  />
-                </Col>
-              </Row>
+              <Space.Compact block key={index} className={styles.commandArgInputRow}>
+                <Space.Addon>{formatParamInputLabel(param)}</Space.Addon>
+                <Input onChange={(e) => (curCommandParamVals.current[index] = e.target.value)} />
+              </Space.Compact>
             ))}
           </Modal>
         )}

@@ -1,4 +1,4 @@
-import {Checkbox, Col, Form, Input, Radio, Row} from 'antd';
+import {Checkbox, Col, Flex, Input, Radio, Row, Space} from 'antd';
 
 import {INPUT} from '../../../constants/antd-types.js';
 import styles from './ServerDetails.module.css';
@@ -18,40 +18,38 @@ const sauceAccessKeyPlaceholder = (t) => {
 };
 
 const ServerTabSauce = ({server, setServerParam, t}) => (
-  <Form>
+  <Flex gap="small" vertical>
     <Row gutter={8}>
       <Col span={12}>
-        <Form.Item>
+        <Space.Compact block>
+          <Space.Addon>{t('Sauce Username')}</Space.Addon>
           <Input
             id="sauceUsername"
             placeholder={sauceUsernamePlaceholder(t)}
-            addonBefore={t('Sauce Username')}
             value={server.sauce.username}
             onChange={(e) => setServerParam('username', e.target.value)}
           />
-        </Form.Item>
+        </Space.Compact>
       </Col>
       <Col span={12}>
-        <Form.Item>
+        <Space.Compact block>
+          <Space.Addon>{t('Sauce Access Key')}</Space.Addon>
           <Input
             id="saucePassword"
             type={INPUT.PASSWORD}
             placeholder={sauceAccessKeyPlaceholder(t)}
-            addonBefore={t('Sauce Access Key')}
             value={server.sauce.accessKey}
             onChange={(e) => setServerParam('accessKey', e.target.value)}
           />
-        </Form.Item>
+        </Space.Compact>
       </Col>
     </Row>
     <Row gutter={8}>
       <Col span={8}>
-        <Form.Item>
-          <div className={['ant-input-group-addon', styles.addonDataCenter].join(' ')}>
-            {t('SauceLabs Data Center')}
-          </div>
+        <Space.Compact block>
+          <Space.Addon>{t('SauceLabs Data Center')}</Space.Addon>
           <Radio.Group
-            className={[styles.inputDataCenter, styles.addonDataCenterRadioContainer].join(' ')}
+            className={styles.addonDataCenterRadioContainer}
             buttonStyle="solid"
             defaultValue="us-west-1"
             id="sauceObjectDataCenter"
@@ -62,42 +60,41 @@ const ServerTabSauce = ({server, setServerParam, t}) => (
             <Radio value="us-east-4">{t('US-East')}</Radio>
             <Radio value="eu-central-1">{t('EU-Central')}</Radio>
           </Radio.Group>
-        </Form.Item>
+        </Space.Compact>
       </Col>
       <Col span={8} align="right">
-        <Form.Item>
-          <Checkbox
-            checked={!!server.sauce.useSCProxy}
-            onChange={(e) => setServerParam('useSCProxy', e.target.checked)}
-          >
-            {t('proxyThroughSC')}
-          </Checkbox>
-        </Form.Item>
+        <Checkbox
+          className={styles.addonCheckbox}
+          checked={!!server.sauce.useSCProxy}
+          onChange={(e) => setServerParam('useSCProxy', e.target.checked)}
+        >
+          {t('proxyThroughSC')}
+        </Checkbox>
       </Col>
       <Col span={5}>
-        <Form.Item>
+        <Space.Compact block>
+          <Space.Addon>{t('Host')}</Space.Addon>
           <Input
-            addonBefore={t('Host')}
             placeholder={t('localhost')}
             disabled={!server.sauce.useSCProxy}
             value={server.sauce.scHost}
             onChange={(e) => setServerParam('scHost', e.target.value)}
           />
-        </Form.Item>
+        </Space.Compact>
       </Col>
       <Col span={3}>
-        <Form.Item>
+        <Space.Compact block>
+          <Space.Addon>{t('Port')}</Space.Addon>
           <Input
-            addonBefore={t('Port')}
             placeholder={4445}
             disabled={!server.sauce.useSCProxy}
             value={server.sauce.scPort}
             onChange={(e) => setServerParam('scPort', e.target.value)}
           />
-        </Form.Item>
+        </Space.Compact>
       </Col>
     </Row>
-  </Form>
+  </Flex>
 );
 
 export default ServerTabSauce;

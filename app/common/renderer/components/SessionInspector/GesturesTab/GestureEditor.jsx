@@ -577,7 +577,7 @@ const GestureEditor = (props) => {
           defaultValue={tick.duration}
           onChange={(e) => updateTick(tick, TICK_PROPS.DURATION, e.target.value)}
         />
-        <Space.Addon className={styles.tickDurationAddonText}>ms</Space.Addon>
+        <Space.Addon>ms</Space.Addon>
       </Space.Compact>
     </center>
   );

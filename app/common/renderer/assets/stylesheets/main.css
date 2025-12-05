@@ -68,6 +68,11 @@ body::-webkit-scrollbar-corner {
   height: 32px;
 }
 
+.ant-space-addon {
+  padding: 0 8px;
+  white-space: nowrap;
+}
+
 .ant-btn-icon {
   font-size: 14px;
   display: flex;
