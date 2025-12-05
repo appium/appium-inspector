@@ -548,17 +548,17 @@ const GestureEditor = (props) => {
 
   const tickButton = (tick) => (
     <center>
-      <Space.Compact className={styles.tickButtonGroup}>
+      <Space.Compact block>
         <Button
+          block
           type={tick.button === POINTER_DOWN_BTNS.LEFT ? 'primary' : 'default'}
-          className={styles.tickButtonInput}
           onClick={() => updateTick(tick, TICK_PROPS.BUTTON, POINTER_DOWN_BTNS.LEFT)}
         >
           {t('Left')}
         </Button>
         <Button
+          block
           type={tick.button === POINTER_DOWN_BTNS.RIGHT ? 'primary' : 'default'}
-          className={styles.tickButtonInput}
           onClick={() => updateTick(tick, TICK_PROPS.BUTTON, POINTER_DOWN_BTNS.RIGHT)}
         >
           {t('Right')}
@@ -569,35 +569,37 @@ const GestureEditor = (props) => {
 
   const tickDuration = (tick) => (
     <center>
-      <Input
-        className={styles.tickInputBox}
-        value={!isNaN(tick.duration) ? tick.duration : null}
-        placeholder={t('Duration')}
-        defaultValue={tick.duration}
-        onChange={(e) => updateTick(tick, TICK_PROPS.DURATION, e.target.value)}
-        addonAfter="ms"
-      />
+      <Space.Compact block>
+        <Input
+          className={styles.tickInputBox}
+          value={!isNaN(tick.duration) ? tick.duration : null}
+          placeholder={t('Duration')}
+          defaultValue={tick.duration}
+          onChange={(e) => updateTick(tick, TICK_PROPS.DURATION, e.target.value)}
+        />
+        <Space.Addon className={styles.tickDurationAddonText}>ms</Space.Addon>
+      </Space.Compact>
     </center>
   );
 
   const tickCoords = (tick) => (
     <center>
-      <div className={styles.tickInputBox}>
+      <Space.Compact block>
         <Input
-          className={styles.tickCoordBox}
+          className={styles.tickInputBox}
           value={!isNaN(tick.x) ? tick.x : ''}
           placeholder="X"
           defaultValue={tick.x}
           onChange={(e) => updateTick(tick, TICK_PROPS.X, e.target.value)}
         />
         <Input
-          className={styles.tickCoordBox}
+          className={styles.tickInputBox}
           value={!isNaN(tick.y) ? tick.y : ''}
           placeholder="Y"
           defaultValue={tick.y}
           onChange={(e) => updateTick(tick, TICK_PROPS.Y, e.target.value)}
         />
-      </div>
+      </Space.Compact>
     </center>
   );
 
@@ -674,17 +676,11 @@ const GestureEditor = (props) => {
         </Col>
       ))}
       <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
-        <Card className={styles.tickPlusCard} variant="borderless">
-          <center>
-            <Tooltip title={t('Add')}>
-              <Button
-                className={styles.tickPlusBtn}
-                icon={<PlusOutlined />}
-                onClick={() => addTick(pointer.id)}
-              />
-            </Tooltip>
-          </center>
-        </Card>
+        <div className={styles.tickPlusBtnWrapper}>
+          <Tooltip title={t('Add')}>
+            <Button icon={<PlusOutlined />} onClick={() => addTick(pointer.id)} />
+          </Tooltip>
+        </div>
       </Col>
     </Row>
   );
