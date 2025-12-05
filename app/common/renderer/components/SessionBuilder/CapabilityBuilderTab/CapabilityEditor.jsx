@@ -200,13 +200,15 @@ const CapabilityEditor = (props) => {
           onCancel={hideSaveAsModal}
           onOk={onSaveAsOk}
         >
-          <Input
-            onChange={(e) => setSaveAsText(e.target.value)}
-            addonBefore={t('Name')}
-            value={saveAsText}
-            onPressEnter={onSaveAsOk}
-            status={isDuplicateCapsName ? 'error' : ''}
-          />
+          <Space.Compact block>
+            <Space.Addon>{t('Name')}</Space.Addon>
+            <Input
+              onChange={(e) => setSaveAsText(e.target.value)}
+              value={saveAsText}
+              onPressEnter={onSaveAsOk}
+              status={isDuplicateCapsName ? 'error' : ''}
+            />
+          </Space.Compact>
           {isDuplicateCapsName && (
             <p className={builderStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>
           )}
