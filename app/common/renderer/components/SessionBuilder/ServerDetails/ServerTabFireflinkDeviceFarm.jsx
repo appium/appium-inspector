@@ -1,4 +1,4 @@
-import {Col, Form, Input, Row} from 'antd';
+import {Col, Flex, Input, Row, Space} from 'antd';
 
 import {INPUT} from '../../../constants/antd-types.js';
 
@@ -32,55 +32,57 @@ const fireflinkDeviceFarmprojectNamePlaceholder = (t) => {
 };
 
 const ServerTabFireflinkDeviceFarm = ({server, setServerParam, t}) => (
-  <Form>
+  <Flex gap="small" vertical>
     <Row gutter={8}>
       <Col span={12}>
-        <Form.Item>
+        <Space.Compact block>
+          <Space.Addon>{t('Fireflink DeviceFarm Domain')}</Space.Addon>
           <Input
             id="fireflinkDeviceFarmDomain"
             placeholder={fireflinkDeviceFarmDomainPlaceholder(t)}
-            addonBefore={t('Fireflink DeviceFarm Domain')}
             value={server.fireflinkdevicefarm.host}
             onChange={(e) => setServerParam('host', e.target.value)}
           />
-        </Form.Item>
+        </Space.Compact>
       </Col>
       <Col span={12}>
-        <Form.Item>
+        <Space.Compact block>
+          <Space.Addon>{t('Fireflink DeviceFarm Access Key')}</Space.Addon>
           <Input
             id="fireflinkDeviceFarmAccessKey"
             type={INPUT.PASSWORD}
             placeholder={fireflinkDeviceFarmAccessKeyPlaceholder(t)}
-            addonBefore={t('Fireflink DeviceFarm Access Key')}
             value={server.fireflinkdevicefarm.accessKey}
             onChange={(e) => setServerParam('accessKey', e.target.value)}
           />
-        </Form.Item>
+        </Space.Compact>
       </Col>
+    </Row>
+    <Row gutter={8}>
       <Col span={12}>
-        <Form.Item>
+        <Space.Compact block>
+          <Space.Addon>{t('Fireflink DeviceFarm License ID')}</Space.Addon>
           <Input
             id="fireflinkDeviceFarmLicenseId"
             placeholder={fireflinkDeviceFarmLicenseIdPlaceholder(t)}
-            addonBefore={t('Fireflink DeviceFarm License ID')}
             value={server.fireflinkdevicefarm.licenseId}
             onChange={(e) => setServerParam('licenseId', e.target.value)}
           />
-        </Form.Item>
+        </Space.Compact>
       </Col>
       <Col span={12}>
-        <Form.Item>
+        <Space.Compact block>
+          <Space.Addon>{t('Fireflink DeviceFarm Project Name')}</Space.Addon>
           <Input
             id="fireflinkDeviceFarmprojectName"
             placeholder={fireflinkDeviceFarmprojectNamePlaceholder(t)}
-            addonBefore={t('Fireflink DeviceFarm Project Name')}
             value={server.fireflinkdevicefarm.projectName}
             onChange={(e) => setServerParam('projectName', e.target.value)}
           />
-        </Form.Item>
+        </Space.Compact>
       </Col>
     </Row>
-  </Form>
+  </Flex>
 );
 
 export default ServerTabFireflinkDeviceFarm;

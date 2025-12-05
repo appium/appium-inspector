@@ -1,4 +1,4 @@
-import {Col, Form, Input, Row} from 'antd';
+import {Col, Input, Row, Space} from 'antd';
 
 import {INPUT} from '../../../constants/antd-types.js';
 
@@ -17,33 +17,31 @@ const lambdatestAccessKeyPlaceholder = (t) => {
 };
 
 const ServerTabLambdatest = ({server, setServerParam, t}) => (
-  <Form>
-    <Row gutter={8}>
-      <Col span={12}>
-        <Form.Item>
-          <Input
-            id="lambdatestUsername"
-            placeholder={lambdatestUsernamePlaceholder(t)}
-            addonBefore={t('LambdaTest Username')}
-            value={server.lambdatest.username}
-            onChange={(e) => setServerParam('username', e.target.value)}
-          />
-        </Form.Item>
-      </Col>
-      <Col span={12}>
-        <Form.Item>
-          <Input
-            id="lambdatestPassword"
-            type={INPUT.PASSWORD}
-            placeholder={lambdatestAccessKeyPlaceholder(t)}
-            addonBefore={t('LambdaTest Access Key')}
-            value={server.lambdatest.accessKey}
-            onChange={(e) => setServerParam('accessKey', e.target.value)}
-          />
-        </Form.Item>
-      </Col>
-    </Row>
-  </Form>
+  <Row gutter={8}>
+    <Col span={12}>
+      <Space.Compact block>
+        <Space.Addon>{t('LambdaTest Username')}</Space.Addon>
+        <Input
+          id="lambdatestUsername"
+          placeholder={lambdatestUsernamePlaceholder(t)}
+          value={server.lambdatest.username}
+          onChange={(e) => setServerParam('username', e.target.value)}
+        />
+      </Space.Compact>
+    </Col>
+    <Col span={12}>
+      <Space.Compact block>
+        <Space.Addon>{t('LambdaTest Access Key')}</Space.Addon>
+        <Input
+          id="lambdatestPassword"
+          type={INPUT.PASSWORD}
+          placeholder={lambdatestAccessKeyPlaceholder(t)}
+          value={server.lambdatest.accessKey}
+          onChange={(e) => setServerParam('accessKey', e.target.value)}
+        />
+      </Space.Compact>
+    </Col>
+  </Row>
 );
 
 export default ServerTabLambdatest;

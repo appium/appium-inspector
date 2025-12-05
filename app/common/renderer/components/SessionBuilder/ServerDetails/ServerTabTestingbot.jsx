@@ -1,4 +1,4 @@
-import {Col, Form, Input, Row} from 'antd';
+import {Col, Input, Row, Space} from 'antd';
 
 import {INPUT} from '../../../constants/antd-types.js';
 
@@ -17,33 +17,31 @@ const testingbotAccessKeyPlaceholder = (t) => {
 };
 
 const ServerTabTestingbot = ({server, setServerParam, t}) => (
-  <Form>
-    <Row gutter={8}>
-      <Col span={12}>
-        <Form.Item>
-          <Input
-            id="testingbotKey"
-            placeholder={testingbotUsernamePlaceholder(t)}
-            addonBefore={t('TestingBot Key')}
-            value={server.testingbot.username}
-            onChange={(e) => setServerParam('username', e.target.value)}
-          />
-        </Form.Item>
-      </Col>
-      <Col span={12}>
-        <Form.Item>
-          <Input
-            id="testingbotSecret"
-            type={INPUT.PASSWORD}
-            placeholder={testingbotAccessKeyPlaceholder(t)}
-            addonBefore={t('TestingBot Secret')}
-            value={server.testingbot.accessKey}
-            onChange={(e) => setServerParam('accessKey', e.target.value)}
-          />
-        </Form.Item>
-      </Col>
-    </Row>
-  </Form>
+  <Row gutter={8}>
+    <Col span={12}>
+      <Space.Compact block>
+        <Space.Addon>{t('TestingBot Key')}</Space.Addon>
+        <Input
+          id="testingbotKey"
+          placeholder={testingbotUsernamePlaceholder(t)}
+          value={server.testingbot.username}
+          onChange={(e) => setServerParam('username', e.target.value)}
+        />
+      </Space.Compact>
+    </Col>
+    <Col span={12}>
+      <Space.Compact block>
+        <Space.Addon>{t('TestingBot Secret')}</Space.Addon>
+        <Input
+          id="testingbotSecret"
+          type={INPUT.PASSWORD}
+          placeholder={testingbotAccessKeyPlaceholder(t)}
+          value={server.testingbot.accessKey}
+          onChange={(e) => setServerParam('accessKey', e.target.value)}
+        />
+      </Space.Compact>
+    </Col>
+  </Row>
 );
 
 export default ServerTabTestingbot;

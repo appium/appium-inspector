@@ -86,8 +86,9 @@
   flex: 1;
 }
 
-.treeSearchInput :global(.ant-input-group-addon) {
+.treeSearchInputAddon {
   min-width: 46px;
+  justify-content: center;
 }
 
 .sourceTree {

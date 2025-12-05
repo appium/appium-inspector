@@ -1,4 +1,4 @@
-import {Col, Form, Input, Row} from 'antd';
+import {Col, Input, Row, Space} from 'antd';
 
 import {INPUT} from '../../../constants/antd-types.js';
 
@@ -17,33 +17,31 @@ const browserstackAccessKeyPlaceholder = (t) => {
 };
 
 const ServerTabBrowserstack = ({server, setServerParam, t}) => (
-  <Form>
-    <Row gutter={8}>
-      <Col span={12}>
-        <Form.Item>
-          <Input
-            id="browserstackUsername"
-            placeholder={browserstackUsernamePlaceholder(t)}
-            addonBefore={t('BrowserStack Username')}
-            value={server.browserstack.username}
-            onChange={(e) => setServerParam('username', e.target.value)}
-          />
-        </Form.Item>
-      </Col>
-      <Col span={12}>
-        <Form.Item>
-          <Input
-            id="browserstackPassword"
-            type={INPUT.PASSWORD}
-            placeholder={browserstackAccessKeyPlaceholder(t)}
-            addonBefore={t('BrowserStack Access Key')}
-            value={server.browserstack.accessKey}
-            onChange={(e) => setServerParam('accessKey', e.target.value)}
-          />
-        </Form.Item>
-      </Col>
-    </Row>
-  </Form>
+  <Row gutter={8}>
+    <Col span={12}>
+      <Space.Compact block>
+        <Space.Addon>{t('BrowserStack Username')}</Space.Addon>
+        <Input
+          id="browserstackUsername"
+          placeholder={browserstackUsernamePlaceholder(t)}
+          value={server.browserstack.username}
+          onChange={(e) => setServerParam('username', e.target.value)}
+        />
+      </Space.Compact>
+    </Col>
+    <Col span={12}>
+      <Space.Compact block>
+        <Space.Addon>{t('BrowserStack Access Key')}</Space.Addon>
+        <Input
+          id="browserstackPassword"
+          type={INPUT.PASSWORD}
+          placeholder={browserstackAccessKeyPlaceholder(t)}
+          value={server.browserstack.accessKey}
+          onChange={(e) => setServerParam('accessKey', e.target.value)}
+        />
+      </Space.Compact>
+    </Col>
+  </Row>
 );
 
 export default ServerTabBrowserstack;
