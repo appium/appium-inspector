@@ -55,59 +55,41 @@
   background-color: var(--timelineColor);
 }
 
-.tickButtonGroup {
-  display: block;
-}
-
-.tickButtonInput {
-  width: 73px;
+.tickDurationAddonText {
+  width: 40px;
+  padding: 0 6px;
 }
 
 .tickInputBox {
-  width: 145px;
-}
-
-.tickInputBox :global(.ant-input-group-addon) {
-  position: sticky;
-  width: 50px;
-}
-
-.tickCoordBox {
-  width: 72px;
+  display: block;
   text-align: center;
 }
 
 .tickPointerInput {
-  width: 145px;
+  width: 100%;
 }
 
 .optionInput {
   text-align: center;
 }
 
-.tickCard {
-  overflow: hidden;
-}
-
 .tickCard :global(.ant-card-head) {
-  margin-top: -16px;
-  padding-right: 0px;
+  min-height: unset;
+  padding: 0px;
   border-bottom: none;
 }
 
 .tickCard :global(.ant-card-body) {
-  margin-top: -12px;
-  min-height: 167px;
-  margin-right: -12px;
+  padding-top: 6px;
+  height: calc(100% - 25px);
 }
 
-.tickPlusCard {
-  min-height: 220px;
-}
-
-.tickPlusBtn {
-  position: absolute;
-  top: 40%;
+.tickPlusBtnWrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .pointerTitle {
