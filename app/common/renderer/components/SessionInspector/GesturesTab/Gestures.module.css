@@ -55,11 +55,6 @@
   background-color: var(--timelineColor);
 }
 
-.tickDurationAddonText {
-  width: 40px;
-  padding: 0 6px;
-}
-
 .tickInputBox {
   display: block;
   text-align: center;
