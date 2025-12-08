@@ -8,7 +8,7 @@ const RESOURCE_PATH = path.resolve(RESOURCES_ROOT, ORIGINAL_LANGUAGE, RESOURCE_N
 
 async function uploadToStorage() {
   log.info(`Uploading '${RESOURCE_PATH}' to Crowdin`);
-  const storageData = await performApiRequest('/storages', {
+  const {data: storageData} = await performApiRequest('/storages', {
     method: 'POST',
     headers: {
       'Crowdin-API-FileName': encodeURIComponent(RESOURCE_NAME),
@@ -21,7 +21,7 @@ async function uploadToStorage() {
 }
 
 async function getFileId() {
-  const filesData = await performApiRequest('/files');
+  const {data: filesData} = await performApiRequest('/files');
   const mainFile = filesData.map(({data}) => data).find(({name}) => name === RESOURCE_NAME);
   if (!mainFile) {
     log.debug(JSON.stringify(filesData));
