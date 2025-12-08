@@ -66,41 +66,35 @@ describe('utils/attaching-to-session.js', function () {
 
   describe('#formatSeleniumGridSessions', function () {
     it('should not find invalid sessions', function () {
-      expect(formatSeleniumGridSessions({data: {value: {}}})).toEqual([]);
-      expect(formatSeleniumGridSessions({data: {value: {nodes: []}}})).toEqual([]);
-      expect(formatSeleniumGridSessions({data: {value: {nodes: [{}]}}})).toEqual([]);
-      expect(formatSeleniumGridSessions({data: {value: {nodes: [{slots: []}]}}})).toEqual([]);
-      expect(formatSeleniumGridSessions({data: {value: {nodes: [{slots: [{}]}]}}})).toEqual([]);
+      expect(formatSeleniumGridSessions({value: {}})).toEqual([]);
+      expect(formatSeleniumGridSessions({value: {nodes: []}})).toEqual([]);
+      expect(formatSeleniumGridSessions({value: {nodes: [{}]}})).toEqual([]);
+      expect(formatSeleniumGridSessions({value: {nodes: [{slots: []}]}})).toEqual([]);
+      expect(formatSeleniumGridSessions({value: {nodes: [{slots: [{}]}]}})).toEqual([]);
+      expect(formatSeleniumGridSessions({value: {nodes: [{slots: [{session: {}}]}]}})).toEqual([]);
       expect(
-        formatSeleniumGridSessions({data: {value: {nodes: [{slots: [{session: {}}]}]}}}),
-      ).toEqual([]);
-      expect(
-        formatSeleniumGridSessions({
-          data: {value: {nodes: [{slots: [{session: {capabilities: {}}}]}]}},
-        }),
+        formatSeleniumGridSessions({value: {nodes: [{slots: [{session: {capabilities: {}}}]}]}}),
       ).toEqual([]);
     });
     it('should find and format an Appium session', function () {
       expect(
         formatSeleniumGridSessions({
-          data: {
-            value: {
-              nodes: [
-                {
-                  slots: [
-                    {
-                      session: {
-                        capabilities: {
-                          'appium:automationName': 'UiAutomator2',
-                          desired: {platformName: 'Android', app: 'bestapp.apk'},
-                        },
-                        sessionId: '12345',
+          value: {
+            nodes: [
+              {
+                slots: [
+                  {
+                    session: {
+                      capabilities: {
+                        'appium:automationName': 'UiAutomator2',
+                        desired: {platformName: 'Android', app: 'bestapp.apk'},
                       },
+                      sessionId: '12345',
                     },
-                  ],
-                },
-              ],
-            },
+                  },
+                ],
+              },
+            ],
           },
         }),
       ).toEqual([
@@ -116,25 +110,23 @@ describe('utils/attaching-to-session.js', function () {
     it('should not find non-Appium sessions', function () {
       expect(
         formatSeleniumGridSessions({
-          data: {
-            value: {
-              nodes: [
-                {
-                  slots: [
-                    {
-                      session: {
-                        capabilities: {
-                          browserName: 'Chrome',
-                          desired: {platformName: 'macOS', browserName: 'Chrome'},
-                          platformName: 'macOS',
-                        },
-                        sessionId: '12345',
+          value: {
+            nodes: [
+              {
+                slots: [
+                  {
+                    session: {
+                      capabilities: {
+                        browserName: 'Chrome',
+                        desired: {platformName: 'macOS', browserName: 'Chrome'},
+                        platformName: 'macOS',
                       },
+                      sessionId: '12345',
                     },
-                  ],
-                },
-              ],
-            },
+                  },
+                ],
+              },
+            ],
           },
         }),
       ).toEqual([]);
@@ -142,55 +134,53 @@ describe('utils/attaching-to-session.js', function () {
     it('should find and format Appium sessions across multiple Grid nodes and slots', function () {
       expect(
         formatSeleniumGridSessions({
-          data: {
-            value: {
-              nodes: [
-                {
-                  slots: [
-                    {
-                      session: {
-                        capabilities: {
-                          'appium:automationName': 'UiAutomator2',
-                          desired: {platformName: 'Android', app: 'bestapp.apk'},
-                        },
-                        sessionId: '12345',
+          value: {
+            nodes: [
+              {
+                slots: [
+                  {
+                    session: {
+                      capabilities: {
+                        'appium:automationName': 'UiAutomator2',
+                        desired: {platformName: 'Android', app: 'bestapp.apk'},
                       },
+                      sessionId: '12345',
                     },
-                    {
-                      session: {
-                        capabilities: {
-                          'appium:automationName': 'XCUITest',
-                          desired: {platformName: 'iOS', app: 'bestapp.ipa'},
-                        },
-                        sessionId: '54321',
+                  },
+                  {
+                    session: {
+                      capabilities: {
+                        'appium:automationName': 'XCUITest',
+                        desired: {platformName: 'iOS', app: 'bestapp.ipa'},
                       },
+                      sessionId: '54321',
                     },
-                  ],
-                },
-                {
-                  slots: [
-                    {
-                      session: {
-                        capabilities: {
-                          'appium:automationName': 'UiAutomator2',
-                          desired: {platformName: 'Android', app: 'secondbestapp.apk'},
-                        },
-                        sessionId: '123456',
+                  },
+                ],
+              },
+              {
+                slots: [
+                  {
+                    session: {
+                      capabilities: {
+                        'appium:automationName': 'UiAutomator2',
+                        desired: {platformName: 'Android', app: 'secondbestapp.apk'},
                       },
+                      sessionId: '123456',
                     },
-                    {
-                      session: {
-                        capabilities: {
-                          'appium:automationName': 'XCUITest',
-                          desired: {platformName: 'iOS', app: 'secondbestapp.ipa'},
-                        },
-                        sessionId: '654321',
+                  },
+                  {
+                    session: {
+                      capabilities: {
+                        'appium:automationName': 'XCUITest',
+                        desired: {platformName: 'iOS', app: 'secondbestapp.ipa'},
                       },
+                      sessionId: '654321',
                     },
-                  ],
-                },
-              ],
-            },
+                  },
+                ],
+              },
+            ],
           },
         }),
       ).toEqual([
