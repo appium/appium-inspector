@@ -16,7 +16,7 @@ const BUILD_STATUS = {
 
 async function buildTranslations() {
   log.info('Building project translations');
-  const {data: buildData} = await performApiRequest('/translations/builds', {
+  const buildData = await performApiRequest('/translations/builds', {
     method: 'POST',
   });
   return buildData.id;
@@ -26,7 +26,7 @@ async function downloadTranslations(buildId, dstPath) {
   log.info(`Waiting up to ${BUILD_TIMEOUT_MS / 1000}s for the build #${buildId} to finish`);
   await waitForCondition(
     async () => {
-      const {data: buildData} = await performApiRequest(`/translations/builds/${buildId}`);
+      const buildData = await performApiRequest(`/translations/builds/${buildId}`);
       switch (buildData.status) {
         case BUILD_STATUS.finished:
           return true;
@@ -42,7 +42,7 @@ async function downloadTranslations(buildId, dstPath) {
       intervalMs: 1000,
     },
   );
-  const {data: downloadData} = await performApiRequest(`/translations/builds/${buildId}/download`);
+  const downloadData = await performApiRequest(`/translations/builds/${buildId}/download`);
   log.info(`Downloading translations to '${dstPath}'`);
   await net.downloadFile(downloadData.url, dstPath);
 }
