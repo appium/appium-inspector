@@ -34,9 +34,9 @@ async function updateFile(fileId, storageId) {
   log.info(`Updating the project with the newly uploaded '${RESOURCE_NAME}' instance`);
   await performApiRequest(`/files/${fileId}`, {
     method: 'PUT',
-    payload: JSON.stringify({
+    payload: {
       storageId,
-    }),
+    },
   });
 }
 

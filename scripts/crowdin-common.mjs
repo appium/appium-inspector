@@ -23,8 +23,10 @@ export async function performApiRequest(suffix = '', opts = {}) {
     ? `${API_ROOT}/projects/${PROJECT_ID}${suffix}`
     : `${API_ROOT}${suffix}`;
   log.debug(`Sending ${method} request to ${url}`);
-  if (_.isString(payload)) {
-    log.debug(`Request payload: ${payload}`);
+  let formattedPayload = payload;
+  if (_.isPlainObject(payload)) {
+    formattedPayload = JSON.stringify(payload);
+    log.debug(`Request payload: ${formattedPayload}`);
   }
   return await ky(url, {
     method,
@@ -34,6 +36,6 @@ export async function performApiRequest(suffix = '', opts = {}) {
       'User-Agent': USER_AGENT,
       ...(headers || {}),
     },
-    body: payload,
+    body: formattedPayload,
   }).json();
 }
