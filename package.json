@@ -67,7 +67,6 @@
     "react": "V19: requires antd 6"
   },
   "dependencies": {
-    "@ant-design/pro-components": "2.8.10",
     "@reduxjs/toolkit": "2.11.1",
     "@wdio/protocols": "9.16.2",
     "@xmldom/xmldom": "0.9.8",

@@ -6,26 +6,31 @@
 .gestureHeaderTitle {
   font-size: 20px;
   font-weight: 500;
-}
-
-.gestureHeaderCoordBtn {
-  width: 30px;
-  height: 32px;
+  box-shadow: none !important;
+  border-width: 0px !important;
 }
 
 .gestureHeaderDescription {
+  padding-left: 32px;
+}
+
+.gestureHeaderDescriptionInput {
   font-size: 15px;
   font-weight: 400;
   color: #636363;
-  margin-left: 30px;
-  margin-top: 5px;
+  box-shadow: none !important;
+  border-width: 0px !important;
+}
+
+.gestureHeaderDivider {
+  margin-top: 10px;
 }
 
 .timelineTickTitle {
   text-align: center;
 }
 
-.gestureHeaderIcon {
+.gestureTimelineIcon {
   font-size: 20px;
 }
 
@@ -93,23 +98,4 @@
   text-align: center;
   text-decoration: underline;
   text-decoration-thickness: 20%;
-}
-
-.gestureHeader {
-  padding: 0 0 0 0;
-  margin-right: -12px;
-}
-
-.gestureHeader :global(.ant-page-header-footer) {
-  margin-top: 0px;
-  padding-bottom: 5px;
-}
-
-.gestureHeader :global(.ant-typography) {
-  margin-bottom: 0px;
-}
-
-.gestureHeader :global(.ant-input) {
-  box-shadow: none;
-  border-width: 0px;
 }
