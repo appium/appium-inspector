@@ -33,6 +33,7 @@ const LocatorTestModal = (props) => {
       open={isLocatorTestModalVisible}
       title={t('Search for element')}
       onCancel={onCancel}
+      mask={{blur: false}}
       footer={
         <>
           {locatedElements && (

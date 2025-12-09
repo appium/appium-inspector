@@ -80,18 +80,15 @@ body::-webkit-scrollbar-corner {
 }
 
 .anticon {
-  font-size: 14px !important;
+  font-size: 14px;
 }
 
 .ant-switch .anticon {
-  font-size: 12px !important;
-}
-
-.ant-steps-icon .anticon {
-  font-size: 20px !important;
+  font-size: 12px;
 }
 
 .ant-tree-switcher-icon {
+  font-size: 14px !important;
   vertical-align: sub !important;
 }
 
