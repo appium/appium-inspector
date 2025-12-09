@@ -311,7 +311,7 @@ export function newSession(originalCaps, attachSessId = null) {
               headers,
               timeout: CONN_TIMEOUT,
             });
-            attachedSessionCaps = res.data.value;
+            attachedSessionCaps = res.value;
           } catch (err) {
             // rethrow the error as session not running, but first log the original error to console
             log.error(err);
@@ -754,9 +754,7 @@ async function fetchAllSessions(baseUrl, headers) {
   async function fetchSessionsFromEndpoint(url) {
     try {
       const res = await fetchSessionInformation({url, headers});
-      return url === seleniumSessionsEndpoint
-        ? formatSeleniumGridSessions(res)
-        : (res.data.value ?? []);
+      return url === seleniumSessionsEndpoint ? formatSeleniumGridSessions(res) : (res.value ?? []);
     } catch {
       return [];
     }
