@@ -1,5 +1,6 @@
 import {
   AimOutlined,
+  ArrowLeftOutlined,
   CloseOutlined,
   DownCircleOutlined,
   HighlightOutlined,
@@ -10,7 +11,6 @@ import {
   RightCircleOutlined,
   UpCircleOutlined,
 } from '@ant-design/icons';
-import {PageHeader} from '@ant-design/pro-components';
 import {
   Button,
   Card,
@@ -413,30 +413,26 @@ const GestureEditor = (props) => {
   );
 
   const headerButtons = (
-    <>
+    <Space>
       <Space.Compact>
         <Tooltip title={t('showMoveActionCoordsInPercentage')}>
           <Button
-            className={styles.gestureHeaderCoordBtn}
             type={coordType === POINTER_MOVE_COORDS_TYPE.PERCENTAGES ? 'primary' : 'default'}
             onClick={() => {
               setPointers(getConvertedPointers(POINTER_MOVE_COORDS_TYPE.PERCENTAGES));
               setCoordType(POINTER_MOVE_COORDS_TYPE.PERCENTAGES);
             }}
-            size="small"
           >
             %
           </Button>
         </Tooltip>
         <Tooltip title={t('showMoveActionCoordsInPixels')}>
           <Button
-            className={styles.gestureHeaderCoordBtn}
             type={coordType === POINTER_MOVE_COORDS_TYPE.PIXELS ? 'primary' : 'default'}
             onClick={() => {
               setPointers(getConvertedPointers(POINTER_MOVE_COORDS_TYPE.PIXELS));
               setCoordType(POINTER_MOVE_COORDS_TYPE.PIXELS);
             }}
-            size="small"
           >
             px
           </Button>
@@ -445,22 +441,39 @@ const GestureEditor = (props) => {
       <Tooltip title={t('Play')}>
         <Button type="primary" icon={<PlayCircleOutlined />} onClick={() => onPlay()} />
       </Tooltip>
-      <Button onClick={() => onSaveAs()}>{t('saveAs')}</Button>
-      <Button onClick={() => onSave()} disabled={!loadedGesture}>
-        {t('Save')}
-      </Button>
-    </>
+      <Space.Compact>
+        <Button onClick={() => onSaveAs()}>{t('saveAs')}</Button>
+        <Button onClick={() => onSave()} disabled={!loadedGesture}>
+          {t('Save')}
+        </Button>
+      </Space.Compact>
+    </Space>
   );
 
   const headerDescription = (
-    <Tooltip title={t('Edit')}>
-      <Input
-        defaultValue={description}
-        className={styles.gestureHeaderDescription}
-        onChange={(e) => setDescription(e.target.value)}
-        size="small"
-      />
-    </Tooltip>
+    <div className={styles.gestureHeaderDescription}>
+      <Tooltip title={t('Edit')}>
+        <Input
+          defaultValue={description}
+          className={styles.gestureHeaderDescriptionInput}
+          onChange={(e) => setDescription(e.target.value)}
+          size="small"
+        />
+      </Tooltip>
+    </div>
+  );
+
+  const header = (
+    <>
+      <Row justify="space-between">
+        <Col flex="32px">
+          <Button type="text" icon={<ArrowLeftOutlined />} onClick={() => onBack()} />
+        </Col>
+        <Col flex="1">{headerTitle}</Col>
+        <Col>{headerButtons}</Col>
+      </Row>
+      {headerDescription}
+    </>
   );
 
   const regularTimelineIcon = (pointer, tick) => {
@@ -499,19 +512,19 @@ const GestureEditor = (props) => {
         }
       >
         {type === POINTER_MOVE && (
-          <RightCircleOutlined className={styles.gestureHeaderIcon} style={iconStyle} />
+          <RightCircleOutlined className={styles.gestureTimelineIcon} style={iconStyle} />
         )}
         {type === POINTER_DOWN && (
-          <DownCircleOutlined className={styles.gestureHeaderIcon} style={iconStyle} />
+          <DownCircleOutlined className={styles.gestureTimelineIcon} style={iconStyle} />
         )}
         {type === POINTER_UP && (
-          <UpCircleOutlined className={styles.gestureHeaderIcon} style={iconStyle} />
+          <UpCircleOutlined className={styles.gestureTimelineIcon} style={iconStyle} />
         )}
         {type === PAUSE && (
-          <PauseCircleOutlined className={styles.gestureHeaderIcon} style={iconStyle} />
+          <PauseCircleOutlined className={styles.gestureTimelineIcon} style={iconStyle} />
         )}
         {type === undefined && (
-          <QuestionCircleOutlined className={styles.gestureHeaderIcon} style={iconStyle} />
+          <QuestionCircleOutlined className={styles.gestureTimelineIcon} style={iconStyle} />
         )}
       </Popover>
     );
@@ -535,7 +548,7 @@ const GestureEditor = (props) => {
               status: FILLER_TICK.WAIT,
               icon: (
                 <RightCircleOutlined
-                  className={styles.gestureHeaderIcon}
+                  className={styles.gestureTimelineIcon}
                   style={{color: tick.color}}
                 />
               ),
@@ -716,19 +729,9 @@ const GestureEditor = (props) => {
       }
       className={inspectorStyles.interactionTabCard}
     >
-      <PageHeader
-        className={styles.gestureHeader}
-        onBack={() => onBack()}
-        title={headerTitle}
-        extra={headerButtons}
-        footer={
-          <>
-            {headerDescription}
-            <Divider />
-            {timeline}
-          </>
-        }
-      />
+      {header}
+      <Divider className={styles.gestureHeaderDivider} />
+      {timeline}
       <Tabs
         type="editable-card"
         onChange={(pointerId) => setActivePointerId(pointerId)}
