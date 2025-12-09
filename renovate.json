@@ -17,6 +17,11 @@
       "enabled": false
     },
     {
+      "matchPackageNames": ["antd", "@ant-design/icons"],
+      "groupName": "antd-related packages",
+      "groupSlug": "antd"
+    },
+    {
       "matchPackageNames": ["webdriver", "@wdio/protocols"],
       "groupName": "WebdriverIO-related packages",
       "groupSlug": "webdriverio"

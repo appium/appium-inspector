@@ -32,7 +32,6 @@ import {NOTIF, TABLE_TAB} from '../../../constants/antd-types.js';
 import {
   CURSOR,
   DEFAULT_POINTER,
-  FILLER_TICK,
   POINTER_COLORS,
   POINTER_DOWN_BTNS,
   POINTER_MOVE_COORDS_TYPE,
@@ -47,7 +46,7 @@ import {percentageToPixels, pixelsToPercentage} from '../../../utils/other.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Gestures.module.css';
 
-const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
+const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE, FILLER} = POINTER_TYPES;
 
 /**
  * Shows the gesture editor interface
@@ -363,15 +362,11 @@ const GestureEditor = (props) => {
     const maxTickLength = Math.max(...allTickLengths);
     return copiedPointers.map((pointer) => {
       const currentLength = pointer.ticks.length;
-      if (currentLength > 0) {
-        pointer.ticks[currentLength - 1].customStep = FILLER_TICK.WAIT;
-        if (currentLength < maxTickLength) {
-          const fillers = Array.from({length: maxTickLength - currentLength}, () => ({
-            type: FILLER_TICK.TYPE,
-            color: FILLER_TICK.COLOR,
-          }));
-          pointer.ticks.push(...fillers);
-        }
+      if (currentLength > 0 && currentLength < maxTickLength) {
+        const fillers = Array.from({length: maxTickLength - currentLength}, () => ({
+          type: FILLER,
+        }));
+        pointer.ticks.push(...fillers);
       }
       return pointer;
     });
@@ -476,9 +471,8 @@ const GestureEditor = (props) => {
     </>
   );
 
-  const regularTimelineIcon = (pointer, tick) => {
+  const regularTimelineIcon = (tick) => {
     const {type, duration, button, x, y} = tick;
-    const iconStyle = {color: pointer.color};
     return (
       <Popover
         placement="bottom"
@@ -511,21 +505,11 @@ const GestureEditor = (props) => {
           </div>
         }
       >
-        {type === POINTER_MOVE && (
-          <RightCircleOutlined className={styles.gestureTimelineIcon} style={iconStyle} />
-        )}
-        {type === POINTER_DOWN && (
-          <DownCircleOutlined className={styles.gestureTimelineIcon} style={iconStyle} />
-        )}
-        {type === POINTER_UP && (
-          <UpCircleOutlined className={styles.gestureTimelineIcon} style={iconStyle} />
-        )}
-        {type === PAUSE && (
-          <PauseCircleOutlined className={styles.gestureTimelineIcon} style={iconStyle} />
-        )}
-        {type === undefined && (
-          <QuestionCircleOutlined className={styles.gestureTimelineIcon} style={iconStyle} />
-        )}
+        {type === POINTER_MOVE && <RightCircleOutlined />}
+        {type === POINTER_DOWN && <DownCircleOutlined />}
+        {type === POINTER_UP && <UpCircleOutlined />}
+        {type === PAUSE && <PauseCircleOutlined />}
+        {type === undefined && <QuestionCircleOutlined />}
       </Popover>
     );
   };
@@ -533,28 +517,19 @@ const GestureEditor = (props) => {
   const timeline = updateGestureForTimeline().map((pointer) => (
     <center key={pointer.id}>
       <Steps
-        className={styles.gestureHeaderTimeline}
+        className={styles.gestureTimeline}
         style={{'--timelineColor': pointer.color}}
-        items={pointer.ticks.map((tick) => {
-          if (tick.type !== FILLER_TICK.TYPE) {
-            return {
-              key: 'timeline-steps',
-              status: tick.customStep || FILLER_TICK.FINISH,
-              icon: regularTimelineIcon(pointer, tick),
-            };
-          } else {
-            return {
-              key: 'transparent-steps',
-              status: FILLER_TICK.WAIT,
-              icon: (
-                <RightCircleOutlined
-                  className={styles.gestureTimelineIcon}
-                  style={{color: tick.color}}
-                />
-              ),
-            };
-          }
-        })}
+        items={pointer.ticks.map((tick) =>
+          tick.type !== FILLER
+            ? {
+                status: 'finish',
+                icon: regularTimelineIcon(tick),
+              }
+            : {
+                status: 'wait',
+                icon: <QuestionCircleOutlined />,
+              },
+        )}
       />
     </center>
   ));
@@ -730,8 +705,9 @@ const GestureEditor = (props) => {
       className={inspectorStyles.interactionTabCard}
     >
       {header}
-      <Divider className={styles.gestureHeaderDivider} />
+      <Divider className={styles.gestureEditorDivider} />
       {timeline}
+      <Divider className={styles.gestureEditorDivider} />
       <Tabs
         type="editable-card"
         onChange={(pointerId) => setActivePointerId(pointerId)}
