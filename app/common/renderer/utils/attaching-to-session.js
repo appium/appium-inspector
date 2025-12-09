@@ -1,4 +1,4 @@
-import axios from 'axios';
+import ky from 'ky';
 import _ from 'lodash';
 
 import {SERVER_TYPES} from '../constants/session-builder.js';
@@ -77,14 +77,13 @@ export const getSessionInfo = (session, serverType) => {
 
 // Make a session-related HTTP GET request to the provided Appium server URL
 export async function fetchSessionInformation({url, headers, ...params}) {
-  return await axios({
-    url,
+  return await ky(url, {
     headers: {
       'content-type': 'application/json; charset=utf-8',
       ...headers,
     },
     ...params,
-  });
+  }).json();
 }
 
 export function formatSeleniumGridSessions(res) {
@@ -93,7 +92,7 @@ export function formatSeleniumGridSessions(res) {
   // We extract any session details from this structure and package it into
   // the same format returned by Appium
   const formattedGridSessions = [];
-  const content = res.data.value ?? {};
+  const content = res.value ?? {};
   const nodes = content.nodes ?? [];
   for (const node of nodes) {
     const slots = node.slots ?? [];

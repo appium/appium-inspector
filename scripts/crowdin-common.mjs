@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import {logger} from '@appium/support';
-import axios from 'axios';
+import ky from 'ky';
 import _ from 'lodash';
 
 export const log = logger.getLogger('CROWDIN');
@@ -23,20 +23,19 @@ export async function performApiRequest(suffix = '', opts = {}) {
     ? `${API_ROOT}/projects/${PROJECT_ID}${suffix}`
     : `${API_ROOT}${suffix}`;
   log.debug(`Sending ${method} request to ${url}`);
+  let formattedPayload = payload;
   if (_.isPlainObject(payload)) {
-    log.debug(`Request payload: ${JSON.stringify(payload)}`);
+    formattedPayload = JSON.stringify(payload);
+    log.debug(`Request payload: ${formattedPayload}`);
   }
-  return (
-    await axios({
-      method,
-      headers: {
-        Authorization: `Bearer ${API_TOKEN}`,
-        'Content-Type': 'application/json',
-        'User-Agent': USER_AGENT,
-        ...(headers || {}),
-      },
-      url,
-      data: payload,
-    })
-  ).data;
+  return await ky(url, {
+    method,
+    headers: {
+      Authorization: `Bearer ${API_TOKEN}`,
+      'Content-Type': 'application/json',
+      'User-Agent': USER_AGENT,
+      ...(headers || {}),
+    },
+    body: formattedPayload,
+  }).json();
 }
