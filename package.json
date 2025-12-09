@@ -104,7 +104,7 @@
     "@types/lodash": "4.17.21",
     "@types/react": "18.3.27",
     "@types/react-dom": "18.3.7",
-    "@vitejs/plugin-react": "5.1.1",
+    "@vitejs/plugin-react": "5.1.2",
     "asyncbox": "3.0.0",
     "babel-plugin-react-compiler": "1.0.0",
     "electron": "39.2.6",
