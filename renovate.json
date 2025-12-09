@@ -16,7 +16,7 @@
       "matchUpdateTypes": ["major"],
       "enabled": false
     },
-      {
+    {
       "matchPackageNames": ["antd", "@ant-design/icons"],
       "groupName": "antd-related packages",
       "groupSlug": "antd"
