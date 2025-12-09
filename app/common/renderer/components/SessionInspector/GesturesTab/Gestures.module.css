@@ -22,42 +22,40 @@
   border-width: 0px !important;
 }
 
-.gestureHeaderDivider {
-  margin-top: 10px;
+.gestureEditorDivider {
+  margin: 10px 0;
 }
 
 .timelineTickTitle {
   text-align: center;
 }
 
-.gestureTimelineIcon {
-  font-size: 20px;
-}
-
-.gestureHeaderTimeline {
+.gestureTimeline {
   width: 90%;
-  margin-top: -15px;
+  margin: -10px 0;
   min-height: 36px;
 }
 
-.gestureHeaderTimeline
-  :global(
-    .ant-steps-item-wait
-      > .ant-steps-item-container
-      > .ant-steps-item-content
-      > .ant-steps-item-title::after
-  ) {
-  background-color: #fffefe;
+.gestureTimeline :global(.anticon) {
+  font-size: 20px;
 }
 
-.gestureHeaderTimeline
-  :global(
-    .ant-steps-item-finish
-      .ant-steps-item-container
-      .ant-steps-item-content
-      .ant-steps-item-title::after
-  ) {
-  background-color: var(--timelineColor);
+.gestureTimeline :global(.ant-steps-item-finish .anticon),
+.gestureTimeline :global(.ant-steps-item-rail-finish) {
+  color: var(--timelineColor);
+  border-color: var(--timelineColor);
+}
+
+.gestureTimeline :global(.ant-steps-item-wait .anticon),
+.gestureTimeline :global(.ant-steps-item-rail-wait) {
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+:global(.dark) .gestureTimeline :global(.ant-steps-item-wait .anticon),
+:global(.dark) .gestureTimeline :global(.ant-steps-item-rail-wait) {
+  color: #141414;
+  border-color: #141414;
 }
 
 .tickInputBox {

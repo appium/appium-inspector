@@ -11,6 +11,7 @@ export const POINTER_TYPES = {
   POINTER_DOWN: 'pointerDown',
   PAUSE: 'pause',
   POINTER_MOVE: 'pointerMove',
+  FILLER: 'filler',
 };
 
 export const POINTER_TYPES_MAP = {
@@ -57,9 +58,6 @@ export const POINTER_DOWN_BTNS = {
   LEFT: 0,
   RIGHT: 1,
 };
-
-// Details for 'filler' ticks used to ensure timelines for all pointers have consistent length
-export const FILLER_TICK = {TYPE: 'filler', WAIT: 'wait', FINISH: 'finish', COLOR: '#FFFFFF'};
 
 // Style for dots and lines drawn over the app screenshot
 export const GESTURE_ITEM_STYLES = {
