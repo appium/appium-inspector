@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react';
-import {defineConfig, externalizeDepsPlugin} from 'electron-vite';
+import {defineConfig} from 'electron-vite';
 import {join} from 'path';
 import renderer from 'vite-plugin-electron-renderer';
 
@@ -17,7 +17,6 @@ export default defineConfig({
         '#local-polyfills': join(__dirname, 'app', 'electron', 'renderer', 'polyfills'),
       },
     },
-    plugins: [externalizeDepsPlugin()],
   },
   preload: {
     build: {
@@ -26,7 +25,6 @@ export default defineConfig({
         entry: join(__dirname, 'app', 'electron', 'preload', 'preload.mjs'),
       },
     },
-    plugins: [externalizeDepsPlugin()],
   },
   renderer: {
     build: {
