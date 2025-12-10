@@ -126,7 +126,6 @@
 }
 
 .swipeSvg circle {
-  r: 10;
   fill: rgba(255, 153, 153, 0.8);
 }
 
@@ -156,7 +155,6 @@
 }
 
 .gestureSvg circle {
-  r: 8;
   fill: none;
   stroke-width: 0.4%;
 }
