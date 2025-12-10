@@ -60,13 +60,13 @@ export const ThemeProvider = ({children}) => {
   };
 
   return (
-    <ThemeContext.Provider value={{updateTheme, preferredTheme, isDarkTheme}}>
+    <ThemeContext value={{updateTheme, preferredTheme, isDarkTheme}}>
       <ConfigProvider theme={themeConfig}>
         <App>
           <Layout>{children}</Layout>
           <Notification />
         </App>
       </ConfigProvider>
-    </ThemeContext.Provider>
+    </ThemeContext>
   );
 };
