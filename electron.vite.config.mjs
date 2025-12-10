@@ -47,14 +47,7 @@ export default defineConfig({
     plugins: [
       react({
         babel: {
-          plugins: [
-            [
-              'babel-plugin-react-compiler',
-              {
-                target: '18',
-              },
-            ],
-          ],
+          plugins: ['babel-plugin-react-compiler'],
         },
       }),
       renderer(),

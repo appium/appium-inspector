@@ -81,7 +81,7 @@ const CapabilityEditor = (props) => {
   } = props;
 
   const onSaveAsOk = () => saveSession(server, serverType, caps, {name: saveAsText});
-  const latestCapField = useRef();
+  const latestCapField = useRef(null);
 
   // if we have more than one cap and the most recent cap name is empty,
   // it means we've just added a new cap field, so focus that input element
@@ -106,7 +106,7 @@ const CapabilityEditor = (props) => {
                       placeholder={t('Name')}
                       value={cap.name}
                       onChange={(e) => setCapabilityParam(cap.id, 'name', e.target.value)}
-                      ref={index === caps.length - 1 ? latestCapField : ''}
+                      ref={index === caps.length - 1 ? latestCapField : null}
                       className={styles.capsBoxFont}
                     />
                   </Tooltip>

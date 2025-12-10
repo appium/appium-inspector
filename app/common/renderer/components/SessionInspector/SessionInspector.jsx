@@ -84,7 +84,7 @@ const Inspector = (props) => {
   const screenshotContainerEl = useRef(null);
   const mjpegStreamCheckInterval = useRef(null);
   // Debounced updater stored in a ref to avoid creating it during render
-  const updateScreenshotScaleDebouncedRef = useRef();
+  const updateScreenshotScaleDebouncedRef = useRef(undefined);
 
   // Ref to persist session expiry timeout without resetting on re-renders
   const sessionExpiryTimeoutRef = useRef(null);
