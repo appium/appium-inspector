@@ -33,8 +33,6 @@ import {
   SEARCHING_FOR_ELEMENTS_COMPLETED,
   SELECT_CENTROID,
   SELECT_ELEMENT,
-  SELECT_HOVERED_CENTROID,
-  SELECT_HOVERED_ELEMENT,
   SELECT_INSPECTOR_TAB,
   SELECT_TICK_ELEMENT,
   SESSION_DONE,
@@ -79,8 +77,6 @@ import {
   TOGGLE_SHOW_ATTRIBUTES,
   UNSELECT_CENTROID,
   UNSELECT_ELEMENT,
-  UNSELECT_HOVERED_CENTROID,
-  UNSELECT_HOVERED_ELEMENT,
   UNSELECT_TICK_ELEMENT,
 } from '../actions/SessionInspector.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot.js';
@@ -222,24 +218,6 @@ export default function inspector(state = INITIAL_STATE, action) {
         elementInteractionsNotAvailable: true,
         selectedElementSearchInProgress: false,
       };
-
-    case SELECT_HOVERED_ELEMENT:
-      return {
-        ...state,
-        hoveredElementPath: action.path,
-      };
-
-    case UNSELECT_HOVERED_ELEMENT:
-      return _.omit(state, 'hoveredElementPath');
-
-    case SELECT_HOVERED_CENTROID:
-      return {
-        ...state,
-        hoveredCentroid: action.path,
-      };
-
-    case UNSELECT_HOVERED_CENTROID:
-      return _.omit(state, 'hoveredCentroid');
 
     case METHOD_CALL_REQUESTED:
       return {

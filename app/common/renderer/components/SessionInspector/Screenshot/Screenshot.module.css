@@ -56,7 +56,7 @@
     background-color 0.2s ease-in-out;
 }
 
-.centroidBox.centroid.hoveredElementBox div {
+.centroidBox.centroid:hover div {
   background-color: #ff0000;
   opacity: 0.5;
   visibility: hidden;
@@ -65,7 +65,7 @@
     background-color 0.2s ease-in-out;
 }
 
-.centroidBox.centroid.inspectedElementBox.hoveredElementBox div {
+.centroidBox.centroid.inspectedElementBox:hover div {
   background-color: green;
   opacity: 0.5;
   transition:
@@ -73,7 +73,7 @@
     background-color 0.2s ease-in-out;
 }
 
-.centroidBox.centroid.hoveredElementBox div,
+.centroidBox.centroid:hover div,
 .centroidBox.centroid.inspectedElementBox div {
   position: relative;
   height: 100%;
@@ -98,7 +98,7 @@
     background-color 0.2s ease-in-out;
 }
 
-.centroidBox.overlap.hoveredElementBox div {
+.centroidBox.overlap:hover div {
   background-color: #178b00;
   opacity: 0.5;
   visibility: hidden;
@@ -107,7 +107,7 @@
     background-color 0.2s ease-in-out;
 }
 
-.centroidBox.overlap.inspectedElementBox.hoveredElementBox div {
+.centroidBox.overlap.inspectedElementBox:hover div {
   background-color: rgb(113, 253, 113);
   opacity: 0.5;
   transition:
@@ -115,7 +115,7 @@
     background-color 0.2s ease-in-out;
 }
 
-.centroidBox.overlap.hoveredElementBox div,
+.centroidBox.overlap:hover div,
 .centroidBox.overlap.inspectedElementBox div {
   position: relative;
   height: 100%;
@@ -136,18 +136,18 @@
   visibility: hidden;
 }
 
-.centroidBox.expand.hoveredElementBox div {
+.centroidBox.expand:hover div {
   background-color: #2f2f2f;
   transition: background-color 0.2s ease-in-out;
   visibility: hidden;
 }
 
-.centroidBox.expand.inspectedElementBox.hoveredElementBox div {
+.centroidBox.expand.inspectedElementBox:hover div {
   background-color: rgb(255, 133, 133);
   transition: background-color 0.2s ease-in-out;
 }
 
-.centroidBox.expand.hoveredElementBox div,
+.centroidBox.expand:hover div,
 .centroidBox.expand.inspectedElementBox div {
   position: relative;
   height: 150%;

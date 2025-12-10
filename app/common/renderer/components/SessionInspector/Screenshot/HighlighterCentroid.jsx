@@ -18,32 +18,12 @@ const getCentroidPos = (type, angle, coord) => {
 const HighlighterCentroid = (props) => {
   const {
     selectedElementPath,
-    hoveredElementPath,
     element,
     elementProperties,
     centroidType,
-    hoveredCentroid,
     selectedCentroid,
   } = props;
   const {centerX, centerY, angleX, angleY, keyCode, path, container} = elementProperties;
-
-  const onMouseEnter = (path) => {
-    const {selectHoveredElement, selectHoveredCentroid} = props;
-    if (centroidType === EXPAND) {
-      selectHoveredCentroid(path);
-    } else {
-      selectHoveredElement(path);
-    }
-  };
-
-  const onMouseLeave = () => {
-    const {unselectHoveredElement, unselectHoveredCentroid} = props;
-    if (centroidType === EXPAND) {
-      unselectHoveredCentroid();
-    } else {
-      unselectHoveredElement();
-    }
-  };
 
   const onClickCentroid = (path) => {
     const {selectElement, unselectElement, selectCentroid, unselectCentroid} = props;
@@ -67,9 +47,6 @@ const HighlighterCentroid = (props) => {
 
   // Highlight centroids that represent elements
   if (centroidType !== EXPAND) {
-    if (hoveredElementPath === path) {
-      centroidClasses.push(styles.hoveredElementBox);
-    }
     if (selectedElementPath === path) {
       centroidClasses.push(styles.inspectedElementBox);
     }
@@ -77,9 +54,6 @@ const HighlighterCentroid = (props) => {
 
   // Highlight +/- centroids
   if (centroidType !== CENTROID) {
-    if (hoveredCentroid === keyCode) {
-      centroidClasses.push(styles.hoveredElementBox);
-    }
     if (selectedCentroid === keyCode && !element) {
       centroidClasses.push(styles.inspectedElementBox);
     }
@@ -106,8 +80,6 @@ const HighlighterCentroid = (props) => {
   return (
     <div
       className={centroidClasses.join(' ').trim()}
-      onMouseOver={() => onMouseEnter(path)}
-      onMouseOut={() => onMouseLeave()}
       onClick={() => onClickCentroid(path)}
       key={path}
       style={centroidDivStyle}

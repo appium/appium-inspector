@@ -31,11 +31,7 @@ export const METHOD_CALL_REQUESTED = 'METHOD_CALL_REQUESTED';
 export const METHOD_CALL_DONE = 'METHOD_CALL_DONE';
 export const SET_EXPANDED_PATHS = 'SET_EXPANDED_PATHS';
 export const SET_OPTIMAL_LOCATORS = 'SET_OPTIMAL_LOCATORS';
-export const SELECT_HOVERED_ELEMENT = 'SELECT_HOVERED_ELEMENT';
-export const UNSELECT_HOVERED_ELEMENT = 'UNSELECT_HOVERED_ELEMENT';
 
-export const SELECT_HOVERED_CENTROID = 'SELECT_HOVERED_CENTROID';
-export const UNSELECT_HOVERED_CENTROID = 'UNSELECT_HOVERED_CENTROID';
 export const SELECT_CENTROID = 'SELECT_CENTROID';
 export const UNSELECT_CENTROID = 'UNSELECT_CENTROID';
 export const SET_SHOW_CENTROIDS = 'SET_SHOW_CENTROIDS';
@@ -229,30 +225,6 @@ export function selectCentroid(path) {
 export function unselectCentroid() {
   return (dispatch) => {
     dispatch({type: UNSELECT_CENTROID});
-  };
-}
-
-export function selectHoveredCentroid(path) {
-  return (dispatch) => {
-    dispatch({type: SELECT_HOVERED_CENTROID, path});
-  };
-}
-
-export function unselectHoveredCentroid() {
-  return (dispatch) => {
-    dispatch({type: UNSELECT_HOVERED_CENTROID});
-  };
-}
-
-export function selectHoveredElement(path) {
-  return (dispatch) => {
-    dispatch({type: SELECT_HOVERED_ELEMENT, path});
-  };
-}
-
-export function unselectHoveredElement() {
-  return (dispatch) => {
-    dispatch({type: UNSELECT_HOVERED_ELEMENT});
   };
 }
 
