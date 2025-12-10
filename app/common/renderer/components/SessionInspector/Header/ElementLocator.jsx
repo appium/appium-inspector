@@ -33,7 +33,7 @@ const ElementLocator = (props) => {
   } = props;
 
   return (
-    <Space className={inspectorStyles.spaceContainer} direction="vertical" size="small">
+    <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="small">
       {t('locatorStrategy')}
       <Row justify="center">
         <Radio.Group

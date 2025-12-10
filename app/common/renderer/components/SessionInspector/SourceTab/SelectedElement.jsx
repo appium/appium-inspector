@@ -224,7 +224,7 @@ const SelectedElement = (props) => {
         </span>
       }
     >
-      <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
+      <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="middle">
         {showSnapshotMaxDepthReachedMessage()}
         {elementInteractionsNotAvailable && (
           <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemInfoMessage}>

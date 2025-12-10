@@ -647,7 +647,7 @@ const GestureEditor = (props) => {
         </>
       }
     >
-      <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
+      <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="middle">
         {tickType(tick)}
         {(tick.type === POINTER_MOVE || tick.type === PAUSE) && tickDuration(tick)}
         {(tick.type === POINTER_DOWN || tick.type === POINTER_UP) && tickButton(tick)}
