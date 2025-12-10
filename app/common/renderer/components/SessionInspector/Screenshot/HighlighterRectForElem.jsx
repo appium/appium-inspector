@@ -7,7 +7,7 @@ import styles from './Screenshot.module.css';
 const HighlighterRectForElem = (props) => {
   const {selectedElementPath, selectElement, unselectElement, properties, path} = props;
 
-  const {width, height, left, top} = properties;
+  const {width = 0, height = 0, left = 0, top = 0} = properties;
   const highlighterClasses = [styles.highlighterBox];
 
   // Add class to selected elements
@@ -19,10 +19,8 @@ const HighlighterRectForElem = (props) => {
     <div
       className={highlighterClasses.join(' ').trim()}
       onClick={() => (path === selectedElementPath ? unselectElement() : selectElement(path))}
-      style={{left: left || 0, top: top || 0, width: width || 0, height: height || 0}}
-    >
-      <div></div>
-    </div>
+      style={{left, top, width, height}}
+    />
   );
 };
 
