@@ -138,7 +138,7 @@ const GestureEditor = (props) => {
 
   const displayNotificationMsg = (type, msg) => {
     notification[type]({
-      message: msg,
+      title: msg,
       duration: 5,
     });
   };
