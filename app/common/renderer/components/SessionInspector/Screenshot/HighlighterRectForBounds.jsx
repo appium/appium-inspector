@@ -7,17 +7,13 @@ import styles from './Screenshot.module.css';
 const HighlighterRectForBounds = ({elSize, elLocation, scaleRatio, xOffset}) => (
   <div
     className={`${styles.highlighterBox} ${styles.inspectedElementBox}`}
-    // Unique keys are assigned to elements by their x & y coordinates
-    key={`searchedForElement{x: ${elLocation.x}, y: ${elLocation.y}}`}
     style={{
       left: elLocation.x / scaleRatio + xOffset,
       top: elLocation.y / scaleRatio,
       width: elSize.width / scaleRatio,
       height: elSize.height / scaleRatio,
     }}
-  >
-    <div></div>
-  </div>
+  />
 );
 
 export default HighlighterRectForBounds;
