@@ -51,7 +51,7 @@ const SelectedElement = (props) => {
     downloadFile(href, filename);
   };
 
-  const sendKeys = useRef();
+  const sendKeys = useRef(null);
 
   const isDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
 

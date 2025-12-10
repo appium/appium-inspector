@@ -10,7 +10,7 @@ import styles from './SessionInfo.module.css';
 const SessionInfo = (props) => {
   const {driver, getActiveAppId, getServerStatus, getFlatSessionCaps, sessionStartTime, t} = props;
 
-  const interval = useRef();
+  const interval = useRef(null);
   const [sessionLength, setSessionLength] = useState(0);
 
   const formatSessionLength = () => {

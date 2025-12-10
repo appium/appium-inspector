@@ -35,7 +35,7 @@ const Screenshot = (props) => {
     t,
   } = props;
 
-  const containerEl = useRef();
+  const containerEl = useRef(null);
   const [x, setX] = useState();
   const [y, setY] = useState();
 
