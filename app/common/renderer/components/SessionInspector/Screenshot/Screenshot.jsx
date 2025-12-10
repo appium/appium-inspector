@@ -199,7 +199,7 @@ const Screenshot = (props) => {
           {screenshotInteractionMode === TAP_SWIPE && (
             <svg className={styles.swipeSvg}>
               {coordStart && (
-                <circle cx={coordStart.x / scaleRatio} cy={coordStart.y / scaleRatio} />
+                <circle cx={coordStart.x / scaleRatio} cy={coordStart.y / scaleRatio} r={10} />
               )}
               {coordStart && !coordEnd && (
                 <line
@@ -240,6 +240,7 @@ const Screenshot = (props) => {
                       key={`${tick.id}.circle`}
                       cx={tick.x / scaleRatio}
                       cy={tick.y / scaleRatio}
+                      r={8}
                       style={
                         tick.type === GESTURE_ITEM_STYLES.FILLED
                           ? {fill: tick.color}
