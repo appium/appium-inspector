@@ -21,113 +21,74 @@
 .centroidBox {
   width: 2.2vh;
   height: 2.2vh;
-  border-style: solid;
-  border-color: #ff4141;
-  border-width: 2px;
+  border: 2px solid red;
   position: absolute;
+  opacity: 0.6;
   overflow: hidden;
   cursor: pointer;
-  visibility: visible;
   transform: translate(-50%, -50%);
 }
 
-.centroidBox.centroid {
-  opacity: 1;
+.centroidBox.centroid.inspectedElementBox {
+  background-color: rgb(90, 90, 178);
+  opacity: 0.8;
 }
 
-.centroidBox.centroid.inspectedElementBox div {
-  background-color: blue;
-  opacity: 0.5;
-  visibility: hidden;
+.centroidBox.centroid:hover {
+  background-color: yellow;
+  opacity: 0.8;
 }
 
-.centroidBox.centroid:hover div {
-  background-color: #ff0000;
-  opacity: 0.5;
-  visibility: hidden;
-}
-
-.centroidBox.centroid.inspectedElementBox:hover div {
-  background-color: green;
-  opacity: 0.5;
-}
-
-.centroidBox.centroid:hover div,
-.centroidBox.centroid.inspectedElementBox div {
-  position: relative;
-  height: 100%;
-  width: 100%;
-  visibility: visible;
-}
-
-.centroidBox.overlap {
-  border-style: dashed;
-  border-color: #178b00;
-  z-index: 4;
-  opacity: 1;
-}
-
-.centroidBox.overlap.inspectedElementBox div {
-  background-color: blue;
-  opacity: 0.5;
-  visibility: hidden;
-}
-
-.centroidBox.overlap:hover div {
-  background-color: #178b00;
-  opacity: 0.5;
-  visibility: hidden;
-}
-
-.centroidBox.overlap.inspectedElementBox:hover div {
-  background-color: rgb(113, 253, 113);
-  opacity: 0.5;
-}
-
-.centroidBox.overlap:hover div,
-.centroidBox.overlap.inspectedElementBox div {
-  position: relative;
-  height: 100%;
-  width: 100%;
-  visibility: visible;
+.centroidBox.centroid.inspectedElementBox:hover {
+  background-color: rgb(100, 255, 100);
 }
 
 .centroidBox.expand {
-  z-index: 3;
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.6);
   opacity: 1;
 }
 
-.centroidBox.expand.inspectedElementBox div {
-  background-color: rgb(62, 57, 57);
-  visibility: hidden;
+.centroidBox.expand.inspectedElementBox {
+  background-color: rgb(90, 90, 178);
+  opacity: 0.8;
 }
 
-.centroidBox.expand:hover div {
-  background-color: #2f2f2f;
-  visibility: hidden;
+.centroidBox.expand:hover {
+  background-color: yellow;
+  opacity: 0.8;
 }
 
-.centroidBox.expand.inspectedElementBox:hover div {
-  background-color: rgb(255, 133, 133);
-}
-
-.centroidBox.expand:hover div,
-.centroidBox.expand.inspectedElementBox div {
-  position: relative;
-  height: 150%;
-  width: 100%;
-  visibility: visible;
+.centroidBox.expand.inspectedElementBox:hover {
+  background-color: rgb(100, 255, 100);
 }
 
 .plusMinus {
   position: relative;
-  top: -0.8vh;
+  top: -0.9vh;
   text-align: center;
   font-size: 2vh;
   font-weight: 800;
-  color: #ff4141;
+  color: red;
+}
+
+.centroidBox.overlap {
+  border-style: dashed;
+  border-color: green;
   opacity: 1;
+}
+
+.centroidBox.overlap.inspectedElementBox {
+  background-color: rgb(90, 90, 178);
+  opacity: 0.8;
+}
+
+.centroidBox.overlap:hover {
+  background-color: yellow;
+  opacity: 0.8;
+}
+
+.centroidBox.overlap.inspectedElementBox:hover {
+  background-color: rgb(100, 255, 100);
 }
 
 .innerScreenshotContainer {

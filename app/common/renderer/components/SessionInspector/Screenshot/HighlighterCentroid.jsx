@@ -16,13 +16,7 @@ const getCentroidPos = (type, angle, coord) => {
  * Shows all element centroids
  */
 const HighlighterCentroid = (props) => {
-  const {
-    selectedElementPath,
-    element,
-    elementProperties,
-    centroidType,
-    selectedCentroid,
-  } = props;
+  const {selectedElementPath, element, elementProperties, centroidType, selectedCentroid} = props;
   const {centerX, centerY, angleX, angleY, keyCode, path, container} = elementProperties;
 
   const onClickCentroid = (path) => {
@@ -70,13 +64,6 @@ const HighlighterCentroid = (props) => {
     ...(centroidType === OVERLAP ? overlapDivStyle : {}),
   };
 
-  const placeHolder =
-    centroidType === EXPAND ? (
-      <div className={styles.plusMinus}>{keyCode === selectedCentroid ? '-' : '+'}</div>
-    ) : (
-      <div></div>
-    );
-
   return (
     <div
       className={centroidClasses.join(' ').trim()}
@@ -84,7 +71,9 @@ const HighlighterCentroid = (props) => {
       key={path}
       style={centroidDivStyle}
     >
-      {placeHolder}
+      {centroidType === EXPAND && (
+        <div className={styles.plusMinus}>{keyCode === selectedCentroid ? '-' : '+'}</div>
+      )}
     </div>
   );
 };
