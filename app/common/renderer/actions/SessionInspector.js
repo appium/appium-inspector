@@ -245,10 +245,8 @@ export function unselectHoveredCentroid() {
 }
 
 export function selectHoveredElement(path) {
-  return (dispatch, getState) => {
-    const {sourceJSON} = getState().inspector;
-    const hoveredElement = findJSONElementByPath(path, sourceJSON);
-    dispatch({type: SELECT_HOVERED_ELEMENT, hoveredElement});
+  return (dispatch) => {
+    dispatch({type: SELECT_HOVERED_ELEMENT, path});
   };
 }
 

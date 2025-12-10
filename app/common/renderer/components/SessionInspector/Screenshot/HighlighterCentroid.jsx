@@ -18,7 +18,7 @@ const getCentroidPos = (type, angle, coord) => {
 const HighlighterCentroid = (props) => {
   const {
     selectedElementPath,
-    hoveredElement = {},
+    hoveredElementPath,
     element,
     elementProperties,
     centroidType,
@@ -67,7 +67,7 @@ const HighlighterCentroid = (props) => {
 
   // Highlight centroids that represent elements
   if (centroidType !== EXPAND) {
-    if (hoveredElement.path === path) {
+    if (hoveredElementPath === path) {
       centroidClasses.push(styles.hoveredElementBox);
     }
     if (selectedElementPath === path) {

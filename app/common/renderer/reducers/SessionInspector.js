@@ -226,11 +226,11 @@ export default function inspector(state = INITIAL_STATE, action) {
     case SELECT_HOVERED_ELEMENT:
       return {
         ...state,
-        hoveredElement: action.hoveredElement,
+        hoveredElementPath: action.path,
       };
 
     case UNSELECT_HOVERED_ELEMENT:
-      return _.omit(state, 'hoveredElement');
+      return _.omit(state, 'hoveredElementPath');
 
     case SELECT_HOVERED_CENTROID:
       return {

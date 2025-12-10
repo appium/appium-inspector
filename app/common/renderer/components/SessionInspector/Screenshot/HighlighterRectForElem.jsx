@@ -6,10 +6,10 @@ import styles from './Screenshot.module.css';
  */
 const HighlighterRectForElem = (props) => {
   const {
-    hoveredElement = {},
+    hoveredElementPath,
     selectHoveredElement,
     unselectHoveredElement,
-    selectedElement = {},
+    selectedElementPath,
     selectElement,
     unselectElement,
     dimensions,
@@ -21,10 +21,10 @@ const HighlighterRectForElem = (props) => {
   let highlighterClasses = [styles.highlighterBox];
 
   // Add class + special classes to hovered and selected elements
-  if (hoveredElement.path === element.path) {
+  if (hoveredElementPath === element.path) {
     highlighterClasses.push(styles.hoveredElementBox);
   }
-  if (selectedElement.path === element.path) {
+  if (selectedElementPath === element.path) {
     highlighterClasses.push(styles.inspectedElementBox);
   }
 
@@ -33,7 +33,7 @@ const HighlighterRectForElem = (props) => {
       className={highlighterClasses.join(' ').trim()}
       onMouseOver={() => selectHoveredElement(key)}
       onMouseOut={unselectHoveredElement}
-      onClick={() => (key === selectedElement.path ? unselectElement() : selectElement(key))}
+      onClick={() => (key === selectedElementPath ? unselectElement() : selectElement(key))}
       key={key}
       style={{left: left || 0, top: top || 0, width: width || 0, height: height || 0}}
     >
