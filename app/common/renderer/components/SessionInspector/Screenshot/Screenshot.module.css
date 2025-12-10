@@ -10,18 +10,18 @@
   transition: background-color 0.2s ease-in-out;
 }
 
-.highlighterBox.hoveredElementBox div {
+.highlighterBox:hover div {
   background-color: yellow;
   visibility: hidden;
   transition: background-color 0.2s ease-in-out;
 }
 
-.highlighterBox.inspectedElementBox.hoveredElementBox div {
+.highlighterBox.inspectedElementBox:hover div {
   background-color: rgb(100, 255, 100);
   transition: background-color 0.2s ease-in-out;
 }
 
-.highlighterBox.hoveredElementBox div,
+.highlighterBox:hover div,
 .highlighterBox.inspectedElementBox div {
   position: relative;
   height: 100%;
