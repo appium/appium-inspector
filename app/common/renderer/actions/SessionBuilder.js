@@ -157,7 +157,7 @@ export function showError(e, params = {methodName: null, secs: 5, url: null}) {
 
   log.error(errMessage);
   notification.error({
-    message: methodName ? i18n.t('callToMethodFailed', {methodName}) : i18n.t('Error'),
+    title: methodName ? i18n.t('callToMethodFailed', {methodName}) : i18n.t('Error'),
     description: errMessage,
     duration: secs,
   });
@@ -619,7 +619,7 @@ export function setStateFromSessionFile(sessionFileString) {
     const sessionJSON = parseSessionFileContents(sessionFileString);
     if (sessionJSON === null) {
       notification.error({
-        message: i18n.t('invalidSessionFile'),
+        title: i18n.t('invalidSessionFile'),
         duration: 0,
       });
       return;

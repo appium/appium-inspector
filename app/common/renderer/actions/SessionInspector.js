@@ -302,7 +302,7 @@ export function restartSession(error, params) {
     }
     showError(error, {methodName: params.methodName, secs: 3});
     notification.info({
-      message: i18n.t('RestartSessionMessage'),
+      title: i18n.t('RestartSessionMessage'),
       duration: 3,
     });
     const quitSes = quitSession('Window closed');
