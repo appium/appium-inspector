@@ -141,10 +141,10 @@ export default function builder(state = INITIAL_STATE, action) {
         })),
         capsUUID: action.uuid,
         capsName: action.name,
-        visibleProviders: _.union(
-          state.visibleProviders,
-          action.serverType !== SERVER_TYPES.REMOTE ? [action.serverType] : [],
-        ),
+        visibleProviders:
+          action.serverType !== SERVER_TYPES.REMOTE
+            ? _.union(state.visibleProviders, [action.serverType])
+            : state.visibleProviders,
       };
       return _.omit(nextState, 'isCapsDirty');
 
