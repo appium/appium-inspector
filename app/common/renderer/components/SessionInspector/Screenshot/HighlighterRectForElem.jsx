@@ -5,40 +5,22 @@ import styles from './Screenshot.module.css';
  * boxes of the elements in the app
  */
 const HighlighterRectForElem = (props) => {
-  const {
-    hoveredElement = {},
-    selectHoveredElement,
-    unselectHoveredElement,
-    selectedElement = {},
-    selectElement,
-    unselectElement,
-    dimensions,
-    element,
-  } = props;
+  const {selectedElementPath, selectElement, unselectElement, properties, path} = props;
 
-  const {width, height, left, top} = dimensions;
-  const key = element.path;
-  let highlighterClasses = [styles.highlighterBox];
+  const {width = 0, height = 0, left = 0, top = 0} = properties;
+  const highlighterClasses = [styles.highlighterBox];
 
-  // Add class + special classes to hovered and selected elements
-  if (hoveredElement.path === element.path) {
-    highlighterClasses.push(styles.hoveredElementBox);
-  }
-  if (selectedElement.path === element.path) {
+  // Add class to selected elements
+  if (selectedElementPath === path) {
     highlighterClasses.push(styles.inspectedElementBox);
   }
 
   return (
     <div
       className={highlighterClasses.join(' ').trim()}
-      onMouseOver={() => selectHoveredElement(key)}
-      onMouseOut={unselectHoveredElement}
-      onClick={() => (key === selectedElement.path ? unselectElement() : selectElement(key))}
-      key={key}
-      style={{left: left || 0, top: top || 0, width: width || 0, height: height || 0}}
-    >
-      <div></div>
-    </div>
+      onClick={() => (path === selectedElementPath ? unselectElement() : selectElement(path))}
+      style={{left, top, width, height}}
+    />
   );
 };
 

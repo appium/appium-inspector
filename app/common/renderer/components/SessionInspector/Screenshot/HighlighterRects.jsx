@@ -173,10 +173,12 @@ const HighlighterRects = (props) => {
       }
       highlighterRects.push(
         <HighlighterRectForElem
-          dimensions={elem.properties}
-          element={elem.element}
+          properties={elem.properties}
+          path={elem.element.path}
           key={elem.properties.path}
-          {...props}
+          selectedElementPath={props.selectedElementPath}
+          selectElement={props.selectElement}
+          unselectElement={props.unselectElement}
         />,
       );
     }
