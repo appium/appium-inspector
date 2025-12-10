@@ -13,8 +13,8 @@
     },
     {
       "matchPackageNames": ["@types/react", "@types/react-dom", "react", "react-dom"],
-      "matchUpdateTypes": ["major"],
-      "enabled": false
+      "groupName": "React-related packages",
+      "groupSlug": "react"
     },
     {
       "matchPackageNames": ["antd", "@ant-design/icons"],
