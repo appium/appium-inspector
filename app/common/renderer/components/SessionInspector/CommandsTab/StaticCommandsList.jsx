@@ -11,7 +11,7 @@ const StaticCommandsList = (props) => {
   const {startCommand, t} = props;
 
   return (
-    <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
+    <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="middle">
       {t('commandsDescription')}
       <Row>
         {_.toPairs(TOP_LEVEL_COMMANDS).map(([cmdName, cmdDetails]) => (

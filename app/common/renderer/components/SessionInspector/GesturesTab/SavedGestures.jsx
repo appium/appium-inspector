@@ -207,7 +207,7 @@ const SavedGestures = (props) => {
       }
       className={inspectorStyles.interactionTabCard}
     >
-      <Space className={inspectorStyles.spaceContainer} direction="vertical" size="middle">
+      <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="middle">
         {t('gesturesDescription')}
         <Table
           onRow={(row) => onRowMouseOver(row.key)}

@@ -44,7 +44,7 @@ const LocatedElements = (props) => {
   return (
     <>
       {locatedElements.length === 0 && (
-        <Space className={inspectorStyles.spaceContainer} direction="vertical" size="small">
+        <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="small">
           <Row>
             <i>{t('couldNotFindAnyElements')}</i>
           </Row>
@@ -58,7 +58,7 @@ const LocatedElements = (props) => {
       )}
       {locatedElements.length > 0 && (
         <Spin spinning={isFindingLocatedElementInSource}>
-          <Space className={inspectorStyles.spaceContainer} direction="vertical" size="small">
+          <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="small">
             <Row justify="space-between">
               <span>
                 {t('elementsCount')} <Badge count={locatedElements.length} offset={[0, -2]} />
@@ -93,7 +93,7 @@ const LocatedElements = (props) => {
               />
             </Row>
             <Row justify="center">
-              <Space direction="horizontal" size="small">
+              <Space orientation="horizontal" size="small">
                 <Tooltip title={t('Find and Select in Source')} placement="bottom">
                   <Button
                     disabled={!locatorTestElement}

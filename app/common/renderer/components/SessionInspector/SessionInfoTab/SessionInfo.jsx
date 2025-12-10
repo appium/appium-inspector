@@ -117,7 +117,7 @@ const SessionInfo = (props) => {
       }
       className={inspectorStyles.interactionTabCard}
     >
-      <Space direction="vertical" size="middle">
+      <Space orientation="vertical" size="middle">
         <Table
           columns={columns}
           dataSource={outerDataSource()}
