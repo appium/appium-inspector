@@ -7,18 +7,15 @@
 .highlighterBox.inspectedElementBox div {
   background-color: rgb(90, 90, 178);
   visibility: hidden;
-  transition: background-color 0.2s ease-in-out;
 }
 
 .highlighterBox:hover div {
   background-color: yellow;
   visibility: hidden;
-  transition: background-color 0.2s ease-in-out;
 }
 
 .highlighterBox.inspectedElementBox:hover div {
   background-color: rgb(100, 255, 100);
-  transition: background-color 0.2s ease-in-out;
 }
 
 .highlighterBox:hover div,
@@ -44,33 +41,23 @@
 
 .centroidBox.centroid {
   opacity: 1;
-  transition: opacity 0.2s ease-in-out;
 }
 
 .centroidBox.centroid.inspectedElementBox div {
   background-color: blue;
   opacity: 0.5;
   visibility: hidden;
-  transition:
-    opacity 0.2s ease-in-out,
-    background-color 0.2s ease-in-out;
 }
 
 .centroidBox.centroid:hover div {
   background-color: #ff0000;
   opacity: 0.5;
   visibility: hidden;
-  transition:
-    opacity 0.2s ease-in-out,
-    background-color 0.2s ease-in-out;
 }
 
 .centroidBox.centroid.inspectedElementBox:hover div {
   background-color: green;
   opacity: 0.5;
-  transition:
-    opacity 0.2s ease-in-out,
-    background-color 0.2s ease-in-out;
 }
 
 .centroidBox.centroid:hover div,
@@ -86,33 +73,23 @@
   border-color: #178b00;
   z-index: 4;
   opacity: 1;
-  transition: opacity 0.2s ease-in-out;
 }
 
 .centroidBox.overlap.inspectedElementBox div {
   background-color: blue;
   opacity: 0.5;
   visibility: hidden;
-  transition:
-    opacity 0.2s ease-in-out,
-    background-color 0.2s ease-in-out;
 }
 
 .centroidBox.overlap:hover div {
   background-color: #178b00;
   opacity: 0.5;
   visibility: hidden;
-  transition:
-    opacity 0.2s ease-in-out,
-    background-color 0.2s ease-in-out;
 }
 
 .centroidBox.overlap.inspectedElementBox:hover div {
   background-color: rgb(113, 253, 113);
   opacity: 0.5;
-  transition:
-    opacity 0.2s ease-in-out,
-    background-color 0.2s ease-in-out;
 }
 
 .centroidBox.overlap:hover div,
@@ -127,24 +104,20 @@
   z-index: 3;
   background-color: #ffffff;
   opacity: 1;
-  transition: opacity 0.2s ease-in-out;
 }
 
 .centroidBox.expand.inspectedElementBox div {
   background-color: rgb(62, 57, 57);
-  transition: background-color 0.2s ease-in-out;
   visibility: hidden;
 }
 
 .centroidBox.expand:hover div {
   background-color: #2f2f2f;
-  transition: background-color 0.2s ease-in-out;
   visibility: hidden;
 }
 
 .centroidBox.expand.inspectedElementBox:hover div {
   background-color: rgb(255, 133, 133);
-  transition: background-color 0.2s ease-in-out;
 }
 
 .centroidBox.expand:hover div,
@@ -163,9 +136,6 @@
   font-weight: 800;
   color: #ff4141;
   opacity: 1;
-  transition:
-    opacity 0.2s ease-in-out,
-    background-color 0.2s ease-in-out;
 }
 
 .innerScreenshotContainer {
