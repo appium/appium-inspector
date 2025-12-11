@@ -10,13 +10,11 @@
     },
     {
       "matchPackageNames": ["antd", "@ant-design/icons"],
-      "groupName": "antd-related packages",
-      "groupSlug": "antd"
+      "groupName": "antd-related packages"
     },
     {
       "matchPackageNames": ["appium", "@appium/**", "!@appium/base-plugin"],
-      "groupName": "Appium-related packages",
-      "groupSlug": "appium"
+      "groupName": "Appium-related packages"
     },
     {
       "matchPackageNames": ["@appium/base-plugin"],
