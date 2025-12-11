@@ -1,9 +1,6 @@
 {
-  "extends": [
-    "config:recommended",
-    ":semanticCommitTypeAll(chore)",
-    ":pinAllExceptPeerDependencies"
-  ],
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>appium/appium//renovate/default"],
   "labels": ["dependencies"],
   "packageRules": [
     {
@@ -12,24 +9,12 @@
       "automerge": true
     },
     {
-      "matchPackageNames": ["@types/react", "@types/react-dom", "react", "react-dom"],
-      "groupName": "React-related packages",
-      "groupSlug": "react"
-    },
-    {
       "matchPackageNames": ["antd", "@ant-design/icons"],
-      "groupName": "antd-related packages",
-      "groupSlug": "antd"
-    },
-    {
-      "matchPackageNames": ["webdriver", "@wdio/protocols"],
-      "groupName": "WebdriverIO-related packages",
-      "groupSlug": "webdriverio"
+      "groupName": "antd-related packages"
     },
     {
       "matchPackageNames": ["appium", "@appium/**", "!@appium/base-plugin"],
-      "groupName": "Appium-related packages",
-      "groupSlug": "appium"
+      "groupName": "Appium-related packages"
     },
     {
       "matchPackageNames": ["@appium/base-plugin"],
