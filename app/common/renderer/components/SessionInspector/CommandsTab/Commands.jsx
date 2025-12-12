@@ -80,7 +80,12 @@ const Commands = (props) => {
       args,
       skipRefresh,
     });
-    const formattedResult = _.isObject(res) && _.isEmpty(res) ? null : JSON.stringify(res, null, 2);
+    const formattedResult =
+      _.isObject(res) && _.isEmpty(res)
+        ? null
+        : typeof res === 'string'
+          ? res
+          : JSON.stringify(res, null, 2);
     setCommandResult(formattedResult);
   };
 
