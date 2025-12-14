@@ -39,6 +39,7 @@ const Commands = (props) => {
   const curCommandParamVals = useRef([]);
 
   const [commandResult, setCommandResult] = useState(null);
+  const [resultType, setResultType] = useState(null);
 
   const startCommand = (commandDetails) => {
     setCurCommandDetails(commandDetails);
@@ -80,13 +81,15 @@ const Commands = (props) => {
       args,
       skipRefresh,
     });
-    const formattedResult =
-      _.isObject(res) && _.isEmpty(res)
-        ? null
-        : typeof res === 'string'
-          ? res
-          : JSON.stringify(res, null, 2);
+    if (_.isObject(res) && _.isEmpty(res)) {
+      setCommandResult(null);
+      setResultType(null);
+      return;
+    }
+    const type = typeof res;
+    const formattedResult = type === 'string' ? res : JSON.stringify(res, null, 2);
     setCommandResult(formattedResult);
+    setResultType(type);
   };
 
   const prepareAndRunCommand = (commandDetails) => {
@@ -108,6 +111,7 @@ const Commands = (props) => {
 
   const clearCurrentCommand = () => {
     setCommandResult(null);
+    setResultType(null);
     setCurCommandDetails(null);
     curCommandParamVals.current = [];
   };
@@ -161,6 +165,7 @@ const Commands = (props) => {
           <CommandResultModal
             commandName={curCommandDetails.name}
             commandResult={commandResult}
+            resultType={resultType}
             clearCurrentCommand={clearCurrentCommand}
             t={t}
           />

@@ -208,7 +208,7 @@ const CommandResultModalFooter = ({
   </Row>
 );
 
-const CommandResultModal = ({commandName, commandResult, clearCurrentCommand, t}) => {
+const CommandResultModal = ({commandName, commandResult, resultType, clearCurrentCommand, t}) => {
   const [formatResult, setFormatResult] = useState(false);
 
   const {parsedResult, isPrimitive} = parseCommandResult(commandResult);
@@ -220,7 +220,7 @@ const CommandResultModal = ({commandName, commandResult, clearCurrentCommand, t}
 
   return (
     <Modal
-      title={t('methodCallResult', {methodName: commandName})}
+      title={`${t('methodCallResult', {methodName: commandName})}${resultType ? ` (type: ${resultType})` : ''}`}
       open={!!commandResult}
       onCancel={() => closeCommandModal()}
       width={{md: '80%', lg: '70%', xl: '60%', xxl: '50%'}}
