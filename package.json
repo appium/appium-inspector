@@ -65,7 +65,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "6.1.0",
-    "@reduxjs/toolkit": "2.11.1",
+    "@reduxjs/toolkit": "2.11.2",
     "@wdio/protocols": "9.16.2",
     "@xmldom/xmldom": "0.9.8",
     "antd": "6.1.0",
