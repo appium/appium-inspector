@@ -10,25 +10,10 @@ import styles from './Commands.module.css';
 const LABEL_PROPERTY = 'property';
 const LABEL_VALUE = 'value';
 
-// Parse result as JSON (if possible) and detect whether it is a primitive type
-const parseCommandResult = (result) => {
-  try {
-    const parsedResult = JSON.parse(result);
-    const isPrimitive = !_.isObject(parsedResult);
-    return {parsedResult, isPrimitive};
-  } catch {
-    return {parsedResult: result, isPrimitive: true};
-  }
-};
+const stringifyValue = (val) => (_.isObject(val) ? JSON.stringify(val, null, 2) : String(val));
 
 const CommandResultTableCell = ({value, t}) => {
-  const displayText =
-    typeof value === 'string'
-      ? `"${value}"`
-      : _.isObject(value)
-        ? JSON.stringify(value, null, 2)
-        : String(value);
-
+  const displayText = stringifyValue(value);
   return (
     <Tooltip placement="topLeft" title={t('Copied!')} trigger="click">
       <code className={styles.commandResultTableCell} onClick={() => copyToClipboard(displayText)}>
@@ -173,7 +158,7 @@ const CommandResultRawTable = ({result}) => {
 };
 
 const CommandResultModalFooter = ({
-  commandResult,
+  result,
   closeCommandModal,
   setFormatResult,
   formatResult,
@@ -195,7 +180,7 @@ const CommandResultModalFooter = ({
           <Button
             icon={<CopyOutlined />}
             disabled={formatResult}
-            onClick={() => copyToClipboard(commandResult)}
+            onClick={() => copyToClipboard(result)}
           />
         </Tooltip>
       </Space>
@@ -211,7 +196,9 @@ const CommandResultModalFooter = ({
 const CommandResultModal = ({commandName, commandResult, clearCurrentCommand, t}) => {
   const [formatResult, setFormatResult] = useState(false);
 
-  const {parsedResult, isPrimitive} = parseCommandResult(commandResult);
+  const resultType = commandResult === null ? 'null' : typeof commandResult;
+  const isPrimitive = resultType !== 'object';
+  const stringifiedResult = stringifyValue(commandResult);
 
   const closeCommandModal = () => {
     clearCurrentCommand();
@@ -220,14 +207,14 @@ const CommandResultModal = ({commandName, commandResult, clearCurrentCommand, t}
 
   return (
     <Modal
-      title={t('methodCallResult', {methodName: commandName})}
-      open={!!commandResult}
+      title={t('methodCallResult', {methodName: commandName, resultType})}
+      open={commandResult !== undefined}
       onCancel={() => closeCommandModal()}
       width={{md: '80%', lg: '70%', xl: '60%', xxl: '50%'}}
       className={styles.commandResultModal}
       footer={
         <CommandResultModalFooter
-          commandResult={commandResult}
+          result={stringifiedResult}
           closeCommandModal={closeCommandModal}
           setFormatResult={setFormatResult}
           formatResult={formatResult}
@@ -237,9 +224,9 @@ const CommandResultModal = ({commandName, commandResult, clearCurrentCommand, t}
       }
     >
       {formatResult ? (
-        <CommandResultFormattedTable result={parsedResult} isPrimitive={isPrimitive} t={t} />
+        <CommandResultFormattedTable result={commandResult} isPrimitive={isPrimitive} t={t} />
       ) : (
-        <CommandResultRawTable result={commandResult} />
+        <CommandResultRawTable result={stringifiedResult} />
       )}
     </Modal>
   );
