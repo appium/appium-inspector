@@ -196,8 +196,9 @@ const CommandResultModalFooter = ({
 const CommandResultModal = ({commandName, commandResult, clearCurrentCommand, t}) => {
   const [formatResult, setFormatResult] = useState(false);
 
-  const resultType = commandResult === null ? 'null' : typeof commandResult;
-  const isPrimitive = resultType !== 'object';
+  const resultType =
+    commandResult === null ? 'null' : Array.isArray(commandResult) ? 'array' : typeof commandResult;
+  const isPrimitive = resultType !== 'object' && resultType !== 'array';
   const stringifiedResult = stringifyValue(commandResult);
 
   const closeCommandModal = () => {
