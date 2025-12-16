@@ -38,7 +38,7 @@ const Commands = (props) => {
   const [curCommandDetails, setCurCommandDetails] = useState(null);
   const curCommandParamVals = useRef([]);
 
-  const [commandResult, setCommandResult] = useState(null);
+  const [commandResult, setCommandResult] = useState(undefined);
 
   const startCommand = (commandDetails) => {
     setCurCommandDetails(commandDetails);
@@ -80,8 +80,7 @@ const Commands = (props) => {
       args,
       skipRefresh,
     });
-    const formattedResult = _.isObject(res) && _.isEmpty(res) ? null : JSON.stringify(res, null, 2);
-    setCommandResult(formattedResult);
+    setCommandResult(res);
   };
 
   const prepareAndRunCommand = (commandDetails) => {
@@ -102,7 +101,7 @@ const Commands = (props) => {
   };
 
   const clearCurrentCommand = () => {
-    setCommandResult(null);
+    setCommandResult(undefined);
     setCurCommandDetails(null);
     curCommandParamVals.current = [];
   };
@@ -137,7 +136,7 @@ const Commands = (props) => {
         )}
         {!!curCommandDetails && (
           <Modal
-            title={`${t('Enter Parameters for:')} ${t(curCommandDetails.name)}`}
+            title={t('enterMethodParameters', {methodName: curCommandDetails.name})}
             okText={t('Execute Command')}
             open={!_.isEmpty(curCommandDetails.details.params)}
             onOk={() => prepareAndRunCommand(curCommandDetails)}
@@ -152,7 +151,7 @@ const Commands = (props) => {
             ))}
           </Modal>
         )}
-        {commandResult && (
+        {commandResult !== undefined && (
           <CommandResultModal
             commandName={curCommandDetails.name}
             commandResult={commandResult}
