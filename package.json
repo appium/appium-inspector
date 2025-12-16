@@ -113,7 +113,7 @@
     "globals": "16.5.0",
     "prettier": "3.7.4",
     "rimraf": "6.1.2",
-    "vite": "7.2.7",
+    "vite": "7.3.0",
     "vite-plugin-electron-renderer": "0.14.6",
     "vitest": "4.0.15"
   },
