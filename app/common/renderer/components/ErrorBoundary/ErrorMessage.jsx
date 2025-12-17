@@ -10,7 +10,7 @@ import styles from './ErrorMessage.module.css';
 const ErrorMessage = ({error, copyTrace, t}) => (
   <div className={styles.errorMessage}>
     <Alert
-      message={
+      title={
         <>
           {t('Unexpected Error:')} <code>{error.message}</code>
         </>
