@@ -18,6 +18,12 @@ export const LOCATOR_STRATEGIES = {
   NAME: 'name',
   CLASS_NAME: 'class name',
   ACCESSIBILITY_ID: 'accessibility id',
+  // Web context-specific
+  CSS: 'css selector',
+  LINK_TEXT: 'link text',
+  PARTIAL_LINK_TEXT: 'partial link text',
+  TAG_NAME: 'tag name',
+  // Driver-specific
   PREDICATE: '-ios predicate string',
   CLASS_CHAIN: '-ios class chain',
   UIAUTOMATOR: '-android uiautomator',
@@ -32,6 +38,12 @@ export const LOCATOR_STRATEGY_MAP = {
   NAME: [LOCATOR_STRATEGIES.NAME, 'Name'],
   CLASS_NAME: [LOCATOR_STRATEGIES.CLASS_NAME, 'Class Name'],
   ACCESSIBILITY_ID: [LOCATOR_STRATEGIES.ACCESSIBILITY_ID, 'Accessibility ID'],
+  // Web context-specific
+  CSS: [LOCATOR_STRATEGIES.CSS, 'CSS'],
+  LINK_TEXT: [LOCATOR_STRATEGIES.LINK_TEXT, 'Link Text'],
+  PARTIAL_LINK_TEXT: [LOCATOR_STRATEGIES.PARTIAL_LINK_TEXT, 'Partial Link Text'],
+  TAG_NAME: [LOCATOR_STRATEGIES.TAG_NAME, 'Tag Name'],
+  // Driver-specific
   PREDICATE: [LOCATOR_STRATEGIES.PREDICATE, 'Predicate String'],
   CLASS_CHAIN: [LOCATOR_STRATEGIES.CLASS_CHAIN, 'Class Chain'],
   UIAUTOMATOR: [LOCATOR_STRATEGIES.UIAUTOMATOR, 'UIAutomator'],

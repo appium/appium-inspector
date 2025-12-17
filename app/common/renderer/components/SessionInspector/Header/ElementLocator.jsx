@@ -1,11 +1,14 @@
 import {Alert, Input, Radio, Row, Space} from 'antd';
 
 import {ALERT} from '../../../constants/antd-types.js';
-import {LOCATOR_STRATEGY_MAP as STRAT} from '../../../constants/session-inspector.js';
+import {LOCATOR_STRATEGY_MAP as STRAT, NATIVE_APP} from '../../../constants/session-inspector.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Header.module.css';
 
-const locatorStrategies = (automationName) => {
+const locatorStrategies = (automationName, currentContext) => {
+  if (currentContext !== NATIVE_APP) {
+    return [STRAT.CSS, STRAT.XPATH, STRAT.LINK_TEXT, STRAT.PARTIAL_LINK_TEXT, STRAT.TAG_NAME];
+  }
   let strategies = [STRAT.ID, STRAT.XPATH, STRAT.NAME, STRAT.CLASS_NAME, STRAT.ACCESSIBILITY_ID];
   switch (automationName) {
     case 'xcuitest':
@@ -29,6 +32,7 @@ const ElementLocator = (props) => {
     setLocatorTestStrategy,
     locatorTestStrategy,
     automationName,
+    currentContext,
     t,
   } = props;
 
@@ -42,15 +46,17 @@ const ElementLocator = (props) => {
           defaultValue={locatorTestStrategy}
         >
           <Row justify="center">
-            {locatorStrategies(automationName).map(([strategyValue, strategyName]) => (
-              <Radio.Button
-                className={styles.locatorStrategyBtn}
-                value={strategyValue}
-                key={strategyValue}
-              >
-                {strategyName}
-              </Radio.Button>
-            ))}
+            {locatorStrategies(automationName, currentContext).map(
+              ([strategyValue, strategyName]) => (
+                <Radio.Button
+                  className={styles.locatorStrategyBtn}
+                  value={strategyValue}
+                  key={strategyValue}
+                >
+                  {strategyName}
+                </Radio.Button>
+              ),
+            )}
           </Row>
         </Radio.Group>
       </Row>
