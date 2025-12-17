@@ -63,7 +63,7 @@ const SelectedElement = (props) => {
           <Col>
             <Alert
               type={ALERT.INFO}
-              message={t('snapshotMaxDepthReached', {selectedElementDepth})}
+              title={t('snapshotMaxDepthReached', {selectedElementDepth})}
               showIcon
             />
           </Col>
@@ -229,7 +229,7 @@ const SelectedElement = (props) => {
         {elementInteractionsNotAvailable && (
           <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemInfoMessage}>
             <Col>
-              <Alert type={ALERT.INFO} message={t('interactionsNotAvailable')} showIcon />
+              <Alert type={ALERT.INFO} title={t('interactionsNotAvailable')} showIcon />
             </Col>
           </Row>
         )}
@@ -300,7 +300,7 @@ const SelectedElement = (props) => {
           </Row>
         )}
         {currentContext === NATIVE_APP && showXpathWarning && (
-          <Alert message={t('usingXPathNotRecommended')} type={ALERT.WARNING} showIcon />
+          <Alert title={t('usingXPathNotRecommended')} type={ALERT.WARNING} showIcon />
         )}
         {dataSource.length > 0 && (
           <Row className={styles.selectedElemContentRow}>

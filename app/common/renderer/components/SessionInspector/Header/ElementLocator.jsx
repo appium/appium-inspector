@@ -55,7 +55,7 @@ const ElementLocator = (props) => {
         </Radio.Group>
       </Row>
       {!automationName && (
-        <Alert message={t('missingAutomationNameForStrategies')} type={ALERT.INFO} showIcon />
+        <Alert title={t('missingAutomationNameForStrategies')} type={ALERT.INFO} showIcon />
       )}
       {t('selector')}
       <Input.TextArea

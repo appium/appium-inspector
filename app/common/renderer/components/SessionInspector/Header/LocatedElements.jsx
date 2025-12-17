@@ -35,7 +35,7 @@ const LocatedElements = (props) => {
     ) {
       return (
         <Row>
-          <Alert message={t('idAutocompletionCanBeDisabled')} type={ALERT.INFO} showIcon />
+          <Alert title={t('idAutocompletionCanBeDisabled')} type={ALERT.INFO} showIcon />
         </Row>
       );
     }
