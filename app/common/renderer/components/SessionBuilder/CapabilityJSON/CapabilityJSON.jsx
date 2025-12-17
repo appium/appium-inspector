@@ -138,7 +138,7 @@ const CapabilityJSON = (props) => {
                 isValidCapsJson ? styles.capsEditorBodyFull : styles.capsEditorBodyResized
               }`}
             />
-            {!isValidCapsJson && <Alert message={invalidCapsJsonReason} type={ALERT.ERROR} />}
+            {!isValidCapsJson && <Alert title={invalidCapsJsonReason} type={ALERT.ERROR} />}
           </div>
         )}
         {!isEditingDesiredCaps && (
