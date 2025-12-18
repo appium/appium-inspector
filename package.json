@@ -101,7 +101,7 @@
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "5.1.2",
-    "asyncbox": "3.0.0",
+    "asyncbox": "4.0.1",
     "babel-plugin-react-compiler": "1.0.0",
     "electron": "39.2.7",
     "electron-builder": "26.0.12",
