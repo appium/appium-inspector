@@ -1,22 +1,37 @@
 import {Alert, Button, Input, Row, Space} from 'antd';
 
 import {ALERT, BUTTON} from '../../../constants/antd-types.js';
-import {LOCATOR_STRATEGY_MAP as STRAT} from '../../../constants/session-inspector.js';
+import {DRIVERS} from '../../../constants/common.js';
+import {
+  NATIVE_APP,
+  NATIVE_COMMON_LOCATOR_STRATEGY_MAP,
+  NATIVE_DRIVER_LOCATOR_STRATEGY_MAP,
+  WEB_LOCATOR_STRATEGY_MAP,
+} from '../../../constants/session-inspector.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Header.module.css';
 
-const locatorStrategies = (automationName) => {
-  let strategies = [STRAT.ID, STRAT.XPATH, STRAT.NAME, STRAT.CLASS_NAME, STRAT.ACCESSIBILITY_ID];
+const locatorStrategies = (automationName, currentContext) => {
+  if (currentContext && currentContext !== NATIVE_APP) {
+    return Object.values(WEB_LOCATOR_STRATEGY_MAP);
+  }
+  const strategies = Object.values(NATIVE_COMMON_LOCATOR_STRATEGY_MAP);
   switch (automationName) {
-    case 'xcuitest':
-    case 'mac2':
-      strategies.push(STRAT.PREDICATE, STRAT.CLASS_CHAIN);
+    case DRIVERS.XCUITEST:
+    case DRIVERS.MAC2:
+      strategies.push(
+        NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.PREDICATE,
+        NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.CLASS_CHAIN,
+      );
       break;
-    case 'espresso':
-      strategies.push(STRAT.DATAMATCHER, STRAT.VIEWTAG);
+    case DRIVERS.ESPRESSO:
+      strategies.push(
+        NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.DATAMATCHER,
+        NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.VIEWTAG,
+      );
       break;
-    case 'uiautomator2':
-      strategies.push(STRAT.UIAUTOMATOR);
+    case DRIVERS.UIAUTOMATOR2:
+      strategies.push(NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.UIAUTOMATOR);
       break;
   }
   return strategies;
@@ -29,6 +44,7 @@ const ElementLocator = (props) => {
     setLocatorTestStrategy,
     locatorTestStrategy,
     automationName,
+    currentContext,
     t,
   } = props;
 
@@ -36,7 +52,7 @@ const ElementLocator = (props) => {
     <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="small">
       {t('locatorStrategy')}
       <Row justify="center">
-        {locatorStrategies(automationName).map(([strategyValue, strategyName]) => (
+        {locatorStrategies(automationName, currentContext).map(([strategyValue, strategyName]) => (
           <Button
             type={strategyValue === locatorTestStrategy ? BUTTON.PRIMARY : BUTTON.DEFAULT}
             className={styles.locatorStrategyBtn}
