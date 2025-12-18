@@ -6,7 +6,7 @@ import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Header.module.css';
 
 const locatorStrategies = (automationName, currentContext) => {
-  if (currentContext !== NATIVE_APP) {
+  if (currentContext && currentContext !== NATIVE_APP) {
     return [STRAT.CSS, STRAT.XPATH, STRAT.LINK_TEXT, STRAT.PARTIAL_LINK_TEXT, STRAT.TAG_NAME];
   }
   let strategies = [STRAT.ID, STRAT.XPATH, STRAT.NAME, STRAT.CLASS_NAME, STRAT.ACCESSIBILITY_ID];
