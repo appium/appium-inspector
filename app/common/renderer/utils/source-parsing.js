@@ -73,6 +73,7 @@ export function xmlToJSON(sourceXML) {
         translateRecursively(childNode, path, childIndex),
       ),
       tagName: domNode.tagName,
+      textContent: domNode.textContent.trim(),
       attributes,
       path,
     };

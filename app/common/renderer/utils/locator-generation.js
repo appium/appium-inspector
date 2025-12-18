@@ -1,12 +1,50 @@
 import _ from 'lodash';
 import XPath, {select as xpathSelect} from 'xpath';
 
+import {LOCATOR_STRATEGIES as STRATS} from '../constants/session-inspector.js';
 import {log} from './logger.js';
 import {childNodesOf, domToXML, findDOMNodeByPath, xmlToDOM} from './source-parsing.js';
 
 // ============================================================================
 // Public API
 // ============================================================================
+
+/**
+ * Check whether the provided xpath finds no more than one element
+ *
+ * @param {string} xpath
+ * @param {Document} sourceDoc
+ * @returns {boolean}
+ */
+export function isXpathUnique(xpath, sourceDoc) {
+  // If no sourceDoc provided, assume it's unique
+  if (!sourceDoc || _.isEmpty(sourceDoc)) {
+    return true;
+  }
+  return xpathSelect(xpath, sourceDoc).length < 2;
+}
+
+/**
+ * Check whether the provided tag is unique in the source
+ *
+ * @param {string} tagName
+ * @param {Document} sourceDoc
+ * @returns {boolean}
+ */
+export function isTagUnique(tagName, sourceDoc) {
+  return isXpathUnique(`//${tagName}`, sourceDoc);
+}
+
+/**
+ * Check whether the provided element link text is unique in the source
+ *
+ * @param {string} textContent
+ * @param {Document} sourceDoc
+ * @returns {boolean}
+ */
+export function isLinkTextUnique(textContent, sourceDoc) {
+  return isXpathUnique(`//a[text()="${textContent.replace(/"/g, '')}"]`, sourceDoc);
+}
 
 /**
  * Check whether the provided attribute & value are unique in the source
@@ -17,23 +55,20 @@ import {childNodesOf, domToXML, findDOMNodeByPath, xmlToDOM} from './source-pars
  * @returns {boolean}
  */
 export function areAttrAndValueUnique(attrName, attrValue, sourceDoc) {
-  // If no sourceDoc provided, assume it's unique
-  if (!sourceDoc || _.isEmpty(sourceDoc)) {
-    return true;
-  }
-  return xpathSelect(`//*[@${attrName}="${attrValue.replace(/"/g, '')}"]`, sourceDoc).length < 2;
+  return isXpathUnique(`//*[@${attrName}="${attrValue.replace(/"/g, '')}"]`, sourceDoc);
 }
 
 /**
  * Get suggested selectors for simple locator strategies (which match a specific attribute)
  *
- * @param {Record<string, string|number>} attributes element attributes
+ * @param {Record<string, string|object>} elementProps relevant element properties
  * @param {Document} sourceDoc
  * @param {boolean} [isNative=true] whether native context is active
  * @returns {Record<string, string>} mapping of strategies to selectors
  */
-export function getSimpleSuggestedLocators(attributes, sourceDoc, isNative = true) {
-  return new SimpleLocatorGenerator(attributes, sourceDoc, isNative).generate();
+export function getSimpleSuggestedLocators(elementProps, sourceDoc, isNative = true) {
+  const simpleLocGen = new SimpleLocatorGenerator(elementProps, sourceDoc);
+  return isNative ? simpleLocGen.generateNativeSelectors() : simpleLocGen.generateWebSelectors();
 }
 
 /**
@@ -76,19 +111,20 @@ export function getComplexSuggestedLocators(path, sourceDoc, isNative, automatio
 /**
  * Get suggested selectors for all locator strategies
  *
- * @param {string} selectedElement element node in JSON format
+ * @param {object} selectedElement element node in JSON format
  * @param {string} sourceXML
  * @param {boolean} isNative whether native context is active
  * @param {string} automationName
  * @returns {Array<[string, string]>} array of tuples, consisting of the locator strategy and selector
  */
 export function getSuggestedLocators(selectedElement, sourceXML, isNative, automationName) {
+  const simpleLocElementProps = {
+    tag: selectedElement.tagName,
+    text: selectedElement.textContent,
+    attributes: selectedElement.attributes,
+  };
   const sourceDoc = xmlToDOM(sourceXML);
-  const simpleLocators = getSimpleSuggestedLocators(
-    selectedElement.attributes,
-    sourceDoc,
-    isNative,
-  );
+  const simpleLocators = getSimpleSuggestedLocators(simpleLocElementProps, sourceDoc, isNative);
   const complexLocators = getComplexSuggestedLocators(
     selectedElement.path,
     sourceDoc,
@@ -836,48 +872,70 @@ class UiAutomatorGenerator extends LocatorGeneratorBase {
 }
 
 /**
- * Generator for simple locator strategies (id, class name, accessibility id)
+ * Generator for simple locator strategies in both native and webview contexts
  * @private
  */
 class SimpleLocatorGenerator {
-  // Map of element attributes to their matching simple (optimal) locator strategies
-  static STRATEGY_MAPPINGS = [
-    ['name', 'accessibility id'],
-    ['content-desc', 'accessibility id'],
-    ['id', 'id'],
-    ['rntestid', 'id'],
-    ['resource-id', 'id'],
-    ['class', 'class name'],
-    ['type', 'class name'],
+  // Map of native element attributes to their matching simple (optimal) locator strategies
+  static NATIVE_STRATEGY_MAP = [
+    ['name', STRATS.ACCESSIBILITY_ID],
+    ['content-desc', STRATS.ACCESSIBILITY_ID],
+    ['id', STRATS.ID],
+    ['rntestid', STRATS.ID],
+    ['resource-id', STRATS.ID],
+    ['class', STRATS.CLASS_NAME],
+    ['type', STRATS.CLASS_NAME],
   ];
 
   /**
-   * @param {Record<string, string|number>} attributes - element attributes
+   * @param {Record<string, string|object>} elementProps relevant element properties
    * @param {Document} sourceDoc - the source document
-   * @param {boolean} [isNative=true] - whether native context is active
    */
-  constructor(attributes, doc, isNative = true) {
-    this._doc = doc;
-    this._attributes = attributes;
-    this._isNative = isNative;
+  constructor(elementProps, sourceDoc) {
+    this._doc = sourceDoc;
+    this._tag = elementProps.tag;
+    this._text = elementProps.text;
+    this._attributes = elementProps.attributes;
   }
 
   /**
-   * Get suggested selectors for simple locator strategies (which match a specific attribute)
+   * Get suggested selectors for simple locator strategies in native context:
+   * id, class name, and accessibility id
    *
-   * @returns {Record<string, string>} mapping of strategies to selectors
+   * @returns {Record<string, string>} mapping of native strategies to selectors
    */
-  generate() {
-    return SimpleLocatorGenerator.STRATEGY_MAPPINGS.reduce((res, [strategyAlias, strategy]) => {
-      // accessibility id is only supported in native context
-      if (!(strategy === 'accessibility id' && !this._isNative)) {
-        const value = this._attributes[strategyAlias];
-        if (value && areAttrAndValueUnique(strategyAlias, value, this._doc)) {
-          res[strategy] = value;
-        }
+  generateNativeSelectors() {
+    return SimpleLocatorGenerator.NATIVE_STRATEGY_MAP.reduce((res, [strategyAlias, strategy]) => {
+      const value = this._attributes[strategyAlias];
+      if (value && areAttrAndValueUnique(strategyAlias, value, this._doc)) {
+        res[strategy] = value;
       }
       return res;
     }, {});
+  }
+
+  /**
+   * Get suggested selectors for simple locator strategies in webview context:
+   * id (css), link text, and tag name
+   *
+   * @returns {Record<string, string>} mapping of web strategies to selectors
+   */
+  generateWebSelectors() {
+    const webStrategyMap = {};
+    // id (css)
+    const idValue = this._attributes?.id;
+    if (idValue && areAttrAndValueUnique('id', idValue, this._doc)) {
+      webStrategyMap[STRATS.CSS] = `#${idValue}`;
+    }
+    // link text
+    if (this._tag === 'a' && this._text && isLinkTextUnique(this._text, this._doc)) {
+      webStrategyMap[STRATS.LINK_TEXT] = this._text;
+    }
+    // tag name
+    if (this._tag && isTagUnique(this._tag, this._doc)) {
+      webStrategyMap[STRATS.TAG_NAME] = this._tag;
+    }
+    return webStrategyMap;
   }
 }
 

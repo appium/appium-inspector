@@ -8,6 +8,9 @@ import {
   getOptimalUiAutomatorSelector,
   getOptimalXPath,
   getSimpleSuggestedLocators,
+  isLinkTextUnique,
+  isTagUnique,
+  isXpathUnique,
 } from '../../app/common/renderer/utils/locator-generation.js';
 import {xmlToDOM} from '../../app/common/renderer/utils/source-parsing.js';
 
@@ -19,6 +22,82 @@ function testXPath(doc, node, expectedXPath) {
 }
 
 describe('utils/locator-generation.js', function () {
+  describe('#isXpathUnique', function () {
+    it('should return true if only one element matches the xpath', function () {
+      expect(isXpathUnique('//root', xmlToDOM(`<root></root>`))).toBe(true);
+    });
+
+    it('should return false if more than one element matches the xpath', function () {
+      expect(
+        isXpathUnique(
+          '//node',
+          xmlToDOM(`<root>
+          <node></node>
+          <node></node>
+        </root>`),
+        ),
+      ).toBe(false);
+    });
+
+    it('should return true if no elements match the xpath', function () {
+      expect(isXpathUnique('//nonexistent', xmlToDOM(`<root></root>`))).toBe(true);
+    });
+
+    it('should return true if no sourceXML was provided', function () {
+      expect(isXpathUnique('//tag')).toBe(true);
+    });
+  });
+
+  describe('#isTagUnique', function () {
+    it('should return true if there is only one node with this tag', function () {
+      expect(
+        isTagUnique(
+          'node',
+          xmlToDOM(`<root>
+          <node></node>
+        </root>`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should return false if two nodes have the same tag', function () {
+      expect(
+        isTagUnique(
+          'node',
+          xmlToDOM(`<root>
+          <node></node>
+          <node></node>
+        </root>`),
+        ),
+      ).toBe(false);
+    });
+  });
+
+  describe('#isLinkTextUnique', function () {
+    it('should return true if there is only one node with this link text', function () {
+      expect(
+        isLinkTextUnique(
+          'Link Text',
+          xmlToDOM(`<root>
+          <a>Link Text</a>
+        </root>`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should return false if two nodes have the same link text', function () {
+      expect(
+        isLinkTextUnique(
+          'Link Text',
+          xmlToDOM(`<root>
+          <a>Link Text</a>
+          <a>Link Text</a>
+        </root>`),
+        ),
+      ).toBe(false);
+    });
+  });
+
   describe('#areAttrAndValueUnique', function () {
     it('should return true if there is only one node with this attribute value', function () {
       expect(
@@ -44,117 +123,188 @@ describe('utils/locator-generation.js', function () {
         ),
       ).toBe(false);
     });
-
-    it('should return true if there are no nodes with this attribute', function () {
-      expect(
-        areAttrAndValueUnique(
-          'id',
-          'ID',
-          xmlToDOM(`<root>
-          <node></node>
-          <node></node>
-        </root>`),
-        ),
-      ).toBe(true);
-    });
-
-    it('should return true if no sourceXML was provided', function () {
-      expect(areAttrAndValueUnique('hello', 'world')).toBe(true);
-    });
   });
 
   describe('#getSimpleSuggestedLocators', function () {
-    it('should find ID', function () {
-      expect(getSimpleSuggestedLocators({'resource-id': 'Resource ID'}).id).toBe('Resource ID');
-      expect(getSimpleSuggestedLocators({id: 'ID'}).id).toBe('ID');
-      expect(getSimpleSuggestedLocators({id: 'ID', 'resource-id': 'Resource ID'}).id).toBe(
-        'Resource ID',
-      );
-    });
+    describe('native context', function () {
+      it('should find ID', function () {
+        expect(getSimpleSuggestedLocators({attributes: {'resource-id': 'Resource ID'}}).id).toBe(
+          'Resource ID',
+        );
+        expect(getSimpleSuggestedLocators({attributes: {id: 'ID'}}).id).toBe('ID');
+        expect(
+          getSimpleSuggestedLocators({attributes: {id: 'ID', 'resource-id': 'Resource ID'}}).id,
+        ).toBe('Resource ID');
+      });
 
-    it('should not find ID if ID is not unique', function () {
-      expect(
-        getSimpleSuggestedLocators(
-          {id: 'ID'},
-          xmlToDOM(`<root>
-            <node id='ID'></node>
-            <node id='ID'></node>
+      it('should not find ID if ID is not unique', function () {
+        expect(
+          getSimpleSuggestedLocators(
+            {attributes: {id: 'ID'}},
+            xmlToDOM(`<root>
+              <node id='ID'></node>
+              <node id='ID'></node>
+            </root>`),
+          ).id,
+        ).toBeUndefined();
+      });
+
+      it('should find accessibility id', function () {
+        expect(
+          getSimpleSuggestedLocators({attributes: {'content-desc': 'Content Desc'}})[
+            'accessibility id'
+          ],
+        ).toBe('Content Desc');
+        expect(getSimpleSuggestedLocators({attributes: {name: 'Name'}})['accessibility id']).toBe(
+          'Name',
+        );
+        expect(
+          getSimpleSuggestedLocators(
+            {attributes: {name: 'Name'}},
+            xmlToDOM(`<root>
+            <node content-desc='Name'></node>
           </root>`),
-        ).id,
-      ).toBeUndefined();
-    });
+          )['accessibility id'],
+        ).toBe('Name');
+        expect(
+          getSimpleSuggestedLocators({attributes: {'content-desc': 'Content Desc', name: 'Name'}})[
+            'accessibility id'
+          ],
+        ).toBe('Content Desc');
+      });
 
-    it('should find accessibility id', function () {
-      expect(getSimpleSuggestedLocators({'content-desc': 'Content Desc'})['accessibility id']).toBe(
-        'Content Desc',
-      );
-      expect(getSimpleSuggestedLocators({name: 'Name'})['accessibility id']).toBe('Name');
-      expect(
-        getSimpleSuggestedLocators(
-          {name: 'Name'},
-          xmlToDOM(`<root>
-          <node content-desc='Name'></node>
-        </root>`),
-        )['accessibility id'],
-      ).toBe('Name');
-      expect(
-        getSimpleSuggestedLocators({'content-desc': 'Content Desc', name: 'Name'})[
-          'accessibility id'
-        ],
-      ).toBe('Content Desc');
-    });
+      it('should not find accessibility ID if accessibility ID is not unique', function () {
+        expect(
+          getSimpleSuggestedLocators(
+            {attributes: {'content-desc': 'Content Desc'}},
+            xmlToDOM(`<root>
+              <node content-desc='Content Desc'></node>
+              <node content-desc='Content Desc'></node>
+            </root>`),
+          )['accessibility id'],
+        ).toBeUndefined();
+      });
 
-    it('should not find accessibility ID if accessibility ID is not unique', function () {
-      expect(
-        getSimpleSuggestedLocators(
-          {'content-desc': 'Content Desc'},
-          xmlToDOM(`<root>
-            <node content-desc='Content Desc'></node>
-            <node content-desc='Content Desc'></node>
+      it('should find class name', function () {
+        expect(getSimpleSuggestedLocators({attributes: {class: 'The Class'}})['class name']).toBe(
+          'The Class',
+        );
+        expect(getSimpleSuggestedLocators({attributes: {type: 'The Type'}})['class name']).toBe(
+          'The Type',
+        );
+        expect(
+          getSimpleSuggestedLocators(
+            {attributes: {class: 'The Class'}},
+            xmlToDOM(`<root>
+            <node type='The Class'></node>
           </root>`),
-        )['accessibility id'],
-      ).toBeUndefined();
+          )['class name'],
+        ).toBe('The Class');
+        expect(
+          getSimpleSuggestedLocators({attributes: {class: 'The Class', type: 'The Type'}})[
+            'class name'
+          ],
+        ).toBe('The Type');
+      });
+
+      it('should not find class name if class name is not unique', function () {
+        expect(
+          getSimpleSuggestedLocators(
+            {attributes: {class: 'The Class'}},
+            xmlToDOM(`<root>
+              <node class='The Class'></node>
+              <node class='The Class'></node>
+            </root>`),
+          )['class name'],
+        ).toBeUndefined();
+      });
+
+      it('should not use any non-native context locator strategies', function () {
+        expect(
+          getSimpleSuggestedLocators({tag: 'tag', attributes: {}})['tag name'],
+        ).toBeUndefined();
+      });
     });
 
-    it('should not find accessibility ID in non-native context', function () {
-      expect(
-        getSimpleSuggestedLocators(
-          {'content-desc': 'Content Desc 1'},
-          xmlToDOM(`<root>
-            <node content-desc='Content Desc 1'></node>
-            <node content-desc='Content Desc 2'></node>
+    describe('non-native context', function () {
+      it('should find tag name', function () {
+        expect(getSimpleSuggestedLocators({tag: 'tag'}, null, false)['tag name']).toBe('tag');
+      });
+
+      it('should not find tag name if it is not unique', function () {
+        expect(
+          getSimpleSuggestedLocators(
+            {tag: 'node'},
+            xmlToDOM(`<root>
+              <node></node>
+              <node></node>
+            </root>`),
+            false,
+          )['tag name'],
+        ).toBeUndefined();
+      });
+
+      it('should find link text', function () {
+        expect(
+          getSimpleSuggestedLocators(
+            {tag: 'a', text: 'Link Text'},
+            xmlToDOM(`<root>
+            <a>Link Text</a>
           </root>`),
-          false,
-        )['accessibility id'],
-      ).toBeUndefined();
-    });
+            false,
+          )['link text'],
+        ).toBe('Link Text');
+      });
 
-    it('should find class name', function () {
-      expect(getSimpleSuggestedLocators({class: 'The Class'})['class name']).toBe('The Class');
-      expect(getSimpleSuggestedLocators({type: 'The Type'})['class name']).toBe('The Type');
-      expect(
-        getSimpleSuggestedLocators(
-          {class: 'The Class'},
-          xmlToDOM(`<root>
-          <node type='The Class'></node>
-        </root>`),
-        )['class name'],
-      ).toBe('The Class');
-      expect(getSimpleSuggestedLocators({class: 'The Class', type: 'The Type'})['class name']).toBe(
-        'The Type',
-      );
-    });
-
-    it('should not find class name if class name is not unique', function () {
-      expect(
-        getSimpleSuggestedLocators(
-          {class: 'The Class'},
-          xmlToDOM(`<root>
-            <node class='The Class'></node>
-            <node class='The Class'></node>
+      it('should not find link text if it is not unique', function () {
+        expect(
+          getSimpleSuggestedLocators(
+            {tag: 'a', text: 'Link Text'},
+            xmlToDOM(`<root>
+            <a>Link Text</a>
+            <a>Link Text</a>
           </root>`),
-        )['class name'],
-      ).toBeUndefined();
+            false,
+          )['link text'],
+        ).toBeUndefined();
+      });
+
+      it('should not find link text for non-link elements', function () {
+        expect(
+          getSimpleSuggestedLocators(
+            {tag: 'div', text: 'Link Text'},
+            xmlToDOM(`<root>
+            <div>Link Text</div>
+          </root>`),
+            false,
+          )['link text'],
+        ).toBeUndefined();
+      });
+
+      it('should find ID', function () {
+        expect(
+          getSimpleSuggestedLocators({attributes: {id: 'ID'}}, null, false)['css selector'],
+        ).toBe('#ID');
+      });
+
+      it('should not find ID if ID is not unique', function () {
+        expect(
+          getSimpleSuggestedLocators(
+            {attributes: {id: 'ID'}},
+            xmlToDOM(`<root>
+              <node id='ID'></node>
+              <node id='ID'></node>
+            </root>`),
+            false,
+          )['css selector'],
+        ).toBeUndefined();
+      });
+
+      it('should not use any native context locator strategies', function () {
+        expect(
+          getSimpleSuggestedLocators({attributes: {'resource-id': 'Resource ID'}}, null, false).id,
+        ).toBeUndefined();
+      });
     });
   });
 
