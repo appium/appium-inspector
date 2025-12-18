@@ -35,7 +35,7 @@ const ElementLocator = (props) => {
   return (
     <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="small">
       {t('locatorStrategy')}
-      <Row justify="center">
+      <Row>
         {locatorStrategies(automationName).map(([strategyValue, strategyName]) => (
           <Button
             type={strategyValue === locatorTestStrategy ? BUTTON.PRIMARY : BUTTON.DEFAULT}

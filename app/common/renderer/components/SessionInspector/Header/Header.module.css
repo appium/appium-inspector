@@ -1,6 +1,7 @@
 .locatorStrategyBtn {
   margin: 2px;
-  width: 24%;
+  min-width: 24%;
+  flex-grow: 1;
 }
 
 .locatorSelectorTextArea {
