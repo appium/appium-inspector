@@ -1,6 +1,6 @@
-import {Alert, Input, Radio, Row, Space} from 'antd';
+import {Alert, Button, Input, Row, Space} from 'antd';
 
-import {ALERT} from '../../../constants/antd-types.js';
+import {ALERT, BUTTON} from '../../../constants/antd-types.js';
 import {LOCATOR_STRATEGY_MAP as STRAT} from '../../../constants/session-inspector.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Header.module.css';
@@ -36,23 +36,16 @@ const ElementLocator = (props) => {
     <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="small">
       {t('locatorStrategy')}
       <Row justify="center">
-        <Radio.Group
-          buttonStyle="solid"
-          onChange={(e) => setLocatorTestStrategy(e.target.value)}
-          defaultValue={locatorTestStrategy}
-        >
-          <Row justify="center">
-            {locatorStrategies(automationName).map(([strategyValue, strategyName]) => (
-              <Radio.Button
-                className={styles.locatorStrategyBtn}
-                value={strategyValue}
-                key={strategyValue}
-              >
-                {strategyName}
-              </Radio.Button>
-            ))}
-          </Row>
-        </Radio.Group>
+        {locatorStrategies(automationName).map(([strategyValue, strategyName]) => (
+          <Button
+            type={strategyValue === locatorTestStrategy ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+            className={styles.locatorStrategyBtn}
+            onClick={() => setLocatorTestStrategy(strategyValue)}
+            key={strategyValue}
+          >
+            {strategyName}
+          </Button>
+        ))}
       </Row>
       {!automationName && (
         <Alert title={t('missingAutomationNameForStrategies')} type={ALERT.INFO} showIcon />
