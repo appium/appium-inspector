@@ -285,6 +285,14 @@ describe('utils/locator-generation.js', function () {
         ).toBeUndefined();
       });
 
+      it('should find and escape unique ID with special characters', function () {
+        expect(
+          getSimpleSuggestedLocators({attributes: {id: '!@£$#%^&*(-_=/\\.>°§"'}}, null, false)[
+            'css selector'
+          ],
+        ).toBe('#\\!\\@£\\$\\#\\%\\^\\&\\*\\(-_\\=\\/\\\\\\.\\>°§\\"');
+      });
+
       it('should not use any native context locator strategies', function () {
         expect(
           getSimpleSuggestedLocators({attributes: {'resource-id': 'Resource ID'}}, null, false).id,

@@ -1,3 +1,4 @@
+import cssEscape from 'css.escape';
 import _ from 'lodash';
 import XPath, {select as xpathSelect} from 'xpath';
 
@@ -942,7 +943,7 @@ class SimpleLocatorGenerator {
     // id (css)
     const idValue = this._attributes?.id;
     if (idValue && areAttrAndValueUnique('id', idValue, this._doc)) {
-      webStrategyMap[STRATS.CSS] = `#${idValue}`;
+      webStrategyMap[STRATS.CSS] = `#${cssEscape(idValue)}`;
     }
     // link text
     if (this._tag === 'a' && this._text && isLinkTextUnique(this._text, this._doc)) {
