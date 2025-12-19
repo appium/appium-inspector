@@ -221,7 +221,7 @@ function toTrimmedString(value) {
  */
 function doesDocumentExist(node) {
   // If no node provided, assume the xpath is unique
-  return !(!node || _.isEmpty(node));
+  return Boolean(node) && !_.isEmpty(node);
 }
 
 /**
