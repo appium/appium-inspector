@@ -21,6 +21,21 @@ export function childNodesOf(domNode) {
 }
 
 /**
+ * Get the text content of a Node object,
+ * excluding the text content of any child element nodes
+ *
+ * @param {Node} domNode
+ * @returns {string} text content of the Node
+ */
+function textContentOf(domNode) {
+  if (!domNode?.hasChildNodes()) {
+    return '';
+  }
+  const textChildNodes = _.filter(domNode.childNodes, ['nodeType', domNode.TEXT_NODE]);
+  return textChildNodes.reduce((acc, node) => acc + node.textContent, '').trim();
+}
+
+/**
  * Look up an element in the Document source using the provided path
  *
  * @param {string} path a dot-separated string of indices
@@ -73,7 +88,7 @@ export function xmlToJSON(sourceXML) {
         translateRecursively(childNode, path, childIndex),
       ),
       tagName: domNode.tagName,
-      textContent: domNode.textContent.trim(),
+      textContent: textContentOf(domNode),
       attributes,
       path,
     };
