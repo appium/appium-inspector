@@ -22,11 +22,12 @@ function testXPath(doc, node, expectedXPath) {
 
 describe('utils/locator-generation.js', function () {
   describe('#isTagUnique', function () {
-    it('should return true if there is only one node with this tag', function () {
+    it('should return true if there is exactly one node with this tag', function () {
       expect(isTagUnique('root', xmlToDOM(`<root></root>`))).toBe(true);
     });
 
-    it('should return false if two nodes have the same tag', function () {
+    it('should return false if there are zero or multiple nodes with this tag', function () {
+      expect(isTagUnique('node', xmlToDOM(`<root></root>`))).toBe(false);
       expect(
         isTagUnique(
           'node',
@@ -43,6 +44,11 @@ describe('utils/locator-generation.js', function () {
       expect(isTagUnique('', xmlToDOM(`<root></root>`))).toBe(false);
     });
 
+    it('should apply whitespace normalization', function () {
+      // whitespaces inside the XML tag are caught by xmldom as invalid tag name
+      expect(isTagUnique('root   ', xmlToDOM(`<root></root>`))).toBe(true);
+    });
+
     // Full tag name specification: https://www.w3.org/TR/REC-xml/#d0e804
     // Note: @xmldom/xmldom does not fully comply with this spec (https://github.com/xmldom/xmldom/issues/252)
     it('should handle valid tag names with special characters', function () {
@@ -51,11 +57,12 @@ describe('utils/locator-generation.js', function () {
   });
 
   describe('#isLinkTextUnique', function () {
-    it('should return true if there is only one node with this link text', function () {
+    it('should return true if there is exactly one node with this link text', function () {
       expect(isLinkTextUnique('Link Text', xmlToDOM(`<a>Link Text</a>`))).toBe(true);
     });
 
-    it('should return false if two nodes have the same link text', function () {
+    it('should return false if there are zero or multiple nodes with this link text', function () {
+      expect(isLinkTextUnique('Chain Text', xmlToDOM(`<a>Link Text</a>`))).toBe(false);
       expect(
         isLinkTextUnique(
           'Link Text',
@@ -72,6 +79,10 @@ describe('utils/locator-generation.js', function () {
       expect(isLinkTextUnique('', xmlToDOM(`<a>Link Text</a>`))).toBe(false);
     });
 
+    it('should apply whitespace normalization', function () {
+      expect(isLinkTextUnique('Link Text    ', xmlToDOM(`<a>    Link Text</a>`))).toBe(true);
+    });
+
     it('should handle link texts with special characters', function () {
       expect(
         isLinkTextUnique(`!@£$#%^&*(-_=/\\.>°§'"`, xmlToDOM(`<a>!@£$#%^&*(-_=/\\.>°§'"</a>`)),
@@ -80,11 +91,13 @@ describe('utils/locator-generation.js', function () {
   });
 
   describe('#areAttrAndValueUnique', function () {
-    it('should return true if there is only one node with this attribute value', function () {
+    it('should return true if there is exactly one node with this attribute name and value', function () {
       expect(areAttrAndValueUnique('id', 'ID', xmlToDOM(`<node id='ID'></node>`))).toBe(true);
     });
 
-    it('should return false if two nodes have the same attribute value', function () {
+    it('should return false if there are zero or multiple nodes with this attribute name and value', function () {
+      expect(areAttrAndValueUnique('id2', 'ID', xmlToDOM(`<node id='ID'></node>`))).toBe(false);
+      expect(areAttrAndValueUnique('id', 'ID2', xmlToDOM(`<node id='ID'></node>`))).toBe(false);
       expect(
         areAttrAndValueUnique(
           'id',
@@ -101,6 +114,11 @@ describe('utils/locator-generation.js', function () {
       expect(areAttrAndValueUnique('id', null, xmlToDOM(`<node id='ID'></node>`))).toBe(false);
       expect(areAttrAndValueUnique(null, 'ID', xmlToDOM(`<node id='ID'></node>`))).toBe(false);
       expect(areAttrAndValueUnique('', '', xmlToDOM(`<node id='ID'></node>`))).toBe(false);
+    });
+
+    it('should only apply whitespace normalization to the attribute name', function () {
+      expect(areAttrAndValueUnique(' id   ', 'ID', xmlToDOM(`<node id='ID'></node>`))).toBe(true);
+      expect(areAttrAndValueUnique('id', '  ID', xmlToDOM(`<node id='ID  '></node>`))).toBe(false);
     });
 
     // Attribute name specification is a superset of the tag name spec:
@@ -161,7 +179,7 @@ describe('utils/locator-generation.js', function () {
         );
         expect(
           getSimpleSuggestedLocators(
-            {attributes: {name: 'Name'}},
+            {attributes: {'content-desc': 'Name'}},
             xmlToDOM(`<root>
             <node content-desc='Name'></node>
           </root>`),
@@ -195,7 +213,7 @@ describe('utils/locator-generation.js', function () {
         );
         expect(
           getSimpleSuggestedLocators(
-            {attributes: {class: 'The Class'}},
+            {attributes: {type: 'The Class'}},
             xmlToDOM(`<root>
             <node type='The Class'></node>
           </root>`),

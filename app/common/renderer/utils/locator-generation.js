@@ -11,58 +11,68 @@ import {childNodesOf, domToXML, findDOMNodeByPath, xmlToDOM} from './source-pars
 // ============================================================================
 
 /**
- * Check whether the provided tag is unique in the source
+ * Check whether the provided tag is unique in the source.
+ * Applies whitespace normalization to the input tag name,
+ * since they cannot have spaces
  *
- * @param {string} rawTagName
+ * @param {string} tagName
  * @param {Document} node
  * @returns {boolean}
  */
-export function isTagUnique(rawTagName, node) {
-  const tagName = toTrimmedString(rawTagName);
-  if (!tagName) {
+export function isTagUnique(tagName, node) {
+  if (!doesDocumentExist(node)) {
+    return true;
+  }
+  const trimmedTagName = toTrimmedString(tagName);
+  if (!trimmedTagName) {
     return false;
   }
-  return doesDocumentExist(node)
-    ? isXpathUnique('//*[name()=$tagName]', {variables: {tagName}, node})
-    : true;
+  return isXpathUnique('//*[name()=$tagName]', {variables: {tagName: trimmedTagName}, node});
 }
 
 /**
  * Check whether the provided element link text is unique in the source
+ * Applies whitespace normalization, since all stored textContent is already trimmed
  *
  * @param {string} textContent
  * @param {Document} node
  * @returns {boolean}
  */
-export function isLinkTextUnique(rawLinkText, node) {
-  const textContent = toTrimmedString(rawLinkText);
-  if (!textContent) {
+export function isLinkTextUnique(textContent, node) {
+  if (!doesDocumentExist(node)) {
+    return true;
+  }
+  const trimmedTextContent = toTrimmedString(textContent);
+  if (!trimmedTextContent) {
     return false;
   }
-  return doesDocumentExist(node)
-    ? isXpathUnique(`//a[text()=$textContent]`, {variables: {textContent}, node})
-    : true;
+  return isXpathUnique(`//a[normalize-space(.)=$textContent]`, {
+    variables: {textContent: trimmedTextContent},
+    node,
+  });
 }
 
 /**
  * Check whether the provided attribute & value are unique in the source
+ * Applies whitespace normalization to the attribute name,
+ * since they cannot have spaces
  *
  * @param {string} attrName
  * @param {string} attrValue
  * @param {Document} node
  * @returns {boolean}
  */
-export function areAttrAndValueUnique(rawAttrName, rawAttrValue, node) {
-  const attrName = toTrimmedString(rawAttrName);
-  const attrValue = toTrimmedString(rawAttrValue);
-  if (!attrName || !attrValue) {
+export function areAttrAndValueUnique(attrName, attrValue, node) {
+  if (!doesDocumentExist(node)) {
+    return true;
+  }
+  const trimmedAttrName = toTrimmedString(attrName);
+  if (!trimmedAttrName || !toTrimmedString(attrValue)) {
     return false;
   }
   // if node exists, that means xmlToDOM was called, which already validates attribute names,
   // so the attribute name is safe to use directly
-  return doesDocumentExist(node)
-    ? isXpathUnique(`//*[@${attrName}=$attrValue]`, {variables: {attrValue}, node})
-    : true;
+  return isXpathUnique(`//*[@${trimmedAttrName}=$attrValue]`, {variables: {attrValue}, node});
 }
 
 /**
@@ -216,7 +226,7 @@ function doesDocumentExist(node) {
 
 /**
  * Parse and evaluate an xpath using the built-in safe variable replacement,
- * then check whether it finds no more than one element
+ * then check whether it finds exactly one element
  *
  * @param {string} xpath
  * @param {Record<string, unknown>} options options for XPathEvaluator
@@ -224,7 +234,7 @@ function doesDocumentExist(node) {
  * @returns {boolean}
  */
 function isXpathUnique(xpath, options) {
-  return XPath.parse(xpath).select(options).length < 2;
+  return XPath.parse(xpath).select(options).length === 1;
 }
 
 /**
