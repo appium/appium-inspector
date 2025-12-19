@@ -10,40 +10,29 @@ import {childNodesOf, domToXML, findDOMNodeByPath, xmlToDOM} from './source-pars
 // ============================================================================
 
 /**
- * Check whether the provided xpath finds no more than one element
- *
- * @param {string} xpath
- * @param {Document} sourceDoc
- * @returns {boolean}
- */
-export function isXpathUnique(xpath, sourceDoc) {
-  // If no sourceDoc provided, assume it's unique
-  if (!sourceDoc || _.isEmpty(sourceDoc)) {
-    return true;
-  }
-  return xpathSelect(xpath, sourceDoc).length < 2;
-}
-
-/**
  * Check whether the provided tag is unique in the source
  *
  * @param {string} tagName
- * @param {Document} sourceDoc
+ * @param {Document} node
  * @returns {boolean}
  */
-export function isTagUnique(tagName, sourceDoc) {
-  return isXpathUnique(`//${tagName}`, sourceDoc);
+export function isTagUnique(tagName, node) {
+  // if node exists, that means xmlToDOM was called, which already validates tag names,
+  // so the tag name is safe to use directly
+  return doesDocumentExist(node) ? isXpathUnique(`//${tagName}`, {node}) : true;
 }
 
 /**
  * Check whether the provided element link text is unique in the source
  *
  * @param {string} textContent
- * @param {Document} sourceDoc
+ * @param {Document} node
  * @returns {boolean}
  */
-export function isLinkTextUnique(textContent, sourceDoc) {
-  return isXpathUnique(`//a[text()="${textContent.replace(/"/g, '')}"]`, sourceDoc);
+export function isLinkTextUnique(textContent, node) {
+  return doesDocumentExist(node)
+    ? isXpathUnique(`//a[text()=$textContent]`, {variables: {textContent}, node})
+    : true;
 }
 
 /**
@@ -51,11 +40,15 @@ export function isLinkTextUnique(textContent, sourceDoc) {
  *
  * @param {string} attrName
  * @param {string} attrValue
- * @param {Document} sourceDoc
+ * @param {Document} node
  * @returns {boolean}
  */
-export function areAttrAndValueUnique(attrName, attrValue, sourceDoc) {
-  return isXpathUnique(`//*[@${attrName}="${attrValue.replace(/"/g, '')}"]`, sourceDoc);
+export function areAttrAndValueUnique(attrName, attrValue, node) {
+  // if node exists, that means xmlToDOM was called, which already validates attribute names,
+  // so the attribute name is safe to use directly
+  return doesDocumentExist(node)
+    ? isXpathUnique(`//*[@${attrName}=$attrValue]`, {variables: {attrValue}, node})
+    : true;
 }
 
 /**
@@ -184,6 +177,30 @@ export function getOptimalUiAutomatorSelector(doc, domNode, path) {
 // ============================================================================
 // Private Implementation Classes
 // ============================================================================
+
+/**
+ * Convenience check for whether the document node exists
+ *
+ * @param {Document | undefined} node document node
+ * @returns {boolean}
+ */
+function doesDocumentExist(node) {
+  // If no node provided, assume the xpath is unique
+  return !(!node || _.isEmpty(node));
+}
+
+/**
+ * Parse and evaluate an xpath using the built-in safe variable replacement,
+ * then check whether it finds no more than one element
+ *
+ * @param {string} xpath
+ * @param {Record<string, unknown>} options options for XPathEvaluator
+ * @see https://github.com/goto100/xpath/blob/master/docs/XPathEvaluator.md
+ * @returns {boolean}
+ */
+export function isXpathUnique(xpath, options) {
+  return XPath.parse(xpath).select(options).length < 2;
+}
 
 /**
  * Base class for locator generators providing shared utilities for uniqueness checking and error logging
