@@ -10,7 +10,6 @@ import {
   getSimpleSuggestedLocators,
   isLinkTextUnique,
   isTagUnique,
-  isXpathUnique,
 } from '../../app/common/renderer/utils/locator-generation.js';
 import {xmlToDOM} from '../../app/common/renderer/utils/source-parsing.js';
 
@@ -22,42 +21,9 @@ function testXPath(doc, node, expectedXPath) {
 }
 
 describe('utils/locator-generation.js', function () {
-  describe('#isXpathUnique', function () {
-    it('should return true if only one element matches the xpath', function () {
-      expect(isXpathUnique('//root', xmlToDOM(`<root></root>`))).toBe(true);
-    });
-
-    it('should return false if more than one element matches the xpath', function () {
-      expect(
-        isXpathUnique(
-          '//node',
-          xmlToDOM(`<root>
-          <node></node>
-          <node></node>
-        </root>`),
-        ),
-      ).toBe(false);
-    });
-
-    it('should return true if no elements match the xpath', function () {
-      expect(isXpathUnique('//nonexistent', xmlToDOM(`<root></root>`))).toBe(true);
-    });
-
-    it('should return true if no sourceXML was provided', function () {
-      expect(isXpathUnique('//tag')).toBe(true);
-    });
-  });
-
   describe('#isTagUnique', function () {
     it('should return true if there is only one node with this tag', function () {
-      expect(
-        isTagUnique(
-          'node',
-          xmlToDOM(`<root>
-          <node></node>
-        </root>`),
-        ),
-      ).toBe(true);
+      expect(isTagUnique('root', xmlToDOM(`<root></root>`))).toBe(true);
     });
 
     it('should return false if two nodes have the same tag', function () {
@@ -71,18 +37,17 @@ describe('utils/locator-generation.js', function () {
         ),
       ).toBe(false);
     });
+
+    // Full tag name specification: https://www.w3.org/TR/REC-xml/#d0e804
+    // Note: @xmldom/xmldom does not fully comply with this spec (https://github.com/xmldom/xmldom/issues/252)
+    it('should handle valid tag names with special characters', function () {
+      expect(isTagUnique('_-.234·', xmlToDOM(`<_-.234·></_-.234·>`))).toBe(true);
+    });
   });
 
   describe('#isLinkTextUnique', function () {
     it('should return true if there is only one node with this link text', function () {
-      expect(
-        isLinkTextUnique(
-          'Link Text',
-          xmlToDOM(`<root>
-          <a>Link Text</a>
-        </root>`),
-        ),
-      ).toBe(true);
+      expect(isLinkTextUnique('Link Text', xmlToDOM(`<a>Link Text</a>`))).toBe(true);
     });
 
     it('should return false if two nodes have the same link text', function () {
@@ -96,19 +61,17 @@ describe('utils/locator-generation.js', function () {
         ),
       ).toBe(false);
     });
+
+    it('should handle link texts with special characters', function () {
+      expect(
+        isLinkTextUnique(`!@£$#%^&*(-_=/\\.>°§'"`, xmlToDOM(`<a>!@£$#%^&*(-_=/\\.>°§'"</a>`)),
+      ).toBe(true);
+    });
   });
 
   describe('#areAttrAndValueUnique', function () {
     it('should return true if there is only one node with this attribute value', function () {
-      expect(
-        areAttrAndValueUnique(
-          'id',
-          'ID',
-          xmlToDOM(`<root>
-          <node id='ID'></node>
-        </root>`),
-        ),
-      ).toBe(true);
+      expect(areAttrAndValueUnique('id', 'ID', xmlToDOM(`<node id='ID'></node>`))).toBe(true);
     });
 
     it('should return false if two nodes have the same attribute value', function () {
@@ -122,6 +85,28 @@ describe('utils/locator-generation.js', function () {
         </root>`),
         ),
       ).toBe(false);
+    });
+
+    // Attribute name specification is a superset of the tag name spec:
+    // https://www.w3.org/TR/REC-xml/#sec-attribute-types
+    it('should handle valid attribute names and values with special characters', function () {
+      expect(areAttrAndValueUnique('_-.234·', 'ID', xmlToDOM(`<node _-.234·='ID'></node>`))).toBe(
+        true,
+      );
+      expect(
+        areAttrAndValueUnique(
+          'id',
+          `!@£$#%^&*(-_=/\\.>°§"`,
+          xmlToDOM(`<node id='!@£$#%^&*(-_=/\\.>°§"'></node>`),
+        ),
+      ).toBe(true);
+      expect(
+        areAttrAndValueUnique(
+          'id',
+          `!@£$#%^&*(-_=/\\.>°§'`,
+          xmlToDOM(`<node id="!@£$#%^&*(-_=/\\.>°§'"></node>`),
+        ),
+      ).toBe(true);
     });
   });
 
