@@ -924,7 +924,7 @@ class SimpleLocatorGenerator {
    */
   generateNativeSelectors() {
     return SimpleLocatorGenerator.NATIVE_STRATEGY_MAP.reduce((res, [strategyAlias, strategy]) => {
-      const value = this._attributes[strategyAlias];
+      const value = this._attributes?.[strategyAlias];
       if (value && areAttrAndValueUnique(strategyAlias, value, this._doc)) {
         res[strategy] = value;
       }
