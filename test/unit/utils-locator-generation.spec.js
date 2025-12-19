@@ -38,6 +38,11 @@ describe('utils/locator-generation.js', function () {
       ).toBe(false);
     });
 
+    it('should return false if the tag name is empty or absent', function () {
+      expect(isTagUnique(null, xmlToDOM(`<root></root>`))).toBe(false);
+      expect(isTagUnique('', xmlToDOM(`<root></root>`))).toBe(false);
+    });
+
     // Full tag name specification: https://www.w3.org/TR/REC-xml/#d0e804
     // Note: @xmldom/xmldom does not fully comply with this spec (https://github.com/xmldom/xmldom/issues/252)
     it('should handle valid tag names with special characters', function () {
@@ -60,6 +65,11 @@ describe('utils/locator-generation.js', function () {
         </root>`),
         ),
       ).toBe(false);
+    });
+
+    it('should return false if the link text is empty or absent', function () {
+      expect(isLinkTextUnique(null, xmlToDOM(`<a>Link Text</a>`))).toBe(false);
+      expect(isLinkTextUnique('', xmlToDOM(`<a>Link Text</a>`))).toBe(false);
     });
 
     it('should handle link texts with special characters', function () {
@@ -85,6 +95,12 @@ describe('utils/locator-generation.js', function () {
         </root>`),
         ),
       ).toBe(false);
+    });
+
+    it('should return false if the attribute name or value is empty or absent', function () {
+      expect(areAttrAndValueUnique('id', null, xmlToDOM(`<node id='ID'></node>`))).toBe(false);
+      expect(areAttrAndValueUnique(null, 'ID', xmlToDOM(`<node id='ID'></node>`))).toBe(false);
+      expect(areAttrAndValueUnique('', '', xmlToDOM(`<node id='ID'></node>`))).toBe(false);
     });
 
     // Attribute name specification is a superset of the tag name spec:

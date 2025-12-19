@@ -13,14 +13,18 @@ import {childNodesOf, domToXML, findDOMNodeByPath, xmlToDOM} from './source-pars
 /**
  * Check whether the provided tag is unique in the source
  *
- * @param {string} tagName
+ * @param {string} rawTagName
  * @param {Document} node
  * @returns {boolean}
  */
-export function isTagUnique(tagName, node) {
-  // if node exists, that means xmlToDOM was called, which already validates tag names,
-  // so the tag name is safe to use directly
-  return doesDocumentExist(node) ? isXpathUnique(`//${tagName}`, {node}) : true;
+export function isTagUnique(rawTagName, node) {
+  const tagName = toTrimmedString(rawTagName);
+  if (!tagName) {
+    return false;
+  }
+  return doesDocumentExist(node)
+    ? isXpathUnique('//*[name()=$tagName]', {variables: {tagName}, node})
+    : true;
 }
 
 /**
@@ -30,7 +34,11 @@ export function isTagUnique(tagName, node) {
  * @param {Document} node
  * @returns {boolean}
  */
-export function isLinkTextUnique(textContent, node) {
+export function isLinkTextUnique(rawLinkText, node) {
+  const textContent = toTrimmedString(rawLinkText);
+  if (!textContent) {
+    return false;
+  }
   return doesDocumentExist(node)
     ? isXpathUnique(`//a[text()=$textContent]`, {variables: {textContent}, node})
     : true;
@@ -44,7 +52,12 @@ export function isLinkTextUnique(textContent, node) {
  * @param {Document} node
  * @returns {boolean}
  */
-export function areAttrAndValueUnique(attrName, attrValue, node) {
+export function areAttrAndValueUnique(rawAttrName, rawAttrValue, node) {
+  const attrName = toTrimmedString(rawAttrName);
+  const attrValue = toTrimmedString(rawAttrValue);
+  if (!attrName || !attrValue) {
+    return false;
+  }
   // if node exists, that means xmlToDOM was called, which already validates attribute names,
   // so the attribute name is safe to use directly
   return doesDocumentExist(node)
@@ -180,6 +193,17 @@ export function getOptimalUiAutomatorSelector(doc, domNode, path) {
 // ============================================================================
 
 /**
+ * Trim whitespace from a string value,
+ * otherwise return an empty string
+ *
+ * @param {*} value input value
+ * @returns {string} trimmed string
+ */
+function toTrimmedString(value) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+/**
  * Convenience check for whether the document node exists
  *
  * @param {Document | undefined} node document node
@@ -199,7 +223,7 @@ function doesDocumentExist(node) {
  * @see https://github.com/goto100/xpath/blob/master/docs/XPathEvaluator.md
  * @returns {boolean}
  */
-export function isXpathUnique(xpath, options) {
+function isXpathUnique(xpath, options) {
   return XPath.parse(xpath).select(options).length < 2;
 }
 
@@ -946,11 +970,11 @@ class SimpleLocatorGenerator {
       webStrategyMap[STRATS.CSS] = `#${cssEscape(idValue)}`;
     }
     // link text
-    if (this._tag === 'a' && this._text && isLinkTextUnique(this._text, this._doc)) {
+    if (this._tag === 'a' && isLinkTextUnique(this._text, this._doc)) {
       webStrategyMap[STRATS.LINK_TEXT] = this._text;
     }
     // tag name
-    if (this._tag && isTagUnique(this._tag, this._doc)) {
+    if (isTagUnique(this._tag, this._doc)) {
       webStrategyMap[STRATS.TAG_NAME] = this._tag;
     }
     return webStrategyMap;
