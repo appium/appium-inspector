@@ -8,7 +8,6 @@ import {
   getOptimalUiAutomatorSelector,
   getOptimalXPath,
   getSimpleSuggestedLocators,
-  isLinkTextUnique,
   isTagUnique,
 } from '../../app/common/renderer/utils/locator-generation.js';
 import {xmlToDOM} from '../../app/common/renderer/utils/source-parsing.js';
@@ -53,40 +52,6 @@ describe('utils/locator-generation.js', function () {
     // Note: @xmldom/xmldom does not fully comply with this spec (https://github.com/xmldom/xmldom/issues/252)
     it('should handle valid tag names with special characters', function () {
       expect(isTagUnique('_-.234·', xmlToDOM(`<_-.234·></_-.234·>`))).toBe(true);
-    });
-  });
-
-  describe('#isLinkTextUnique', function () {
-    it('should return true if there is exactly one node with this link text', function () {
-      expect(isLinkTextUnique('Link Text', xmlToDOM(`<a>Link Text</a>`))).toBe(true);
-    });
-
-    it('should return false if there are zero or multiple nodes with this link text', function () {
-      expect(isLinkTextUnique('Non-Existent Text', xmlToDOM(`<a>Link Text</a>`))).toBe(false);
-      expect(
-        isLinkTextUnique(
-          'Link Text',
-          xmlToDOM(`<root>
-          <a>Link Text</a>
-          <a>Link Text</a>
-        </root>`),
-        ),
-      ).toBe(false);
-    });
-
-    it('should return false if the link text is empty or absent', function () {
-      expect(isLinkTextUnique(null, xmlToDOM(`<a>Link Text</a>`))).toBe(false);
-      expect(isLinkTextUnique('', xmlToDOM(`<a>Link Text</a>`))).toBe(false);
-    });
-
-    it('should apply whitespace normalization', function () {
-      expect(isLinkTextUnique('Link Text    ', xmlToDOM(`<a>    Link Text</a>`))).toBe(true);
-    });
-
-    it('should handle link texts with special characters', function () {
-      expect(
-        isLinkTextUnique(`!@£$#%^&*(-_=/\\.>°§'"`, xmlToDOM(`<a>!@£$#%^&*(-_=/\\.>°§'"</a>`)),
-      ).toBe(true);
     });
   });
 
@@ -260,43 +225,6 @@ describe('utils/locator-generation.js', function () {
             </root>`),
             false,
           )['tag name'],
-        ).toBeUndefined();
-      });
-
-      it('should find link text', function () {
-        expect(
-          getSimpleSuggestedLocators(
-            {tag: 'a', text: 'Link Text'},
-            xmlToDOM(`<root>
-            <a>Link Text</a>
-          </root>`),
-            false,
-          )['link text'],
-        ).toBe('Link Text');
-      });
-
-      it('should not find link text if it is not unique', function () {
-        expect(
-          getSimpleSuggestedLocators(
-            {tag: 'a', text: 'Link Text'},
-            xmlToDOM(`<root>
-            <a>Link Text</a>
-            <a>Link Text</a>
-          </root>`),
-            false,
-          )['link text'],
-        ).toBeUndefined();
-      });
-
-      it('should not find link text for non-link elements', function () {
-        expect(
-          getSimpleSuggestedLocators(
-            {tag: 'div', text: 'Link Text'},
-            xmlToDOM(`<root>
-            <div>Link Text</div>
-          </root>`),
-            false,
-          )['link text'],
         ).toBeUndefined();
       });
 

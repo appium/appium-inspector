@@ -31,28 +31,6 @@ export function isTagUnique(tagName, node) {
 }
 
 /**
- * Check whether the provided element link text is unique in the source
- * Applies whitespace normalization, since all stored textContent is already trimmed
- *
- * @param {string} textContent
- * @param {Document} node
- * @returns {boolean}
- */
-export function isLinkTextUnique(textContent, node) {
-  if (!doesDocumentExist(node)) {
-    return true;
-  }
-  const trimmedTextContent = toTrimmedString(textContent);
-  if (!trimmedTextContent) {
-    return false;
-  }
-  return isXpathUnique(`//a[normalize-space(.)=$textContent]`, {
-    variables: {textContent: trimmedTextContent},
-    node,
-  });
-}
-
-/**
  * Check whether the provided attribute & value are unique in the source
  * Applies whitespace normalization to the attribute name,
  * since they cannot have spaces
@@ -137,7 +115,6 @@ export function getComplexSuggestedLocators(path, sourceDoc, isNative, automatio
 export function getSuggestedLocators(selectedElement, sourceXML, isNative, automationName) {
   const simpleLocElementProps = {
     tag: selectedElement.tagName,
-    text: selectedElement.textContent,
     attributes: selectedElement.attributes,
   };
   const sourceDoc = xmlToDOM(sourceXML);
@@ -946,7 +923,6 @@ class SimpleLocatorGenerator {
   constructor(elementProps, sourceDoc) {
     this._doc = sourceDoc;
     this._tag = elementProps.tag;
-    this._text = elementProps.text;
     this._attributes = elementProps.attributes;
   }
 
@@ -978,10 +954,6 @@ class SimpleLocatorGenerator {
     const idValue = this._attributes?.id;
     if (idValue && areAttrAndValueUnique('id', idValue, this._doc)) {
       webStrategyMap[STRATS.CSS] = `#${cssEscape(idValue)}`;
-    }
-    // link text
-    if (this._tag === 'a' && isLinkTextUnique(this._text, this._doc)) {
-      webStrategyMap[STRATS.LINK_TEXT] = this._text;
     }
     // tag name
     if (isTagUnique(this._tag, this._doc)) {

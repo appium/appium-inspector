@@ -1,5 +1,3 @@
-import {promises as fs} from 'fs';
-import {join} from 'path';
 import {describe, expect, it} from 'vitest';
 
 import {
@@ -60,7 +58,6 @@ describe('utils/source-parsing.js', function () {
       expect(foundElement).toEqual({
         children: [],
         tagName: 'secondD',
-        textContent: '',
         attributes: {},
         path: '0.1.1',
       });
@@ -92,7 +89,6 @@ describe('utils/source-parsing.js', function () {
               {
                 children: [],
                 tagName: 'XCUIElementTypeWindow',
-                textContent: '',
                 attributes: {
                   type: 'XCUIElementTypeWindow',
                   enabled: 'true',
@@ -106,7 +102,6 @@ describe('utils/source-parsing.js', function () {
               },
             ],
             tagName: 'XCUIElementTypeApplication',
-            textContent: '',
             attributes: {
               type: 'XCUIElementTypeApplication',
               name: '🦋',
@@ -124,21 +119,7 @@ describe('utils/source-parsing.js', function () {
         attributes: {},
         path: '',
         tagName: 'hierarchy',
-        textContent: '',
       });
-    });
-
-    it('should convert webview html to json', async function () {
-      const webviewSource = await fs.readFile(
-        join(__dirname, 'mocks', 'webview-parsed.html'),
-        'utf8',
-      );
-      const parsedJsonson = xmlToJSON(webviewSource);
-      const expectedJson = await fs.readFile(
-        join(__dirname, 'mocks', 'webview-parsed.json'),
-        'utf8',
-      );
-      expect(parsedJsonson).toEqual(JSON.parse(expectedJson));
     });
 
     it('should convert xml to json for Android', function () {
@@ -188,7 +169,6 @@ describe('utils/source-parsing.js', function () {
               {
                 children: [],
                 tagName: 'android.widget.LinearLayout',
-                textContent: '',
                 attributes: {
                   index: '0',
                   package: 'com.appiuminspector',
@@ -211,7 +191,6 @@ describe('utils/source-parsing.js', function () {
               },
             ],
             tagName: 'android.widget.FrameLayout',
-            textContent: '',
             attributes: {
               index: '0',
               package: 'com.appiuminspector',
@@ -241,7 +220,6 @@ describe('utils/source-parsing.js', function () {
           index: '0',
         },
         tagName: 'hierarchy',
-        textContent: '',
         path: '',
       });
     });
@@ -289,7 +267,6 @@ describe('utils/source-parsing.js', function () {
                                   {
                                     children: [],
                                     tagName: 'XCUIElementTypeStaticText',
-                                    textContent: '',
                                     attributes: {
                                       type: 'XCUIElementTypeStaticText',
                                       value: 'Login',
@@ -306,7 +283,6 @@ describe('utils/source-parsing.js', function () {
                                   },
                                 ],
                                 tagName: 'XCUIElementTypeOther',
-                                textContent: '',
                                 attributes: {
                                   type: 'XCUIElementTypeOther',
                                   name: 'Login',
@@ -322,7 +298,6 @@ describe('utils/source-parsing.js', function () {
                               },
                             ],
                             tagName: 'XCUIElementTypeOther',
-                            textContent: '',
                             attributes: {
                               type: 'XCUIElementTypeOther',
                               name: 'button-login-container',
@@ -338,7 +313,6 @@ describe('utils/source-parsing.js', function () {
                           },
                         ],
                         tagName: 'XCUIElementTypeOther',
-                        textContent: '',
                         attributes: {
                           type: 'XCUIElementTypeOther',
                           name: 'Appium Inspector',
@@ -359,7 +333,6 @@ describe('utils/source-parsing.js', function () {
                               {
                                 children: [],
                                 tagName: 'XCUIElementTypeButton',
-                                textContent: '',
                                 attributes: {
                                   type: 'XCUIElementTypeButton',
                                   value: '1',
@@ -376,7 +349,6 @@ describe('utils/source-parsing.js', function () {
                               },
                             ],
                             tagName: 'XCUIElementTypeOther',
-                            textContent: '',
                             attributes: {
                               type: 'XCUIElementTypeOther',
                               name: 'Home WebView Login Forms Swipe',
@@ -392,7 +364,6 @@ describe('utils/source-parsing.js', function () {
                           },
                         ],
                         tagName: 'XCUIElementTypeOther',
-                        textContent: '',
                         attributes: {
                           type: 'XCUIElementTypeOther',
                           name: 'Home WebView Login Forms Swipe',
@@ -408,7 +379,6 @@ describe('utils/source-parsing.js', function () {
                       },
                     ],
                     tagName: 'XCUIElementTypeOther',
-                    textContent: '',
                     attributes: {
                       type: 'XCUIElementTypeOther',
                       name: 'Appium Inspector',
@@ -424,7 +394,6 @@ describe('utils/source-parsing.js', function () {
                   },
                 ],
                 tagName: 'XCUIElementTypeWindow',
-                textContent: '',
                 attributes: {
                   type: 'XCUIElementTypeWindow',
                   enabled: 'true',
@@ -443,7 +412,6 @@ describe('utils/source-parsing.js', function () {
                       {
                         children: [],
                         tagName: 'XCUIElementTypeOther',
-                        textContent: '',
                         attributes: {
                           type: 'XCUIElementTypeOther',
                           enabled: 'true',
@@ -457,7 +425,6 @@ describe('utils/source-parsing.js', function () {
                       },
                     ],
                     tagName: 'XCUIElementTypeOther',
-                    textContent: '',
                     attributes: {
                       type: 'XCUIElementTypeOther',
                       enabled: 'true',
@@ -471,7 +438,6 @@ describe('utils/source-parsing.js', function () {
                   },
                 ],
                 tagName: 'XCUIElementTypeWindow',
-                textContent: '',
                 attributes: {
                   type: 'XCUIElementTypeWindow',
                   enabled: 'true',
@@ -485,7 +451,6 @@ describe('utils/source-parsing.js', function () {
               },
             ],
             tagName: 'XCUIElementTypeApplication',
-            textContent: '',
             attributes: {
               type: 'XCUIElementTypeApplication',
               name: 'wdioDemoApp',
@@ -502,7 +467,6 @@ describe('utils/source-parsing.js', function () {
         ],
         attributes: {},
         tagName: 'hierarchy',
-        textContent: '',
         path: '',
       });
     });
@@ -527,7 +491,6 @@ describe('utils/source-parsing.js', function () {
               {
                 children: [],
                 tagName: 'android.widget.LinearLayout',
-                textContent: '',
                 attributes: {
                   index: '0',
                   class: 'android.widget.LinearLayout',
@@ -537,7 +500,6 @@ describe('utils/source-parsing.js', function () {
               },
             ],
             tagName: 'android.widget.FrameLayout',
-            textContent: '',
             attributes: {
               index: '0',
               class: 'android.widget.FrameLayout',
@@ -548,7 +510,6 @@ describe('utils/source-parsing.js', function () {
         ],
         attributes: {},
         tagName: 'hierarchy',
-        textContent: '',
         path: '',
       });
     });
