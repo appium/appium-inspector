@@ -62,7 +62,7 @@ describe('utils/locator-generation.js', function () {
     });
 
     it('should return false if there are zero or multiple nodes with this link text', function () {
-      expect(isLinkTextUnique('Chain Text', xmlToDOM(`<a>Link Text</a>`))).toBe(false);
+      expect(isLinkTextUnique('Non-Existent Text', xmlToDOM(`<a>Link Text</a>`))).toBe(false);
       expect(
         isLinkTextUnique(
           'Link Text',
