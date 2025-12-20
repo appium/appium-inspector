@@ -944,7 +944,7 @@ class SimpleLocatorGenerator {
 
   /**
    * Get suggested selectors for simple locator strategies in webview context:
-   * id (css), link text, and tag name
+   * id (css) and tag name
    *
    * @returns {Record<string, string>} mapping of web strategies to selectors
    */
