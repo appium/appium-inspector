@@ -1,6 +1,6 @@
 import cssEscape from 'css.escape';
 import _ from 'lodash';
-import {select as xpathSelect} from 'xpath';
+import XPath, {select as xpathSelect} from 'xpath';
 
 import {LOCATOR_STRATEGIES as STRATS} from '../constants/session-inspector.js';
 import {log} from './logger.js';
