@@ -1,5 +1,5 @@
 import {describe, expect, it, vi} from 'vitest';
-import xpath from 'xpath';
+import * as xpath from 'xpath';
 
 import {
   areAttrAndValueUnique,
@@ -11,6 +11,15 @@ import {
   isTagUnique,
 } from '../../app/common/renderer/utils/locator-generation.js';
 import {xmlToDOM} from '../../app/common/renderer/utils/source-parsing.js';
+
+// Create identical mock of xpath, so that xpath.select can be modified as needed
+vi.mock('xpath', async (importOriginal) => {
+  const originalXpath = await importOriginal();
+  return {
+    ...originalXpath,
+    select: vi.fn(originalXpath.select),
+  };
+});
 
 // Helper that checks that the optimal xpath for a node is the one that we expect and also
 // checks that the XPath successfully locates the node in it's doc
@@ -444,7 +453,7 @@ describe('utils/locator-generation.js', function () {
 
     describe('when exceptions are thrown', function () {
       it('should keep going if xpath.select throws an exception', function () {
-        vi.spyOn(xpath, 'select').mockImplementation(() => {
+        vi.mocked(xpath.select).mockImplementation(() => {
           throw new Error('Exception');
         });
         const doc = xmlToDOM(`<node id='foo'>

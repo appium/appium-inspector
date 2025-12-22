@@ -31,7 +31,7 @@ export default defineConfig(({command}) => {
     },
     root: join(__dirname, 'app', 'common'),
     test: {
-      restoreMocks: true,
+      mockReset: true,
       root: join(__dirname, 'test'),
     },
   };

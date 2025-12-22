@@ -1,6 +1,6 @@
 import cssEscape from 'css.escape';
 import _ from 'lodash';
-import XPath, {select as xpathSelect} from 'xpath';
+import {select as xpathSelect} from 'xpath';
 
 import {LOCATOR_STRATEGIES as STRATS} from '../constants/session-inspector.js';
 import {log} from './logger.js';
@@ -306,8 +306,7 @@ class XPathGenerator extends LocatorGeneratorBase {
 
     // If the XPath does not parse, move to the next unique attribute
     try {
-      // eslint-disable-next-line import/no-named-as-default-member -- needed for Vitest spy functionality
-      othersWithAttr = XPath.select(xpath, this._doc);
+      othersWithAttr = xpathSelect(xpath, this._doc);
     } catch {
       return [false];
     }
