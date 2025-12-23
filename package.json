@@ -70,6 +70,7 @@
     "@xmldom/xmldom": "0.9.8",
     "antd": "6.1.1",
     "cheerio": "1.1.2",
+    "css.escape": "1.5.1",
     "dayjs": "1.11.19",
     "electron-debug": "4.1.0",
     "electron-settings": "4.0.4",
