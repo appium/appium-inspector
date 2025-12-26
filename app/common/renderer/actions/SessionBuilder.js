@@ -953,6 +953,33 @@ export function setAddVendorPrefixes(addVendorPrefixes) {
   };
 }
 
+/**
+ * Extract port from URL and set it in server state when running in browser/plugin mode
+ * This is useful when the inspector is accessed via the plugin at http://localhost:PORT/inspector
+ * The port from the URL takes precedence when running in plugin mode
+ */
+export function setPortFromUrl() {
+  return (dispatch, getState) => {
+    if (typeof window === 'undefined' || !window.location) {
+      return;
+    }
+
+    try {
+      const url = new URL(window.location.href);
+      const port = url.port;
+
+      if (port && url.pathname.includes('/inspector')) {
+        const parsedPort = parseInt(port, 10);
+        if (!isNaN(parsedPort) && parsedPort > 0 && parsedPort <= 65535) {
+          setServerParam('port', parsedPort.toString(), SERVER_TYPES.REMOTE)(dispatch, getState);
+        }
+      }
+    } catch (e) {
+      log.debug('Could not extract port from URL:', e);
+    }
+  };
+}
+
 export function initFromQueryString(loadNewSession) {
   return (dispatch, getState) => {
     if (!isFirstRun) {
