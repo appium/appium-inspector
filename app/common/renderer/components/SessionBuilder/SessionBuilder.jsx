@@ -13,6 +13,7 @@ import {
 } from '../../constants/session-builder.js';
 import {ipcRenderer, openLink} from '../../polyfills.js';
 import {log} from '../../utils/logger.js';
+import AppSettings from './AppSettings/AppSettings.jsx';
 import AttachToSession from './AttachToSessionTab/AttachToSession.jsx';
 import CapabilityEditor from './CapabilityBuilderTab/CapabilityEditor.jsx';
 import SavedCapabilitySets from './SavedCapabilitySetsTab/SavedCapabilitySets.jsx';
@@ -21,7 +22,6 @@ import CloudProviders from './ServerDetails/CloudProviders.jsx';
 import CloudProviderSelector from './ServerDetails/CloudProviderSelector.jsx';
 import ServerTabCustom from './ServerDetails/ServerTabCustom.jsx';
 import styles from './SessionBuilder.module.css';
-import ToggleTheme from './Settings/ToggleTheme.jsx';
 
 // There are 3 possible cases for an empty capability set:
 // * Default Inspector state, which has 1 predefined capability without name or value
@@ -154,7 +154,7 @@ const Session = (props) => {
               },
             ]}
           />
-          <ToggleTheme {...props} />
+          <AppSettings t={t} />
         </div>
         <AdvancedServerParams {...props} />
         <Tabs

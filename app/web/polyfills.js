@@ -26,6 +26,7 @@ const browserUtils = {
   copyToClipboard: (text) => navigator.clipboard.writeText(text),
   openLink: (url) => window.open(url, ''),
   setTheme: () => {},
+  updateLanguage: () => {},
   ipcRenderer: {
     on: (evt) => {
       console.warn(`Cannot listen for IPC event ${evt} in browser context`); // eslint-disable-line no-console
@@ -48,7 +49,7 @@ class BrowserSettings {
 }
 
 const settings = new BrowserSettings();
-const {copyToClipboard, openLink, setTheme, ipcRenderer} = browserUtils;
+const {copyToClipboard, openLink, setTheme, ipcRenderer, updateLanguage} = browserUtils;
 
 export {
   copyToClipboard,
@@ -58,4 +59,5 @@ export {
   openLink,
   setTheme,
   settings,
+  updateLanguage,
 };

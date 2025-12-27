@@ -26,4 +26,5 @@ export {
   ipcRenderer,
   openLink,
   setTheme,
+  updateLanguage,
 } from '#local-polyfills'; // eslint-disable-line import/no-unresolved
