@@ -44,13 +44,3 @@ a downloadable `.appiumsession` file, which can then be shared to other computer
 Selecting the _Open Session File_ option will load the server and session details in the
 [Session Builder](./session-builder/index.md). The loaded information can then be modified and/or
 saved inside the Inspector.
-
-## Change Language
-
-The _Language_ option in the _View_ menu allows to change the entire application language. Currently
-there are over 20 available languages with community-provided translations!
-
-!!! note
-
-    Most languages only include partial translations. You can help by providing your translations on
-    [Crowdin](https://crowdin.com/project/appium-desktop)!
