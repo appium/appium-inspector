@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 import {languageList} from '../../../../shared/i18next.config.js';
 import {PREFERRED_LANGUAGE} from '../../../../shared/setting-defs.js';
 import i18n from '../../../i18next.js';
-import {setSetting} from '../../../polyfills.js';
+import {setSetting, updateLanguage} from '../../../polyfills.js';
 
 const ChangeLanguage = ({t}) => {
   const [language, setLanguage] = useState(i18n.language);
@@ -24,6 +24,7 @@ const ChangeLanguage = ({t}) => {
     setLanguage(val);
     await i18n.changeLanguage(val);
     await setSetting(PREFERRED_LANGUAGE, val);
+    updateLanguage(val);
   };
 
   return (
