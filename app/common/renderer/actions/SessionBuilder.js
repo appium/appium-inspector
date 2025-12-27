@@ -959,7 +959,7 @@ export function setAddVendorPrefixes(addVendorPrefixes) {
  * The port from the URL takes precedence when running in plugin mode
  */
 export function setPortFromUrl() {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     if (typeof window === 'undefined' || !window.location) {
       return;
     }
@@ -968,10 +968,10 @@ export function setPortFromUrl() {
       const url = new URL(window.location.href);
       const port = url.port;
 
-      if (port && url.pathname.includes('/inspector')) {
+      if (port && (url.pathname === '/inspector' || url.pathname.startsWith('/inspector/'))) {
         const parsedPort = parseInt(port, 10);
         if (!isNaN(parsedPort) && parsedPort > 0 && parsedPort <= 65535) {
-          setServerParam('port', parsedPort.toString(), SERVER_TYPES.REMOTE)(dispatch, getState);
+          await setServerParam('port', parsedPort.toString(), SERVER_TYPES.REMOTE)(dispatch, getState);
         }
       }
     } catch (e) {

@@ -96,7 +96,7 @@ const Session = (props) => {
         await setVisibleProviders();
         await setSavedServerParams();
         await setLocalServerParams();
-        setPortFromUrl();
+        await setPortFromUrl();
         initFromQueryString(loadNewSession);
         await initFromSessionFile();
         ipcRenderer.on('sessionfile:apply', (_, sessionFileString) =>
