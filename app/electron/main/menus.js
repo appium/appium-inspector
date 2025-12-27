@@ -1,8 +1,6 @@
 import {app, dialog, Menu, shell} from 'electron';
 
-import {languageList} from '../../common/shared/i18next.config.js';
 import {APPIUM_SESSION_EXTENSION, isDev, openSessionFile, t} from './helpers.js';
-import i18n from './i18next.js';
 import {checkForUpdates} from './updater.js';
 import {launchNewSessionWindow} from './windows.js';
 
@@ -39,15 +37,6 @@ async function openFile(mainWindow) {
 
 function saveAs(mainWindow) {
   mainWindow.webContents.send('sessionfile:download');
-}
-
-function getLanguagesMenu() {
-  return languageList.map((language) => ({
-    label: `${language.name} (${language.original})`,
-    type: 'radio',
-    checked: i18n.language === language.code,
-    click: () => i18n.changeLanguage(language.code),
-  }));
 }
 
 function optionAbout() {
@@ -121,8 +110,6 @@ function dropdownView() {
     {label: t('Reset Zoom Level'), role: 'resetZoom'},
     {label: t('Zoom In'), role: 'zoomIn'},
     {label: t('Zoom Out'), role: 'zoomOut'},
-    separator,
-    {label: t('Languages'), submenu: getLanguagesMenu()},
   ];
 
   if (isDev) {

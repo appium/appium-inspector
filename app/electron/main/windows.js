@@ -1,8 +1,8 @@
-import {BrowserWindow, Menu, nativeTheme, webContents} from 'electron';
+import {BrowserWindow, ipcMain, Menu, nativeTheme} from 'electron';
 import settings from 'electron-settings';
 import {join} from 'path';
 
-import {PREFERRED_LANGUAGE, PREFERRED_THEME} from '../../common/shared/setting-defs.js';
+import {PREFERRED_THEME} from '../../common/shared/setting-defs.js';
 import {isDev} from './helpers.js';
 import i18n from './i18next.js';
 import {openFilePath} from './main.js';
@@ -96,19 +96,10 @@ export async function setupMainWindow() {
     callback({requestHeaders: details.requestHeaders});
   });
 
-  i18n.on('languageChanged', async (languageCode) => {
-    // this event gets called before the i18n initialization event,
-    // so add a guard condition
-    if (!i18n.isInitialized) {
-      return;
-    }
+  // Not included in `setupIPCListeners` to avoid circular dependency
+  ipcMain.on('electron:updateLanguage', async (_evt, lngCode) => {
+    await i18n.changeLanguage(lngCode);
     rebuildMenus(mainWindow);
-    await settings.set(PREFERRED_LANGUAGE, languageCode);
-    webContents.getAllWebContents().forEach((wc) => {
-      wc.send('appium-language-changed', {
-        language: languageCode,
-      });
-    });
   });
 }
 

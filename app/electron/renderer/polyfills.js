@@ -18,6 +18,7 @@ const electronUtils = {
   copyToClipboard: (text) => ipcRenderer.send('electron:copyToClipboard', text),
   openLink: (link) => ipcRenderer.send('electron:openLink', link),
   setTheme: (theme) => ipcRenderer.send('electron:setTheme', theme),
+  updateLanguage: (lngCode) => ipcRenderer.send('electron:updateLanguage', lngCode),
 };
 
 class ElectronSettings {
@@ -35,7 +36,7 @@ class ElectronSettings {
 }
 
 const settings = new ElectronSettings();
-const {copyToClipboard, openLink, setTheme} = electronUtils;
+const {copyToClipboard, openLink, setTheme, updateLanguage} = electronUtils;
 
 export {
   copyToClipboard,
@@ -45,4 +46,5 @@ export {
   openLink,
   setTheme,
   settings,
+  updateLanguage,
 };

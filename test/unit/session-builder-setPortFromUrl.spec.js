@@ -24,6 +24,7 @@ vi.mock('../../app/common/renderer/polyfills.js', () => ({
   copyToClipboard: vi.fn(),
   openLink: vi.fn(),
   setTheme: vi.fn(),
+  updateLanguage: vi.fn(),
   ipcRenderer: {
     on: vi.fn(),
     invoke: vi.fn(),
