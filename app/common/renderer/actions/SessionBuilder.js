@@ -971,7 +971,7 @@ export function setPortFromUrl() {
       if (port && (url.pathname === '/inspector' || url.pathname.startsWith('/inspector/'))) {
         const parsedPort = parseInt(port, 10);
         if (!isNaN(parsedPort) && parsedPort > 0 && parsedPort <= 65535) {
-          await setServerParam('port', parsedPort.toString(), SERVER_TYPES.REMOTE)(dispatch, getState);
+          await setServerParam('port', parsedPort.toString())(dispatch, getState);
         }
       }
     } catch (e) {
