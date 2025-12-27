@@ -207,8 +207,6 @@ describe('SessionBuilder actions', function () {
       await action(mockDispatch, mockGetState);
 
       expect(mockDispatch).not.toHaveBeenCalled();
-
-      global.URL = OriginalURL;
     });
 
     it('should handle port numbers outside valid range', async function () {
