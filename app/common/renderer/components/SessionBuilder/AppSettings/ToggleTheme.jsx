@@ -1,4 +1,4 @@
-import {ControlOutlined, MoonOutlined, SunOutlined} from '@ant-design/icons';
+import {BgColorsOutlined, MoonOutlined, SunOutlined} from '@ant-design/icons';
 import {Form, Radio} from 'antd';
 
 import {useTheme} from '../../../hooks/use-theme.jsx';
@@ -20,7 +20,7 @@ const ToggleTheme = ({t}) => {
     {
       value: 'system',
       label: t('System Theme'),
-      icon: <ControlOutlined />,
+      icon: <BgColorsOutlined />,
     },
   ];
 
