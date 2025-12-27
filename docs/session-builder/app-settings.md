@@ -16,7 +16,7 @@ a light or dark theme.
 
 ## Language
 
-The language dropdown allows to change the entire application language. Currently there are over 20
+The language dropdown allows you to change the entire application language. Currently there are over 20
 available languages with community-provided translations!
 
 !!! note

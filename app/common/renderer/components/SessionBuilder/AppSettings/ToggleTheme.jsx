@@ -24,13 +24,14 @@ const ToggleTheme = ({t}) => {
     },
   ];
 
-  themes.forEach((th) => {
-    th.label = (
+  const themeOptions = themes.map((th) => ({
+    ...th,
+    label: (
       <>
         {th.icon} {th.label}
       </>
-    );
-  });
+    ),
+  }));
 
   return (
     <Form.Item label={t('Theme')}>
@@ -41,7 +42,7 @@ const ToggleTheme = ({t}) => {
         onChange={(e) => updateTheme(e.target.value)}
         optionType="button"
         buttonStyle="solid"
-        options={themes}
+        options={themeOptions}
       />
     </Form.Item>
   );
