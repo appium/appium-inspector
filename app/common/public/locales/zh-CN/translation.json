@@ -294,7 +294,7 @@
   "Token": "令牌",
   "Key": "密钥",
   "Secret": "密钥",
-  "Toggle Theme": "Toggle Theme",
+  "Theme": "Theme",
   "Light Theme": "浅色主题",
   "Dark Theme": "Dark Theme",
   "System Theme": "System Theme",
@@ -324,5 +324,6 @@
   "executeMethods": "Execute Methods",
   "dynamicCommandsDescription": "Run commands supported by the currently active driver and plugin(s). Note that some commands may only work in specific contexts. Any commands not supported by WebdriverIO are not included in this list.",
   "dynamicExecuteMethodsDescription": "Run any execute method supported by the currently active driver and plugin(s).",
-  "methodDeprecated": "This method is deprecated"
+  "methodDeprecated": "This method is deprecated",
+  "App Settings": "App Settings"
 }
