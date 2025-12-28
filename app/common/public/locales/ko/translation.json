@@ -294,7 +294,7 @@
   "Token": "토큰",
   "Key": "키",
   "Secret": "시크릿",
-  "Toggle Theme": "테마 전환",
+  "Theme": "Theme",
   "Light Theme": "라이트 테마",
   "Dark Theme": "다크 테마",
   "System Theme": "시스템 테마",
@@ -324,5 +324,6 @@
   "executeMethods": "메서드 실행",
   "dynamicCommandsDescription": "현재 활성 드라이버 및 플러그인이 지원하는 명령어만 실행할 수 있습니다. 일부 명령어는 특정 컨텍스트에서만 동작할 수 있으니 유의하세요. WebdriverIO에서 지원하지 않는 명령어는 이 목록에 포함되어 있지 않습니다",
   "dynamicExecuteMethodsDescription": "현재 활성화된 드라이버와 플러그인에서 지원하는 모든 execute 메서드를 실행할 수 있습니다",
-  "methodDeprecated": "이 메서드는 더 이상 권장되지 않습니다"
+  "methodDeprecated": "이 메서드는 더 이상 권장되지 않습니다",
+  "App Settings": "App Settings"
 }
