@@ -378,10 +378,7 @@ export default function builder(state = INITIAL_STATE, action) {
     case SET_STATE_FROM_URL:
       return {
         ...state,
-        server: {
-          ...state.server,
-          ...(action.state.server || {}),
-        },
+        server: _.merge({}, state.server, action.state.server || {}),
         ..._.omit(action.state, ['server']),
       };
 
