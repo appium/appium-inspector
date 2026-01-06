@@ -35,31 +35,63 @@ export async function readTextFromUploadedFiles(fileList) {
   return await Promise.all(fileReaderPromise);
 }
 
+function parseSessionCaps(sessionCaps) {
+  if (!_.isArray(sessionCaps)) {
+    return null;
+  }
+  for (const cap of sessionCaps) {
+    for (const capProp of ['type', 'name', 'value']) {
+      if (!(capProp in cap)) {
+        return null;
+      }
+    }
+    if (!_.values(CAPABILITY_TYPES).includes(cap.type)) {
+      return null;
+    }
+  }
+  return sessionCaps;
+}
+
+function parseV1SessionFile(sessionJSON) {
+  if (!('serverType' in sessionJSON)) {
+    return null;
+  }
+  if (!_.values(SERVER_TYPES).includes(sessionJSON.serverType)) {
+    return null;
+  }
+  return sessionJSON;
+}
+
+function parseV2SessionFile(sessionJSON) {
+  for (const sessionProp of ['name', 'server']) {
+    if (!(sessionProp in sessionJSON)) {
+      return null;
+    }
+  }
+  if (!_.values(SERVER_TYPES).includes(_.keys(sessionJSON.server)[0])) {
+    return null;
+  }
+  return sessionJSON;
+}
+
 export function parseSessionFileContents(sessionFileString) {
   try {
     const sessionJSON = JSON.parse(sessionFileString);
-    for (const sessionProp of ['version', 'caps', 'serverType']) {
+    for (const sessionProp of ['version', 'caps']) {
       if (!(sessionProp in sessionJSON)) {
         return null;
       }
     }
-    if (!_.values(SERVER_TYPES).includes(sessionJSON.serverType)) {
+    if (!parseSessionCaps(sessionJSON.caps)) {
       return null;
-    } else if (!_.isArray(sessionJSON.caps)) {
-      return null;
-    } else {
-      for (const cap of sessionJSON.caps) {
-        for (const capProp of ['type', 'name', 'value']) {
-          if (!(capProp in cap)) {
-            return null;
-          }
-        }
-        if (!_.values(CAPABILITY_TYPES).includes(cap.type)) {
-          return null;
-        }
-      }
     }
-    return sessionJSON;
+    if (sessionJSON.version === '1.0') {
+      return parseV1SessionFile(sessionJSON);
+    }
+    if (sessionJSON.version === '2.0') {
+      return parseV2SessionFile(sessionJSON, console);
+    }
+    return null;
   } catch {
     return null;
   }
