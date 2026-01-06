@@ -7,7 +7,11 @@ import {
   SESSION_SERVER_TYPE,
   VISIBLE_PROVIDERS,
 } from '../../shared/setting-defs.js';
-import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder.js';
+import {
+  APPIUM_SESSION_FILE_VERSION,
+  SERVER_TYPES,
+  SESSION_BUILDER_TABS,
+} from '../constants/session-builder.js';
 import {APP_MODE} from '../constants/session-inspector.js';
 import {DEFAULT_SERVER_PROPS} from '../constants/webdriver.js';
 import i18n from '../i18next.js';
@@ -71,8 +75,6 @@ export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
 export const SET_CAPABILITY_NAME_ERROR = 'SET_CAPABILITY_NAME_ERROR';
 export const SET_STATE_FROM_URL = 'SET_STATE_FROM_URL';
 export const SET_STATE_FROM_FILE = 'SET_STATE_FROM_FILE';
-
-const APPIUM_SESSION_FILE_VERSION = '1.0';
 
 const CAPS_NEW_COMMAND = 'appium:newCommandTimeout';
 const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
@@ -635,17 +637,19 @@ export function setStateFromSessionFile(sessionFileString) {
 export function saveSessionAsFile() {
   return (_dispatch, getState) => {
     const state = getState().builder;
+    const sessionName = state.capsName ?? '(unnamed)';
+    const filteredServer = {[state.serverType]: state.server[state.serverType]};
     const sessionFileDetails = {
       version: APPIUM_SESSION_FILE_VERSION,
+      name: sessionName,
+      server: filteredServer,
       caps: state.caps.map((cap) => _.omit(cap, 'id')),
-      server: state.server,
-      serverType: state.serverType,
-      visibleProviders: state.visibleProviders,
     };
     const href = `data:text/json;charset=utf-8,${encodeURIComponent(
       JSON.stringify(sessionFileDetails, null, 2),
     )}`;
-    const fileName = `${state.serverType}.appiumsession`;
+    const escapedName = sessionName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+    const fileName = `${escapedName}.appiumsession`;
     downloadFile(href, fileName);
   };
 }

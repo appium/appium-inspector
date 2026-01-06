@@ -4,6 +4,8 @@ export const SESSION_BUILDER_TABS = {
   ATTACH_TO_SESSION: 'attach',
 };
 
+export const APPIUM_SESSION_FILE_VERSION = '2.0';
+
 export const SERVER_TYPES = {
   LOCAL: 'local',
   REMOTE: 'remote',
