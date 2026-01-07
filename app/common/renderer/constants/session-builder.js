@@ -54,6 +54,12 @@ export const PROVIDER_VALUES = {
 
 export const ADD_CLOUD_PROVIDER_TAB_KEY = 'addCloudProvider';
 
+export const SERVER_ADVANCED_PARAMS = {
+  ALLOW_UNAUTHORIZED: 'allowUnauthorized',
+  PROXY: 'proxy',
+  USE_PROXY: 'useProxy',
+};
+
 export const CAPABILITY_TYPES = {
   TEXT: 'text',
   BOOL: 'boolean',

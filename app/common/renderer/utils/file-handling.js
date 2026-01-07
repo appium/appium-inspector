@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {
   CAPABILITY_TYPES,
   DEFAULT_SESSION_NAME,
+  SERVER_ADVANCED_PARAMS,
   SERVER_TYPES,
   SESSION_FILE_VERSIONS,
 } from '../constants/session-builder.js';
@@ -52,13 +53,17 @@ function migrateSessionJsonToV2(sessionJSON) {
   sessionJSON.name = DEFAULT_SESSION_NAME;
   // Bump version
   sessionJSON.version = SESSION_FILE_VERSIONS.V2;
-  // Filter server to only the value that matches serverType,
+  // Filter server to only the value that matches serverType (plus advanced),
   // creating it if it does not exist
   if (!('serverType' in sessionJSON)) {
     return null;
   }
   const serverTypeValue = sessionJSON.server?.[sessionJSON.serverType] ?? {};
-  sessionJSON.server = {[sessionJSON.serverType]: serverTypeValue};
+  const advancedValue = sessionJSON.server?.[SERVER_TYPES.ADVANCED] ?? {};
+  sessionJSON.server = {
+    [sessionJSON.serverType]: serverTypeValue,
+    [SERVER_TYPES.ADVANCED]: advancedValue,
+  };
   // Remove serverType and visibleProviders if they exist
   delete sessionJSON.serverType;
   delete sessionJSON.visibleProviders;
@@ -110,8 +115,40 @@ function isSessionServerValid(sessionJSON) {
   if (!('server' in sessionJSON && _.isObject(sessionJSON.server))) {
     return false;
   }
-  const serverKeys = _.keys(sessionJSON.server);
-  return serverKeys.length === 1 && _.values(SERVER_TYPES).includes(serverKeys[0]);
+  const serverKeys = Object.keys(sessionJSON.server);
+  if (
+    serverKeys.length !== 2 ||
+    !serverKeys.includes(SERVER_TYPES.ADVANCED) ||
+    !_.isObject(sessionJSON.server.advanced)
+  ) {
+    return false;
+  }
+
+  for (const key of serverKeys) {
+    if (!Object.values(SERVER_TYPES).includes(key)) {
+      return false;
+    }
+    if (key !== SERVER_TYPES.ADVANCED) {
+      continue;
+    }
+    for (const [advKey, advValue] of Object.entries(sessionJSON.server.advanced)) {
+      if (!Object.values(SERVER_ADVANCED_PARAMS).includes(advKey)) {
+        return false;
+      }
+      if (
+        [SERVER_ADVANCED_PARAMS.ALLOW_UNAUTHORIZED, SERVER_ADVANCED_PARAMS.USE_PROXY].includes(
+          advKey,
+        ) &&
+        typeof advValue !== 'boolean'
+      ) {
+        return false;
+      }
+      if (advKey === SERVER_ADVANCED_PARAMS.PROXY && typeof advValue !== 'string') {
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 /**

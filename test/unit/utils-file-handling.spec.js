@@ -28,14 +28,19 @@ describe('utils/file-handling.js', function () {
           version: SESSION_FILE_VERSIONS.V1,
           caps: [],
           serverType: 'remote',
-          server: {local: {}, remote: {path: '/test'}, sauce: {}},
+          server: {
+            local: {},
+            remote: {path: '/test'},
+            sauce: {},
+            advanced: {allowUnauthorized: true},
+          },
           visibleProviders: [],
         };
         expect(migrateSessionJSON(v1Session)).toEqual({
           version: SESSION_FILE_VERSIONS.LATEST,
           name: DEFAULT_SESSION_NAME,
           caps: [],
-          server: {remote: {path: '/test'}},
+          server: {remote: {path: '/test'}, advanced: {allowUnauthorized: true}},
         });
       });
 
@@ -47,7 +52,7 @@ describe('utils/file-handling.js', function () {
         expect(migrateSessionJSON(session1)).toEqual({
           version: SESSION_FILE_VERSIONS.LATEST,
           name: DEFAULT_SESSION_NAME,
-          server: {remote: {}},
+          server: {remote: {}, advanced: {}},
         });
         const session2 = {version: SESSION_FILE_VERSIONS.V1};
         expect(migrateSessionJSON(session2)).toBeNull();
@@ -62,7 +67,7 @@ describe('utils/file-handling.js', function () {
         expect(migrateSessionJSON(v1Session)).toEqual({
           version: SESSION_FILE_VERSIONS.LATEST,
           name: DEFAULT_SESSION_NAME,
-          server: {any: {}},
+          server: {any: {}, advanced: {}},
         });
       });
     });
@@ -71,7 +76,7 @@ describe('utils/file-handling.js', function () {
   describe('#validateSessionJSON', function () {
     const versionProp = {version: SESSION_FILE_VERSIONS.LATEST};
     const nameProp = {name: 'Test'};
-    const serverProp = {server: {remote: {}}};
+    const serverProp = {server: {remote: {}, advanced: {}}};
     const capsProp = {caps: []};
 
     it('should validate a correct v2 session', function () {
@@ -97,6 +102,26 @@ describe('utils/file-handling.js', function () {
       expect(validateSessionJSON(session2)).toBeNull();
       expect(validateSessionJSON(session3)).toBeNull();
       expect(validateSessionJSON(session4)).toBeNull();
+    });
+
+    it('should return null if advanced server properties are invalid', function () {
+      const baseSession = {...versionProp, ...nameProp, ...serverProp, ...capsProp};
+      const session1 = {...baseSession, server: {...baseSession.server, advanced: 123}};
+      const session2 = {...baseSession, server: {...baseSession.server, advanced: {invalid: {}}}};
+      const session3 = {
+        ...baseSession,
+        server: {...baseSession.server, advanced: {allowUnauthorized: 1}},
+      };
+      const session4 = {
+        ...baseSession,
+        server: {...baseSession.server, advanced: {useProxy: 'test'}},
+      };
+      const session5 = {...baseSession, server: {...baseSession.server, advanced: {proxy: false}}};
+      expect(validateSessionJSON(session1)).toBeNull();
+      expect(validateSessionJSON(session2)).toBeNull();
+      expect(validateSessionJSON(session3)).toBeNull();
+      expect(validateSessionJSON(session4)).toBeNull();
+      expect(validateSessionJSON(session5)).toBeNull();
     });
 
     it('should return null if caps is missing, not array, or invalid', function () {
@@ -169,7 +194,7 @@ describe('utils/file-handling.js', function () {
             value: 'Android',
           },
         ],
-        server: {remote: {path: ''}},
+        server: {remote: {path: ''}, advanced: {}},
       });
     });
 
@@ -184,7 +209,7 @@ describe('utils/file-handling.js', function () {
             value: 'Android',
           },
         ],
-        server: {remote: {}},
+        server: {remote: {}, advanced: {}},
       };
       const parsedJson = parseSessionFileContents(JSON.stringify(sessionFile));
       expect(parsedJson).toEqual(sessionFile);
