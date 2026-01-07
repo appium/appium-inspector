@@ -397,6 +397,8 @@ export default function builder(state = INITIAL_STATE, action) {
           enabled: true,
           ...cap,
         })),
+        // reset capsName since we now have an unnamed session
+        capsName: null,
         server: {
           ...state.server,
           ...action.sessionJSON.server,
