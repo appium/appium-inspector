@@ -627,7 +627,9 @@ export function setStateFromSessionFile(sessionFileString) {
       });
       return;
     }
-    sessionJSON.serverType = Object.keys(sessionJSON.server)[0];
+    sessionJSON.serverType = Object.keys(sessionJSON.server).find(
+      (type) => type !== SERVER_TYPES.ADVANCED,
+    );
     sessionJSON.visibleProviders =
       sessionJSON.serverType !== SERVER_TYPES.REMOTE ? [sessionJSON.serverType] : [];
     dispatch({type: SET_STATE_FROM_FILE, sessionJSON});
