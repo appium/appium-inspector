@@ -234,6 +234,7 @@ describe('utils/file-handling.js', function () {
         expect(parseSessionFileContents(sessionString1)).toBeNull();
         expect(parseSessionFileContents(sessionString2)).toBeNull();
       });
+
       it('should not parse if the server type is invalid', function () {
         const sessionString = `{
           "version": "2.0",
