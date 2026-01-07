@@ -68,7 +68,14 @@ function parseV2SessionFile(sessionJSON) {
       return null;
     }
   }
-  if (!_.values(SERVER_TYPES).includes(_.keys(sessionJSON.server)[0])) {
+  if (typeof sessionJSON.name !== 'string' || !_.isObject(sessionJSON.server)) {
+    return null;
+  }
+  const serverKeys = _.keys(sessionJSON.server);
+  if (serverKeys.length !== 1) {
+    return null;
+  }
+  if (!_.values(SERVER_TYPES).includes(serverKeys[0])) {
     return null;
   }
   return sessionJSON;
@@ -89,7 +96,7 @@ export function parseSessionFileContents(sessionFileString) {
       return parseV1SessionFile(sessionJSON);
     }
     if (sessionJSON.version === '2.0') {
-      return parseV2SessionFile(sessionJSON, console);
+      return parseV2SessionFile(sessionJSON);
     }
     return null;
   } catch {

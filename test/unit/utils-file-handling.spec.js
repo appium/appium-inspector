@@ -218,7 +218,7 @@ describe('utils/file-handling.js', function () {
         expect(parseSessionFileContents(sessionString)).toEqual(expectedSessionJSON);
       });
 
-      it('should not parse if name or server is missing', function () {
+      it('should not parse if the name or server is missing', function () {
         const sessionString1 = `{
           "version": "2.0",
           "name": "Test Session",
@@ -227,7 +227,46 @@ describe('utils/file-handling.js', function () {
         const sessionString2 = `{
           "version": "2.0",
           "server": {
-            "remote": {},
+            "remote": {}
+          },
+          "caps": []
+        }`;
+        expect(parseSessionFileContents(sessionString1)).toBeNull();
+        expect(parseSessionFileContents(sessionString2)).toBeNull();
+      });
+
+      it('should not parse if the name or server variable type is incorrect', function () {
+        const sessionString1 = `{
+          "version": "2.0",
+          "name": 12345,
+          "server": {
+            "remote": {}
+          },
+          "caps": []
+        }`;
+        const sessionString2 = `{
+          "version": "2.0",
+          "name": "Test Session",
+          "server": 12345,
+          "caps": []
+        }`;
+        expect(parseSessionFileContents(sessionString1)).toBeNull();
+        expect(parseSessionFileContents(sessionString2)).toBeNull();
+      });
+
+      it('should not parse if the server does not have exactly one entry', function () {
+        const sessionString1 = `{
+          "version": "2.0",
+          "name": "Test Session",
+          "server": {},
+          "caps": []
+        }`;
+        const sessionString2 = `{
+          "version": "2.0",
+          "name": "Test Session",
+          "server": {
+            "local": {},
+            "remote": {}
           },
           "caps": []
         }`;

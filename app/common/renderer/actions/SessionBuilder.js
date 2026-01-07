@@ -654,7 +654,7 @@ export function saveSessionAsFile() {
     const href = `data:text/json;charset=utf-8,${encodeURIComponent(
       JSON.stringify(sessionFileDetails, null, 2),
     )}`;
-    const escapedName = sessionName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+    const escapedName = sessionName.replace(/[\s\\/:*?"<>|]/g, '_');
     const fileName = `${escapedName}.appiumsession`;
     downloadFile(href, fileName);
   };
