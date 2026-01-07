@@ -167,8 +167,8 @@ describe('utils/file-handling.js', function () {
           "version": "2.0",
           "name": "Test Session",
           "server": {
-            "remote": {
-              "path": ""
+            "sauce": {
+              "dataCenter": "us-west-1"
             }
           },
           "caps": [
@@ -183,8 +183,8 @@ describe('utils/file-handling.js', function () {
           version: '2.0',
           name: 'Test Session',
           server: {
-            remote: {
-              path: '',
+            sauce: {
+              dataCenter: 'us-west-1',
             },
           },
           caps: [
