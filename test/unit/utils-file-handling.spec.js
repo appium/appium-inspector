@@ -1,290 +1,193 @@
 import {describe, expect, it} from 'vitest';
 
-import {parseSessionFileContents} from '../../app/common/renderer/utils/file-handling.js';
+import {
+  DEFAULT_SESSION_NAME,
+  SESSION_FILE_VERSIONS,
+} from '../../app/common/renderer/constants/session-builder.js';
+import {
+  migrateSessionJSON,
+  parseSessionFileContents,
+  validateSessionJSON,
+} from '../../app/common/renderer/utils/file-handling.js';
 
 describe('utils/file-handling.js', function () {
-  describe('#parseSessionFileContents', function () {
-    describe('no version', function () {
-      it('should not parse invalid JSON', function () {
-        const sessionString = 'this is not JSON';
-        expect(parseSessionFileContents(sessionString)).toBeNull();
-      });
-
-      it('should not parse if the version property is missing', function () {
-        const sessionString = `{
-          "caps": [],
-          "serverType": "remote"
-        }`;
-        expect(parseSessionFileContents(sessionString)).toBeNull();
-      });
+  describe('#migrateSessionJSON', function () {
+    it('should not migrate if already on the latest version', function () {
+      const session = {version: SESSION_FILE_VERSIONS.LATEST};
+      expect(migrateSessionJSON(session)).toEqual(session);
     });
 
-    describe('any version', function () {
-      it('should not parse if the caps property is missing', function () {
-        const sessionString = `{
-          "version": "any",
-          "serverType": "remote"
-        }`;
-        expect(parseSessionFileContents(sessionString)).toBeNull();
-      });
-
-      it('should not parse if caps is not an array', function () {
-        const sessionString = `{
-          "version": "any",
-          "caps": 9999,
-          "serverType": "remote"
-        }`;
-        expect(parseSessionFileContents(sessionString)).toBeNull();
-      });
-
-      it('should not parse if any required capability property is missing', function () {
-        const sessionString = `{
-          "version": "any",
-          "caps": [
-            {
-              "name": "single cap"
-            }
-          ],
-          "serverType": "remote"
-        }`;
-        expect(parseSessionFileContents(sessionString)).toBeNull();
-      });
-
-      it('should not parse if any capability type is not valid', function () {
-        const sessionString = `{
-          "version": "any",
-          "caps": [
-            {
-              "type": "invalid type",
-              "name": "single cap",
-              "value": "single cap value"
-            }
-          ],
-          "serverType": "remote"
-        }`;
-        expect(parseSessionFileContents(sessionString)).toBeNull();
-      });
+    it('should return null if version is missing or invalid', function () {
+      expect(migrateSessionJSON({})).toBeNull();
+      expect(migrateSessionJSON({version: '0.5'})).toBeNull();
     });
 
-    describe('version 1', function () {
-      it('should parse a fully formed session file', function () {
-        const sessionString = `{
-          "version": "1.0",
-          "caps": [
-            {
-              "type": "text",
-              "name": "platformName",
-              "value": "Android"
-            }
-          ],
-          "server": {
-            "local": {},
-            "remote": {
-              "path": ""
-            },
-            "sauce": {
-              "dataCenter": "us-west-1"
-            },
-            "headspin": {},
-            "browserstack": {},
-            "lambdatest": {},
-            "advanced": {},
-            "bitbar": {},
-            "kobiton": {},
-            "perfecto": {},
-            "pcloudy": {},
-            "testingbot": {},
-            "experitest": {},
-            "roboticmobi": {},
-            "remotetestkit": {}
-          },
-          "serverType": "remote",
-          "visibleProviders": []
-        }`;
-        const expectedSessionJSON = {
-          version: '1.0',
-          caps: [
-            {
-              type: 'text',
-              name: 'platformName',
-              value: 'Android',
-            },
-          ],
-          server: {
-            local: {},
-            remote: {
-              path: '',
-            },
-            sauce: {
-              dataCenter: 'us-west-1',
-            },
-            headspin: {},
-            browserstack: {},
-            lambdatest: {},
-            advanced: {},
-            bitbar: {},
-            kobiton: {},
-            perfecto: {},
-            pcloudy: {},
-            testingbot: {},
-            experitest: {},
-            roboticmobi: {},
-            remotetestkit: {},
-          },
+    describe('from v1', function () {
+      it('should migrate a valid v1 session file to latest', function () {
+        const v1Session = {
+          version: SESSION_FILE_VERSIONS.V1,
+          caps: [],
           serverType: 'remote',
+          server: {local: {}, remote: {path: '/test'}, sauce: {}},
           visibleProviders: [],
         };
-        expect(parseSessionFileContents(sessionString)).toEqual(expectedSessionJSON);
+        expect(migrateSessionJSON(v1Session)).toEqual({
+          version: SESSION_FILE_VERSIONS.LATEST,
+          name: DEFAULT_SESSION_NAME,
+          caps: [],
+          server: {remote: {path: '/test'}},
+        });
       });
 
-      it('should parse a minimum valid session file', function () {
-        const sessionString = `{
-          "version": "1.0",
-          "caps": [],
-          "serverType": "remote"
-        }`;
-        const expectedSessionJSON = {
-          version: '1.0',
-          caps: [],
+      it('should only require the serverType property', function () {
+        const session1 = {
+          version: SESSION_FILE_VERSIONS.V1,
           serverType: 'remote',
         };
-        expect(parseSessionFileContents(sessionString)).toEqual(expectedSessionJSON);
+        expect(migrateSessionJSON(session1)).toEqual({
+          version: SESSION_FILE_VERSIONS.LATEST,
+          name: DEFAULT_SESSION_NAME,
+          server: {remote: {}},
+        });
+        const session2 = {version: SESSION_FILE_VERSIONS.V1};
+        expect(migrateSessionJSON(session2)).toBeNull();
       });
 
-      it('should not parse if serverType is invalid', function () {
-        const sessionString = `{
-          "version": "1.0",
-          "caps": [],
-          "serverType": "some other server"
-        }`;
-        expect(parseSessionFileContents(sessionString)).toBeNull();
+      it('should migrate empty server object', function () {
+        const v1Session = {
+          version: SESSION_FILE_VERSIONS.V1,
+          serverType: 'any',
+          server: {},
+        };
+        expect(migrateSessionJSON(v1Session)).toEqual({
+          version: SESSION_FILE_VERSIONS.LATEST,
+          name: DEFAULT_SESSION_NAME,
+          server: {any: {}},
+        });
+      });
+    });
+  });
+
+  describe('#validateSessionJSON', function () {
+    const versionProp = {version: SESSION_FILE_VERSIONS.LATEST};
+    const nameProp = {name: 'Test'};
+    const serverProp = {server: {remote: {}}};
+    const capsProp = {caps: []};
+
+    it('should validate a correct v2 session', function () {
+      const session = {...versionProp, ...nameProp, ...serverProp, ...capsProp};
+      expect(validateSessionJSON(session)).toEqual(session);
+    });
+
+    it('should return null if name is missing or not a string', function () {
+      const sessionWithoutName = {...versionProp, ...serverProp, ...capsProp};
+      const sessionWithInvalidName = {...sessionWithoutName, name: 123};
+      expect(validateSessionJSON(sessionWithoutName)).toBeNull();
+      expect(validateSessionJSON(sessionWithInvalidName)).toBeNull();
+    });
+
+    it('should return null if server is missing or invalid', function () {
+      const sessionWithoutServer = {...versionProp, ...nameProp, ...capsProp};
+      const session1 = {...sessionWithoutServer, server: 123};
+      const session2 = {...sessionWithoutServer, server: {}};
+      const session3 = {...sessionWithoutServer, server: {invalid: {}}};
+      const session4 = {...sessionWithoutServer, server: {remote: {}, local: {}}};
+      expect(validateSessionJSON(sessionWithoutServer)).toBeNull();
+      expect(validateSessionJSON(session1)).toBeNull();
+      expect(validateSessionJSON(session2)).toBeNull();
+      expect(validateSessionJSON(session3)).toBeNull();
+      expect(validateSessionJSON(session4)).toBeNull();
+    });
+
+    it('should return null if caps is missing, not array, or invalid', function () {
+      const sessionWithoutCaps = {...versionProp, ...nameProp, ...serverProp};
+      const session1 = {...sessionWithoutCaps, caps: 123};
+      const session2 = {...sessionWithoutCaps, caps: [{name: 'foo', value: 'bar'}]};
+      const session3 = {
+        ...sessionWithoutCaps,
+        caps: [{type: 'invalid', name: 'foo', value: 'bar'}],
+      };
+      expect(validateSessionJSON(sessionWithoutCaps)).toBeNull();
+      expect(validateSessionJSON(session1)).toBeNull();
+      expect(validateSessionJSON(session2)).toBeNull();
+      expect(validateSessionJSON(session3)).toBeNull();
+    });
+  });
+
+  describe('#parseSessionFileContents', function () {
+    it('should return null for invalid JSON', function () {
+      expect(parseSessionFileContents('not json')).toBeNull();
+    });
+
+    it('should work for a valid v1 session file', function () {
+      const v1 = JSON.stringify({
+        version: SESSION_FILE_VERSIONS.V1,
+        caps: [
+          {
+            type: 'text',
+            name: 'platformName',
+            value: 'Android',
+          },
+        ],
+        server: {
+          local: {},
+          remote: {
+            path: '',
+          },
+          advanced: {},
+          sauce: {
+            dataCenter: 'us-west-1',
+          },
+          headspin: {},
+          browserstack: {},
+          lambdatest: {},
+          testingbot: {},
+          experitest: {},
+          roboticmobi: {},
+          remotetestkit: {},
+          bitbar: {},
+          kobiton: {},
+          perfecto: {},
+          pcloudy: {},
+          mobitru: {},
+          tvlabs: {},
+          testcribe: {},
+          webmate: {},
+          fireflinkdevicefarm: {},
+        },
+        serverType: 'remote',
+        visibleProviders: [],
+      });
+      const result = parseSessionFileContents(v1);
+      expect(result).toEqual({
+        version: 2,
+        name: DEFAULT_SESSION_NAME,
+        caps: [
+          {
+            type: 'text',
+            name: 'platformName',
+            value: 'Android',
+          },
+        ],
+        server: {remote: {path: ''}},
       });
     });
 
-    describe('version 2', function () {
-      it('should parse a fully formed session file', function () {
-        const sessionString = `{
-          "version": "2.0",
-          "name": "Test Session",
-          "server": {
-            "sauce": {
-              "dataCenter": "us-west-1"
-            }
+    it('should work for a valid v2 session file', function () {
+      const sessionFile = {
+        version: SESSION_FILE_VERSIONS.V2,
+        name: 'Example Session',
+        caps: [
+          {
+            type: 'text',
+            name: 'platformName',
+            value: 'Android',
           },
-          "caps": [
-            {
-              "type": "text",
-              "name": "platformName",
-              "value": "Android"
-            }
-          ]
-        }`;
-        const expectedSessionJSON = {
-          version: '2.0',
-          name: 'Test Session',
-          server: {
-            sauce: {
-              dataCenter: 'us-west-1',
-            },
-          },
-          caps: [
-            {
-              type: 'text',
-              name: 'platformName',
-              value: 'Android',
-            },
-          ],
-        };
-        expect(parseSessionFileContents(sessionString)).toEqual(expectedSessionJSON);
-      });
-
-      it('should parse a minimum valid session file', function () {
-        const sessionString = `{
-          "version": "2.0",
-          "name": "Test Session",
-          "server": {
-            "remote": {}
-          },
-          "caps": []
-        }`;
-        const expectedSessionJSON = {
-          version: '2.0',
-          name: 'Test Session',
-          server: {
-            remote: {},
-          },
-          caps: [],
-        };
-        expect(parseSessionFileContents(sessionString)).toEqual(expectedSessionJSON);
-      });
-
-      it('should not parse if the name or server is missing', function () {
-        const sessionString1 = `{
-          "version": "2.0",
-          "name": "Test Session",
-          "caps": []
-        }`;
-        const sessionString2 = `{
-          "version": "2.0",
-          "server": {
-            "remote": {}
-          },
-          "caps": []
-        }`;
-        expect(parseSessionFileContents(sessionString1)).toBeNull();
-        expect(parseSessionFileContents(sessionString2)).toBeNull();
-      });
-
-      it('should not parse if the name or server variable type is incorrect', function () {
-        const sessionString1 = `{
-          "version": "2.0",
-          "name": 12345,
-          "server": {
-            "remote": {}
-          },
-          "caps": []
-        }`;
-        const sessionString2 = `{
-          "version": "2.0",
-          "name": "Test Session",
-          "server": 12345,
-          "caps": []
-        }`;
-        expect(parseSessionFileContents(sessionString1)).toBeNull();
-        expect(parseSessionFileContents(sessionString2)).toBeNull();
-      });
-
-      it('should not parse if the server does not have exactly one entry', function () {
-        const sessionString1 = `{
-          "version": "2.0",
-          "name": "Test Session",
-          "server": {},
-          "caps": []
-        }`;
-        const sessionString2 = `{
-          "version": "2.0",
-          "name": "Test Session",
-          "server": {
-            "local": {},
-            "remote": {}
-          },
-          "caps": []
-        }`;
-        expect(parseSessionFileContents(sessionString1)).toBeNull();
-        expect(parseSessionFileContents(sessionString2)).toBeNull();
-      });
-
-      it('should not parse if the server type is invalid', function () {
-        const sessionString = `{
-          "version": "2.0",
-          "name": "Test Session",
-          "server": {
-            "some other server": {}
-          },
-          "caps": []
-        }`;
-        expect(parseSessionFileContents(sessionString)).toBeNull();
-      });
+        ],
+        server: {remote: {}},
+      };
+      const parsedJson = parseSessionFileContents(JSON.stringify(sessionFile));
+      expect(parsedJson).toEqual(sessionFile);
     });
   });
 });
