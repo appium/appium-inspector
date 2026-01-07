@@ -6,6 +6,8 @@ export const SESSION_BUILDER_TABS = {
 
 export const APPIUM_SESSION_FILE_VERSION = '2.0';
 
+export const DEFAULT_SESSION_NAME = '(unnamed)';
+
 export const SERVER_TYPES = {
   LOCAL: 'local',
   REMOTE: 'remote',

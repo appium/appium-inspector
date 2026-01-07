@@ -402,7 +402,10 @@ export default function builder(state = INITIAL_STATE, action) {
           ...action.sessionJSON.server,
         },
         serverType: action.sessionJSON.serverType,
-        visibleProviders: action.sessionJSON.visibleProviders || [],
+        visibleProviders: _.union(
+          state.visibleProviders,
+          action.sessionJSON.visibleProviders || [],
+        ),
       };
 
     default:

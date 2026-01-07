@@ -9,6 +9,7 @@ import {
 } from '../../shared/setting-defs.js';
 import {
   APPIUM_SESSION_FILE_VERSION,
+  DEFAULT_SESSION_NAME,
   SERVER_TYPES,
   SESSION_BUILDER_TABS,
 } from '../constants/session-builder.js';
@@ -626,6 +627,11 @@ export function setStateFromSessionFile(sessionFileString) {
       });
       return;
     }
+    if (sessionJSON.version === '2.0') {
+      sessionJSON.serverType = Object.keys(sessionJSON.server)[0];
+      sessionJSON.visibleProviders =
+        sessionJSON.serverType !== SERVER_TYPES.REMOTE ? [sessionJSON.serverType] : [];
+    }
     dispatch({type: SET_STATE_FROM_FILE, sessionJSON});
     switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER)(dispatch, getState);
   };
@@ -637,7 +643,7 @@ export function setStateFromSessionFile(sessionFileString) {
 export function saveSessionAsFile() {
   return (_dispatch, getState) => {
     const state = getState().builder;
-    const sessionName = state.capsName ?? '(unnamed)';
+    const sessionName = state.capsName ?? DEFAULT_SESSION_NAME;
     const filteredServer = {[state.serverType]: state.server[state.serverType]};
     const sessionFileDetails = {
       version: APPIUM_SESSION_FILE_VERSION,
