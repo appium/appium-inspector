@@ -81,8 +81,8 @@ const Inspector = (props) => {
     t,
   } = props;
 
-  const screenshotContainerEl = useRef(null);
-  const mjpegStreamCheckInterval = useRef(null);
+  const screenshotContainerElRef = useRef(null);
+  const mjpegStreamCheckIntervalRef = useRef(null);
   // Debounced updater stored in a ref to avoid creating it during render
   const updateScreenshotScaleDebouncedRef = useRef(undefined);
 
@@ -101,7 +101,7 @@ const Inspector = (props) => {
     // If the screenshot has too much space to the right or bottom, adjust the max width
     // of its container, so the source tree always fills the remaining space.
     // This keeps everything looking tight.
-    const screenshotContainer = screenshotContainerEl.current;
+    const screenshotContainer = screenshotContainerElRef.current;
     if (!screenshotContainer) {
       return;
     }
@@ -161,8 +161,8 @@ const Inspector = (props) => {
       setAwaitingMjpegStream(false);
       updateScreenshotScaleDebounced();
       // stream obtained - can clear the refresh interval
-      clearInterval(mjpegStreamCheckInterval.current);
-      mjpegStreamCheckInterval.current = null;
+      clearInterval(mjpegStreamCheckIntervalRef.current);
+      mjpegStreamCheckIntervalRef.current = null;
     } else if (!imgReady && !isAwaitingMjpegStream) {
       setAwaitingMjpegStream(true);
     }
@@ -215,13 +215,16 @@ const Inspector = (props) => {
     updateScreenshotScaleDebounced();
     window.addEventListener('resize', updateScreenshotScaleDebounced);
     if (isUsingMjpegMode) {
-      mjpegStreamCheckInterval.current = setInterval(checkMjpegStream, MJPEG_STREAM_CHECK_INTERVAL);
+      mjpegStreamCheckIntervalRef.current = setInterval(
+        checkMjpegStream,
+        MJPEG_STREAM_CHECK_INTERVAL,
+      );
     }
     return () => {
       window.removeEventListener('resize', updateScreenshotScaleDebounced);
-      if (mjpegStreamCheckInterval.current) {
-        clearInterval(mjpegStreamCheckInterval.current);
-        mjpegStreamCheckInterval.current = null;
+      if (mjpegStreamCheckIntervalRef.current) {
+        clearInterval(mjpegStreamCheckIntervalRef.current);
+        mjpegStreamCheckIntervalRef.current = null;
       }
     };
   }, [checkMjpegStream, isUsingMjpegMode, updateScreenshotScaleDebounced, windowSize]);
@@ -292,7 +295,7 @@ const Inspector = (props) => {
       <div
         id="screenshotContainer"
         className={styles.screenshotContainer}
-        ref={screenshotContainerEl}
+        ref={screenshotContainerElRef}
       >
         {screenShotControls}
         {showScreenshot && <Screenshot {...props} scaleRatio={scaleRatio} />}

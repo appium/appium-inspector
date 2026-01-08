@@ -1,5 +1,5 @@
 import {Spin} from 'antd';
-import {Fragment, useRef, useState} from 'react';
+import {Fragment, useState} from 'react';
 
 import {GESTURE_ITEM_STYLES, POINTER_TYPES} from '../../../constants/gestures.js';
 import {
@@ -35,7 +35,6 @@ const Screenshot = (props) => {
     t,
   } = props;
 
-  const containerEl = useRef(null);
   const [x, setX] = useState();
   const [y, setY] = useState();
 
@@ -176,7 +175,6 @@ const Screenshot = (props) => {
     <Spin size="large" spinning={!!methodCallInProgress && !isUsingMjpegMode}>
       <div className={styles.innerScreenshotContainer}>
         <div
-          ref={containerEl}
           style={screenshotStyle}
           onMouseDown={handleScreenshotDown}
           onMouseUp={handleScreenshotUp}
@@ -193,9 +191,7 @@ const Screenshot = (props) => {
             </div>
           )}
           {screenImg}
-          {screenshotInteractionMode === SELECT && (
-            <HighlighterRects {...props} containerEl={containerEl} />
-          )}
+          {screenshotInteractionMode === SELECT && <HighlighterRects {...props} />}
           {screenshotInteractionMode === TAP_SWIPE && (
             <svg className={styles.swipeSvg}>
               {coordStart && (

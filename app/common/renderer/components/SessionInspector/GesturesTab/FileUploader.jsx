@@ -5,16 +5,16 @@ import {useRef} from 'react';
 const FileUploader = (props) => {
   const {multiple, onUpload, type, icon, tooltipTitle} = props;
 
-  const fileCounter = useRef(1);
+  const fileCounterRef = useRef(1);
 
   // If multiple files are uploaded at once, this function is called once for every file.
   // In order to upload everything only once, use a counter to track invocation count.
   const beforeUpload = (_file, list) => {
-    if (fileCounter.current >= list.length) {
+    if (fileCounterRef.current >= list.length) {
       onUpload(list);
-      fileCounter.current = 1;
+      fileCounterRef.current = 1;
     } else {
-      fileCounter.current += 1;
+      fileCounterRef.current += 1;
     }
     return false;
   };
