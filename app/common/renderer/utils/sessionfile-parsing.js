@@ -138,6 +138,9 @@ function isSessionNameValid(sessionJSON) {
   if (!('name' in sessionJSON && typeof sessionJSON.name === 'string')) {
     return logValidationError("'name' property is missing or not a string");
   }
+  if (sessionJSON.name.trim().length === 0) {
+    return logValidationError("'name' property is empty or only whitespace");
+  }
   return true;
 }
 
@@ -180,10 +183,7 @@ function isSessionServerValid(sessionJSON) {
         ) &&
         typeof advValue !== 'boolean'
       ) {
-        return logValidationError(
-          `'${SERVER_ADVANCED_PARAMS.ALLOW_UNAUTHORIZED}' and/or ` +
-            `'${SERVER_ADVANCED_PARAMS.USE_PROXY}' property is not a boolean`,
-        );
+        return logValidationError(`'${advKey}' property is not a boolean`);
       }
       if (advKey === SERVER_ADVANCED_PARAMS.PROXY && typeof advValue !== 'string') {
         return logValidationError(`'${SERVER_ADVANCED_PARAMS.PROXY}' property is not a string`);

@@ -88,6 +88,8 @@ describe('utils/sessionfile-parsing.js', function () {
 
     it.each([
       ['is missing', {}],
+      ['is empty', {name: ''}],
+      ['only contains whitespace', {name: '   '}],
       ['is not a string', {name: 123}],
     ])('should return null if name %s', (_desc, newNameProp) => {
       const session = {...versionProp, ...serverProp, ...capsProp, ...newNameProp};

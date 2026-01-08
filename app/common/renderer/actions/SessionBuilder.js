@@ -645,7 +645,7 @@ export function setStateFromSessionFile(sessionFileString) {
 export function saveSessionAsFile() {
   return (_dispatch, getState) => {
     const state = getState().builder;
-    const sessionName = state.capsName ?? DEFAULT_SESSION_NAME;
+    const sessionName = state.capsName?.trim() || DEFAULT_SESSION_NAME;
     const filteredServer = {
       [state.serverType]: state.server[state.serverType],
       [SERVER_TYPES.ADVANCED]: state.server[SERVER_TYPES.ADVANCED],
