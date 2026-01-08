@@ -7,6 +7,17 @@ import {
   SERVER_TYPES,
   SESSION_FILE_VERSIONS,
 } from '../constants/session-builder.js';
+import {log} from './logger.js';
+
+function logParsingError(text) {
+  log.error(`Error parsing session file: ${text}`);
+  return null;
+}
+
+function logValidationError(text) {
+  log.error(`Error validating session file: ${text}`);
+  return false;
+}
 
 /**
  * Upgrades a session file from 1.0 to v2.
@@ -23,7 +34,7 @@ function migrateSessionJsonToV2(sessionJSON) {
   // Filter server to only the value that matches serverType (plus advanced),
   // creating it if it does not exist
   if (!('serverType' in sessionJSON)) {
-    return null;
+    return logParsingError("'serverType' property is missing");
   }
   const serverTypeValue = sessionJSON.server?.[sessionJSON.serverType] ?? {};
   const advancedValue = sessionJSON.server?.[SERVER_TYPES.ADVANCED] ?? {};
@@ -47,7 +58,7 @@ function migrateSessionJsonToV2(sessionJSON) {
 export function migrateSessionJSON(sessionJSON) {
   // First validate if the version field exists
   if (!('version' in sessionJSON)) {
-    return null;
+    return logParsingError("'version' property is missing");
   }
   // If the file is already on the latest version, no need to migrate
   if (sessionJSON.version === SESSION_FILE_VERSIONS.LATEST) {
@@ -57,7 +68,7 @@ export function migrateSessionJSON(sessionJSON) {
   if (sessionJSON.version === SESSION_FILE_VERSIONS.V1) {
     updatedSessionJSON = migrateSessionJsonToV2(updatedSessionJSON);
   } else {
-    return null; // unsupported value for the version field
+    return logParsingError(`unsupported 'version' value '${sessionJSON.version}'`);
   }
   return updatedSessionJSON;
 }
@@ -69,7 +80,10 @@ export function migrateSessionJSON(sessionJSON) {
  * @returns true if the name field is valid, otherwise false
  */
 function isSessionNameValid(sessionJSON) {
-  return 'name' in sessionJSON && typeof sessionJSON.name === 'string';
+  if (!('name' in sessionJSON && typeof sessionJSON.name === 'string')) {
+    return logValidationError("'name' property is missing or not a string");
+  }
+  return true;
 }
 
 /**
@@ -80,7 +94,7 @@ function isSessionNameValid(sessionJSON) {
  */
 function isSessionServerValid(sessionJSON) {
   if (!('server' in sessionJSON && _.isObject(sessionJSON.server))) {
-    return false;
+    return logValidationError("'server' property is missing or not an object");
   }
   const serverKeys = Object.keys(sessionJSON.server);
   if (
@@ -88,19 +102,22 @@ function isSessionServerValid(sessionJSON) {
     !serverKeys.includes(SERVER_TYPES.ADVANCED) ||
     !_.isObject(sessionJSON.server.advanced)
   ) {
-    return false;
+    return logValidationError(
+      "'server' property must have exactly two properties, " +
+        "and one of them must be 'advanced', whose value must be an object",
+    );
   }
 
   for (const key of serverKeys) {
     if (!Object.values(SERVER_TYPES).includes(key)) {
-      return false;
+      return logValidationError(`unsupported server type '${key}'`);
     }
     if (key !== SERVER_TYPES.ADVANCED) {
       continue;
     }
     for (const [advKey, advValue] of Object.entries(sessionJSON.server.advanced)) {
       if (!Object.values(SERVER_ADVANCED_PARAMS).includes(advKey)) {
-        return false;
+        return logValidationError(`unsupported advanced server property '${advKey}'`);
       }
       if (
         [SERVER_ADVANCED_PARAMS.ALLOW_UNAUTHORIZED, SERVER_ADVANCED_PARAMS.USE_PROXY].includes(
@@ -108,10 +125,13 @@ function isSessionServerValid(sessionJSON) {
         ) &&
         typeof advValue !== 'boolean'
       ) {
-        return false;
+        return logValidationError(
+          `'${SERVER_ADVANCED_PARAMS.ALLOW_UNAUTHORIZED}' and/or ` +
+            `'${SERVER_ADVANCED_PARAMS.USE_PROXY}' property is not a boolean`,
+        );
       }
       if (advKey === SERVER_ADVANCED_PARAMS.PROXY && typeof advValue !== 'string') {
-        return false;
+        return logValidationError(`'${SERVER_ADVANCED_PARAMS.PROXY}' property is not a string`);
       }
     }
   }
@@ -126,19 +146,22 @@ function isSessionServerValid(sessionJSON) {
  */
 function areSessionCapsValid(sessionJSON) {
   if (!('caps' in sessionJSON && _.isArray(sessionJSON.caps))) {
-    return false;
+    return logValidationError("'caps' property is missing or not an array");
   }
   for (const cap of sessionJSON.caps) {
     if (!_.isObject(cap)) {
-      return false;
+      return logValidationError(`capability '${JSON.stringify(cap)}' is not an object`);
     }
     for (const capProp of ['type', 'name', 'value']) {
       if (!(capProp in cap)) {
-        return false;
+        return logValidationError(
+          `capability '${JSON.stringify(cap)}' must have ` +
+            `the 'type', 'name' and 'value' properties`,
+        );
       }
     }
     if (!_.values(CAPABILITY_TYPES).includes(cap.type)) {
-      return false;
+      return logValidationError(`'${cap.type}' is not a valid capability type`);
     }
   }
   return true;
@@ -175,6 +198,6 @@ export function parseSessionFileContents(sessionFileString) {
     const updatedSessionJSON = migrateSessionJSON(sessionJSON);
     return validateSessionJSON(updatedSessionJSON);
   } catch {
-    return null;
+    return logParsingError('file is not valid JSON');
   }
 }

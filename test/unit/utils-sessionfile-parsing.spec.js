@@ -95,7 +95,7 @@ describe('utils/file-handling.js', function () {
       const sessionWithoutServer = {...versionProp, ...nameProp, ...capsProp};
       const session1 = {...sessionWithoutServer, server: 123};
       const session2 = {...sessionWithoutServer, server: {}};
-      const session3 = {...sessionWithoutServer, server: {invalid: {}}};
+      const session3 = {...sessionWithoutServer, server: {invalid: {}, advanced: {}}};
       const session4 = {...sessionWithoutServer, server: {remote: {}, local: {}}};
       expect(validateSessionJSON(sessionWithoutServer)).toBeNull();
       expect(validateSessionJSON(session1)).toBeNull();
@@ -127,8 +127,9 @@ describe('utils/file-handling.js', function () {
     it('should return null if caps is missing, not array, or invalid', function () {
       const sessionWithoutCaps = {...versionProp, ...nameProp, ...serverProp};
       const session1 = {...sessionWithoutCaps, caps: 123};
-      const session2 = {...sessionWithoutCaps, caps: [{name: 'foo', value: 'bar'}]};
-      const session3 = {
+      const session2 = {...sessionWithoutCaps, caps: [345]};
+      const session3 = {...sessionWithoutCaps, caps: [{name: 'foo', value: 'bar'}]};
+      const session4 = {
         ...sessionWithoutCaps,
         caps: [{type: 'invalid', name: 'foo', value: 'bar'}],
       };
@@ -136,6 +137,7 @@ describe('utils/file-handling.js', function () {
       expect(validateSessionJSON(session1)).toBeNull();
       expect(validateSessionJSON(session2)).toBeNull();
       expect(validateSessionJSON(session3)).toBeNull();
+      expect(validateSessionJSON(session4)).toBeNull();
     });
   });
 
