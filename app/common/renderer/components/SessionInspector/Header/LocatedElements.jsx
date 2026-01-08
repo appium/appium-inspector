@@ -23,7 +23,7 @@ const LocatedElements = (props) => {
     t,
   } = props;
 
-  const sendKeys = useRef(null);
+  const sendKeysRef = useRef(null);
 
   const showIdAutocompleteInfo = () => {
     const {automationName, sessionSettings} = props;
@@ -123,7 +123,7 @@ const LocatedElements = (props) => {
                     disabled={!locatorTestElement}
                     placeholder={t('Enter Keys to Send')}
                     allowClear={true}
-                    onChange={(e) => (sendKeys.current = e.target.value)}
+                    onChange={(e) => (sendKeysRef.current = e.target.value)}
                   />
                   <Tooltip title={t('Send Keys')} placement="bottom">
                     <Button
@@ -133,7 +133,7 @@ const LocatedElements = (props) => {
                         applyClientMethod({
                           methodName: 'elementSendKeys',
                           elementId: locatorTestElement,
-                          args: [sendKeys.current || ''],
+                          args: [sendKeysRef.current || ''],
                         })
                       }
                     />

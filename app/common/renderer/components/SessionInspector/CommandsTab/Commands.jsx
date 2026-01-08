@@ -32,11 +32,11 @@ const Commands = (props) => {
   const {applyClientMethod, getSupportedSessionMethods, storeSessionSettings, t} = props;
 
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
-  const driverCommands = useRef(null);
-  const driverExecuteMethods = useRef(null);
+  const [driverCommands, setDriverCommands] = useState(null);
+  const [driverExecuteMethods, setDriverExecuteMethods] = useState(null);
 
   const [curCommandDetails, setCurCommandDetails] = useState(null);
-  const curCommandParamVals = useRef([]);
+  const curCommandParamValsRef = useRef([]);
 
   const [commandResult, setCommandResult] = useState(undefined);
 
@@ -49,7 +49,7 @@ const Commands = (props) => {
 
   const prepareCommand = (cmdName, cmdParams, isExecute) => {
     const adjustedCmdName = isExecute ? COMMAND_EXECUTE_SCRIPT : cmdName;
-    let adjustedCmdParams = curCommandParamVals.current.map(adjustParamValueType);
+    let adjustedCmdParams = curCommandParamValsRef.current.map(adjustParamValueType);
 
     // If we are about to run an execute method,
     // the parameters array needs to be turned into an object,
@@ -103,15 +103,15 @@ const Commands = (props) => {
   const clearCurrentCommand = () => {
     setCommandResult(undefined);
     setCurCommandDetails(null);
-    curCommandParamVals.current = [];
+    curCommandParamValsRef.current = [];
   };
 
   useEffect(() => {
     (async () => {
       const {commands, executeMethods} = await getSupportedSessionMethods();
       setHasMethodsMap(!(_.isEmpty(commands) && _.isEmpty(executeMethods)));
-      driverCommands.current = transformCommandsMap(commands);
-      driverExecuteMethods.current = transformExecMethodsMap(executeMethods);
+      setDriverCommands(transformCommandsMap(commands));
+      setDriverExecuteMethods(transformExecMethodsMap(executeMethods));
     })();
   }, [getSupportedSessionMethods]);
 
@@ -146,7 +146,7 @@ const Commands = (props) => {
             {_.map(curCommandDetails.details.params, (param, index) => (
               <Space.Compact block key={index} className={styles.commandArgInputRow}>
                 <Space.Addon>{formatParamInputLabel(param)}</Space.Addon>
-                <Input onChange={(e) => (curCommandParamVals.current[index] = e.target.value)} />
+                <Input onChange={(e) => (curCommandParamValsRef.current[index] = e.target.value)} />
               </Space.Compact>
             ))}
           </Modal>
