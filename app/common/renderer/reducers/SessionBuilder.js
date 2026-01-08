@@ -397,12 +397,17 @@ export default function builder(state = INITIAL_STATE, action) {
           enabled: true,
           ...cap,
         })),
+        // reset capsName since we now have an unnamed session
+        capsName: null,
         server: {
           ...state.server,
           ...action.sessionJSON.server,
         },
         serverType: action.sessionJSON.serverType,
-        visibleProviders: action.sessionJSON.visibleProviders || [],
+        visibleProviders: _.union(
+          state.visibleProviders,
+          action.sessionJSON.visibleProviders || [],
+        ),
       };
 
     default:

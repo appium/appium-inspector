@@ -1,7 +1,3 @@
-import _ from 'lodash';
-
-import {CAPABILITY_TYPES, SERVER_TYPES} from '../constants/session-builder.js';
-
 export function downloadFile(href, filename) {
   let element = document.createElement('a');
   element.setAttribute('href', href);
@@ -33,34 +29,4 @@ export async function readTextFromUploadedFiles(fileList) {
     });
   });
   return await Promise.all(fileReaderPromise);
-}
-
-export function parseSessionFileContents(sessionFileString) {
-  try {
-    const sessionJSON = JSON.parse(sessionFileString);
-    for (const sessionProp of ['version', 'caps', 'serverType']) {
-      if (!(sessionProp in sessionJSON)) {
-        return null;
-      }
-    }
-    if (!_.values(SERVER_TYPES).includes(sessionJSON.serverType)) {
-      return null;
-    } else if (!_.isArray(sessionJSON.caps)) {
-      return null;
-    } else {
-      for (const cap of sessionJSON.caps) {
-        for (const capProp of ['type', 'name', 'value']) {
-          if (!(capProp in cap)) {
-            return null;
-          }
-        }
-        if (!_.values(CAPABILITY_TYPES).includes(cap.type)) {
-          return null;
-        }
-      }
-    }
-    return sessionJSON;
-  } catch {
-    return null;
-  }
 }

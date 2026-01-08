@@ -4,6 +4,14 @@ export const SESSION_BUILDER_TABS = {
   ATTACH_TO_SESSION: 'attach',
 };
 
+export const SESSION_FILE_VERSIONS = {
+  V1: '1.0',
+  V2: 2,
+  LATEST: 2,
+};
+
+export const DEFAULT_SESSION_NAME = '(unnamed)';
+
 export const SERVER_TYPES = {
   LOCAL: 'local',
   REMOTE: 'remote',
@@ -45,6 +53,12 @@ export const PROVIDER_VALUES = {
 };
 
 export const ADD_CLOUD_PROVIDER_TAB_KEY = 'addCloudProvider';
+
+export const SERVER_ADVANCED_PARAMS = {
+  ALLOW_UNAUTHORIZED: 'allowUnauthorized',
+  PROXY: 'proxy',
+  USE_PROXY: 'useProxy',
+};
 
 export const CAPABILITY_TYPES = {
   TEXT: 'text',
