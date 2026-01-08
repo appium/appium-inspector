@@ -81,15 +81,15 @@ const CapabilityEditor = (props) => {
   } = props;
 
   const onSaveAsOk = () => saveSession(server, serverType, caps, {name: saveAsText});
-  const latestCapField = useRef(null);
+  const latestCapFieldRef = useRef(null);
 
   // if we have more than one cap and the most recent cap name is empty,
   // it means we've just added a new cap field, so focus that input element
   useEffect(() => {
-    if (caps.length > 1 && latestCapField.current && !latestCapField.current.input.value) {
-      latestCapField.current.focus();
+    if (caps.length > 1 && latestCapFieldRef.current && !latestCapFieldRef.current.input.value) {
+      latestCapFieldRef.current.focus();
     }
-  }, [caps.length, latestCapField]);
+  }, [caps.length, latestCapFieldRef]);
 
   return (
     <Splitter>
@@ -106,7 +106,7 @@ const CapabilityEditor = (props) => {
                       placeholder={t('Name')}
                       value={cap.name}
                       onChange={(e) => setCapabilityParam(cap.id, 'name', e.target.value)}
-                      ref={index === caps.length - 1 ? latestCapField : null}
+                      ref={index === caps.length - 1 ? latestCapFieldRef : null}
                       className={styles.capsBoxFont}
                     />
                   </Tooltip>

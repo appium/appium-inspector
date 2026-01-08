@@ -14,11 +14,11 @@ const MethodMapCommandsList = (props) => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const hasNoCommands = _.isEmpty(driverCommands.current);
-  const hasNoExecuteMethods = _.isEmpty(driverExecuteMethods.current);
+  const hasNoCommands = _.isEmpty(driverCommands);
+  const hasNoExecuteMethods = _.isEmpty(driverExecuteMethods);
 
-  const filteredDriverCommands = filterMethodPairs(driverCommands.current, searchQuery);
-  const filteredDriverExecuteMethods = filterMethodPairs(driverExecuteMethods.current, searchQuery);
+  const filteredDriverCommands = filterMethodPairs(driverCommands, searchQuery);
+  const filteredDriverExecuteMethods = filterMethodPairs(driverExecuteMethods, searchQuery);
 
   const methodButton = (methodName, methodDetails, isExecute) => (
     <div className={styles.btnContainer}>

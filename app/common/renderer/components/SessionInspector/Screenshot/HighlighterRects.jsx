@@ -12,7 +12,6 @@ const {CENTROID, OVERLAP, EXPAND} = RENDER_CENTROID_AS;
 const HighlighterRects = (props) => {
   const {
     sourceJSON,
-    containerEl,
     searchedForElementBounds,
     scaleRatio,
     showCentroids,
@@ -22,7 +21,6 @@ const HighlighterRects = (props) => {
 
   const highlighterRects = [];
   const highlighterCentroids = [];
-  let highlighterXOffset = 0;
 
   const getElements = (sourceJSON) => {
     const elementsByOverlap = buildElementsWithProps(sourceJSON, null, [], {});
@@ -71,18 +69,17 @@ const HighlighterRects = (props) => {
       return {};
     }
     const {x1, y1, x2, y2} = parseCoordinates(sourceJSON);
-    const xOffset = highlighterXOffset || 0;
     const centerPoint = (v1, v2) => Math.round(v1 + (v2 - v1) / 2) / scaleRatio;
     const obj = {
       type: CENTROID,
       element: sourceJSON,
       parent: prevElement,
       properties: {
-        left: x1 / scaleRatio + xOffset,
+        left: x1 / scaleRatio,
         top: y1 / scaleRatio,
         width: (x2 - x1) / scaleRatio,
         height: (y2 - y1) / scaleRatio,
-        centerX: centerPoint(x1, x2) + xOffset,
+        centerX: centerPoint(x1, x2),
         centerY: centerPoint(y1, y2),
         angleX: null,
         angleY: null,
@@ -202,12 +199,6 @@ const HighlighterRects = (props) => {
   // Array of all element objects with properties to draw rectangles and/or centroids
   const elements = getElements(sourceJSON);
 
-  if (containerEl.current) {
-    const screenshotEl = containerEl.current.querySelector('img');
-    highlighterXOffset =
-      screenshotEl.getBoundingClientRect().left - containerEl.current.getBoundingClientRect().left;
-  }
-
   // If the user selected an element that they searched for, highlight that element
   if (searchedForElementBounds && isLocatorTestModalVisible) {
     const {location, size} = searchedForElementBounds;
@@ -217,7 +208,6 @@ const HighlighterRects = (props) => {
         elLocation={location}
         scaleRatio={scaleRatio}
         key={`el.${location.x}.${location.y}.${size.width}.${size.height}`}
-        xOffset={highlighterXOffset}
       />,
     );
   }

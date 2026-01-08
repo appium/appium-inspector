@@ -51,7 +51,7 @@ const SelectedElement = (props) => {
     downloadFile(href, filename);
   };
 
-  const sendKeys = useRef(null);
+  const sendKeysRef = useRef(null);
 
   const isDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
 
@@ -250,7 +250,7 @@ const SelectedElement = (props) => {
               disabled={isDisabled}
               placeholder={t('Enter Keys to Send')}
               allowClear={true}
-              onChange={(e) => (sendKeys.current = e.target.value)}
+              onChange={(e) => (sendKeysRef.current = e.target.value)}
             />
             <Tooltip title={t('Send Keys')}>
               <Button
@@ -261,7 +261,7 @@ const SelectedElement = (props) => {
                   applyClientMethod({
                     methodName: 'elementSendKeys',
                     elementId: selectedElementId,
-                    args: [sendKeys.current || ''],
+                    args: [sendKeysRef.current || ''],
                   })
                 }
               />
