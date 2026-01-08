@@ -89,6 +89,7 @@
     "react-icons": "5.5.0",
     "react-redux": "9.2.0",
     "react-router": "7.11.0",
+    "sanitize-filename": "1.6.3",
     "webdriver": "9.23.0",
     "xpath": "0.0.34"
   },

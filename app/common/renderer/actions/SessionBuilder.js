@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import sanitize from 'sanitize-filename';
 
 import {
   SAVED_SESSIONS,
@@ -657,7 +658,7 @@ export function saveSessionAsFile() {
     const href = `data:text/json;charset=utf-8,${encodeURIComponent(
       JSON.stringify(sessionFileDetails, null, 2),
     )}`;
-    const escapedName = sessionName.replace(/[\s\\/:*?"<>|]/g, '_');
+    const escapedName = sanitize(sessionName, {replacement: '_'});
     const fileName = `${escapedName}.appiumsession`;
     downloadFile(href, fileName);
   };
