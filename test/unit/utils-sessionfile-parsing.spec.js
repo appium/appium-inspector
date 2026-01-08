@@ -17,9 +17,11 @@ describe('utils/sessionfile-parsing.js', function () {
       expect(migrateSessionJSON(session)).toEqual(session);
     });
 
-    it('should return null if version is missing or invalid', function () {
-      expect(migrateSessionJSON({})).toBeNull();
-      expect(migrateSessionJSON({version: '0.5'})).toBeNull();
+    it.each([
+      ['version is missing', {}],
+      ['version is invalid', {version: 'invalid'}],
+    ])('should return null when %s', (_desc, session) => {
+      expect(migrateSessionJSON(session)).toBeNull();
     });
 
     describe('from v1', function () {
@@ -84,60 +86,50 @@ describe('utils/sessionfile-parsing.js', function () {
       expect(validateSessionJSON(session)).toEqual(session);
     });
 
-    it('should return null if name is missing or not a string', function () {
-      const sessionWithoutName = {...versionProp, ...serverProp, ...capsProp};
-      const sessionWithInvalidName = {...sessionWithoutName, name: 123};
-      expect(validateSessionJSON(sessionWithoutName)).toBeNull();
-      expect(validateSessionJSON(sessionWithInvalidName)).toBeNull();
+    it.each([
+      ['is missing', {}],
+      ['is not a string', {name: 123}],
+    ])('should return null if name %s', (_desc, newNameProp) => {
+      const session = {...versionProp, ...serverProp, ...capsProp, ...newNameProp};
+      expect(validateSessionJSON(session)).toBeNull();
     });
 
-    it('should return null if server is missing or invalid', function () {
-      const sessionWithoutServer = {...versionProp, ...nameProp, ...capsProp};
-      const session1 = {...sessionWithoutServer, server: 123};
-      const session2 = {...sessionWithoutServer, server: {}};
-      const session3 = {...sessionWithoutServer, server: {invalid: {}, advanced: {}}};
-      const session4 = {...sessionWithoutServer, server: {remote: {}, local: {}}};
-      expect(validateSessionJSON(sessionWithoutServer)).toBeNull();
-      expect(validateSessionJSON(session1)).toBeNull();
-      expect(validateSessionJSON(session2)).toBeNull();
-      expect(validateSessionJSON(session3)).toBeNull();
-      expect(validateSessionJSON(session4)).toBeNull();
+    it.each([
+      ['is missing', {}],
+      ['is a number', {server: 123}],
+      ['is an empty object', {server: {}}],
+      ['has invalid structure', {server: {invalid: {}, advanced: {}}}],
+      ['has remote and local only', {server: {remote: {}, local: {}}}],
+    ])('should return null if server %s', (_desc, newServerProp) => {
+      const session = {...versionProp, ...nameProp, ...capsProp, ...newServerProp};
+      expect(validateSessionJSON(session)).toBeNull();
     });
 
-    it('should return null if advanced server properties are invalid', function () {
-      const baseSession = {...versionProp, ...nameProp, ...serverProp, ...capsProp};
-      const session1 = {...baseSession, server: {...baseSession.server, advanced: 123}};
-      const session2 = {...baseSession, server: {...baseSession.server, advanced: {invalid: {}}}};
-      const session3 = {
-        ...baseSession,
-        server: {...baseSession.server, advanced: {allowUnauthorized: 1}},
+    it.each([
+      ['is not an object', 123],
+      ['has unknown keys', {invalid: {}}],
+      ['has non-boolean allowUnauthorized', {allowUnauthorized: 1}],
+      ['has non-boolean useProxy', {useProxy: 'test'}],
+      ['has non-string proxy', {proxy: false}],
+    ])('should return null if advanced server %s', (_desc, newAdvancedServerProp) => {
+      const session = {
+        ...versionProp,
+        ...nameProp,
+        ...capsProp,
+        server: {...serverProp.server, advanced: newAdvancedServerProp},
       };
-      const session4 = {
-        ...baseSession,
-        server: {...baseSession.server, advanced: {useProxy: 'test'}},
-      };
-      const session5 = {...baseSession, server: {...baseSession.server, advanced: {proxy: false}}};
-      expect(validateSessionJSON(session1)).toBeNull();
-      expect(validateSessionJSON(session2)).toBeNull();
-      expect(validateSessionJSON(session3)).toBeNull();
-      expect(validateSessionJSON(session4)).toBeNull();
-      expect(validateSessionJSON(session5)).toBeNull();
+      expect(validateSessionJSON(session)).toBeNull();
     });
 
-    it('should return null if caps is missing, not array, or invalid', function () {
-      const sessionWithoutCaps = {...versionProp, ...nameProp, ...serverProp};
-      const session1 = {...sessionWithoutCaps, caps: 123};
-      const session2 = {...sessionWithoutCaps, caps: [345]};
-      const session3 = {...sessionWithoutCaps, caps: [{name: 'foo', value: 'bar'}]};
-      const session4 = {
-        ...sessionWithoutCaps,
-        caps: [{type: 'invalid', name: 'foo', value: 'bar'}],
-      };
-      expect(validateSessionJSON(sessionWithoutCaps)).toBeNull();
-      expect(validateSessionJSON(session1)).toBeNull();
-      expect(validateSessionJSON(session2)).toBeNull();
-      expect(validateSessionJSON(session3)).toBeNull();
-      expect(validateSessionJSON(session4)).toBeNull();
+    it.each([
+      ['is missing', {}],
+      ['is not an array', {caps: 123}],
+      ['contains a non-object', {caps: [345]}],
+      ['omits required fields', {caps: [{name: 'foo', value: 'bar'}]}],
+      ['has an invalid type value', {caps: [{type: 'invalid', name: 'foo', value: 'bar'}]}],
+    ])('should return null if caps %s', (_desc, newCapsProp) => {
+      const session = {...versionProp, ...nameProp, ...serverProp, ...newCapsProp};
+      expect(validateSessionJSON(session)).toBeNull();
     });
   });
 

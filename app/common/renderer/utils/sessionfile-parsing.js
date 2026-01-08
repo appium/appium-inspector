@@ -9,14 +9,65 @@ import {
 } from '../constants/session-builder.js';
 import {log} from './logger.js';
 
-function logParsingError(text) {
-  log.error(`Error parsing session file: ${text}`);
-  return null;
+/**
+ * Parses the session file contents in JSON, migrates them to the latest session file format,
+ * and runs various validation checks for the JSON contents.
+ *
+ * @param {string} sessionFileString session file contents
+ * @returns session file in JSON format, or null if any validations failed
+ */
+export function parseSessionFileContents(sessionFileString) {
+  let sessionJSON;
+  try {
+    sessionJSON = JSON.parse(sessionFileString);
+  } catch {
+    return logParsingError('file is not valid JSON');
+  }
+  const updatedSessionJSON = migrateSessionJSON(sessionJSON);
+  return validateSessionJSON(updatedSessionJSON);
 }
 
-function logValidationError(text) {
-  log.error(`Error validating session file: ${text}`);
-  return false;
+/**
+ * Validates the properties of a session file.
+ *
+ * @param {object} sessionJSON session file contents in JSON
+ * @returns validated JSON, or null if any validations failed
+ */
+export function validateSessionJSON(sessionJSON) {
+  if (
+    !sessionJSON ||
+    !isSessionNameValid(sessionJSON) ||
+    !isSessionServerValid(sessionJSON) ||
+    !areSessionCapsValid(sessionJSON)
+  ) {
+    return null;
+  }
+  return sessionJSON;
+}
+
+/**
+ * Migrates a session file to the latest version, if required.
+ * The file may or may not be a fully valid session file.
+ *
+ * @param {object} sessionJSON session file contents in JSON
+ * @returns migrated JSON, or null if any validations failed
+ */
+export function migrateSessionJSON(sessionJSON) {
+  // First validate if the version field exists
+  if (!('version' in sessionJSON)) {
+    return logParsingError("'version' property is missing");
+  }
+  // If the file is already on the latest version, no need to migrate
+  if (sessionJSON.version === SESSION_FILE_VERSIONS.LATEST) {
+    return sessionJSON;
+  }
+  let updatedSessionJSON = structuredClone(sessionJSON);
+  if (sessionJSON.version === SESSION_FILE_VERSIONS.V1) {
+    updatedSessionJSON = migrateSessionJsonToV2(updatedSessionJSON);
+  } else {
+    return logParsingError(`unsupported 'version' value '${sessionJSON.version}'`);
+  }
+  return updatedSessionJSON;
 }
 
 /**
@@ -49,28 +100,32 @@ function migrateSessionJsonToV2(sessionJSON) {
 }
 
 /**
- * Migrates a session file to the latest version, if required.
- * The file may or may not be a fully valid session file.
+ * Checks if the caps field in the session file is valid.
  *
  * @param {object} sessionJSON session file contents in JSON
- * @returns migrated JSON, or null if any validations failed
+ * @returns true if the caps field is valid, otherwise false
  */
-export function migrateSessionJSON(sessionJSON) {
-  // First validate if the version field exists
-  if (!('version' in sessionJSON)) {
-    return logParsingError("'version' property is missing");
+function areSessionCapsValid(sessionJSON) {
+  if (!('caps' in sessionJSON && _.isArray(sessionJSON.caps))) {
+    return logValidationError("'caps' property is missing or not an array");
   }
-  // If the file is already on the latest version, no need to migrate
-  if (sessionJSON.version === SESSION_FILE_VERSIONS.LATEST) {
-    return sessionJSON;
+  for (const cap of sessionJSON.caps) {
+    if (!_.isPlainObject(cap)) {
+      return logValidationError(`capability '${JSON.stringify(cap)}' is not an object`);
+    }
+    for (const capProp of ['type', 'name', 'value']) {
+      if (!(capProp in cap)) {
+        return logValidationError(
+          `capability '${JSON.stringify(cap)}' must have ` +
+            `the 'type', 'name' and 'value' properties`,
+        );
+      }
+    }
+    if (!_.values(CAPABILITY_TYPES).includes(cap.type)) {
+      return logValidationError(`'${cap.type}' is not a valid capability type`);
+    }
   }
-  let updatedSessionJSON = structuredClone(sessionJSON);
-  if (sessionJSON.version === SESSION_FILE_VERSIONS.V1) {
-    updatedSessionJSON = migrateSessionJsonToV2(updatedSessionJSON);
-  } else {
-    return logParsingError(`unsupported 'version' value '${sessionJSON.version}'`);
-  }
-  return updatedSessionJSON;
+  return true;
 }
 
 /**
@@ -93,14 +148,14 @@ function isSessionNameValid(sessionJSON) {
  * @returns true if the server field is valid, otherwise false
  */
 function isSessionServerValid(sessionJSON) {
-  if (!('server' in sessionJSON && _.isObject(sessionJSON.server))) {
+  if (!('server' in sessionJSON && _.isPlainObject(sessionJSON.server))) {
     return logValidationError("'server' property is missing or not an object");
   }
   const serverKeys = Object.keys(sessionJSON.server);
   if (
     serverKeys.length !== 2 ||
     !serverKeys.includes(SERVER_TYPES.ADVANCED) ||
-    !_.isObject(sessionJSON.server.advanced)
+    !_.isPlainObject(sessionJSON.server.advanced)
   ) {
     return logValidationError(
       "'server' property must have exactly two properties, " +
@@ -138,66 +193,12 @@ function isSessionServerValid(sessionJSON) {
   return true;
 }
 
-/**
- * Checks if the caps field in the session file is valid.
- *
- * @param {object} sessionJSON session file contents in JSON
- * @returns true if the caps field is valid, otherwise false
- */
-function areSessionCapsValid(sessionJSON) {
-  if (!('caps' in sessionJSON && _.isArray(sessionJSON.caps))) {
-    return logValidationError("'caps' property is missing or not an array");
-  }
-  for (const cap of sessionJSON.caps) {
-    if (!_.isObject(cap)) {
-      return logValidationError(`capability '${JSON.stringify(cap)}' is not an object`);
-    }
-    for (const capProp of ['type', 'name', 'value']) {
-      if (!(capProp in cap)) {
-        return logValidationError(
-          `capability '${JSON.stringify(cap)}' must have ` +
-            `the 'type', 'name' and 'value' properties`,
-        );
-      }
-    }
-    if (!_.values(CAPABILITY_TYPES).includes(cap.type)) {
-      return logValidationError(`'${cap.type}' is not a valid capability type`);
-    }
-  }
-  return true;
+function logParsingError(text) {
+  log.error(`Error parsing session file: ${text}`);
+  return null;
 }
 
-/**
- * Validates the properties of a session file.
- *
- * @param {object} sessionJSON session file contents in JSON
- * @returns validated JSON, or null if any validations failed
- */
-export function validateSessionJSON(sessionJSON) {
-  if (
-    !sessionJSON ||
-    !isSessionNameValid(sessionJSON) ||
-    !isSessionServerValid(sessionJSON) ||
-    !areSessionCapsValid(sessionJSON)
-  ) {
-    return null;
-  }
-  return sessionJSON;
-}
-
-/**
- * Parses the session file contents in JSON, migrates them to the latest session file format,
- * and runs various validation checks for the JSON contents.
- *
- * @param {string} sessionFileString session file contents
- * @returns session file in JSON format, or null if any validations failed
- */
-export function parseSessionFileContents(sessionFileString) {
-  try {
-    const sessionJSON = JSON.parse(sessionFileString);
-    const updatedSessionJSON = migrateSessionJSON(sessionJSON);
-    return validateSessionJSON(updatedSessionJSON);
-  } catch {
-    return logParsingError('file is not valid JSON');
-  }
+function logValidationError(text) {
+  log.error(`Error validating session file: ${text}`);
+  return false;
 }
