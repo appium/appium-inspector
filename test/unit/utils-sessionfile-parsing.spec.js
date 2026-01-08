@@ -10,7 +10,7 @@ import {
   validateSessionJSON,
 } from '../../app/common/renderer/utils/sessionfile-parsing.js';
 
-describe('utils/file-handling.js', function () {
+describe('utils/sessionfile-parsing.js', function () {
   describe('#migrateSessionJSON', function () {
     it('should not migrate if already on the latest version', function () {
       const session = {version: SESSION_FILE_VERSIONS.LATEST};
