@@ -76,7 +76,7 @@
     "electron-settings": "4.0.4",
     "electron-updater": "6.7.3",
     "highlight.js": "11.11.1",
-    "i18next": "25.7.3",
+    "i18next": "25.7.4",
     "i18next-chained-backend": "4.6.3",
     "i18next-fs-backend": "2.6.1",
     "i18next-http-backend": "3.0.2",
