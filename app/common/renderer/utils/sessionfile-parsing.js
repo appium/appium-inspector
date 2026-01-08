@@ -171,6 +171,9 @@ function isSessionServerValid(sessionJSON) {
       return logValidationError(`unsupported server type '${key}'`);
     }
     if (key !== SERVER_TYPES.ADVANCED) {
+      if (!_.isPlainObject(sessionJSON.server[key])) {
+        return logValidationError(`'${key}' server property must be an object`);
+      }
       continue;
     }
     for (const [advKey, advValue] of Object.entries(sessionJSON.server.advanced)) {

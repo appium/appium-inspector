@@ -100,8 +100,9 @@ describe('utils/sessionfile-parsing.js', function () {
       ['is missing', {}],
       ['is a number', {server: 123}],
       ['is an empty object', {server: {}}],
-      ['has invalid structure', {server: {invalid: {}, advanced: {}}}],
-      ['has remote and local only', {server: {remote: {}, local: {}}}],
+      ['has invalid property names', {server: {invalid: {}, advanced: {}}}],
+      ['has non-object properties', {server: {remote: 123, advanced: {}}}],
+      ['does not have the advanced property', {server: {remote: {}, local: {}}}],
     ])('should return null if server %s', (_desc, newServerProp) => {
       const session = {...versionProp, ...nameProp, ...capsProp, ...newServerProp};
       expect(validateSessionJSON(session)).toBeNull();
