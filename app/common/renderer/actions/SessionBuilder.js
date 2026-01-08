@@ -24,10 +24,11 @@ import {
   fetchSessionInformation,
   formatSeleniumGridSessions,
 } from '../utils/attaching-to-session.js';
-import {downloadFile, parseSessionFileContents} from '../utils/file-handling.js';
+import {downloadFile} from '../utils/file-handling.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
 import {addVendorPrefixes} from '../utils/other.js';
+import {parseSessionFileContents} from '../utils/sessionfile-parsing.js';
 import {quitSession, setSessionDetails} from './SessionInspector.js';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';

@@ -8,7 +8,7 @@ import {
   migrateSessionJSON,
   parseSessionFileContents,
   validateSessionJSON,
-} from '../../app/common/renderer/utils/file-handling.js';
+} from '../../app/common/renderer/utils/sessionfile-parsing.js';
 
 describe('utils/file-handling.js', function () {
   describe('#migrateSessionJSON', function () {
