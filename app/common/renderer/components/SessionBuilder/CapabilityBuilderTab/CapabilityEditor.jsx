@@ -80,7 +80,7 @@ const CapabilityEditor = (props) => {
     isDuplicateCapsName,
   } = props;
 
-  const onSaveAsOk = () => saveSession(server, serverType, caps, {name: saveAsText});
+  const onSaveAsOk = () => saveSession({server, serverType, caps, name: saveAsText}, true);
   const latestCapFieldRef = useRef(null);
 
   // if we have more than one cap and the most recent cap name is empty,

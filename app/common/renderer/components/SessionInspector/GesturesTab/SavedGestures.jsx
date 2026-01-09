@@ -1,8 +1,8 @@
 import {
   DeleteOutlined,
-  DownloadOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
+  ExportOutlined,
   HighlightOutlined,
   PlayCircleOutlined,
   PlusOutlined,
@@ -16,8 +16,8 @@ import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../../constants/gestures.js
 import {SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
 import {downloadFile} from '../../../utils/file-handling.js';
 import {percentageToPixels} from '../../../utils/other.js';
+import FileUploader from '../../FileUploader.jsx';
 import inspectorStyles from '../SessionInspector.module.css';
-import FileUploader from './FileUploader.jsx';
 import styles from './Gestures.module.css';
 
 const dataSource = (savedGestures, t) => {
@@ -134,8 +134,8 @@ const SavedGestures = (props) => {
               <Tooltip zIndex={3} title={t('Edit')}>
                 <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
               </Tooltip>
-              <Tooltip zIndex={3} title={t('Download')}>
-                <Button icon={<DownloadOutlined />} onClick={() => handleDownload(gesture)} />
+              <Tooltip zIndex={3} title={t('Export to File')}>
+                <Button icon={<ExportOutlined />} onClick={() => handleDownload(gesture)} />
               </Tooltip>
               <Tooltip zIndex={3} title={t('Delete')}>
                 <Popconfirm
@@ -174,7 +174,7 @@ const SavedGestures = (props) => {
       onCancel={() => setGestureUploadErrors(null)}
     >
       <p>
-        <i>{t('unableToUploadGestureFiles')}</i>
+        <i>{t('unableToImportGestureFiles')}</i>
       </p>
       <Collapse
         ghost
@@ -217,11 +217,11 @@ const SavedGestures = (props) => {
           scroll={{y: 'calc(100vh - 32em)'}}
           footer={() => (
             <Space.Compact>
-              <Tooltip title={t('Create New Gesture')}>
-                <Button onClick={showGestureEditor} icon={<PlusOutlined />} />
-              </Tooltip>
+              <Button onClick={showGestureEditor} icon={<PlusOutlined />}>
+                {t('Create New Gesture')}
+              </Button>
               <FileUploader
-                tooltipTitle={t('Upload Gesture File')}
+                title={t('Import from File')}
                 onUpload={uploadGesturesFromFile}
                 multiple={true}
                 type="application/json"

@@ -24,6 +24,8 @@ import {
   SAVE_RAW_DESIRED_CAPS,
   SAVE_SESSION_DONE,
   SAVE_SESSION_REQUESTED,
+  SESSION_UPLOAD_DONE,
+  SESSION_UPLOAD_REQUESTED,
   SET_ADD_VENDOR_PREFIXES,
   SET_ATTACH_SESS_ID,
   SET_CAPABILITY_NAME_ERROR,
@@ -77,6 +79,7 @@ const INITIAL_STATE = {
   isValidatingCapsJson: false,
   isAddingCloudProvider: false,
   addVendorPrefixes: true,
+  isUploadingSessionFiles: false,
 };
 
 let nextState;
@@ -129,10 +132,7 @@ export default function builder(state = INITIAL_STATE, action) {
     case SET_CAPS_AND_SERVER:
       nextState = {
         ...state,
-        server: {
-          ...state.server,
-          [action.serverType]: action.server[action.serverType] ?? {},
-        },
+        server: {...state.server, ...action.server},
         serverType: action.serverType,
         caps: action.caps.map((cap) => ({
           id: crypto.randomUUID(),
@@ -408,6 +408,18 @@ export default function builder(state = INITIAL_STATE, action) {
           state.visibleProviders,
           action.sessionJSON.visibleProviders || [],
         ),
+      };
+
+    case SESSION_UPLOAD_REQUESTED:
+      return {
+        ...state,
+        isUploadingSessionFiles: true,
+      };
+
+    case SESSION_UPLOAD_DONE:
+      return {
+        ...state,
+        isUploadingSessionFiles: false,
       };
 
     default:

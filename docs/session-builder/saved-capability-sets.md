@@ -18,8 +18,23 @@ is also shown in the title of the Saved Capability Sets tab.
 
 ![Saved Caps Set List](assets/images/saved-capability-sets/saved-caps-set-list.png)
 
-Selecting any set populates the JSON structure on the right side with the contents of the set. There
-are also 2 buttons: one for opening the set in the Capability Builder tab, and one for deleting the set.
+Selecting any set populates the JSON structure on the right side with the contents of the set.
+The Actions column of each set also has 3 buttons:
+
+- Open the set in the Capability Builder tab
+- Export the set (along with the current session details) as an `.appiumsession` file
+- Delete the set
+
+There is also a button at the bottom of the saved capability sets list, which can be used to import
+previously exported `.appiumsession` files and automatically add them to the list of saved
+capability sets. Multiple files can be imported at the same time.
+
+!!! tip
+
+    If you have installed the standalone desktop app version, you can also open an `.appiumsession`
+    file using your file manager/command line. This will launch the Inspector and load the session
+    file details in the [Capability Builder tab](./capability-builder.md), which may be useful if
+    you do not want to add it as a saved capability set.
 
 ## Saved Capability Set JSON Structure
 
