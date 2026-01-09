@@ -21,7 +21,7 @@ export async function readTextFromUploadedFiles(fileList) {
         });
       reader.onerror = (error) => {
         resolve({
-          name: file.name,
+          fileName: file.name,
           error: error.message,
         });
       };
