@@ -1,4 +1,4 @@
-import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
+import {DeleteOutlined, EditOutlined, ExportOutlined} from '@ant-design/icons';
 import {Button, Card, Popconfirm, Space, Spin, Splitter, Table, Tooltip} from 'antd';
 import dayjs from 'dayjs';
 
@@ -32,6 +32,7 @@ const getSessionById = (savedSessions, id, t) => {
 const SavedCapabilitySets = (props) => {
   const {
     savedSessions,
+    exportSavedSession,
     deleteSavedSession,
     capsUUID,
     switchTabs,
@@ -71,6 +72,11 @@ const SavedCapabilitySets = (props) => {
     );
   };
 
+  const findAndExportSavedSession = (uuid) => {
+    const session = getSessionById(savedSessions, uuid, t);
+    exportSavedSession(session);
+  };
+
   const columns = [
     {
       title: t('Name'),
@@ -96,6 +102,12 @@ const SavedCapabilitySets = (props) => {
                 handleCapsAndServer(record.key);
                 switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER);
               }}
+            />
+          </Tooltip>
+          <Tooltip zIndex={3} title={t('Export to File')}>
+            <Button
+              icon={<ExportOutlined />}
+              onClick={() => findAndExportSavedSession(record.key)}
             />
           </Tooltip>
           <Tooltip zIndex={3} title={t('Delete')}>
@@ -139,7 +151,7 @@ const SavedCapabilitySets = (props) => {
               scroll={{y: 'calc(100vh - 34em)'}}
               footer={() => (
                 <FileUploader
-                  title={t('Import From File')}
+                  title={t('Import from File')}
                   onUpload={importSessionFiles}
                   multiple={true}
                   type=".appiumsession"

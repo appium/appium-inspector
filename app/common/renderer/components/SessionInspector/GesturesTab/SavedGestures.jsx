@@ -1,8 +1,8 @@
 import {
   DeleteOutlined,
-  DownloadOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
+  ExportOutlined,
   HighlightOutlined,
   PlayCircleOutlined,
   PlusOutlined,
@@ -134,8 +134,8 @@ const SavedGestures = (props) => {
               <Tooltip zIndex={3} title={t('Edit')}>
                 <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
               </Tooltip>
-              <Tooltip zIndex={3} title={t('Download')}>
-                <Button icon={<DownloadOutlined />} onClick={() => handleDownload(gesture)} />
+              <Tooltip zIndex={3} title={t('Export to File')}>
+                <Button icon={<ExportOutlined />} onClick={() => handleDownload(gesture)} />
               </Tooltip>
               <Tooltip zIndex={3} title={t('Delete')}>
                 <Popconfirm
@@ -221,7 +221,7 @@ const SavedGestures = (props) => {
                 {t('Create New Gesture')}
               </Button>
               <FileUploader
-                title={t('Import From File')}
+                title={t('Import from File')}
                 onUpload={uploadGesturesFromFile}
                 multiple={true}
                 type="application/json"

@@ -37,7 +37,7 @@ export const SERVER_TYPES = {
 
 export const SAVED_SESSIONS_TABLE_VALUES = {
   DATE_COLUMN_WIDTH: '25%',
-  ACTIONS_COLUMN_WIDTH: '106px',
+  ACTIONS_COLUMN_WIDTH: '124px',
 };
 
 // Placeholder values for specific cloud provider input fields

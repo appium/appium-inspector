@@ -719,6 +719,29 @@ export function saveSessionAsFile() {
   };
 }
 
+export function exportSavedSession(session) {
+  return async () => {
+    const cleanedName = session.name?.trim() || DEFAULT_SESSION_NAME;
+    const cleanedServer = {
+      [session.serverType]: session.server[session.serverType],
+      [SERVER_TYPES.ADVANCED]: session.server[SERVER_TYPES.ADVANCED],
+    };
+    const cleanedCaps = session.caps.map((cap) => _.omit(cap, 'id'));
+    const sessionFileDetails = {
+      version: SESSION_FILE_VERSIONS.LATEST,
+      name: cleanedName,
+      server: cleanedServer,
+      caps: cleanedCaps,
+    };
+    const href = `data:text/json;charset=utf-8,${encodeURIComponent(
+      JSON.stringify(sessionFileDetails, null, 2),
+    )}`;
+    const escapedName = sanitize(cleanedName, {replacement: '_'});
+    const fileName = `${escapedName}.appiumsession`;
+    downloadFile(href, fileName);
+  };
+}
+
 /**
  * @returns {Promise<VendorProperties | false | {}>}
  */

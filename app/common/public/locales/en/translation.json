@@ -228,7 +228,7 @@
   "Left": "Left",
   "Right": "Right",
   "Play": "Play",
-  "Download": "Download",
+  "Export to File": "Export to File",
   "Save Capability Set As": "Save Capability Set As…",
   "Edit Raw JSON": "Edit Raw JSON",
   "enterMethodParameters": "Enter Parameters for: '{{methodName}}'",
@@ -326,5 +326,5 @@
   "methodDeprecated": "This method is deprecated",
   "App Settings": "App Settings",
   "unableToImportSessionFiles": "Could not import sessions from the following files: {{fileNames}}",
-  "Import From File": "Import From File"
+  "Import from File": "Import from File"
 }
