@@ -670,11 +670,7 @@ export function importSessionFiles(fileList) {
 function parseAndValidateSessionFileString(sessionFileString) {
   const sessionJSON = parseSessionFileContents(sessionFileString);
   if (sessionJSON === null) {
-    notification.error({
-      title: i18n.t('invalidSessionFile'),
-      duration: 0,
-    });
-    return;
+    return null;
   }
   sessionJSON.serverType = Object.keys(sessionJSON.server).find(
     (type) => type !== SERVER_TYPES.ADVANCED,

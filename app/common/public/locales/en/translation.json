@@ -276,7 +276,6 @@
   "gestureNameCannotBeEmptyError": "Gesture name cannot be empty",
   "gestureInvalidJsonError": "Invalid JSON file. Unable to parse the file content",
   "gestureImportedFrom": "Gesture imported from '{{fileName}}'",
-  "invalidSessionFile": "Invalid session file",
   "TV Labs API Key": "TV Labs API Key",
   "TestcribeAPIKey": "Testcribe API Key",
   "sessionTestcribeApiKeyDescription": "You can get your api key from https://app.testcribe.com/settings/apiKeys",
