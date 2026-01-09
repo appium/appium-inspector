@@ -174,7 +174,7 @@ const SavedGestures = (props) => {
       onCancel={() => setGestureUploadErrors(null)}
     >
       <p>
-        <i>{t('unableToUploadGestureFiles')}</i>
+        <i>{t('unableToImportGestureFiles')}</i>
       </p>
       <Collapse
         ghost
@@ -214,14 +214,14 @@ const SavedGestures = (props) => {
           pagination={false}
           dataSource={dataSource(savedGestures, t)}
           columns={columns}
-          scroll={{y: 'calc(100vh - 32em)'}}
+          scroll={{y: 'calc(100vh - 30em)'}}
           footer={() => (
             <Space.Compact>
-              <Tooltip title={t('Create New Gesture')}>
-                <Button onClick={showGestureEditor} icon={<PlusOutlined />} />
-              </Tooltip>
+              <Button onClick={showGestureEditor} icon={<PlusOutlined />}>
+                {t('Create New Gesture')}
+              </Button>
               <FileUploader
-                tooltipTitle={t('Upload Gesture File')}
+                title={t('Import From File')}
                 onUpload={uploadGesturesFromFile}
                 multiple={true}
                 type="application/json"

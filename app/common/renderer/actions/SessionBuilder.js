@@ -624,7 +624,7 @@ export function initFromSessionFile() {
   };
 }
 
-export function uploadSessionFiles(fileList) {
+export function importSessionFiles(fileList) {
   return async (dispatch, getState) => {
     const sessions = await readTextFromUploadedFiles(fileList);
     const invalidSessionFiles = [];
@@ -655,7 +655,7 @@ export function uploadSessionFiles(fileList) {
 
     if (!_.isEmpty(invalidSessionFiles)) {
       notification.error({
-        title: i18n.t('unableToUploadSessionFiles', {fileNames: invalidSessionFiles.toString()}),
+        title: i18n.t('unableToImportSessionFiles', {fileNames: invalidSessionFiles.toString()}),
         duration: 0,
       });
     }

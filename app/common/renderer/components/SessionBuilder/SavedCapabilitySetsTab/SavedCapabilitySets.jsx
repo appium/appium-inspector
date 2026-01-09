@@ -35,7 +35,7 @@ const SavedCapabilitySets = (props) => {
     deleteSavedSession,
     capsUUID,
     switchTabs,
-    uploadSessionFiles,
+    importSessionFiles,
     isUploadingSessionFiles,
     t,
   } = props;
@@ -139,8 +139,8 @@ const SavedCapabilitySets = (props) => {
               scroll={{y: 'calc(100vh - 34em)'}}
               footer={() => (
                 <FileUploader
-                  tooltipTitle={t('Upload Session File')}
-                  onUpload={uploadSessionFiles}
+                  title={t('Import From File')}
+                  onUpload={importSessionFiles}
                   multiple={true}
                   type=".appiumsession"
                 />
