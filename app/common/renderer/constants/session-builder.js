@@ -4,6 +4,8 @@ export const SESSION_BUILDER_TABS = {
   ATTACH_TO_SESSION: 'attach',
 };
 
+export const SESSION_FILE_EXTENSION = '.appiumsession';
+
 export const SESSION_FILE_VERSIONS = {
   V1: '1.0',
   V2: 2,
@@ -37,7 +39,7 @@ export const SERVER_TYPES = {
 
 export const SAVED_SESSIONS_TABLE_VALUES = {
   DATE_COLUMN_WIDTH: '25%',
-  ACTIONS_COLUMN_WIDTH: '106px',
+  ACTIONS_COLUMN_WIDTH: '124px',
 };
 
 // Placeholder values for specific cloud provider input fields

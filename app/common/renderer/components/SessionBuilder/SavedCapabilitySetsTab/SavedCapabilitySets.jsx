@@ -1,11 +1,13 @@
-import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
-import {Button, Card, Popconfirm, Space, Splitter, Table, Tooltip} from 'antd';
+import {DeleteOutlined, EditOutlined, ExportOutlined} from '@ant-design/icons';
+import {Button, Card, Popconfirm, Space, Spin, Splitter, Table, Tooltip} from 'antd';
 import dayjs from 'dayjs';
 
 import {
   SAVED_SESSIONS_TABLE_VALUES,
   SESSION_BUILDER_TABS,
+  SESSION_FILE_EXTENSION,
 } from '../../../constants/session-builder.js';
+import FileUploader from '../../FileUploader.jsx';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
 import styles from './SavedCapabilitySets.module.css';
 
@@ -30,7 +32,16 @@ const getSessionById = (savedSessions, id, t) => {
 };
 
 const SavedCapabilitySets = (props) => {
-  const {savedSessions, deleteSavedSession, capsUUID, switchTabs, t} = props;
+  const {
+    savedSessions,
+    exportSavedSession,
+    deleteSavedSession,
+    capsUUID,
+    switchTabs,
+    importSessionFiles,
+    isUploadingSessionFiles,
+    t,
+  } = props;
 
   const handleCapsAndServer = (uuid) => {
     const {
@@ -63,6 +74,11 @@ const SavedCapabilitySets = (props) => {
     );
   };
 
+  const findAndExportSavedSession = (uuid) => {
+    const session = getSessionById(savedSessions, uuid, t);
+    exportSavedSession(session);
+  };
+
   const columns = [
     {
       title: t('Name'),
@@ -90,6 +106,12 @@ const SavedCapabilitySets = (props) => {
               }}
             />
           </Tooltip>
+          <Tooltip zIndex={3} title={t('Export to File')}>
+            <Button
+              icon={<ExportOutlined />}
+              onClick={() => findAndExportSavedSession(record.key)}
+            />
+          </Tooltip>
           <Tooltip zIndex={3} title={t('Delete')}>
             <Popconfirm
               zIndex={4}
@@ -109,21 +131,40 @@ const SavedCapabilitySets = (props) => {
   return (
     <Splitter>
       <Splitter.Panel min={430}>
-        <Card className={styles.savedSessions}>
-          <Table
-            pagination={false}
-            sticky={true}
-            dataSource={dataSource(savedSessions, t)}
-            columns={columns}
-            onRow={(row) => ({onClick: () => handleCapsAndServer(row.key)})}
-            rowSelection={{
-              selectedRowKeys: [capsUUID],
-              hideSelectAll: true,
-              columnWidth: 0,
-              renderCell: () => null,
-            }}
-          />
-        </Card>
+        <Spin spinning={isUploadingSessionFiles}>
+          <Card styles={{root: {height: '100%'}, body: {height: '100%', padding: '2px'}}}>
+            <Table
+              className={styles.capabilitySetsTable}
+              styles={{
+                root: {height: '100%'},
+                header: {cell: {padding: '8px 16px'}},
+                section: {height: 'calc(100% - 48px)'},
+                body: {cell: {padding: '8px 16px'}},
+                footer: {padding: '8px 16px'},
+              }}
+              pagination={false}
+              sticky={true}
+              dataSource={dataSource(savedSessions, t)}
+              columns={columns}
+              onRow={(row) => ({onClick: () => handleCapsAndServer(row.key)})}
+              rowSelection={{
+                selectedRowKeys: [capsUUID],
+                hideSelectAll: true,
+                columnWidth: 0,
+                renderCell: () => null,
+              }}
+              scroll={{y: 'calc(100% - 37px)'}}
+              footer={() => (
+                <FileUploader
+                  title={t('Import from File')}
+                  onUpload={importSessionFiles}
+                  multiple={true}
+                  type={SESSION_FILE_EXTENSION}
+                />
+              )}
+            />
+          </Card>
+        </Spin>
       </Splitter.Panel>
       <Splitter.Panel collapsible min={400}>
         <CapabilityJSON

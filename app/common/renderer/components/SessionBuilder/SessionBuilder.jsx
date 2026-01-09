@@ -11,7 +11,7 @@ import {
   SERVER_TYPES,
   SESSION_BUILDER_TABS,
 } from '../../constants/session-builder.js';
-import {ipcRenderer, openLink} from '../../polyfills.js';
+import {openLink} from '../../polyfills.js';
 import {log} from '../../utils/logger.js';
 import AppSettings from './AppSettings/AppSettings.jsx';
 import AttachToSession from './AttachToSessionTab/AttachToSession.jsx';
@@ -52,12 +52,10 @@ const Session = (props) => {
     getSavedSessions,
     setSavedServerParams,
     initFromSessionFile,
-    setStateFromSessionFile,
     setVisibleProviders,
     bindWindowClose,
     initFromQueryString,
     setPortFromUrl,
-    saveSessionAsFile,
     showError,
     t,
   } = props;
@@ -99,10 +97,6 @@ const Session = (props) => {
         await setPortFromUrl();
         initFromQueryString(loadNewSession);
         await initFromSessionFile();
-        ipcRenderer.on('sessionfile:apply', (_, sessionFileString) =>
-          setStateFromSessionFile(sessionFileString),
-        );
-        ipcRenderer.on('sessionfile:download', () => saveSessionAsFile());
       } catch (e) {
         log.error(e);
       }
@@ -114,11 +108,9 @@ const Session = (props) => {
     initFromQueryString,
     initFromSessionFile,
     loadNewSession,
-    saveSessionAsFile,
     setLocalServerParams,
     setPortFromUrl,
     setSavedServerParams,
-    setStateFromSessionFile,
     setVisibleProviders,
     switchTabs,
   ]);
@@ -177,7 +169,6 @@ const Session = (props) => {
               ),
               key: SESSION_BUILDER_TABS.SAVED_CAPS,
               className: styles.scrollingTab,
-              disabled: savedSessions.length === 0,
               children: <SavedCapabilitySets {...props} />,
             },
             {
@@ -202,7 +193,7 @@ const Session = (props) => {
               {capsUUID && (
                 <Button
                   onClick={() =>
-                    saveSession(server, serverType, caps, {name: capsName, uuid: capsUUID})
+                    saveSession({server, serverType, caps, name: capsName, uuid: capsUUID})
                   }
                   disabled={!isCapsDirty || isEditingDesiredCaps}
                 >

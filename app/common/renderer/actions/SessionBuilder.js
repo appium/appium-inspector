@@ -24,7 +24,7 @@ import {
   fetchSessionInformation,
   formatSeleniumGridSessions,
 } from '../utils/attaching-to-session.js';
-import {downloadFile} from '../utils/file-handling.js';
+import {downloadFile, readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
 import {addVendorPrefixes} from '../utils/other.js';
@@ -78,6 +78,9 @@ export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
 export const SET_CAPABILITY_NAME_ERROR = 'SET_CAPABILITY_NAME_ERROR';
 export const SET_STATE_FROM_URL = 'SET_STATE_FROM_URL';
 export const SET_STATE_FROM_FILE = 'SET_STATE_FROM_FILE';
+
+export const SESSION_UPLOAD_REQUESTED = 'SESSION_UPLOAD_REQUESTED';
+export const SESSION_UPLOAD_DONE = 'SESSION_UPLOAD_DONE';
 
 const CAPS_NEW_COMMAND = 'appium:newCommandTimeout';
 const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
@@ -398,22 +401,23 @@ export function newSession(originalCaps, attachSessId = null) {
 /**
  * Saves the caps and server details
  */
-export function saveSession(server, serverType, caps, params) {
+export function saveSession(sessionParams, checkDuplicateName = false) {
   return async (dispatch) => {
-    let {name, uuid} = params;
-    let savedSessions = (await getSetting(SAVED_SESSIONS)) || [];
-    let duplicateSessions = savedSessions.filter((session) => session.name === name);
-    // Ignore the check if the user is updating an existing capability set with duplicate names
-    let isEditingExistingCapability = duplicateSessions.find((session) => session.uuid === uuid);
-    if (duplicateSessions.length > 0 && !isEditingExistingCapability) {
-      return dispatch({type: SET_CAPABILITY_NAME_ERROR});
+    const {server, serverType, caps, name, uuid: foundUUID} = sessionParams;
+    const savedSessions = (await getSetting(SAVED_SESSIONS)) || [];
+    if (checkDuplicateName) {
+      const duplicateSessionNameExists = savedSessions.some((session) => session.name === name);
+      if (duplicateSessionNameExists) {
+        return dispatch({type: SET_CAPABILITY_NAME_ERROR});
+      }
     }
     dispatch({type: SAVE_SESSION_REQUESTED});
 
+    let uuid = foundUUID;
     if (!uuid) {
       // If it's a new session, add it to the list
       uuid = crypto.randomUUID();
-      let newSavedSession = {
+      const newSavedSession = {
         date: Date.now(),
         name,
         uuid,
@@ -424,18 +428,18 @@ export function saveSession(server, serverType, caps, params) {
       savedSessions.push(newSavedSession);
     } else {
       // If it's an existing session, overwrite it
-      for (let session of savedSessions) {
+      for (const session of savedSessions) {
         if (session.uuid === uuid) {
           session.name = name;
           session.caps = caps;
           session.server = server;
           session.serverType = serverType;
+          break;
         }
       }
     }
     await setSetting(SAVED_SESSIONS, savedSessions);
-    const action = getSavedSessions();
-    await action(dispatch);
+    await getSavedSessions()(dispatch);
     dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name});
     dispatch({type: SAVE_SESSION_DONE});
   };
@@ -602,64 +606,103 @@ export function setSavedServerParams() {
 
 /**
  * Checks if the app was launched by opening a file -
- * if yes, set the current server and capability details from the file contents
+ * if yes, switch to capability builder and set the current details from the file contents
  */
 export function initFromSessionFile() {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     const lastArg = process.argv[process.argv.length - 1];
     if (!lastArg?.startsWith('filename=')) {
       return null;
     }
     const filePath = lastArg.split('=')[1];
     const sessionFileString = await ipcRenderer.invoke('sessionfile:open', filePath);
-    setStateFromSessionFile(sessionFileString)(dispatch);
-  };
-}
-
-/**
- * Sets the current server and capability details using the provided .appiumsession file contents
- */
-export function setStateFromSessionFile(sessionFileString) {
-  return (dispatch, getState) => {
-    const sessionJSON = parseSessionFileContents(sessionFileString);
-    if (sessionJSON === null) {
+    const sessionJSON = parseAndValidateSessionFileString(sessionFileString);
+    if (sessionJSON) {
+      dispatch({type: SET_STATE_FROM_FILE, sessionJSON});
+      switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER)(dispatch, getState);
+    } else {
       notification.error({
         title: i18n.t('invalidSessionFile'),
         duration: 0,
       });
-      return;
     }
-    sessionJSON.serverType = Object.keys(sessionJSON.server).find(
-      (type) => type !== SERVER_TYPES.ADVANCED,
-    );
-    sessionJSON.visibleProviders =
-      sessionJSON.serverType !== SERVER_TYPES.REMOTE ? [sessionJSON.serverType] : [];
-    dispatch({type: SET_STATE_FROM_FILE, sessionJSON});
-    switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER)(dispatch, getState);
   };
+}
+
+/**
+ * Reads one or more .appiumsession files, then extracts, validates, and saves
+ * their details as new session sets.
+ * Duplicate session names are intentionally OK
+ */
+export function importSessionFiles(fileList) {
+  return async (dispatch) => {
+    dispatch({type: SESSION_UPLOAD_REQUESTED});
+    const sessions = await readTextFromUploadedFiles(fileList);
+    const invalidSessionFiles = [];
+    const parsedSessions = [];
+    for (const session of sessions) {
+      const {fileName, content, error} = session;
+      // Some error occurred while reading the uploaded file
+      if (error) {
+        invalidSessionFiles.push(fileName);
+        continue;
+      }
+      const sessionJSON = parseAndValidateSessionFileString(content);
+      if (!sessionJSON) {
+        invalidSessionFiles.push(fileName);
+        continue;
+      }
+      parsedSessions.push(sessionJSON);
+    }
+
+    for (const parsedSession of parsedSessions) {
+      await saveSession(parsedSession)(dispatch);
+    }
+    dispatch({type: SESSION_UPLOAD_DONE});
+
+    if (!_.isEmpty(invalidSessionFiles)) {
+      notification.error({
+        title: i18n.t('unableToImportSessionFiles', {fileNames: invalidSessionFiles.join(', ')}),
+        duration: 0,
+      });
+    }
+  };
+}
+
+function parseAndValidateSessionFileString(sessionFileString) {
+  const sessionJSON = parseSessionFileContents(sessionFileString);
+  if (sessionJSON === null) {
+    return null;
+  }
+  sessionJSON.serverType = Object.keys(sessionJSON.server).find(
+    (type) => type !== SERVER_TYPES.ADVANCED,
+  );
+  sessionJSON.visibleProviders =
+    sessionJSON.serverType !== SERVER_TYPES.REMOTE ? [sessionJSON.serverType] : [];
+  return sessionJSON;
 }
 
 /**
  * Packages the current server and capability details in an .appiumsession file
  */
-export function saveSessionAsFile() {
-  return (_dispatch, getState) => {
-    const state = getState().builder;
-    const sessionName = state.capsName?.trim() || DEFAULT_SESSION_NAME;
-    const filteredServer = {
-      [state.serverType]: state.server[state.serverType],
-      [SERVER_TYPES.ADVANCED]: state.server[SERVER_TYPES.ADVANCED],
+export function exportSavedSession(session) {
+  return async () => {
+    const cleanedName = session.name?.trim() || DEFAULT_SESSION_NAME;
+    const cleanedServer = {
+      [session.serverType]: session.server[session.serverType],
+      [SERVER_TYPES.ADVANCED]: session.server[SERVER_TYPES.ADVANCED],
     };
+    const cleanedCaps = session.caps.map((cap) => _.omit(cap, 'id'));
     const sessionFileDetails = {
       version: SESSION_FILE_VERSIONS.LATEST,
-      name: sessionName,
-      server: filteredServer,
-      caps: state.caps.map((cap) => _.omit(cap, 'id')),
+      name: cleanedName,
+      server: cleanedServer,
+      caps: cleanedCaps,
     };
     const href = `data:text/json;charset=utf-8,${encodeURIComponent(
       JSON.stringify(sessionFileDetails, null, 2),
     )}`;
-    const escapedName = sanitize(sessionName, {replacement: '_'});
+    const escapedName = sanitize(cleanedName, {replacement: '_'});
     const fileName = `${escapedName}.appiumsession`;
     downloadFile(href, fileName);
   };
@@ -800,7 +843,7 @@ export function saveDesiredCapsName() {
   return (dispatch, getState) => {
     const {server, serverType, caps, capsUUID, desiredCapsName} = getState().builder;
     dispatch({type: SAVE_DESIRED_CAPS_NAME, name: desiredCapsName});
-    saveSession(server, serverType, caps, {name: desiredCapsName, uuid: capsUUID})(dispatch);
+    saveSession({server, serverType, caps, name: desiredCapsName, uuid: capsUUID}, true)(dispatch);
   };
 }
 
