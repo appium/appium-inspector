@@ -169,7 +169,6 @@ const Session = (props) => {
               ),
               key: SESSION_BUILDER_TABS.SAVED_CAPS,
               className: styles.scrollingTab,
-              disabled: savedSessions.length === 0,
               children: <SavedCapabilitySets {...props} />,
             },
             {
