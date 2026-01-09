@@ -149,7 +149,7 @@ const SavedCapabilitySets = (props) => {
                 columnWidth: 0,
                 renderCell: () => null,
               }}
-              scroll={{y: 'calc(100vh - 34em)'}}
+              scroll={{y: 'calc(100vh - 405px)'}}
               footer={() => (
                 <FileUploader
                   title={t('Import from File')}
