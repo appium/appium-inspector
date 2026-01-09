@@ -406,8 +406,8 @@ export function saveSession(sessionParams, checkDuplicateName = false) {
     const {server, serverType, caps, name, uuid: foundUUID} = sessionParams;
     const savedSessions = (await getSetting(SAVED_SESSIONS)) || [];
     if (checkDuplicateName) {
-      const sessionsWithSameName = savedSessions.filter((session) => session.name === name);
-      if (sessionsWithSameName.length > 0) {
+      const duplicateSessionNameExists = savedSessions.some((session) => session.name === name);
+      if (duplicateSessionNameExists) {
         return dispatch({type: SET_CAPABILITY_NAME_ERROR});
       }
     }
@@ -655,16 +655,14 @@ export function importSessionFiles(fileList) {
       parsedSessions.push(sessionJSON);
     }
 
-    if (parsedSessions.length) {
-      for (const parsedSession of parsedSessions) {
-        await saveSession(parsedSession)(dispatch);
-      }
+    for (const parsedSession of parsedSessions) {
+      await saveSession(parsedSession)(dispatch);
     }
     dispatch({type: SESSION_UPLOAD_DONE});
 
     if (!_.isEmpty(invalidSessionFiles)) {
       notification.error({
-        title: i18n.t('unableToImportSessionFiles', {fileNames: invalidSessionFiles.toString()}),
+        title: i18n.t('unableToImportSessionFiles', {fileNames: invalidSessionFiles.join(', ')}),
         duration: 0,
       });
     }
