@@ -35,10 +35,6 @@ async function openFile(mainWindow) {
   }
 }
 
-function saveAs(mainWindow) {
-  mainWindow.webContents.send('sessionfile:download');
-}
-
 function optionAbout() {
   return {
     label: t('About Appium Inspector'),
@@ -75,7 +71,6 @@ function dropdownFile(mainWindow, isMac) {
     {label: t('Close Window'), role: 'close'},
     separator,
     {label: t('Open Session File…'), accelerator: 'CmdOrCtrl+O', click: () => openFile(mainWindow)},
-    {label: t('saveAs'), accelerator: 'CmdOrCtrl+S', click: () => saveAs(mainWindow)},
   ];
 
   if (!isMac) {

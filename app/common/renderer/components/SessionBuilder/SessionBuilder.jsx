@@ -57,7 +57,6 @@ const Session = (props) => {
     bindWindowClose,
     initFromQueryString,
     setPortFromUrl,
-    saveSessionAsFile,
     showError,
     t,
   } = props;
@@ -103,7 +102,6 @@ const Session = (props) => {
           'sessionfile:apply',
           async (_, sessionFileString) => await setStateFromSessionFile(sessionFileString),
         );
-        ipcRenderer.on('sessionfile:download', () => saveSessionAsFile());
       } catch (e) {
         log.error(e);
       }
@@ -115,7 +113,6 @@ const Session = (props) => {
     initFromQueryString,
     initFromSessionFile,
     loadNewSession,
-    saveSessionAsFile,
     setLocalServerParams,
     setPortFromUrl,
     setSavedServerParams,

@@ -696,29 +696,6 @@ function parseAndValidateSessionFileString(sessionFileString) {
 /**
  * Packages the current server and capability details in an .appiumsession file
  */
-export function saveSessionAsFile() {
-  return (_dispatch, getState) => {
-    const state = getState().builder;
-    const sessionName = state.capsName?.trim() || DEFAULT_SESSION_NAME;
-    const filteredServer = {
-      [state.serverType]: state.server[state.serverType],
-      [SERVER_TYPES.ADVANCED]: state.server[SERVER_TYPES.ADVANCED],
-    };
-    const sessionFileDetails = {
-      version: SESSION_FILE_VERSIONS.LATEST,
-      name: sessionName,
-      server: filteredServer,
-      caps: state.caps.map((cap) => _.omit(cap, 'id')),
-    };
-    const href = `data:text/json;charset=utf-8,${encodeURIComponent(
-      JSON.stringify(sessionFileDetails, null, 2),
-    )}`;
-    const escapedName = sanitize(sessionName, {replacement: '_'});
-    const fileName = `${escapedName}.appiumsession`;
-    downloadFile(href, fileName);
-  };
-}
-
 export function exportSavedSession(session) {
   return async () => {
     const cleanedName = session.name?.trim() || DEFAULT_SESSION_NAME;
