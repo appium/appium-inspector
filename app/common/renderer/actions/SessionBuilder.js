@@ -398,22 +398,23 @@ export function newSession(originalCaps, attachSessId = null) {
 /**
  * Saves the caps and server details
  */
-export function saveSession(server, serverType, caps, params) {
+export function saveSession(sessionParams, checkDuplicateName = false) {
   return async (dispatch) => {
-    let {name, uuid} = params;
-    let savedSessions = (await getSetting(SAVED_SESSIONS)) || [];
-    let duplicateSessions = savedSessions.filter((session) => session.name === name);
-    // Ignore the check if the user is updating an existing capability set with duplicate names
-    let isEditingExistingCapability = duplicateSessions.find((session) => session.uuid === uuid);
-    if (duplicateSessions.length > 0 && !isEditingExistingCapability) {
-      return dispatch({type: SET_CAPABILITY_NAME_ERROR});
+    const {server, serverType, caps, name, uuid: foundUUID} = sessionParams;
+    const savedSessions = (await getSetting(SAVED_SESSIONS)) || [];
+    if (checkDuplicateName) {
+      const sessionsWithSameName = savedSessions.filter((session) => session.name === name);
+      if (sessionsWithSameName.length > 0) {
+        return dispatch({type: SET_CAPABILITY_NAME_ERROR});
+      }
     }
     dispatch({type: SAVE_SESSION_REQUESTED});
 
+    let uuid = foundUUID;
     if (!uuid) {
       // If it's a new session, add it to the list
       uuid = crypto.randomUUID();
-      let newSavedSession = {
+      const newSavedSession = {
         date: Date.now(),
         name,
         uuid,
@@ -424,18 +425,18 @@ export function saveSession(server, serverType, caps, params) {
       savedSessions.push(newSavedSession);
     } else {
       // If it's an existing session, overwrite it
-      for (let session of savedSessions) {
+      for (const session of savedSessions) {
         if (session.uuid === uuid) {
           session.name = name;
           session.caps = caps;
           session.server = server;
           session.serverType = serverType;
+          break;
         }
       }
     }
     await setSetting(SAVED_SESSIONS, savedSessions);
-    const action = getSavedSessions();
-    await action(dispatch);
+    await getSavedSessions()(dispatch);
     dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name});
     dispatch({type: SAVE_SESSION_DONE});
   };
@@ -602,41 +603,53 @@ export function setSavedServerParams() {
 
 /**
  * Checks if the app was launched by opening a file -
- * if yes, set the current server and capability details from the file contents
+ * if yes, switch to capability builder and set the current details from the file contents
  */
 export function initFromSessionFile() {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     const lastArg = process.argv[process.argv.length - 1];
     if (!lastArg?.startsWith('filename=')) {
       return null;
     }
     const filePath = lastArg.split('=')[1];
     const sessionFileString = await ipcRenderer.invoke('sessionfile:open', filePath);
-    setStateFromSessionFile(sessionFileString)(dispatch);
+    const sessionJSON = parseAndValidateSessionFileString(sessionFileString);
+    if (sessionJSON) {
+      dispatch({type: SET_STATE_FROM_FILE, sessionJSON});
+      switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER)(dispatch, getState);
+    }
   };
 }
 
 /**
- * Sets the current server and capability details using the provided .appiumsession file contents
+ * Saves a new session using details from an .appiumsession file.
+ * Duplicate session names are intentionally OK
  */
 export function setStateFromSessionFile(sessionFileString) {
-  return (dispatch, getState) => {
-    const sessionJSON = parseSessionFileContents(sessionFileString);
-    if (sessionJSON === null) {
-      notification.error({
-        title: i18n.t('invalidSessionFile'),
-        duration: 0,
-      });
-      return;
+  return async (dispatch, getState) => {
+    const sessionJSON = parseAndValidateSessionFileString(sessionFileString);
+    if (sessionJSON) {
+      await saveSession(sessionJSON)(dispatch);
+      switchTabs(SESSION_BUILDER_TABS.SAVED_CAPS)(dispatch, getState);
     }
-    sessionJSON.serverType = Object.keys(sessionJSON.server).find(
-      (type) => type !== SERVER_TYPES.ADVANCED,
-    );
-    sessionJSON.visibleProviders =
-      sessionJSON.serverType !== SERVER_TYPES.REMOTE ? [sessionJSON.serverType] : [];
-    dispatch({type: SET_STATE_FROM_FILE, sessionJSON});
-    switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER)(dispatch, getState);
   };
+}
+
+function parseAndValidateSessionFileString(sessionFileString) {
+  const sessionJSON = parseSessionFileContents(sessionFileString);
+  if (sessionJSON === null) {
+    notification.error({
+      title: i18n.t('invalidSessionFile'),
+      duration: 0,
+    });
+    return;
+  }
+  sessionJSON.serverType = Object.keys(sessionJSON.server).find(
+    (type) => type !== SERVER_TYPES.ADVANCED,
+  );
+  sessionJSON.visibleProviders =
+    sessionJSON.serverType !== SERVER_TYPES.REMOTE ? [sessionJSON.serverType] : [];
+  return sessionJSON;
 }
 
 /**
@@ -800,7 +813,7 @@ export function saveDesiredCapsName() {
   return (dispatch, getState) => {
     const {server, serverType, caps, capsUUID, desiredCapsName} = getState().builder;
     dispatch({type: SAVE_DESIRED_CAPS_NAME, name: desiredCapsName});
-    saveSession(server, serverType, caps, {name: desiredCapsName, uuid: capsUUID})(dispatch);
+    saveSession({server, serverType, caps, name: desiredCapsName, uuid: capsUUID}, true)(dispatch);
   };
 }
 

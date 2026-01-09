@@ -99,8 +99,9 @@ const Session = (props) => {
         await setPortFromUrl();
         initFromQueryString(loadNewSession);
         await initFromSessionFile();
-        ipcRenderer.on('sessionfile:apply', (_, sessionFileString) =>
-          setStateFromSessionFile(sessionFileString),
+        ipcRenderer.on(
+          'sessionfile:apply',
+          async (_, sessionFileString) => await setStateFromSessionFile(sessionFileString),
         );
         ipcRenderer.on('sessionfile:download', () => saveSessionAsFile());
       } catch (e) {
@@ -202,7 +203,7 @@ const Session = (props) => {
               {capsUUID && (
                 <Button
                   onClick={() =>
-                    saveSession(server, serverType, caps, {name: capsName, uuid: capsUUID})
+                    saveSession({server, serverType, caps, name: capsName, uuid: capsUUID})
                   }
                   disabled={!isCapsDirty || isEditingDesiredCaps}
                 >
