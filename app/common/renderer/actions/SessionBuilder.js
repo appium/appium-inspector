@@ -620,6 +620,11 @@ export function initFromSessionFile() {
     if (sessionJSON) {
       dispatch({type: SET_STATE_FROM_FILE, sessionJSON});
       switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER)(dispatch, getState);
+    } else {
+      notification.error({
+        title: i18n.t('invalidSessionFile'),
+        duration: 0,
+      });
     }
   };
 }
