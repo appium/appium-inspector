@@ -24,7 +24,7 @@ import {
   fetchSessionInformation,
   formatSeleniumGridSessions,
 } from '../utils/attaching-to-session.js';
-import {downloadFile} from '../utils/file-handling.js';
+import {downloadFile, readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
 import {addVendorPrefixes} from '../utils/other.js';
@@ -78,6 +78,9 @@ export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
 export const SET_CAPABILITY_NAME_ERROR = 'SET_CAPABILITY_NAME_ERROR';
 export const SET_STATE_FROM_URL = 'SET_STATE_FROM_URL';
 export const SET_STATE_FROM_FILE = 'SET_STATE_FROM_FILE';
+
+export const SESSION_UPLOAD_REQUESTED = 'SESSION_UPLOAD_REQUESTED';
+export const SESSION_UPLOAD_DONE = 'SESSION_UPLOAD_DONE';
 
 const CAPS_NEW_COMMAND = 'appium:newCommandTimeout';
 const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
@@ -617,6 +620,44 @@ export function initFromSessionFile() {
     if (sessionJSON) {
       dispatch({type: SET_STATE_FROM_FILE, sessionJSON});
       switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER)(dispatch, getState);
+    }
+  };
+}
+
+export function uploadSessionFiles(fileList) {
+  return async (dispatch, getState) => {
+    const sessions = await readTextFromUploadedFiles(fileList);
+    const invalidSessionFiles = [];
+    const parsedSessions = [];
+    for (const session of sessions) {
+      const {fileName, content, error} = session;
+      // Some error occurred while reading the uploaded file
+      if (error) {
+        invalidSessionFiles.push(fileName);
+        continue;
+      }
+      const sessionJSON = parseAndValidateSessionFileString(content);
+      if (!sessionJSON) {
+        invalidSessionFiles.push(fileName);
+        continue;
+      }
+      parsedSessions.push(sessionJSON);
+    }
+
+    if (parsedSessions.length) {
+      dispatch({type: SESSION_UPLOAD_REQUESTED});
+      for (const parsedSession of parsedSessions) {
+        await saveSession(parsedSession)(dispatch);
+      }
+      dispatch({type: SESSION_UPLOAD_DONE});
+      switchTabs(SESSION_BUILDER_TABS.SAVED_CAPS)(dispatch, getState);
+    }
+
+    if (!_.isEmpty(invalidSessionFiles)) {
+      notification.error({
+        title: i18n.t('unableToUploadSessionFiles', {fileNames: invalidSessionFiles.toString()}),
+        duration: 0,
+      });
     }
   };
 }

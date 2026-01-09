@@ -16,8 +16,8 @@ import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../../constants/gestures.js
 import {SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
 import {downloadFile} from '../../../utils/file-handling.js';
 import {percentageToPixels} from '../../../utils/other.js';
+import FileUploader from '../../FileUploader.jsx';
 import inspectorStyles from '../SessionInspector.module.css';
-import FileUploader from './FileUploader.jsx';
 import styles from './Gestures.module.css';
 
 const dataSource = (savedGestures, t) => {

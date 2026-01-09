@@ -1,13 +1,13 @@
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
-import {Button, Card, Popconfirm, Space, Splitter, Table, Tooltip} from 'antd';
+import {Button, Card, Popconfirm, Space, Spin, Splitter, Table, Tooltip} from 'antd';
 import dayjs from 'dayjs';
 
 import {
   SAVED_SESSIONS_TABLE_VALUES,
   SESSION_BUILDER_TABS,
 } from '../../../constants/session-builder.js';
+import FileUploader from '../../FileUploader.jsx';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
-import styles from './SavedCapabilitySets.module.css';
 
 const dataSource = (savedSessions, t) => {
   if (!savedSessions) {
@@ -30,7 +30,15 @@ const getSessionById = (savedSessions, id, t) => {
 };
 
 const SavedCapabilitySets = (props) => {
-  const {savedSessions, deleteSavedSession, capsUUID, switchTabs, t} = props;
+  const {
+    savedSessions,
+    deleteSavedSession,
+    capsUUID,
+    switchTabs,
+    uploadSessionFiles,
+    isUploadingSessionFiles,
+    t,
+  } = props;
 
   const handleCapsAndServer = (uuid) => {
     const {
@@ -109,21 +117,37 @@ const SavedCapabilitySets = (props) => {
   return (
     <Splitter>
       <Splitter.Panel min={430}>
-        <Card className={styles.savedSessions}>
-          <Table
-            pagination={false}
-            sticky={true}
-            dataSource={dataSource(savedSessions, t)}
-            columns={columns}
-            onRow={(row) => ({onClick: () => handleCapsAndServer(row.key)})}
-            rowSelection={{
-              selectedRowKeys: [capsUUID],
-              hideSelectAll: true,
-              columnWidth: 0,
-              renderCell: () => null,
-            }}
-          />
-        </Card>
+        <Spin spinning={isUploadingSessionFiles}>
+          <Card styles={{body: {padding: '2px'}}}>
+            <Table
+              styles={{
+                header: {cell: {padding: '8px 16px'}},
+                body: {cell: {padding: '8px 16px'}},
+                footer: {padding: '8px 16px'},
+              }}
+              pagination={false}
+              sticky={true}
+              dataSource={dataSource(savedSessions, t)}
+              columns={columns}
+              onRow={(row) => ({onClick: () => handleCapsAndServer(row.key)})}
+              rowSelection={{
+                selectedRowKeys: [capsUUID],
+                hideSelectAll: true,
+                columnWidth: 0,
+                renderCell: () => null,
+              }}
+              scroll={{y: 'calc(100vh - 34em)'}}
+              footer={() => (
+                <FileUploader
+                  tooltipTitle={t('Upload Session File')}
+                  onUpload={uploadSessionFiles}
+                  multiple={true}
+                  type=".appiumsession"
+                />
+              )}
+            />
+          </Card>
+        </Spin>
       </Splitter.Panel>
       <Splitter.Panel collapsible min={400}>
         <CapabilityJSON
