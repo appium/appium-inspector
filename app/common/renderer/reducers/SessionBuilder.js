@@ -132,10 +132,7 @@ export default function builder(state = INITIAL_STATE, action) {
     case SET_CAPS_AND_SERVER:
       nextState = {
         ...state,
-        server: {
-          ...state.server,
-          [action.serverType]: action.server[action.serverType] ?? {},
-        },
+        server: {...state.server, ...action.server},
         serverType: action.serverType,
         caps: action.caps.map((cap) => ({
           id: crypto.randomUUID(),
