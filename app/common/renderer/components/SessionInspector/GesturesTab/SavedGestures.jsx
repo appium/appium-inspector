@@ -214,7 +214,7 @@ const SavedGestures = (props) => {
           pagination={false}
           dataSource={dataSource(savedGestures, t)}
           columns={columns}
-          scroll={{y: 'calc(100vh - 30em)'}}
+          scroll={{y: 'calc(100vh - 32em)'}}
           footer={() => (
             <Space.Compact>
               <Button onClick={showGestureEditor} icon={<PlusOutlined />}>
