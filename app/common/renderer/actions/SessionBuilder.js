@@ -630,7 +630,8 @@ export function initFromSessionFile() {
  * Duplicate session names are intentionally OK
  */
 export function importSessionFiles(fileList) {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
+    dispatch({type: SESSION_UPLOAD_REQUESTED});
     const sessions = await readTextFromUploadedFiles(fileList);
     const invalidSessionFiles = [];
     const parsedSessions = [];
@@ -650,13 +651,11 @@ export function importSessionFiles(fileList) {
     }
 
     if (parsedSessions.length) {
-      dispatch({type: SESSION_UPLOAD_REQUESTED});
       for (const parsedSession of parsedSessions) {
         await saveSession(parsedSession)(dispatch);
       }
-      dispatch({type: SESSION_UPLOAD_DONE});
-      switchTabs(SESSION_BUILDER_TABS.SAVED_CAPS)(dispatch, getState);
     }
+    dispatch({type: SESSION_UPLOAD_DONE});
 
     if (!_.isEmpty(invalidSessionFiles)) {
       notification.error({
