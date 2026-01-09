@@ -1,6 +1,6 @@
 import {app, dialog, Menu, shell} from 'electron';
 
-import {APPIUM_SESSION_EXTENSION, isDev, openSessionFile, t} from './helpers.js';
+import {isDev, t} from './helpers.js';
 import {checkForUpdates} from './updater.js';
 import {launchNewSessionWindow} from './windows.js';
 
@@ -21,18 +21,6 @@ function showAppInfoPopup() {
       nodejsVersion: process.versions.node,
     }),
   });
-}
-
-async function openFile(mainWindow) {
-  const {canceled, filePaths} = await dialog.showOpenDialog({
-    properties: ['openFile'],
-    filters: [{name: 'Appium Session Files', extensions: [APPIUM_SESSION_EXTENSION]}],
-  });
-  if (!canceled) {
-    const filePath = filePaths[0];
-    const sessionFileString = openSessionFile(filePath);
-    mainWindow.webContents.send('sessionfile:apply', sessionFileString);
-  }
 }
 
 function optionAbout() {
@@ -65,12 +53,10 @@ function dropdownApp() {
   };
 }
 
-function dropdownFile(mainWindow, isMac) {
+function dropdownFile(isMac) {
   const submenu = [
     {label: t('New Window'), accelerator: 'CmdOrCtrl+N', click: launchNewSessionWindow},
     {label: t('Close Window'), role: 'close'},
-    separator,
-    {label: t('Open Session File…'), accelerator: 'CmdOrCtrl+O', click: () => openFile(mainWindow)},
   ];
 
   if (!isMac) {
@@ -149,10 +135,10 @@ function dropdownHelp() {
   };
 }
 
-function menuTemplate(mainWindow, isMac) {
+function menuTemplate(isMac) {
   return [
     ...(isMac ? [dropdownApp()] : []),
-    dropdownFile(mainWindow, isMac),
+    dropdownFile(isMac),
     dropdownEdit(),
     dropdownView(),
     ...(isMac ? [dropdownWindow()] : []),
@@ -163,7 +149,7 @@ function menuTemplate(mainWindow, isMac) {
 export function rebuildMenus(mainWindow) {
   const isMac = process.platform === 'darwin';
 
-  const menu = Menu.buildFromTemplate(menuTemplate(mainWindow, isMac));
+  const menu = Menu.buildFromTemplate(menuTemplate(isMac));
 
   if (isMac) {
     Menu.setApplicationMenu(menu);

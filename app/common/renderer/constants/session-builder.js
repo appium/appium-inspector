@@ -4,6 +4,8 @@ export const SESSION_BUILDER_TABS = {
   ATTACH_TO_SESSION: 'attach',
 };
 
+export const SESSION_FILE_EXTENSION = '.appiumsession';
+
 export const SESSION_FILE_VERSIONS = {
   V1: '1.0',
   V2: 2,

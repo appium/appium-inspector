@@ -624,6 +624,11 @@ export function initFromSessionFile() {
   };
 }
 
+/**
+ * Reads one or more .appiumsession files, then extracts, validates, and saves
+ * their details as new session sets.
+ * Duplicate session names are intentionally OK
+ */
 export function importSessionFiles(fileList) {
   return async (dispatch, getState) => {
     const sessions = await readTextFromUploadedFiles(fileList);
@@ -658,20 +663,6 @@ export function importSessionFiles(fileList) {
         title: i18n.t('unableToImportSessionFiles', {fileNames: invalidSessionFiles.toString()}),
         duration: 0,
       });
-    }
-  };
-}
-
-/**
- * Saves a new session using details from an .appiumsession file.
- * Duplicate session names are intentionally OK
- */
-export function setStateFromSessionFile(sessionFileString) {
-  return async (dispatch, getState) => {
-    const sessionJSON = parseAndValidateSessionFileString(sessionFileString);
-    if (sessionJSON) {
-      await saveSession(sessionJSON)(dispatch);
-      switchTabs(SESSION_BUILDER_TABS.SAVED_CAPS)(dispatch, getState);
     }
   };
 }

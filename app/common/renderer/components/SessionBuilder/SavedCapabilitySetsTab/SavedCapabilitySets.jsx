@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import {
   SAVED_SESSIONS_TABLE_VALUES,
   SESSION_BUILDER_TABS,
+  SESSION_FILE_EXTENSION,
 } from '../../../constants/session-builder.js';
 import FileUploader from '../../FileUploader.jsx';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
@@ -154,7 +155,7 @@ const SavedCapabilitySets = (props) => {
                   title={t('Import from File')}
                   onUpload={importSessionFiles}
                   multiple={true}
-                  type=".appiumsession"
+                  type={SESSION_FILE_EXTENSION}
                 />
               )}
             />

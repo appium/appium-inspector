@@ -11,7 +11,7 @@ import {
   SERVER_TYPES,
   SESSION_BUILDER_TABS,
 } from '../../constants/session-builder.js';
-import {ipcRenderer, openLink} from '../../polyfills.js';
+import {openLink} from '../../polyfills.js';
 import {log} from '../../utils/logger.js';
 import AppSettings from './AppSettings/AppSettings.jsx';
 import AttachToSession from './AttachToSessionTab/AttachToSession.jsx';
@@ -52,7 +52,6 @@ const Session = (props) => {
     getSavedSessions,
     setSavedServerParams,
     initFromSessionFile,
-    setStateFromSessionFile,
     setVisibleProviders,
     bindWindowClose,
     initFromQueryString,
@@ -98,10 +97,6 @@ const Session = (props) => {
         await setPortFromUrl();
         initFromQueryString(loadNewSession);
         await initFromSessionFile();
-        ipcRenderer.on(
-          'sessionfile:apply',
-          async (_, sessionFileString) => await setStateFromSessionFile(sessionFileString),
-        );
       } catch (e) {
         log.error(e);
       }
@@ -116,7 +111,6 @@ const Session = (props) => {
     setLocalServerParams,
     setPortFromUrl,
     setSavedServerParams,
-    setStateFromSessionFile,
     setVisibleProviders,
     switchTabs,
   ]);
