@@ -9,6 +9,7 @@ import {
 } from '../../../constants/session-builder.js';
 import FileUploader from '../../FileUploader.jsx';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
+import styles from './SavedCapabilitySets.module.css';
 
 const dataSource = (savedSessions, t) => {
   if (!savedSessions) {
@@ -131,10 +132,13 @@ const SavedCapabilitySets = (props) => {
     <Splitter>
       <Splitter.Panel min={430}>
         <Spin spinning={isUploadingSessionFiles}>
-          <Card styles={{body: {padding: '2px'}}}>
+          <Card styles={{root: {height: '100%'}, body: {height: '100%', padding: '2px'}}}>
             <Table
+              className={styles.capabilitySetsTable}
               styles={{
+                root: {height: '100%'},
                 header: {cell: {padding: '8px 16px'}},
+                section: {height: 'calc(100% - 48px)'},
                 body: {cell: {padding: '8px 16px'}},
                 footer: {padding: '8px 16px'},
               }}
@@ -149,7 +153,7 @@ const SavedCapabilitySets = (props) => {
                 columnWidth: 0,
                 renderCell: () => null,
               }}
-              scroll={{y: 'calc(100vh - 405px)'}}
+              scroll={{y: 'calc(100% - 37px)'}}
               footer={() => (
                 <FileUploader
                   title={t('Import from File')}

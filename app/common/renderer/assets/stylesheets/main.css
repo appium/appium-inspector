@@ -100,7 +100,3 @@ body::-webkit-scrollbar-corner {
 .ant-splitter-bar {
   margin: 6px;
 }
-
-.ant-table-sticky-holder {
-  z-index: 2 !important;
-}

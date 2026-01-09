@@ -1,0 +1,7 @@
+.capabilitySetsTable :global(.ant-table) {
+  height: 100%;
+}
+
+.capabilitySetsTable :global(.ant-table-sticky-holder) {
+  z-index: 2 !important;
+}
