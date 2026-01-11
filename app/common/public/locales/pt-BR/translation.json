@@ -14,7 +14,6 @@
   "Zoom Out": "Diminuir zoom",
   "Reset Zoom Level": "Redefinir nível de zoom",
   "Close Window": "Fechar Janela",
-  "Open Session File…": "Abrir Arquivo de Sessão…",
   "Bring All to Front": "Trazer Tudo para Frente",
   "Help": "Ajuda",
   "Appium Documentation": "•‎ Documentação do Appium",
@@ -205,7 +204,6 @@
   "Gesture Builder": "Construtor de Gesto",
   "Saved Gestures": "Gestos salvos",
   "Create New Gesture": "Criar novo gesto",
-  "Upload Gesture File": "Enviar Arquivo de Gesto",
   "gesturesDescription": "Crie, salve e execute gestos personalizados aqui. Gestos são idênticos às cadeias de ações na API de ações do W3C WebDriver.",
   "Session Information": "Informações da Sessão",
   "Execute Command": "Executar Comando",
@@ -229,7 +227,7 @@
   "Left": "Esquerda",
   "Right": "Direita",
   "Play": "Executar",
-  "Download": "Download",
+  "Export to File": "Export to File",
   "Save Capability Set As": "Salvar Conjunto de Recursos como…",
   "Edit Raw JSON": "Editar JSON bruto",
   "enterMethodParameters": "Inserir parâmetros para: '{{methodName}}'",
@@ -271,7 +269,7 @@
   "whitespaceDetected": "Texto começa e/ou termina com espaço em branco",
   "duplicateCapabilityNameError": "Já existe um conjunto de recursos com o mesmo nome",
   "errorLoadingGestures": "Erro ao carregar gestos",
-  "unableToUploadGestureFiles": "Não foi possível carregar os gestos dos arquivos abaixo:",
+  "unableToImportGestureFiles": "Could not import gestures from below files:",
   "gestureEmptyTickError": "Ações devem ter marcações válidas",
   "gestureInvalidEventError": "Tipo de evento inválido '{{invalidEvent}}'. Os valores válidos são {{validEvents}}",
   "gestureRequiredFieldsError": "Valores '{{fields}}' são necessários para o evento '{{eventType}}'",
@@ -325,5 +323,7 @@
   "dynamicCommandsDescription": "Run commands supported by the currently active driver and plugin(s). Note that some commands may only work in specific contexts. Any commands not supported by WebdriverIO are not included in this list.",
   "dynamicExecuteMethodsDescription": "Run any execute method supported by the currently active driver and plugin(s).",
   "methodDeprecated": "This method is deprecated",
-  "App Settings": "App Settings"
+  "App Settings": "App Settings",
+  "unableToImportSessionFiles": "Could not import sessions from the following files: {{fileNames}}",
+  "Import from File": "Import from File"
 }

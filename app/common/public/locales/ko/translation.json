@@ -14,7 +14,6 @@
   "Zoom Out": "줌 아웃",
   "Reset Zoom Level": "줌 레벨 리셋",
   "Close Window": "창 닫기",
-  "Open Session File…": "세션 파일 열기",
   "Bring All to Front": "모두 전면으로 가져오기",
   "Help": "도움",
   "Appium Documentation": "Appium 문서",
@@ -205,7 +204,6 @@
   "Gesture Builder": "제스처 빌더",
   "Saved Gestures": "제스처 저장",
   "Create New Gesture": "새 제스처 만들기",
-  "Upload Gesture File": "제스처 파일 업로드",
   "gesturesDescription": "여기에서 사용자 정의 제스처를 생성·저장하고 실행할 수 있습니다. 제스처는 W3C WebDriver Actions API의 액션 체인과 동일합니다",
   "Session Information": "세션 정보",
   "Execute Command": "커맨드 실행",
@@ -229,7 +227,7 @@
   "Left": "왼쪽",
   "Right": "오른쪽",
   "Play": "플레이",
-  "Download": "다운로드",
+  "Export to File": "Export to File",
   "Save Capability Set As": "Capability 셋 새로 저장하기",
   "Edit Raw JSON": "Raw JSON 변경",
   "enterMethodParameters": "Enter Parameters for: '{{methodName}}'",
@@ -271,7 +269,7 @@
   "whitespaceDetected": "텍스트의 시작 또는 끝에 공백이 있습니다.",
   "duplicateCapabilityNameError": "같은 이름의 capability 세트가 이미 존재합니다.",
   "errorLoadingGestures": "제스처 로딩중 오류",
-  "unableToUploadGestureFiles": "아래 파일에서 제스처를 업로드할 수 없습니다",
+  "unableToImportGestureFiles": "Could not import gestures from below files:",
   "gestureEmptyTickError": "액션은 유효한 틱 값을 가져야 합니다.",
   "gestureInvalidEventError": "잘못된 이벤트 유형입니다: '{{invalidEvent}}'. 허용되는 값은 {{validEvents}}입니다",
   "gestureRequiredFieldsError": "'{{eventType}}' 이벤트에는 '{{fields}}' 값이 필수입니다",
@@ -325,5 +323,7 @@
   "dynamicCommandsDescription": "현재 활성 드라이버 및 플러그인이 지원하는 명령어만 실행할 수 있습니다. 일부 명령어는 특정 컨텍스트에서만 동작할 수 있으니 유의하세요. WebdriverIO에서 지원하지 않는 명령어는 이 목록에 포함되어 있지 않습니다",
   "dynamicExecuteMethodsDescription": "현재 활성화된 드라이버와 플러그인에서 지원하는 모든 execute 메서드를 실행할 수 있습니다",
   "methodDeprecated": "이 메서드는 더 이상 권장되지 않습니다",
-  "App Settings": "App Settings"
+  "App Settings": "App Settings",
+  "unableToImportSessionFiles": "Could not import sessions from the following files: {{fileNames}}",
+  "Import from File": "Import from File"
 }
