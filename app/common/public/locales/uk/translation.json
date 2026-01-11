@@ -14,7 +14,6 @@
   "Zoom Out": "Зменшити",
   "Reset Zoom Level": "Скинути рівень масштабування",
   "Close Window": "Закрити вікно",
-  "Open Session File…": "Відкрити файл сесії…",
   "Bring All to Front": "Помістити все на передній план",
   "Help": "Допомога",
   "Appium Documentation": "Документація Appium",
@@ -205,7 +204,6 @@
   "Gesture Builder": "Конструктор жестів",
   "Saved Gestures": "Збережені жести",
   "Create New Gesture": "Створити новий жест",
-  "Upload Gesture File": "Завантажити файл жестів",
   "gesturesDescription": "Створюйте, зберігайте та виконувати користувацькі жести тут. Жести ідентичні ланцюжкам дій в W3C WebDriver Actions API.",
   "Session Information": "Інформація про сеанс користувача",
   "Execute Command": "Виконати команду",
@@ -229,7 +227,7 @@
   "Left": "Ліва",
   "Right": "Права",
   "Play": "Запустити",
-  "Download": "Завантажити",
+  "Export to File": "Експорт у файл",
   "Save Capability Set As": "Зберегти набір опцій як…",
   "Edit Raw JSON": "Редагувати сирий JSON",
   "enterMethodParameters": "Введіть параметри для: '{{methodName}}'",
@@ -271,7 +269,7 @@
   "whitespaceDetected": "Текст починається та/або закінчується пробілом",
   "duplicateCapabilityNameError": "Набір можливостей з таким ім'ям вже існує",
   "errorLoadingGestures": "Помилка завантаження жестів",
-  "unableToUploadGestureFiles": "Не вдалося завантажити жести з файлів нижче:",
+  "unableToImportGestureFiles": "Не вдалося імпортувати жести з файлів нижче:",
   "gestureEmptyTickError": "Дії повинні мати припустимі галочки",
   "gestureInvalidEventError": "Недійсний тип події \"{{invalidEvent}}\". Дійсні значення: {{validEvents}}",
   "gestureRequiredFieldsError": "Значення '{{fields}}' необхідні для події '{{eventType}}'",
@@ -325,5 +323,7 @@
   "dynamicCommandsDescription": "Запустити команди, які підтримуються зараз активним драйвером та плагінами. Зверніть увагу, що деякі команди можуть працювати лише в певних контекстах. Будь-які команди, які не підтримуються WebdriverIO не включені в цей список.",
   "dynamicExecuteMethodsDescription": "Запустити будь-який процес, який підтримується активним драйвером та плагінами.",
   "methodDeprecated": "Цей метод є застарілим",
-  "App Settings": "Налаштування застосунку"
+  "App Settings": "Налаштування застосунку",
+  "unableToImportSessionFiles": "Неможливо імпортувати сеанси з наступних файлів: {{fileNames}}",
+  "Import from File": "Імпорт з файлу"
 }

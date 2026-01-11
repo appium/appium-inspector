@@ -14,7 +14,6 @@
   "Zoom Out": "縮小",
   "Reset Zoom Level": "拡大／縮小のリセット",
   "Close Window": "閉じる",
-  "Open Session File…": "セッションファイルを開く",
   "Bring All to Front": "すべてを手前に移動",
   "Help": "ヘルプ",
   "Appium Documentation": "Appium 関連のドキュメント",
@@ -205,7 +204,6 @@
   "Gesture Builder": "ジェスチャーの構築",
   "Saved Gestures": "保存されたジェスチャー",
   "Create New Gesture": "新しい操作を記録する",
-  "Upload Gesture File": "記録された操作ファイルをアップロードする",
   "gesturesDescription": "ここでカスタムジェスチャーを作成、保存、実行します。ジェスチャーは W3C WebDriver Actions API と同じです。",
   "Session Information": "セッション情報",
   "Execute Command": "コマンドを実行",
@@ -229,7 +227,7 @@
   "Left": "Left",
   "Right": "Right",
   "Play": "Play",
-  "Download": "ダウンロード",
+  "Export to File": "Export to File",
   "Save Capability Set As": "名前をつけてCapabilityを保存",
   "Edit Raw JSON": "直接JSONを編集する",
   "enterMethodParameters": "Enter Parameters for: '{{methodName}}'",
@@ -271,7 +269,7 @@
   "whitespaceDetected": "空白文字で開始または終了します",
   "duplicateCapabilityNameError": "同じ名前のcapabilitiesが既に存在します",
   "errorLoadingGestures": "ジェスチャーの読み込みエラー",
-  "unableToUploadGestureFiles": "以下のファイルからジェスチャーをアップロードできませんでした",
+  "unableToImportGestureFiles": "Could not import gestures from below files:",
   "gestureEmptyTickError": "アクションには有効な目盛りが必要です",
   "gestureInvalidEventError": "無効なイベントの型 {{invalidEvent}} です。有効な値は {{validEvents}}です",
   "gestureRequiredFieldsError": "値 '{{fields}}' は '{{eventType}}' イベントに必須です",
@@ -325,5 +323,7 @@
   "dynamicCommandsDescription": "Run commands supported by the currently active driver and plugin(s). Note that some commands may only work in specific contexts. Any commands not supported by WebdriverIO are not included in this list.",
   "dynamicExecuteMethodsDescription": "Run any execute method supported by the currently active driver and plugin(s).",
   "methodDeprecated": "This method is deprecated",
-  "App Settings": "App Settings"
+  "App Settings": "App Settings",
+  "unableToImportSessionFiles": "Could not import sessions from the following files: {{fileNames}}",
+  "Import from File": "Import from File"
 }

@@ -14,7 +14,6 @@
   "Zoom Out": "缩小",
   "Reset Zoom Level": "重置缩放级别",
   "Close Window": "关闭窗口",
-  "Open Session File…": "打开会话文件",
   "Bring All to Front": "前置全部窗口",
   "Help": "帮助",
   "Appium Documentation": "Appium 文档",
@@ -205,7 +204,6 @@
   "Gesture Builder": "手势构建器",
   "Saved Gestures": "已保存的手势",
   "Create New Gesture": "Create New Gesture",
-  "Upload Gesture File": "上传手势文件",
   "gesturesDescription": "在此创建、保存和执行自定义手势。手势与 W3C WebDriver Actions API 中的动作链相同。",
   "Session Information": "会话信息",
   "Execute Command": "执行命令",
@@ -229,7 +227,7 @@
   "Left": "左方向键",
   "Right": "右方向键",
   "Play": "播放",
-  "Download": "下载",
+  "Export to File": "Export to File",
   "Save Capability Set As": "保存能力设置为…",
   "Edit Raw JSON": "直接编辑 JSON",
   "enterMethodParameters": "Enter Parameters for: '{{methodName}}'",
@@ -271,7 +269,7 @@
   "whitespaceDetected": "文本开始和/或以空格结束",
   "duplicateCapabilityNameError": "已存在同名的能力设置",
   "errorLoadingGestures": "加载手势时出错",
-  "unableToUploadGestureFiles": "无法从以下文件上传手势：",
+  "unableToImportGestureFiles": "Could not import gestures from below files:",
   "gestureEmptyTickError": "动作应该有有效的时间点",
   "gestureInvalidEventError": "无效的事件类型 '{{invalidEvent}}'。有效值为 {{validEvents}}",
   "gestureRequiredFieldsError": "{{eventType}}' 事件需要 '{{fields}}' 值",
@@ -325,5 +323,7 @@
   "dynamicCommandsDescription": "Run commands supported by the currently active driver and plugin(s). Note that some commands may only work in specific contexts. Any commands not supported by WebdriverIO are not included in this list.",
   "dynamicExecuteMethodsDescription": "Run any execute method supported by the currently active driver and plugin(s).",
   "methodDeprecated": "This method is deprecated",
-  "App Settings": "App Settings"
+  "App Settings": "App Settings",
+  "unableToImportSessionFiles": "Could not import sessions from the following files: {{fileNames}}",
+  "Import from File": "Import from File"
 }
