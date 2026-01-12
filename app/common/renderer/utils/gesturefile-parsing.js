@@ -3,6 +3,12 @@ import _ from 'lodash';
 import {POINTER_TYPES} from '../constants/gestures.js';
 import {log} from './logger.js';
 
+/**
+ * Parses the gesture file contents in JSON and runs validation checks for the JSON contents.
+ *
+ * @param {string} gestureFileString Gesture file contents as a string
+ * @returns {object|null} Gesture file in JSON format, or null if any validations failed
+ */
 export function parseGestureFileContents(gestureFileString) {
   let gestureJSON;
   try {
@@ -14,6 +20,12 @@ export function parseGestureFileContents(gestureFileString) {
   return validateGestureJSON(gestureJSON);
 }
 
+/**
+ * Validates the properties of a gesture file JSON object.
+ *
+ * @param {object} gestureJSON Gesture file contents in JSON
+ * @returns {object|null} Validated JSON, or null if any validations failed
+ */
 export function validateGestureJSON(gestureJSON) {
   if (
     !gestureJSON ||
@@ -26,6 +38,12 @@ export function validateGestureJSON(gestureJSON) {
   return gestureJSON;
 }
 
+/**
+ * Checks if the actions field in the gesture file is valid.
+ *
+ * @param {object} gestureJSON Gesture file contents in JSON
+ * @returns {boolean} True if the actions field is valid, otherwise false
+ */
 function areGestureActionsValid(gestureJSON) {
   if (!('actions' in gestureJSON && _.isArray(gestureJSON.actions))) {
     return logValidationError("'actions' property is missing or not an array");
@@ -58,6 +76,12 @@ function areGestureActionsValid(gestureJSON) {
   return true;
 }
 
+/**
+ * Checks if a tick object in an action is valid.
+ *
+ * @param {object} tickJSON Tick object in the gesture file
+ * @returns {boolean} True if the tick is valid, otherwise false
+ */
 function isActionTickValid(tickJSON) {
   if (!_.isPlainObject(tickJSON)) {
     return logValidationError(`tick '${JSON.stringify(tickJSON)}' is not an object`);
@@ -82,6 +106,13 @@ function isActionTickValid(tickJSON) {
   }
 }
 
+/**
+ * Checks if the required pointer properties exist and are numbers in a tick object.
+ *
+ * @param {object} tickJSON Tick object in the gesture file
+ * @param {string[]} propsArray Array of required property names
+ * @returns {boolean} True if all properties are valid, otherwise false
+ */
 function arePointerPropertiesValid(tickJSON, propsArray) {
   for (const tickProp of propsArray) {
     if (!(tickProp in tickJSON && typeof tickJSON[tickProp] === 'number')) {
@@ -93,6 +124,14 @@ function arePointerPropertiesValid(tickJSON, propsArray) {
   return true;
 }
 
+/**
+ * Checks if an object has a property that is a non-empty string.
+ *
+ * @param {object} object The object to check
+ * @param {string} propName The property name to check
+ * @param {string} [prefix] Optional prefix for error messages
+ * @returns {boolean} True if the property exists and is a non-empty string, otherwise false
+ */
 function objectHasStringProperty(object, propName, prefix = '') {
   if (!(propName in object && typeof object[propName] === 'string')) {
     return logValidationError(`${prefix}'${propName}' property is missing or not a string`);
