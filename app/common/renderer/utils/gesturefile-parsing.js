@@ -102,7 +102,9 @@ function isActionTickValid(tickJSON) {
     case POINTER_TYPES.PAUSE:
       return arePointerPropertiesValid(tickJSON, ['duration']);
     default:
-      return logValidationError(`unsupported tick type '${tickJSON.type}'`);
+      return logValidationError(
+        `tick '${JSON.stringify(tickJSON)}' has unsupported type '${tickJSON.type}'`,
+      );
   }
 }
 
