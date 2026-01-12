@@ -1,13 +1,12 @@
 import {
   DeleteOutlined,
   EditOutlined,
-  ExclamationCircleOutlined,
   ExportOutlined,
   HighlightOutlined,
   PlayCircleOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-import {Button, Card, Collapse, Modal, Popconfirm, Row, Space, Table, Tooltip} from 'antd';
+import {Button, Card, Popconfirm, Space, Spin, Table, Tooltip} from 'antd';
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import {useEffect} from 'react';
@@ -18,7 +17,6 @@ import {downloadFile} from '../../../utils/file-handling.js';
 import {percentageToPixels} from '../../../utils/other.js';
 import FileUploader from '../../FileUploader.jsx';
 import inspectorStyles from '../SessionInspector.module.css';
-import styles from './Gestures.module.css';
 
 const dataSource = (savedGestures, t) => {
   if (!savedGestures) {
@@ -46,11 +44,10 @@ const SavedGestures = (props) => {
     savedGestures,
     showGestureEditor,
     displayGesture,
-    setGestureUploadErrors,
     removeGestureDisplay,
     getSavedGestures,
-    uploadGesturesFromFile,
-    gestureUploadErrors,
+    isUploadingGestureFiles,
+    importGestureFiles,
     t,
   } = props;
 
@@ -162,38 +159,6 @@ const SavedGestures = (props) => {
     }
   });
 
-  const showGestureUploadErrorsModal = () => (
-    <Modal
-      title={
-        <Row align="start">
-          <ExclamationCircleOutlined className={styles.errorIcon} /> {t('errorLoadingGestures')}
-        </Row>
-      }
-      open={!!gestureUploadErrors}
-      footer={null} // we dont need ok and cancel buttons
-      onCancel={() => setGestureUploadErrors(null)}
-    >
-      <p>
-        <i>{t('unableToImportGestureFiles')}</i>
-      </p>
-      <Collapse
-        ghost
-        defaultActiveKey={Object.keys(gestureUploadErrors)}
-        items={Object.keys(gestureUploadErrors).map((errorFile) => ({
-          key: errorFile,
-          label: <b>{errorFile}</b>,
-          children: (
-            <ol>
-              {gestureUploadErrors[errorFile].map((error, index) => (
-                <li key={errorFile + index.toString()}>{error}</li>
-              ))}
-            </ol>
-          ),
-        }))}
-      />
-    </Modal>
-  );
-
   useEffect(() => {
     getSavedGestures();
   }, [getSavedGestures]);
@@ -209,27 +174,28 @@ const SavedGestures = (props) => {
     >
       <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="middle">
         {t('gesturesDescription')}
-        <Table
-          onRow={(row) => onRowMouseOver(row.key)}
-          pagination={false}
-          dataSource={dataSource(savedGestures, t)}
-          columns={columns}
-          scroll={{y: 'calc(100vh - 32em)'}}
-          footer={() => (
-            <Space.Compact>
-              <Button onClick={showGestureEditor} icon={<PlusOutlined />}>
-                {t('Create New Gesture')}
-              </Button>
-              <FileUploader
-                title={t('Import from File')}
-                onUpload={uploadGesturesFromFile}
-                multiple={true}
-                type="application/json"
-              />
-            </Space.Compact>
-          )}
-        />
-        {gestureUploadErrors && showGestureUploadErrorsModal()}
+        <Spin spinning={isUploadingGestureFiles}>
+          <Table
+            onRow={(row) => onRowMouseOver(row.key)}
+            pagination={false}
+            dataSource={dataSource(savedGestures, t)}
+            columns={columns}
+            scroll={{y: 'calc(100vh - 32em)'}}
+            footer={() => (
+              <Space.Compact>
+                <Button onClick={showGestureEditor} icon={<PlusOutlined />}>
+                  {t('Create New Gesture')}
+                </Button>
+                <FileUploader
+                  title={t('Import from File')}
+                  onUpload={importGestureFiles}
+                  multiple={true}
+                  type="application/json"
+                />
+              </Space.Compact>
+            )}
+          />
+        </Spin>
       </Space>
     </Card>
   );

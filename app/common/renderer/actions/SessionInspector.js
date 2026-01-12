@@ -1,13 +1,13 @@
 import _ from 'lodash';
 
 import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs.js';
-import {POINTER_TYPES} from '../constants/gestures.js';
 import {APP_MODE, NATIVE_APP, UNKNOWN_ERROR} from '../constants/session-inspector.js';
 import i18n from '../i18next.js';
 import InspectorDriver from '../lib/appium/inspector-driver.js';
 import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map.js';
 import {getSetting, setSetting} from '../polyfills.js';
 import {readTextFromUploadedFiles} from '../utils/file-handling.js';
+import {parseGestureFileContents} from '../utils/gesturefile-parsing.js';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
@@ -89,6 +89,8 @@ export const SET_LAST_ACTIVE_MOMENT = 'SET_LAST_ACTIVE_MOMENT';
 
 export const SET_AWAITING_MJPEG_STREAM = 'SET_AWAITING_MJPEG_STREAM';
 
+export const GESTURE_UPLOAD_REQUESTED = 'GESTURE_UPLOAD_REQUESTED';
+export const GESTURE_UPLOAD_DONE = 'GESTURE_UPLOAD_DONE';
 export const SHOW_GESTURE_EDITOR = 'SHOW_GESTURE_EDITOR';
 export const HIDE_GESTURE_EDITOR = 'HIDE_GESTURE_EDITOR';
 export const GET_SAVED_GESTURES_REQUESTED = 'GET_SAVED_GESTURES_REQUESTED';
@@ -107,7 +109,6 @@ export const CLEAR_TAP_COORDINATES = 'CLEAR_TAP_COORDINATES';
 export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
 export const TOGGLE_REFRESHING_STATE = 'TOGGLE_REFRESHING_STATE';
 
-export const SET_GESTURE_UPLOAD_ERROR = 'SET_GESTURE_UPLOAD_ERROR';
 export const SET_AUTO_SESSION_RESTART = 'SET_AUTO_SESSION_RESTART';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
@@ -132,52 +133,6 @@ const findElement = _.debounce(async function (strategyMap, dispatch, getState, 
 
   return dispatch({type: SET_INTERACTIONS_NOT_AVAILABLE});
 }, 1000);
-
-const checkErrorsInAction = ({ticks}) => {
-  const errors = [];
-  if (!ticks) {
-    return [i18n.t('gestureEmptyTickError')];
-  }
-
-  for (const tick of ticks) {
-    if (!Object.values(POINTER_TYPES).includes(tick.type)) {
-      errors.push(
-        i18n.t('gestureInvalidEventError', {
-          invalidEvent: tick.type,
-          validEvents: Object.values(POINTER_TYPES).join(', '),
-        }),
-      );
-    } else if (
-      tick.type === POINTER_TYPES.POINTER_MOVE &&
-      (tick.duration === undefined || !tick.x || !tick.y)
-    ) {
-      errors.push(
-        i18n.t('gestureRequiredFieldsError', {
-          fields: 'duration, x and y',
-          eventType: tick.type,
-        }),
-      );
-    } else if (
-      [POINTER_TYPES.POINTER_DOWN, POINTER_TYPES.POINTER_UP].includes(tick.type) &&
-      tick.button === undefined
-    ) {
-      errors.push(
-        i18n.t('gestureRequiredFieldsError', {
-          fields: 'button',
-          eventType: tick.type,
-        }),
-      );
-    } else if (tick.type === POINTER_TYPES.PAUSE && tick.duration === undefined) {
-      errors.push(
-        i18n.t('gestureRequiredFieldsError', {
-          fields: 'duration',
-          eventType: tick.type,
-        }),
-      );
-    }
-  }
-  return errors;
-};
 
 export function selectElement(path) {
   return async (dispatch, getState) => {
@@ -919,77 +874,69 @@ export function setAwaitingMjpegStream(isAwaiting) {
   };
 }
 
-export function setGestureUploadErrors(errors) {
-  return (dispatch) => {
-    dispatch({type: SET_GESTURE_UPLOAD_ERROR, errors});
-  };
-}
-
-export function uploadGesturesFromFile(fileList) {
+export function importGestureFiles(fileList) {
   return async (dispatch) => {
+    dispatch({type: GESTURE_UPLOAD_REQUESTED});
     const gestures = await readTextFromUploadedFiles(fileList);
-    const invalidGestures = {};
+    const invalidGestureFiles = [];
     const parsedGestures = [];
     for (const gesture of gestures) {
       const {fileName, content, error} = gesture;
-      try {
-        // Some error occurred while reading the uploaded file
-        if (error) {
-          invalidGestures[fileName] = [i18n.t('gestureInvalidJsonError')];
-          continue;
-        }
-        const gesture = JSON.parse(content);
-        if (!gesture.name) {
-          invalidGestures[fileName] = [i18n.t('gestureNameCannotBeEmptyError')];
-          continue;
-        }
-        const actionErrors = gesture.actions
-          .map(checkErrorsInAction)
-          .reduce((acc, error) => (error.length ? acc.concat(error) : acc), []);
-
-        if (actionErrors.length) {
-          invalidGestures[fileName] = actionErrors;
-          continue;
-        }
-
-        gesture.description = gesture.description || i18n.t('gestureImportedFrom', {fileName});
-        parsedGestures.push(_.omit(gesture, ['id']));
-      } catch {
-        invalidGestures[fileName] = [i18n.t('gestureInvalidJsonError')];
+      // Some error occurred while reading the uploaded file
+      if (error) {
+        invalidGestureFiles.push(fileName);
+        continue;
       }
+      const gestureJSON = parseAndValidateGestureFileString(content);
+      if (!gestureJSON) {
+        invalidGestureFiles.push(fileName);
+        continue;
+      }
+      parsedGestures.push(gestureJSON);
     }
 
-    if (parsedGestures.length) {
-      await saveGesture(parsedGestures)(dispatch);
+    for (const parsedGesture of parsedGestures) {
+      await saveGesture(parsedGesture)(dispatch);
     }
+    dispatch({type: GESTURE_UPLOAD_DONE});
 
-    if (!_.isEmpty(invalidGestures)) {
-      setGestureUploadErrors(invalidGestures)(dispatch);
+    if (!_.isEmpty(invalidGestureFiles)) {
+      notification.error({
+        title: i18n.t('unableToImportGestureFiles', {fileNames: invalidGestureFiles.join(', ')}),
+        duration: 0,
+      });
     }
   };
 }
 
-export function saveGesture(params) {
-  return async (dispatch) => {
-    const gestureList = _.isArray(params) ? params : [params];
-    let savedGestures = (await getSetting(SET_SAVED_GESTURES)) || [];
+function parseAndValidateGestureFileString(gestureFileString) {
+  const gestureJSON = parseGestureFileContents(gestureFileString);
+  if (gestureJSON === null) {
+    return null;
+  }
+  delete gestureJSON.id;
+  delete gestureJSON.date;
+  return gestureJSON;
+}
 
-    for (const param of gestureList) {
-      if (param.id) {
-        // Editing an already saved gesture
-        for (const gesture of savedGestures) {
-          if (gesture.id === param.id) {
-            gesture.name = param.name;
-            gesture.description = param.description;
-            gesture.actions = param.actions;
-          }
+export function saveGesture(gesture) {
+  return async (dispatch) => {
+    const savedGestures = (await getSetting(SET_SAVED_GESTURES)) || [];
+
+    if (gesture.id) {
+      // Editing an already saved gesture
+      for (const savedGesture of savedGestures) {
+        if (savedGesture.id === gesture.id) {
+          savedGesture.name = gesture.name;
+          savedGesture.description = gesture.description;
+          savedGesture.actions = gesture.actions;
         }
-        continue;
       }
+    } else {
       // Adding a new gesture
-      param.id = crypto.randomUUID();
-      param.date = Date.now();
-      savedGestures.push(param);
+      gesture.id = crypto.randomUUID();
+      gesture.date = Date.now();
+      savedGestures.push(gesture);
     }
 
     await setSetting(SET_SAVED_GESTURES, savedGestures);
