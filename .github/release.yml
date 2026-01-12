@@ -1,9 +1,6 @@
 # Configuration for automatically generated release notes
 
 changelog:
-  exclude:
-    labels:
-      - dependencies
   categories:
     - title: 🚀 New Features
       labels:
@@ -23,3 +20,6 @@ changelog:
     - title: 🔍 Other Changes
       labels:
         - '*'
+      exclude:
+        authors:
+          - renovate[bot]
