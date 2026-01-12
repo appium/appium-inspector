@@ -915,18 +915,15 @@ function parseAndValidateGestureFileString(gestureFileString) {
   if (gestureJSON === null) {
     return null;
   }
-  delete gestureJSON.id;
-  delete gestureJSON.date;
-  return gestureJSON;
+  return _.omit(gestureJSON, ['id', 'date']);
 }
 
 export function exportSavedGesture(gestureJSON) {
   return async () => {
     const cleanedName = `gesture-${gestureJSON.name}`;
-    delete gestureJSON.id;
-    delete gestureJSON.date;
+    const gestureToExport = _.omit(gestureJSON, ['id', 'date']);
     const href = `data:text/json;charset=utf-8,${encodeURIComponent(
-      JSON.stringify(gestureJSON, null, 2),
+      JSON.stringify(gestureToExport, null, 2),
     )}`;
     const escapedName = sanitize(cleanedName, {replacement: '_'});
     const fileName = `${escapedName}.json`;
