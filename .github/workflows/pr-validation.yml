@@ -10,7 +10,6 @@ on:
       - '.github/ISSUE_TEMPLATE/**'
       - 'app/common/public/locales/**'
       - 'docs/**'
-      - 'sample-session-files/**'
       - '.gitignore'
       - 'LICENSE'
       - 'README.md'
