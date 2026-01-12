@@ -13,7 +13,6 @@ import {useEffect} from 'react';
 
 import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../../constants/gestures.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
-import {downloadFile} from '../../../utils/file-handling.js';
 import {percentageToPixels} from '../../../utils/other.js';
 import FileUploader from '../../FileUploader.jsx';
 import inspectorStyles from '../SessionInspector.module.css';
@@ -48,6 +47,7 @@ const SavedGestures = (props) => {
     getSavedGestures,
     isUploadingGestureFiles,
     importGestureFiles,
+    exportSavedGesture,
     t,
   } = props;
 
@@ -72,14 +72,6 @@ const SavedGestures = (props) => {
     const {deleteSavedGesture} = props;
     removeGestureDisplay();
     deleteSavedGesture(id);
-  };
-
-  const handleDownload = (gesture) => {
-    const href = `data:text/json;charset=utf-8,${encodeURIComponent(
-      JSON.stringify(gesture, null, 2),
-    )}`;
-    const fileName = `gesture-${gesture.name.replace(' ', '-')}.json`;
-    downloadFile(href, fileName);
   };
 
   const onPlay = (gesture) => {
@@ -132,7 +124,7 @@ const SavedGestures = (props) => {
                 <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
               </Tooltip>
               <Tooltip zIndex={3} title={t('Export to File')}>
-                <Button icon={<ExportOutlined />} onClick={() => handleDownload(gesture)} />
+                <Button icon={<ExportOutlined />} onClick={() => exportSavedGesture(gesture)} />
               </Tooltip>
               <Tooltip zIndex={3} title={t('Delete')}>
                 <Popconfirm

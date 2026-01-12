@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import sanitize from 'sanitize-filename';
 
 import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs.js';
 import {APP_MODE, NATIVE_APP, UNKNOWN_ERROR} from '../constants/session-inspector.js';
@@ -6,7 +7,7 @@ import i18n from '../i18next.js';
 import InspectorDriver from '../lib/appium/inspector-driver.js';
 import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map.js';
 import {getSetting, setSetting} from '../polyfills.js';
-import {readTextFromUploadedFiles} from '../utils/file-handling.js';
+import {downloadFile, readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {parseGestureFileContents} from '../utils/gesturefile-parsing.js';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation.js';
 import {log} from '../utils/logger.js';
@@ -917,6 +918,20 @@ function parseAndValidateGestureFileString(gestureFileString) {
   delete gestureJSON.id;
   delete gestureJSON.date;
   return gestureJSON;
+}
+
+export function exportSavedGesture(gestureJSON) {
+  return async () => {
+    const cleanedName = `gesture-${gestureJSON.name}`;
+    delete gestureJSON.id;
+    delete gestureJSON.date;
+    const href = `data:text/json;charset=utf-8,${encodeURIComponent(
+      JSON.stringify(gestureJSON, null, 2),
+    )}`;
+    const escapedName = sanitize(cleanedName, {replacement: '_'});
+    const fileName = `${escapedName}.json`;
+    downloadFile(href, fileName);
+  };
 }
 
 export function saveGesture(gesture) {
