@@ -10,10 +10,15 @@ import {
   SearchOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
+import {
+  IconChevronLeft,
+  IconCircle,
+  IconHome,
+  IconMessageChatbot,
+  IconRecycle,
+  IconSquare,
+} from '@tabler/icons-react';
 import {Button, Divider, Select, Space, Tooltip} from 'antd';
-import {BiCircle, BiRecycle, BiSquare} from 'react-icons/bi';
-import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
-import {IoChevronBackOutline} from 'react-icons/io5';
 
 import {BUTTON} from '../../../constants/antd-types.js';
 import {LINKS} from '../../../constants/common.js';
@@ -51,7 +56,7 @@ const HeaderButtons = (props) => {
           <Tooltip title={t('Press Home Button')}>
             <Button
               id="btnPressHomeButton"
-              icon={<HiOutlineHome className={styles.headerBtnIcon} />}
+              icon={<IconHome size={18} />}
               onClick={() =>
                 applyClientMethod({
                   methodName: 'executeScript',
@@ -63,7 +68,7 @@ const HeaderButtons = (props) => {
           <Tooltip title={t('Execute Siri Command')}>
             <Button
               id="siriCommand"
-              icon={<HiOutlineMicrophone className={styles.headerBtnIcon} />}
+              icon={<IconMessageChatbot size={18} />}
               onClick={showSiriCommandModal}
             />
           </Tooltip>
@@ -74,7 +79,7 @@ const HeaderButtons = (props) => {
           <Tooltip title={t('Press Back Button')}>
             <Button
               id="btnPressHomeButton"
-              icon={<IoChevronBackOutline className={styles.headerBtnIcon} />}
+              icon={<IconChevronLeft size={20} />}
               onClick={() =>
                 applyClientMethod({
                   methodName: 'executeScript',
@@ -86,7 +91,7 @@ const HeaderButtons = (props) => {
           <Tooltip title={t('Press Home Button')}>
             <Button
               id="btnPressHomeButton"
-              icon={<BiCircle className={styles.headerBtnIcon} />}
+              icon={<IconCircle size={16} />}
               onClick={() =>
                 applyClientMethod({
                   methodName: 'executeScript',
@@ -98,7 +103,7 @@ const HeaderButtons = (props) => {
           <Tooltip title={t('Press App Switch Button')}>
             <Button
               id="btnPressHomeButton"
-              icon={<BiSquare className={styles.headerBtnIcon} />}
+              icon={<IconSquare size={16} />}
               onClick={() =>
                 applyClientMethod({
                   methodName: 'executeScript',
@@ -231,7 +236,7 @@ const HeaderButtons = (props) => {
     <Tooltip title={t('ToggleRestartSession')}>
       <Button
         id={autoSessionRestart ? 'btnDisableRestartSession' : 'btnEnableRestartSession'}
-        icon={<BiRecycle />}
+        icon={<IconRecycle size={16} />}
         type={autoSessionRestart ? BUTTON.PRIMARY : undefined}
         onClick={toggleAutoSessionRestart}
       />
