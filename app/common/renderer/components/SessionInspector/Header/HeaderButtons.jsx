@@ -8,11 +8,11 @@ import {
   PlayCircleOutlined,
   ReloadOutlined,
   SearchOutlined,
-  VideoCameraOutlined,
 } from '@ant-design/icons';
 import {
   IconChevronLeft,
   IconCircle,
+  IconCircleDot,
   IconHome,
   IconMessageChatbot,
   IconRecycle,
@@ -209,14 +209,18 @@ const HeaderButtons = (props) => {
       </Tooltip>
       {!isRecording && (
         <Tooltip title={t('Start Recording')}>
-          <Button id="btnStartRecording" icon={<VideoCameraOutlined />} onClick={startRecording} />
+          <Button
+            id="btnStartRecording"
+            icon={<IconCircleDot size={18} />}
+            onClick={startRecording}
+          />
         </Tooltip>
       )}
       {isRecording && (
         <Tooltip title={t('Pause Recording')}>
           <Button
             id="btnPause"
-            icon={<VideoCameraOutlined />}
+            icon={<IconCircleDot size={18} />}
             type={BUTTON.PRIMARY}
             danger
             onClick={pauseRecording}

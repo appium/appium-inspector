@@ -1,10 +1,5 @@
-import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  DownloadOutlined,
-  PlusSquareOutlined,
-  SelectOutlined,
-} from '@ant-design/icons';
+import {CheckCircleOutlined, CloseCircleOutlined, DownloadOutlined} from '@ant-design/icons';
+import {IconCrosshair, IconLayoutBoardSplit} from '@tabler/icons-react';
 import {Button, Modal, Space, Spin, Splitter, Switch, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useCallback, useEffect, useRef, useState} from 'react';
@@ -266,7 +261,7 @@ const Inspector = (props) => {
         <Space.Compact>
           <Tooltip title={t('Select Elements')}>
             <Button
-              icon={<SelectOutlined />}
+              icon={<IconLayoutBoardSplit size={18} />}
               onClick={() => screenshotInteractionChange(SELECT)}
               type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
               disabled={isGestureEditorVisible}
@@ -274,7 +269,7 @@ const Inspector = (props) => {
           </Tooltip>
           <Tooltip title={t('Tap/Swipe By Coordinates')}>
             <Button
-              icon={<PlusSquareOutlined />}
+              icon={<IconCrosshair size={18} />}
               onClick={() => screenshotInteractionChange(TAP_SWIPE)}
               type={screenshotInteractionMode === TAP_SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
               disabled={isGestureEditorVisible}
