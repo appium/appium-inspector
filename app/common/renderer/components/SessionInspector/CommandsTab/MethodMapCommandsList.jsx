@@ -1,4 +1,4 @@
-import {SearchOutlined} from '@ant-design/icons';
+import {IconSearch} from '@tabler/icons-react';
 import {Button, Col, Divider, Input, Row, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useState} from 'react';
@@ -94,7 +94,7 @@ const MethodMapCommandsList = (props) => {
           onChange={(e) => setSearchQuery(e.target.value)}
           value={searchQuery}
           allowClear
-          prefix={<SearchOutlined />}
+          prefix={<IconSearch size={12} />}
         />
       }
     />
