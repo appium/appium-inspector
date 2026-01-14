@@ -1,5 +1,5 @@
-import {ThunderboltOutlined} from '@ant-design/icons';
-import {Card, Input, Modal, Space, Typography} from 'antd';
+import {IconTerminal} from '@tabler/icons-react';
+import {Card, Flex, Input, Modal, Space, Typography} from 'antd';
 import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 
@@ -118,9 +118,10 @@ const Commands = (props) => {
   return (
     <Card
       title={
-        <span>
-          <ThunderboltOutlined /> {t('Execute Commands')}
-        </span>
+        <Flex gap={4} align="center">
+          <IconTerminal size={18} />
+          {t('Execute Commands')}
+        </Flex>
       }
       className={inspectorStyles.interactionTabCard}
     >

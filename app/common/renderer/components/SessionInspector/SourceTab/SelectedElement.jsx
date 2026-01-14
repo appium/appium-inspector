@@ -1,14 +1,13 @@
 import {
-  AimOutlined,
-  ClearOutlined,
-  CopyOutlined,
-  DownloadOutlined,
-  HourglassOutlined,
-  LoadingOutlined,
-  SendOutlined,
-  TagOutlined,
-} from '@ant-design/icons';
-import {Alert, Button, Card, Col, Input, Row, Space, Spin, Table, Tooltip} from 'antd';
+  IconDownload,
+  IconEraser,
+  IconFiles,
+  IconFocus2,
+  IconSend2,
+  IconStopwatch,
+  IconTag,
+} from '@tabler/icons-react';
+import {Alert, Button, Card, Col, Flex, Input, Row, Space, Spin, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useRef} from 'react';
 
@@ -53,6 +52,8 @@ const SelectedElement = (props) => {
 
   const sendKeysRef = useRef(null);
 
+  const tapButtonLoadingState =
+    !(elementInteractionsNotAvailable || selectedElementId) || selectedElementSearchInProgress;
   const isDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
 
   const showSnapshotMaxDepthReachedMessage = () => {
@@ -188,17 +189,13 @@ const SelectedElement = (props) => {
     findDataSource = findElementsExecutionTimes;
   }
 
-  let tapIcon = <AimOutlined />;
-  if (!(elementInteractionsNotAvailable || selectedElementId) || selectedElementSearchInProgress) {
-    tapIcon = <LoadingOutlined />;
-  }
-
   return (
     <Card
       title={
-        <span>
-          <TagOutlined /> {t('selectedElement')}
-        </span>
+        <Flex gap={4} align="center">
+          <IconTag size={18} />
+          {t('selectedElement')}
+        </Flex>
       }
       className={styles.selectedElementCard}
       extra={
@@ -208,7 +205,7 @@ const SelectedElement = (props) => {
               type="text"
               disabled={isDisabled}
               id="btnCopyAttributes"
-              icon={<CopyOutlined />}
+              icon={<IconFiles size={18} />}
               onClick={() => copyToClipboard(JSON.stringify(dataSource))}
             />
           </Tooltip>
@@ -216,7 +213,7 @@ const SelectedElement = (props) => {
             <Button
               type="text"
               disabled={isDisabled}
-              icon={<DownloadOutlined />}
+              icon={<IconDownload size={18} />}
               id="btnDownloadElemScreenshot"
               onClick={() => downloadElementScreenshot(selectedElementId)}
             />
@@ -237,7 +234,8 @@ const SelectedElement = (props) => {
           <Tooltip title={t('Tap')}>
             <Button
               disabled={isDisabled}
-              icon={tapIcon}
+              icon={<IconFocus2 size={18} />}
+              loading={tapButtonLoadingState}
               id="btnTapElement"
               onClick={() =>
                 applyClientMethod({methodName: 'elementClick', elementId: selectedElementId})
@@ -256,7 +254,7 @@ const SelectedElement = (props) => {
               <Button
                 disabled={isDisabled}
                 id="btnSendKeysToElement"
-                icon={<SendOutlined />}
+                icon={<IconSend2 size={18} />}
                 onClick={() =>
                   applyClientMethod({
                     methodName: 'elementSendKeys',
@@ -270,7 +268,7 @@ const SelectedElement = (props) => {
               <Button
                 disabled={isDisabled}
                 id="btnClearElement"
-                icon={<ClearOutlined />}
+                icon={<IconEraser size={18} />}
                 onClick={() =>
                   applyClientMethod({methodName: 'elementClear', elementId: selectedElementId})
                 }
@@ -281,7 +279,7 @@ const SelectedElement = (props) => {
             <Button
               disabled={isDisabled}
               id="btnGetTiming"
-              icon={<HourglassOutlined />}
+              icon={<IconStopwatch size={18} />}
               onClick={() => getFindElementsTimes(findDataSource)}
             />
           </Tooltip>

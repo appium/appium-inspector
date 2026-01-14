@@ -28,26 +28,22 @@
 .gestureTimeline {
   width: 90%;
   margin: -10px 0;
-  min-height: 36px;
+  min-height: 32px;
 }
 
-.gestureTimeline :global(.anticon) {
-  font-size: 20px;
-}
-
-.gestureTimeline :global(.ant-steps-item-finish .anticon),
+.gestureTimeline :global(.ant-steps-item-finish .ant-steps-item-icon),
 .gestureTimeline :global(.ant-steps-item-rail-finish) {
   color: var(--timelineColor);
   border-color: var(--timelineColor);
 }
 
-.gestureTimeline :global(.ant-steps-item-wait .anticon),
+.gestureTimeline :global(.ant-steps-item-wait .ant-steps-item-icon),
 .gestureTimeline :global(.ant-steps-item-rail-wait) {
   color: #ffffff;
   border-color: #ffffff;
 }
 
-:global(.dark) .gestureTimeline :global(.ant-steps-item-wait .anticon),
+:global(.dark) .gestureTimeline :global(.ant-steps-item-wait .ant-steps-item-icon),
 :global(.dark) .gestureTimeline :global(.ant-steps-item-rail-wait) {
   color: #141414;
   border-color: #141414;

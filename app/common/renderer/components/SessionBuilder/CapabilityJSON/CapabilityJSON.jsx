@@ -1,4 +1,4 @@
-import {CloseOutlined, EditOutlined, SaveOutlined} from '@ant-design/icons';
+import {IconDeviceFloppy, IconEdit, IconX} from '@tabler/icons-react';
 import {Alert, Button, Card, Input, Row, Tooltip} from 'antd';
 import hljs from 'highlight.js';
 
@@ -42,7 +42,7 @@ const CapabilityJSON = (props) => {
           <Input
             onChange={(e) => setDesiredCapsName(e.target.value)}
             value={desiredCapsName}
-            className={styles.capsEditorTitle}
+            className={styles.capsEditorTitleInput}
             onPressEnter={saveDesiredCapsName}
             status={isDuplicateCapsName ? 'error' : ''}
           />
@@ -64,21 +64,21 @@ const CapabilityJSON = (props) => {
           <Button
             size="small"
             onClick={startDesiredCapsNameEditor}
-            icon={<EditOutlined />}
+            icon={<IconEdit size={14} />}
             className={styles.capsNameEditorButton}
           />
         </Tooltip>
       );
     } else {
       return (
-        <div>
+        <>
           <Tooltip title={t('Cancel')}>
             <Button
               size="small"
               color="danger"
               variant="outlined"
               onClick={abortDesiredCapsNameEditor}
-              icon={<CloseOutlined />}
+              icon={<IconX size={14} />}
               className={styles.capsNameEditorButton}
             />
           </Tooltip>
@@ -88,11 +88,11 @@ const CapabilityJSON = (props) => {
               color="primary"
               variant="outlined"
               onClick={saveDesiredCapsName}
-              icon={<SaveOutlined />}
+              icon={<IconDeviceFloppy size={14} />}
               className={styles.capsNameEditorButton}
             />
           </Tooltip>
-        </div>
+        </>
       );
     }
   };
@@ -107,7 +107,7 @@ const CapabilityJSON = (props) => {
                 color="danger"
                 variant="outlined"
                 onClick={abortDesiredCapsEditor}
-                icon={<CloseOutlined />}
+                icon={<IconX size={20} />}
                 className={styles.capsEditorButton}
               />
             </Tooltip>
@@ -118,14 +118,14 @@ const CapabilityJSON = (props) => {
                 color="primary"
                 variant="outlined"
                 onClick={() => saveRawDesiredCaps(caps, rawDesiredCaps)}
-                icon={<SaveOutlined />}
+                icon={<IconDeviceFloppy size={20} />}
                 className={styles.capsEditorButton}
               />
             </Tooltip>
           )}
           {!isEditingDesiredCaps && (
             <Tooltip title={t('Edit Raw JSON')} placement="topRight">
-              <Button onClick={startDesiredCapsEditor} icon={<EditOutlined />} />
+              <Button onClick={startDesiredCapsEditor} icon={<IconEdit size={18} />} />
             </Tooltip>
           )}
         </div>

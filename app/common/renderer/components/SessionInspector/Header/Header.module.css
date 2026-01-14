@@ -9,33 +9,12 @@
   width: 100%;
 }
 
-.headerBtnIcon {
-  font-size: 16px;
-  vertical-align: middle;
-}
-
 .wideTooltip {
   max-width: 400px;
 }
 
-.contextsInfoBtn {
-  height: 30px;
-  width: 30px;
-  color: #ffffff;
-  margin-top: 1px;
-  padding: 3px 0 0 7px;
-}
-
-.noContextsInfoIcon {
-  background-color: #faad14;
-}
-
 .headerContextSelector {
   width: 350px;
-}
-
-.contextsInfoIcon {
-  background-color: #1890ff;
 }
 
 .headerButtons {

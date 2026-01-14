@@ -1,4 +1,4 @@
-import {AimOutlined, ClearOutlined, MenuUnfoldOutlined, SendOutlined} from '@ant-design/icons';
+import {IconEraser, IconFocus2, IconListSearch, IconSend2} from '@tabler/icons-react';
 import {Alert, Badge, Button, Input, Row, Space, Spin, Table, Tooltip} from 'antd';
 import {useRef} from 'react';
 
@@ -97,7 +97,7 @@ const LocatedElements = (props) => {
                 <Tooltip title={t('Find and Select in Source')} placement="bottom">
                   <Button
                     disabled={!locatorTestElement}
-                    icon={<MenuUnfoldOutlined />}
+                    icon={<IconListSearch size={18} />}
                     onClick={() =>
                       selectLocatedElement(
                         sourceJSON,
@@ -111,7 +111,7 @@ const LocatedElements = (props) => {
                 <Tooltip title={t('Tap')} placement="bottom">
                   <Button
                     disabled={!locatorTestElement}
-                    icon={<AimOutlined />}
+                    icon={<IconFocus2 size={18} />}
                     onClick={() =>
                       applyClientMethod({methodName: 'elementClick', elementId: locatorTestElement})
                     }
@@ -128,7 +128,7 @@ const LocatedElements = (props) => {
                   <Tooltip title={t('Send Keys')} placement="bottom">
                     <Button
                       disabled={!locatorTestElement}
-                      icon={<SendOutlined />}
+                      icon={<IconSend2 size={18} />}
                       onClick={() =>
                         applyClientMethod({
                           methodName: 'elementSendKeys',
@@ -142,7 +142,7 @@ const LocatedElements = (props) => {
                     <Button
                       disabled={!locatorTestElement}
                       id="btnClearElement"
-                      icon={<ClearOutlined />}
+                      icon={<IconEraser size={18} />}
                       onClick={() =>
                         applyClientMethod({
                           methodName: 'elementClear',

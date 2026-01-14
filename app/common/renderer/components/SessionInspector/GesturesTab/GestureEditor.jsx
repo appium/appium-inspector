@@ -1,21 +1,22 @@
 import {
-  AimOutlined,
-  ArrowLeftOutlined,
-  CloseOutlined,
-  DownCircleOutlined,
-  HighlightOutlined,
-  PauseCircleOutlined,
-  PlayCircleOutlined,
-  PlusOutlined,
-  QuestionCircleOutlined,
-  RightCircleOutlined,
-  UpCircleOutlined,
-} from '@ant-design/icons';
+  IconArrowBigDownLine,
+  IconArrowBigRightLines,
+  IconArrowBigUpLine,
+  IconArrowLeft,
+  IconFocus2,
+  IconHandMove,
+  IconPlayerPause,
+  IconPlayerPlay,
+  IconPlus,
+  IconQuestionMark,
+  IconX,
+} from '@tabler/icons-react';
 import {
   Button,
   Card,
   Col,
   Divider,
+  Flex,
   Input,
   Popover,
   Row,
@@ -434,7 +435,7 @@ const GestureEditor = (props) => {
         </Tooltip>
       </Space.Compact>
       <Tooltip title={t('Play')}>
-        <Button type="primary" icon={<PlayCircleOutlined />} onClick={() => onPlay()} />
+        <Button type="primary" icon={<IconPlayerPlay size={18} />} onClick={() => onPlay()} />
       </Tooltip>
       <Space.Compact>
         <Button onClick={() => onSaveAs()}>{t('saveAs')}</Button>
@@ -462,7 +463,7 @@ const GestureEditor = (props) => {
     <>
       <Row justify="space-between">
         <Col flex="32px">
-          <Button type="text" icon={<ArrowLeftOutlined />} onClick={() => onBack()} />
+          <Button type="text" icon={<IconArrowLeft size={18} />} onClick={() => onBack()} />
         </Col>
         <Col flex="1">{headerTitle}</Col>
         <Col>{headerButtons}</Col>
@@ -505,11 +506,11 @@ const GestureEditor = (props) => {
           </div>
         }
       >
-        {type === POINTER_MOVE && <RightCircleOutlined />}
-        {type === POINTER_DOWN && <DownCircleOutlined />}
-        {type === POINTER_UP && <UpCircleOutlined />}
-        {type === PAUSE && <PauseCircleOutlined />}
-        {type === undefined && <QuestionCircleOutlined />}
+        {type === POINTER_MOVE && <IconArrowBigRightLines size={18} />}
+        {type === POINTER_DOWN && <IconArrowBigDownLine size={18} />}
+        {type === POINTER_UP && <IconArrowBigUpLine size={18} />}
+        {type === PAUSE && <IconPlayerPause size={18} />}
+        {type === undefined && <IconQuestionMark size={18} />}
       </Popover>
     );
   };
@@ -527,7 +528,7 @@ const GestureEditor = (props) => {
               }
             : {
                 status: 'wait',
-                icon: <QuestionCircleOutlined />,
+                icon: <IconQuestionMark size={18} />,
               },
         )}
       />
@@ -623,7 +624,7 @@ const GestureEditor = (props) => {
       <Button
         size="small"
         type={selectedTick === tickId ? 'primary' : 'text'}
-        icon={<AimOutlined />}
+        icon={<IconFocus2 size={18} />}
         onClick={() => (selectedTick === tickId ? unselectTick() : selectTick(tickId))}
       />
     </Tooltip>
@@ -640,7 +641,7 @@ const GestureEditor = (props) => {
             <Button
               size="small"
               type="text"
-              icon={<CloseOutlined />}
+              icon={<IconX size={18} />}
               onClick={() => deleteTick(tick.id[0], tick.id)}
             />
           </Tooltip>
@@ -666,7 +667,7 @@ const GestureEditor = (props) => {
       <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
         <div className={styles.tickPlusBtnWrapper}>
           <Tooltip title={t('Add')}>
-            <Button icon={<PlusOutlined />} onClick={() => addTick(pointer.id)} />
+            <Button icon={<IconPlus size={18} />} onClick={() => addTick(pointer.id)} />
           </Tooltip>
         </div>
       </Col>
@@ -698,9 +699,10 @@ const GestureEditor = (props) => {
   return (
     <Card
       title={
-        <span>
-          <HighlightOutlined /> {t('Gesture Builder')}
-        </span>
+        <Flex gap={4} align="center">
+          <IconHandMove size={18} />
+          {t('Gesture Builder')}
+        </Flex>
       }
       className={inspectorStyles.interactionTabCard}
     >
