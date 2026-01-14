@@ -1,4 +1,4 @@
-import {SettingOutlined} from '@ant-design/icons';
+import {IconSettings} from '@tabler/icons-react';
 import {Button, Form, Modal, Tooltip} from 'antd';
 import {useState} from 'react';
 
@@ -11,7 +11,7 @@ const AppSettings = ({t}) => {
   return (
     <>
       <Tooltip title={t('App Settings')}>
-        <Button icon={<SettingOutlined />} onClick={() => setModalOpen(true)} />
+        <Button icon={<IconSettings size={18} />} onClick={() => setModalOpen(true)} />
       </Tooltip>
 
       <Modal

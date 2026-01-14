@@ -1,4 +1,4 @@
-import {CopyOutlined} from '@ant-design/icons';
+import {IconCopy} from '@tabler/icons-react';
 import {Alert, Button, Tooltip} from 'antd';
 
 import {ALERT} from '../../constants/antd-types.js';
@@ -29,8 +29,8 @@ const ErrorMessage = ({error, copyTrace, t}) => (
             <Button
               size="small"
               className={styles.copyTraceBtn}
-              onClick={copyTrace(error.stack)}
-              icon={<CopyOutlined />}
+              onClick={() => copyTrace(error.stack)}
+              icon={<IconCopy size={14} />}
             />
           </Tooltip>
           <pre>{error.stack}</pre>
