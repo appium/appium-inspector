@@ -64,7 +64,7 @@ const CapabilityJSON = (props) => {
           <Button
             size="small"
             onClick={startDesiredCapsNameEditor}
-            icon={<IconEdit size={18} />}
+            icon={<IconEdit size={14} />}
             className={styles.capsNameEditorButton}
           />
         </Tooltip>
@@ -78,7 +78,7 @@ const CapabilityJSON = (props) => {
               color="danger"
               variant="outlined"
               onClick={abortDesiredCapsNameEditor}
-              icon={<IconX size={18} />}
+              icon={<IconX size={14} />}
               className={styles.capsNameEditorButton}
             />
           </Tooltip>
@@ -88,7 +88,7 @@ const CapabilityJSON = (props) => {
               color="primary"
               variant="outlined"
               onClick={saveDesiredCapsName}
-              icon={<IconDeviceFloppy size={18} />}
+              icon={<IconDeviceFloppy size={14} />}
               className={styles.capsNameEditorButton}
             />
           </Tooltip>
