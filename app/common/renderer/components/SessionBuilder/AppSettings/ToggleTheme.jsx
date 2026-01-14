@@ -1,6 +1,7 @@
-import {BgColorsOutlined, MoonOutlined, SunOutlined} from '@ant-design/icons';
-import {Form, Radio} from 'antd';
+import {IconMoon, IconSun, IconSunMoon} from '@tabler/icons-react';
+import {Button, Col, Form, Row} from 'antd';
 
+import {BUTTON} from '../../../constants/antd-types.js';
 import {useTheme} from '../../../hooks/use-theme.jsx';
 
 const ToggleTheme = ({t}) => {
@@ -10,40 +11,38 @@ const ToggleTheme = ({t}) => {
     {
       value: 'light',
       label: t('Light Theme'),
-      icon: <SunOutlined />,
+      icon: <IconSun size={16} />,
     },
     {
       value: 'dark',
       label: t('Dark Theme'),
-      icon: <MoonOutlined />,
+      icon: <IconMoon size={16} />,
     },
     {
       value: 'system',
       label: t('System Theme'),
-      icon: <BgColorsOutlined />,
+      icon: <IconSunMoon size={16} />,
     },
   ];
 
-  const themeOptions = themes.map((th) => ({
-    ...th,
-    label: (
-      <>
-        {th.icon} {th.label}
-      </>
-    ),
-  }));
-
   return (
     <Form.Item label={t('Theme')}>
-      <Radio.Group
-        block
-        size={'large'}
-        value={preferredTheme}
-        onChange={(e) => updateTheme(e.target.value)}
-        optionType="button"
-        buttonStyle="solid"
-        options={themeOptions}
-      />
+      <Row gutter={6}>
+        {themes.map(({value, label, icon}) => (
+          <Col span={8} key={value}>
+            <Button
+              block
+              styles={{root: {height: 'max(40px, 100%)', whiteSpace: 'normal'}}}
+              size={'large'}
+              type={preferredTheme === value ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+              icon={icon}
+              onClick={() => updateTheme(value)}
+            >
+              {label}
+            </Button>
+          </Col>
+        ))}
+      </Row>
     </Form.Item>
   );
 };

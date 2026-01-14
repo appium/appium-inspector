@@ -1,4 +1,4 @@
-import {CopyOutlined, TableOutlined} from '@ant-design/icons';
+import {IconFiles, IconTable} from '@tabler/icons-react';
 import {Button, Col, Modal, Row, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useState} from 'react';
@@ -170,7 +170,7 @@ const CommandResultModalFooter = ({
       <Space>
         <Tooltip title={t('toggleTableFormatting')}>
           <Button
-            icon={<TableOutlined />}
+            icon={<IconTable size={18} />}
             disabled={isPrimitive}
             type={formatResult ? BUTTON.PRIMARY : BUTTON.DEFAULT}
             onClick={() => setFormatResult(!formatResult)}
@@ -178,7 +178,7 @@ const CommandResultModalFooter = ({
         </Tooltip>
         <Tooltip title={t('copyResultToClipboard')}>
           <Button
-            icon={<CopyOutlined />}
+            icon={<IconFiles size={18} />}
             disabled={formatResult}
             onClick={() => copyToClipboard(result)}
           />

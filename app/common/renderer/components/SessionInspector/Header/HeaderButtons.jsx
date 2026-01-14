@@ -1,22 +1,20 @@
 import {
-  AppstoreOutlined,
-  CloseOutlined,
-  ExclamationCircleOutlined,
-  GlobalOutlined,
-  InfoCircleOutlined,
-  PauseCircleOutlined,
-  PlayCircleOutlined,
-  ReloadOutlined,
-  SearchOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
-import {
   IconChevronLeft,
   IconCircle,
+  IconExclamationCircle,
   IconHome,
+  IconInfoCircle,
   IconMessageChatbot,
+  IconPlayerPause,
+  IconPlayerPlay,
   IconRecycle,
+  IconRefresh,
+  IconSearch,
   IconSquare,
+  IconTriangleSquareCircle,
+  IconVideo,
+  IconWorld,
+  IconX,
 } from '@tabler/icons-react';
 import {Button, Divider, Select, Space, Tooltip} from 'antd';
 
@@ -121,23 +119,25 @@ const HeaderButtons = (props) => {
     <Space.Compact>
       <Tooltip title={t('Native App Mode')}>
         <Button
-          icon={<AppstoreOutlined />}
+          icon={<IconTriangleSquareCircle size={18} />}
           onClick={() => selectAppMode(APP_MODE.NATIVE)}
           type={appMode === APP_MODE.NATIVE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
         />
       </Tooltip>
       <Tooltip title={t('Web/Hybrid App Mode')}>
         <Button
-          icon={<GlobalOutlined />}
+          icon={<IconWorld size={18} />}
           onClick={() => selectAppMode(APP_MODE.WEB_HYBRID)}
           type={appMode === APP_MODE.WEB_HYBRID ? BUTTON.PRIMARY : BUTTON.DEFAULT}
         />
       </Tooltip>
       {contexts && contexts.length === 1 && (
         <Tooltip title={t('noAdditionalContextsFound')} classNames={{root: styles.wideTooltip}}>
-          <div className={`${styles.contextsInfoBtn} ${styles.noContextsInfoIcon}`}>
-            <ExclamationCircleOutlined className={styles.headerBtnIcon} />
-          </div>
+          <Button
+            disabled
+            icon={<IconExclamationCircle size={20} />}
+            styles={{root: {backgroundColor: '#faad14', color: '#ffffff'}}}
+          />
         </Tooltip>
       )}
       {contexts && contexts.length > 1 && (
@@ -168,9 +168,11 @@ const HeaderButtons = (props) => {
             }
             classNames={{root: styles.wideTooltip}}
           >
-            <div className={`${styles.contextsInfoBtn} ${styles.contextsInfoIcon}`}>
-              <InfoCircleOutlined className={styles.headerBtnIcon} />
-            </div>
+            <Button
+              disabled
+              icon={<IconInfoCircle size={20} />}
+              styles={{root: {backgroundColor: 'var(--ant-color-primary)', color: '#ffffff'}}}
+            />
           </Tooltip>
         </>
       )}
@@ -183,7 +185,7 @@ const HeaderButtons = (props) => {
         <Tooltip title={t('Start Refreshing Source')}>
           <Button
             id="btnStartRefreshing"
-            icon={<PlayCircleOutlined />}
+            icon={<IconPlayerPlay size={18} />}
             onClick={toggleRefreshingState}
           />
         </Tooltip>
@@ -192,7 +194,7 @@ const HeaderButtons = (props) => {
         <Tooltip title={t('Pause Refreshing Source')}>
           <Button
             id="btnPauseRefreshing"
-            icon={<PauseCircleOutlined />}
+            icon={<IconPlayerPause size={18} />}
             onClick={toggleRefreshingState}
           />
         </Tooltip>
@@ -200,23 +202,27 @@ const HeaderButtons = (props) => {
       <Tooltip title={t('refreshSource')}>
         <Button
           id="btnReload"
-          icon={<ReloadOutlined />}
+          icon={<IconRefresh size={18} />}
           onClick={() => applyClientMethod({methodName: 'getPageSource'})}
         />
       </Tooltip>
       <Tooltip title={t('Search for element')}>
-        <Button id="searchForElement" icon={<SearchOutlined />} onClick={showLocatorTestModal} />
+        <Button
+          id="searchForElement"
+          icon={<IconSearch size={18} />}
+          onClick={showLocatorTestModal}
+        />
       </Tooltip>
       {!isRecording && (
         <Tooltip title={t('Start Recording')}>
-          <Button id="btnStartRecording" icon={<VideoCameraOutlined />} onClick={startRecording} />
+          <Button id="btnStartRecording" icon={<IconVideo size={18} />} onClick={startRecording} />
         </Tooltip>
       )}
       {isRecording && (
         <Tooltip title={t('Pause Recording')}>
           <Button
             id="btnPause"
-            icon={<VideoCameraOutlined />}
+            icon={<IconVideo size={18} />}
             type={BUTTON.PRIMARY}
             danger
             onClick={pauseRecording}
@@ -228,7 +234,7 @@ const HeaderButtons = (props) => {
 
   const quitSessionButton = (
     <Tooltip title={t('Quit Session')}>
-      <Button id="btnClose" icon={<CloseOutlined />} onClick={quitCurrentSession} />
+      <Button id="btnClose" icon={<IconX size={18} />} onClick={quitCurrentSession} />
     </Tooltip>
   );
 

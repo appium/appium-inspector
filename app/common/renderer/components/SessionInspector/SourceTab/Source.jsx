@@ -1,13 +1,13 @@
+import {CaretDownOutlined} from '@ant-design/icons';
 import {
-  CaretDownOutlined,
-  CodeOutlined,
-  CopyOutlined,
-  DownloadOutlined,
-  FileTextOutlined,
-  NodeCollapseOutlined,
-  SearchOutlined,
-} from '@ant-design/icons';
-import {Button, Card, Input, Row, Space, Spin, Tooltip, Tree} from 'antd';
+  IconDownload,
+  IconEyeCode,
+  IconFiles,
+  IconFileText,
+  IconFold,
+  IconSearch,
+} from '@tabler/icons-react';
+import {Button, Card, Flex, Input, Row, Space, Spin, Tooltip, Tree} from 'antd';
 import {useCallback, useMemo, useState} from 'react';
 
 import {BUTTON, ROW} from '../../../constants/antd-types.js';
@@ -169,9 +169,10 @@ const Source = (props) => {
   return (
     <Card
       title={
-        <span>
-          <FileTextOutlined /> {t('App Source')}{' '}
-        </span>
+        <Flex gap={4} align="center">
+          <IconFileText size={18} />
+          {t('App Source')}
+        </Flex>
       }
       extra={
         <span>
@@ -179,7 +180,7 @@ const Source = (props) => {
             <Button
               type="text"
               id="btnSourceXML"
-              icon={<CopyOutlined />}
+              icon={<IconFiles size={18} />}
               onClick={() => copyToClipboard(sourceXML)}
             />
           </Tooltip>
@@ -187,7 +188,7 @@ const Source = (props) => {
             <Button
               type="text"
               id="btnDownloadSourceXML"
-              icon={<DownloadOutlined />}
+              icon={<IconDownload size={18} />}
               onClick={() => downloadXML(sourceXML)}
             />
           </Tooltip>
@@ -210,14 +211,14 @@ const Source = (props) => {
                   <Tooltip title={t('Collapse All')}>
                     <Button
                       id="btnCollapseAll"
-                      icon={<NodeCollapseOutlined />}
+                      icon={<IconFold size={18} />}
                       onClick={collapseAll}
                     />
                   </Tooltip>
                   <Tooltip title={t('Toggle Attributes')}>
                     <Button
                       id="btnToggleAttrs"
-                      icon={<CodeOutlined />}
+                      icon={<IconEyeCode size={18} />}
                       onClick={toggleShowAttributes}
                       type={showSourceAttrs ? BUTTON.PRIMARY : BUTTON.DEFAULT}
                     />
@@ -229,7 +230,7 @@ const Source = (props) => {
                     onChange={onChange}
                     value={searchValue}
                     allowClear
-                    prefix={<SearchOutlined />}
+                    prefix={<IconSearch size={12} />}
                   />
                   <Space.Addon className={styles.treeSearchInputAddon}>
                     <Tooltip title={t('Matching Elements')}>{matchingElements.length}</Tooltip>

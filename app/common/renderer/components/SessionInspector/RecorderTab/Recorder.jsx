@@ -1,5 +1,5 @@
-import {ClearOutlined, CodeOutlined, CopyOutlined, PicRightOutlined} from '@ant-design/icons';
-import {Button, Card, Select, Space, Tooltip} from 'antd';
+import {IconEraser, IconEyeCode, IconFiles, IconVideo} from '@tabler/icons-react';
+import {Button, Card, Flex, Select, Space, Tooltip} from 'antd';
 import hljs from 'highlight.js';
 import _ from 'lodash';
 
@@ -36,15 +36,15 @@ const Recorder = (props) => {
             <Tooltip title={t('Show/Hide Boilerplate Code')}>
               <Button
                 onClick={toggleShowBoilerplate}
-                icon={<PicRightOutlined />}
+                icon={<IconEyeCode size={18} />}
                 type={showBoilerplate ? BUTTON.PRIMARY : BUTTON.DEFAULT}
               />
             </Tooltip>
             <Tooltip title={t('Copy code to clipboard')}>
-              <Button icon={<CopyOutlined />} onClick={() => copyToClipboard(code())} />
+              <Button icon={<IconFiles size={18} />} onClick={() => copyToClipboard(code())} />
             </Tooltip>
             <Tooltip title={t('Clear Actions')}>
-              <Button icon={<ClearOutlined />} onClick={clearRecording} />
+              <Button icon={<IconEraser size={18} />} onClick={clearRecording} />
             </Tooltip>
           </Space.Compact>
         )}
@@ -65,9 +65,10 @@ const Recorder = (props) => {
   return (
     <Card
       title={
-        <span>
-          <CodeOutlined /> {t('Recorder')}
-        </span>
+        <Flex gap={4} align="center">
+          <IconVideo size={18} />
+          {t('Recorder')}
+        </Flex>
       }
       className={inspectorStyles.interactionTabCard}
       extra={actionBar()}

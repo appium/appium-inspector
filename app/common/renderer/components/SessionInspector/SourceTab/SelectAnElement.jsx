@@ -1,5 +1,5 @@
-import {TagOutlined} from '@ant-design/icons';
-import {Card} from 'antd';
+import {IconTag} from '@tabler/icons-react';
+import {Card, Flex} from 'antd';
 
 import styles from './Source.module.css';
 
@@ -10,9 +10,10 @@ import styles from './Source.module.css';
 const SelectAnElement = ({t}) => (
   <Card
     title={
-      <span>
-        <TagOutlined /> {t('selectedElement')}
-      </span>
+      <Flex gap={4} align="center">
+        <IconTag size={18} />
+        {t('selectedElement')}
+      </Flex>
     }
     className={styles.selectedElementCard}
   >

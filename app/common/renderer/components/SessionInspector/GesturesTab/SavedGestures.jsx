@@ -1,12 +1,12 @@
 import {
-  DeleteOutlined,
-  EditOutlined,
-  ExportOutlined,
-  HighlightOutlined,
-  PlayCircleOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
-import {Button, Card, Popconfirm, Space, Spin, Table, Tooltip} from 'antd';
+  IconEdit,
+  IconFileExport,
+  IconHandMove,
+  IconPlayerPlay,
+  IconPlus,
+  IconTrash,
+} from '@tabler/icons-react';
+import {Button, Card, Flex, Popconfirm, Space, Spin, Table, Tooltip} from 'antd';
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import {useEffect} from 'react';
@@ -116,15 +116,18 @@ const SavedGestures = (props) => {
                 <Button
                   key="play"
                   type="primary"
-                  icon={<PlayCircleOutlined />}
+                  icon={<IconPlayerPlay size={18} />}
                   onClick={() => onPlay(gesture)}
                 />
               </Tooltip>
               <Tooltip zIndex={3} title={t('Edit')}>
-                <Button icon={<EditOutlined />} onClick={() => loadSavedGesture(gesture)} />
+                <Button icon={<IconEdit size={18} />} onClick={() => loadSavedGesture(gesture)} />
               </Tooltip>
               <Tooltip zIndex={3} title={t('Export to File')}>
-                <Button icon={<ExportOutlined />} onClick={() => exportSavedGesture(gesture)} />
+                <Button
+                  icon={<IconFileExport size={18} />}
+                  onClick={() => exportSavedGesture(gesture)}
+                />
               </Tooltip>
               <Tooltip zIndex={3} title={t('Delete')}>
                 <Popconfirm
@@ -135,7 +138,7 @@ const SavedGestures = (props) => {
                   cancelText={t('Cancel')}
                   onConfirm={() => handleDelete(gesture.id)}
                 >
-                  <Button icon={<DeleteOutlined />} />
+                  <Button icon={<IconTrash size={18} />} />
                 </Popconfirm>
               </Tooltip>
             </Space.Compact>
@@ -158,9 +161,10 @@ const SavedGestures = (props) => {
   return (
     <Card
       title={
-        <span>
-          <HighlightOutlined /> {t('Saved Gestures')}
-        </span>
+        <Flex gap={4} align="center">
+          <IconHandMove size={18} />
+          {t('Saved Gestures')}
+        </Flex>
       }
       className={inspectorStyles.interactionTabCard}
     >
@@ -175,7 +179,7 @@ const SavedGestures = (props) => {
             scroll={{y: 'calc(100vh - 32em)'}}
             footer={() => (
               <Space.Compact>
-                <Button onClick={showGestureEditor} icon={<PlusOutlined />}>
+                <Button onClick={showGestureEditor} icon={<IconPlus size={16} />}>
                   {t('Create New Gesture')}
                 </Button>
                 <FileUploader

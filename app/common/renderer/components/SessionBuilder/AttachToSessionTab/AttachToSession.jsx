@@ -1,4 +1,4 @@
-import {ReloadOutlined} from '@ant-design/icons';
+import {IconRefresh} from '@tabler/icons-react';
 import {Button, Card, Col, Form, Row, Select, Tooltip} from 'antd';
 
 import {getSessionInfo} from '../../../utils/attaching-to-session.js';
@@ -50,7 +50,7 @@ const AttachToSession = ({
             <Button
               className={styles.btnReload}
               onClick={getRunningSessions}
-              icon={<ReloadOutlined />}
+              icon={<IconRefresh size={18} />}
             />
           </Tooltip>
         </Col>

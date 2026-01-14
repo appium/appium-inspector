@@ -1,4 +1,4 @@
-import {DeleteOutlined, EditOutlined, ExportOutlined} from '@ant-design/icons';
+import {IconEdit, IconFileExport, IconTrash} from '@tabler/icons-react';
 import {Button, Card, Popconfirm, Space, Spin, Splitter, Table, Tooltip} from 'antd';
 import dayjs from 'dayjs';
 
@@ -99,7 +99,7 @@ const SavedCapabilitySets = (props) => {
         <Space.Compact>
           <Tooltip zIndex={3} title={t('Edit')}>
             <Button
-              icon={<EditOutlined />}
+              icon={<IconEdit size={18} />}
               onClick={() => {
                 handleCapsAndServer(record.key);
                 switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER);
@@ -108,7 +108,7 @@ const SavedCapabilitySets = (props) => {
           </Tooltip>
           <Tooltip zIndex={3} title={t('Export to File')}>
             <Button
-              icon={<ExportOutlined />}
+              icon={<IconFileExport size={18} />}
               onClick={() => findAndExportSavedSession(record.key)}
             />
           </Tooltip>
@@ -120,7 +120,7 @@ const SavedCapabilitySets = (props) => {
               cancelText={t('Cancel')}
               onConfirm={() => deleteSavedSession(record.key)}
             >
-              <Button icon={<DeleteOutlined />} />
+              <Button icon={<IconTrash size={18} />} />
             </Popconfirm>
           </Tooltip>
         </Space.Compact>
