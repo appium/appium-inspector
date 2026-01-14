@@ -1,4 +1,4 @@
-import {ImportOutlined} from '@ant-design/icons';
+import {IconFileImport} from '@tabler/icons-react';
 import {Button, Upload} from 'antd';
 import {useRef} from 'react';
 
@@ -27,7 +27,7 @@ const FileUploader = (props) => {
       beforeUpload={beforeUpload}
       showUploadList={false}
     >
-      <Button icon={<ImportOutlined />}>{title}</Button>
+      <Button icon={<IconFileImport size={16} />}>{title}</Button>
     </Upload>
   );
 };

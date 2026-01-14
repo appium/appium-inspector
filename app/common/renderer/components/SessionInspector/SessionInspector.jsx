@@ -1,6 +1,5 @@
-import {CheckCircleOutlined, CloseCircleOutlined, DownloadOutlined} from '@ant-design/icons';
-import {IconCrosshair, IconLayoutBoardSplit} from '@tabler/icons-react';
-import {Button, Modal, Space, Spin, Splitter, Switch, Tabs, Tooltip} from 'antd';
+import {IconCrosshair, IconDownload, IconEyePlus, IconLayoutDashboard} from '@tabler/icons-react';
+import {Button, Modal, Space, Spin, Splitter, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router';
@@ -250,18 +249,17 @@ const Inspector = (props) => {
           title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')}
           placement="topRight"
         >
-          <Switch
-            checkedChildren={<CheckCircleOutlined />}
-            unCheckedChildren={<CloseCircleOutlined />}
-            defaultChecked={false}
-            onChange={() => toggleShowCentroids()}
+          <Button
+            icon={<IconEyePlus size={18} />}
+            onClick={() => toggleShowCentroids()}
+            type={showCentroids ? BUTTON.PRIMARY : BUTTON.DEFAULT}
             disabled={isGestureEditorVisible}
           />
         </Tooltip>
         <Space.Compact>
           <Tooltip title={t('Select Elements')}>
             <Button
-              icon={<IconLayoutBoardSplit size={18} />}
+              icon={<IconLayoutDashboard size={18} />}
               onClick={() => screenshotInteractionChange(SELECT)}
               type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
               disabled={isGestureEditorVisible}
@@ -278,7 +276,10 @@ const Inspector = (props) => {
         </Space.Compact>
         {showScreenshot && !isUsingMjpegMode && (
           <Tooltip title={t('Download Screenshot')}>
-            <Button icon={<DownloadOutlined />} onClick={() => downloadScreenshot(screenshot)} />
+            <Button
+              icon={<IconDownload size={18} />}
+              onClick={() => downloadScreenshot(screenshot)}
+            />
           </Tooltip>
         )}
       </Space>
