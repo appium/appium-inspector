@@ -98,7 +98,7 @@
     "@appium/eslint-config-appium-ts": "2.0.5",
     "@appium/fake-driver": "6.0.1",
     "@appium/support": "7.0.4",
-    "@eslint-react/eslint-plugin": "2.5.5",
+    "@eslint-react/eslint-plugin": "2.5.7",
     "@types/lodash": "4.17.23",
     "@types/react": "19.2.8",
     "@types/react-dom": "19.2.3",
@@ -117,7 +117,7 @@
     "rimraf": "6.1.2",
     "vite": "7.3.1",
     "vite-plugin-electron-renderer": "0.14.6",
-    "vitest": "4.0.16"
+    "vitest": "4.0.17"
   },
   "engines": {
     "node": "^20.19.0 || ^22.12.0 || >=24.0.0",
