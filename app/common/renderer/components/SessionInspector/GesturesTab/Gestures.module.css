@@ -28,7 +28,7 @@
 .gestureTimeline {
   width: 90%;
   margin: -10px 0;
-  min-height: 36px;
+  min-height: 32px;
 }
 
 .gestureTimeline :global(.anticon) {
