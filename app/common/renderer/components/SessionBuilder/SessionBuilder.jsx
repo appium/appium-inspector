@@ -1,4 +1,4 @@
-import {LinkOutlined} from '@ant-design/icons';
+import {IconLink} from '@tabler/icons-react';
 import {Badge, Button, Divider, Space, Spin, Tabs} from 'antd';
 import _ from 'lodash';
 import {useCallback, useEffect} from 'react';
@@ -181,13 +181,14 @@ const Session = (props) => {
         />
         <Divider />
         <div className={styles.sessionFooter}>
-          <div className={styles.desiredCapsLink}>
-            <a href="#" onClick={(e) => e.preventDefault() || openLink(LINKS.CAPS_DOCS)}>
-              <LinkOutlined />
-              &nbsp;
-              {t('desiredCapabilitiesDocumentation')}
-            </a>
-          </div>
+          <Button
+            type="link"
+            className={styles.desiredCapsLink}
+            icon={<IconLink size={16} />}
+            onClick={() => openLink(LINKS.CAPS_DOCS)}
+          >
+            {t('desiredCapabilitiesDocumentation')}
+          </Button>
           {!isAttaching && (
             <Space.Compact>
               {capsUUID && (

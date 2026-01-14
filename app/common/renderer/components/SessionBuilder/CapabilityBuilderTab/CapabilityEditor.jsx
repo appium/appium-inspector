@@ -1,4 +1,4 @@
-import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
+import {IconPlus, IconTrash} from '@tabler/icons-react';
 import {
   Button,
   Checkbox,
@@ -154,7 +154,7 @@ const CapabilityEditor = (props) => {
                     <Tooltip title={t('Delete')} placement="right">
                       <Button
                         {...{disabled: caps.length <= 1 || isEditingDesiredCaps}}
-                        icon={<DeleteOutlined />}
+                        icon={<IconTrash size={18} />}
                         onClick={() => removeCapability(cap.id)}
                       />
                     </Tooltip>
@@ -180,7 +180,7 @@ const CapabilityEditor = (props) => {
                   <Button
                     disabled={isEditingDesiredCaps}
                     id="btnAddDesiredCapability"
-                    icon={<PlusOutlined />}
+                    icon={<IconPlus size={18} />}
                     onClick={addCapability}
                     className={styles.addCapabilityButton}
                   />
