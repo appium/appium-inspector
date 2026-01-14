@@ -1,7 +1,6 @@
 import {
   IconChevronLeft,
   IconCircle,
-  IconCircleDot,
   IconExclamationCircle,
   IconHome,
   IconInfoCircle,
@@ -13,6 +12,7 @@ import {
   IconSearch,
   IconSquare,
   IconTriangleSquareCircle,
+  IconVideo,
   IconWorld,
   IconX,
 } from '@tabler/icons-react';
@@ -215,18 +215,14 @@ const HeaderButtons = (props) => {
       </Tooltip>
       {!isRecording && (
         <Tooltip title={t('Start Recording')}>
-          <Button
-            id="btnStartRecording"
-            icon={<IconCircleDot size={18} />}
-            onClick={startRecording}
-          />
+          <Button id="btnStartRecording" icon={<IconVideo size={18} />} onClick={startRecording} />
         </Tooltip>
       )}
       {isRecording && (
         <Tooltip title={t('Pause Recording')}>
           <Button
             id="btnPause"
-            icon={<IconCircleDot size={18} />}
+            icon={<IconVideo size={18} />}
             type={BUTTON.PRIMARY}
             danger
             onClick={pauseRecording}

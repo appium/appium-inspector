@@ -1,5 +1,5 @@
-import {CodeOutlined, CopyOutlined} from '@ant-design/icons';
-import {Button, Card, Select, Space, Tooltip} from 'antd';
+import {IconCode, IconFiles} from '@tabler/icons-react';
+import {Button, Card, Flex, Select, Space, Tooltip} from 'antd';
 import hljs from 'highlight.js';
 import _ from 'lodash';
 
@@ -27,7 +27,7 @@ const SessionCodeBox = (props) => {
   const actionBar = () => (
     <Space size="middle">
       <Tooltip title={t('Copy code to clipboard')}>
-        <Button icon={<CopyOutlined />} onClick={() => copyToClipboard(code())} />
+        <Button icon={<IconFiles size={18} />} onClick={() => copyToClipboard(code())} />
       </Tooltip>
       <Select
         defaultValue={clientFramework}
@@ -45,9 +45,10 @@ const SessionCodeBox = (props) => {
   return (
     <Card
       title={
-        <span>
-          <CodeOutlined /> {t('Start this Kind of Session with Code')}
-        </span>
+        <Flex gap={4} align="center">
+          <IconCode size={18} />
+          {t('Start this Kind of Session with Code')}
+        </Flex>
       }
       extra={actionBar()}
     >

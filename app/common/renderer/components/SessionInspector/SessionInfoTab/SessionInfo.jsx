@@ -1,5 +1,5 @@
-import {InfoCircleOutlined} from '@ant-design/icons';
-import {Card, Space, Table} from 'antd';
+import {IconInfoCircle} from '@tabler/icons-react';
+import {Card, Flex, Space, Table} from 'antd';
 import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 
@@ -111,9 +111,10 @@ const SessionInfo = (props) => {
   return (
     <Card
       title={
-        <span>
-          <InfoCircleOutlined /> {t('Session Information')}
-        </span>
+        <Flex gap={4} align="center">
+          <IconInfoCircle size={18} />
+          {t('Session Information')}
+        </Flex>
       }
       className={inspectorStyles.interactionTabCard}
     >
