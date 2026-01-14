@@ -116,8 +116,7 @@ function areSessionCapsValid(sessionJSON) {
     for (const capProp of ['type', 'name', 'value']) {
       if (!(capProp in cap)) {
         return logValidationError(
-          `capability '${JSON.stringify(cap)}' must have ` +
-            `the 'type', 'name' and 'value' properties`,
+          `capability '${JSON.stringify(cap)}' must have the '${capProp}' property`,
         );
       }
     }
