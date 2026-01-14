@@ -179,7 +179,7 @@ const SavedGestures = (props) => {
             scroll={{y: 'calc(100vh - 32em)'}}
             footer={() => (
               <Space.Compact>
-                <Button onClick={showGestureEditor} icon={<IconPlus size={18} />}>
+                <Button onClick={showGestureEditor} icon={<IconPlus size={16} />}>
                   {t('Create New Gesture')}
                 </Button>
                 <FileUploader
