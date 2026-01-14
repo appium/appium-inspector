@@ -12,6 +12,8 @@ import {
   DELETE_SAVED_GESTURES_REQUESTED,
   FINDING_ELEMENT_IN_SOURCE,
   FINDING_ELEMENT_IN_SOURCE_COMPLETED,
+  GESTURE_UPLOAD_DONE,
+  GESTURE_UPLOAD_REQUESTED,
   GET_FIND_ELEMENTS_TIMES,
   GET_FIND_ELEMENTS_TIMES_COMPLETED,
   GET_SAVED_GESTURES_DONE,
@@ -47,7 +49,6 @@ import {
   SET_EXPANDED_PATHS,
   SET_FLAT_SESSION_CAPS,
   SET_GESTURE_TAP_COORDS_MODE,
-  SET_GESTURE_UPLOAD_ERROR,
   SET_INTERACTIONS_NOT_AVAILABLE,
   SET_KEEP_ALIVE_INTERVAL,
   SET_LAST_ACTIVE_MOMENT,
@@ -122,7 +123,7 @@ const INITIAL_STATE = {
   isFindingLocatedElementInSource: false,
   isAwaitingMjpegStream: true,
   showSourceAttrs: false,
-  gestureUploadErrors: null,
+  isUploadingGestureFiles: false,
   autoSessionRestart: false,
 };
 
@@ -529,6 +530,18 @@ export default function inspector(state = INITIAL_STATE, action) {
     case SET_AWAITING_MJPEG_STREAM:
       return {...state, isAwaitingMjpegStream: action.isAwaiting};
 
+    case GESTURE_UPLOAD_REQUESTED:
+      return {
+        ...state,
+        isUploadingGestureFiles: true,
+      };
+
+    case GESTURE_UPLOAD_DONE:
+      return {
+        ...state,
+        isUploadingGestureFiles: false,
+      };
+
     case SHOW_GESTURE_EDITOR:
       return {
         ...state,
@@ -607,9 +620,6 @@ export default function inspector(state = INITIAL_STATE, action) {
 
     case TOGGLE_REFRESHING_STATE:
       return {...state, isSourceRefreshOn: !state.isSourceRefreshOn};
-
-    case SET_GESTURE_UPLOAD_ERROR:
-      return {...state, gestureUploadErrors: action.errors};
 
     case SET_AUTO_SESSION_RESTART:
       return {
