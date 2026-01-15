@@ -2,6 +2,7 @@ import {IconFiles, IconTable} from '@tabler/icons-react';
 import {Button, Col, Modal, Row, Space, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
 import {copyToClipboard} from '../../../polyfills.js';
@@ -12,7 +13,8 @@ const LABEL_VALUE = 'value';
 
 const stringifyValue = (val) => (_.isObject(val) ? JSON.stringify(val, null, 2) : String(val));
 
-const CommandResultTableCell = ({value, t}) => {
+const CommandResultTableCell = ({value}) => {
+  const {t} = useTranslation();
   const displayText = stringifyValue(value);
   return (
     <Tooltip placement="topLeft" title={t('Copied!')} trigger="click">
@@ -23,7 +25,8 @@ const CommandResultTableCell = ({value, t}) => {
   );
 };
 
-const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
+const CommandResultFormattedTable = ({result, isPrimitive}) => {
+  const {t} = useTranslation();
   // Specify properties for each column
   const createColumn = (colDataArray, colName, options = {}) => ({
     title:
@@ -31,7 +34,7 @@ const CommandResultFormattedTable = ({result, isPrimitive, t}) => {
     dataIndex: colName,
     key: colName,
     ellipsis: {showTitle: false},
-    render: (value) => <CommandResultTableCell value={value} t={t} />,
+    render: (value) => <CommandResultTableCell value={value} />,
     sorter: (a, b) => {
       const av = String(a[colName] ?? '');
       const bv = String(b[colName] ?? '');
@@ -163,37 +166,40 @@ const CommandResultModalFooter = ({
   setFormatResult,
   formatResult,
   isPrimitive,
-  t,
-}) => (
-  <Row>
-    <Col span={12}>
-      <Space>
-        <Tooltip title={t('toggleTableFormatting')}>
-          <Button
-            icon={<IconTable size={18} />}
-            disabled={isPrimitive}
-            type={formatResult ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-            onClick={() => setFormatResult(!formatResult)}
-          />
-        </Tooltip>
-        <Tooltip title={t('copyResultToClipboard')}>
-          <Button
-            icon={<IconFiles size={18} />}
-            disabled={formatResult}
-            onClick={() => copyToClipboard(result)}
-          />
-        </Tooltip>
-      </Space>
-    </Col>
-    <Col span={12} className={styles.commandResultModalOkButtonCol}>
-      <Button onClick={() => closeCommandModal()} type={BUTTON.PRIMARY}>
-        {t('OK')}
-      </Button>
-    </Col>
-  </Row>
-);
+}) => {
+  const {t} = useTranslation();
+  return (
+    <Row>
+      <Col span={12}>
+        <Space>
+          <Tooltip title={t('toggleTableFormatting')}>
+            <Button
+              icon={<IconTable size={18} />}
+              disabled={isPrimitive}
+              type={formatResult ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+              onClick={() => setFormatResult(!formatResult)}
+            />
+          </Tooltip>
+          <Tooltip title={t('copyResultToClipboard')}>
+            <Button
+              icon={<IconFiles size={18} />}
+              disabled={formatResult}
+              onClick={() => copyToClipboard(result)}
+            />
+          </Tooltip>
+        </Space>
+      </Col>
+      <Col span={12} className={styles.commandResultModalOkButtonCol}>
+        <Button onClick={() => closeCommandModal()} type={BUTTON.PRIMARY}>
+          {t('OK')}
+        </Button>
+      </Col>
+    </Row>
+  );
+};
 
-const CommandResultModal = ({commandName, commandResult, clearCurrentCommand, t}) => {
+const CommandResultModal = ({commandName, commandResult, clearCurrentCommand}) => {
+  const {t} = useTranslation();
   const [formatResult, setFormatResult] = useState(false);
 
   const resultType =
@@ -220,12 +226,11 @@ const CommandResultModal = ({commandName, commandResult, clearCurrentCommand, t}
           setFormatResult={setFormatResult}
           formatResult={formatResult}
           isPrimitive={isPrimitive}
-          t={t}
         />
       }
     >
       {formatResult ? (
-        <CommandResultFormattedTable result={commandResult} isPrimitive={isPrimitive} t={t} />
+        <CommandResultFormattedTable result={commandResult} isPrimitive={isPrimitive} />
       ) : (
         <CommandResultRawTable result={stringifiedResult} />
       )}

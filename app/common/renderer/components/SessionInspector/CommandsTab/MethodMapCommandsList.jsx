@@ -2,6 +2,7 @@ import {IconSearch} from '@tabler/icons-react';
 import {Button, Col, Divider, Input, Row, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {filterMethodPairs} from '../../../utils/commands-tab.js';
 import styles from './Commands.module.css';
@@ -10,7 +11,8 @@ import styles from './Commands.module.css';
 // Unlike StaticCommandsList, we cannot predict the contents of the method map response,
 // and we also want to be able to filter it, so just render all methods in a single grid.
 const MethodMapCommandsList = (props) => {
-  const {driverCommands, driverExecuteMethods, startCommand, t} = props;
+  const {driverCommands, driverExecuteMethods, startCommand} = props;
+  const {t} = useTranslation();
 
   const [searchQuery, setSearchQuery] = useState('');
 

@@ -1,4 +1,5 @@
 import {Col, Input, Row, Space} from 'antd';
+import {useTranslation} from 'react-i18next';
 
 import {INPUT} from '../../../constants/antd-types.js';
 
@@ -9,21 +10,24 @@ const tvlabsApiKeyPlaceholder = (t) => {
   return t('yourApiKey');
 };
 
-const ServerTabTVLabs = ({server, setServerParam, t}) => (
-  <Row gutter={8}>
-    <Col span={24}>
-      <Space.Compact block>
-        <Space.Addon>{t('TV Labs API Key')}</Space.Addon>
-        <Input
-          id="tvlabsApiKey"
-          type={INPUT.PASSWORD}
-          placeholder={tvlabsApiKeyPlaceholder(t)}
-          value={server.tvlabs.apiKey}
-          onChange={(e) => setServerParam('apiKey', e.target.value)}
-        />
-      </Space.Compact>
-    </Col>
-  </Row>
-);
+const ServerTabTVLabs = ({server, setServerParam}) => {
+  const {t} = useTranslation();
+  return (
+    <Row gutter={8}>
+      <Col span={24}>
+        <Space.Compact block>
+          <Space.Addon>{t('TV Labs API Key')}</Space.Addon>
+          <Input
+            id="tvlabsApiKey"
+            type={INPUT.PASSWORD}
+            placeholder={tvlabsApiKeyPlaceholder(t)}
+            value={server.tvlabs.apiKey}
+            onChange={(e) => setServerParam('apiKey', e.target.value)}
+          />
+        </Space.Compact>
+      </Col>
+    </Row>
+  );
+};
 
 export default ServerTabTVLabs;

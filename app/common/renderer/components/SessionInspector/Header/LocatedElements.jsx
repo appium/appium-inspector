@@ -1,6 +1,7 @@
 import {IconEraser, IconFocus2, IconListSearch, IconSend2} from '@tabler/icons-react';
 import {Alert, Badge, Button, Input, Row, Space, Spin, Table, Tooltip} from 'antd';
 import {useRef} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {ALERT} from '../../../constants/antd-types.js';
 import inspectorStyles from '../SessionInspector.module.css';
@@ -20,8 +21,8 @@ const LocatedElements = (props) => {
     sourceXML,
     locatorTestStrategy,
     locatorTestValue,
-    t,
   } = props;
+  const {t} = useTranslation();
 
   const sendKeysRef = useRef(null);
 

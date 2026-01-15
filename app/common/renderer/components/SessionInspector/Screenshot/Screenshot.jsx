@@ -1,5 +1,6 @@
 import {Spin} from 'antd';
 import {Fragment, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {GESTURE_ITEM_STYLES, POINTER_TYPES} from '../../../constants/gestures.js';
 import {
@@ -32,8 +33,8 @@ const Screenshot = (props) => {
     selectedTick,
     selectedInspectorTab,
     applyClientMethod,
-    t,
   } = props;
+  const {t} = useTranslation();
 
   const [x, setX] = useState();
   const [y, setY] = useState();

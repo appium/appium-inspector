@@ -1,6 +1,5 @@
 import i18n from 'i18next';
-import _ from 'lodash';
-import {initReactI18next, withTranslation as wt} from 'react-i18next';
+import {initReactI18next} from 'react-i18next';
 
 import {commonI18NextOptions} from '../shared/i18next.config.js';
 import {PREFERRED_LANGUAGE} from '../shared/setting-defs.js';
@@ -12,14 +11,8 @@ const i18nextOptions = {
   lng: await getSetting(PREFERRED_LANGUAGE),
 };
 
-const namespace = 'translation';
-
 if (!i18n.isInitialized) {
   i18n.use(initReactI18next).use(i18NextBackend).init(i18nextOptions);
-}
-
-export function withTranslation(componentCls, ...hocs) {
-  return _.flow(...hocs, wt(namespace))(componentCls);
 }
 
 export default i18n;

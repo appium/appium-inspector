@@ -1,5 +1,6 @@
 import {Button, Col, Collapse, Row, Space} from 'antd';
 import _ from 'lodash';
+import {useTranslation} from 'react-i18next';
 
 import {COMMAND_DEFINITIONS, TOP_LEVEL_COMMANDS} from '../../../constants/commands.js';
 import inspectorStyles from '../SessionInspector.module.css';
@@ -7,8 +8,8 @@ import styles from './Commands.module.css';
 
 // Static list of driver commands, shown only for drivers that do not support
 // the listCommands/listExtensions endpoints
-const StaticCommandsList = (props) => {
-  const {startCommand, t} = props;
+const StaticCommandsList = ({startCommand}) => {
+  const {t} = useTranslation();
 
   return (
     <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="middle">

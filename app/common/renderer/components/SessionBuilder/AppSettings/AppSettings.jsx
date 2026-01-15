@@ -1,12 +1,14 @@
 import {IconSettings} from '@tabler/icons-react';
 import {Button, Form, Modal, Tooltip} from 'antd';
 import {useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import ChangeLanguage from './ChangeLanguage.jsx';
 import ToggleTheme from './ToggleTheme.jsx';
 
-const AppSettings = ({t}) => {
+const AppSettings = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const {t} = useTranslation();
 
   return (
     <>
@@ -23,8 +25,8 @@ const AppSettings = ({t}) => {
         centered
       >
         <Form styles={{label: {fontSize: '16px'}}} layout="vertical">
-          <ToggleTheme t={t} />
-          <ChangeLanguage t={t} />
+          <ToggleTheme />
+          <ChangeLanguage />
         </Form>
       </Modal>
     </>

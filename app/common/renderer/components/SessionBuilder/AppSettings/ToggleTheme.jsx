@@ -1,11 +1,13 @@
 import {IconMoon, IconSun, IconSunMoon} from '@tabler/icons-react';
 import {Button, Col, Form, Row} from 'antd';
+import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
 import {useTheme} from '../../../hooks/use-theme.jsx';
 
-const ToggleTheme = ({t}) => {
+const ToggleTheme = () => {
   const {preferredTheme, updateTheme} = useTheme();
+  const {t} = useTranslation();
 
   const themes = [
     {

@@ -2,6 +2,7 @@ import {IconTerminal} from '@tabler/icons-react';
 import {Card, Flex, Input, Modal, Space, Typography} from 'antd';
 import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {
   adjustParamValueType,
@@ -29,7 +30,8 @@ const formatParamInputLabel = (param) => {
 };
 
 const Commands = (props) => {
-  const {applyClientMethod, getSupportedSessionMethods, storeSessionSettings, t} = props;
+  const {applyClientMethod, getSupportedSessionMethods, storeSessionSettings} = props;
+  const {t} = useTranslation();
 
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
   const [driverCommands, setDriverCommands] = useState(null);
@@ -126,13 +128,12 @@ const Commands = (props) => {
       className={inspectorStyles.interactionTabCard}
     >
       <div className={styles.commandsContainer}>
-        {hasMethodsMap === false && <StaticCommandsList startCommand={startCommand} t={t} />}
+        {hasMethodsMap === false && <StaticCommandsList startCommand={startCommand} />}
         {hasMethodsMap && (
           <MethodMapCommandsList
             driverCommands={driverCommands}
             driverExecuteMethods={driverExecuteMethods}
             startCommand={startCommand}
-            t={t}
           />
         )}
         {!!curCommandDetails && (
@@ -157,7 +158,6 @@ const Commands = (props) => {
             commandName={curCommandDetails.name}
             commandResult={commandResult}
             clearCurrentCommand={clearCurrentCommand}
-            t={t}
           />
         )}
       </div>

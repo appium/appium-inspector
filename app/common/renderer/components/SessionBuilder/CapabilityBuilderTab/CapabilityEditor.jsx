@@ -13,6 +13,7 @@ import {
   Tooltip,
 } from 'antd';
 import {useEffect, useRef} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {CAPABILITY_TYPES} from '../../../constants/session-builder.js';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
@@ -72,7 +73,6 @@ const CapabilityEditor = (props) => {
     showSaveAsModal,
     setSaveAsText,
     isEditingDesiredCaps,
-    t,
     setAddVendorPrefixes,
     addVendorPrefixes,
     server,
@@ -82,6 +82,7 @@ const CapabilityEditor = (props) => {
 
   const onSaveAsOk = () => saveSession({server, serverType, caps, name: saveAsText}, true);
   const latestCapFieldRef = useRef(null);
+  const {t} = useTranslation();
 
   // if we have more than one cap and the most recent cap name is empty,
   // it means we've just added a new cap field, so focus that input element

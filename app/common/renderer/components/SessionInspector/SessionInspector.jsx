@@ -2,6 +2,7 @@ import {IconCrosshair, IconDownload, IconEyePlus, IconLayoutDashboard} from '@ta
 import {Button, Modal, Space, Spin, Splitter, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useCallback, useEffect, useRef, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {useNavigate} from 'react-router';
 
 import {BUTTON} from '../../constants/antd-types.js';
@@ -72,7 +73,6 @@ const Inspector = (props) => {
     setSessionTime,
     storeSessionSettings,
     setAwaitingMjpegStream,
-    t,
   } = props;
 
   const screenshotContainerElRef = useRef(null);
@@ -86,6 +86,7 @@ const Inspector = (props) => {
   const [scaleRatio, setScaleRatio] = useState(1);
 
   const navigate = useNavigate();
+  const {t} = useTranslation();
 
   const showScreenshot =
     (screenshot && !screenshotError) ||

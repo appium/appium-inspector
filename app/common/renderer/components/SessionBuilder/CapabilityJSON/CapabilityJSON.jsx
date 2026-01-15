@@ -1,6 +1,7 @@
 import {IconDeviceFloppy, IconEdit, IconX} from '@tabler/icons-react';
 import {Alert, Button, Card, Input, Row, Tooltip} from 'antd';
 import hljs from 'highlight.js';
+import {useTranslation} from 'react-i18next';
 
 import {getCapsObject} from '../../../actions/SessionBuilder.js';
 import {ALERT} from '../../../constants/antd-types.js';
@@ -22,8 +23,9 @@ const CapabilityJSON = (props) => {
     isValidCapsJson,
     invalidCapsJsonReason,
     isDuplicateCapsName,
-    t,
   } = props;
+
+  const {t} = useTranslation();
 
   const getHighlightedCaps = (caps) => {
     const formattedJson = JSON.stringify(getCapsObject(caps), null, 2);

@@ -10,6 +10,7 @@ import {
 import {Alert, Button, Card, Col, Flex, Input, Row, Space, Spin, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useRef} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {ALERT, ROW} from '../../../constants/antd-types.js';
 import {LINKS} from '../../../constants/common.js';
@@ -36,8 +37,8 @@ const SelectedElement = (props) => {
     elementInteractionsNotAvailable,
     selectedElementSearchInProgress,
     sessionSettings,
-    t,
   } = props;
+  const {t} = useTranslation();
 
   const downloadElementScreenshot = async (elementId) => {
     const elemScreenshot = await applyClientMethod({

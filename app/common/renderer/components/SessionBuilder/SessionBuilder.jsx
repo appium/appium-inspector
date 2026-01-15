@@ -2,6 +2,7 @@ import {IconLink} from '@tabler/icons-react';
 import {Badge, Button, Divider, Space, Spin, Tabs} from 'antd';
 import _ from 'lodash';
 import {useCallback, useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
 import {useNavigate} from 'react-router';
 
 import {BUTTON} from '../../constants/antd-types.js';
@@ -57,10 +58,10 @@ const Session = (props) => {
     initFromQueryString,
     setPortFromUrl,
     showError,
-    t,
   } = props;
 
   const navigate = useNavigate();
+  const {t} = useTranslation();
 
   const isAttaching = tabKey === 'attach';
 
@@ -146,7 +147,7 @@ const Session = (props) => {
               },
             ]}
           />
-          <AppSettings t={t} />
+          <AppSettings />
         </div>
         <AdvancedServerParams {...props} />
         <Tabs
