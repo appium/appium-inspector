@@ -58,7 +58,7 @@ const SessionInfo = (props) => {
   );
 
   const outerDataSource = () => {
-    const {serverDetails, appId, status, flatSessionCaps, t} = props;
+    const {serverDetails, appId, status, flatSessionCaps} = props;
     const {sessionId} = driver || '';
 
     // TODO: Fetch URL from Cloud Providers
