@@ -1,5 +1,6 @@
 import {IconRefresh} from '@tabler/icons-react';
 import {Button, Card, Col, Form, Row, Select, Tooltip} from 'antd';
+import {useTranslation} from 'react-i18next';
 
 import {getSessionInfo} from '../../../utils/attaching-to-session.js';
 import builderStyles from '../SessionBuilder.module.css';
@@ -11,52 +12,54 @@ const AttachToSession = ({
   setAttachSessId,
   runningAppiumSessions,
   getRunningSessions,
-  t,
-}) => (
-  <Form>
-    <Form.Item>
-      <Card>
-        <p className={builderStyles.localDesc}>
-          {t('connectToExistingSessionInstructions')}
-          <br />
-          {t('selectSessionIDInDropdown')}
-        </p>
-      </Card>
-    </Form.Item>
-    <Form.Item>
-      <Row>
-        <Col span={23}>
-          <Select
-            showSearch
-            notFoundContent={t('noResultsFound')}
-            placeholder={t('enterYourSessionId')}
-            value={attachSessId || undefined}
-            onChange={(value) => setAttachSessId(value)}
-          >
-            {runningAppiumSessions
-              .slice()
-              .reverse()
-              .map((session) => (
-                // list is reversed in order to place the most recent sessions at the top
-                // slice() is added because reverse() mutates the original array
-                <Select.Option key={session.id} value={session.id}>
-                  <div>{getSessionInfo(session, serverType)}</div>
-                </Select.Option>
-              ))}
-          </Select>
-        </Col>
-        <Col span={1}>
-          <Tooltip title={t('Reload')}>
-            <Button
-              className={styles.btnReload}
-              onClick={getRunningSessions}
-              icon={<IconRefresh size={18} />}
-            />
-          </Tooltip>
-        </Col>
-      </Row>
-    </Form.Item>
-  </Form>
-);
+}) => {
+  const {t} = useTranslation();
+  return (
+    <Form>
+      <Form.Item>
+        <Card>
+          <p className={builderStyles.localDesc}>
+            {t('connectToExistingSessionInstructions')}
+            <br />
+            {t('selectSessionIDInDropdown')}
+          </p>
+        </Card>
+      </Form.Item>
+      <Form.Item>
+        <Row>
+          <Col span={23}>
+            <Select
+              showSearch
+              notFoundContent={t('noResultsFound')}
+              placeholder={t('enterYourSessionId')}
+              value={attachSessId || undefined}
+              onChange={(value) => setAttachSessId(value)}
+            >
+              {runningAppiumSessions
+                .slice()
+                .reverse()
+                .map((session) => (
+                  // list is reversed in order to place the most recent sessions at the top
+                  // slice() is added because reverse() mutates the original array
+                  <Select.Option key={session.id} value={session.id}>
+                    <div>{getSessionInfo(session, serverType)}</div>
+                  </Select.Option>
+                ))}
+            </Select>
+          </Col>
+          <Col span={1}>
+            <Tooltip title={t('Reload')}>
+              <Button
+                className={styles.btnReload}
+                onClick={getRunningSessions}
+                icon={<IconRefresh size={18} />}
+              />
+            </Tooltip>
+          </Col>
+        </Row>
+      </Form.Item>
+    </Form>
+  );
+};
 
 export default AttachToSession;
