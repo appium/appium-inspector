@@ -9,6 +9,7 @@ import {
 } from '@tabler/icons-react';
 import {Button, Card, Flex, Input, Row, Space, Spin, Tooltip, Tree} from 'antd';
 import {useCallback, useMemo, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {BUTTON, ROW} from '../../../constants/antd-types.js';
 import {IMPORTANT_SOURCE_ATTRS} from '../../../constants/source.js';
@@ -40,8 +41,8 @@ const Source = (props) => {
     isSourceRefreshOn,
     sourceXML,
     toggleShowAttributes,
-    t,
   } = props;
+  const {t} = useTranslation();
 
   const [searchValue, setSearchValue] = useState('');
   const [autoExpandParent, setAutoExpandParent] = useState(true);

@@ -2,13 +2,15 @@ import {IconInfoCircle} from '@tabler/icons-react';
 import {Card, Flex, Space, Table} from 'antd';
 import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import inspectorStyles from '../SessionInspector.module.css';
 import SessionCodeBox from './SessionCodeBox.jsx';
 import styles from './SessionInfo.module.css';
 
 const SessionInfo = (props) => {
-  const {driver, getActiveAppId, getServerStatus, getFlatSessionCaps, sessionStartTime, t} = props;
+  const {driver, getActiveAppId, getServerStatus, getFlatSessionCaps, sessionStartTime} = props;
+  const {t} = useTranslation();
 
   const intervalRef = useRef(null);
   const [sessionLength, setSessionLength] = useState(0);

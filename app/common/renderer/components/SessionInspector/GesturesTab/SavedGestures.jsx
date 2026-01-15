@@ -10,6 +10,7 @@ import {Button, Card, Flex, Popconfirm, Space, Spin, Table, Tooltip} from 'antd'
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import {useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../../constants/gestures.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
@@ -48,8 +49,8 @@ const SavedGestures = (props) => {
     isUploadingGestureFiles,
     importGestureFiles,
     exportSavedGesture,
-    t,
   } = props;
+  const {t} = useTranslation();
 
   const onRowMouseOver = (rowKey) => ({
     onMouseEnter: () => {

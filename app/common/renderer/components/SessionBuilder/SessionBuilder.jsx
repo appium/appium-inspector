@@ -147,7 +147,7 @@ const Session = (props) => {
               },
             ]}
           />
-          <AppSettings t={t} />
+          <AppSettings />
         </div>
         <AdvancedServerParams {...props} />
         <Tabs

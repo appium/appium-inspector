@@ -1,7 +1,9 @@
 import {Button, Input, Modal, Row} from 'antd';
+import {useTranslation} from 'react-i18next';
 
 const SiriCommandModal = (props) => {
-  const {siriCommandValue, setSiriCommandValue, isSiriCommandModalVisible, t} = props;
+  const {siriCommandValue, setSiriCommandValue, isSiriCommandModalVisible} = props;
+  const {t} = useTranslation();
 
   const onSubmit = () => {
     const {applyClientMethod} = props;
