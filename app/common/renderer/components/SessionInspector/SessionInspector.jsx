@@ -1,4 +1,11 @@
-import {IconCrosshair, IconDownload, IconEyePlus, IconLayoutDashboard} from '@tabler/icons-react';
+import {
+  IconCrosshair,
+  IconDownload,
+  IconEyePlus,
+  IconLayoutDashboard,
+  IconMovie,
+  IconPhoto,
+} from '@tabler/icons-react';
 import {Button, Modal, Space, Spin, Splitter, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useCallback, useEffect, useRef, useState} from 'react';
@@ -61,7 +68,9 @@ const Inspector = (props) => {
     keepSessionAlive,
     serverDetails,
     isUsingMjpegMode,
+    setMjpegState,
     isAwaitingMjpegStream,
+    setRefreshingState,
     toggleShowCentroids,
     showCentroids,
     isGestureEditorVisible,
@@ -174,6 +183,14 @@ const Inspector = (props) => {
     selectScreenshotInteractionMode(mode);
   };
 
+  const switchScreenCaptureMode = (shouldUseMjpeg) => {
+    setMjpegState(shouldUseMjpeg);
+    if (!shouldUseMjpeg) {
+      setRefreshingState({source: true});
+      applyClientMethod({methodName: 'getPageSource'});
+    }
+  };
+
   const quitCurrentSession = useCallback(
     async (reason, killedByUser = true) => {
       await quitSession(reason, killedByUser);
@@ -246,10 +263,25 @@ const Inspector = (props) => {
   const screenShotControls = (
     <div className={styles.screenshotControls}>
       <Space size="middle">
-        <Tooltip
-          title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')}
-          placement="topRight"
-        >
+        {serverDetails.mjpegScreenshotUrl !== null && (
+          <Space.Compact>
+            <Tooltip title={t('MJPEG Mode')}>
+              <Button
+                icon={<IconMovie size={18} />}
+                onClick={() => switchScreenCaptureMode(true)}
+                type={isUsingMjpegMode ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+              />
+            </Tooltip>
+            <Tooltip title={t('Screenshot Mode')}>
+              <Button
+                icon={<IconPhoto size={18} />}
+                onClick={() => switchScreenCaptureMode(false)}
+                type={!isUsingMjpegMode ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+              />
+            </Tooltip>
+          </Space.Compact>
+        )}
+        <Tooltip title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')}>
           <Button
             icon={<IconEyePlus size={18} />}
             onClick={() => toggleShowCentroids()}
@@ -275,14 +307,13 @@ const Inspector = (props) => {
             />
           </Tooltip>
         </Space.Compact>
-        {showScreenshot && !isUsingMjpegMode && (
-          <Tooltip title={t('Download Screenshot')}>
-            <Button
-              icon={<IconDownload size={18} />}
-              onClick={() => downloadScreenshot(screenshot)}
-            />
-          </Tooltip>
-        )}
+        <Tooltip title={t('Download Screenshot')}>
+          <Button
+            icon={<IconDownload size={18} />}
+            onClick={() => downloadScreenshot(screenshot)}
+            disabled={!showScreenshot || isUsingMjpegMode}
+          />
+        </Tooltip>
       </Space>
     </div>
   );

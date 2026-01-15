@@ -65,6 +65,7 @@ export const FINDING_ELEMENT_IN_SOURCE_COMPLETED = 'FINDING_ELEMENT_IN_SOURCE_CO
 export const CLEAR_SEARCH_RESULTS = 'CLEAR_SEARCH_RESULTS';
 export const ADD_ASSIGNED_VAR_CACHE = 'ADD_ASSIGNED_VAR_CACHE';
 export const CLEAR_ASSIGNED_VAR_CACHE = 'CLEAR_ASSIGNED_VAR_CACHE';
+export const SET_MJPEG_STATE = 'SET_MJPEG_STATE';
 export const SET_SCREENSHOT_INTERACTION_MODE = 'SET_SCREENSHOT_INTERACTION_MODE';
 export const SET_APP_MODE = 'SET_APP_MODE';
 export const SET_SEARCHED_FOR_ELEMENT_BOUNDS = 'SET_SEARCHED_FOR_ELEMENT_BOUNDS';
@@ -108,7 +109,7 @@ export const SET_GESTURE_TAP_COORDS_MODE = 'SET_GESTURE_TAP_COORDS_MODE';
 export const CLEAR_TAP_COORDINATES = 'CLEAR_TAP_COORDINATES';
 
 export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
-export const TOGGLE_REFRESHING_STATE = 'TOGGLE_REFRESHING_STATE';
+export const SET_REFRESHING_STATE = 'SET_REFRESHING_STATE';
 
 export const SET_AUTO_SESSION_RESTART = 'SET_AUTO_SESSION_RESTART';
 
@@ -634,15 +635,21 @@ export function clearSearchResults() {
   };
 }
 
+export function setMjpegState(targetMjpegState) {
+  return (dispatch) => {
+    dispatch({type: SET_MJPEG_STATE, targetMjpegState});
+  };
+}
+
 export function selectScreenshotInteractionMode(screenshotInteractionMode) {
   return (dispatch) => {
     dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode});
   };
 }
 
-export function toggleRefreshingState() {
+export function setRefreshingState(refreshStates) {
   return (dispatch) => {
-    dispatch({type: TOGGLE_REFRESHING_STATE});
+    dispatch({type: SET_REFRESHING_STATE, refreshStates});
   };
 }
 

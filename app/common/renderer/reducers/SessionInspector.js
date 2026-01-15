@@ -56,7 +56,9 @@ import {
   SET_LOCATOR_TEST_ELEMENT,
   SET_LOCATOR_TEST_STRATEGY,
   SET_LOCATOR_TEST_VALUE,
+  SET_MJPEG_STATE,
   SET_OPTIMAL_LOCATORS,
+  SET_REFRESHING_STATE,
   SET_SCREENSHOT_INTERACTION_MODE,
   SET_SEARCHED_FOR_ELEMENT_BOUNDS,
   SET_SELECTED_ELEMENT_ID,
@@ -74,7 +76,6 @@ import {
   SHOW_SIRI_COMMAND_MODAL,
   START_RECORDING,
   STORE_SESSION_SETTINGS,
-  TOGGLE_REFRESHING_STATE,
   TOGGLE_SHOW_ATTRIBUTES,
   UNSELECT_CENTROID,
   UNSELECT_ELEMENT,
@@ -403,6 +404,12 @@ export default function inspector(state = INITIAL_STATE, action) {
         isFindingLocatedElementInSource: false,
       };
 
+    case SET_MJPEG_STATE:
+      return {
+        ...state,
+        isUsingMjpegMode: action.targetMjpegState,
+      };
+
     case SET_SCREENSHOT_INTERACTION_MODE:
       return {
         ...state,
@@ -618,8 +625,8 @@ export default function inspector(state = INITIAL_STATE, action) {
     case TOGGLE_SHOW_ATTRIBUTES:
       return {...state, showSourceAttrs: !state.showSourceAttrs};
 
-    case TOGGLE_REFRESHING_STATE:
-      return {...state, isSourceRefreshOn: !state.isSourceRefreshOn};
+    case SET_REFRESHING_STATE:
+      return {...state, isSourceRefreshOn: action.refreshStates.source};
 
     case SET_AUTO_SESSION_RESTART:
       return {
