@@ -2,8 +2,8 @@ import {
   IconCrosshair,
   IconDownload,
   IconEyePlus,
-  IconLayoutDashboard,
   IconMovie,
+  IconObjectScan,
   IconPhoto,
 } from '@tabler/icons-react';
 import {Button, Modal, Space, Spin, Splitter, Tabs, Tooltip} from 'antd';
@@ -292,7 +292,7 @@ const Inspector = (props) => {
         <Space.Compact>
           <Tooltip title={t('Select Elements')}>
             <Button
-              icon={<IconLayoutDashboard size={18} />}
+              icon={<IconObjectScan size={18} />}
               onClick={() => screenshotInteractionChange(SELECT)}
               type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
               disabled={isGestureEditorVisible}
