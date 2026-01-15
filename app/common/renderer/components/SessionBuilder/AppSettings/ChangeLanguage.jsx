@@ -1,19 +1,20 @@
 import {Form, Select} from 'antd';
 import {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {languageList} from '../../../../shared/i18next.config.js';
 import {PREFERRED_LANGUAGE} from '../../../../shared/setting-defs.js';
-import i18n from '../../../i18next.js';
 import {setSetting, updateLanguage} from '../../../polyfills.js';
 
-const ChangeLanguage = ({t}) => {
+const ChangeLanguage = () => {
+  const {t, i18n} = useTranslation();
   const [language, setLanguage] = useState(i18n.language);
 
   useEffect(() => {
     const handler = (lng) => setLanguage(lng);
     i18n.on('languageChanged', handler);
     return () => i18n.off('languageChanged', handler);
-  }, []);
+  }, [i18n]);
 
   const languageOptions = languageList.map((language) => ({
     value: language.code,

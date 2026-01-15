@@ -12,14 +12,12 @@ const i18nextOptions = {
   lng: await getSetting(PREFERRED_LANGUAGE),
 };
 
-const namespace = 'translation';
-
 if (!i18n.isInitialized) {
   i18n.use(initReactI18next).use(i18NextBackend).init(i18nextOptions);
 }
 
 export function withTranslation(componentCls, ...hocs) {
-  return _.flow(...hocs, wt(namespace))(componentCls);
+  return _.flow(...hocs, wt())(componentCls);
 }
 
 export default i18n;
