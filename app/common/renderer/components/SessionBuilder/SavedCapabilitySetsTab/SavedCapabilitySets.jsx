@@ -1,6 +1,7 @@
 import {IconEdit, IconFileExport, IconTrash} from '@tabler/icons-react';
 import {Button, Card, Popconfirm, Space, Spin, Splitter, Table, Tooltip} from 'antd';
 import dayjs from 'dayjs';
+import {useTranslation} from 'react-i18next';
 
 import {
   SAVED_SESSIONS_TABLE_VALUES,
@@ -40,8 +41,9 @@ const SavedCapabilitySets = (props) => {
     switchTabs,
     importSessionFiles,
     isUploadingSessionFiles,
-    t,
   } = props;
+
+  const {t} = useTranslation();
 
   const handleCapsAndServer = (uuid) => {
     const {

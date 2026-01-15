@@ -17,6 +17,7 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import {Button, Divider, Select, Space, Tooltip} from 'antd';
+import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
 import {LINKS} from '../../../constants/common.js';
@@ -42,10 +43,10 @@ const HeaderButtons = (props) => {
     contexts,
     currentContext,
     setContext,
-    t,
     autoSessionRestart,
     toggleAutoSessionRestart,
   } = props;
+  const {t} = useTranslation();
 
   const deviceControls = (
     <Space.Compact>

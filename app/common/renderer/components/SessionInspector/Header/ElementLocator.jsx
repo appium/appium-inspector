@@ -1,4 +1,5 @@
 import {Alert, Button, Input, Row, Space} from 'antd';
+import {useTranslation} from 'react-i18next';
 
 import {ALERT, BUTTON} from '../../../constants/antd-types.js';
 import {DRIVERS} from '../../../constants/common.js';
@@ -45,8 +46,8 @@ const ElementLocator = (props) => {
     locatorTestStrategy,
     automationName,
     currentContext,
-    t,
   } = props;
+  const {t} = useTranslation();
 
   return (
     <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="small">

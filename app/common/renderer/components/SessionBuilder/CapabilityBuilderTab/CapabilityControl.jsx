@@ -1,17 +1,13 @@
 import {Input, Switch} from 'antd';
+import {useTranslation} from 'react-i18next';
 
 import {INPUT} from '../../../constants/antd-types.js';
 import {CAPABILITY_TYPES} from '../../../constants/session-builder.js';
 import styles from './CapabilityBuilderTab.module.css';
 
-const CapabilityControl = ({
-  cap,
-  onSetCapabilityParam,
-  onPressEnter,
-  isEditingDesiredCaps,
-  id,
-  t,
-}) => {
+const CapabilityControl = ({cap, onSetCapabilityParam, onPressEnter, isEditingDesiredCaps, id}) => {
+  const {t} = useTranslation();
+
   switch (cap.type) {
     case CAPABILITY_TYPES.TEXT:
     case CAPABILITY_TYPES.FILE:

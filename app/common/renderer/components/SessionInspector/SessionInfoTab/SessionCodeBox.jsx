@@ -2,13 +2,15 @@ import {IconCode, IconFiles} from '@tabler/icons-react';
 import {Button, Card, Flex, Select, Space, Tooltip} from 'antd';
 import hljs from 'highlight.js';
 import _ from 'lodash';
+import {useTranslation} from 'react-i18next';
 
 import {CLIENT_FRAMEWORK_MAP} from '../../../lib/client-frameworks/map.js';
 import {copyToClipboard} from '../../../polyfills.js';
 import inspectorStyles from '../SessionInspector.module.css';
 
 const SessionCodeBox = (props) => {
-  const {clientFramework, setClientFramework, t} = props;
+  const {clientFramework, setClientFramework} = props;
+  const {t} = useTranslation();
 
   const code = (raw = true) => {
     const {serverDetails, sessionCaps} = props;

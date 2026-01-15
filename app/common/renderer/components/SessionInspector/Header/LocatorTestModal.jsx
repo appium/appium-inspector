@@ -1,16 +1,13 @@
 import {Button, Modal} from 'antd';
+import {useTranslation} from 'react-i18next';
 
 import ElementLocator from './ElementLocator.jsx';
 import LocatedElements from './LocatedElements.jsx';
 
 const LocatorTestModal = (props) => {
-  const {
-    isLocatorTestModalVisible,
-    isSearchingForElements,
-    clearSearchResults,
-    locatedElements,
-    t,
-  } = props;
+  const {isLocatorTestModalVisible, isSearchingForElements, clearSearchResults, locatedElements} =
+    props;
+  const {t} = useTranslation();
 
   const onCancel = () => {
     const {hideLocatorTestModal} = props;

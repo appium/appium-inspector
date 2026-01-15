@@ -1,12 +1,14 @@
 import {Button, Col, Modal, Row} from 'antd';
 import _ from 'lodash';
+import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
 import CloudProviders from './CloudProviders.jsx';
 import styles from './ServerDetails.module.css';
 
 const CloudProviderSelector = (props) => {
-  const {visibleProviders = [], isAddingCloudProvider, stopAddCloudProvider, t} = props;
+  const {visibleProviders = [], isAddingCloudProvider, stopAddCloudProvider} = props;
+  const {t} = useTranslation();
 
   const footer = (
     <Button key="back" type={BUTTON.PRIMARY} onClick={stopAddCloudProvider}>

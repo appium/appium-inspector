@@ -28,6 +28,7 @@ import {
 } from 'antd';
 import _ from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {NOTIF, TABLE_TAB} from '../../../constants/antd-types.js';
 import {
@@ -62,8 +63,8 @@ const GestureEditor = (props) => {
     unselectTick,
     windowSize,
     displayGesture,
-    t,
   } = props;
+  const {t} = useTranslation();
 
   const defaultGestureName = t('Untitled Gesture');
   const defaultGestureDescription = t('Add Description');
