@@ -265,14 +265,14 @@ const Inspector = (props) => {
       <Space size="middle">
         {serverDetails.mjpegScreenshotUrl !== null && (
           <Space.Compact>
-            <Tooltip title={t('MJPEG Mode')}>
+            <Tooltip title={t('useMjpegStream')} placement="topLeft">
               <Button
                 icon={<IconMovie size={18} />}
                 onClick={() => switchScreenCaptureMode(true)}
                 type={isUsingMjpegMode ? BUTTON.PRIMARY : BUTTON.DEFAULT}
               />
             </Tooltip>
-            <Tooltip title={t('Screenshot Mode')}>
+            <Tooltip title={t('useScreenshotApi')} placement="topLeft">
               <Button
                 icon={<IconPhoto size={18} />}
                 onClick={() => switchScreenCaptureMode(false)}
