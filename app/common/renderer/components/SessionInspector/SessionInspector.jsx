@@ -187,8 +187,8 @@ const Inspector = (props) => {
     setMjpegState(shouldUseMjpeg);
     if (!shouldUseMjpeg) {
       setRefreshingState({source: true});
-      applyClientMethod({methodName: 'getPageSource'});
     }
+    applyClientMethod({methodName: 'getPageSource'});
   };
 
   const quitCurrentSession = useCallback(
