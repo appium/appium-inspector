@@ -43,62 +43,63 @@ export default function hljsDefineRobot() {
   const VAR = {
     className: 'variable',
     begin: /\$\{/,
-    end: /\}/
+    end: /\}/,
   };
   const DICT = {
     className: 'variable',
     begin: /&\{/,
-    end: /\}/
+    end: /\}/,
   };
   const LIST = {
     className: 'variable',
     begin: /@\{/,
-    end: /\}/
+    end: /\}/,
   };
   const NUMBER = {
     className: 'number',
     begin: /\$\{([0-9])/,
-    end: /\}/
+    end: /\}/,
   };
   const SECTION = {
     className: 'section',
     begin: /^(\*{1,3})/,
-    end: /$/
+    end: /$/,
   };
   const DOC = {
     className: 'comment',
     begin: /^\s*\[?Documentation\]?\s+/,
-    end: /$/
+    end: /$/,
   };
   const DOC_CONT = {
     className: 'comment',
     begin: /^\.\.\./,
-    end: /$/
+    end: /$/,
   };
   const COMMENT = {
     className: 'comment',
     begin: /(^| {2,}|\t|\| {1,})#/,
-    end: /$/
+    end: /$/,
   };
   const TEST = {
     className: 'name',
     begin: /(^([^*| |\t|\n)]))\w/,
     end: /($|\s{2,})/,
-    contains: [VAR]
+    contains: [VAR],
   };
   const SETTING = {
     className: 'built_in',
     begin: /^\s+\[(Tags|Setup|Teardown|Template|Timeout|Arguments|Return)\]/,
     end: /$| {2,}|\t/,
     contains: [VAR],
-    relevance: 10
+    relevance: 10,
   };
   const CONST = {
     className: 'attribute',
-    begin: /^(Library|Resource|Test Timeout|Test Template|Test Teardown|Test Setup|Default Tags|Force Tags|Variables|Suite Setup|Suite Teardown)(?:( )|( \| ))/,
+    begin:
+      /^(Library|Resource|Test Timeout|Test Template|Test Teardown|Test Setup|Default Tags|Force Tags|Variables|Suite Setup|Suite Teardown)(?:( )|( \| ))/,
     end: /$| {2,}|\t/,
     contains: [VAR],
-    relevance: 10
+    relevance: 10,
   };
   const GHERKIN = {
     className: 'comment',
@@ -106,13 +107,14 @@ export default function hljsDefineRobot() {
       {begin: /^\s{2,}given/, end: /\s/},
       {begin: /^\s{2,}when/, end: /\s/},
       {begin: /^\s{2,}then/, end: /\s/},
-      {begin: /^\s{2,}and/, end: /\s/}
-    ]
+      {begin: /^\s{2,}and/, end: /\s/},
+    ],
   };
   return {
     case_insensitive: true,
     aliases: ['robot', 'rf'],
-    keywords: 'Settings Keywords [Return] [Teardown] [Timeout] [Setup] [Tags] [Arguments] [Documentation]',
+    keywords:
+      'Settings Keywords [Return] [Teardown] [Timeout] [Setup] [Tags] [Arguments] [Documentation]',
     contains: [
       NUMBER,
       VAR,
@@ -125,7 +127,7 @@ export default function hljsDefineRobot() {
       TEST,
       COMMENT,
       SETTING,
-      GHERKIN
-    ]
+      GHERKIN,
+    ],
   };
 }
