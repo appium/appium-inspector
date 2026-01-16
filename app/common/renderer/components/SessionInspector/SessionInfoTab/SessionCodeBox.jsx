@@ -23,7 +23,6 @@ const SessionCodeBox = (props) => {
       return rawCode;
     }
 
-    hljs.registerLanguage(ClientFrameworkClass.hljsLang, ClientFrameworkClass.hljsLib);
     return hljs.highlight(rawCode, {language: ClientFrameworkClass.hljsLang}).value;
   };
 

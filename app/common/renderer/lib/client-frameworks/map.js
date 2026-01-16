@@ -1,3 +1,5 @@
+import hljs from 'highlight.js/lib/core';
+
 import {CLIENT_FRAMEWORKS} from '../../constants/session-inspector.js';
 import DotNetNUnitFramework from './dotnet-nunit.js';
 import JavaJUnit4Framework from './java-junit4.js';
@@ -18,3 +20,7 @@ export const CLIENT_FRAMEWORK_MAP = {
   [CLIENT_FRAMEWORKS.ROBOT]: RobotFramework,
   [CLIENT_FRAMEWORKS.RUBY]: RubyFramework,
 };
+
+for (const framework of Object.values(CLIENT_FRAMEWORK_MAP)) {
+  hljs.registerLanguage(framework.hljsLang, framework.hljsLib);
+}

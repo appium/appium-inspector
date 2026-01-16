@@ -82,7 +82,7 @@ export default function hljsDefineRobot() {
   };
   const TEST = {
     className: 'name',
-    begin: /(^([^*| |\t|\n)]))\w/,
+    begin: /(^([^*| \t\n)]))\w/,
     end: /($|\s{2,})/,
     contains: [VAR],
   };
