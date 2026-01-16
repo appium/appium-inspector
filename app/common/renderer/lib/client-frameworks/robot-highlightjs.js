@@ -1,5 +1,6 @@
 /**
  * highlight.js Robot Framework syntax highlighting definition
+ * Source: https://github.com/highlightjs/highlightjs-robot
  *
  * @see https://github.com/isagalaev/highlight.js
  *
