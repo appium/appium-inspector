@@ -1,12 +1,15 @@
 import {IconDeviceFloppy, IconEdit, IconX} from '@tabler/icons-react';
 import {Alert, Button, Card, Input, Row, Tooltip} from 'antd';
-import hljs from 'highlight.js';
+import hljs from 'highlight.js/lib/core';
+import hljsJson from 'highlight.js/lib/languages/json';
 import {useTranslation} from 'react-i18next';
 
 import {getCapsObject} from '../../../actions/SessionBuilder.js';
 import {ALERT} from '../../../constants/antd-types.js';
 import builderStyles from '../SessionBuilder.module.css';
 import styles from './CapabilityJSON.module.css';
+
+hljs.registerLanguage('json', hljsJson);
 
 const CapabilityJSON = (props) => {
   const {

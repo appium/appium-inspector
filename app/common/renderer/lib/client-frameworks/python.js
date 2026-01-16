@@ -1,10 +1,12 @@
+import hljsPython from 'highlight.js/lib/languages/python';
 import _ from 'lodash';
 
 import CommonClientFramework from './common.js';
 
 export default class PythonFramework extends CommonClientFramework {
   static readableName = 'Python';
-  static highlightLang = 'python';
+  static hljsLang = 'python';
+  static hljsLib = hljsPython;
 
   getPythonVal(jsonVal) {
     if (typeof jsonVal === 'boolean') {

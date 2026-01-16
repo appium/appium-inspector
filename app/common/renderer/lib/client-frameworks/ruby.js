@@ -1,10 +1,12 @@
+import hljsRuby from 'highlight.js/lib/languages/ruby';
 import _ from 'lodash';
 
 import CommonClientFramework from './common.js';
 
 export default class RubyFramework extends CommonClientFramework {
   static readableName = 'Ruby';
-  static highlightLang = 'ruby';
+  static hljsLang = 'ruby';
+  static hljsLib = hljsRuby;
 
   // Use this instead of JSON.stringify, as it puts quotes around dictionary keys
   getRubyVal(jsonVal) {

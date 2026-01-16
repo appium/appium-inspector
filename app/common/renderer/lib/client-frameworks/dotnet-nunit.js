@@ -1,10 +1,12 @@
+import hljsCsharp from 'highlight.js/lib/languages/csharp';
 import _ from 'lodash';
 
 import CommonClientFramework from './common.js';
 
 export default class DotNetNUnitFramework extends CommonClientFramework {
   static readableName = '.NET - NUnit';
-  static highlightLang = 'csharp';
+  static hljsLang = 'csharp';
+  static hljsLib = hljsCsharp;
 
   getCSharpVal(jsonVal) {
     if (Array.isArray(jsonVal)) {

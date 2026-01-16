@@ -1,6 +1,6 @@
 import {IconEraser, IconEyeCode, IconFiles, IconVideo} from '@tabler/icons-react';
 import {Button, Card, Flex, Select, Space, Tooltip} from 'antd';
-import hljs from 'highlight.js';
+import hljs from 'highlight.js/lib/core';
 import _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 
@@ -25,7 +25,8 @@ const Recorder = (props) => {
     if (raw) {
       return rawCode;
     }
-    return hljs.highlight(rawCode, {language: ClientFrameworkClass.highlightLang}).value;
+    hljs.registerLanguage(ClientFrameworkClass.hljsLang, ClientFrameworkClass.hljsLib);
+    return hljs.highlight(rawCode, {language: ClientFrameworkClass.hljsLang}).value;
   };
 
   const actionBar = () => {

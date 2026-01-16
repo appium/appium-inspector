@@ -1,9 +1,11 @@
+import hljsJava from 'highlight.js/lib/languages/java';
 import _ from 'lodash';
 
 import CommonClientFramework from './common.js';
 
 export default class JavaFramework extends CommonClientFramework {
-  static highlightLang = 'java';
+  static hljsLang = 'java';
+  static hljsLib = hljsJava;
 
   getJavaVal(jsonVal) {
     if (Array.isArray(jsonVal)) {

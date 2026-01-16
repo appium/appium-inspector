@@ -1,8 +1,11 @@
+import hljsJavaScript from 'highlight.js/lib/languages/javascript';
+
 import CommonClientFramework from './common.js';
 
 export default class JsWdIoFramework extends CommonClientFramework {
   static readableName = 'JS - WebdriverIO';
-  static highlightLang = 'js';
+  static hljsLang = 'js';
+  static hljsLib = hljsJavaScript;
 
   wrapWithBoilerplate(code) {
     return `// This sample code supports WebdriverIO client >=9.7.0
