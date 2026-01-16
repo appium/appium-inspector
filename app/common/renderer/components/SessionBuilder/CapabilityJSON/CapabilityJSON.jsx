@@ -1,12 +1,15 @@
 import {IconDeviceFloppy, IconEdit, IconX} from '@tabler/icons-react';
 import {Alert, Button, Card, Input, Row, Tooltip} from 'antd';
-import hljs from 'highlight.js';
 import {useTranslation} from 'react-i18next';
+import {Refractor, registerLanguage} from 'react-refractor';
+import json from 'refractor/json';
 
 import {getCapsObject} from '../../../actions/SessionBuilder.js';
 import {ALERT} from '../../../constants/antd-types.js';
 import builderStyles from '../SessionBuilder.module.css';
 import styles from './CapabilityJSON.module.css';
+
+registerLanguage(json);
 
 const CapabilityJSON = (props) => {
   const {
@@ -29,7 +32,7 @@ const CapabilityJSON = (props) => {
 
   const getHighlightedCaps = (caps) => {
     const formattedJson = JSON.stringify(getCapsObject(caps), null, 2);
-    return hljs.highlight(formattedJson, {language: 'json'}).value;
+    return <Refractor language="json" value={formattedJson} />;
   };
 
   const setCapsTitle = () => {
@@ -144,13 +147,7 @@ const CapabilityJSON = (props) => {
           </div>
         )}
         {!isEditingDesiredCaps && (
-          <div className={styles.formattedCapsBody}>
-            <pre>
-              {/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml --
-              We assume that the user considers their own input to be safe */}
-              <code dangerouslySetInnerHTML={{__html: getHighlightedCaps(caps)}} />
-            </pre>
-          </div>
+          <div className={styles.formattedCapsBody}>{getHighlightedCaps(caps)}</div>
         )}
       </Card>
     )

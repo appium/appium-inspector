@@ -1,9 +1,11 @@
 import _ from 'lodash';
+import refractorJava from 'refractor/java';
 
 import CommonClientFramework from './common.js';
 
 export default class JavaFramework extends CommonClientFramework {
-  static highlightLang = 'java';
+  static refractorLang = 'java';
+  static refractorLib = refractorJava;
 
   getJavaVal(jsonVal) {
     if (Array.isArray(jsonVal)) {

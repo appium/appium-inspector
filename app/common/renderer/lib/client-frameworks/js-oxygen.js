@@ -1,8 +1,11 @@
+import refractorJs from 'refractor/javascript';
+
 import CommonClientFramework from './common.js';
 
 export default class JsOxygenFramework extends CommonClientFramework {
   static readableName = 'JS - Oxygen HQ';
-  static highlightLang = 'js';
+  static refractorLang = 'js';
+  static refractorLib = refractorJs;
 
   get type() {
     if (this.caps?.platformName && this.caps.platformName.toLowerCase() === 'windows') {

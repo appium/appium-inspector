@@ -2,13 +2,33 @@ import {App, ConfigProvider, Layout, theme} from 'antd';
 import {createContext, useState} from 'react';
 
 import {PREFERRED_THEME} from '../../shared/setting-defs.js';
+import darkTheme from '../assets/stylesheets/prism-dark.css?url';
+import lightTheme from '../assets/stylesheets/prism-light.css?url';
 import Notification from '../components/Notification.jsx';
 import {getSetting, setSetting, setTheme} from '../polyfills.js';
-import {loadHighlightTheme} from '../utils/highlight-theme.js';
 
 const systemPrefersDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
 const savedTheme = await getSetting(PREFERRED_THEME);
 setTheme(savedTheme);
+
+const loadHighlightTheme = (isDarkTheme) => {
+  const linkId = 'highlight-theme';
+  let link = document.getElementById(linkId);
+
+  if (!link) {
+    link = document.createElement('link');
+    link.id = linkId;
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    document.head.appendChild(link);
+  }
+
+  if (isDarkTheme) {
+    link.href = darkTheme;
+  } else {
+    link.href = lightTheme;
+  }
+};
 
 export const ThemeContext = createContext(null);
 
