@@ -1,10 +1,12 @@
 import _ from 'lodash';
+import refractorPython from 'refractor/python';
 
 import CommonClientFramework from './common.js';
 
 export default class PythonFramework extends CommonClientFramework {
   static readableName = 'Python';
-  static highlightLang = 'python';
+  static refractorLang = 'python';
+  static refractorLib = refractorPython;
 
   getPythonVal(jsonVal) {
     if (typeof jsonVal === 'boolean') {

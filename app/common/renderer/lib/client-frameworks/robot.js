@@ -1,10 +1,12 @@
 import _ from 'lodash';
+import refractorRobot from 'refractor/robotframework';
 
 import CommonClientFramework from './common.js';
 
 export default class RobotFramework extends CommonClientFramework {
   static readableName = 'Robot Framework';
-  static highlightLang = 'python'; // Robot highlighting requires highlightjs-robot package
+  static refractorLang = 'robot';
+  static refractorLib = refractorRobot;
 
   getRobotVal(jsonVal) {
     if (typeof jsonVal === 'boolean') {
@@ -95,7 +97,7 @@ Tap With Positions    $\{100}    $\{positions}`;
     // change the JSON object into a format accepted by Create Dictionary: a sequence of key=value
     const cleanedJson = _.omitBy(jsonArg[0], _.isUndefined);
     const argsValuesStrings = _.map(cleanedJson, (v, k) => `${k}=${this.getRobotVal(v)}`);
-    return `&{scriptArgument}    Create Dictionary    ${argsValuesStrings.join('    ')}
+    return `&{scriptArgument} =    Create Dictionary    ${argsValuesStrings.join('    ')}
 ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
   }
 

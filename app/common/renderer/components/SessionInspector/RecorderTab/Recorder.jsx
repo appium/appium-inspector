@@ -1,8 +1,8 @@
 import {IconEraser, IconEyeCode, IconFiles, IconVideo} from '@tabler/icons-react';
 import {Button, Card, Flex, Select, Space, Tooltip} from 'antd';
-import hljs from 'highlight.js';
 import _ from 'lodash';
 import {useTranslation} from 'react-i18next';
+import {Refractor} from 'react-refractor';
 
 import {BUTTON} from '../../../constants/antd-types.js';
 import {CLIENT_FRAMEWORK_MAP} from '../../../lib/client-frameworks/map.js';
@@ -14,18 +14,15 @@ const Recorder = (props) => {
   const {showBoilerplate, recordedActions, clientFramework} = props;
   const {t} = useTranslation();
 
-  const code = (raw = true) => {
+  const ClientFrameworkClass = CLIENT_FRAMEWORK_MAP[clientFramework];
+
+  const getCode = () => {
     const {serverDetails, sessionCaps} = props;
     const {serverUrl, serverUrlParts} = serverDetails;
 
-    const ClientFrameworkClass = CLIENT_FRAMEWORK_MAP[clientFramework];
     const framework = new ClientFrameworkClass(serverUrl, serverUrlParts, sessionCaps);
     framework.actions = recordedActions;
-    const rawCode = framework.getCodeString(showBoilerplate);
-    if (raw) {
-      return rawCode;
-    }
-    return hljs.highlight(rawCode, {language: ClientFrameworkClass.highlightLang}).value;
+    return framework.getCodeString(showBoilerplate);
   };
 
   const actionBar = () => {
@@ -43,7 +40,7 @@ const Recorder = (props) => {
               />
             </Tooltip>
             <Tooltip title={t('Copy code to clipboard')}>
-              <Button icon={<IconFiles size={18} />} onClick={() => copyToClipboard(code())} />
+              <Button icon={<IconFiles size={18} />} onClick={() => copyToClipboard(getCode())} />
             </Tooltip>
             <Tooltip title={t('Clear Actions')}>
               <Button icon={<IconEraser size={18} />} onClick={clearRecording} />
@@ -79,11 +76,7 @@ const Recorder = (props) => {
         <div className={styles.noRecordedActions}>{t('enableRecordingAndPerformActions')}</div>
       )}
       {!!recordedActions.length && (
-        <pre className={inspectorStyles.recordedCode}>
-          {/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml --
-          We assume that the user considers their own input and the connected server to be safe */}
-          <code dangerouslySetInnerHTML={{__html: code(false)}} />
-        </pre>
+        <Refractor language={ClientFrameworkClass.refractorLang} value={getCode()} />
       )}
     </Card>
   );

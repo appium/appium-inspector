@@ -1,8 +1,11 @@
+import refractorJs from 'refractor/javascript';
+
 import CommonClientFramework from './common.js';
 
 export default class JsWdIoFramework extends CommonClientFramework {
   static readableName = 'JS - WebdriverIO';
-  static highlightLang = 'js';
+  static refractorLang = 'js';
+  static refractorLib = refractorJs;
 
   wrapWithBoilerplate(code) {
     return `// This sample code supports WebdriverIO client >=9.7.0

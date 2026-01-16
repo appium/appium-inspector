@@ -1,8 +1,8 @@
 import {IconCode, IconFiles} from '@tabler/icons-react';
 import {Button, Card, Flex, Select, Space, Tooltip} from 'antd';
-import hljs from 'highlight.js';
 import _ from 'lodash';
 import {useTranslation} from 'react-i18next';
+import {Refractor} from 'react-refractor';
 
 import {CLIENT_FRAMEWORK_MAP} from '../../../lib/client-frameworks/map.js';
 import {copyToClipboard} from '../../../polyfills.js';
@@ -12,24 +12,20 @@ const SessionCodeBox = (props) => {
   const {clientFramework, setClientFramework} = props;
   const {t} = useTranslation();
 
-  const code = (raw = true) => {
+  const ClientFrameworkClass = CLIENT_FRAMEWORK_MAP[clientFramework];
+
+  const getCode = () => {
     const {serverDetails, sessionCaps} = props;
     const {serverUrl, serverUrlParts} = serverDetails;
 
-    const ClientFrameworkClass = CLIENT_FRAMEWORK_MAP[clientFramework];
     const framework = new ClientFrameworkClass(serverUrl, serverUrlParts, sessionCaps);
-    const rawCode = framework.getCodeString(true);
-    if (raw) {
-      return rawCode;
-    }
-
-    return hljs.highlight(rawCode, {language: ClientFrameworkClass.highlightLang}).value;
+    return framework.getCodeString(true);
   };
 
   const actionBar = () => (
     <Space size="middle">
       <Tooltip title={t('Copy code to clipboard')}>
-        <Button icon={<IconFiles size={18} />} onClick={() => copyToClipboard(code())} />
+        <Button icon={<IconFiles size={18} />} onClick={() => copyToClipboard(getCode())} />
       </Tooltip>
       <Select
         defaultValue={clientFramework}
@@ -54,11 +50,7 @@ const SessionCodeBox = (props) => {
       }
       extra={actionBar()}
     >
-      <pre className={inspectorStyles.recordedCode}>
-        {/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml --
-        We assume that the user considers their own input and the connected server to be safe */}
-        <code dangerouslySetInnerHTML={{__html: code(false)}} />
-      </pre>
+      <Refractor language={ClientFrameworkClass.refractorLang} value={getCode()} />
     </Card>
   );
 };

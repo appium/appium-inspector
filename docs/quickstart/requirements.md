@@ -16,7 +16,7 @@ will differ:
     - The minimum application window size is **890 x 710** pixels
 - Web app/Appium server plugin
     - Works in Chrome/Edge/Firefox/Safari, released in 2022 or later
-    - The plugin version requires around **9MB** of free space
+    - The plugin version requires around **6MB** of free space
     - Viewport size of at least **870 x 610** pixels is recommended
 
 ### Appium Server Requirements
