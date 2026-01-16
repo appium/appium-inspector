@@ -1,11 +1,11 @@
-import hljsJavaScript from 'highlight.js/lib/languages/javascript';
+import refractorJs from 'refractor/javascript';
 
 import CommonClientFramework from './common.js';
 
 export default class JsOxygenFramework extends CommonClientFramework {
   static readableName = 'JS - Oxygen HQ';
-  static hljsLang = 'js';
-  static hljsLib = hljsJavaScript;
+  static refractorLang = 'js';
+  static refractorLib = refractorJs;
 
   get type() {
     if (this.caps?.platformName && this.caps.platformName.toLowerCase() === 'windows') {

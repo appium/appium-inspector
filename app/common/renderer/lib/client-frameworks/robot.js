@@ -1,12 +1,12 @@
 import _ from 'lodash';
+import refractorRobot from 'refractor/robotframework';
 
 import CommonClientFramework from './common.js';
-import hljsRobot from './robot-highlightjs.js';
 
 export default class RobotFramework extends CommonClientFramework {
   static readableName = 'Robot Framework';
-  static hljsLang = 'robot';
-  static hljsLib = hljsRobot;
+  static refractorLang = 'robot';
+  static refractorLib = refractorRobot;
 
   getRobotVal(jsonVal) {
     if (typeof jsonVal === 'boolean') {

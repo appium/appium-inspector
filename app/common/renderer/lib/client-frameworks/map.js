@@ -1,4 +1,4 @@
-import hljs from 'highlight.js/lib/core';
+import {registerLanguage} from 'react-refractor';
 
 import {CLIENT_FRAMEWORKS} from '../../constants/session-inspector.js';
 import DotNetNUnitFramework from './dotnet-nunit.js';
@@ -22,5 +22,5 @@ export const CLIENT_FRAMEWORK_MAP = {
 };
 
 for (const framework of Object.values(CLIENT_FRAMEWORK_MAP)) {
-  hljs.registerLanguage(framework.hljsLang, framework.hljsLib);
+  registerLanguage(framework.refractorLib);
 }

@@ -1,11 +1,11 @@
-import hljsJavaScript from 'highlight.js/lib/languages/javascript';
+import refractorJs from 'refractor/javascript';
 
 import CommonClientFramework from './common.js';
 
 export default class JsWdIoFramework extends CommonClientFramework {
   static readableName = 'JS - WebdriverIO';
-  static hljsLang = 'js';
-  static hljsLib = hljsJavaScript;
+  static refractorLang = 'js';
+  static refractorLib = refractorJs;
 
   wrapWithBoilerplate(code) {
     return `// This sample code supports WebdriverIO client >=9.7.0

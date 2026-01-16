@@ -14,17 +14,12 @@
   padding: 0;
 }
 
-.formattedCaps,
-.formattedCapsBody {
+.formattedCaps {
   height: 100%;
 }
 
-.formattedCapsBody pre {
-  height: 100%;
-  margin: 0;
-  padding: 24px 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+.formattedCapsBody {
+  padding-top: 24px;
 }
 
 .formattedCaps :global(.ant-card-head-title) {
@@ -77,5 +72,6 @@
 }
 
 .capsEditorBodyResized {
-  height: calc(100% - 40px) !important;
+  height: calc(100% - 44px) !important;
+  margin-bottom: 6px;
 }

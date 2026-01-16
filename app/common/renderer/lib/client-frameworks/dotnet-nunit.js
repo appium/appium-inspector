@@ -1,12 +1,12 @@
-import hljsCsharp from 'highlight.js/lib/languages/csharp';
 import _ from 'lodash';
+import refractorCsharp from 'refractor/csharp';
 
 import CommonClientFramework from './common.js';
 
 export default class DotNetNUnitFramework extends CommonClientFramework {
   static readableName = '.NET - NUnit';
-  static hljsLang = 'csharp';
-  static hljsLib = hljsCsharp;
+  static refractorLang = 'csharp';
+  static refractorLib = refractorCsharp;
 
   getCSharpVal(jsonVal) {
     if (Array.isArray(jsonVal)) {

@@ -1,12 +1,12 @@
-import hljsPython from 'highlight.js/lib/languages/python';
 import _ from 'lodash';
+import refractorPython from 'refractor/python';
 
 import CommonClientFramework from './common.js';
 
 export default class PythonFramework extends CommonClientFramework {
   static readableName = 'Python';
-  static hljsLang = 'python';
-  static hljsLib = hljsPython;
+  static refractorLang = 'python';
+  static refractorLib = refractorPython;
 
   getPythonVal(jsonVal) {
     if (typeof jsonVal === 'boolean') {

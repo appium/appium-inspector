@@ -1,11 +1,11 @@
-import hljsJava from 'highlight.js/lib/languages/java';
 import _ from 'lodash';
+import refractorJava from 'refractor/java';
 
 import CommonClientFramework from './common.js';
 
 export default class JavaFramework extends CommonClientFramework {
-  static hljsLang = 'java';
-  static hljsLib = hljsJava;
+  static refractorLang = 'java';
+  static refractorLib = refractorJava;
 
   getJavaVal(jsonVal) {
     if (Array.isArray(jsonVal)) {
