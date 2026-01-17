@@ -32,14 +32,26 @@ by using MJPEG session capabilities, such as `appium:mjpegServerPort`.
 
 ## Screenshot Panel Header
 
-The panel header contains several interface elements that allow interacting with the screenshot in
-various ways.
+The panel header contains several buttons for interacting with the screenshot.
 
-### Element Handles Toggle
+### Screenshot Origin
+
+![Screenshot Origin Buttons](./assets/images/screenshot/screenshot-origin-buttons.png)
+
+!!! info
+
+    These buttons are only shown when using MJPEG screenshotting capabilities like
+    `appium:mjpegServerPort`.
+
+The Screenshot Origin buttons allow switching the source of the rendered screenshot between the
+MJPEG stream and the W3C WebDriver screenshot endpoint. This functionality can be useful in case
+the MJPEG server is unreachable or has other issues.
+
+### Toggle Element Handles
 
 ![Toggle Element Handles Button](./assets/images/screenshot/toggle-element-handles-button.png)
 
-This switch toggles the visibility of highlighter handles for all identified elements.
+This button toggles the visibility of highlighter handles for all identified elements.
 
 !!! info
 
@@ -72,7 +84,7 @@ Mode. The differences are as follows:
 
 !!! info
 
-    This button is not visible when using MJPEG screenshotting capabilities like
-    `appium:mjpegServerUrl`.
+    This button is disabled when using MJPEG screenshotting capabilities like
+    `appium:mjpegServerPort`.
 
 This button allows to save the currently shown screenshot to your computer as a `.PNG` file.

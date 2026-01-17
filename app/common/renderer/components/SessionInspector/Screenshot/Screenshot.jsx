@@ -166,8 +166,9 @@ const Screenshot = (props) => {
     screenshotStyle.cursor = 'crosshair';
   }
 
-  const screenSrc = serverDetails.mjpegScreenshotUrl || `data:image/gif;base64,${screenshot}`;
-  const screenImg = <img src={screenSrc} id="screenshot" />;
+  const screenSrc = isUsingMjpegMode
+    ? serverDetails.mjpegScreenshotUrl
+    : `data:image/gif;base64,${screenshot}`;
   const points = getGestureCoordinates();
 
   // Show the screenshot and highlighter rects.
@@ -191,7 +192,7 @@ const Screenshot = (props) => {
               <p>{t('yCoordinate', {y})}</p>
             </div>
           )}
-          {screenImg}
+          <img src={screenSrc} id="screenshot" />
           {screenshotInteractionMode === SELECT && <HighlighterRects {...props} />}
           {screenshotInteractionMode === TAP_SWIPE && (
             <svg className={styles.swipeSvg}>

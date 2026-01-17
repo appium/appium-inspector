@@ -31,7 +31,7 @@ const HeaderButtons = (props) => {
     appMode,
     isUsingMjpegMode,
     isSourceRefreshOn,
-    toggleRefreshingState,
+    setRefreshingState,
     isRecording,
     startRecording,
     pauseRecording,
@@ -187,7 +187,7 @@ const HeaderButtons = (props) => {
           <Button
             id="btnStartRefreshing"
             icon={<IconPlayerPlay size={18} />}
-            onClick={toggleRefreshingState}
+            onClick={() => setRefreshingState({source: true})}
           />
         </Tooltip>
       )}
@@ -196,7 +196,7 @@ const HeaderButtons = (props) => {
           <Button
             id="btnPauseRefreshing"
             icon={<IconPlayerPause size={18} />}
-            onClick={toggleRefreshingState}
+            onClick={() => setRefreshingState({source: false})}
           />
         </Tooltip>
       )}

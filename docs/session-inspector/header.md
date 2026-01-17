@@ -52,7 +52,7 @@ The current context can now be switched by selecting the new context in the drop
 !!! info
 
     This button is only visible when using MJPEG screenshotting capabilities like
-    `appium:mjpegServerUrl`.
+    `appium:mjpegServerPort`.
 
 This button allows to disable or re-enable refreshing the application XML source, when executing
 actions that normally trigger a refresh (these are listed in the [Source tab page](./source.md#refreshing-the-source)).
