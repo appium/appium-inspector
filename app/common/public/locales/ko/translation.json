@@ -268,14 +268,7 @@
   "invalidCapType": "유효하지 않은 capability 타입: {{type}}",
   "whitespaceDetected": "텍스트의 시작 또는 끝에 공백이 있습니다.",
   "duplicateCapabilityNameError": "같은 이름의 capability 세트가 이미 존재합니다.",
-  "errorLoadingGestures": "제스처 로딩중 오류",
-  "unableToImportGestureFiles": "Could not import gestures from below files:",
-  "gestureEmptyTickError": "액션은 유효한 틱 값을 가져야 합니다.",
-  "gestureInvalidEventError": "잘못된 이벤트 유형입니다: '{{invalidEvent}}'. 허용되는 값은 {{validEvents}}입니다",
-  "gestureRequiredFieldsError": "'{{eventType}}' 이벤트에는 '{{fields}}' 값이 필수입니다",
-  "gestureNameCannotBeEmptyError": "제스처 이름은 비워둘 수 없습니다",
-  "gestureInvalidJsonError": "JSON 파일이 유효하지 않습니다. 파일 내용을 해석할 수 없습니다.",
-  "gestureImportedFrom": "'{{fileName}}' 파일에서 제스처를 가져왔습니다",
+  "unableToImportGestureFiles": "Could not import gestures from the following files: {{fileNames}}",
   "invalidSessionFile": "잘못된 세션 파일",
   "TV Labs API Key": "TV Labs API 키",
   "TestcribeAPIKey": "Testcribe API 키",
@@ -325,5 +318,7 @@
   "methodDeprecated": "이 메서드는 더 이상 권장되지 않습니다",
   "App Settings": "App Settings",
   "unableToImportSessionFiles": "Could not import sessions from the following files: {{fileNames}}",
-  "Import from File": "Import from File"
+  "Import from File": "Import from File",
+  "useMjpegStream": "Use MJPEG Stream",
+  "useScreenshotApi": "Use Screenshot API"
 }

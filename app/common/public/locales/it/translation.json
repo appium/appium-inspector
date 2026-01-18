@@ -268,14 +268,7 @@
   "invalidCapType": "Tipo di capability non valido: {{type}}",
   "whitespaceDetected": "Il testo inizia e/o termina con uno spazio bianco",
   "duplicateCapabilityNameError": "A capability set with the same name already exists",
-  "errorLoadingGestures": "Error loading gestures",
-  "unableToImportGestureFiles": "Could not import gestures from below files:",
-  "gestureEmptyTickError": "Actions should have valid ticks",
-  "gestureInvalidEventError": "Invalid event type '{{invalidEvent}}'. Valid values are {{validEvents}}",
-  "gestureRequiredFieldsError": "Values '{{fields}}' are required for '{{eventType}}' event",
-  "gestureNameCannotBeEmptyError": "Gesture name cannot be empty",
-  "gestureInvalidJsonError": "Invalid JSON file. Unable to parse the file content",
-  "gestureImportedFrom": "Gesture imported from '{{fileName}}'",
+  "unableToImportGestureFiles": "Could not import gestures from the following files: {{fileNames}}",
   "invalidSessionFile": "Invalid session file",
   "TV Labs API Key": "TV Labs API Key",
   "TestcribeAPIKey": "Testcribe API Key",
@@ -325,5 +318,7 @@
   "methodDeprecated": "This method is deprecated",
   "App Settings": "App Settings",
   "unableToImportSessionFiles": "Could not import sessions from the following files: {{fileNames}}",
-  "Import from File": "Import from File"
+  "Import from File": "Import from File",
+  "useMjpegStream": "Use MJPEG Stream",
+  "useScreenshotApi": "Use Screenshot API"
 }
