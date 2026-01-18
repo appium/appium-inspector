@@ -268,14 +268,7 @@
   "invalidCapType": "無効な Capability: {{type}}",
   "whitespaceDetected": "空白文字で開始または終了します",
   "duplicateCapabilityNameError": "同じ名前のcapabilitiesが既に存在します",
-  "errorLoadingGestures": "ジェスチャーの読み込みエラー",
-  "unableToImportGestureFiles": "Could not import gestures from below files:",
-  "gestureEmptyTickError": "アクションには有効な目盛りが必要です",
-  "gestureInvalidEventError": "無効なイベントの型 {{invalidEvent}} です。有効な値は {{validEvents}}です",
-  "gestureRequiredFieldsError": "値 '{{fields}}' は '{{eventType}}' イベントに必須です",
-  "gestureNameCannotBeEmptyError": "ジェスチャー名は空にできません",
-  "gestureInvalidJsonError": "無効な JSON ファイルです。ファイルの内容を解析できません。",
-  "gestureImportedFrom": "記録された操作は '{{fileName}}' から読み込まれました",
+  "unableToImportGestureFiles": "Could not import gestures from the following files: {{fileNames}}",
   "invalidSessionFile": "無効なセッションファイル",
   "TV Labs API Key": "TV LabsのAPIキー",
   "TestcribeAPIKey": "Testcribe APIキー",
@@ -325,5 +318,7 @@
   "methodDeprecated": "This method is deprecated",
   "App Settings": "App Settings",
   "unableToImportSessionFiles": "Could not import sessions from the following files: {{fileNames}}",
-  "Import from File": "Import from File"
+  "Import from File": "Import from File",
+  "useMjpegStream": "Use MJPEG Stream",
+  "useScreenshotApi": "Use Screenshot API"
 }

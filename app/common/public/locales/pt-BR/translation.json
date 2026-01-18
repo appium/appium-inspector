@@ -268,14 +268,7 @@
   "invalidCapType": "Tipo de recurso inválido: {{type}}",
   "whitespaceDetected": "Texto começa e/ou termina com espaço em branco",
   "duplicateCapabilityNameError": "Já existe um conjunto de recursos com o mesmo nome",
-  "errorLoadingGestures": "Erro ao carregar gestos",
-  "unableToImportGestureFiles": "Could not import gestures from below files:",
-  "gestureEmptyTickError": "Ações devem ter marcações válidas",
-  "gestureInvalidEventError": "Tipo de evento inválido '{{invalidEvent}}'. Os valores válidos são {{validEvents}}",
-  "gestureRequiredFieldsError": "Valores '{{fields}}' são necessários para o evento '{{eventType}}'",
-  "gestureNameCannotBeEmptyError": "Nome do gesto não pode ser vazio",
-  "gestureInvalidJsonError": "Arquivo JSON inválido. Não é possível analisar o conteúdo do arquivo",
-  "gestureImportedFrom": "Gesto importado de '{{fileName}}'",
+  "unableToImportGestureFiles": "Não foi possível importar os gestos dos seguintes arquivos: {{fileNames}}",
   "invalidSessionFile": "Arquivo de sessão inválido",
   "TV Labs API Key": "Chave API do TV Labs",
   "TestcribeAPIKey": "Chave API do Testcribe",
@@ -325,5 +318,7 @@
   "methodDeprecated": "This method is deprecated",
   "App Settings": "App Settings",
   "unableToImportSessionFiles": "Could not import sessions from the following files: {{fileNames}}",
-  "Import from File": "Import from File"
+  "Import from File": "Import from File",
+  "useMjpegStream": "Use MJPEG Stream",
+  "useScreenshotApi": "Use Screenshot API"
 }
