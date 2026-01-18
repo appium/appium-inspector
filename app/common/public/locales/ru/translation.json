@@ -268,14 +268,7 @@
   "invalidCapType": "Негодный тип возможности: {{type}}",
   "whitespaceDetected": "Текст начинается и/или заканчивается с пробелом",
   "duplicateCapabilityNameError": "Набор возможностей с таким именем уже существует",
-  "errorLoadingGestures": "Ошибка загрузки жестов",
-  "unableToImportGestureFiles": "Не удалось загрузить жесты из файлов:",
-  "gestureEmptyTickError": "Действия должны иметь годные такты",
-  "gestureInvalidEventError": "Негодный тип действия '{{invalidEvent}}'. Годные значения: {{validEvents}}",
-  "gestureRequiredFieldsError": "Значения '{{fields}}' необходимы для действия '{{eventType}}'",
-  "gestureNameCannotBeEmptyError": "Название жеста не может быть пустым",
-  "gestureInvalidJsonError": "Негодный файл JSON. Невозможно разобрать содержимое файла",
-  "gestureImportedFrom": "Жест импортирован из '{{fileName}}'",
+  "unableToImportGestureFiles": "Could not import gestures from the following files: {{fileNames}}",
   "invalidSessionFile": "Негодный файл сессии",
   "TV Labs API Key": "API ключ TV Labs",
   "TestcribeAPIKey": "API ключ Testcribe",
@@ -325,5 +318,7 @@
   "methodDeprecated": "Этот метод устарел",
   "App Settings": "Настройки приложения",
   "unableToImportSessionFiles": "Не удалось импортировать сессии из следующих файлов: {{fileNames}}",
-  "Import from File": "Импортировать из файла"
+  "Import from File": "Импортировать из файла",
+  "useMjpegStream": "Use MJPEG Stream",
+  "useScreenshotApi": "Use Screenshot API"
 }

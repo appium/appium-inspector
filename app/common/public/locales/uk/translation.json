@@ -268,14 +268,7 @@
   "invalidCapType": "Недійсний тип можливості: {{type}}",
   "whitespaceDetected": "Текст починається та/або закінчується пробілом",
   "duplicateCapabilityNameError": "Набір можливостей з таким ім'ям вже існує",
-  "errorLoadingGestures": "Помилка завантаження жестів",
-  "unableToImportGestureFiles": "Не вдалося імпортувати жести з файлів нижче:",
-  "gestureEmptyTickError": "Дії повинні мати припустимі галочки",
-  "gestureInvalidEventError": "Недійсний тип події \"{{invalidEvent}}\". Дійсні значення: {{validEvents}}",
-  "gestureRequiredFieldsError": "Значення '{{fields}}' необхідні для події '{{eventType}}'",
-  "gestureNameCannotBeEmptyError": "Ім'я жесту не може бути пустим",
-  "gestureInvalidJsonError": "Неправильний файл JSON. Не вдалося розпізнати вміст файлу",
-  "gestureImportedFrom": "Жест імпортовано з '{{fileName}}'",
+  "unableToImportGestureFiles": "Неможливо імпортувати жести з наступних файлів: {{fileNames}}",
   "invalidSessionFile": "Некоректний файл сеансу",
   "TV Labs API Key": "TV Labs API ключ",
   "TestcribeAPIKey": "Тестування API-ключа",
@@ -325,5 +318,7 @@
   "methodDeprecated": "Цей метод є застарілим",
   "App Settings": "Налаштування застосунку",
   "unableToImportSessionFiles": "Неможливо імпортувати сеанси з наступних файлів: {{fileNames}}",
-  "Import from File": "Імпорт з файлу"
+  "Import from File": "Імпорт з файлу",
+  "useMjpegStream": "Використовувати MJPEG потік",
+  "useScreenshotApi": "Використовувати API знімки екрану"
 }

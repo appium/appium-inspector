@@ -268,14 +268,7 @@
   "invalidCapType": "无效的capability类型: {{type}}",
   "whitespaceDetected": "文本开始和/或以空格结束",
   "duplicateCapabilityNameError": "已存在同名的能力设置",
-  "errorLoadingGestures": "加载手势时出错",
-  "unableToImportGestureFiles": "Could not import gestures from below files:",
-  "gestureEmptyTickError": "动作应该有有效的时间点",
-  "gestureInvalidEventError": "无效的事件类型 '{{invalidEvent}}'。有效值为 {{validEvents}}",
-  "gestureRequiredFieldsError": "{{eventType}}' 事件需要 '{{fields}}' 值",
-  "gestureNameCannotBeEmptyError": "手势名称不能为空",
-  "gestureInvalidJsonError": "无效的 JSON 文件。无法解析文件内容",
-  "gestureImportedFrom": "已从 '{{fileName}}' 导入手势",
+  "unableToImportGestureFiles": "Could not import gestures from the following files: {{fileNames}}",
   "invalidSessionFile": "无效的会话文件",
   "TV Labs API Key": "TV Labs API 密钥",
   "TestcribeAPIKey": "Testcribe API 密钥",
@@ -325,5 +318,7 @@
   "methodDeprecated": "This method is deprecated",
   "App Settings": "App Settings",
   "unableToImportSessionFiles": "Could not import sessions from the following files: {{fileNames}}",
-  "Import from File": "Import from File"
+  "Import from File": "Import from File",
+  "useMjpegStream": "Use MJPEG Stream",
+  "useScreenshotApi": "Use Screenshot API"
 }
