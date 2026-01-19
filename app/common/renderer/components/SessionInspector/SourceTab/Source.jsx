@@ -75,20 +75,23 @@ const Source = (props) => {
     const {tagName, attributes} = el;
     let attrs = [];
 
+    // token class names are used to match react-refractor colors
     for (let attr of Object.keys(attributes)) {
       if ((IMPORTANT_SOURCE_ATTRS.includes(attr) && attributes[attr]) || showAllAttrs) {
         attrs.push(
           <span key={attr}>
             &nbsp;
-            <i className={styles.sourceAttrName}>{getHighlightedText(attr)}</i>=
-            <span>&quot;{getHighlightedText(attributes[attr])}&quot;</span>
+            <span className="token attr-name">{getHighlightedText(attr)}</span>=
+            <span className="token attr-value">
+              &quot;{getHighlightedText(attributes[attr])}&quot;
+            </span>
           </span>,
         );
       }
     }
     return (
       <span className={inspectorStyles.monoFont}>
-        &lt;<b className={styles.sourceTag}>{getHighlightedText(tagName)}</b>
+        &lt;<span className="token property">{getHighlightedText(tagName)}</span>
         {attrs}&gt;
       </span>
     );
