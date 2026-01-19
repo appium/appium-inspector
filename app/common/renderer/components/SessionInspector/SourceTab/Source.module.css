@@ -94,4 +94,19 @@
 .sourceTree {
   flex: 1;
   overflow: auto;
+  --ant-tree-title-height: 18px !important;
+  --ant-tree-indent-size: 18px !important;
+}
+
+.sourceTree :global(.ant-tree-treenode) {
+  margin-bottom: 2px;
+}
+
+.sourceTree :global(.ant-tree-node-content-wrapper) {
+  margin: 0 0 2px 4px;
+}
+
+.sourceTree :global(.ant-tree-switcher-icon) {
+  font-size: 14px !important;
+  vertical-align: middle !important;
 }

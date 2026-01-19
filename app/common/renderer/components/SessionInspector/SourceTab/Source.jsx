@@ -17,6 +17,7 @@ import {copyToClipboard} from '../../../polyfills.js';
 import {downloadFile} from '../../../utils/file-handling.js';
 import LocatorTestModal from '../Header/LocatorTestModal.jsx';
 import SiriCommandModal from '../Header/SiriCommandModal.jsx';
+import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Source.module.css';
 
 const downloadXML = (sourceXML) => {
@@ -86,7 +87,7 @@ const Source = (props) => {
       }
     }
     return (
-      <span>
+      <span className={inspectorStyles.monoFont}>
         &lt;<b className={styles.sourceTag}>{getHighlightedText(tagName)}</b>
         {attrs}&gt;
       </span>

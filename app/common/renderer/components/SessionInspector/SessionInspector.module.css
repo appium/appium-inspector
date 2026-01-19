@@ -1,3 +1,7 @@
+.monoFont {
+  font-family: monospace;
+}
+
 .inspectorContainer {
   display: flex;
   flex-direction: column;
