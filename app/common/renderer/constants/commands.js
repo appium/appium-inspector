@@ -225,25 +225,7 @@ export const COMMANDS_WITH_MISMATCHED_PARAMS = {
     {name: 'shrinkToFit', required: false},
     {name: 'pageRanges', required: false},
   ],
-  addAuthCredential: [
-    // userHandle & signCount are required
-    {name: 'credentialId', required: true},
-    {name: 'isResidentCredential', required: true},
-    {name: 'rpId', required: true},
-    {name: 'privateKey', required: true},
-    {name: 'userHandle', required: true},
-    {name: 'signCount', required: true},
-    {name: 'largeBlob', required: false},
-  ],
-  setUserAuthVerified: [], // no isUserVerified property
   getDeviceTime: [], // only GET endpoint is supported
-  installApp: [{name: 'appPath', required: true}], // no options
-  activateApp: [{name: 'appId', required: true}], // no bundleId & options
-  removeApp: [{name: 'appId', required: true}], // no bundleId & options
-  terminateApp: [{name: 'appId', required: true}], // no bundleId
-  isAppInstalled: [{name: 'appId', required: true}], // no bundleId
-  queryAppState: [{name: 'appId', required: true}], // no bundleId
-  getLogEvents: [{name: 'type', required: true}], // type is required
   stopRecordingScreen: [
     // options separated into components
     {name: 'remotePath', required: false},
