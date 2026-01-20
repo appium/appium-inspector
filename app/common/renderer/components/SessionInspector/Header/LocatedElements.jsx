@@ -1,5 +1,5 @@
 import {IconEraser, IconFocus2, IconListSearch, IconSend2} from '@tabler/icons-react';
-import {Alert, Badge, Button, Input, Row, Space, Spin, Table, Tooltip} from 'antd';
+import {Alert, Badge, Button, Col, Input, Row, Space, Spin, Table, Tooltip} from 'antd';
 import {useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 
@@ -50,9 +50,16 @@ const LocatedElements = (props) => {
             <i>{t('couldNotFindAnyElements')}</i>
           </Row>
           <Row>
-            {t('locatorStrategy')} {locatorTestStrategy}
-            <br />
-            {t('selector')} {locatorTestValue}
+            <Col span={6}>{t('locatorStrategy')}</Col>
+            <Col span={18}>
+              <span className={inspectorStyles.monoFont}>{locatorTestStrategy}</span>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={6}>{t('selector')}</Col>
+            <Col span={18}>
+              <span className={inspectorStyles.monoFont}>{locatorTestValue}</span>
+            </Col>
           </Row>
           {showIdAutocompleteInfo()}
         </Space>

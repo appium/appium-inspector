@@ -75,18 +75,19 @@ const SelectedElement = (props) => {
   };
 
   const selectedElementTableCell = (text, copyToClipBoard) => {
+    const monoText = <span className={inspectorStyles.monoFont}>{text}</span>;
     if (copyToClipBoard) {
       return (
         <div className={styles.selectedElemTableCells}>
           <Tooltip title={t('Copied!')} trigger="click">
-            <span className={styles['element-cell-copy']} onClick={() => copyToClipboard(text)}>
-              {text}
+            <span className={styles.copyableCell} onClick={() => copyToClipboard(text)}>
+              {monoText}
             </span>
           </Tooltip>
         </div>
       );
     } else {
-      return <div className={styles.selectedElemTableCells}>{text}</div>;
+      return <div className={styles.selectedElemTableCells}>{monoText}</div>;
     }
   };
 
@@ -108,8 +109,7 @@ const SelectedElement = (props) => {
       title: t('Attribute'),
       dataIndex: 'name',
       key: 'name',
-      fixed: 'left',
-      width: 150,
+      fixed: 'start',
       render: (text) => selectedElementTableCell(text, false),
     },
     {
@@ -138,8 +138,7 @@ const SelectedElement = (props) => {
       title: t('Find By'),
       dataIndex: 'find',
       key: 'find',
-      fixed: 'left',
-      width: 150,
+      fixed: 'start',
       render: (text) => selectedElementTableCell(text, false),
     },
     {
@@ -155,7 +154,7 @@ const SelectedElement = (props) => {
       title: t('Time'),
       dataIndex: 'time',
       key: 'time',
-      fixed: 'right',
+      fixed: 'end',
       render: (text) => selectedElementTableCell(text, false),
     });
   }
@@ -286,8 +285,8 @@ const SelectedElement = (props) => {
           </Tooltip>
         </Row>
         {findDataSource.length > 0 && (
-          <Row className={styles.selectedElemContentRow}>
-            <Spin spinning={isFindingElementsTimes}>
+          <Spin spinning={isFindingElementsTimes}>
+            <Row className={styles.selectedElemTableWrapper}>
               <Table
                 columns={findColumns}
                 dataSource={findDataSource}
@@ -295,14 +294,14 @@ const SelectedElement = (props) => {
                 scroll={{x: 'max-content'}}
                 pagination={false}
               />
-            </Spin>
-          </Row>
+            </Row>
+          </Spin>
         )}
         {currentContext === NATIVE_APP && showXpathWarning && (
           <Alert title={t('usingXPathNotRecommended')} type={ALERT.WARNING} showIcon />
         )}
         {dataSource.length > 0 && (
-          <Row className={styles.selectedElemContentRow}>
+          <Row className={styles.selectedElemTableWrapper}>
             <Table
               columns={attributeColumns}
               dataSource={dataSource}

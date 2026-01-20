@@ -17,6 +17,7 @@ import {copyToClipboard} from '../../../polyfills.js';
 import {downloadFile} from '../../../utils/file-handling.js';
 import LocatorTestModal from '../Header/LocatorTestModal.jsx';
 import SiriCommandModal from '../Header/SiriCommandModal.jsx';
+import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Source.module.css';
 
 const downloadXML = (sourceXML) => {
@@ -64,7 +65,7 @@ const Source = (props) => {
     return (
       <>
         {prefix}
-        <span className={styles.treeSearchHighlight}>{matchedWord}</span>
+        <span className={styles.sourceSearchHighlight}>{matchedWord}</span>
         {suffix}
       </>
     );
@@ -79,15 +80,18 @@ const Source = (props) => {
         attrs.push(
           <span key={attr}>
             &nbsp;
-            <i className={styles.sourceAttrName}>{getHighlightedText(attr)}</i>=
-            <span>&quot;{getHighlightedText(attributes[attr])}&quot;</span>
+            <span className={styles.sourceNodeAttrName}>{getHighlightedText(attr)}</span>=&quot;
+            <span className={styles.sourceNodeAttrValue}>
+              {getHighlightedText(attributes[attr])}
+            </span>
+            &quot;
           </span>,
         );
       }
     }
     return (
-      <span>
-        &lt;<b className={styles.sourceTag}>{getHighlightedText(tagName)}</b>
+      <span className={inspectorStyles.monoFont}>
+        &lt;<span className={styles.sourceNodeTag}>{getHighlightedText(tagName)}</span>
         {attrs}&gt;
       </span>
     );

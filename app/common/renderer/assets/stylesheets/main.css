@@ -87,11 +87,6 @@ body::-webkit-scrollbar-corner {
   font-size: 12px;
 }
 
-.ant-tree-switcher-icon {
-  font-size: 14px !important;
-  vertical-align: middle !important;
-}
-
 .ant-switch-inner-checked,
 .ant-switch-inner-unchecked {
   font-size: 12px !important;

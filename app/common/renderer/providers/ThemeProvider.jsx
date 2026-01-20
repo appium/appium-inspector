@@ -73,8 +73,14 @@ export const ThemeProvider = ({children}) => {
         trackHeight: 22,
         trackMinWidth: 44,
       },
+      Table: {
+        rowSelectedBg: isDarkTheme ? '#15325b' : '#cce9ff',
+      },
       Tabs: {
         titleFontSize: 14,
+      },
+      Tree: {
+        nodeSelectedBg: isDarkTheme ? '#15325b' : '#cce9ff',
       },
     },
   };
