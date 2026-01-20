@@ -75,7 +75,6 @@ const Source = (props) => {
     const {tagName, attributes} = el;
     let attrs = [];
 
-    // token class names are used to match react-refractor colors
     for (let attr of Object.keys(attributes)) {
       if ((IMPORTANT_SOURCE_ATTRS.includes(attr) && attributes[attr]) || showAllAttrs) {
         attrs.push(
