@@ -40,7 +40,7 @@
   width: 100%;
 }
 
-.selectedElemTableWrapper div {
+.selectedElemTableWrapper > div {
   width: 100%;
 }
 
