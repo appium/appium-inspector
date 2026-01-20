@@ -51,11 +51,15 @@ const LocatedElements = (props) => {
           </Row>
           <Row>
             <Col span={6}>{t('locatorStrategy')}</Col>
-            <Col span={18}><span className={inspectorStyles.monoFont}>{locatorTestStrategy}</span></Col>
+            <Col span={18}>
+              <span className={inspectorStyles.monoFont}>{locatorTestStrategy}</span>
+            </Col>
           </Row>
           <Row>
             <Col span={6}>{t('selector')}</Col>
-            <Col span={18}><span className={inspectorStyles.monoFont}>{locatorTestValue}</span></Col>
+            <Col span={18}>
+              <span className={inspectorStyles.monoFont}>{locatorTestValue}</span>
+            </Col>
           </Row>
           {showIdAutocompleteInfo()}
         </Space>
