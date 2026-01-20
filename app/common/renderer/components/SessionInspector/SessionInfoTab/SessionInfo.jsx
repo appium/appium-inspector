@@ -15,6 +15,8 @@ const SessionInfo = (props) => {
   const intervalRef = useRef(null);
   const [sessionLength, setSessionLength] = useState(0);
 
+  const formatMono = (node) => <span className={inspectorStyles.monoFont}>{node}</span>;
+
   const formatSessionLength = () => {
     const sessionLengthDate = new Date(sessionLength);
     const hours = sessionLengthDate.getUTCHours();
@@ -23,7 +25,7 @@ const SessionInfo = (props) => {
 
     const padTime = (timeUnit) => String(timeUnit).padStart(2, '0');
 
-    return `${padTime(hours)}:${padTime(minutes)}:${padTime(seconds)}`;
+    return formatMono(`${padTime(hours)}:${padTime(minutes)}:${padTime(seconds)}`);
   };
 
   const columns = [
@@ -41,8 +43,8 @@ const SessionInfo = (props) => {
   const innerDataSource = (dataObject) =>
     _.toPairs(dataObject).map(([propName, propValue]) => ({
       key: propName,
-      property: propName,
-      value: String(propValue),
+      property: formatMono(propName),
+      value: formatMono(String(propValue)),
     }));
 
   const getInnerTable = (dataObject) => (
@@ -63,7 +65,7 @@ const SessionInfo = (props) => {
 
     // TODO: Fetch URL from Cloud Providers
     const sessionUrl = sessionId
-      ? `${serverDetails.serverUrl}/session/${sessionId}`
+      ? formatMono(`${serverDetails.serverUrl}/session/${sessionId}`)
       : t('Error Fetching Session URL');
 
     return [
@@ -90,7 +92,7 @@ const SessionInfo = (props) => {
       {
         key: 'active_appId',
         property: t('Currently Active App ID'),
-        value: appId,
+        value: formatMono(appId),
       },
     ];
   };
