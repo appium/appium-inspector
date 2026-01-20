@@ -65,7 +65,7 @@ const Source = (props) => {
     return (
       <>
         {prefix}
-        <span className={styles.treeSearchHighlight}>{matchedWord}</span>
+        <span className={styles.sourceSearchHighlight}>{matchedWord}</span>
         {suffix}
       </>
     );
@@ -81,17 +81,18 @@ const Source = (props) => {
         attrs.push(
           <span key={attr}>
             &nbsp;
-            <span className="token attr-name">{getHighlightedText(attr)}</span>=
-            <span className="token attr-value">
-              &quot;{getHighlightedText(attributes[attr])}&quot;
+            <span className={styles.sourceNodeAttrName}>{getHighlightedText(attr)}</span>=&quot;
+            <span className={styles.sourceNodeAttrValue}>
+              {getHighlightedText(attributes[attr])}
             </span>
+            &quot;
           </span>,
         );
       }
     }
     return (
       <span className={inspectorStyles.monoFont}>
-        &lt;<span className="token property">{getHighlightedText(tagName)}</span>
+        &lt;<span className={styles.sourceNodeTag}>{getHighlightedText(tagName)}</span>
         {attrs}&gt;
       </span>
     );

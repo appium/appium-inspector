@@ -39,31 +39,37 @@
   display: block;
 }
 
-.treeSearchHighlight {
+.sourceSearchHighlight {
   background-color: #ffeb3b;
   border-radius: 2px;
 }
 
-:global(.dark) .treeSearchHighlight {
-  background-color: #dba400;
+:global(.dark) .sourceSearchHighlight {
+  background-color: #ecbf3a;
 }
 
-.sourceAttrName {
-  color: #864da1;
-  font-style: italic;
+.sourceNodeTag {
+  color: #137dce;
 }
 
-:global(.dark) .sourceAttrName {
-  color: #c96dc6;
+:global(.dark) .sourceNodeTag {
+  color: #298dda;
 }
 
-.sourceTag {
-  color: #7d2020;
-  font-weight: normal;
+.sourceNodeAttrName {
+  color: #7c13ec;
 }
 
-:global(.dark) .sourceTag {
-  color: #b31b1b;
+:global(.dark) .sourceNodeAttrName {
+  color: #a450ff;
+}
+
+.sourceNodeAttrValue {
+  color: #e34cde;
+}
+
+:global(.dark) .sourceNodeAttrValue {
+  color: #ea61e5;
 }
 
 .treeContainer {
