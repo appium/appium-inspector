@@ -17,7 +17,7 @@
   word-break: break-all;
 }
 
-.element-cell-copy {
+.copyableCell {
   cursor: pointer;
 }
 
@@ -35,8 +35,13 @@
   width: calc(100% - 64px);
 }
 
-.selectedElemContentRow {
-  display: block;
+.selectedElemTableWrapper {
+  display: flex;
+  width: 100%;
+}
+
+.selectedElemTableWrapper div {
+  width: 100%;
 }
 
 .sourceSearchHighlight {
