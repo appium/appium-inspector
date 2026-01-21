@@ -100,7 +100,7 @@
     "@appium/support": "7.0.4",
     "@eslint-react/eslint-plugin": "2.7.2",
     "@types/lodash": "4.17.23",
-    "@types/react": "19.2.8",
+    "@types/react": "19.2.9",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "5.1.2",
     "asyncbox": "4.0.1",
