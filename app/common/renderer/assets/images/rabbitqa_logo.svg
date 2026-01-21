@@ -1,0 +1,15 @@
+<svg width="200" height="40" viewBox="0 0 200 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g>
+    <line x1="8" y1="20" x2="12" y2="20" stroke="#8070D0" stroke-width="1.5" opacity="0.6"/>
+    <line x1="6" y1="18" x2="10" y2="18" stroke="#8070D0" stroke-width="1.5" opacity="0.4"/>
+    <line x1="6" y1="22" x2="10" y2="22" stroke="#8070D0" stroke-width="1.5" opacity="0.4"/>
+    <ellipse cx="12" cy="20" rx="4" ry="5" fill="#8070D0"/>
+    <ellipse cx="8" cy="16" rx="3" ry="3.5" fill="#8070D0"/>
+    <ellipse cx="6" cy="12" rx="1.5" ry="4" fill="#8070D0"/>
+    <ellipse cx="10" cy="12" rx="1.5" ry="4" fill="#8070D0"/>
+    <circle cx="7" cy="15" r="0.8" fill="#363640"/>
+    <ellipse cx="10" cy="24" rx="1.2" ry="1.5" fill="#8070D0"/>
+    <ellipse cx="14" cy="24" rx="1.2" ry="1.5" fill="#8070D0"/>
+  </g>
+  <text x="22" y="26" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#363640">RabbitQA</text>
+</svg>

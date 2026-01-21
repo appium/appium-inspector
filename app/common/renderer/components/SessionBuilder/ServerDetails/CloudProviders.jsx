@@ -24,6 +24,8 @@ import TVLabsLogo from '../../../assets/images/tvlabs_logo.svg';
 import TVLabsLogoDark from '../../../assets/images/tvlabs_logo_dark.svg';
 import WebmateLogo from '../../../assets/images/webmate_logo.svg';
 import WebmateLogoDark from '../../../assets/images/webmate_logo_dark.svg';
+import RabbitQALogo from '../../../assets/images/rabbitqa_logo.svg';
+import RabbitQALogoDark from '../../../assets/images/rabbitqa_logo_dark.svg';
 import {SERVER_TYPES} from '../../../constants/session-builder.js';
 import {useTheme} from '../../../hooks/use-theme.jsx';
 import styles from './ServerDetails.module.css';
@@ -44,6 +46,7 @@ import ServerTabTestcribe from './ServerTabTestcribe.jsx';
 import ServerTabTestingbot from './ServerTabTestingbot.jsx';
 import ServerTabTVLabs from './ServerTabTVLabs.jsx';
 import ServerTabWebmate from './ServerTabWebmate.jsx';
+import ServerTabRabbitQA from './ServerTabRabbitqa.jsx';
 
 const providers = {
   [SERVER_TYPES.SAUCE]: {
@@ -163,6 +166,13 @@ const providers = {
     logos: {
       light: FireflinkDeviceFarmColor,
       dark: FireflinkDeviceFarmWhite,
+    },
+  },
+  [SERVER_TYPES.RABBITQA]: {
+    tab: ServerTabRabbitQA,
+    logos: {
+      light: RabbitQALogo,
+      dark: RabbitQALogoDark,
     },
   },
 };

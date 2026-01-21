@@ -18,6 +18,7 @@ import {TestcribeVendor} from './testcribe.js';
 import {TestingbotVendor} from './testingbot.js';
 import {TvlabsVendor} from './tvlabs.js';
 import {WebmateVendor} from './webmate.js';
+import {RabbitQAVendor} from './rabbitqa.js';
 
 export const VENDOR_MAP = {
   [SERVER_TYPES.LOCAL]: LocalVendor,
@@ -39,4 +40,5 @@ export const VENDOR_MAP = {
   [SERVER_TYPES.TESTCRIBE]: TestcribeVendor,
   [SERVER_TYPES.WEBMATE]: WebmateVendor,
   [SERVER_TYPES.FIREFLINKDEVICEFARM]: FireflinkDeviceFarmVendor,
+  [SERVER_TYPES.RABBITQA]: RabbitQAVendor,
 };
