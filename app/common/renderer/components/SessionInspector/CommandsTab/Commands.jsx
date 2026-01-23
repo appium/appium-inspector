@@ -19,14 +19,15 @@ const COMMAND_EXECUTE_SCRIPT = 'executeScript';
 const COMMAND_UPDATE_SETTINGS = 'updateSettings';
 
 const formatParamInputLabel = (param) => {
+  const monoName = <span className={inspectorStyles.monoFont}>{param.name}</span>;
   if (param.required) {
     return (
       <>
-        <Typography.Text type="danger">*</Typography.Text>&nbsp;{param.name}
+        <Typography.Text type="danger">*</Typography.Text>&nbsp;{monoName}
       </>
     );
   }
-  return param.name;
+  return monoName;
 };
 
 const Commands = (props) => {
