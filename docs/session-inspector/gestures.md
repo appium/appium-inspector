@@ -57,8 +57,8 @@ The header lists general gesture information, settings, and actions.
 
 ### Gesture Timeline
 
-When creating a new gesture, a red circle with a questionmark is shown right below the gesture
-description. This is the gesture timeline.
+When creating a new gesture, a red questionmark is shown right below the gesture description. This
+is the gesture timeline.
 
 ![Gesture Timeline Empty](./assets/images/gestures/gesture-timeline-empty.png)
 
@@ -86,7 +86,7 @@ When creating a new gesture, only one pointer is added by default, but it is pos
 5 pointers in the same gesture! Each pointer is underlined with its unique colour, and appears as a
 separate row in the [gesture timeline](#gesture-timeline).
 
-![Two Pointers](./assets/images/gestures/two-pointers.png)
+![Three Pointers](./assets/images/gestures/three-pointers.png)
 
 The title of each pointer can also be clicked and edited.
 
