@@ -19,7 +19,7 @@ const StaticCommandsList = ({startCommand}) => {
           <Col key={cmdName} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
             <div className={styles.btnContainer}>
               <Button onClick={() => startCommand({name: cmdName, details: cmdDetails})}>
-                {cmdName}
+                <span className={inspectorStyles.monoFont}>{cmdName}</span>
               </Button>
             </div>
           </Col>
@@ -35,7 +35,7 @@ const StaticCommandsList = ({startCommand}) => {
                 <Col key={cmdName} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
                   <div className={styles.btnContainer}>
                     <Button onClick={() => startCommand({name: cmdName, details: cmdDetails})}>
-                      {cmdName}
+                      <span className={inspectorStyles.monoFont}>{cmdName}</span>
                     </Button>
                   </div>
                 </Col>
