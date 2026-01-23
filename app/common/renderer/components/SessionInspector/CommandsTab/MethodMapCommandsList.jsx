@@ -5,6 +5,7 @@ import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {filterMethodPairs} from '../../../utils/commands-tab.js';
+import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
 
 // Dynamic list of driver commands, generated from the driver's method map responses.
@@ -29,7 +30,7 @@ const MethodMapCommandsList = (props) => {
           className={styles.methodBtn}
           onClick={() => startCommand({name: methodName, details: methodDetails, isExecute})}
         >
-          {methodName}
+          <span className={inspectorStyles.monoFont}>{methodName}</span>
         </Button>
       )}
       {(methodDetails.deprecated || methodDetails.info) && (
@@ -46,7 +47,7 @@ const MethodMapCommandsList = (props) => {
             className={`${styles.methodBtn} ${styles.deprecatedMethod}`}
             onClick={() => startCommand({name: methodName, details: methodDetails, isExecute})}
           >
-            {methodName}
+            <span className={inspectorStyles.monoFont}>{methodName}</span>
           </Button>
         </Tooltip>
       )}
