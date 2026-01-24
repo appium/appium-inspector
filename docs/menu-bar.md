@@ -5,14 +5,14 @@ hide:
 title: Menu Bar
 ---
 
-The **Menu Bar** is the always shown either at the top of the application window (Windows) or in the
-system menu bar (macOS).
+The **Menu Bar** is the always shown either at the top of the application window (Windows/Linux) or
+in the system menu bar (macOS).
 
 ![macOS Menu Bar](assets/images/menu-bar-macos.png)
 
 !!! note
 
-    The menu bar is not available in the [web app version](./overview.md#formats) of the Inspector.
+    The menu bar is only available in the [standalone app version](./overview.md#formats) of the Inspector.
 
 Several standard menu bar options are included, mainly related to window and text management.
 However, there are a few specific options as well:
