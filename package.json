@@ -70,7 +70,7 @@
     "@wdio/protocols": "9.23.2",
     "@xmldom/xmldom": "0.9.8",
     "antd": "6.2.1",
-    "cheerio": "1.1.2",
+    "cheerio": "1.2.0",
     "css.escape": "1.5.1",
     "dayjs": "1.11.19",
     "electron-debug": "4.1.0",
