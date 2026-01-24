@@ -37,18 +37,20 @@ When inspecting a mobile app, the Inspector looks like this:
 
 ## Installation
 
-Appium Inspector is released in 3 formats:
+Appium Inspector is released in two formats:
 
 1. Standalone desktop application for macOS, Windows, and Linux - download it from the
    [**Releases**](https://github.com/appium/appium-inspector/releases) section
-2. Web application - **<https://inspector.appiumpro.com>** (note that
-   [CORS must be enabled](https://appium.github.io/appium-inspector/latest/troubleshooting/#cannot-start-a-session-using-browser-inspector)
-   in order to connect to an Appium server)
-3. Appium server plugin - see the [**plugin README**](./plugins/README.md) for details
+2. Appium server plugin - see the [**plugin README**](./plugins/README.md) for details
 
 Check the [System Requirements](https://appium.github.io/appium-inspector/latest/quickstart/requirements/)
 and [Installation](https://appium.github.io/appium-inspector/latest/quickstart/installation/)
 documentation for more details.
+
+> [!NOTE]
+>
+> The Inspector was also formerly released as a web application hosted at <https://inspector.appiumpro.com>. The Appium team no longer has developer access to this site, so even though it remains operational, it is highly unlikely to be updated to a newer Inspector version, and may be taken down without notice. We recommend migrating to the standalone app or the plugin version.
+> The Appium team is exploring the idea of hosting an up-to-date version of the web app in the future.
 
 ## Features
 

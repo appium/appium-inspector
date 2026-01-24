@@ -25,18 +25,21 @@ Like all Appium plugins, the Inspector plugin can be installed and activated usi
 2.  Launch the Appium server with the plugin activated:
 
     ```bash
-    appium --use-plugins=inspector --allow-cors
+    appium --use-plugins=inspector
     ```
 
 3.  Open the Inspector URL in your web browser:
     ```
-    http://localhost:4723/inspector
+    http://127.0.0.1:4723/inspector
     ```
 
 !!! info
 
     Make sure the above **host URL** and **port** match those of the Appium server. The server's
     **base path** value is irrelevant, as the plugin always uses the `/inspector` path.
+
+    Check [the Troubleshooting guide](../troubleshooting.md#cannot-start-a-session-using-plugin-version)
+    if you are unable to create a session.
 
 ## Desktop App
 
