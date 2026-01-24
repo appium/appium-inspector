@@ -102,7 +102,7 @@ and element attributes.
 | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | ![Tap Element](./assets/images/header/search-tap-element.png)                            | Tap the element                                                                   |
 | ![Send or Clear Element Text](./assets/images/header/search-send-clear-element-text.png) | Enter text to send to the element, or clear its text                              |
-| ![Get Element Timings](./assets/images/source/get-timings.png)                           | Run a timing comparison for the [suggested element locators](#suggested-locators) |
+| ![Get Element Timings](./assets/images/source/get-timings-button.png)                    | Run a timing comparison for the [suggested element locators](#suggested-locators) |
 
 ### Suggested Locators
 
