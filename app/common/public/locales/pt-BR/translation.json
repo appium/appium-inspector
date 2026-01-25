@@ -319,6 +319,6 @@
   "App Settings": "App Settings",
   "unableToImportSessionFiles": "Could not import sessions from the following files: {{fileNames}}",
   "Import from File": "Import from File",
-  "useMjpegStream": "Use MJPEG Stream",
-  "useScreenshotApi": "Use Screenshot API"
+  "useMjpegStream": "Usar stream MJPEG",
+  "useScreenshotApi": "Usar API de Captura de tela"
 }
