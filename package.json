@@ -81,7 +81,7 @@
     "i18next-fs-backend": "2.6.1",
     "i18next-http-backend": "3.0.2",
     "i18next-localstorage-backend": "4.3.1",
-    "ky": "1.14.2",
+    "ky": "1.14.3",
     "lodash": "4.17.23",
     "react": "19.2.3",
     "react-dom": "19.2.3",
