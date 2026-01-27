@@ -4,7 +4,7 @@
  * they cannot be added to tsconfig and eslint configurations
  */
 
-import {settings} from '#local-polyfills'; // eslint-disable-line import/no-unresolved
+import {settings} from '#local-polyfills'; // eslint-disable-line import-x/no-unresolved
 
 import {DEFAULT_SETTINGS} from '../shared/setting-defs.js';
 
@@ -27,4 +27,4 @@ export {
   openLink,
   setTheme,
   updateLanguage,
-} from '#local-polyfills'; // eslint-disable-line import/no-unresolved
+} from '#local-polyfills'; // eslint-disable-line import-x/no-unresolved

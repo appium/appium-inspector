@@ -1,5 +1,6 @@
+import path from 'node:path';
+
 import {startServer as startAppiumFakeDriverServer} from '@appium/fake-driver';
-import path from 'path';
 import {afterAll, beforeAll, describe, expect, it} from 'vitest';
 
 import InspectorDriver from '../../app/common/renderer/lib/appium/inspector-driver.js';

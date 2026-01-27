@@ -1,5 +1,6 @@
-import {promises as fs} from 'fs';
-import {join} from 'path';
+import {promises as fs} from 'node:fs';
+import {join} from 'node:path';
+
 import {describe, expect, it} from 'vitest';
 
 import {parseHtmlSource} from '../../app/common/renderer/utils/webview.js';
