@@ -1,6 +1,7 @@
+import path from 'node:path';
+
 import {startServer as startAppiumFakeDriverServer} from '@appium/fake-driver';
 import {retryInterval} from 'asyncbox';
-import path from 'path';
 import {expect} from 'vitest';
 
 import InspectorPage from './pages/inspector-page-object.js';
