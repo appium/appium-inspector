@@ -1,6 +1,7 @@
+import {join} from 'node:path';
+
 import {ipcRenderer} from 'electron';
 import i18NextBackend from 'i18next-fs-backend';
-import {join} from 'path';
 
 const localesPath =
   process.env.NODE_ENV === 'development'

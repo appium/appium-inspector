@@ -1,6 +1,7 @@
+import {join} from 'node:path';
+
 import {BrowserWindow, ipcMain, Menu, nativeTheme} from 'electron';
 import settings from 'electron-settings';
-import {join} from 'path';
 
 import {PREFERRED_THEME} from '../../common/shared/setting-defs.js';
 import {isDev} from './helpers.js';
