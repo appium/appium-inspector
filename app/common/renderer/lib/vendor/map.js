@@ -5,7 +5,6 @@ import {ExperitestVendor} from './experitest.js';
 import {FireflinkDeviceFarmVendor} from './fireflinkdevicefarm.js';
 import {HeadspinVendor} from './headspin.js';
 import {KobitonVendor} from './kobiton.js';
-import {LambdatestVendor} from './lambdatest.js';
 import {LocalVendor} from './local.js';
 import {MobitruVendor} from './mobitru.js';
 import {PcloudyVendor} from './pcloudy.js';
@@ -16,6 +15,7 @@ import {RobotqaVendor} from './robotqa.js';
 import {SaucelabsVendor} from './saucelabs.js';
 import {TestcribeVendor} from './testcribe.js';
 import {TestingbotVendor} from './testingbot.js';
+import {TestMuAIVendor} from './testmuai.js';
 import {TvlabsVendor} from './tvlabs.js';
 import {WebmateVendor} from './webmate.js';
 
@@ -26,7 +26,7 @@ export const VENDOR_MAP = {
   [SERVER_TYPES.HEADSPIN]: HeadspinVendor,
   [SERVER_TYPES.PERFECTO]: PerfectoVendor,
   [SERVER_TYPES.BROWSERSTACK]: BrowserstackVendor,
-  [SERVER_TYPES.LAMBDATEST]: LambdatestVendor,
+  [SERVER_TYPES.TESTMUAI]: TestMuAIVendor,
   [SERVER_TYPES.BITBAR]: BitbarVendor,
   [SERVER_TYPES.KOBITON]: KobitonVendor,
   [SERVER_TYPES.PCLOUDY]: PcloudyVendor,

@@ -16,7 +16,7 @@ const AdvancedServerParams = ({server, setServerParam, serverType}) => {
                 label: t('Advanced Settings'),
                 children: (
                   <Row>
-                    {serverType !== 'lambdatest' && (
+                    {serverType !== SERVER_TYPES.TESTMUAI && (
                       <Col span={7}>
                         <Form.Item>
                           <Checkbox

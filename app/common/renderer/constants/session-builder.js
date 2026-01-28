@@ -21,7 +21,7 @@ export const SERVER_TYPES = {
   SAUCE: 'sauce',
   HEADSPIN: 'headspin',
   BROWSERSTACK: 'browserstack',
-  LAMBDATEST: 'lambdatest',
+  TESTMUAI: 'lambdatest',
   TESTINGBOT: 'testingbot',
   EXPERITEST: 'experitest',
   ROBOTQA: 'roboticmobi',

@@ -41,7 +41,7 @@ describe('utils/attaching-to-session.js', function () {
         '12345 — AAAAA-BBBBB / Android / UiAutomator2 / com.best.app',
       );
     });
-    it('should show correct info for LambdaTest-specific capability format', function () {
+    it('should show correct info for TestMu AI-specific capability format', function () {
       const session = {
         id: '12345',
         capabilities: {
@@ -57,7 +57,7 @@ describe('utils/attaching-to-session.js', function () {
           },
         },
       };
-      const serverType = SERVER_TYPES.LAMBDATEST;
+      const serverType = SERVER_TYPES.TESTMUAI;
       expect(getSessionInfo(session, serverType)).toEqual(
         '12345 — Vitest Session / Vitest Phone / Android 100 / UiAutomator2 / bestapp.apk',
       );
