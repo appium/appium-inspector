@@ -12,6 +12,7 @@ import {parseGestureFileContents} from '../utils/gesturefile-parsing.js';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
+import {getRandomId} from '../utils/other.js';
 import {
   findDOMNodeByPath,
   findJSONElementByPath,
@@ -953,7 +954,7 @@ export function saveGesture(gesture) {
       }
     } else {
       // Adding a new gesture
-      gesture.id = crypto.randomUUID();
+      gesture.id = getRandomId();
       gesture.date = Date.now();
       savedGestures.push(gesture);
     }

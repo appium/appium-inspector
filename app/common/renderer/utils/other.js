@@ -2,6 +2,14 @@ import _ from 'lodash';
 
 import {STANDARD_W3C_CAPS} from '../constants/session-builder.js';
 
+/**
+ * Generates a random ID string for persistent data like session details or gestures.
+ * Uses `crypto.getRandomValues` instead of `crypto.randomUUID` to support insecure contexts,
+ * such as the plugin version when accessed over HTTP.
+ * @returns random ID string
+ */
+export const getRandomId = () => crypto.getRandomValues(new Uint32Array(3)).join('-');
+
 export function addVendorPrefixes(caps) {
   return caps.map((cap) => {
     // if we don't have a valid unprefixed cap or a cap with an existing prefix, update it
