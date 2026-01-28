@@ -27,7 +27,7 @@ import {
 import {downloadFile, readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
-import {addVendorPrefixes} from '../utils/other.js';
+import {addVendorPrefixes, getRandomId} from '../utils/other.js';
 import {parseSessionFileContents} from '../utils/sessionfile-parsing.js';
 import {quitSession, setSessionDetails} from './SessionInspector.js';
 
@@ -416,7 +416,7 @@ export function saveSession(sessionParams, checkDuplicateName = false) {
     let uuid = foundUUID;
     if (!uuid) {
       // If it's a new session, add it to the list
-      uuid = crypto.randomUUID();
+      uuid = getRandomId();
       const newSavedSession = {
         date: Date.now(),
         name,
@@ -887,7 +887,7 @@ export function saveRawDesiredCaps(currentCapsArray, rawDesiredCaps) {
 
       // Translate the raw caps JSON to array format
       const newCapsArray = Object.entries(rawCapsObj).map(([name, value]) => ({
-        id: crypto.randomUUID(),
+        id: getRandomId(),
         enabled: true,
         ...currentCapsObj[name], // overrides id and enabled, if present
         type: typeof value === 'string' ? 'text' : typeof value,

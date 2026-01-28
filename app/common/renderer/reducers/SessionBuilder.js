@@ -43,6 +43,7 @@ import {
   SWITCHED_TABS,
 } from '../actions/SessionBuilder.js';
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder.js';
+import {getRandomId} from '../utils/other.js';
 
 const visibleProviders = []; // Pull this from the VISIBLE_PROVIDERS setting
 
@@ -63,7 +64,7 @@ const INITIAL_STATE = {
   // Make sure there's always at least one cap
   caps: [
     {
-      id: crypto.randomUUID(),
+      id: getRandomId(),
       type: 'text',
       enabled: true,
     },
@@ -105,7 +106,7 @@ export default function builder(state = INITIAL_STATE, action) {
     case ADD_CAPABILITY:
       return {
         ...state,
-        caps: [...state.caps, {id: crypto.randomUUID(), type: 'text', enabled: true}],
+        caps: [...state.caps, {id: getRandomId(), type: 'text', enabled: true}],
       };
 
     case REMOVE_CAPABILITY:
@@ -135,7 +136,7 @@ export default function builder(state = INITIAL_STATE, action) {
         server: {...state.server, ...action.server},
         serverType: action.serverType,
         caps: action.caps.map((cap) => ({
-          id: crypto.randomUUID(),
+          id: getRandomId(),
           enabled: true,
           ...cap,
         })),
@@ -393,7 +394,7 @@ export default function builder(state = INITIAL_STATE, action) {
         ...state,
         // caps will always be defined as per parseSessionFileContents
         caps: action.sessionJSON.caps.map((cap) => ({
-          id: crypto.randomUUID(),
+          id: getRandomId(),
           enabled: true,
           ...cap,
         })),
