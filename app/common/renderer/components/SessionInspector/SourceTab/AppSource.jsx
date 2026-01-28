@@ -29,7 +29,7 @@ const downloadXML = (sourceXML) => {
 /**
  * Shows the 'source' of the app as a Tree
  */
-const Source = (props) => {
+const AppSource = (props) => {
   const {
     sourceJSON,
     sourceError,
@@ -266,4 +266,4 @@ const Source = (props) => {
   );
 };
 
-export default Source;
+export default AppSource;
