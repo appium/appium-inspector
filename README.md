@@ -88,7 +88,7 @@ The Inspector has built-in integrations with various cloud service provider plat
     </td>
     <td align="center" valign="center">
       <a href="https://www.testmuai.com/support/docs/appium-inspector-integration/">
-        <img width="200" height="50" alt="TestMu AI" src="app/common/renderer/assets/images/testmuai_logo.svg">
+        <img width="200" height="50" alt="TestMu AI (formerly LambdaTest)" src="app/common/renderer/assets/images/testmuai_logo.svg">
       </a>
     </td>
   </tr>
