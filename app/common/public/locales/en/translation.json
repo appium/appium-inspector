@@ -71,7 +71,6 @@
   "locatorStrategy": "Locator Strategy:",
   "selector": "Selector:",
   "couldNotObtainScreenshot": "Could not obtain screenshot: {{screenshotError}}",
-  "selectElementInSource": "Select an element in the source to begin.",
   "Press Home Button": "Press Home Button",
   "Execute Siri Command": "Execute Siri Command",
   "Press Back Button": "Press Back Button",
