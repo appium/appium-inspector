@@ -6,7 +6,7 @@ import {STANDARD_W3C_CAPS} from '../constants/session-builder.js';
  * Generates a random ID string for persistent data like session details or gestures.
  * Uses `crypto.getRandomValues` instead of `crypto.randomUUID` to support insecure contexts,
  * such as the plugin version when accessed over HTTP.
- * @returns random ID string
+ * @returns random ID string (5-32 symbols)
  */
 export const getRandomId = () => crypto.getRandomValues(new Uint32Array(3)).join('-');
 
