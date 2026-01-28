@@ -302,8 +302,8 @@ export function newSession(originalCaps, attachSessId = null) {
         let attachedSessionCaps = {};
         if (attachedSession) {
           attachedSessionCaps = attachedSession.capabilities;
-          if (session.serverType === SERVER_TYPES.LAMBDATEST) {
-            // adjust for LambdaTest-specific format
+          if (session.serverType === SERVER_TYPES.TESTMUAI) {
+            // adjust for TestMu AI-specific format
             if ('capabilities' in attachedSessionCaps) {
               attachedSessionCaps = attachedSessionCaps.capabilities;
             }
