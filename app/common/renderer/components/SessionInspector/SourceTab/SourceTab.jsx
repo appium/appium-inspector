@@ -17,13 +17,11 @@ const SourceTab = (props) => {
       >
         <AppSource {...props} />
       </Splitter.Panel>
-      <Splitter.Panel
-        collapsible={hasSelectedElement}
-        size={hasSelectedElement ? undefined : 0}
-        min={250}
-      >
-        {hasSelectedElement && <SelectedElement {...props} />}
-      </Splitter.Panel>
+      {hasSelectedElement && (
+        <Splitter.Panel collapsible={true} min={250}>
+          <SelectedElement {...props} />
+        </Splitter.Panel>
+      )}
     </Splitter>
   );
 };
