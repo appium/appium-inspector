@@ -2,17 +2,17 @@ import _ from 'lodash';
 
 import {BaseVendor} from './base.js';
 
-export class LambdatestVendor extends BaseVendor {
+export class TestMuAIVendor extends BaseVendor {
   /**
    * @override
    */
   async configureProperties() {
-    const lambdatest = this._server.lambdatest;
+    const testmuai = this._server.lambdatest;
     const advanced = this._server.advanced;
-    const vendorName = 'LambdaTest';
+    const vendorName = 'TestMu AI';
 
-    const username = lambdatest.username || process.env.LAMBDATEST_USERNAME;
-    const accessKey = lambdatest.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
+    const username = testmuai.username || process.env.LAMBDATEST_USERNAME;
+    const accessKey = testmuai.accessKey || process.env.LAMBDATEST_ACCESS_KEY;
     this._checkInputPropertyPresence(vendorName, [
       {name: 'Username', val: username},
       {name: 'Access Key', val: accessKey},
@@ -22,7 +22,7 @@ export class LambdatestVendor extends BaseVendor {
     const port = process.env.LAMBDATEST_PORT || 443;
     const path = '/wd/hub';
     const https = parseInt(port, 10) === 443;
-    this._saveProperties(lambdatest, {host, path, port, https, username, accessKey});
+    this._saveProperties(testmuai, {host, path, port, https, username, accessKey});
 
     if (_.has(this._sessionCaps, 'lt:options')) {
       const options = {
