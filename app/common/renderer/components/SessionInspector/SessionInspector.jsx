@@ -6,7 +6,7 @@ import {
   IconObjectScan,
   IconPhoto,
 } from '@tabler/icons-react';
-import {Button, Modal, Space, Spin, Splitter, Tabs, Tooltip} from 'antd';
+import {Button, Modal, Space, Spin, Tabs, Tooltip} from 'antd';
 import _ from 'lodash';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -29,9 +29,7 @@ import Recorder from './RecorderTab/Recorder.jsx';
 import Screenshot from './Screenshot/Screenshot.jsx';
 import SessionInfo from './SessionInfoTab/SessionInfo.jsx';
 import styles from './SessionInspector.module.css';
-import SelectAnElement from './SourceTab/SelectAnElement.jsx';
-import SelectedElement from './SourceTab/SelectedElement.jsx';
-import Source from './SourceTab/Source.jsx';
+import SourceTab from './SourceTab/SourceTab.jsx';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 
@@ -58,7 +56,6 @@ const Inspector = (props) => {
   const {
     screenshot,
     screenshotError,
-    selectedElement = {},
     quitSession,
     screenshotInteractionMode,
     selectedInspectorTab,
@@ -344,17 +341,7 @@ const Inspector = (props) => {
               label: t('Source'),
               key: INSPECTOR_TABS.SOURCE,
               disabled: !showScreenshot,
-              children: (
-                <Splitter>
-                  <Splitter.Panel collapsible defaultSize="50%" min="25%" max="80%">
-                    <Source {...props} />
-                  </Splitter.Panel>
-                  <Splitter.Panel collapsible>
-                    {selectedElement.path && <SelectedElement {...props} />}
-                    {!selectedElement.path && <SelectAnElement {...props} />}
-                  </Splitter.Panel>
-                </Splitter>
-              ),
+              children: <SourceTab {...props} />,
             },
             {
               label: t('Commands'),
