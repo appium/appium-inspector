@@ -1,6 +1,7 @@
+import {join} from 'node:path';
+
 import react from '@vitejs/plugin-react';
 import {defineConfig} from 'electron-vite';
-import {join} from 'path';
 import renderer from 'vite-plugin-electron-renderer';
 
 export default defineConfig({

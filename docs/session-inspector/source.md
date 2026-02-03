@@ -3,7 +3,8 @@ title: Source Tab
 ---
 
 The Source tab is the default tab opened after starting an Inspector session. It can be divided into
-two connected parts: the Application Source panel, and the Selected Element panel.
+two connected parts: the Application Source panel, and the Selected Element panel (only shown if an
+element is selected).
 
 ![Source Tab](./assets/images/source/source-tab.png)
 
@@ -75,16 +76,17 @@ header, which allows to disable automatic refreshing.
 
 ## Selected Element
 
-The Selected Element panel is shown on the right side of the Source tab. It is empty by default, but
-becomes populated once an element is selected.
+Once any element is selected, the Selected Element panel is shown to the right of the Source tab.
 
 ![Selected Element](./assets/images/source/selected-element.png)
 
-In order to populate the panel, an element can be selected in one of the following ways:
+An element can be selected in one of the following ways:
 
-- Selecting an entry in the [Application Source](#application-source)
+- Selecting a tree node in the [Application Source](#application-source)
 - Selecting a highlighter in the [Screenshot panel](./screenshot.md)
 - Clicking the [Reveal Element in Source button in the Search Results](./header.md#search-for-element)
+
+Unselecting the element will hide the Selected Element panel.
 
 The panel can be divided into 4 parts: header buttons, element action buttons, suggested locators,
 and element attributes.
@@ -102,7 +104,7 @@ and element attributes.
 | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | ![Tap Element](./assets/images/header/search-tap-element.png)                            | Tap the element                                                                   |
 | ![Send or Clear Element Text](./assets/images/header/search-send-clear-element-text.png) | Enter text to send to the element, or clear its text                              |
-| ![Get Element Timings](./assets/images/source/get-timings.png)                           | Run a timing comparison for the [suggested element locators](#suggested-locators) |
+| ![Get Element Timings](./assets/images/source/get-timings-button.png)                    | Run a timing comparison for the [suggested element locators](#suggested-locators) |
 
 ### Suggested Locators
 
@@ -120,5 +122,6 @@ was returned.
 This table lists all attributes retrieved from the element, along with their values. Clicking on a
 value copies it to the clipboard.
 
-Refer to your [Appium driver](https://appium.io/docs/en/latest/ecosystem/drivers/) documentation for
-ways to customize the attributes shown in this table.
+Depending on your [Appium driver](https://appium.io/docs/en/latest/ecosystem/drivers/), you may also
+be able to configure these attributes, for example, by including certain attributes that may be
+hidden by default due to performance reasons. Check your driver documentation for more information.

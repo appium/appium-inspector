@@ -1,7 +1,8 @@
+import os from 'node:os';
+import {join} from 'node:path';
+
 import {fs, logger} from '@appium/support';
 import {retryInterval} from 'asyncbox';
-import os from 'os';
-import {join} from 'path';
 import {expect} from 'vitest';
 
 const platform = os.platform();

@@ -3,30 +3,30 @@ import {useTranslation} from 'react-i18next';
 
 import {INPUT} from '../../../constants/antd-types.js';
 
-const lambdatestUsernamePlaceholder = (t) => {
+const testMuAIUsernamePlaceholder = (t) => {
   if (process.env.LAMBDATEST_USERNAME) {
     return t('usingDataFoundIn', {environmentVariable: 'LAMBDATEST_USERNAME'});
   }
   return t('yourUsername');
 };
 
-const lambdatestAccessKeyPlaceholder = (t) => {
+const testMuAIAccessKeyPlaceholder = (t) => {
   if (process.env.LAMBDATEST_ACCESS_KEY) {
     return t('usingDataFoundIn', {environmentVariable: 'LAMBDATEST_ACCESS_KEY'});
   }
   return t('yourAccessKey');
 };
 
-const ServerTabLambdatest = ({server, setServerParam}) => {
+const ServerTabTestMuAI = ({server, setServerParam}) => {
   const {t} = useTranslation();
   return (
     <Row gutter={8}>
       <Col span={12}>
         <Space.Compact block>
-          <Space.Addon>{t('LambdaTest Username')}</Space.Addon>
+          <Space.Addon>{t('TestMu AI Username')}</Space.Addon>
           <Input
-            id="lambdatestUsername"
-            placeholder={lambdatestUsernamePlaceholder(t)}
+            id="testMuAIUsername"
+            placeholder={testMuAIUsernamePlaceholder(t)}
             value={server.lambdatest.username}
             onChange={(e) => setServerParam('username', e.target.value)}
           />
@@ -34,11 +34,11 @@ const ServerTabLambdatest = ({server, setServerParam}) => {
       </Col>
       <Col span={12}>
         <Space.Compact block>
-          <Space.Addon>{t('LambdaTest Access Key')}</Space.Addon>
+          <Space.Addon>{t('TestMu AI Access Key')}</Space.Addon>
           <Input
-            id="lambdatestPassword"
+            id="testMuAIUsernameAccessKey"
             type={INPUT.PASSWORD}
-            placeholder={lambdatestAccessKeyPlaceholder(t)}
+            placeholder={testMuAIAccessKeyPlaceholder(t)}
             value={server.lambdatest.accessKey}
             onChange={(e) => setServerParam('accessKey', e.target.value)}
           />
@@ -48,4 +48,4 @@ const ServerTabLambdatest = ({server, setServerParam}) => {
   );
 };
 
-export default ServerTabLambdatest;
+export default ServerTabTestMuAI;

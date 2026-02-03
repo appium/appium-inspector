@@ -11,19 +11,17 @@ This page aims to act as a reference for issues that may be encountered when usi
 
 Please refer to the [Installation guide](./quickstart/installation.md).
 
-## Cannot start a session using browser Inspector
+## Cannot start a session using plugin version
 
 The reason for this issue is [cross-origin resource sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
-(CORS). Web browsers have security features which prevent CORS. The browser version of the Inspector
-needs to make requests to the Appium server directly from the browser via JavaScript, but these
-requests are typically not made to the same host (for example, the Inspector is accessed at
-`appiumpro.com`, whereas your local Appium server is `localhost:4723`).
+(CORS). The browser will prevent you from connecting to the Appium server if the base URLs of
+the Inspector and the Appium server do not match (typically `127.0.0.1`).
 
-In this scenario, you will be unable to start a session, because the browser will prevent it. You
-can resolve this issue by starting your Appium server with the `--allow-cors` flag:
+If you want to access the Inspector using another base URL (such as `localhost`), you can do so by
+adding the `--allow-cors` flag when starting the server:
 
 ```
-appium --allow-cors
+appium --use-plugins=inspector --allow-cors
 ```
 
 This will instruct the server to sent the correct CORS-related headers, and it should be possible to

@@ -14,15 +14,18 @@ with a graphical user interface and additional features.
 
 ## Formats
 
-The Inspector is distributed in 3 formats:
+The Inspector is distributed in two formats:
 
 - Standalone desktop application for Windows, macOS, and Linux, available for download from
   [its GitHub repo](https://github.com/appium/appium-inspector/releases)
-- Web application, available at <https://inspector.appiumpro.com>
 - Appium server plugin, available for installation using
   [Appium's Extension CLI](https://appium.io/docs/en/latest/cli/extensions/)
 
-Note that the web application may not be fully up-to-date with the desktop application.
+!!! note
+
+    The Inspector was also formerly released as a web application hosted at <https://inspector.appiumpro.com>. The Appium team no longer has developer access to this site, so even though it remains operational, it is highly unlikely to be updated to a newer Inspector version, and may be taken down without notice. We recommend migrating to the standalone app or the plugin version.
+
+    The Appium team is exploring the idea of hosting an up-to-date version of the web app in the future.
 
 ## GUI Overview
 

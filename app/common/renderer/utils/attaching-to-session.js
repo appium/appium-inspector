@@ -46,7 +46,7 @@ class DefaultSessionDescription {
   }
 }
 
-class LambdaTestSessionDescription extends DefaultSessionDescription {
+class TestMuAISessionDescription extends DefaultSessionDescription {
   constructor(caps) {
     super('capabilities' in caps ? caps.capabilities : caps);
   }
@@ -58,8 +58,8 @@ class LambdaTestSessionDescription extends DefaultSessionDescription {
 
 const getSessionDescription = (caps, serverType) => {
   switch (serverType) {
-    case SERVER_TYPES.LAMBDATEST:
-      return new LambdaTestSessionDescription(caps);
+    case SERVER_TYPES.TESTMUAI:
+      return new TestMuAISessionDescription(caps);
     default:
       return new DefaultSessionDescription(caps);
   }
