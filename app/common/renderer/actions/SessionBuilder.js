@@ -532,11 +532,11 @@ export function changeServerType(serverType) {
 /**
  * Set a server parameter (host, port, etc...)
  */
-export function setServerParam(name, value, serverType) {
+export function setServerParam(name, value, serverType, {markDirty = false} = {}) {
   return async (dispatch, getState) => {
     serverType = serverType || getState().builder.serverType;
     await setSetting(SESSION_SERVER_TYPE, serverType);
-    dispatch({type: SET_SERVER_PARAM, serverType, name, value});
+    dispatch({type: SET_SERVER_PARAM, serverType, name, value, markDirty});
   };
 }
 
