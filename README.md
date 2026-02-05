@@ -99,7 +99,11 @@ The Inspector has built-in integrations with various cloud service provider plat
   <tr>
     <td align="center" valign="center">
       <a href="https://testingbot.com/support/getting-started/appium.html">
-        <img width="200" height="50" alt="TestingBot" src="app/common/renderer/assets/images/testingbot_logo.svg">
+        <picture>
+          <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/testingbot_logo.svg">
+          <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/testingbot_logo_dark.svg">
+          <img width="200" height="50" alt="TestingBot">
+        </picture>
       </a>
     </td>
     <td align="center" valign="center">

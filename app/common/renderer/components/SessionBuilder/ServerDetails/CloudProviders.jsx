@@ -19,6 +19,7 @@ import SauceLogoDark from '../../../assets/images/sauce_logo_dark.svg';
 import TestcribeLogo from '../../../assets/images/testcribe_logo.svg';
 import TestcribeLogoDark from '../../../assets/images/testcribe_logo_dark.svg';
 import TestingBotLogo from '../../../assets/images/testingbot_logo.svg';
+import TestingBotLogoDark from '../../../assets/images/testingbot_logo_dark.svg';
 import TestMuAILogo from '../../../assets/images/testmuai_logo.svg';
 import TestMuAILogoDark from '../../../assets/images/testmuai_logo_dark.svg';
 import TVLabsLogo from '../../../assets/images/tvlabs_logo.svg';
@@ -79,7 +80,7 @@ const providers = {
     tab: ServerTabTestingbot,
     logos: {
       light: TestingBotLogo,
-      dark: null,
+      dark: TestingBotLogoDark,
     },
   },
   [SERVER_TYPES.EXPERITEST]: {
