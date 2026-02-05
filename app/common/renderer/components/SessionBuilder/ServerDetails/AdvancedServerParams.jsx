@@ -26,7 +26,6 @@ const AdvancedServerParams = ({server, setServerParam, serverType}) => {
                                 SERVER_ADVANCED_PARAMS.ALLOW_UNAUTHORIZED,
                                 e.target.checked,
                                 SERVER_TYPES.ADVANCED,
-                                {markDirty: true},
                               )
                             }
                           >
@@ -44,7 +43,6 @@ const AdvancedServerParams = ({server, setServerParam, serverType}) => {
                               SERVER_ADVANCED_PARAMS.USE_PROXY,
                               e.target.checked,
                               SERVER_TYPES.ADVANCED,
-                              {markDirty: true},
                             )
                           }
                         >
@@ -61,7 +59,6 @@ const AdvancedServerParams = ({server, setServerParam, serverType}) => {
                               SERVER_ADVANCED_PARAMS.PROXY,
                               e.target.value,
                               SERVER_TYPES.ADVANCED,
-                              {markDirty: true},
                             )
                           }
                           placeholder={t('Proxy URL')}

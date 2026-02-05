@@ -15,9 +15,7 @@ const ServerTabCustom = ({server, setServerParam}) => {
             id="customServerHost"
             placeholder={DEFAULT_SERVER_PROPS.hostname}
             value={server.remote.hostname}
-            onChange={(e) =>
-              setServerParam('hostname', e.target.value, undefined, {markDirty: true})
-            }
+            onChange={(e) => setServerParam('hostname', e.target.value)}
           />
         </Space.Compact>
       </Col>
@@ -28,7 +26,7 @@ const ServerTabCustom = ({server, setServerParam}) => {
             id="customServerPort"
             placeholder={DEFAULT_SERVER_PROPS.port}
             value={server.remote.port}
-            onChange={(e) => setServerParam('port', e.target.value, undefined, {markDirty: true})}
+            onChange={(e) => setServerParam('port', e.target.value)}
           />
         </Space.Compact>
       </Col>
@@ -39,7 +37,7 @@ const ServerTabCustom = ({server, setServerParam}) => {
             id="customServerPath"
             placeholder={DEFAULT_SERVER_PROPS.path}
             value={server.remote.path}
-            onChange={(e) => setServerParam('path', e.target.value, undefined, {markDirty: true})}
+            onChange={(e) => setServerParam('path', e.target.value)}
           />
         </Space.Compact>
       </Col>
@@ -49,7 +47,7 @@ const ServerTabCustom = ({server, setServerParam}) => {
           id="customServerSSL"
           checked={!!server.remote.ssl}
           value={server.remote.ssl}
-          onChange={(e) => setServerParam('ssl', e.target.checked, undefined, {markDirty: true})}
+          onChange={(e) => setServerParam('ssl', e.target.checked)}
         >
           {t('SSL')}
         </Checkbox>

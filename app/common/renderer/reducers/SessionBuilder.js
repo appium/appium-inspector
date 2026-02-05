@@ -232,7 +232,6 @@ export default function builder(state = INITIAL_STATE, action) {
             [action.name]: action.value,
           },
         },
-        isCapsDirty: action.markDirty ? true : state.isCapsDirty,
       };
 
     case SET_SERVER:

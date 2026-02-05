@@ -88,7 +88,6 @@ describe('SessionBuilder actions', function () {
         serverType: SERVER_TYPES.REMOTE,
         name: 'port',
         value: '1234',
-        markDirty: false,
       });
     });
 
@@ -121,42 +120,7 @@ describe('SessionBuilder actions', function () {
         serverType: SERVER_TYPES.REMOTE,
         name: 'port',
         value: '4723',
-        markDirty: false,
       });
-    });
-
-    it('should NOT mark server params as dirty when port is set from URL', async function () {
-      const mockState = {
-        builder: {
-          server: {
-            [SERVER_TYPES.REMOTE]: {
-              hostname: '127.0.0.1',
-            },
-          },
-          serverType: SERVER_TYPES.REMOTE,
-        },
-      };
-
-      const mockDispatch = vi.fn();
-      const mockGetState = vi.fn().mockReturnValue(mockState);
-
-      global.window = {
-        location: {
-          href: 'http://localhost:1234/inspector',
-          pathname: '/inspector',
-        },
-      };
-
-      const action = SessionBuilderActions.setPortFromUrl();
-      await action(mockDispatch, mockGetState);
-
-      expect(mockDispatch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: 'SET_SERVER_PARAM',
-          name: 'port',
-          markDirty: false,
-        }),
-      );
     });
 
     it('should not set port if window is undefined (electron mode)', async function () {
