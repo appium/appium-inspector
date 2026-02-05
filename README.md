@@ -208,6 +208,11 @@ The Inspector has built-in integrations with various cloud service provider plat
         </picture>
       </a>
     </td>
+    <td align="center" valign="center">
+      <a href="https://docs.rabbitqa.com/">
+        <img width="200" height="50" alt="RabbitQA" src="app/common/renderer/assets/images/rabbitqa_logo.svg">
+      </a>
+    </td>
   </tr>
 </table>
 
