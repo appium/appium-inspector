@@ -156,7 +156,6 @@ The Inspector has built-in integrations with various cloud service provider plat
     </td>
     <td align="center" valign="center">
       <a href="https://www.pcloudy.com/docs/inspect-element-using-appium-desktop">
-        <img width="200" height="50" alt="Pcloudy" src="app/common/renderer/assets/images/pcloudy_logo.svg">
         <picture>
           <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/pcloudy_logo.svg">
           <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/pcloudy_logo_dark.svg">
