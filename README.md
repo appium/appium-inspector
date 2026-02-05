@@ -87,12 +87,20 @@ The Inspector has built-in integrations with various cloud service provider plat
     </td>
     <td align="center" valign="center">
       <a href="https://www.browserstack.com/docs/app-automate/appium/integrations/appium-desktop">
-        <img width="200" height="50" alt="BrowserStack" src="app/common/renderer/assets/images/browserstack_logo.svg">
+        <picture>
+          <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/browserstack_logo.svg">
+          <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/browserstack_logo_dark.svg">
+          <img width="200" height="50" alt="BrowserStack">
+        </picture>
       </a>
     </td>
     <td align="center" valign="center">
       <a href="https://www.testmuai.com/support/docs/appium-inspector-integration/">
-        <img width="200" height="50" alt="TestMu AI (formerly LambdaTest)" src="app/common/renderer/assets/images/testmuai_logo_dark.svg">
+        <picture>
+          <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/testmuai_logo.svg">
+          <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/testmuai_logo_dark.svg">
+          <img width="200" height="50" alt="TestMu AI (formerly LambdaTest)">
+        </picture>
       </a>
     </td>
   </tr>
@@ -107,13 +115,17 @@ The Inspector has built-in integrations with various cloud service provider plat
       </a>
     </td>
     <td align="center" valign="center">
-      <a href="https://docs.digital.ai/bundle/TE/page/appium.html">
+      <a href="https://docs.digital.ai/continuous-testing/docs/te/test-execution-home/mobile-android-and-ios/appium">
         <img width="200" height="50" alt="ExperiTest" src="app/common/renderer/assets/images/experitest_logo.svg">
       </a>
     </td>
     <td align="center" valign="center">
       <a href="https://robotqa.com/documentation/docs/for-testers/first-test/inspect_element">
-        <img width="200" height="50" alt="RobotQA" src="app/common/renderer/assets/images/robotqa_logo.svg">
+        <picture>
+          <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/robotqa_logo.svg">
+          <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/robotqa_logo_dark.svg">
+          <img width="200" height="50" alt="RobotQA">
+        </picture>
       </a>
     </td>
     <td align="center" valign="center">
@@ -130,7 +142,11 @@ The Inspector has built-in integrations with various cloud service provider plat
     </td>
     <td align="center" valign="center">
       <a href="https://docs.kobiton.com/automation-testing/basic-appium-server/launch-a-basic-appium-2-session">
-        <img width="200" height="50" alt="Kobiton" src="app/common/renderer/assets/images/kobiton_logo.svg">
+        <picture>
+          <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/kobiton_logo.svg">
+          <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/kobiton_logo_dark.svg">
+          <img width="200" height="50" alt="Kobiton">
+        </picture>
       </a>
     </td>
     <td align="center" valign="center">
@@ -141,28 +157,45 @@ The Inspector has built-in integrations with various cloud service provider plat
     <td align="center" valign="center">
       <a href="https://www.pcloudy.com/docs/inspect-element-using-appium-desktop">
         <img width="200" height="50" alt="Pcloudy" src="app/common/renderer/assets/images/pcloudy_logo.svg">
+        <picture>
+          <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/pcloudy_logo.svg">
+          <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/pcloudy_logo_dark.svg">
+          <img width="200" height="50" alt="Pcloudy">
+        </picture>
       </a>
     </td>
   </tr>
   <tr>
     <td align="center" valign="center">
-      <a href="https://mobitru.com/docs/automation/">
+      <a href="https://mobitru.com/docs/appium-inspector-integration/">
         <img width="200" height="50" alt="Mobitru" src="app/common/renderer/assets/images/mobitru_logo.svg">
       </a>
     </td>
     <td align="center" valign="center">
-      <a href="https://docs.tvlabs.ai/platform/integrations/appium">
-        <img width="200" height="50" alt="TV Labs" src="app/common/renderer/assets/images/tvlabs_logo.svg">
+      <a href="https://docs.tvlabs.ai/platform/integrations/appium/inspector">
+        <picture>
+          <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/tvlabs_logo.svg">
+          <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/tvlabs_logo_dark.svg">
+          <img width="200" height="50" alt="TV Labs">
+        </picture>
       </a>
     </td>
      <td align="center" valign="center">
       <a href="https://docs.testcribe.com/docs/Introduction">
-        <img width="200" height="50" alt="Testcribe" src="app/common/renderer/assets/images/testcribe_logo.svg">
+        <picture>
+          <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/testcribe_logo.svg">
+          <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/testcribe_logo_dark.svg">
+          <img width="200" height="50" alt="Testcribe">
+        </picture>
       </a>
     </td>
     <td align="center" valign="center">
       <a href="https://docs.webmate.io/app-testing/appium-inspector/">
-        <img width="200" height="50" alt="webmate" src="app/common/renderer/assets/images/webmate_logo.svg">
+        <picture>
+          <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/webmate_logo.svg">
+          <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/webmate_logo_dark.svg">
+          <img width="200" height="50" alt="Webmate">
+        </picture>
       </a>
     </td>
   </tr>
