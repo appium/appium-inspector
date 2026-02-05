@@ -73,7 +73,11 @@ The Inspector has built-in integrations with various cloud service provider plat
   <tr>
     <td align="center" valign="center">
       <a href="https://docs.saucelabs.com/mobile-apps/automated-testing/appium/">
-        <img width="200" height="50" alt="SauceLabs" src="app/common/renderer/assets/images/sauce_logo.svg">
+        <picture>
+          <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/sauce_logo.svg">
+          <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/sauce_logo_dark.svg">
+          <img width="200" height="50" alt="SauceLabs">
+        </picture>
       </a>
     </td>
     <td align="center" valign="center">
