@@ -9,7 +9,7 @@ export class RabbitQAVendor extends BaseVendor {
     const vendorName = 'RabbitQA';
 
     const apiKey = rabbitQA?.apiKey || process.env.RABBITQA_API_KEY;
-    
+
     this._checkInputPropertyPresence(vendorName, [
       {name: 'API Key', val: apiKey},
     ]);
@@ -18,7 +18,7 @@ export class RabbitQAVendor extends BaseVendor {
     const port = 443;
     const path = '/df/wd/hub';
     const https = true;
-    
+
     this._saveProperties(rabbitQA, {host, path, port, https, accessKey: apiKey});
 
     this._updateSessionCap(

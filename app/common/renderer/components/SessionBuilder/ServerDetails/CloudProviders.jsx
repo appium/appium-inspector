@@ -11,6 +11,8 @@ import MobitruLogo from '../../../assets/images/mobitru_logo.svg';
 import PcloudyLogo from '../../../assets/images/pcloudy_logo.svg';
 import PcloudyLogoDark from '../../../assets/images/pcloudy_logo_dark.svg';
 import PerfectoLogo from '../../../assets/images/perfecto_logo.svg';
+import RabbitQALogo from '../../../assets/images/rabbitqa_logo.svg';
+import RabbitQALogoDark from '../../../assets/images/rabbitqa_logo_dark.svg';
 import RemoteTestKitLogo from '../../../assets/images/remotetestkit_logo.svg';
 import RobotQALogo from '../../../assets/images/robotqa_logo.svg';
 import RobotQALogoDark from '../../../assets/images/robotqa_logo_dark.svg';
@@ -25,8 +27,6 @@ import TVLabsLogo from '../../../assets/images/tvlabs_logo.svg';
 import TVLabsLogoDark from '../../../assets/images/tvlabs_logo_dark.svg';
 import WebmateLogo from '../../../assets/images/webmate_logo.svg';
 import WebmateLogoDark from '../../../assets/images/webmate_logo_dark.svg';
-import RabbitQALogo from '../../../assets/images/rabbitqa_logo.svg';
-import RabbitQALogoDark from '../../../assets/images/rabbitqa_logo_dark.svg';
 import {SERVER_TYPES} from '../../../constants/session-builder.js';
 import {useTheme} from '../../../hooks/use-theme.jsx';
 import styles from './ServerDetails.module.css';
@@ -39,6 +39,7 @@ import ServerTabKobiton from './ServerTabKobiton.jsx';
 import ServerTabMobitru from './ServerTabMobitru.jsx';
 import ServerTabPcloudy from './ServerTabPcloudy.jsx';
 import ServerTabPerfecto from './ServerTabPerfecto.jsx';
+import ServerTabRabbitQA from './ServerTabRabbitqa.jsx';
 import ServerTabRemoteTestKit from './ServerTabRemoteTestKit.jsx';
 import ServerTabRobotQA from './ServerTabRobotQA.jsx';
 import ServerTabSauce from './ServerTabSauce.jsx';
@@ -47,7 +48,6 @@ import ServerTabTestingbot from './ServerTabTestingbot.jsx';
 import ServerTabTestMuAI from './ServerTabTestMuAI.jsx';
 import ServerTabTVLabs from './ServerTabTVLabs.jsx';
 import ServerTabWebmate from './ServerTabWebmate.jsx';
-import ServerTabRabbitQA from './ServerTabRabbitqa.jsx';
 
 const providers = {
   [SERVER_TYPES.SAUCE]: {
