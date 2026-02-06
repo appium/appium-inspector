@@ -35,9 +35,9 @@ support integration through Appium Inspector:
 
 Selecting any provider then adds a new tab next to the default _Appium Server_ tab, and switching to
 the provider's tab changes the available server detail fields. Different providers will have
-different fields - for example, LambdaTest only requires the _username_ and _access key_:
+different fields - for example, TestMu AI only requires the _username_ and _access key_:
 
-![LambdaTest Server Details](./assets/images/server-details/lambdatest-details.png)
+![TestMu AI Server Details](./assets/images/server-details/testmuai-details.png)
 
 ## Advanced Settings
 

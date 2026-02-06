@@ -21,7 +21,7 @@ export const SERVER_TYPES = {
   SAUCE: 'sauce',
   HEADSPIN: 'headspin',
   BROWSERSTACK: 'browserstack',
-  LAMBDATEST: 'lambdatest',
+  TESTMUAI: 'lambdatest',
   TESTINGBOT: 'testingbot',
   EXPERITEST: 'experitest',
   ROBOTQA: 'roboticmobi',
@@ -35,6 +35,7 @@ export const SERVER_TYPES = {
   TESTCRIBE: 'testcribe',
   WEBMATE: 'webmate',
   FIREFLINKDEVICEFARM: 'fireflinkdevicefarm',
+  RABBITQA: 'rabbitqa',
 };
 
 export const SAVED_SESSIONS_TABLE_VALUES = {
@@ -52,6 +53,7 @@ export const PROVIDER_VALUES = {
   PCLOUDY_ACCESS_KEY: 'kjdgtdwn65fdasd78uy6y',
   PERFECTO_URL: 'cloud.Perfectomobile.com',
   TESTCRIBE_API_KEY: 'your-api-key',
+  RABBITQA_API_KEY: 'your-api-key',
 };
 
 export const ADD_CLOUD_PROVIDER_TAB_KEY = 'addCloudProvider';

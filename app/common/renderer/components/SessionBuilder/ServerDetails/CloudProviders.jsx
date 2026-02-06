@@ -2,16 +2,17 @@ import BitBarLogo from '../../../assets/images/bitbar_logo.svg';
 import BrowserStackLogo from '../../../assets/images/browserstack_logo.svg';
 import BrowserStackLogoDark from '../../../assets/images/browserstack_logo_dark.svg';
 import ExperitestLogo from '../../../assets/images/experitest_logo.svg';
-import FireflinkDeviceFarmWhite from '../../../assets/images/fireflink_deviceFarm.svg';
-import FireflinkDeviceFarmColor from '../../../assets/images/fireflink_deviceFarm_logo.svg';
+import FireflinkDeviceFarmLogo from '../../../assets/images/fireflink_devicefarm_logo.svg';
+import FireflinkDeviceFarmLogoDark from '../../../assets/images/fireflink_devicefarm_logo_dark.svg';
 import HeadSpinLogo from '../../../assets/images/headspin_logo.svg';
 import KobitonLogo from '../../../assets/images/kobiton_logo.svg';
 import KobitonLogoDark from '../../../assets/images/kobiton_logo_dark.svg';
-import LambdaTestLogo from '../../../assets/images/lambdatest_logo.svg';
 import MobitruLogo from '../../../assets/images/mobitru_logo.svg';
 import PcloudyLogo from '../../../assets/images/pcloudy_logo.svg';
 import PcloudyLogoDark from '../../../assets/images/pcloudy_logo_dark.svg';
 import PerfectoLogo from '../../../assets/images/perfecto_logo.svg';
+import RabbitQALogo from '../../../assets/images/rabbitqa_logo.svg';
+import RabbitQALogoDark from '../../../assets/images/rabbitqa_logo_dark.svg';
 import RemoteTestKitLogo from '../../../assets/images/remotetestkit_logo.svg';
 import RobotQALogo from '../../../assets/images/robotqa_logo.svg';
 import RobotQALogoDark from '../../../assets/images/robotqa_logo_dark.svg';
@@ -20,6 +21,9 @@ import SauceLogoDark from '../../../assets/images/sauce_logo_dark.svg';
 import TestcribeLogo from '../../../assets/images/testcribe_logo.svg';
 import TestcribeLogoDark from '../../../assets/images/testcribe_logo_dark.svg';
 import TestingBotLogo from '../../../assets/images/testingbot_logo.svg';
+import TestingBotLogoDark from '../../../assets/images/testingbot_logo_dark.svg';
+import TestMuAILogo from '../../../assets/images/testmuai_logo.svg';
+import TestMuAILogoDark from '../../../assets/images/testmuai_logo_dark.svg';
 import TVLabsLogo from '../../../assets/images/tvlabs_logo.svg';
 import TVLabsLogoDark from '../../../assets/images/tvlabs_logo_dark.svg';
 import WebmateLogo from '../../../assets/images/webmate_logo.svg';
@@ -33,15 +37,16 @@ import ServerTabExperitest from './ServerTabExperitest.jsx';
 import ServerTabFireflinkDeviceFarm from './ServerTabFireflinkDeviceFarm.jsx';
 import ServerTabHeadspin from './ServerTabHeadspin.jsx';
 import ServerTabKobiton from './ServerTabKobiton.jsx';
-import ServerTabLambdatest from './ServerTabLambdatest.jsx';
 import ServerTabMobitru from './ServerTabMobitru.jsx';
 import ServerTabPcloudy from './ServerTabPcloudy.jsx';
 import ServerTabPerfecto from './ServerTabPerfecto.jsx';
+import ServerTabRabbitQA from './ServerTabRabbitqa.jsx';
 import ServerTabRemoteTestKit from './ServerTabRemoteTestKit.jsx';
 import ServerTabRobotQA from './ServerTabRobotQA.jsx';
 import ServerTabSauce from './ServerTabSauce.jsx';
 import ServerTabTestcribe from './ServerTabTestcribe.jsx';
 import ServerTabTestingbot from './ServerTabTestingbot.jsx';
+import ServerTabTestMuAI from './ServerTabTestMuAI.jsx';
 import ServerTabTVLabs from './ServerTabTVLabs.jsx';
 import ServerTabWebmate from './ServerTabWebmate.jsx';
 
@@ -67,18 +72,18 @@ const providers = {
       dark: BrowserStackLogoDark,
     },
   },
-  [SERVER_TYPES.LAMBDATEST]: {
-    tab: ServerTabLambdatest,
+  [SERVER_TYPES.TESTMUAI]: {
+    tab: ServerTabTestMuAI,
     logos: {
-      light: LambdaTestLogo,
-      dark: null,
+      light: TestMuAILogo,
+      dark: TestMuAILogoDark,
     },
   },
   [SERVER_TYPES.TESTINGBOT]: {
     tab: ServerTabTestingbot,
     logos: {
       light: TestingBotLogo,
-      dark: null,
+      dark: TestingBotLogoDark,
     },
   },
   [SERVER_TYPES.EXPERITEST]: {
@@ -161,8 +166,15 @@ const providers = {
   [SERVER_TYPES.FIREFLINKDEVICEFARM]: {
     tab: ServerTabFireflinkDeviceFarm,
     logos: {
-      light: FireflinkDeviceFarmColor,
-      dark: FireflinkDeviceFarmWhite,
+      light: FireflinkDeviceFarmLogo,
+      dark: FireflinkDeviceFarmLogoDark,
+    },
+  },
+  [SERVER_TYPES.RABBITQA]: {
+    tab: ServerTabRabbitQA,
+    logos: {
+      light: RabbitQALogo,
+      dark: RabbitQALogoDark,
     },
   },
 };
