@@ -5,6 +5,7 @@ import inspectorStyles from '../../SessionInspector.module.css';
 import InteractionsNotAvailableMessage from './InteractionsNotAvailableMessage.jsx';
 import SelectedElementActions from './SelectedElementActions.jsx';
 import SelectedElementAttributesTable from './SelectedElementAttributesTable.jsx';
+import SelectedElementBoxModel from './SelectedElementBoxModel.jsx';
 import SelectedElementCard from './SelectedElementCard.jsx';
 import SelectedElementLocatorsTable from './SelectedElementLocatorsTable.jsx';
 import SnapshotMaxDepthReachedMessage from './SnapshotMaxDepthReachedMessage.jsx';
@@ -77,6 +78,7 @@ const SelectedElement = (props) => {
           currentContext={currentContext}
           elementLocatorsData={elementLocatorsData}
         />
+        <SelectedElementBoxModel selectedElement={selectedElement} />
         <SelectedElementAttributesTable elementAttributesData={elementAttributesData} />
       </Space>
     </SelectedElementCard>
