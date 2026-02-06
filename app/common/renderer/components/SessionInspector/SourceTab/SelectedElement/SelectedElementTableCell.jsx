@@ -3,7 +3,7 @@ import {useTranslation} from 'react-i18next';
 
 import {copyToClipboard} from '../../../../polyfills.js';
 import inspectorStyles from '../../SessionInspector.module.css';
-import styles from '../Source.module.css';
+import styles from './SelectedElement.module.css';
 
 /**
  * Generic cell component for the selected element's tables. Can optionally be copyable.
