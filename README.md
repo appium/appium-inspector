@@ -209,7 +209,7 @@ The Inspector has built-in integrations with various cloud service provider plat
       </a>
     </td>
     <td align="center" valign="center">
-      <a href="https://docs.rabbitqa.com/">
+      <a href="https://docs.rabbitqa.com/modules/devicer/appium-config">
         <picture>
           <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/rabbitqa_logo.svg">
           <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/rabbitqa_logo_dark.svg">
