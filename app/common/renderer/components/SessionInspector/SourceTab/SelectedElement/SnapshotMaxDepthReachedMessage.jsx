@@ -11,19 +11,20 @@ const SnapshotMaxDepthReachedMessage = ({selectedElementPath, sessionSettings}) 
   const {t} = useTranslation();
   const selectedElementDepth = selectedElementPath.split('.').length;
 
-  if (selectedElementDepth === sessionSettings.snapshotMaxDepth) {
-    return (
-      <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemInfoMessage}>
-        <Col>
-          <Alert
-            type={ALERT.INFO}
-            title={t('snapshotMaxDepthReached', {selectedElementDepth})}
-            showIcon
-          />
-        </Col>
-      </Row>
-    );
+  if (selectedElementDepth !== sessionSettings.snapshotMaxDepth) {
+    return null;
   }
+  return (
+    <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemInfoMessage}>
+      <Col>
+        <Alert
+          type={ALERT.INFO}
+          title={t('snapshotMaxDepthReached', {selectedElementDepth})}
+          showIcon
+        />
+      </Col>
+    </Row>
+  );
 };
 
 export default SnapshotMaxDepthReachedMessage;

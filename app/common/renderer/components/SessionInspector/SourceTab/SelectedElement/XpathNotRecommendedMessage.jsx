@@ -10,9 +10,10 @@ import {NATIVE_APP} from '../../../../constants/session-inspector.js';
 const XpathNotRecommendedMessage = ({currentContext, elementLocatorsData}) => {
   const {t} = useTranslation();
 
-  if (currentContext === NATIVE_APP && elementLocatorsData.length === 1) {
-    return <Alert title={t('usingXPathNotRecommended')} type={ALERT.WARNING} showIcon />;
+  if (currentContext !== NATIVE_APP || elementLocatorsData.length !== 1) {
+    return null;
   }
+  return <Alert title={t('usingXPathNotRecommended')} type={ALERT.WARNING} showIcon />;
 };
 
 export default XpathNotRecommendedMessage;

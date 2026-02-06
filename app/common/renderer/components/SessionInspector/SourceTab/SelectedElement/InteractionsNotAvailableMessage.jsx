@@ -11,15 +11,16 @@ import styles from '../Source.module.css';
 const InteractionsNotAvailableMessage = ({elementInteractionsNotAvailable}) => {
   const {t} = useTranslation();
 
-  if (elementInteractionsNotAvailable) {
-    return (
-      <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemInfoMessage}>
-        <Col>
-          <Alert type={ALERT.INFO} title={t('interactionsNotAvailable')} showIcon />
-        </Col>
-      </Row>
-    );
+  if (!elementInteractionsNotAvailable) {
+    return null;
   }
+  return (
+    <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemInfoMessage}>
+      <Col>
+        <Alert type={ALERT.INFO} title={t('interactionsNotAvailable')} showIcon />
+      </Col>
+    </Row>
+  );
 };
 
 export default InteractionsNotAvailableMessage;
