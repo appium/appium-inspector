@@ -88,8 +88,8 @@ An element can be selected in one of the following ways:
 
 Unselecting the element will hide the Selected Element panel.
 
-The panel can be divided into 4 parts: header buttons, element action buttons, suggested locators,
-and element attributes.
+The panel can be divided into 5 parts: header buttons, element action buttons, suggested locators,
+box model, and element attributes.
 
 ### Element Header Buttons
 
@@ -116,6 +116,13 @@ listed strategies + locators, and adds a new table column with the elapsed time 
 was returned.
 
 ![Locators Table With Timings](./assets/images/source/timing-values.png)
+
+### Box Model
+
+![Box Model](./assets/images/source/box-model.png)
+
+The box model provides an easy reference to the element's position and size values. It shows the
+element's width and height, and the exact coordinates for each of its corners, plus its midpoint.
 
 ### Element Attributes
 
