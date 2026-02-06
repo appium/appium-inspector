@@ -45,7 +45,7 @@
 }
 
 .selectedElemBoxModelWrapper {
-  height: 90;
+  height: 90px;
   display: flex;
   flex-direction: column;
   justify-content: center;
