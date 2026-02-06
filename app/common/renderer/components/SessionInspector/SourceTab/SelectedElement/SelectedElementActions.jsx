@@ -4,7 +4,7 @@ import {useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {ROW} from '../../../../constants/antd-types.js';
-import styles from '../Source.module.css';
+import styles from './SelectedElement.module.css';
 
 /**
  * Action buttons for the selected element, including tap, send keys, clear, and get timing.

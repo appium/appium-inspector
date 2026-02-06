@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 
 import {copyToClipboard} from '../../../../polyfills.js';
 import {downloadFile} from '../../../../utils/file-handling.js';
-import styles from '../Source.module.css';
+import styles from './SelectedElement.module.css';
 
 /**
  * Title of the selected element's wrapper card, with its dedicated icon.

@@ -1,6 +1,6 @@
 import {Row, Table} from 'antd';
 
-import styles from '../Source.module.css';
+import styles from './SelectedElement.module.css';
 
 /**
  * Generic table component for displaying selected element data.
