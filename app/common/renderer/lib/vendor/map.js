@@ -9,6 +9,7 @@ import {LocalVendor} from './local.js';
 import {MobitruVendor} from './mobitru.js';
 import {PcloudyVendor} from './pcloudy.js';
 import {PerfectoVendor} from './perfecto.js';
+import {RabbitQAVendor} from './rabbitqa.js';
 import {RemoteVendor} from './remote.js';
 import {RemotetestkitVendor} from './remotetestkit.js';
 import {RobotqaVendor} from './robotqa.js';
@@ -39,4 +40,5 @@ export const VENDOR_MAP = {
   [SERVER_TYPES.TESTCRIBE]: TestcribeVendor,
   [SERVER_TYPES.WEBMATE]: WebmateVendor,
   [SERVER_TYPES.FIREFLINKDEVICEFARM]: FireflinkDeviceFarmVendor,
+  [SERVER_TYPES.RABBITQA]: RabbitQAVendor,
 };

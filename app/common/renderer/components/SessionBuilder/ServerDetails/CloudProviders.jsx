@@ -11,6 +11,8 @@ import MobitruLogo from '../../../assets/images/mobitru_logo.svg';
 import PcloudyLogo from '../../../assets/images/pcloudy_logo.svg';
 import PcloudyLogoDark from '../../../assets/images/pcloudy_logo_dark.svg';
 import PerfectoLogo from '../../../assets/images/perfecto_logo.svg';
+import RabbitQALogo from '../../../assets/images/rabbitqa_logo.svg';
+import RabbitQALogoDark from '../../../assets/images/rabbitqa_logo_dark.svg';
 import RemoteTestKitLogo from '../../../assets/images/remotetestkit_logo.svg';
 import RobotQALogo from '../../../assets/images/robotqa_logo.svg';
 import RobotQALogoDark from '../../../assets/images/robotqa_logo_dark.svg';
@@ -38,6 +40,7 @@ import ServerTabKobiton from './ServerTabKobiton.jsx';
 import ServerTabMobitru from './ServerTabMobitru.jsx';
 import ServerTabPcloudy from './ServerTabPcloudy.jsx';
 import ServerTabPerfecto from './ServerTabPerfecto.jsx';
+import ServerTabRabbitQA from './ServerTabRabbitqa.jsx';
 import ServerTabRemoteTestKit from './ServerTabRemoteTestKit.jsx';
 import ServerTabRobotQA from './ServerTabRobotQA.jsx';
 import ServerTabSauce from './ServerTabSauce.jsx';
@@ -165,6 +168,13 @@ const providers = {
     logos: {
       light: FireflinkDeviceFarmLogo,
       dark: FireflinkDeviceFarmLogoDark,
+    },
+  },
+  [SERVER_TYPES.RABBITQA]: {
+    tab: ServerTabRabbitQA,
+    logos: {
+      light: RabbitQALogo,
+      dark: RabbitQALogoDark,
     },
   },
 };
