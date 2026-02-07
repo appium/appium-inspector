@@ -320,5 +320,6 @@
   "unableToImportSessionFiles": "Could not import sessions from the following files: {{fileNames}}",
   "Import from File": "Import from File",
   "useMjpegStream": "Use MJPEG Stream",
-  "useScreenshotApi": "Use Screenshot API"
+  "useScreenshotApi": "Use Screenshot API",
+  "Box Model": "Box Model"
 }

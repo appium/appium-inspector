@@ -43,3 +43,60 @@
 .copyableCell {
   cursor: pointer;
 }
+
+.selectedElemBoxModelWrapper {
+  height: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.selectedElemWidth {
+  text-align: center;
+}
+
+.selectedElemHeightPlusBoxWrapper {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 8px;
+}
+
+.selectedElemBoxWrapper {
+  position: relative;
+  flex: 1;
+  height: 70px;
+  border: 1px dashed var(--ant-blue-6);
+  background-color: var(--ant-blue-1);
+}
+
+.selectedElemTopLeft {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+}
+
+.selectedElemTopRight {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+}
+
+.selectedElemMidpoint {
+  display: grid;
+  height: 70px;
+  align-items: center;
+  place-items: center;
+}
+
+.selectedElemBottomLeft {
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+}
+
+.selectedElemBottomRight {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+}
