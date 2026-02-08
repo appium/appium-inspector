@@ -305,6 +305,7 @@
   "Fireflink DeviceFarm Access Key": "Ключ доступа Fireflink DeviceFarm",
   "Fireflink DeviceFarm License ID": "ID лицензии Fireflink DeviceFarm",
   "Fireflink DeviceFarm Project Name": "Имя проекта Fireflink DeviceFarm",
+  "RabbitQA API Key": "RabbitQA API Key",
   "RestartSessionMessage": "Соединение с устройством потеряно – сессия перезагружается…",
   "ToggleRestartSession": "Перезагрузить сессию при потере соединения с устройством",
   "toggleTableFormatting": "Переключить форматирование таблицей",
@@ -319,5 +320,6 @@
   "unableToImportSessionFiles": "Не удалось импортировать сессии из следующих файлов: {{fileNames}}",
   "Import from File": "Импортировать из файла",
   "useMjpegStream": "Use MJPEG Stream",
-  "useScreenshotApi": "Use Screenshot API"
+  "useScreenshotApi": "Use Screenshot API",
+  "Box Model": "Box Model"
 }

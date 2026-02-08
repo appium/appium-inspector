@@ -305,6 +305,7 @@
   "Fireflink DeviceFarm Access Key": "Fireflink DeviceFarm 액세스 키",
   "Fireflink DeviceFarm License ID": "Fireflink DeviceFarm 라이센스ID",
   "Fireflink DeviceFarm Project Name": "Fireflink DeviceFarm 프로젝트 이름",
+  "RabbitQA API Key": "RabbitQA API Key",
   "RestartSessionMessage": "디바이스 연결이 끊어졌습니다 – 세션을 재시작합니다…",
   "ToggleRestartSession": "디바이스 연결 해제 시 세션 리로드 토글",
   "toggleTableFormatting": "테이블 서식 토글",
@@ -319,5 +320,6 @@
   "unableToImportSessionFiles": "Could not import sessions from the following files: {{fileNames}}",
   "Import from File": "Import from File",
   "useMjpegStream": "Use MJPEG Stream",
-  "useScreenshotApi": "Use Screenshot API"
+  "useScreenshotApi": "Use Screenshot API",
+  "Box Model": "Box Model"
 }
