@@ -991,7 +991,7 @@ export function bindWindowClose() {
       let {driver} = getState().inspector;
       if (driver) {
         try {
-          const action = quitSession('Window closed');
+          const action = quitSession();
           await action(dispatch, getState);
         } finally {
           driver = null;

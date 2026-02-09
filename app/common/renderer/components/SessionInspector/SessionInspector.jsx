@@ -188,9 +188,9 @@ const Inspector = (props) => {
     applyClientMethod({methodName: 'getPageSource'});
   };
 
-  const quitCurrentSession = useCallback(
-    async (reason, killedByUser = true) => {
-      await quitSession(reason, killedByUser);
+  const quitSessionAndReturn = useCallback(
+    async ({reason, manualQuit = true, detachOnly = false}) => {
+      await quitSession({reason, manualQuit, detachOnly});
       navigate('/session', {replace: true});
     },
     [navigate, quitSession],
@@ -245,7 +245,7 @@ const Inspector = (props) => {
       // Create timeout only once while prompt is visible
       if (!sessionExpiryTimeoutRef.current) {
         sessionExpiryTimeoutRef.current = setTimeout(() => {
-          quitCurrentSession(t('Session closed due to inactivity'), false);
+          quitSessionAndReturn({reason: t('Session closed due to inactivity'), manualQuit: false});
         }, SESSION_EXPIRY_PROMPT_TIMEOUT);
         setUserWaitTimeout(sessionExpiryTimeoutRef.current);
       }
@@ -255,7 +255,7 @@ const Inspector = (props) => {
       sessionExpiryTimeoutRef.current = null;
       setUserWaitTimeout(null);
     }
-  }, [quitCurrentSession, setUserWaitTimeout, showKeepAlivePrompt, t]);
+  }, [quitSessionAndReturn, setUserWaitTimeout, showKeepAlivePrompt, t]);
 
   const screenShotControls = (
     <div className={styles.screenshotControls}>
@@ -379,13 +379,13 @@ const Inspector = (props) => {
 
   return (
     <div className={styles.inspectorContainer}>
-      <HeaderButtons quitCurrentSession={quitCurrentSession} {...props} />
+      <HeaderButtons quitSessionAndReturn={quitSessionAndReturn} {...props} />
       {main}
       <Modal
         title={t('Session Inactive')}
         open={showKeepAlivePrompt}
         onOk={() => keepSessionAlive()}
-        onCancel={() => quitCurrentSession()}
+        onCancel={() => quitSessionAndReturn()}
         okText={t('Keep Session Running')}
         cancelText={t('Quit Session')}
       >
