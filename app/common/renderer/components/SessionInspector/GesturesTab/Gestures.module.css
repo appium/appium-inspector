@@ -54,14 +54,6 @@
   text-align: center;
 }
 
-.tickPointerInput {
-  width: 100%;
-}
-
-.optionInput {
-  text-align: center;
-}
-
 .tickCard :global(.ant-card-head) {
   min-height: unset;
   padding: 0px;

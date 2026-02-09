@@ -17,10 +17,6 @@
   max-width: 400px;
 }
 
-.headerContextSelector {
-  width: 350px;
-}
-
 .headerButtons {
   display: flex;
   flex-direction: column;

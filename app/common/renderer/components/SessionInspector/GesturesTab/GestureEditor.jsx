@@ -596,27 +596,24 @@ const GestureEditor = (props) => {
   const tickType = (tick) => (
     <center>
       <Select
-        className={styles.tickPointerInput}
+        styles={{
+          root: {width: '100%'},
+          content: {justifyContent: 'center'},
+          popup: {listItem: {textAlign: 'center'}},
+        }}
         placeholder={t('Action Type')}
         value={tick.type}
         defaultValue={tick.type}
         size="middle"
         popupMatchSelectWidth={false}
         onChange={(e) => updateTick(tick, TICK_PROPS.POINTER_TYPE, e)}
-      >
-        <Select.Option className={styles.optionInput} value={POINTER_MOVE}>
-          {t(POINTER_TYPES_MAP.pointerMove)}
-        </Select.Option>
-        <Select.Option className={styles.optionInput} value={POINTER_DOWN}>
-          {t(POINTER_TYPES_MAP.pointerDown)}
-        </Select.Option>
-        <Select.Option className={styles.optionInput} value={POINTER_UP}>
-          {t(POINTER_TYPES_MAP.pointerUp)}
-        </Select.Option>
-        <Select.Option className={styles.optionInput} value={PAUSE}>
-          {t(POINTER_TYPES_MAP.pause)}
-        </Select.Option>
-      </Select>
+        options={[
+          {value: POINTER_MOVE, label: t(POINTER_TYPES_MAP.pointerMove)},
+          {value: POINTER_DOWN, label: t(POINTER_TYPES_MAP.pointerDown)},
+          {value: POINTER_UP, label: t(POINTER_TYPES_MAP.pointerUp)},
+          {value: PAUSE, label: t(POINTER_TYPES_MAP.pause)},
+        ]}
+      />
     </center>
   );
 

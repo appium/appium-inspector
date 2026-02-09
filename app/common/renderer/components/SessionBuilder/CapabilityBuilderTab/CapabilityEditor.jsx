@@ -119,14 +119,13 @@ const CapabilityEditor = (props) => {
                     disabled={isEditingDesiredCaps}
                     value={cap.type}
                     onChange={(val) => handleSetType(setCapabilityParam, cap, val)}
-                  >
-                    <Select.Option value={CAPABILITY_TYPES.TEXT}>{t('text')}</Select.Option>
-                    <Select.Option value={CAPABILITY_TYPES.BOOL}>{t('boolean')}</Select.Option>
-                    <Select.Option value={CAPABILITY_TYPES.NUM}>{t('number')}</Select.Option>
-                    <Select.Option value={CAPABILITY_TYPES.OBJECT}>
-                      {t('JSON object')}
-                    </Select.Option>
-                  </Select>
+                    options={[
+                      {value: CAPABILITY_TYPES.TEXT, label: t('text')},
+                      {value: CAPABILITY_TYPES.BOOL, label: t('boolean')},
+                      {value: CAPABILITY_TYPES.NUM, label: t('number')},
+                      {value: CAPABILITY_TYPES.OBJECT, label: t('JSON object')},
+                    ]}
+                  />
                 </Form.Item>
               </Col>
               <Col flex="1">
