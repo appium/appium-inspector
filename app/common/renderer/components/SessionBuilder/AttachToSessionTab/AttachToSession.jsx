@@ -34,18 +34,15 @@ const AttachToSession = ({
               placeholder={t('enterYourSessionId')}
               value={attachSessId || undefined}
               onChange={(value) => setAttachSessId(value)}
-            >
-              {runningAppiumSessions
+              options={runningAppiumSessions
                 .slice()
                 .reverse()
-                .map((session) => (
+                .map((session) =>
                   // list is reversed in order to place the most recent sessions at the top
                   // slice() is added because reverse() mutates the original array
-                  <Select.Option key={session.id} value={session.id}>
-                    <div>{getSessionInfo(session, serverType)}</div>
-                  </Select.Option>
-                ))}
-            </Select>
+                  ({value: session.id, label: getSessionInfo(session, serverType)}),
+                )}
+            />
           </Col>
           <Col span={1}>
             <Tooltip title={t('Reload')}>
