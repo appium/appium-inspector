@@ -298,7 +298,7 @@ export function setExpandedPaths(paths) {
 /**
  * Quit the session and go back to the new session window
  */
-export function quitSession({reason, manualQuit = true, detachOnly = false}) {
+export function quitSession({reason, manualQuit = true, detachOnly = false} = {}) {
   return async (dispatch, getState) => {
     const killAction = killKeepAliveLoop();
     killAction(dispatch, getState);

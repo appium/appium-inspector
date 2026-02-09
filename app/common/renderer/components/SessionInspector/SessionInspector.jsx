@@ -189,7 +189,7 @@ const Inspector = (props) => {
   };
 
   const quitSessionAndReturn = useCallback(
-    async ({reason, manualQuit = true, detachOnly = false}) => {
+    async ({reason, manualQuit = true, detachOnly = false} = {}) => {
       await quitSession({reason, manualQuit, detachOnly});
       navigate('/session', {replace: true});
     },
