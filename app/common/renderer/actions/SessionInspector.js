@@ -263,7 +263,7 @@ export function restartSession(error, params) {
       title: i18n.t('RestartSessionMessage'),
       duration: 3,
     });
-    const quitSes = quitSession('Window closed');
+    const quitSes = quitSession();
     const newSes = newSession(getState().builder.caps);
     const getPageSrc = applyClientMethod({methodName: 'getPageSource'});
     const storeSessionSet = storeSessionSettings();
@@ -298,14 +298,16 @@ export function setExpandedPaths(paths) {
 /**
  * Quit the session and go back to the new session window
  */
-export function quitSession(reason, killedByUser = true) {
+export function quitSession({reason, manualQuit = true, detachOnly = false} = {}) {
   return async (dispatch, getState) => {
     const killAction = killKeepAliveLoop();
     killAction(dispatch, getState);
-    const applyAction = applyClientMethod({methodName: 'deleteSession'});
-    await applyAction(dispatch, getState);
+    if (!detachOnly) {
+      const applyAction = applyClientMethod({methodName: 'deleteSession'});
+      await applyAction(dispatch, getState);
+    }
     dispatch({type: QUIT_SESSION_DONE});
-    if (!killedByUser) {
+    if (!manualQuit) {
       showError(new Error(reason || i18n.t('Session has been terminated')), {secs: 0});
     }
   };

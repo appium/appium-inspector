@@ -7,6 +7,7 @@ import {
   IconMessageChatbot,
   IconPlayerPause,
   IconPlayerPlay,
+  IconPlugConnectedX,
   IconRecycle,
   IconRefresh,
   IconSearch,
@@ -38,7 +39,7 @@ const HeaderButtons = (props) => {
     showLocatorTestModal,
     showSiriCommandModal,
     applyClientMethod,
-    quitCurrentSession,
+    quitSessionAndReturn,
     driver,
     contexts,
     currentContext,
@@ -231,10 +232,19 @@ const HeaderButtons = (props) => {
     </Space.Compact>
   );
 
-  const quitSessionButton = (
-    <Tooltip title={t('Quit Session')}>
-      <Button id="btnClose" icon={<IconX size={18} />} onClick={quitCurrentSession} />
-    </Tooltip>
+  const quitControls = (
+    <Space.Compact>
+      <Tooltip title={t('detachFromSession')}>
+        <Button
+          id="btnDetach"
+          icon={<IconPlugConnectedX size={18} />}
+          onClick={() => quitSessionAndReturn({detachOnly: true})}
+        />
+      </Tooltip>
+      <Tooltip title={t('Quit Session')}>
+        <Button id="btnClose" icon={<IconX size={18} />} onClick={quitSessionAndReturn} />
+      </Tooltip>
+    </Space.Compact>
   );
 
   const sessionReloadButton = (
@@ -255,7 +265,7 @@ const HeaderButtons = (props) => {
         {appModeControls}
         {generalControls}
         {sessionReloadButton}
-        {quitSessionButton}
+        {quitControls}
       </Space>
       <Divider />
     </div>
