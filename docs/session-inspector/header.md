@@ -134,9 +134,10 @@ disconnected device, this functionality is disabled by default.
 ![Detach Button](./assets/images/header/detach-button.png)
 
 This button disconnects the Inspector from the active session and returns to the
-[Session Builder](../session-builder/index.md), but the session itself is not deleted, and remains
-running on the Appium server. This approach may be useful if you are attaching to an existing
-session mid-test and want to resume the test afterwards, or if you want to reuse the session later.
+[Session Builder](../session-builder/index.md), but the session itself ^^is not deleted^^, and
+^^remains running^^ on the Appium server. This approach may be useful if you are attaching to an
+existing session mid-test and want to resume the test afterwards, or if you want to reuse the
+session later.
 
 ## Quit Session
 
