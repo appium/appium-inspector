@@ -36,9 +36,13 @@ export async function installExtensions() {
   );
   try {
     const installedExts = await installExtension(EXTENSIONS_TO_INSTALL, opts);
-    logWithExtPrefix(`Installed extensions at ${getExtDirPath(installedExts)}:`);
-    for (const ext of installedExts) {
-      logWithExtPrefix(`* ${ext.name} v${ext.version} (ID: ${ext.id})`);
+    if (installedExts.length === 0) {
+      logWithExtPrefix('No extensions were installed');
+    } else {
+      logWithExtPrefix(`Installed extensions at ${getExtDirPath(installedExts)}:`);
+      for (const ext of installedExts) {
+        logWithExtPrefix(`* ${ext.name} v${ext.version} (ID: ${ext.id})`);
+      }
     }
   } catch (e) {
     logWithExtPrefix(`Error installing extensions: ${e}`);
