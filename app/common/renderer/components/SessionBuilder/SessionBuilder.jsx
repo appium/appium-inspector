@@ -117,7 +117,7 @@ const Session = (props) => {
   ]);
 
   return [
-    <Spin spinning={!!newSessionLoading} key="main">
+    <Spin size="large" spinning={!!newSessionLoading} key="main">
       <div className={styles.sessionContainer}>
         <div className={styles.sessionHeader}>
           <Tabs

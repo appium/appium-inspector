@@ -12,6 +12,11 @@ import SnapshotMaxDepthReachedMessage from './SnapshotMaxDepthReachedMessage.jsx
 import XpathNotRecommendedMessage from './XpathNotRecommendedMessage.jsx';
 
 /**
+ * Placeholder shown for the element ID while the element search is in progress.
+ */
+const ElementIdLoader = () => <Spin styles={{root: {width: 20}}}> </Spin>;
+
+/**
  * The full panel for the selected element.
  */
 const SelectedElement = (props) => {
@@ -38,7 +43,7 @@ const SelectedElement = (props) => {
   }));
   elementAttributesData.unshift({
     key: 'elementId',
-    value: selectedElementSearchInProgress ? <Spin /> : selectedElementId,
+    value: selectedElementSearchInProgress ? <ElementIdLoader /> : selectedElementId,
     name: 'elementId',
   });
 
