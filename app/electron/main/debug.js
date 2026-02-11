@@ -1,12 +1,47 @@
-import {installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} from 'electron-devtools-installer';
+import {
+  installExtension,
+  REACT_DEVELOPER_TOOLS,
+  REDUX_DEVTOOLS,
+} from '@tomjs/electron-devtools-installer';
+
+const EXTENSIONS_TO_INSTALL = [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS];
+
+// These console.log wrappers are used for better visual separation from other logs
+
+function logEmptyLine() {
+  console.log(''); // eslint-disable-line no-console
+}
+
+function logWithExtPrefix(textString) {
+  console.log(`[🧩 Extensions 🧩] ${textString}`); // eslint-disable-line no-console
+}
+
+function getExtDirPath(installedExts) {
+  const firstExtPath = installedExts[0].path;
+  const pathSeparator = process.platform === 'win32' ? '\\' : '/';
+  const lastSeparatorIndex = firstExtPath.lastIndexOf(pathSeparator);
+  return firstExtPath.substring(0, lastSeparatorIndex);
+}
 
 export async function installExtensions() {
   const opts = {
     forceDownload: !!process.env.UPGRADE_EXTENSIONS,
   };
+  logEmptyLine();
+  logWithExtPrefix('Installing development extensions...');
+  logWithExtPrefix(
+    opts.forceDownload
+      ? 'Explicitly re-downloading all extensions'
+      : 'Set UPGRADE_EXTENSIONS=1 to force re-download',
+  );
   try {
-    await installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], opts);
+    const installedExts = await installExtension(EXTENSIONS_TO_INSTALL, opts);
+    logWithExtPrefix(`Installed extensions at ${getExtDirPath(installedExts)}:`);
+    for (const ext of installedExts) {
+      logWithExtPrefix(`* ${ext.name} v${ext.version} (ID: ${ext.id})`);
+    }
   } catch (e) {
-    console.warn(`Error installing extension: ${e}`); // eslint-disable-line no-console
+    logWithExtPrefix(`Error installing extensions: ${e}`);
   }
+  logEmptyLine();
 }
