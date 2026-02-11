@@ -23,9 +23,9 @@ app.on('window-all-closed', () => {
 app.on('ready', async () => {
   if (isDev) {
     debug();
+    await installExtensions();
   }
-  await installExtensions();
-  app.quit();
-  // setupIPCListeners();
-  // await setupMainWindow();
+
+  setupIPCListeners();
+  await setupMainWindow();
 });
