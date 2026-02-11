@@ -1,3 +1,5 @@
+import {join} from 'node:path';
+
 import {
   installExtension,
   REACT_DEVELOPER_TOOLS,
@@ -16,13 +18,6 @@ function logWithExtPrefix(textString) {
   console.log(`[🧩 Extensions 🧩] ${textString}`); // eslint-disable-line no-console
 }
 
-function getExtDirPath(installedExts) {
-  const firstExtPath = installedExts[0].path;
-  const pathSeparator = process.platform === 'win32' ? '\\' : '/';
-  const lastSeparatorIndex = firstExtPath.lastIndexOf(pathSeparator);
-  return firstExtPath.substring(0, lastSeparatorIndex);
-}
-
 export async function installExtensions() {
   const opts = {
     forceDownload: !!process.env.UPGRADE_EXTENSIONS,
@@ -39,7 +34,7 @@ export async function installExtensions() {
     if (installedExts.length === 0) {
       logWithExtPrefix('No extensions were installed');
     } else {
-      logWithExtPrefix(`Installed extensions at ${getExtDirPath(installedExts)}:`);
+      logWithExtPrefix(`Installed extensions at ${join(installedExts[0].path, '..')}:`);
       for (const ext of installedExts) {
         logWithExtPrefix(`* ${ext.name} v${ext.version} (ID: ${ext.id})`);
       }
