@@ -40,7 +40,7 @@ export async function installExtensions() {
       }
     }
   } catch (e) {
-    logWithExtPrefix(`Error installing extensions: ${e}`);
+    logWithExtPrefix(`Error installing extensions: ${e.message}`);
   }
   logEmptyLine();
 }
