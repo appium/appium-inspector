@@ -26,10 +26,6 @@ body::-webkit-scrollbar-corner {
   height: 100%;
 }
 
-#root .ant-spin-nested-loading > div > .ant-spin {
-  max-height: initial;
-}
-
 .window {
   background-color: #cde4f5 !important;
   width: 100%;
@@ -40,7 +36,7 @@ body::-webkit-scrollbar-corner {
   background-color: #662d91 !important;
 }
 
-.ant-spin-nested-loading,
+.ant-spin,
 .ant-spin-container {
   height: 100%;
 }
