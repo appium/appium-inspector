@@ -101,7 +101,7 @@
     "@eslint-react/eslint-plugin": "2.12.4",
     "@tomjs/electron-devtools-installer": "4.0.1",
     "@types/lodash": "4.17.23",
-    "@types/react": "19.2.13",
+    "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "5.1.4",
     "asyncbox": "6.1.0",
