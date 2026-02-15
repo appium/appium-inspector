@@ -321,5 +321,6 @@
   "Import from File": "Імпорт з файлу",
   "useMjpegStream": "Використовувати MJPEG потік",
   "useScreenshotApi": "Використовувати API знімки екрану",
-  "Box Model": "Box Model"
+  "Box Model": "Коробкова модель",
+  "detachFromSession": "Відʼєднатися від сесії"
 }

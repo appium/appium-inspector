@@ -321,5 +321,6 @@
   "Import from File": "Import from File",
   "useMjpegStream": "Use MJPEG Stream",
   "useScreenshotApi": "Use Screenshot API",
-  "Box Model": "Box Model"
+  "Box Model": "Box Model",
+  "detachFromSession": "Detach from Session"
 }
