@@ -75,7 +75,7 @@
     "dayjs": "1.11.19",
     "electron-debug": "4.1.0",
     "electron-settings": "4.0.4",
-    "electron-updater": "6.7.3",
+    "electron-updater": "6.8.3",
     "i18next": "25.8.11",
     "i18next-chained-backend": "5.0.2",
     "i18next-fs-backend": "2.6.1",
