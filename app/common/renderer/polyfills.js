@@ -19,10 +19,4 @@ export async function setSetting(setting, value) {
   await settings.set(setting, value);
 }
 
-export {
-  i18NextBackend,
-  i18NextBackendOptions,
-  openLink,
-  setTheme,
-  updateLanguage,
-} from '#local-polyfills'; // eslint-disable-line import-x/no-unresolved
+export {localesPath, openLink, setTheme, updateLanguage} from '#local-polyfills'; // eslint-disable-line import-x/no-unresolved

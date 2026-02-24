@@ -1,18 +1,4 @@
-import i18NextBackend from 'i18next-chained-backend';
-import HttpApi from 'i18next-http-backend';
-import LocalStorageBackend from 'i18next-localstorage-backend';
-
 const localesPath = './locales'; // relative path works for both dev and production
-
-const i18NextBackendOptions = {
-  backends: [LocalStorageBackend, HttpApi],
-  backendOptions: [
-    {},
-    {
-      loadPath: `${localesPath}/{{lng}}/{{ns}}.json`,
-    },
-  ],
-};
 
 const openLink = (link) => window.electronIPC.openLink(link);
 const setTheme = (theme) => window.electronIPC.setTheme(theme);
@@ -34,4 +20,4 @@ class ElectronSettings {
 
 const settings = new ElectronSettings();
 
-export {i18NextBackend, i18NextBackendOptions, openLink, setTheme, settings, updateLanguage};
+export {localesPath, openLink, setTheme, settings, updateLanguage};

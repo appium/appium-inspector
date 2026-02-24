@@ -1,6 +1,3 @@
-import i18NextBackend from 'i18next-chained-backend';
-import HttpApi from 'i18next-http-backend';
-import LocalStorageBackend from 'i18next-localstorage-backend';
 import _ from 'lodash';
 
 // Adjust locales path depending on Vite base (web vs plugin)
@@ -11,16 +8,6 @@ const localesPath =
   process.env.NODE_ENV === 'development'
     ? '/locales' // 'public' folder contents are served at '/'
     : `..${vitePath}locales`; // from 'dist-browser/assets/'
-
-const i18NextBackendOptions = {
-  backends: [LocalStorageBackend, HttpApi],
-  backendOptions: [
-    {},
-    {
-      loadPath: `${localesPath}/{{lng}}/{{ns}}.json`,
-    },
-  ],
-};
 
 const openLink = (url) => window.open(url, '');
 const setTheme = () => {}; // only relevant in Electron build
@@ -42,4 +29,4 @@ class BrowserSettings {
 
 const settings = new BrowserSettings();
 
-export {i18NextBackend, i18NextBackendOptions, openLink, setTheme, settings, updateLanguage};
+export {localesPath, openLink, setTheme, settings, updateLanguage};
