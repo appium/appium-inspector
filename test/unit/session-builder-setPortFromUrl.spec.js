@@ -21,7 +21,6 @@ vi.mock('i18next', () => ({
 vi.mock('../../app/common/renderer/polyfills.js', () => ({
   setSetting: vi.fn(() => Promise.resolve()),
   getSetting: vi.fn(() => Promise.resolve(null)),
-  copyToClipboard: vi.fn(),
   openLink: vi.fn(),
   setTheme: vi.fn(),
   updateLanguage: vi.fn(),
