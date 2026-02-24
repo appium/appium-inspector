@@ -45,8 +45,8 @@ function buildSessionWindow(backgroundColor) {
     webPreferences: {
       preload: join(__dirname, '..', 'preload', 'preload.mjs'), // from 'main' in package.json
       sandbox: false,
-      // nodeIntegration: true,
-      // contextIsolation: false,
+      nodeIntegration: true,
+      contextIsolation: false,
       additionalArguments: openFilePath ? [`filename=${openFilePath}`] : [],
     },
   });

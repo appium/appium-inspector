@@ -2,7 +2,7 @@ import {join} from 'node:path';
 
 import react from '@vitejs/plugin-react';
 import {defineConfig} from 'electron-vite';
-// import renderer from 'vite-plugin-electron-renderer';
+import renderer from 'vite-plugin-electron-renderer';
 
 export default defineConfig({
   main: {
@@ -37,21 +37,13 @@ export default defineConfig({
         },
       },
     },
-    // optimizeDeps: {
-    //   include: ['i18next-fs-backend'],
-    //   esbuildOptions: {
-    //     supported: {
-    //       'top-level-await': true,
-    //     },
-    //   },
-    // },
     plugins: [
       react({
         babel: {
           plugins: ['babel-plugin-react-compiler'],
         },
       }),
-      // renderer(),
+      renderer(),
     ],
     resolve: {
       alias: {

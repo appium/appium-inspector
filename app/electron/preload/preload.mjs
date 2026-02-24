@@ -1,6 +1,4 @@
-// const {join} = require('node:path');
-
-const {contextBridge, ipcRenderer} = require('electron');
+const {ipcRenderer} = require('electron');
 
 // const i18nLocalesPath =
 //   process.env.NODE_ENV === 'development'
@@ -9,9 +7,10 @@ const {contextBridge, ipcRenderer} = require('electron');
 // const i18nTranslationFilePath = join(i18nLocalesPath, '{{lng}}', '{{ns}}.json');
 
 // Extract the filename argument from process.argv (passed via additionalArguments)
-const filenameArg = process.argv.find((arg) => arg.startsWith('filename='));
+const lastArg = process.argv[process.argv.length - 1];
+const filenameArg = lastArg.startsWith('filename=') ? lastArg : null;
 
-contextBridge.exposeInMainWorld('electronIPC', {
+window.electronIPC = {
   hasSetting: async (key) => await ipcRenderer.invoke('settings:has', key),
   setSetting: async (key, val) => await ipcRenderer.invoke('settings:set', key, val),
   getSetting: async (key) => await ipcRenderer.invoke('settings:get', key),
@@ -19,6 +18,5 @@ contextBridge.exposeInMainWorld('electronIPC', {
   setTheme: (theme) => ipcRenderer.send('electron:setTheme', theme),
   updateLanguage: (lngCode) => ipcRenderer.send('electron:updateLanguage', lngCode),
   openSessionFile: async (filePath) => await ipcRenderer.invoke('sessionfile:open', filePath),
-  // i18nextFilePath: i18nTranslationFilePath,
   filenameArg,
-});
+};
