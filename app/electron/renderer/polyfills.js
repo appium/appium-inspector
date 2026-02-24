@@ -1,16 +1,11 @@
-import {join} from 'node:path';
-
-import i18NextBackend from 'i18next-fs-backend';
-
-const localesPath =
-  process.env.NODE_ENV === 'development'
-    ? join('app', 'common', 'public', 'locales') // from project root
-    : join(__dirname, '..', 'renderer', 'locales'); // from 'main' in package.json
-const translationFilePath = join(localesPath, '{{lng}}', '{{ns}}.json');
+// const i18NextBackend = window.electronIPC.i18nextElectronBackend;
+import i18NextBackend from 'i18next-electron-fs-backend';
+const translationFilePath = window.electronIPC.i18nextFilePath;
 
 const i18NextBackendOptions = {
   loadPath: translationFilePath,
   addPath: translationFilePath,
+  contextBridgeApiKey: 'electronIPC',
   jsonIndent: 2,
 };
 
