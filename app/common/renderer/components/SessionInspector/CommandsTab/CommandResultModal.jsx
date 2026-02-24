@@ -5,7 +5,7 @@ import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
-import {copyToClipboard} from '../../../polyfills.js';
+import {copyToClipboard} from '../../../utils/other.js';
 import styles from './Commands.module.css';
 
 const LABEL_PROPERTY = 'property';

@@ -2,8 +2,8 @@ import {IconDownload, IconFiles, IconTag} from '@tabler/icons-react';
 import {Button, Card, Flex, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import {copyToClipboard} from '../../../../polyfills.js';
 import {downloadFile} from '../../../../utils/file-handling.js';
+import {copyToClipboard} from '../../../../utils/other.js';
 import styles from './SelectedElement.module.css';
 
 /**

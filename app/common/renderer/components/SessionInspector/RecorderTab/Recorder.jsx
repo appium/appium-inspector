@@ -6,7 +6,7 @@ import {Refractor} from 'react-refractor';
 
 import {BUTTON} from '../../../constants/antd-types.js';
 import {CLIENT_FRAMEWORK_MAP} from '../../../lib/client-frameworks/map.js';
-import {copyToClipboard} from '../../../polyfills.js';
+import {copyToClipboard} from '../../../utils/other.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Recorder.module.css';
 

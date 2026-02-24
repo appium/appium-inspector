@@ -20,7 +20,6 @@ export async function setSetting(setting, value) {
 }
 
 export {
-  copyToClipboard,
   i18NextBackend,
   i18NextBackendOptions,
   ipcRenderer,

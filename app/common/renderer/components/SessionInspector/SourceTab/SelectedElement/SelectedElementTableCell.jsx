@@ -1,7 +1,7 @@
 import {Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import {copyToClipboard} from '../../../../polyfills.js';
+import {copyToClipboard} from '../../../../utils/other.js';
 import inspectorStyles from '../../SessionInspector.module.css';
 import styles from './SelectedElement.module.css';
 

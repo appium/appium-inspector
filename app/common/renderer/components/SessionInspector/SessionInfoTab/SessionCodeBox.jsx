@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {Refractor} from 'react-refractor';
 
 import {CLIENT_FRAMEWORK_MAP} from '../../../lib/client-frameworks/map.js';
-import {copyToClipboard} from '../../../polyfills.js';
+import {copyToClipboard} from '../../../utils/other.js';
 import inspectorStyles from '../SessionInspector.module.css';
 
 const SessionCodeBox = (props) => {

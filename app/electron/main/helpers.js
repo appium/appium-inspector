@@ -1,6 +1,6 @@
 import {readFileSync} from 'node:fs';
 
-import {clipboard, ipcMain, nativeTheme, shell} from 'electron';
+import {ipcMain, nativeTheme, shell} from 'electron';
 import settings from 'electron-settings';
 
 import i18n from './i18next.js';
@@ -12,7 +12,6 @@ export function setupIPCListeners() {
   ipcMain.handle('settings:set', async (_evt, key, value) => await settings.set(key, value));
   ipcMain.handle('settings:get', async (_evt, key) => await settings.get(key));
   ipcMain.on('electron:openLink', (_evt, link) => shell.openExternal(link));
-  ipcMain.on('electron:copyToClipboard', (_evt, text) => clipboard.writeText(text));
   ipcMain.on('electron:setTheme', (_evt, theme) => (nativeTheme.themeSource = theme));
   ipcMain.handle('sessionfile:open', async (_evt, filePath) => readFileSync(filePath, 'utf8'));
 }

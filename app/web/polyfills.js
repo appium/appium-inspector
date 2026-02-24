@@ -23,7 +23,6 @@ const i18NextBackendOptions = {
 };
 
 const browserUtils = {
-  copyToClipboard: (text) => navigator.clipboard.writeText(text),
   openLink: (url) => window.open(url, ''),
   setTheme: () => {},
   updateLanguage: () => {},
@@ -49,10 +48,9 @@ class BrowserSettings {
 }
 
 const settings = new BrowserSettings();
-const {copyToClipboard, openLink, setTheme, ipcRenderer, updateLanguage} = browserUtils;
+const {openLink, setTheme, ipcRenderer, updateLanguage} = browserUtils;
 
 export {
-  copyToClipboard,
   i18NextBackend,
   i18NextBackendOptions,
   ipcRenderer,
