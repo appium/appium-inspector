@@ -1,6 +1,5 @@
 import {join} from 'node:path';
 
-import {ipcRenderer} from 'electron';
 import i18NextBackend from 'i18next-fs-backend';
 
 const localesPath =
@@ -16,34 +15,26 @@ const i18NextBackendOptions = {
 };
 
 const electronUtils = {
-  openLink: (link) => ipcRenderer.send('electron:openLink', link),
-  setTheme: (theme) => ipcRenderer.send('electron:setTheme', theme),
-  updateLanguage: (lngCode) => ipcRenderer.send('electron:updateLanguage', lngCode),
+  openLink: (link) => window.electronIPC.openLink(link),
+  setTheme: (theme) => window.electronIPC.setTheme(theme),
+  updateLanguage: (lngCode) => window.electronIPC.updateLanguage(lngCode),
 };
 
 class ElectronSettings {
   async has(key) {
-    return await ipcRenderer.invoke('settings:has', key);
+    return await window.electronIPC.hasSetting(key);
   }
 
   async set(key, val) {
-    return await ipcRenderer.invoke('settings:set', key, val);
+    return await window.electronIPC.setSetting(key, val);
   }
 
   async get(key) {
-    return await ipcRenderer.invoke('settings:get', key);
+    return await window.electronIPC.getSetting(key);
   }
 }
 
 const settings = new ElectronSettings();
 const {openLink, setTheme, updateLanguage} = electronUtils;
 
-export {
-  i18NextBackend,
-  i18NextBackendOptions,
-  ipcRenderer,
-  openLink,
-  setTheme,
-  settings,
-  updateLanguage,
-};
+export {i18NextBackend, i18NextBackendOptions, openLink, setTheme, settings, updateLanguage};

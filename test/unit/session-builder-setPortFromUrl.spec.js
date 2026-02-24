@@ -24,11 +24,6 @@ vi.mock('../../app/common/renderer/polyfills.js', () => ({
   openLink: vi.fn(),
   setTheme: vi.fn(),
   updateLanguage: vi.fn(),
-  ipcRenderer: {
-    on: vi.fn(),
-    invoke: vi.fn(),
-    send: vi.fn(),
-  },
   i18NextBackend: {
     type: 'backend',
     init: vi.fn(),

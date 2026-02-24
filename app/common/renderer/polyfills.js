@@ -22,7 +22,6 @@ export async function setSetting(setting, value) {
 export {
   i18NextBackend,
   i18NextBackendOptions,
-  ipcRenderer,
   openLink,
   setTheme,
   updateLanguage,

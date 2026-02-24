@@ -26,11 +26,6 @@ const browserUtils = {
   openLink: (url) => window.open(url, ''),
   setTheme: () => {},
   updateLanguage: () => {},
-  ipcRenderer: {
-    on: (evt) => {
-      console.warn(`Cannot listen for IPC event ${evt} in browser context`); // eslint-disable-line no-console
-    },
-  },
 };
 
 class BrowserSettings {
@@ -48,14 +43,6 @@ class BrowserSettings {
 }
 
 const settings = new BrowserSettings();
-const {openLink, setTheme, ipcRenderer, updateLanguage} = browserUtils;
+const {openLink, setTheme, updateLanguage} = browserUtils;
 
-export {
-  i18NextBackend,
-  i18NextBackendOptions,
-  ipcRenderer,
-  openLink,
-  setTheme,
-  settings,
-  updateLanguage,
-};
+export {i18NextBackend, i18NextBackendOptions, openLink, setTheme, settings, updateLanguage};

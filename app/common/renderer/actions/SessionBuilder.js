@@ -19,7 +19,7 @@ import {DEFAULT_SERVER_PROPS} from '../constants/webdriver.js';
 import i18n from '../i18next.js';
 import WDSessionStarter from '../lib/appium/session-starter.js';
 import {VENDOR_MAP} from '../lib/vendor/map.js';
-import {getSetting, ipcRenderer, setSetting} from '../polyfills.js';
+import {getSetting, setSetting} from '../polyfills.js';
 import {
   fetchSessionInformation,
   formatSeleniumGridSessions,
@@ -615,7 +615,7 @@ export function initFromSessionFile() {
       return null;
     }
     const filePath = lastArg.split('=')[1];
-    const sessionFileString = await ipcRenderer.invoke('sessionfile:open', filePath);
+    const sessionFileString = await window.electronIPC.openSessionFile(filePath);
     const sessionJSON = parseAndValidateSessionFileString(sessionFileString);
     if (sessionJSON) {
       dispatch({type: SET_STATE_FROM_FILE, sessionJSON});
