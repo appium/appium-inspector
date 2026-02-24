@@ -1,12 +1,6 @@
-const {ipcRenderer} = require('electron');
+import {ipcRenderer} from 'electron';
 
-// const i18nLocalesPath =
-//   process.env.NODE_ENV === 'development'
-//     ? join('app', 'common', 'public', 'locales') // from project root
-//     : join(__dirname, '..', 'renderer', 'locales'); // from 'main' in package.json
-// const i18nTranslationFilePath = join(i18nLocalesPath, '{{lng}}', '{{ns}}.json');
-
-// Extract the filename argument from process.argv (passed via additionalArguments)
+// Extract the filename argument to allow opening Inspector by opening a session file
 const lastArg = process.argv[process.argv.length - 1];
 const filenameArg = lastArg.startsWith('filename=') ? lastArg : null;
 
