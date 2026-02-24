@@ -14,11 +14,9 @@ const i18NextBackendOptions = {
   jsonIndent: 2,
 };
 
-const electronUtils = {
-  openLink: (link) => window.electronIPC.openLink(link),
-  setTheme: (theme) => window.electronIPC.setTheme(theme),
-  updateLanguage: (lngCode) => window.electronIPC.updateLanguage(lngCode),
-};
+const openLink = (link) => window.electronIPC.openLink(link);
+const setTheme = (theme) => window.electronIPC.setTheme(theme);
+const updateLanguage = (lngCode) => window.electronIPC.updateLanguage(lngCode);
 
 class ElectronSettings {
   async has(key) {
@@ -35,6 +33,5 @@ class ElectronSettings {
 }
 
 const settings = new ElectronSettings();
-const {openLink, setTheme, updateLanguage} = electronUtils;
 
 export {i18NextBackend, i18NextBackendOptions, openLink, setTheme, settings, updateLanguage};

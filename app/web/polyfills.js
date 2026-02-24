@@ -22,11 +22,9 @@ const i18NextBackendOptions = {
   ],
 };
 
-const browserUtils = {
-  openLink: (url) => window.open(url, ''),
-  setTheme: () => {},
-  updateLanguage: () => {},
-};
+const openLink = (url) => window.open(url, '');
+const setTheme = () => {}; // only relevant in Electron build
+const updateLanguage = () => {}; // only relevant in Electron build
 
 class BrowserSettings {
   has(key) {
@@ -43,6 +41,5 @@ class BrowserSettings {
 }
 
 const settings = new BrowserSettings();
-const {openLink, setTheme, updateLanguage} = browserUtils;
 
 export {i18NextBackend, i18NextBackendOptions, openLink, setTheme, settings, updateLanguage};

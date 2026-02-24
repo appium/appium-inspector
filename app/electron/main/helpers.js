@@ -13,7 +13,7 @@ export function setupIPCListeners() {
   ipcMain.handle('settings:get', async (_evt, key) => await settings.get(key));
   ipcMain.on('electron:openLink', (_evt, link) => shell.openExternal(link));
   ipcMain.on('electron:setTheme', (_evt, theme) => (nativeTheme.themeSource = theme));
-  ipcMain.handle('sessionfile:open', async (_evt, filePath) => readFileSync(filePath, 'utf8'));
+  ipcMain.handle('sessionfile:open', (_evt, filePath) => readFileSync(filePath, 'utf8'));
 }
 
 export const t = (string, params = null) => i18n.t(string, params);
