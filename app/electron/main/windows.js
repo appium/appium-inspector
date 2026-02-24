@@ -6,7 +6,6 @@ import settings from 'electron-settings';
 import {PREFERRED_THEME} from '../../common/shared/setting-defs.js';
 import {isDev} from './helpers.js';
 import i18n from './i18next.js';
-import {openFilePath} from './main.js';
 import {rebuildMenus} from './menus.js';
 
 const mainPath = isDev
@@ -47,7 +46,6 @@ function buildSessionWindow(backgroundColor) {
       sandbox: false,
       nodeIntegration: true,
       contextIsolation: false,
-      additionalArguments: openFilePath ? [`filename=${openFilePath}`] : [],
     },
   });
 }
