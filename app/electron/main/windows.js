@@ -1,9 +1,7 @@
-import fs from 'node:fs';
 import {join} from 'node:path';
 
 import {BrowserWindow, ipcMain, Menu, nativeTheme} from 'electron';
 import settings from 'electron-settings';
-import i18NextBackend from 'i18next-electron-fs-backend';
 
 import {PREFERRED_THEME} from '../../common/shared/setting-defs.js';
 import {isDev} from './helpers.js';
@@ -65,7 +63,6 @@ export async function setupMainWindow() {
   splashWindow.show();
 
   mainWindow = buildSessionWindow(backgroundColor);
-  i18NextBackend.mainBindings(ipcMain, mainWindow, fs);
   mainWindow[pathLoadMethod](mainPath);
 
   mainWindow.webContents.on('did-finish-load', () => {

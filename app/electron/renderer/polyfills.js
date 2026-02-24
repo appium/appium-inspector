@@ -1,12 +1,17 @@
-// const i18NextBackend = window.electronIPC.i18nextElectronBackend;
-import i18NextBackend from 'i18next-electron-fs-backend';
-const translationFilePath = window.electronIPC.i18nextFilePath;
+import i18NextBackend from 'i18next-chained-backend';
+import HttpApi from 'i18next-http-backend';
+import LocalStorageBackend from 'i18next-localstorage-backend';
+
+const localesPath = './locales'; // relative path works for both dev and production
 
 const i18NextBackendOptions = {
-  loadPath: translationFilePath,
-  addPath: translationFilePath,
-  contextBridgeApiKey: 'electronIPC',
-  jsonIndent: 2,
+  backends: [LocalStorageBackend, HttpApi],
+  backendOptions: [
+    {},
+    {
+      loadPath: `${localesPath}/{{lng}}/{{ns}}.json`,
+    },
+  ],
 };
 
 const openLink = (link) => window.electronIPC.openLink(link);

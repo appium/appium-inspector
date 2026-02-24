@@ -610,11 +610,11 @@ export function setSavedServerParams() {
  */
 export function initFromSessionFile() {
   return async (dispatch, getState) => {
-    const lastArg = process.argv[process.argv.length - 1];
-    if (!lastArg?.startsWith('filename=')) {
+    const filenameArg = window.electronIPC?.filenameArg;
+    if (!filenameArg) {
       return null;
     }
-    const filePath = lastArg.split('=')[1];
+    const filePath = filenameArg.split('=')[1];
     const sessionFileString = await window.electronIPC.openSessionFile(filePath);
     const sessionJSON = parseAndValidateSessionFileString(sessionFileString);
     if (sessionJSON) {
