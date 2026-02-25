@@ -13,16 +13,14 @@ const localesPath =
     : join(__dirname, '..', 'renderer', 'locales'); // from 'main' in package.json
 const translationFilePath = join(localesPath, '{{lng}}', '{{ns}}.json');
 
-const i18NextBackendOptions = {
-  loadPath: translationFilePath,
-  addPath: translationFilePath,
-  jsonIndent: 2,
-};
-
 const i18nextOptions = {
   ...commonI18NextOptions,
-  backend: i18NextBackendOptions,
   lng: settings.getSync(PREFERRED_LANGUAGE) || fallbackLng,
+  backend: {
+    loadPath: translationFilePath,
+    addPath: translationFilePath,
+    jsonIndent: 2,
+  },
 };
 
 if (!i18n.isInitialized) {
