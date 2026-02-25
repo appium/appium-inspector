@@ -610,7 +610,12 @@ export function setSavedServerParams() {
  */
 export function initFromSessionFile() {
   return async (dispatch, getState) => {
-    const sessionFileString = await loadSessionFileIfOpened();
+    let sessionFileString;
+    try {
+      sessionFileString = await loadSessionFileIfOpened();
+    } catch (err) {
+      log.warn(`Error loading session file on startup: ${err.message}`);
+    }
     if (!sessionFileString) {
       return null;
     }

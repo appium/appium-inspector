@@ -25,6 +25,7 @@ vi.mock('../../app/common/renderer/polyfills.js', () => ({
   setTheme: vi.fn(),
   updateLanguage: vi.fn(),
   localesPath: '',
+  loadSessionFileIfOpened: vi.fn().mockResolvedValue(null),
 }));
 
 describe('SessionBuilder actions', function () {
