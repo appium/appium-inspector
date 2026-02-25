@@ -18,11 +18,7 @@ export function setupIPCListeners(getOpenFilePath) {
     if (!openFilePath) {
       return null;
     }
-    try {
-      return await readFile(openFilePath, 'utf8');
-    } catch {
-      return null;
-    }
+    return await readFile(openFilePath, 'utf8');
   });
 }
 
