@@ -19,4 +19,10 @@ export async function setSetting(setting, value) {
   await settings.set(setting, value);
 }
 
-export {localesPath, openLink, setTheme, updateLanguage} from '#local-polyfills'; // eslint-disable-line import-x/no-unresolved
+export {
+  loadSessionFileIfOpened,
+  localesPath,
+  openLink,
+  setTheme,
+  updateLanguage,
+} from '#local-polyfills'; // eslint-disable-line import-x/no-unresolved

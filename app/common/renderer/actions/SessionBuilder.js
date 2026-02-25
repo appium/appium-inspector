@@ -19,7 +19,7 @@ import {DEFAULT_SERVER_PROPS} from '../constants/webdriver.js';
 import i18n from '../i18next.js';
 import WDSessionStarter from '../lib/appium/session-starter.js';
 import {VENDOR_MAP} from '../lib/vendor/map.js';
-import {getSetting, setSetting} from '../polyfills.js';
+import {getSetting, loadSessionFileIfOpened, setSetting} from '../polyfills.js';
 import {
   fetchSessionInformation,
   formatSeleniumGridSessions,
@@ -610,7 +610,7 @@ export function setSavedServerParams() {
  */
 export function initFromSessionFile() {
   return async (dispatch, getState) => {
-    const sessionFileString = await window.electronIPC?.loadSessionFileIfOpened();
+    const sessionFileString = await loadSessionFileIfOpened();
     if (!sessionFileString) {
       return null;
     }

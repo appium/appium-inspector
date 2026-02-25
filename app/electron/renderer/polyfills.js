@@ -3,6 +3,7 @@ const localesPath = './locales'; // relative path works for both dev and product
 const openLink = (link) => window.electronIPC.openLink(link);
 const setTheme = (theme) => window.electronIPC.setTheme(theme);
 const updateLanguage = (lngCode) => window.electronIPC.updateLanguage(lngCode);
+const loadSessionFileIfOpened = () => window.electronIPC.loadSessionFileIfOpened();
 
 class ElectronSettings {
   async has(key) {
@@ -20,4 +21,4 @@ class ElectronSettings {
 
 const settings = new ElectronSettings();
 
-export {localesPath, openLink, setTheme, settings, updateLanguage};
+export {loadSessionFileIfOpened, localesPath, openLink, setTheme, settings, updateLanguage};

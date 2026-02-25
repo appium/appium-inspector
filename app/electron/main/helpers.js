@@ -1,24 +1,24 @@
-import {readFileSync} from 'node:fs';
+import {readFile} from 'node:fs/promises';
 
 import {ipcMain, nativeTheme, shell} from 'electron';
 import settings from 'electron-settings';
 
 import i18n from './i18next.js';
-import {openFilePath} from './main.js';
 
 export const isDev = process.env.NODE_ENV === 'development';
 
-export function setupIPCListeners() {
+export function setupIPCListeners(getOpenFilePath) {
   ipcMain.handle('settings:has', async (_evt, key) => await settings.has(key));
   ipcMain.handle('settings:set', async (_evt, key, value) => await settings.set(key, value));
   ipcMain.handle('settings:get', async (_evt, key) => await settings.get(key));
   ipcMain.on('electron:openLink', (_evt, link) => shell.openExternal(link));
   ipcMain.on('electron:setTheme', (_evt, theme) => (nativeTheme.themeSource = theme));
-  ipcMain.handle('sessionfile:loadIfOpened', () => {
+  ipcMain.handle('sessionfile:loadIfOpened', async () => {
+    const openFilePath = getOpenFilePath();
     if (!openFilePath) {
       return null;
     }
-    return readFileSync(openFilePath, 'utf8');
+    return await readFile(openFilePath, 'utf8');
   });
 }
 
