@@ -39,7 +39,7 @@ jobs:
       - name: build package
         run: npx electron-builder build --x64 --arm64 --publish always
       - name: Upload built packages
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: artifact-${{ matrix.image }}
           path: release/
