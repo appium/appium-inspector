@@ -8,13 +8,10 @@ import WDSessionStarter from '../../app/common/renderer/lib/appium/session-start
 
 const FAKE_DRIVER_PORT = 12121;
 
-const FAKE_DRIVER_PATH = path.dirname(require.resolve('@appium/fake-driver/package.json'));
-const TEST_APP = path.resolve(FAKE_DRIVER_PATH, 'test', 'fixtures', 'app.xml');
-
 const DEFAULT_CAPS = {
   platformName: 'Fake',
   'appium:deviceName': 'Fake',
-  'appium:app': TEST_APP,
+  'appium:app': path.resolve(__dirname, '..', 'fixtures', 'fake-app.xml'),
 };
 
 describe('InspectorDriver actions', function () {
