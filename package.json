@@ -72,7 +72,7 @@
     "antd": "6.3.2",
     "cheerio": "1.2.0",
     "css.escape": "1.5.1",
-    "dayjs": "1.11.19",
+    "dayjs": "1.11.20",
     "electron-debug": "4.1.0",
     "electron-settings": "4.0.4",
     "electron-updater": "6.8.3",
