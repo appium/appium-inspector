@@ -162,7 +162,7 @@
   "localhost": "localhost",
   "Host": "Хост",
   "Port": "Порт",
-  "usingDataFoundIn": "Использование данных из переменной среды {{environmentVariable}}",
+  "usingDataFoundIn": "Подстановка данных из переменной среды {{environmentVariable}}",
   "yourUsername": "Ваше имя пользователя",
   "Sauce Username": "Имя пользователя Sauce",
   "Sauce Access Key": "Ключ доступа Sauce",
