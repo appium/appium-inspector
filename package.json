@@ -67,7 +67,7 @@
     "@ant-design/icons": "6.1.0",
     "@reduxjs/toolkit": "2.11.2",
     "@tabler/icons-react": "3.40.0",
-    "@wdio/protocols": "9.25.0",
+    "@wdio/protocols": "9.26.1",
     "@xmldom/xmldom": "0.9.8",
     "antd": "6.3.2",
     "cheerio": "1.2.0",
@@ -90,7 +90,7 @@
     "react-refractor": "4.0.0",
     "react-router": "7.13.1",
     "sanitize-filename": "1.6.3",
-    "webdriver": "9.25.0",
+    "webdriver": "9.26.1",
     "xpath": "0.0.34"
   },
   "devDependencies": {
