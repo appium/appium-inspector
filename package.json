@@ -89,7 +89,7 @@
     "react-redux": "9.2.0",
     "react-refractor": "4.0.0",
     "react-router": "7.13.1",
-    "sanitize-filename": "1.6.3",
+    "sanitize-filename": "1.6.4",
     "webdriver": "9.26.1",
     "xpath": "0.0.34"
   },
