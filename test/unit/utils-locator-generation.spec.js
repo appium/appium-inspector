@@ -294,7 +294,7 @@ describe('utils/locator-generation.js', function () {
         testXPath(doc, doc.firstChild, '//root[@name="bar"]');
       });
 
-      it('should use an absolute xpath if the node has no unique or maybe-unique attributes', function () {
+      it('should use a relative xpath if the node has no unique or maybe-unique attributes', function () {
         const doc = xmlToDOM(`<root non-unique-attr='foo'></root>`);
         testXPath(doc, doc.firstChild, '/root');
       });
@@ -352,7 +352,7 @@ describe('utils/locator-generation.js', function () {
     });
 
     describe('using the node and its parent and siblings', function () {
-      it('should use a unique parent attribute and relative node path if parent has a unique attribute', function () {
+      it('should use a unique parent attribute and relative node path if only the parent has a unique attribute', function () {
         const doc = xmlToDOM(`<root>
           <parent id='foo'>
             <node>Hello</node>
@@ -363,7 +363,7 @@ describe('utils/locator-generation.js', function () {
         testXPath(doc, doc.getElementsByTagName('node')[1], '//parent[@id="foo"]/node[2]');
       });
 
-      it('should use indices for both parents and nodes if there are no unique attributes', function () {
+      it('should use indices for both parent and node if there are no unique attributes', function () {
         const doc = xmlToDOM(`<root>
           <parent>
             <node>Hello</node>
@@ -379,6 +379,18 @@ describe('utils/locator-generation.js', function () {
         testXPath(doc, doc.getElementsByTagName('node')[1], '/root/parent[1]/node[2]');
         testXPath(doc, doc.getElementsByTagName('node')[2], '/root/parent[2]/node[1]');
         testXPath(doc, doc.getElementsByTagName('node')[3], '/root/parent[2]/node[2]');
+      });
+
+      it('should use a unique attribute and index for parent if it has an identical sibling with the same unique attribute', function () {
+        const doc = xmlToDOM(`<root>
+          <parent id='foo'>
+            <node>Hello</node>
+          </parent>
+          <parent id='foo'>
+            <node>World</node>
+          </parent>
+        </root>`);
+        testXPath(doc, doc.getElementsByTagName('node')[0], '(//parent[@id="foo"])[1]/node');
       });
     });
 
