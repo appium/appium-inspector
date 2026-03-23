@@ -1,15 +1,15 @@
 import {describe, expect, it, vi} from 'vitest';
 import * as xpath from 'xpath';
 
+import {getOptimalClassChain} from '../../app/common/renderer/utils/locator-generation/class-chain.js';
+import {getOptimalPredicateString} from '../../app/common/renderer/utils/locator-generation/predicate.js';
 import {
   areAttrAndValueUnique,
-  getOptimalClassChain,
-  getOptimalPredicateString,
-  getOptimalUiAutomatorSelector,
-  getOptimalXPath,
   getSimpleSuggestedLocators,
   isTagUnique,
-} from '../../app/common/renderer/utils/locator-generation.js';
+} from '../../app/common/renderer/utils/locator-generation/simple.js';
+import {getOptimalUiAutomatorSelector} from '../../app/common/renderer/utils/locator-generation/uiautomator.js';
+import {getOptimalXPath} from '../../app/common/renderer/utils/locator-generation/xpath.js';
 import {xmlToDOM} from '../../app/common/renderer/utils/source-parsing.js';
 
 // Create identical mock of xpath, so that xpath.select can be modified as needed
