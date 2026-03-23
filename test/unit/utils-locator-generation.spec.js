@@ -22,7 +22,7 @@ vi.mock('xpath', async (importOriginal) => {
 });
 
 // Helper that checks that the optimal xpath for a node is the one that we expect and also
-// checks that the XPath successfully locates the node in it's doc
+// checks that the XPath successfully locates the node in its doc
 function testXPath(doc, node, expectedXPath) {
   expect(getOptimalXPath(doc, node)).toBe(expectedXPath);
   expect(xpath.select(expectedXPath, doc)[0]).toEqual(node);
@@ -273,181 +273,112 @@ describe('utils/locator-generation.js', function () {
   });
 
   describe('#getOptimalXPath', function () {
-    describe('on XML with height == 1', function () {
-      it('should set an absolute xpath if attrName "id" is set', function () {
-        const doc = xmlToDOM(`<node id='foo'></node>`);
-        testXPath(doc, doc.getElementById('foo'), '//node[@id="foo"]');
+    describe('using only the node itself', function () {
+      it('should use a relative xpath if the node has no attributes', function () {
+        const doc = xmlToDOM(`<root></root>`);
+        testXPath(doc, doc.firstChild, '/root');
       });
 
-      it('should set an absolute xpath if unique attributes is set to "content-desc" and that attr is set', function () {
-        const doc = xmlToDOM(`<node content-desc='foo'></node>`);
-        testXPath(doc, doc.firstChild, '//node[@content-desc="foo"]');
+      it('should use an absolute xpath if the node has a unique attribute', function () {
+        const doc = xmlToDOM(`<root id='foo'></root>`);
+        testXPath(doc, doc.firstChild, '//root[@id="foo"]');
       });
 
-      it('should set relative xpath with tagname if no unique attributes are set', function () {
-        const doc = xmlToDOM(`<node non-unique-attr='foo'></node>`);
-        testXPath(doc, doc.firstChild, '/node');
-      });
-    });
-
-    describe('on XML with height == 2', function () {
-      let doc;
-
-      it('should set first child node to relative xpath with tagname if the child node has no siblings', function () {
-        doc = xmlToDOM(`<xml>
-          <child-node non-unique-attr='hello'>Hello</child-node>
-          <other-node>
-            <child-node></child-node>
-          </other-node>
-        </xml>`);
-        testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node');
+      it('should use an absolute xpath if the node has a maybe-unique attribute', function () {
+        const doc = xmlToDOM(`<root text='foo'></root>`);
+        testXPath(doc, doc.firstChild, '//root[@text="foo"]');
       });
 
-      it('should set first child node to relative xpath with tagname and index', function () {
-        doc = xmlToDOM(`<xml>
-          <child-node non-unique-attr='hello'>Hello</child-node>
-          <child-node non-unique-attr='world'>World</child-node>
-        </xml>`);
-        testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node[1]');
-        testXPath(doc, doc.getElementsByTagName('child-node')[1], '/xml/child-node[2]');
+      it('should prefer unique attributes over maybe-unique ones', function () {
+        const doc = xmlToDOM(`<root text='foo' name='bar'></root>`);
+        testXPath(doc, doc.firstChild, '//root[@name="bar"]');
       });
 
-      it('should set first child node to absolute xpath if it has ID set', function () {
-        doc = xmlToDOM(`<xml>
-          <child-node content-desc='hello'>Hello</child-node>
-          <child-node content-desc='world'>World</child-node>
-        </xml>`);
-        testXPath(
-          doc,
-          doc.getElementsByTagName('child-node')[0],
-          '//child-node[@content-desc="hello"]',
-        );
-        testXPath(
-          doc,
-          doc.getElementsByTagName('child-node')[1],
-          '//child-node[@content-desc="world"]',
-        );
-      });
-
-      it('should index children based on tagName', function () {
-        doc = xmlToDOM(`<xml>
-          <child>Hello</child>
-          <child-node>World</child-node>
-          <child>Foo</child>
-          <child-node>Bar</child-node>
-        </xml>`);
-        testXPath(doc, doc.getElementsByTagName('child')[0], '/xml/child[1]');
-        testXPath(doc, doc.getElementsByTagName('child')[1], '/xml/child[2]');
-        testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node[1]');
-        testXPath(doc, doc.getElementsByTagName('child-node')[1], '/xml/child-node[2]');
-
-        doc = xmlToDOM(`<xml>
-          <child>Hello</child>
-          <child-node>World</child-node>
-          <other-child-node>asdfasdf</other-child-node>
-          <child-node>Bar</child-node>
-        </xml>`);
-        testXPath(doc, doc.getElementsByTagName('child')[0], '//child');
-        testXPath(doc, doc.getElementsByTagName('child-node')[0], '/xml/child-node[1]');
-        testXPath(doc, doc.getElementsByTagName('child-node')[1], '/xml/child-node[2]');
-        testXPath(doc, doc.getElementsByTagName('other-child-node')[0], '//other-child-node');
+      it('should use an absolute xpath if the node has no unique or maybe-unique attributes', function () {
+        const doc = xmlToDOM(`<root non-unique-attr='foo'></root>`);
+        testXPath(doc, doc.firstChild, '/root');
       });
     });
 
-    describe('on XML with height = 3', function () {
-      let doc;
-
-      it('should use child as absolute and relative grandchild path if child has an ID set', function () {
-        doc = xmlToDOM(`<root>
-          <child id='foo'>
-            <grandchild>Hello</grandchild>
-            <grandchild>World</grandchild>
-          </child>
+    describe('using the node and its siblings', function () {
+      it('should use a relative xpath and add an index if the node has identical siblings and no attributes', function () {
+        const doc = xmlToDOM(`<root>
+          <node></node>
+          <node></node>
         </root>`);
-        testXPath(
-          doc,
-          doc.getElementsByTagName('grandchild')[0],
-          '//child[@id="foo"]/grandchild[1]',
-        );
-        testXPath(
-          doc,
-          doc.getElementsByTagName('grandchild')[1],
-          '//child[@id="foo"]/grandchild[2]',
-        );
+        testXPath(doc, doc.getElementsByTagName('node')[0], '/root/node[1]');
       });
 
-      it('should use indices of children and grandchildren if no IDs are set', function () {
-        doc = xmlToDOM(`<root>
-          <child>
-            <grandchild>Hello</grandchild>
-            <grandchild>World</grandchild>
-          </child>
-          <irrelevant-child></irrelevant-child>
-          <child>
-            <grandchild>Foo</grandchild>
-            <grandchild>Bar</grandchild>
-          </child>
+      it('should use tagname if the node has a unique tag with no attributes', function () {
+        const doc = xmlToDOM(`<root>
+          <node></node>
+          <other-node></other-node>
         </root>`);
-        testXPath(doc, doc.getElementsByTagName('grandchild')[0], '/root/child[1]/grandchild[1]');
-        testXPath(doc, doc.getElementsByTagName('grandchild')[1], '/root/child[1]/grandchild[2]');
-        testXPath(doc, doc.getElementsByTagName('grandchild')[2], '/root/child[2]/grandchild[1]');
-        testXPath(doc, doc.getElementsByTagName('grandchild')[3], '/root/child[2]/grandchild[2]');
+        testXPath(doc, doc.getElementsByTagName('node')[0], '//node');
       });
 
-      it("should use indices if the unique attribute isn't actually unique", function () {
-        doc = xmlToDOM(`<root>
-          <child id='foo'>
-            <grandchild>Foo</grandchild>
-            <grandchild>Bar</grandchild>
-          </child>
-          <child id='foo'>
-            <grandchild>Hello</grandchild>
-          </child>
-          <child id='foo'></child>
-          <another-child>Irrelevant</another-child>
-          <another-child>Irrelevant</another-child>
-          <child id='foo'>
-            <grandchild></grandchild>
-            <child id='foo'>
-              <great-grand-child></great-grand-child>
-            </child>
-          </child>
+      it('should use a unique attribute and index if the node has identical siblings with the same unique attribute', function () {
+        const doc = xmlToDOM(`<root>
+          <node id='foo'></node>
+          <node id='foo'></node>
         </root>`);
-        const grandchildren = doc.getElementsByTagName('grandchild');
-        testXPath(doc, grandchildren[0], '(//child[@id="foo"])[1]/grandchild[1]');
-        testXPath(doc, grandchildren[1], '(//child[@id="foo"])[1]/grandchild[2]');
-        testXPath(doc, grandchildren[2], '(//child[@id="foo"])[2]/grandchild');
-        testXPath(doc, grandchildren[3], '(//child[@id="foo"])[4]/grandchild');
-
-        const greatgrandchildren = doc.getElementsByTagName('great-grand-child');
-        testXPath(doc, greatgrandchildren[0], '//great-grand-child');
-
-        const children = doc.getElementsByTagName('child');
-        testXPath(doc, children[0], '(//child[@id="foo"])[1]');
-        testXPath(doc, children[1], '(//child[@id="foo"])[2]');
-        testXPath(doc, children[2], '(//child[@id="foo"])[3]');
-        testXPath(doc, children[3], '(//child[@id="foo"])[4]');
-        testXPath(doc, children[4], '(//child[@id="foo"])[5]');
+        testXPath(doc, doc.getElementsByTagName('node')[0], '(//node[@id="foo"])[1]');
       });
 
-      it('should return conjunctively unique xpath locators if they exist', function () {
-        doc = xmlToDOM(`<root>
-          <child id='foo' text='bar'></child>
-          <child text='yo'></child>
-          <child id='foo' text='yo'></child>
-          <child id='foo'></child>
-          <child text='zoom'></child>
-          <child id='bar' text='ohai'></child>
-          <child id='bar' text='ohai'></child>
+      it('should combine unique and maybe-unique attributes if only the maybe-unique attribute differs', function () {
+        const doc = xmlToDOM(`<root>
+          <node id='foo' text='bar'></node>
+          <node id='foo' text='yo'></node>
         </root>`);
-        const children = doc.getElementsByTagName('child');
-        testXPath(doc, children[0], '//child[@id="foo" and @text="bar"]');
-        testXPath(doc, children[1], '(//child[@text="yo"])[1]');
-        testXPath(doc, children[2], '//child[@id="foo" and @text="yo"]');
-        testXPath(doc, children[3], '(//child[@id="foo"])[3]');
-        testXPath(doc, children[4], '//child[@text="zoom"]');
-        testXPath(doc, children[5], '(//child[@id="bar"])[1]');
-        testXPath(doc, children[6], '(//child[@id="bar"])[2]');
+        const children = doc.getElementsByTagName('node');
+        testXPath(doc, children[0], '//node[@id="foo" and @text="bar"]');
+        testXPath(doc, children[1], '//node[@id="foo" and @text="yo"]');
+      });
+
+      it('should index nodes based on tagName', function () {
+        const doc = xmlToDOM(`<root>
+          <node>Hello</node>
+          <other-node>World</other-node>
+          <node>Foo</node>
+          <another-node>Bar</another-node>
+          <other-node>Baz</other-node>
+        </root>`);
+        testXPath(doc, doc.getElementsByTagName('node')[0], '/root/node[1]');
+        testXPath(doc, doc.getElementsByTagName('node')[1], '/root/node[2]');
+        testXPath(doc, doc.getElementsByTagName('other-node')[0], '/root/other-node[1]');
+        testXPath(doc, doc.getElementsByTagName('other-node')[1], '/root/other-node[2]');
+        testXPath(doc, doc.getElementsByTagName('another-node')[0], '//another-node');
+      });
+    });
+
+    describe('using the node and its parent and siblings', function () {
+      it('should use a unique parent attribute and relative node path if parent has a unique attribute', function () {
+        const doc = xmlToDOM(`<root>
+          <parent id='foo'>
+            <node>Hello</node>
+            <node>World</node>
+          </parent>
+        </root>`);
+        testXPath(doc, doc.getElementsByTagName('node')[0], '//parent[@id="foo"]/node[1]');
+        testXPath(doc, doc.getElementsByTagName('node')[1], '//parent[@id="foo"]/node[2]');
+      });
+
+      it('should use indices for both parents and nodes if there are no unique attributes', function () {
+        const doc = xmlToDOM(`<root>
+          <parent>
+            <node>Hello</node>
+            <node>World</node>
+          </parent>
+          <another-parent></another-parent>
+          <parent>
+            <node>Foo</node>
+            <node>Bar</node>
+          </parent>
+        </root>`);
+        testXPath(doc, doc.getElementsByTagName('node')[0], '/root/parent[1]/node[1]');
+        testXPath(doc, doc.getElementsByTagName('node')[1], '/root/parent[1]/node[2]');
+        testXPath(doc, doc.getElementsByTagName('node')[2], '/root/parent[2]/node[1]');
+        testXPath(doc, doc.getElementsByTagName('node')[3], '/root/parent[2]/node[2]');
       });
     });
 
@@ -456,22 +387,22 @@ describe('utils/locator-generation.js', function () {
         vi.mocked(xpath.select).mockImplementation(() => {
           throw new Error('Exception');
         });
-        const doc = xmlToDOM(`<node id='foo'>
-          <child id='a'></child>
-          <child id='b'>
-            <grandchild id='hello'></grandchild>
-          </child>
-        </node>`);
-        expect(getOptimalXPath(doc, doc.getElementById('hello'))).toBe('/node/child[2]/grandchild');
+        const doc = xmlToDOM(`<root id='foo'>
+          <parent id='a'></parent>
+          <parent id='b'>
+            <node id='hello'></node>
+          </parent>
+        </root>`);
+        expect(getOptimalXPath(doc, doc.getElementById('hello'))).toBe('/root/parent[2]/node');
       });
 
       it('should return null if anything else throws an exception', function () {
-        const doc = xmlToDOM(`<node id='foo'>
-          <child id='a'></child>
-          <child id='b'>
-            <grandchild id='hello'></grandchild>
-          </child>
-        </node>`);
+        const doc = xmlToDOM(`<root id='foo'>
+          <parent id='a'></parent>
+          <parent id='b'>
+            <node id='hello'></node>
+          </parent>
+        </root>`);
         const node = doc.getElementById('hello');
         node.getAttribute = () => {
           throw new Error('Some unexpected error');
