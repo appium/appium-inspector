@@ -34,18 +34,24 @@ class XPathGenerator extends LocatorGeneratorBase {
    */
   generate() {
     try {
-      // If this isn't an element, we're above the root, return empty string
+      // Phase 0: if this isn't an element, we're above the root, return empty string
       if (!this._isValidElementNode()) {
         return '';
       }
 
-      // Try to find a unique XPath based on attributes or node name
-      const uniqueXpath = this._tryCasesForUniqueXPath();
-      if (uniqueXpath) {
-        return uniqueXpath;
+      // Phase 1: try to find a unique XPath based on the node itself (attributes or tagname)
+      const [nodeXpath, isFullyUnique] = this._tryCasesForUniqueXPath();
+      if (nodeXpath && isFullyUnique) {
+        return nodeXpath;
       }
 
-      // Fall back to hierarchical XPath based on DOM position
+      // Phase 2: Try to find a scoped XPath using a unique ancestor
+      const scopedXPath = this._tryParentScopeXPath();
+      if (scopedXPath) {
+        return scopedXPath;
+      }
+
+      // Phase 3: Fall back to hierarchical XPath based on DOM position
       return this._buildHierarchicalXPath();
     } catch (error) {
       this._logLocatorError('XPath', error);
@@ -77,6 +83,8 @@ class XPathGenerator extends LocatorGeneratorBase {
 
     return [true];
   }
+
+  // #region Phase 1 - Node
 
   /**
    * Try to find a unique XPath based on the node's tag name alone
@@ -189,8 +197,9 @@ class XPathGenerator extends LocatorGeneratorBase {
    * @param {string[]|[string, string][]} attrs - a list of attributes to consider, or
    * a list of pairs of attributes to consider in conjunction
    *
-   * @returns {[string|undefined, boolean|undefined]} tuple consisting of (1) the xpath selector discovered, and (2)
-   * whether this selector is absolutely unique in the document (true) or qualified by index (false)
+   * @returns {[string|undefined, boolean|undefined]} tuple consisting of:
+   * (1) the xpath selector discovered, and
+   * (2) whether this selector is absolutely unique in the document (true) or qualified by index (false)
    */
   _getUniqueXPath(attrs) {
     // If we're looking for a unique //<nodetype>, return it only if it's actually unique
@@ -238,7 +247,9 @@ class XPathGenerator extends LocatorGeneratorBase {
   /**
    * Try all XPath cases and return the first unique or best semi-unique result
    *
-   * @returns {string|undefined} the best XPath found, or undefined if none found
+   * @returns {[string|undefined, boolean|undefined]} tuple consisting of:
+   * (1) the best xpath selector discovered, and
+   * (2) whether this selector is absolutely unique in the document (true) or qualified by index (false)
    */
   _tryCasesForUniqueXPath() {
     const cases = this._buildXPathCases();
@@ -247,7 +258,7 @@ class XPathGenerator extends LocatorGeneratorBase {
     for (const attrs of cases) {
       const [xpath, isFullyUnique] = this._getUniqueXPath(attrs);
       if (isFullyUnique) {
-        return xpath;
+        return [xpath, true];
       }
       // Keep the first semi-unique XPath we find
       if (!semiUniqueXpath && xpath) {
@@ -255,8 +266,81 @@ class XPathGenerator extends LocatorGeneratorBase {
       }
     }
 
-    return semiUniqueXpath;
+    return [semiUniqueXpath, false];
   }
+
+  // #endregion
+  // #region Phase 2 - Parent
+
+  /**
+   * Find the closest ancestor node that has a unique identifying attribute or tag name
+   *
+   * @returns {Object|null} Object with {node, xpath} or null if no unique ancestor found
+   */
+  _findUniqueAncestor() {
+    let ancestor = this._domNode.parentNode;
+
+    while (ancestor && ancestor.tagName) {
+      const ancestorGenerator = new XPathGenerator(this._doc, ancestor);
+      const [xpath, isFullyUnique] = ancestorGenerator._tryCasesForUniqueXPath();
+      // Ignore the result if it is not fully unique
+      if (xpath && isFullyUnique) {
+        return { node: ancestor, xpath };
+      }
+      ancestor = ancestor.parentNode;
+    }
+
+    return null;
+  }
+
+  /**
+   * Build an XPath scoped to a unique ancestor
+   *
+   * @param {Node} ancestor - The unique ancestor node
+   * @param {string} ancestorXPath - The XPath that uniquely identifies the ancestor
+   * @returns {string|null} Parent-scoped XPath or null if unable to build
+   */
+  _buildParentScopedXPath(ancestor, ancestorXPath) {
+    // Build path from ancestor to current node
+    let currentNode = this._domNode;
+    let descendantPath = '';
+
+    while (currentNode !== ancestor && currentNode && currentNode.tagName) {
+      let nodeXPath = `/${currentNode.tagName}`;
+      // Add index if there are multiple siblings with same tag
+      const siblings = currentNode.parentNode?.childNodes
+        ? Array.from(currentNode.parentNode.childNodes).filter(
+            (node) => node.nodeType === 1 && node.tagName === currentNode.tagName
+          )
+        : [];
+      if (siblings.length > 1) {
+        const index = siblings.indexOf(currentNode);
+        nodeXPath += `[${index + 1}]`;
+      }
+      descendantPath = nodeXPath + descendantPath;
+      currentNode = currentNode.parentNode;
+    }
+    const fullXPath = ancestorXPath + descendantPath;
+    // Validate that this XPath is unique
+    const [isUnique] = this._determineXpathUniqueness(fullXPath);
+    return isUnique ? fullXPath : null;
+  }
+
+  /**
+   * Try to find a scoped XPath using a unique ancestor
+   *
+   * @returns {string|null} Parent-scoped XPath or null if not found
+   */
+  _tryParentScopeXPath() {
+    const uniqueAncestor = this._findUniqueAncestor();
+    if (!uniqueAncestor) {
+      return null;
+    }
+    return this._buildParentScopedXPath(uniqueAncestor.node, uniqueAncestor.xpath);
+  }
+
+  // #endregion
+  // #region Phase 3 - Raw
 
   /**
    * Build a hierarchical XPath based on the node's position in the DOM tree
@@ -277,4 +361,6 @@ class XPathGenerator extends LocatorGeneratorBase {
     const parentGenerator = new XPathGenerator(this._doc, this._domNode.parentNode);
     return parentGenerator.generate() + xpath;
   }
+
+  // #endregion
 }
