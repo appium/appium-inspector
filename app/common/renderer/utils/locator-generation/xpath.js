@@ -46,7 +46,7 @@ class XPathGenerator extends LocatorGeneratorBase {
       }
 
       // Phase 2: Try to find a scoped XPath using a unique ancestor
-      const scopedXPath = this._findBestParentScopeXPath();
+      const scopedXPath = this._findBestParentScopeXPath(nodeXpath);
       if (scopedXPath) {
         return scopedXPath;
       }
@@ -286,26 +286,39 @@ class XPathGenerator extends LocatorGeneratorBase {
    *
    * @param {Node} ancestor - The unique ancestor node
    * @param {string} ancestorXPath - The XPath that uniquely identifies the ancestor
+   * @param {string|null} nodeXpath - the semi-unique XPath from Phase 1, without index
    * @returns {string|null} Parent-scoped XPath or null if unable to build
    */
-  _buildParentScopedXPath(ancestor, ancestorXPath) {
-    // Build path from ancestor to current node
+  _buildParentScopedXPath(ancestor, ancestorXPath, nodeXpath) {
+    // Helper to get node XPath based on siblings and nodeXpath for target node
+    const getNodeXPath = (node, providedNodeXpath) => {
+      const siblings = node.parentNode?.childNodes
+        ? Array.from(node.parentNode.childNodes).filter(
+            (n) => n.nodeType === 1 && n.tagName === node.tagName,
+          )
+        : [];
+      if (providedNodeXpath && siblings.length <= 1) {
+        return providedNodeXpath.replace(/^\/\//, '/');
+      }
+      let nodeXPath = `/${node.tagName}`;
+      if (siblings.length > 1) {
+        const index = siblings.indexOf(node);
+        nodeXPath += `[${index + 1}]`;
+      }
+      return nodeXPath;
+    };
+
     let currentNode = this._domNode;
     let descendantPath = '';
 
     while (currentNode !== ancestor && currentNode && currentNode.tagName) {
-      let nodeXPath = `/${currentNode.tagName}`;
-      // Add index if there are multiple siblings with same tag
-      const siblings = currentNode.parentNode?.childNodes
-        ? Array.from(currentNode.parentNode.childNodes).filter(
-            (node) => node.nodeType === 1 && node.tagName === currentNode.tagName,
-          )
-        : [];
-      if (siblings.length > 1) {
-        const index = siblings.indexOf(currentNode);
-        nodeXPath += `[${index + 1}]`;
+      let adjustedNodeXPath;
+      if (currentNode === this._domNode) {
+        adjustedNodeXPath = getNodeXPath(currentNode, nodeXpath);
+      } else {
+        adjustedNodeXPath = getNodeXPath(currentNode, null);
       }
-      descendantPath = nodeXPath + descendantPath;
+      descendantPath = adjustedNodeXPath + descendantPath;
       currentNode = currentNode.parentNode;
     }
     const fullXPath = ancestorXPath + descendantPath;
@@ -317,14 +330,17 @@ class XPathGenerator extends LocatorGeneratorBase {
   /**
    * Try to find a scoped XPath using a unique ancestor
    *
+   * @param {string|null} nodeXpath - the semi-unique XPath from Phase 1, without index
    * @returns {string|null} Parent-scoped XPath or null if not found
    */
-  _findBestParentScopeXPath() {
+  _findBestParentScopeXPath(nodeXpath) {
     const uniqueAncestor = this._findUniqueAncestor();
     if (!uniqueAncestor) {
       return null;
     }
-    return this._buildParentScopedXPath(uniqueAncestor.node, uniqueAncestor.xpath);
+
+    // Try building with nodeXpath if provided
+    return this._buildParentScopedXPath(uniqueAncestor.node, uniqueAncestor.xpath, nodeXpath);
   }
 
   // #endregion
