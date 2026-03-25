@@ -474,9 +474,10 @@ describe('utils/locator-generation.js', function () {
               <node>Hello</node>
               <node>World</node>
             </parent>
+            <another-parent></another-parent>
             <parent>
-              <node>Hello</node>
-              <node>World</node>
+              <node>Foo</node>
+              <node>Bar</node>
             </parent>
           </root>`);
           testXPath(doc, doc.getElementsByTagName('node')[0], '/root/parent[1]/node[1]');
