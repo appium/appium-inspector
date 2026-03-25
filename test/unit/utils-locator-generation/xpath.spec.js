@@ -20,7 +20,7 @@ function testXPath(doc, node, expectedXPath) {
   expect(xpath.select(expectedXPath, doc)[0]).toEqual(node);
 }
 
-describe('utils/locator-generation.js', function () {
+describe('utils/locator-generation/xpath.js', function () {
   describe('#getOptimalXPath', function () {
     describe('using only the node itself', function () {
       it('should use a relative xpath if the node has no attributes', function () {
