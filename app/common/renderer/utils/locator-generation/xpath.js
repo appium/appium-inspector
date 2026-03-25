@@ -309,9 +309,8 @@ class XPathGenerator extends LocatorGeneratorBase {
   /**
    * Build an XPath scoped to a unique ancestor
    *
-   * @param {Node} ancestor - The unique ancestor node
+   * @param {Node} ancestorNode - The unique ancestor node
    * @param {string} ancestorXpath - The XPath that uniquely identifies the ancestor
-   * @param {string|null} nodeScopeXpath - the semi-unique XPath from Phase 1, without index
    * @returns {string} Parent-scoped XPath
    */
   _buildParentScopedXPath(ancestorNode, ancestorXpath) {
