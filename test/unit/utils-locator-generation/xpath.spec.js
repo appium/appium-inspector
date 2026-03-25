@@ -258,6 +258,19 @@ describe('utils/locator-generation/xpath.js', function () {
           testXPath(doc, doc.getElementsByTagName('node')[1], '/root/parent[2]/node');
         });
 
+        it('should use indices if only node has unique attributes', function () {
+          const doc = xmlToDOM(`<root>
+            <parent>
+              <node id='bar'>Hello</node>
+            </parent>
+            <parent>
+              <node id='bar'>World</node>
+            </parent>
+          </root>`);
+          testXPath(doc, doc.getElementsByTagName('node')[0], '/root/parent[1]/node');
+          testXPath(doc, doc.getElementsByTagName('node')[1], '/root/parent[2]/node');
+        });
+
         it('should use indices if both parent and node have unique attributes', function () {
           const doc = xmlToDOM(`<root>
             <parent id='foo'>
