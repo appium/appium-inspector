@@ -64,16 +64,15 @@ class XPathGenerator extends LocatorGeneratorBase {
    * index of the element in the document if not unique
    *
    * @param {string} xpath
-   * @param {Document} [scope] - the document or element scope to evaluate the xpath in
    * @returns {number | null} the xpath index in the set of other similar nodes,
    * or null if the xpath is invalid and cannot be evaluated
    */
-  _determineXpathUniqueness(xpath, scope = this._doc) {
+  _determineXpathUniqueness(xpath) {
     let othersWithAttr = [];
 
     // If the XPath does not parse, move to the next unique attribute
     try {
-      othersWithAttr = xpathSelect(xpath, scope);
+      othersWithAttr = xpathSelect(xpath, this._doc);
     } catch {
       return undefined;
     }
