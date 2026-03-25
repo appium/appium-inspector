@@ -213,7 +213,9 @@ class XPathGenerator extends LocatorGeneratorBase {
       ...XPathGenerator.UNIQUE_ATTRIBUTES,
       ...XPathGenerator.MAYBE_UNIQUE_ATTRIBUTES,
     ];
-    const attrPairsPermutations = allAttributes.flatMap((v1, i) => allAttributes.slice(i + 1).map((v2) => [v1, v2]));
+    const attrPairsPermutations = allAttributes.flatMap((v1, i) =>
+      allAttributes.slice(i + 1).map((v2) => [v1, v2]),
+    );
 
     return [
       // Try unique attributes first
@@ -285,62 +287,60 @@ class XPathGenerator extends LocatorGeneratorBase {
    * Build an XPath scoped to a unique ancestor
    *
    * @param {Node} ancestor - The unique ancestor node
-   * @param {string} ancestorXPath - The XPath that uniquely identifies the ancestor
-   * @param {string|null} nodeXpath - the semi-unique XPath from Phase 1, without index
+   * @param {string} ancestorXpath - The XPath that uniquely identifies the ancestor
+   * @param {string|null} nodeScopeXpath - the semi-unique XPath from Phase 1, without index
    * @returns {string|null} Parent-scoped XPath or null if unable to build
    */
-  _buildParentScopedXPath(ancestor, ancestorXPath, nodeXpath) {
-    // Helper to get node XPath based on siblings and nodeXpath for target node
-    const getNodeXPath = (node, providedNodeXpath) => {
-      const siblings = node.parentNode?.childNodes
-        ? Array.from(node.parentNode.childNodes).filter(
-            (n) => n.nodeType === 1 && n.tagName === node.tagName,
+  _buildParentScopedXPath(ancestorNode, ancestorXpath, nodeScopeXpath) {
+    let currentNode = this._domNode;
+    let cumulativeDescendantXpath = '';
+
+    // Assemble the path upwards from the current node to the ancestor, adding indices as needed
+    while (currentNode !== ancestorNode && currentNode && currentNode.tagName) {
+      const siblings = currentNode.parentNode?.childNodes
+        ? Array.from(currentNode.parentNode.childNodes).filter(
+            (n) => n.nodeType === 1 && n.tagName === currentNode.tagName,
           )
         : [];
-      if (providedNodeXpath && siblings.length <= 1) {
-        return providedNodeXpath.replace(/^\/\//, '/');
-      }
-      let nodeXPath = `/${node.tagName}`;
-      if (siblings.length > 1) {
-        const index = siblings.indexOf(node);
-        nodeXPath += `[${index + 1}]`;
-      }
-      return nodeXPath;
-    };
-
-    let currentNode = this._domNode;
-    let descendantPath = '';
-
-    while (currentNode !== ancestor && currentNode && currentNode.tagName) {
-      let adjustedNodeXPath;
-      if (currentNode === this._domNode) {
-        adjustedNodeXPath = getNodeXPath(currentNode, nodeXpath);
-      } else {
-        adjustedNodeXPath = getNodeXPath(currentNode, null);
-      }
-      descendantPath = adjustedNodeXPath + descendantPath;
+      const relativeCurrentNodeXpath =
+        siblings.length > 1
+          ? `/${currentNode.tagName}[${siblings.indexOf(currentNode) + 1}]`
+          : `/${currentNode.tagName}`;
+      cumulativeDescendantXpath = relativeCurrentNodeXpath + cumulativeDescendantXpath;
       currentNode = currentNode.parentNode;
     }
-    const fullXPath = ancestorXPath + descendantPath;
-    // Validate that this XPath is unique
-    const nodeIndex = this._determineXpathUniqueness(fullXPath);
-    return nodeIndex === 0 ? fullXPath : null;
+
+    const fullXpath = ancestorXpath + cumulativeDescendantXpath;
+    // If Phase 1 returned a semi-unique nodeScopeXpath, but it required an index,
+    // and the node still has an index in the currently assembled xpath,
+    // check if we can now use the Phase 1 xpath without an index
+    if (nodeScopeXpath && fullXpath.endsWith(']')) {
+      const fullXpathWithNodeScope = fullXpath.replace(
+        /\/[^/]+$/,
+        nodeScopeXpath.replace(/^\/\//, '/'),
+      );
+      const fullXpathWithNodeScopeIndex = this._determineXpathUniqueness(fullXpathWithNodeScope);
+      if (fullXpathWithNodeScopeIndex === 0) {
+        return fullXpathWithNodeScope;
+      }
+      // Index still needed - fall back to the previous xpath
+    }
+    const fullXpathIndex = this._determineXpathUniqueness(fullXpath);
+    return fullXpathIndex === 0 ? fullXpath : null;
   }
 
   /**
    * Try to find a scoped XPath using a unique ancestor
    *
-   * @param {string|null} nodeXpath - the semi-unique XPath from Phase 1, without index
+   * @param {string|null} nodeScopeXpath - the semi-unique XPath from Phase 1, without index
    * @returns {string|null} Parent-scoped XPath or null if not found
    */
-  _findBestParentScopeXPath(nodeXpath) {
-    const uniqueAncestor = this._findUniqueAncestor();
-    if (!uniqueAncestor) {
+  _findBestParentScopeXPath(nodeScopeXpath) {
+    const ancestor = this._findUniqueAncestor();
+    if (!ancestor) {
       return null;
     }
-
-    // Try building with nodeXpath if provided
-    return this._buildParentScopedXPath(uniqueAncestor.node, uniqueAncestor.xpath, nodeXpath);
+    return this._buildParentScopedXPath(ancestor.node, ancestor.xpath, nodeScopeXpath);
   }
 
   // #endregion

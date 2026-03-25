@@ -433,7 +433,7 @@ describe('utils/locator-generation.js', function () {
           testXPath(doc, doc.getElementsByTagName('node')[2], '//parent[@id="quux"]/node');
         });
 
-        it('should use parent attributes and node indices if the node has other siblings', function () {
+        it('should use parent and node attributes if the node has siblings with the same tag but different attributes', function () {
           const doc = xmlToDOM(`<root>
             <parent id='foo'>
               <node id='quux'>Hello</node>
@@ -444,10 +444,26 @@ describe('utils/locator-generation.js', function () {
               <node id='bar'>World</node>
             </parent>
           </root>`);
-          testXPath(doc, doc.getElementsByTagName('node')[0], '//parent[@id="foo"]/node[1]');
-          testXPath(doc, doc.getElementsByTagName('node')[1], '//parent[@id="foo"]/node[2]');
-          testXPath(doc, doc.getElementsByTagName('node')[2], '//parent[@id="baz"]/node[1]');
-          testXPath(doc, doc.getElementsByTagName('node')[3], '//parent[@id="baz"]/node[2]');
+          testXPath(
+            doc,
+            doc.getElementsByTagName('node')[0],
+            '//parent[@id="foo"]/node[@id="quux"]',
+          );
+          testXPath(
+            doc,
+            doc.getElementsByTagName('node')[1],
+            '//parent[@id="foo"]/node[@id="bar"]',
+          );
+          testXPath(
+            doc,
+            doc.getElementsByTagName('node')[2],
+            '//parent[@id="baz"]/node[@id="quux"]',
+          );
+          testXPath(
+            doc,
+            doc.getElementsByTagName('node')[3],
+            '//parent[@id="baz"]/node[@id="bar"]',
+          );
         });
       });
 
@@ -511,10 +527,38 @@ describe('utils/locator-generation.js', function () {
           testXPath(doc, doc.getElementsByTagName('node')[2], '/root/parent[2]/node[1]');
           testXPath(doc, doc.getElementsByTagName('node')[3], '/root/parent[2]/node[2]');
         });
+
+        it('should use indices and node attributes if the node has siblings with the same tag but different attributes', function () {
+          const doc = xmlToDOM(`<root>
+            <parent id='foo'>
+              <node id='bar'>Hello</node>
+              <node id='baz'>World</node>
+            </parent>
+            <parent id='foo'>
+              <node id='bar'>Hello</node>
+              <node id='baz'>World</node>
+            </parent>
+          </root>`);
+          testXPath(doc, doc.getElementsByTagName('node')[0], '/root/parent[1]/node[@id="bar"]');
+          testXPath(doc, doc.getElementsByTagName('node')[1], '/root/parent[1]/node[@id="baz"]');
+          testXPath(doc, doc.getElementsByTagName('node')[2], '/root/parent[2]/node[@id="bar"]');
+          testXPath(doc, doc.getElementsByTagName('node')[3], '/root/parent[2]/node[@id="baz"]');
+        });
       });
 
       describe('identical nodes in different levels', function () {
-        it('should use parent attributes if the node has no siblings', function () {
+        it('should use parent attributes if the node has no siblings nor attributes', function () {
+          const doc = xmlToDOM(`<root>
+            <node>Hello</node>
+            <node>World</node>
+            <parent id='foo'>
+              <node>Hello</node>
+            </parent>
+          </root>`);
+          testXPath(doc, doc.getElementsByTagName('node')[2], '//parent[@id="foo"]/node');
+        });
+
+        it('should use parent attributes if the node has no siblings but has attributes', function () {
           const doc = xmlToDOM(`<root>
             <node id='bar'>Hello</node>
             <node id='bar'>World</node>
@@ -525,7 +569,7 @@ describe('utils/locator-generation.js', function () {
           testXPath(doc, doc.getElementsByTagName('node')[2], '//parent[@id="foo"]/node');
         });
 
-        it('should use parent attributes and node index if the node has siblings', function () {
+        it('should use parent attributes and node index if the node has identical siblings', function () {
           const doc = xmlToDOM(`<root>
             <node id='bar'>Hello</node>
             <node id='bar'>World</node>
@@ -535,6 +579,27 @@ describe('utils/locator-generation.js', function () {
             </parent>
           </root>`);
           testXPath(doc, doc.getElementsByTagName('node')[2], '//parent[@id="foo"]/node[1]');
+        });
+
+        it('should use parent and node attributes if the node has siblings with the same tag but different attributes', function () {
+          const doc = xmlToDOM(`<root>
+            <node id='bar'>Hello</node>
+            <node id='baz'>World</node>
+            <parent id='foo'>
+              <node id='bar'>Hello</node>
+              <node id='baz'>World</node>
+            </parent>
+          </root>`);
+          testXPath(
+            doc,
+            doc.getElementsByTagName('node')[2],
+            '//parent[@id="foo"]/node[@id="bar"]',
+          );
+          testXPath(
+            doc,
+            doc.getElementsByTagName('node')[3],
+            '//parent[@id="foo"]/node[@id="baz"]',
+          );
         });
       });
     });
