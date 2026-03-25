@@ -20,6 +20,9 @@ function testXPath(doc, node, expectedXPath) {
   expect(xpath.select(expectedXPath, doc)[0]).toEqual(node);
 }
 
+// Helper for a shorter syntax of getting elements by tag name
+const byTag = (doc, tagName) => doc.getElementsByTagName(tagName);
+
 describe('utils/locator-generation/xpath.js', function () {
   describe('#getOptimalXPath', function () {
     describe('using only the node itself', function () {
@@ -55,7 +58,7 @@ describe('utils/locator-generation/xpath.js', function () {
           <node></node>
           <node></node>
         </root>`);
-        testXPath(doc, doc.getElementsByTagName('node')[0], '/root/node[1]');
+        testXPath(doc, byTag(doc, 'node')[0], '/root/node[1]');
       });
 
       it('should use tagname if the node has a unique tag with no attributes', function () {
@@ -63,7 +66,7 @@ describe('utils/locator-generation/xpath.js', function () {
           <node></node>
           <other-node></other-node>
         </root>`);
-        testXPath(doc, doc.getElementsByTagName('node')[0], '//node');
+        testXPath(doc, byTag(doc, 'node')[0], '//node');
       });
 
       it('should use a unique attribute and index if the node has identical siblings with the same unique attribute', function () {
@@ -71,7 +74,7 @@ describe('utils/locator-generation/xpath.js', function () {
           <node id='foo'></node>
           <node id='foo'></node>
         </root>`);
-        testXPath(doc, doc.getElementsByTagName('node')[0], '(//node[@id="foo"])[1]');
+        testXPath(doc, byTag(doc, 'node')[0], '(//node[@id="foo"])[1]');
       });
 
       it('should combine unique and maybe-unique attributes if only the maybe-unique attribute differs', function () {
@@ -79,7 +82,7 @@ describe('utils/locator-generation/xpath.js', function () {
           <node id='foo' text='bar'></node>
           <node id='foo' text='yo'></node>
         </root>`);
-        const children = doc.getElementsByTagName('node');
+        const children = byTag(doc, 'node');
         testXPath(doc, children[0], '//node[@id="foo" and @text="bar"]');
         testXPath(doc, children[1], '//node[@id="foo" and @text="yo"]');
       });
@@ -92,11 +95,11 @@ describe('utils/locator-generation/xpath.js', function () {
           <another-node>Bar</another-node>
           <other-node>Baz</other-node>
         </root>`);
-        testXPath(doc, doc.getElementsByTagName('node')[0], '/root/node[1]');
-        testXPath(doc, doc.getElementsByTagName('node')[1], '/root/node[2]');
-        testXPath(doc, doc.getElementsByTagName('other-node')[0], '/root/other-node[1]');
-        testXPath(doc, doc.getElementsByTagName('other-node')[1], '/root/other-node[2]');
-        testXPath(doc, doc.getElementsByTagName('another-node')[0], '//another-node');
+        testXPath(doc, byTag(doc, 'node')[0], '/root/node[1]');
+        testXPath(doc, byTag(doc, 'node')[1], '/root/node[2]');
+        testXPath(doc, byTag(doc, 'other-node')[0], '/root/other-node[1]');
+        testXPath(doc, byTag(doc, 'other-node')[1], '/root/other-node[2]');
+        testXPath(doc, byTag(doc, 'another-node')[0], '//another-node');
       });
     });
 
@@ -108,8 +111,8 @@ describe('utils/locator-generation/xpath.js', function () {
             <node>World</node>
           </parent>
         </root>`);
-        testXPath(doc, doc.getElementsByTagName('node')[0], '//parent[@id="foo"]/node[1]');
-        testXPath(doc, doc.getElementsByTagName('node')[1], '//parent[@id="foo"]/node[2]');
+        testXPath(doc, byTag(doc, 'node')[0], '//parent[@id="foo"]/node[1]');
+        testXPath(doc, byTag(doc, 'node')[1], '//parent[@id="foo"]/node[2]');
       });
 
       it('should use indices for both parent and node if there are no unique attributes', function () {
@@ -124,10 +127,10 @@ describe('utils/locator-generation/xpath.js', function () {
             <node>Bar</node>
           </parent>
         </root>`);
-        testXPath(doc, doc.getElementsByTagName('node')[0], '/root/parent[1]/node[1]');
-        testXPath(doc, doc.getElementsByTagName('node')[1], '/root/parent[1]/node[2]');
-        testXPath(doc, doc.getElementsByTagName('node')[2], '/root/parent[2]/node[1]');
-        testXPath(doc, doc.getElementsByTagName('node')[3], '/root/parent[2]/node[2]');
+        testXPath(doc, byTag(doc, 'node')[0], '/root/parent[1]/node[1]');
+        testXPath(doc, byTag(doc, 'node')[1], '/root/parent[1]/node[2]');
+        testXPath(doc, byTag(doc, 'node')[2], '/root/parent[2]/node[1]');
+        testXPath(doc, byTag(doc, 'node')[3], '/root/parent[2]/node[2]');
       });
 
       it('should use a unique attribute and index for parent if it has an identical sibling with the same unique attribute', function () {
@@ -139,7 +142,7 @@ describe('utils/locator-generation/xpath.js', function () {
             <node>World</node>
           </parent>
         </root>`);
-        testXPath(doc, doc.getElementsByTagName('node')[0], '(//parent[@id="foo"])[1]/node');
+        testXPath(doc, byTag(doc, 'node')[0], '(//parent[@id="foo"])[1]/node');
       });
     });
 
