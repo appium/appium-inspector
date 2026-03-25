@@ -40,7 +40,7 @@ class XPathGenerator extends LocatorGeneratorBase {
       }
 
       // Phase 1: try to find a unique XPath based on the node itself (attributes or tagname)
-      const [nodeXpath, nodeIndex] = this._findBestNodeScopeXPath();
+      const {nodeXpath, nodeIndex} = this._findBestNodeScopeXPath();
       if (nodeXpath && nodeIndex === 0) {
         return nodeXpath;
       }
@@ -67,8 +67,8 @@ class XPathGenerator extends LocatorGeneratorBase {
    * index of the element in the document if not unique
    *
    * @param {string} xpath
-   * @returns {number | null} the xpath index in the set of other similar nodes,
-   * or null if the xpath is invalid and cannot be evaluated
+   * @returns {number | undefined} the xpath index in the set of other similar nodes,
+   * or undefined if the xpath is invalid and cannot be evaluated
    */
   _determineXpathUniqueness(xpath) {
     let othersWithAttr = [];
@@ -92,20 +92,20 @@ class XPathGenerator extends LocatorGeneratorBase {
   /**
    * Try to find a unique XPath based on the node's tag name alone
    *
-   * @returns {[string, number]|[]} tuple of [xpath, nodeIndex] if unique, or empty array if not unique
+   * @returns {{nodeXpath: string, nodeIndex: number}|{}} the XPath and index if unique, or empty object if not unique
    */
   _tryNodeTagNameForUniqueXPath() {
     let xpath = `//${this._domNode.tagName}`;
     const nodeIndex = this._determineXpathUniqueness(xpath);
     if (nodeIndex !== 0) {
-      return [];
+      return {};
     }
 
     // Even if this node name is unique, if it's the root node, use '/' instead of '//'
     if (!this._domNode.parentNode?.tagName) {
       xpath = `/${this._domNode.tagName}`;
     }
-    return [xpath, 0];
+    return {nodeXpath: xpath, nodeIndex};
   }
 
   /**
@@ -155,7 +155,7 @@ class XPathGenerator extends LocatorGeneratorBase {
    * Try to find a unique XPath by testing attributes
    *
    * @param {string[]|[string, string][]} attrs - attributes to test (single attributes or pairs)
-   * @returns {[string, number]|[]} tuple of [xpath, nodeIndex], or empty array if not found
+   * @returns {{nodeXpath: string, nodeIndex: number}|{}} the XPath and index if unique, or empty object if not unique
    */
   _tryNodeAttributesForUniqueXPath(attrs) {
     const tagForXpath = this._domNode.tagName || '*';
@@ -190,12 +190,12 @@ class XPathGenerator extends LocatorGeneratorBase {
     }
 
     if (uniqueXpath) {
-      return [uniqueXpath, 0];
+      return {nodeXpath: uniqueXpath, nodeIndex: 0};
     }
     if (semiUniqueXpath) {
-      return [semiUniqueXpath, semiUniqueXpathIndex];
+      return {nodeXpath: semiUniqueXpath, nodeIndex: semiUniqueXpathIndex};
     }
-    return [];
+    return {};
   }
 
   /**
@@ -205,7 +205,7 @@ class XPathGenerator extends LocatorGeneratorBase {
    * @param {string[]|[string, string][]} attrs - a list of attributes to consider, or
    * a list of pairs of attributes to consider in conjunction
    *
-   * @returns {[string, number]|[]} tuple of [xpath, nodeIndex], or empty array if not found
+   * @returns {{xpath: string, nodeIndex: number}|{}} the XPath and index if unique, or empty object if not unique
    */
   _getUniqueNodeScopeXPath(attrs) {
     // If we're looking for a unique //<nodetype>, return it only if it's actually unique
@@ -245,9 +245,7 @@ class XPathGenerator extends LocatorGeneratorBase {
   /**
    * Try all XPath cases and return the first unique or best semi-unique result
    *
-   * @returns {[string|undefined, boolean|undefined]} tuple consisting of:
-   * (1) the best xpath selector discovered, and
-   * (2) 0 if the xpath is fully unique, or the xpath index of the node in the matching set (1-based)
+   * @returns {{nodeXpath: string, nodeIndex: number}|{}} the XPath and index if unique, or empty object if not unique
    */
   _findBestNodeScopeXPath() {
     const cases = this._buildUniqueXPathFinderCases();
@@ -255,21 +253,21 @@ class XPathGenerator extends LocatorGeneratorBase {
     let semiUniqueXpathIndex;
 
     for (const attrs of cases) {
-      const [xpath, nodeIndex] = this._getUniqueNodeScopeXPath(attrs);
+      const {nodeXpath, nodeIndex} = this._getUniqueNodeScopeXPath(attrs);
       if (nodeIndex === 0) {
-        return [xpath, nodeIndex];
+        return {nodeXpath, nodeIndex};
       }
       // Store the current semi-unique xpath and its index only if its index
       // is better (lower) than any previously found semi-unique xpath.
       // This is not guaranteed to be the best option if parent nodes will also be required,
       // but it is still better than just saving the first one.
       if (!semiUniqueXpathIndex && !_.isUndefined(nodeIndex)) {
-        semiUniqueXpath = xpath;
+        semiUniqueXpath = nodeXpath;
         semiUniqueXpathIndex = nodeIndex;
       }
     }
 
-    return [semiUniqueXpath, semiUniqueXpathIndex];
+    return {nodeXpath: semiUniqueXpath, nodeIndex: semiUniqueXpathIndex};
   }
 
   // #endregion
@@ -284,7 +282,7 @@ class XPathGenerator extends LocatorGeneratorBase {
    * but without any limits, meaning the generated XPath is unlikely to be any better.
    *
    * @param {string|null} nodeScopeXpath - the semi-unique XPath from Phase 1, without index
-   * @returns {Object|null} Object with {node, xpath} or null if no unique ancestor found
+   * @returns {{node: ParentNode, xpath: string}|{}} Object with {node, xpath} or empty object if no unique ancestor found
    */
   _findUniqueAncestor(nodeScopeXpath) {
     let ancestor = this._domNode.parentNode;
@@ -296,16 +294,16 @@ class XPathGenerator extends LocatorGeneratorBase {
         break;
       }
       const ancestorGenerator = new XPathGenerator(this._doc, ancestor);
-      const [xpath, nodeIndex] = ancestorGenerator._findBestNodeScopeXPath();
+      const {nodeXpath, nodeIndex} = ancestorGenerator._findBestNodeScopeXPath();
       // Ignore the result if it is not fully unique
-      if (xpath && nodeIndex === 0) {
-        return {node: ancestor, xpath};
+      if (nodeXpath && nodeIndex === 0) {
+        return {node: ancestor, xpath: nodeXpath};
       }
       ancestor = ancestor.parentNode;
       curAncestor++;
     }
 
-    return null;
+    return {};
   }
 
   /**
@@ -380,7 +378,7 @@ class XPathGenerator extends LocatorGeneratorBase {
    */
   _findBestParentScopeXPath(nodeScopeXpath) {
     const ancestor = this._findUniqueAncestor(nodeScopeXpath);
-    if (!ancestor) {
+    if (_.isEmpty(ancestor)) {
       return null;
     }
     const parentScopedXpath = this._buildParentScopedXPath(ancestor.node, ancestor.xpath);
