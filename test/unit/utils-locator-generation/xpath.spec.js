@@ -50,7 +50,7 @@ describe('utils/locator-generation/xpath.js', function () {
     });
 
     describe('using the node and its siblings', function () {
-      it('should use tagname if the node has a unique tag and no attributes', function () {
+      it('should use tagname if the node has a unique tag with no attributes', function () {
         const doc = xmlToDOM(`<root>
           <node></node>
           <other-node></other-node>
@@ -101,7 +101,17 @@ describe('utils/locator-generation/xpath.js', function () {
           testXPath(doc, doc.getElementsByTagName('node')[1], '//parent[@id="foo"]/node[2]');
         });
 
-        it('should use parent attributes even if the node also has them', function () {
+        it('should use parent tagname if only the node has attributes but they are not unique', function () {
+          const doc = xmlToDOM(`<root>
+            <parent>
+              <node id='foo'></node>
+              <node id='foo'></node>
+            </parent>
+          </root>`);
+          testXPath(doc, doc.getElementsByTagName('node')[0], '//parent/node[1]');
+        });
+
+        it('should use parent attributes if node attributes are not unique', function () {
           const doc = xmlToDOM(`<root>
             <parent id='foo'>
               <node id='bar'>Hello</node>
