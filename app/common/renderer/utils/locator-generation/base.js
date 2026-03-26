@@ -25,9 +25,7 @@ export class LocatorGeneratorBase {
     }
     return Array.prototype.slice
       .call(targetNode.parentNode.childNodes, 0)
-      .filter(
-        (childNode) => childNode.nodeType === 1 && childNode.tagName === targetNode.tagName,
-      );
+      .filter((childNode) => childNode.nodeType === 1 && childNode.tagName === targetNode.tagName);
   }
 
   /**

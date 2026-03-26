@@ -54,9 +54,9 @@ class XPathGenerator extends LocatorGeneratorBase {
       }
 
       // Phase 2: Try to find a scoped XPath using a unique ancestor
-      const scopedXPath = this._findBestParentScopeXPath(nodeXpath);
-      if (scopedXPath) {
-        return scopedXPath;
+      const scopedXpath = this._findBestParentScopeXPath(nodeXpath);
+      if (scopedXpath) {
+        return scopedXpath;
       } else if (nodeXpath && nodeIndex > 0) {
         // If the scoped xpath failed but we did previously find a semi-unique xpath, fallback to that
         return this._buildSemiUniqueXPath(nodeXpath, nodeIndex);
@@ -103,17 +103,17 @@ class XPathGenerator extends LocatorGeneratorBase {
    * @returns {{nodeXpath: string, nodeIndex: number}|{}} the XPath and index if unique, or empty object if not unique
    */
   _tryNodeTagNameForUniqueXPath() {
-    let xpath = `//${this._domNode.tagName}`;
-    const nodeIndex = this._determineXpathUniqueness(xpath);
+    let nodeXpath = `//${this._domNode.tagName}`;
+    const nodeIndex = this._determineXpathUniqueness(nodeXpath);
     if (nodeIndex !== 0) {
       return {};
     }
 
     // Even if this node name is unique, if it's the root node, use '/' instead of '//'
-    if (!this._domNode.parentNode?.tagName) {
-      xpath = `/${this._domNode.tagName}`;
+    if (!this._isValidElementNode(this._domNode.parentNode)) {
+      nodeXpath = `/${this._domNode.tagName}`;
     }
-    return {nodeXpath: xpath, nodeIndex};
+    return {nodeXpath, nodeIndex};
   }
 
   /**
@@ -195,7 +195,7 @@ class XPathGenerator extends LocatorGeneratorBase {
       }
     }
 
-    return semiUniqueXpath ? {nodeXpath: semiUniqueXpath, nodeIndex: semiUniqueXpathIndex} : {};
+    return {nodeXpath: semiUniqueXpath, nodeIndex: semiUniqueXpathIndex};
   }
 
   /**
@@ -316,7 +316,7 @@ class XPathGenerator extends LocatorGeneratorBase {
     let currentNode = this._domNode;
     let cumulativeDescendantXpath = '';
 
-    // Assemble the path upwards from the current node to the ancestor, adding indices as needed
+    // Assemble the path upwards from the target node to the ancestor, adding indices as needed
     while (this._isValidElementNode(currentNode) && currentNode !== ancestorNode) {
       const siblings = this._getSiblingsWithSameTag(currentNode);
       const relativeCurrentNodeXpath =
