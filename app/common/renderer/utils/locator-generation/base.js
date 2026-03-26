@@ -16,26 +16,28 @@ export class LocatorGeneratorBase {
   /**
    * Get sibling nodes with the same tag name
    *
+   * @param {Node} targetNode - the node to find siblings for, defaults to the main DOM node if not provided
    * @returns {Node[]} array of sibling nodes with the same tag name
    */
-  _getSiblingsWithSameTag() {
-    if (!this._domNode.parentNode) {
+  _getSiblingsWithSameTag(targetNode = this._domNode) {
+    if (!targetNode.parentNode) {
       return [];
     }
     return Array.prototype.slice
-      .call(this._domNode.parentNode.childNodes, 0)
+      .call(targetNode.parentNode.childNodes, 0)
       .filter(
-        (childNode) => childNode.nodeType === 1 && childNode.tagName === this._domNode.tagName,
+        (childNode) => childNode.nodeType === 1 && childNode.tagName === targetNode.tagName,
       );
   }
 
   /**
    * Check if a node is a valid element node
    *
+   * @param {Node} targetNode - the node to check, defaults to the main DOM node if not provided
    * @returns {boolean} true if the node is a valid element
    */
-  _isValidElementNode() {
-    return this._domNode.tagName && this._domNode.nodeType === 1;
+  _isValidElementNode(targetNode = this._domNode) {
+    return targetNode.tagName && targetNode.nodeType === 1;
   }
 
   /**

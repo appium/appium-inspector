@@ -288,7 +288,7 @@ class XPathGenerator extends LocatorGeneratorBase {
     let ancestor = this._domNode.parentNode;
     let curAncestorCount = 1;
 
-    while (ancestor && ancestor.tagName) {
+    while (this._isValidElementNode(ancestor)) {
       if (nodeScopeXpath && curAncestorCount > XPathGenerator.ANCESTOR_TRAVERSAL_LIMIT) {
         break;
       }
@@ -317,12 +317,8 @@ class XPathGenerator extends LocatorGeneratorBase {
     let cumulativeDescendantXpath = '';
 
     // Assemble the path upwards from the current node to the ancestor, adding indices as needed
-    while (currentNode !== ancestorNode && currentNode && currentNode.tagName) {
-      const siblings = currentNode.parentNode?.childNodes
-        ? Array.from(currentNode.parentNode.childNodes).filter(
-            (n) => n.nodeType === 1 && n.tagName === currentNode.tagName,
-          )
-        : [];
+    while (this._isValidElementNode(currentNode) && currentNode !== ancestorNode) {
+      const siblings = this._getSiblingsWithSameTag(currentNode);
       const relativeCurrentNodeXpath =
         siblings.length > 1
           ? `/${currentNode.tagName}[${siblings.indexOf(currentNode) + 1}]`
