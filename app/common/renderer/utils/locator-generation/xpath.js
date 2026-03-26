@@ -27,6 +27,14 @@ class XPathGenerator extends LocatorGeneratorBase {
   // attributes
   static MAYBE_UNIQUE_ATTRIBUTES = ['label', 'text', 'value'];
 
+  // Limit for how many ancestors to traverse when looking for a unique parent scope in Phase 2,
+  // if we already have a semi-unique xpath from Phase 1.
+  static ANCESTOR_TRAVERSAL_LIMIT = 2;
+
+  // Regex to identify the last tag in an xpath, used for optimizing parent-scoped xpaths
+  // by replacing it with a more specific semi-unique xpath from Phase 1
+  static LAST_TAG_REGEX = /\/[^/]+$/;
+
   /**
    * Get an optimal XPath for a Node
    *
@@ -155,28 +163,26 @@ class XPathGenerator extends LocatorGeneratorBase {
    * Try to find a unique XPath by testing attributes
    *
    * @param {string[]|[string, string][]} attrs - attributes to test (single attributes or pairs)
-   * @returns {{nodeXpath: string, nodeIndex: number}|{}} the XPath and index if unique, or empty object if not unique
+   * @returns {{nodeXpath: string, nodeIndex: number}|{}} the XPath and node index if found, or empty object if not found
    */
   _tryNodeAttributesForUniqueXPath(attrs) {
     const tagForXpath = this._domNode.tagName || '*';
     const isPairs = attrs.length > 0 && _.isArray(attrs[0]);
-    let uniqueXpath;
     let semiUniqueXpath;
     let semiUniqueXpathIndex;
 
     for (const attrName of attrs) {
-      const xpath = isPairs
+      const nodeXpath = isPairs
         ? this._buildXPathFromAttributePair(attrName, tagForXpath)
         : this._buildXPathFromSingleAttribute(attrName, tagForXpath);
 
-      if (!xpath) {
+      if (!nodeXpath) {
         continue;
       }
 
-      const nodeIndex = this._determineXpathUniqueness(xpath);
+      const nodeIndex = this._determineXpathUniqueness(nodeXpath);
       if (nodeIndex === 0) {
-        uniqueXpath = xpath;
-        break;
+        return {nodeXpath, nodeIndex};
       }
 
       // Store the current semi-unique xpath and its index only if its index
@@ -184,18 +190,12 @@ class XPathGenerator extends LocatorGeneratorBase {
       // This is not guaranteed to be the best option if parent nodes will also be required,
       // but it is still better than just saving the first one.
       if (!semiUniqueXpathIndex && !_.isUndefined(nodeIndex)) {
-        semiUniqueXpath = xpath;
+        semiUniqueXpath = nodeXpath;
         semiUniqueXpathIndex = nodeIndex;
       }
     }
 
-    if (uniqueXpath) {
-      return {nodeXpath: uniqueXpath, nodeIndex: 0};
-    }
-    if (semiUniqueXpath) {
-      return {nodeXpath: semiUniqueXpath, nodeIndex: semiUniqueXpathIndex};
-    }
-    return {};
+    return semiUniqueXpath ? {nodeXpath: semiUniqueXpath, nodeIndex: semiUniqueXpathIndex} : {};
   }
 
   /**
@@ -205,7 +205,7 @@ class XPathGenerator extends LocatorGeneratorBase {
    * @param {string[]|[string, string][]} attrs - a list of attributes to consider, or
    * a list of pairs of attributes to consider in conjunction
    *
-   * @returns {{xpath: string, nodeIndex: number}|{}} the XPath and index if unique, or empty object if not unique
+   * @returns {{xpath: string, nodeIndex: number}|{}} the XPath and node index if found, or empty object if not found
    */
   _getUniqueNodeScopeXPath(attrs) {
     // If we're looking for a unique //<nodetype>, return it only if it's actually unique
@@ -245,7 +245,7 @@ class XPathGenerator extends LocatorGeneratorBase {
   /**
    * Try all XPath cases and return the first unique or best semi-unique result
    *
-   * @returns {{nodeXpath: string, nodeIndex: number}|{}} the XPath and index if unique, or empty object if not unique
+   * @returns {{nodeXpath: string, nodeIndex: number}|{}} the XPath and node index if found, or empty object if not found
    */
   _findBestNodeScopeXPath() {
     const cases = this._buildUniqueXPathFinderCases();
@@ -276,31 +276,30 @@ class XPathGenerator extends LocatorGeneratorBase {
   /**
    * Find the closest ancestor node that has a unique identifying attribute or tag name.
    * If Phase 1 found a semi-unique XPath, only check ancestors up to a certain limit
-   * to avoid traversing too far up the tree and therefore generating overly long and brittle XPaths.
-   * If we didn't get anything from Phase 1, we can be more lenient in checking ancestors,
-   * since running into limits here would proceed with Phase 3, which also traverses up the path,
-   * but without any limits, meaning the generated XPath is unlikely to be any better.
+   * to avoid traversing too far up the tree and therefore generating overly long and brittle XPaths
+   * (compared to the Phase 1 XPath, which uses only the node).
+   * If we didn't get anything from Phase 1, we can ignore this limit, since if we were to return early due to this,
+   * the code would proceed with Phase 3, which also traverses up the path, but without any limits.
    *
    * @param {string|null} nodeScopeXpath - the semi-unique XPath from Phase 1, without index
    * @returns {{node: ParentNode, xpath: string}|{}} Object with {node, xpath} or empty object if no unique ancestor found
    */
   _findUniqueAncestor(nodeScopeXpath) {
     let ancestor = this._domNode.parentNode;
-    const ancestorLimit = 2;
-    let curAncestor = 1;
+    let curAncestorCount = 1;
 
     while (ancestor && ancestor.tagName) {
-      if (nodeScopeXpath && curAncestor > ancestorLimit) {
+      if (nodeScopeXpath && curAncestorCount > XPathGenerator.ANCESTOR_TRAVERSAL_LIMIT) {
         break;
       }
       const ancestorGenerator = new XPathGenerator(this._doc, ancestor);
       const {nodeXpath, nodeIndex} = ancestorGenerator._findBestNodeScopeXPath();
-      // Ignore the result if it is not fully unique
+      // Only use the xpath if it is fully unique
       if (nodeXpath && nodeIndex === 0) {
         return {node: ancestor, xpath: nodeXpath};
       }
       ancestor = ancestor.parentNode;
-      curAncestor++;
+      curAncestorCount++;
     }
 
     return {};
@@ -348,10 +347,10 @@ class XPathGenerator extends LocatorGeneratorBase {
     if (!nodeScopeXpath || !parentScopedXpath.endsWith(']')) {
       return this._determineXpathUniqueness(parentScopedXpath) === 0 ? parentScopedXpath : null;
     }
-    // First, try just replacing the tag name with the Phase 1 xpath without index,
+    // First, try just replacing the tag name + index with the Phase 1 xpath (without its index),
     // and see if that is unique
     const combinedScopeXpath = parentScopedXpath.replace(
-      /\/[^/]+$/,
+      XPathGenerator.LAST_TAG_REGEX,
       nodeScopeXpath.replace(/^\/\//, '/'),
     );
     const combinedScopeXpathIndex = this._determineXpathUniqueness(combinedScopeXpath);
@@ -364,8 +363,8 @@ class XPathGenerator extends LocatorGeneratorBase {
     // * The index of combinedScopeXpath (combinedScopeXpathIndex)
     //
     // We can unconditionally use combinedScopeXpathIndex, because:
-    // * it will ALWAYS be less than or equal to nodeScopeIndex, since it is the same node xpath but with a more specific parent tag
-    // * it will ALWAYS be less than or equal to parentScopedXpathNodeIndex, since it is the same parent xpath but with a more specific node tag,
+    // * combinedScopeXpathIndex <= nodeScopeIndex: same node xpath, more specific parent tag
+    // * combinedScopeXpathIndex <= parentScopedXpathNodeIndex: same parent xpath, more specific node tag
     return this._buildSemiUniqueXPath(combinedScopeXpath, combinedScopeXpathIndex);
   }
 
