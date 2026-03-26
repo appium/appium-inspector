@@ -110,7 +110,7 @@ export const APPIUM_TO_WD_COMMANDS = {
   removeApp: 'removeApp',
   terminateApp: 'terminateApp',
   isAppInstalled: 'isAppInstalled',
-  queryAppState: 'appiumQueryAppState', // should be reverted in WDIO
+  queryAppState: 'queryAppState',
   hideKeyboard: 'hideKeyboard',
   isKeyboardShown: 'isKeyboardShown',
   pushFile: 'pushFile',
