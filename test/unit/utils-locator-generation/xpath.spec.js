@@ -20,9 +20,6 @@ function testXPath(doc, node, expectedXPath) {
   expect(xpath.select(expectedXPath, doc)[0]).toEqual(node);
 }
 
-// Helper for a shorter syntax of getting elements by tag name
-const byTag = (doc, tagName) => doc.getElementsByTagName(tagName);
-
 describe('utils/locator-generation/xpath.js', function () {
   describe('#getOptimalXPath', function () {
     describe('using only the node itself', function () {
@@ -52,21 +49,26 @@ describe('utils/locator-generation/xpath.js', function () {
       });
     });
 
-    describe('using the node and its siblings', function () {
-      it('should use tagname if the node has a unique tag with no attributes', function () {
+    // Tests in this block do not check identical nodes, as their presence would require using their parent,
+    // which is tested in the next block
+    describe('using the node and other non-identical siblings', function () {
+      it('should only use tagname if there are no attributes', function () {
         const doc = xmlToDOM(`<root>
           <node></node>
           <other-node></other-node>
         </root>`);
-        testXPath(doc, byTag(doc, 'node')[0], '//node');
+        testXPath(doc, doc.getElementsByTagName('node')[0], '//node');
+        testXPath(doc, doc.getElementsByTagName('other-node')[0], '//other-node');
       });
 
-      it('should use a unique attribute if the node has one', function () {
+      it('should use a unique attribute if one exists', function () {
         const doc = xmlToDOM(`<root>
           <node id='foo'></node>
           <node id='bar'></node>
         </root>`);
-        testXPath(doc, byTag(doc, 'node')[0], '//node[@id="foo"]');
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '//node[@id="foo"]');
+        testXPath(doc, nodes[1], '//node[@id="bar"]');
       });
 
       it('should combine unique and maybe-unique attributes if only the maybe-unique attribute differs', function () {
@@ -74,311 +76,296 @@ describe('utils/locator-generation/xpath.js', function () {
           <node id='foo' text='bar'></node>
           <node id='foo' text='yo'></node>
         </root>`);
-        const children = byTag(doc, 'node');
-        testXPath(doc, children[0], '//node[@id="foo" and @text="bar"]');
-        testXPath(doc, children[1], '//node[@id="foo" and @text="yo"]');
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '//node[@id="foo" and @text="bar"]');
+        testXPath(doc, nodes[1], '//node[@id="foo" and @text="yo"]');
       });
     });
 
-    describe('using the node and its parent and siblings', function () {
-      describe('identical nodes in one parent', function () {
-        it('should use parent tagname if there are no unique attributes', function () {
-          const doc = xmlToDOM(`<root>
-            <parent>
-              <node>Hello</node>
-              <node>World</node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '//parent/node[1]');
-          testXPath(doc, byTag(doc, 'node')[1], '//parent/node[2]');
-        });
-
-        it('should use parent attributes if only the parent has them', function () {
-          const doc = xmlToDOM(`<root>
-            <parent id='foo'>
-              <node>Hello</node>
-              <node>World</node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '//parent[@id="foo"]/node[1]');
-          testXPath(doc, byTag(doc, 'node')[1], '//parent[@id="foo"]/node[2]');
-        });
-
-        it('should use parent tagname and node attributes if only the node has attributes', function () {
-          const doc = xmlToDOM(`<root>
-            <parent>
-              <node id='foo'></node>
-              <node id='foo'></node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '(//parent/node[@id="foo"])[1]');
-        });
-
-        it('should use parent and node attributes if both have them', function () {
-          const doc = xmlToDOM(`<root>
-            <parent id='foo'>
-              <node id='bar'>Hello</node>
-              <node id='bar'>World</node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '(//parent[@id="foo"]/node[@id="bar"])[1]');
-          testXPath(doc, byTag(doc, 'node')[1], '(//parent[@id="foo"]/node[@id="bar"])[2]');
-        });
-
-        it('should use different indices for nodes with different tag names', function () {
-          const doc = xmlToDOM(`<root>
-            <parent>
-              <node>Hello</node>
-              <other-node>World</other-node>
-              <node>Foo</node>
-              <another-node>Bar</another-node>
-              <other-node>Baz</other-node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '//parent/node[1]');
-          testXPath(doc, byTag(doc, 'node')[1], '//parent/node[2]');
-          testXPath(doc, byTag(doc, 'other-node')[0], '//parent/other-node[1]');
-          testXPath(doc, byTag(doc, 'other-node')[1], '//parent/other-node[2]');
-          testXPath(doc, byTag(doc, 'another-node')[0], '//another-node');
-        });
-
-        it('should revert to the node-local path if the parent chain becomes too long', function () {
-          const doc = xmlToDOM(`<root>
-            <parent>
-              <parent>
-                <node id='bar'>Hello</node>
-                <node id='bar'>World</node>
-              </parent>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '(//node[@id="bar"])[1]');
-          testXPath(doc, byTag(doc, 'node')[1], '(//node[@id="bar"])[2]');
-        });
-
-        it('should use long parent chains if no node-local path could be found', function () {
-          const doc = xmlToDOM(`<root>
-            <parent>
-              <parent>
-                <node>Hello</node>
-                <node>World</node>
-              </parent>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '/root/parent/parent/node[1]');
-          testXPath(doc, byTag(doc, 'node')[1], '/root/parent/parent/node[2]');
-        });
+    describe('using identical nodes and their shared parent', function () {
+      it('should use parent tagname if the node has no unique attributes', function () {
+        const doc = xmlToDOM(`<root>
+          <parent>
+            <node></node>
+            <node></node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '//parent/node[1]');
+        testXPath(doc, nodes[1], '//parent/node[2]');
       });
 
-      describe('identical nodes in multiple different parents', function () {
-        it('should use parent tagnames if there are no other unique attributes', function () {
-          const doc = xmlToDOM(`<root>
-            <parent>
-              <node>Hello</node>
-            </parent>
-            <other-parent>
-              <node>Hello</node>
-            </other-parent>
-            <another-parent>
-              <node>Hello</node>
-            </another-parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '//parent/node');
-          testXPath(doc, byTag(doc, 'node')[1], '//other-parent/node');
-          testXPath(doc, byTag(doc, 'node')[2], '//another-parent/node');
-        });
-
-        it('should use parent attributes if only the parent has them', function () {
-          const doc = xmlToDOM(`<root>
-            <parent id='foo'>
-              <node>Hello</node>
-            </parent>
-            <parent id='baz'>
-              <node>Hello</node>
-            </parent>
-            <parent id='quux'>
-              <node>Hello</node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '//parent[@id="foo"]/node');
-          testXPath(doc, byTag(doc, 'node')[1], '//parent[@id="baz"]/node');
-          testXPath(doc, byTag(doc, 'node')[2], '//parent[@id="quux"]/node');
-        });
-
-        it('should use parent attributes even if the node also has them', function () {
-          const doc = xmlToDOM(`<root>
-            <parent id='foo'>
-              <node id='bar'>Hello</node>
-            </parent>
-            <parent id='baz'>
-              <node id='bar'>Hello</node>
-            </parent>
-            <parent id='quux'>
-              <node id='bar'>Hello</node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '//parent[@id="foo"]/node');
-          testXPath(doc, byTag(doc, 'node')[1], '//parent[@id="baz"]/node');
-          testXPath(doc, byTag(doc, 'node')[2], '//parent[@id="quux"]/node');
-        });
-
-        it('should use parent and node attributes if the node has siblings with the same tag but different attributes', function () {
-          const doc = xmlToDOM(`<root>
-            <parent id='foo'>
-              <node id='quux'>Hello</node>
-              <node id='bar'>Hello</node>
-            </parent>
-            <parent id='baz'>
-              <node id='quux'>World</node>
-              <node id='bar'>World</node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '//parent[@id="foo"]/node[@id="quux"]');
-          testXPath(doc, byTag(doc, 'node')[1], '//parent[@id="foo"]/node[@id="bar"]');
-          testXPath(doc, byTag(doc, 'node')[2], '//parent[@id="baz"]/node[@id="quux"]');
-          testXPath(doc, byTag(doc, 'node')[3], '//parent[@id="baz"]/node[@id="bar"]');
-        });
+      it('should use parent attributes if only the parent has them', function () {
+        const doc = xmlToDOM(`<root>
+          <parent id='foo'>
+            <node></node>
+            <node></node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '//parent[@id="foo"]/node[1]');
+        testXPath(doc, nodes[1], '//parent[@id="foo"]/node[2]');
       });
 
-      describe('identical nodes in multiple identical parents', function () {
-        it('should use indices if there are no unique attributes', function () {
-          const doc = xmlToDOM(`<root>
-            <parent>
-              <node>Hello</node>
-              <node>World</node>
-            </parent>
-            <another-parent></another-parent>
-            <parent>
-              <node>Foo</node>
-              <node>Bar</node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '/root/parent[1]/node[1]');
-          testXPath(doc, byTag(doc, 'node')[1], '/root/parent[1]/node[2]');
-          testXPath(doc, byTag(doc, 'node')[2], '/root/parent[2]/node[1]');
-          testXPath(doc, byTag(doc, 'node')[3], '/root/parent[2]/node[2]');
-        });
-
-        it('should use indices if only parent has unique attributes', function () {
-          const doc = xmlToDOM(`<root>
-            <parent id='foo'>
-              <node>Hello</node>
-            </parent>
-            <parent id='foo'>
-              <node>World</node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '/root/parent[1]/node');
-          testXPath(doc, byTag(doc, 'node')[1], '/root/parent[2]/node');
-        });
-
-        it('should use indices if only node has unique attributes', function () {
-          const doc = xmlToDOM(`<root>
-            <parent>
-              <node id='bar'>Hello</node>
-            </parent>
-            <parent>
-              <node id='bar'>World</node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '/root/parent[1]/node');
-          testXPath(doc, byTag(doc, 'node')[1], '/root/parent[2]/node');
-        });
-
-        it('should use indices if both parent and node have unique attributes', function () {
-          const doc = xmlToDOM(`<root>
-            <parent id='foo'>
-              <node id='bar'>Hello</node>
-            </parent>
-            <parent id='foo'>
-              <node id='bar'>World</node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '/root/parent[1]/node');
-          testXPath(doc, byTag(doc, 'node')[1], '/root/parent[2]/node');
-        });
-
-        it('should use indices and node attributes if the node has attributes', function () {
-          const doc = xmlToDOM(`<root>
-            <parent id='foo'>
-              <node id='bar'>Hello</node>
-              <node id='bar'>Hello</node>
-            </parent>
-            <parent id='foo'>
-              <node id='bar'>World</node>
-              <node id='bar'>World</node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '(/root/parent[1]/node[@id="bar"])[1]');
-          testXPath(doc, byTag(doc, 'node')[1], '(/root/parent[1]/node[@id="bar"])[2]');
-          testXPath(doc, byTag(doc, 'node')[2], '(/root/parent[2]/node[@id="bar"])[1]');
-          testXPath(doc, byTag(doc, 'node')[3], '(/root/parent[2]/node[@id="bar"])[2]');
-        });
-
-        it('should use indices and node attributes if the node has siblings with the same tag but different attributes', function () {
-          const doc = xmlToDOM(`<root>
-            <parent id='foo'>
-              <node id='bar'>Hello</node>
-              <node id='baz'>World</node>
-            </parent>
-            <parent id='foo'>
-              <node id='bar'>Hello</node>
-              <node id='baz'>World</node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[0], '/root/parent[1]/node[@id="bar"]');
-          testXPath(doc, byTag(doc, 'node')[1], '/root/parent[1]/node[@id="baz"]');
-          testXPath(doc, byTag(doc, 'node')[2], '/root/parent[2]/node[@id="bar"]');
-          testXPath(doc, byTag(doc, 'node')[3], '/root/parent[2]/node[@id="baz"]');
-        });
+      it('should use parent tagname and node attributes if only the node has attributes', function () {
+        const doc = xmlToDOM(`<root>
+          <parent>
+            <node id='foo'></node>
+            <node id='foo'></node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '(//parent/node[@id="foo"])[1]');
+        testXPath(doc, nodes[1], '(//parent/node[@id="foo"])[2]');
       });
 
-      describe('identical nodes in different levels', function () {
-        it('should use parent attributes if the node has no siblings nor attributes', function () {
-          const doc = xmlToDOM(`<root>
-            <node>Hello</node>
-            <node>World</node>
-            <parent id='foo'>
-              <node>Hello</node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[2], '//parent[@id="foo"]/node');
-        });
+      it('should use parent and node attributes if both have them', function () {
+        const doc = xmlToDOM(`<root>
+          <parent id='foo'>
+            <node id='bar'></node>
+            <node id='bar'></node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '(//parent[@id="foo"]/node[@id="bar"])[1]');
+        testXPath(doc, nodes[1], '(//parent[@id="foo"]/node[@id="bar"])[2]');
+      });
 
-        it('should use parent attributes if the node has no siblings but has attributes', function () {
-          const doc = xmlToDOM(`<root>
-            <node id='bar'>Hello</node>
-            <node id='bar'>World</node>
-            <parent id='foo'>
-              <node id='bar'>Hello</node>
+      it('should use the next ancestor if parent is not unique and no node-local path could be found', function () {
+        const doc = xmlToDOM(`<root>
+          <parent>
+            <parent>
+              <node></node>
+              <node></node>
             </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[2], '//parent[@id="foo"]/node');
-        });
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '/root/parent/parent/node[1]');
+        testXPath(doc, nodes[1], '/root/parent/parent/node[2]');
+      });
 
-        it('should use parent and node attributes plus index if the node has identical siblings', function () {
-          const doc = xmlToDOM(`<root>
-            <node id='bar'>Hello</node>
-            <node id='bar'>World</node>
-            <parent id='foo'>
-              <node id='bar'>Hello</node>
-              <node id='bar'>World</node>
+      it('should revert to the node-local path if the ancestor chain becomes too long', function () {
+        const doc = xmlToDOM(`<root>
+          <parent>
+            <parent>
+              <node id='bar'></node>
+              <node id='bar'></node>
             </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[2], '(//parent[@id="foo"]/node[@id="bar"])[1]');
-        });
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '(//node[@id="bar"])[1]');
+        testXPath(doc, nodes[1], '(//node[@id="bar"])[2]');
+      });
 
-        it('should use parent and node attributes if the node has siblings with the same tag but different attributes', function () {
-          const doc = xmlToDOM(`<root>
-            <node id='bar'>Hello</node>
-            <node id='baz'>World</node>
-            <parent id='foo'>
-              <node id='bar'>Hello</node>
-              <node id='baz'>World</node>
-            </parent>
-          </root>`);
-          testXPath(doc, byTag(doc, 'node')[2], '//parent[@id="foo"]/node[@id="bar"]');
-          testXPath(doc, byTag(doc, 'node')[3], '//parent[@id="foo"]/node[@id="baz"]');
-        });
+      it('should use different indices for nodes with different tag names', function () {
+        const doc = xmlToDOM(`<root>
+          <parent>
+            <node></node>
+            <other-node></other-node>
+            <node></node>
+            <other-node></other-node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        const otherNodes = doc.getElementsByTagName('other-node');
+        testXPath(doc, nodes[0], '//parent/node[1]');
+        testXPath(doc, nodes[1], '//parent/node[2]');
+        testXPath(doc, otherNodes[0], '//parent/other-node[1]');
+        testXPath(doc, otherNodes[1], '//parent/other-node[2]');
+      });
+    });
+
+    // Tests with multiple nodes per parent are covered by the 'using multiple pairs of identical nodes' block
+    describe('using individual identical nodes in multiple different parents', function () {
+      it('should use parent tagnames if there are no other unique attributes', function () {
+        const doc = xmlToDOM(`<root>
+          <parent>
+            <node></node>
+          </parent>
+          <other-parent>
+            <node></node>
+          </other-parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '//parent/node');
+        testXPath(doc, nodes[1], '//other-parent/node');
+      });
+
+      it('should use parent attributes if only the parent has them', function () {
+        const doc = xmlToDOM(`<root>
+          <parent id='foo'>
+            <node></node>
+          </parent>
+          <parent id='baz'>
+            <node></node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '//parent[@id="foo"]/node');
+        testXPath(doc, nodes[1], '//parent[@id="baz"]/node');
+      });
+
+      it('should use parent tagnames even if only the node has attributes', function () {
+        const doc = xmlToDOM(`<root>
+          <parent>
+            <node id='foo'></node>
+          </parent>
+          <other-parent>
+            <node id='foo'></node>
+          </other-parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '//parent/node');
+        testXPath(doc, nodes[1], '//other-parent/node');
+      });
+
+      it('should use parent attributes even if the node also has them', function () {
+        const doc = xmlToDOM(`<root>
+          <parent id='foo'>
+            <node id='baz'></node>
+          </parent>
+          <parent id='bar'>
+            <node id='baz'></node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '//parent[@id="foo"]/node');
+        testXPath(doc, nodes[1], '//parent[@id="bar"]/node');
+      });
+    });
+
+    // Tests with multiple nodes per parent are covered by the 'using multiple pairs of identical nodes' block
+    describe('using individual identical nodes in multiple identical parents', function () {
+      it('should use the next ancestor if there are no unique attributes', function () {
+        const doc = xmlToDOM(`<root>
+          <parent>
+            <node></node>
+          </parent>
+          <parent>
+            <node></node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '/root/parent[1]/node');
+        testXPath(doc, nodes[1], '/root/parent[2]/node');
+      });
+
+      it('should use the next ancestor if only the parent has unique attributes', function () {
+        const doc = xmlToDOM(`<root>
+          <parent id='foo'>
+            <node></node>
+          </parent>
+          <parent id='foo'>
+            <node></node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '/root/parent[1]/node');
+        testXPath(doc, nodes[1], '/root/parent[2]/node');
+      });
+
+      it('should use the next ancestor if only the node has unique attributes', function () {
+        const doc = xmlToDOM(`<root>
+          <parent>
+            <node id='bar'></node>
+          </parent>
+          <parent>
+            <node id='bar'></node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '/root/parent[1]/node');
+        testXPath(doc, nodes[1], '/root/parent[2]/node');
+      });
+
+      it('should use the next ancestor if both parent and node have unique attributes', function () {
+        const doc = xmlToDOM(`<root>
+          <parent id='foo'>
+            <node id='bar'></node>
+          </parent>
+          <parent id='foo'>
+            <node id='bar'></node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '/root/parent[1]/node');
+        testXPath(doc, nodes[1], '/root/parent[2]/node');
+      });
+    });
+
+    describe('using multiple pairs of identical nodes', function () {
+      it('should only use attributes if there are no identical nodes under the same parent', function () {
+        const doc = xmlToDOM(`<root>
+          <parent id='foo'>
+            <node id='baz'></node>
+            <node id='quux'></node>
+          </parent>
+          <parent id='bar'>
+            <node id='baz'></node>
+            <node id='quux'></node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '//parent[@id="foo"]/node[@id="baz"]');
+        testXPath(doc, nodes[1], '//parent[@id="foo"]/node[@id="quux"]');
+        testXPath(doc, nodes[2], '//parent[@id="bar"]/node[@id="baz"]');
+        testXPath(doc, nodes[3], '//parent[@id="bar"]/node[@id="quux"]');
+      });
+
+      it('should add an index if there are adjacent identical nodes', function () {
+        const doc = xmlToDOM(`<root>
+          <parent id='foo'>
+            <node id='baz'></node>
+            <node id='baz'></node>
+          </parent>
+          <parent id='bar'>
+            <node id='baz'></node>
+            <node id='baz'></node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '(//parent[@id="foo"]/node[@id="baz"])[1]');
+        testXPath(doc, nodes[1], '(//parent[@id="foo"]/node[@id="baz"])[2]');
+        testXPath(doc, nodes[2], '(//parent[@id="bar"]/node[@id="baz"])[1]');
+        testXPath(doc, nodes[3], '(//parent[@id="bar"]/node[@id="baz"])[2]');
+      });
+
+      it('should use the next ancestor plus node attributes if there are adjacent identical parents', function () {
+        const doc = xmlToDOM(`<root>
+          <parent id='foo'>
+            <node id='bar'></node>
+            <node id='baz'></node>
+          </parent>
+          <parent id='foo'>
+            <node id='bar'></node>
+            <node id='baz'></node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '/root/parent[1]/node[@id="bar"]');
+        testXPath(doc, nodes[1], '/root/parent[1]/node[@id="baz"]');
+        testXPath(doc, nodes[2], '/root/parent[2]/node[@id="bar"]');
+        testXPath(doc, nodes[3], '/root/parent[2]/node[@id="baz"]');
+      });
+
+      it('should use the next ancestor, node attributes and index if there are adjacent identical parents and nodes', function () {
+        const doc = xmlToDOM(`<root>
+          <parent id='foo'>
+            <node id='bar'></node>
+            <node id='bar'></node>
+          </parent>
+          <parent id='foo'>
+            <node id='bar'></node>
+            <node id='bar'></node>
+          </parent>
+        </root>`);
+        const nodes = doc.getElementsByTagName('node');
+        testXPath(doc, nodes[0], '(/root/parent[1]/node[@id="bar"])[1]');
+        testXPath(doc, nodes[1], '(/root/parent[1]/node[@id="bar"])[2]');
+        testXPath(doc, nodes[2], '(/root/parent[2]/node[@id="bar"])[1]');
+        testXPath(doc, nodes[3], '(/root/parent[2]/node[@id="bar"])[2]');
       });
     });
 
