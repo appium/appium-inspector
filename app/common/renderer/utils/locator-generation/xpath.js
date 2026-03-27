@@ -322,7 +322,11 @@ class XPathGenerator extends LocatorGeneratorBase {
     // trying to use unique identifiers for each node along the path when possible
     while (this._isValidElementNode(currentNode) && currentNode !== ancestorNode) {
       // Try to uniquely identify the current node within the context of its parent node
-      const nodeParentScopeGenerator = new XPathGenerator(this._doc, currentNode, currentNode.parentNode);
+      const nodeParentScopeGenerator = new XPathGenerator(
+        this._doc,
+        currentNode,
+        currentNode.parentNode,
+      );
       const {nodeXpath, nodeIndex} = nodeParentScopeGenerator._findBestNodeScopeXPath();
 
       if (nodeXpath && nodeIndex === 0) {
