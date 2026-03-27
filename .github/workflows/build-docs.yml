@@ -25,7 +25,7 @@ jobs:
           node-version: lts/*
           cache: 'npm'
       - name: Install dependencies (Node.js)
-        run: npm install
+        run: npm ci
       - name: Install dependencies (Python)
         run: npm run install-docs-deps
       - name: Build Docs

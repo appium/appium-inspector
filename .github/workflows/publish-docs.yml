@@ -1,9 +1,14 @@
 # Builds and publishes the Appium Inspector MkDocs documentation
+# Executed on-demand, or after publishing new version packages
 
 name: Publish Docs
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Package and Publish"]
+    types:
+      - completed
 
 jobs:
   build:
@@ -20,8 +25,10 @@ jobs:
           node-version: lts/*
           cache: 'npm'
       - name: Install dependencies (Node.js)
-        run: npm install
+        run: npm ci
       - name: Install dependencies (Python)
         run: npm run install-docs-deps
+      - name: Fetch gh-pages
+        run: git fetch origin docs-site:docs-site || true
       - name: Build and deploy docs
         run: npm run publish:docs
