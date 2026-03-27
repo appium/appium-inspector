@@ -75,11 +75,12 @@ class XPathGenerator extends LocatorGeneratorBase {
 
   /**
    * Determine the uniqueness of an xpath query: return 0 if the xpath is unique,
-   * a positive integer index if the xpath is not unique, or undefined if the xpath does not match any nodes
+   * a positive integer index if the xpath is not unique,
+   * or undefined if the xpath does not match the target node
    *
    * @param {string} xpath
    * @returns {number | undefined} the xpath index in the set of other similar nodes,
-   * or undefined if the xpath is invalid or does not match any nodes
+   * or undefined if the xpath is invalid or does not match the target node
    */
   _determineXpathUniqueness(xpath) {
     let othersWithAttr = [];
@@ -94,9 +95,14 @@ class XPathGenerator extends LocatorGeneratorBase {
     }
 
     if (othersWithAttr.length === 0) {
+      // Should never happen
       return undefined;
     }
     if (othersWithAttr.length > 1) {
+      if (!othersWithAttr.includes(this._domNode)) {
+        // Should never happen
+        return undefined;
+      }
       return othersWithAttr.indexOf(this._domNode) + 1; // XPath indices are 1-based
     }
 
