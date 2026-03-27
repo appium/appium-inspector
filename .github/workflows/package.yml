@@ -1,4 +1,8 @@
-name: Create packages
+# Builds the desktop and plugin versions of the app.
+# The plugin version is published to npm, while the desktop app packages
+# are uploaded to a GitHub release for the latest app version tag.
+
+name: Package and Publish
 
 on:
   workflow_dispatch:
