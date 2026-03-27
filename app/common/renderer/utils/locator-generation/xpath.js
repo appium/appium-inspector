@@ -80,7 +80,7 @@ class XPathGenerator extends LocatorGeneratorBase {
    */
   _determineXpathUniqueness(xpath) {
     let othersWithAttr = [];
-    // Searches under a context node must start with '.'
+    // Searches under a context node must start with '.', but we won't need it when assembling the full xpath
     const contextedXpath = this._contextNode ? '.' + xpath : xpath;
 
     // If the XPath does not parse, move to the next unique attribute
