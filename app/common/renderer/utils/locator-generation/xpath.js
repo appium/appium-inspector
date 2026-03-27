@@ -94,18 +94,16 @@ class XPathGenerator extends LocatorGeneratorBase {
       return undefined;
     }
 
-    if (othersWithAttr.length === 0) {
+    if (othersWithAttr.length === 0 || !othersWithAttr.includes(this._domNode)) {
       // Should never happen
       return undefined;
     }
-    if (othersWithAttr.length > 1) {
-      if (!othersWithAttr.includes(this._domNode)) {
-        // Should never happen
-        return undefined;
-      }
-      return othersWithAttr.indexOf(this._domNode) + 1; // XPath indices are 1-based
-    }
 
+    // Not a unique node - return the xpath (1-based) index of the node in the returned set
+    if (othersWithAttr.length > 1) {
+      return othersWithAttr.indexOf(this._domNode) + 1;
+    }
+    // Unique node
     return 0;
   }
 
