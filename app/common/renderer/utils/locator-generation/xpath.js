@@ -35,6 +35,9 @@ class XPathGenerator extends LocatorGeneratorBase {
   // by replacing it with a more specific semi-unique xpath from Phase 1
   static LAST_TAG_REGEX = /\/[^/]+$/;
 
+  // Regex to identify if an xpath ends with an index, used for optimizing parent-scoped xpaths
+  static LAST_INDEX_REGEX = /\[\d+\]$/;
+
   /**
    * Get an optimal XPath for a Node
    *
@@ -71,12 +74,12 @@ class XPathGenerator extends LocatorGeneratorBase {
   }
 
   /**
-   * Return information about whether an xpath query results in a unique element, and the non-unique
-   * index of the element in the document if not unique
+   * Determine the uniqueness of an xpath query: return 0 if the xpath is unique,
+   * a positive integer index if the xpath is not unique, or undefined if the xpath does not match any nodes
    *
    * @param {string} xpath
    * @returns {number | undefined} the xpath index in the set of other similar nodes,
-   * or undefined if the xpath is invalid and cannot be evaluated
+   * or undefined if the xpath is invalid or does not match any nodes
    */
   _determineXpathUniqueness(xpath) {
     let othersWithAttr = [];
@@ -90,6 +93,9 @@ class XPathGenerator extends LocatorGeneratorBase {
       return undefined;
     }
 
+    if (othersWithAttr.length === 0) {
+      return undefined;
+    }
     if (othersWithAttr.length > 1) {
       return othersWithAttr.indexOf(this._domNode) + 1; // XPath indices are 1-based
     }
@@ -191,7 +197,7 @@ class XPathGenerator extends LocatorGeneratorBase {
       // is better (lower) than any previously found semi-unique xpath.
       // This is not guaranteed to be the best option if parent nodes will also be required,
       // but it is still better than just saving the first one.
-      if (!semiUniqueXpathIndex && !_.isUndefined(nodeIndex)) {
+      if (nodeIndex > 0 && (!semiUniqueXpathIndex || nodeIndex < semiUniqueXpathIndex)) {
         semiUniqueXpath = nodeXpath;
         semiUniqueXpathIndex = nodeIndex;
       }
@@ -207,7 +213,7 @@ class XPathGenerator extends LocatorGeneratorBase {
    * @param {string[]|[string, string][]} attrs - a list of attributes to consider, or
    * a list of pairs of attributes to consider in conjunction
    *
-   * @returns {{xpath: string, nodeIndex: number}|{}} the XPath and node index if found, or empty object if not found
+   * @returns {{nodeXpath: string, nodeIndex: number}|{}} the XPath and node index if found, or empty object if not found
    */
   _getUniqueNodeScopeXPath(attrs) {
     // If we're looking for a unique //<nodetype>, return it only if it's actually unique
@@ -263,7 +269,7 @@ class XPathGenerator extends LocatorGeneratorBase {
       // is better (lower) than any previously found semi-unique xpath.
       // This is not guaranteed to be the best option if parent nodes will also be required,
       // but it is still better than just saving the first one.
-      if (!semiUniqueXpathIndex && !_.isUndefined(nodeIndex)) {
+      if (nodeIndex > 0 && (!semiUniqueXpathIndex || nodeIndex < semiUniqueXpathIndex)) {
         semiUniqueXpath = nodeXpath;
         semiUniqueXpathIndex = nodeIndex;
       }
@@ -355,7 +361,7 @@ class XPathGenerator extends LocatorGeneratorBase {
   _optimizeParentScopedXpath(parentScopedXpath, nodeScopeXpath) {
     // If Phase 1 did not return any semi-unique xpath, or parentScopedXpath doesn't have an improvable index,
     // just use parentScopedXpath as is
-    if (!nodeScopeXpath || !parentScopedXpath.endsWith(']')) {
+    if (!nodeScopeXpath || !XPathGenerator.LAST_INDEX_REGEX.test(parentScopedXpath)) {
       return this._determineXpathUniqueness(parentScopedXpath) === 0 ? parentScopedXpath : null;
     }
     // Replace the last tag name + index with the Phase 1 xpath (without its index).

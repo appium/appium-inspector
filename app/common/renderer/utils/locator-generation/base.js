@@ -39,7 +39,7 @@ export class LocatorGeneratorBase {
    * @returns {boolean} true if the node is a valid element
    */
   _isValidElementNode(targetNode = this._domNode) {
-    return targetNode.tagName && targetNode.nodeType === 1;
+    return targetNode && targetNode.tagName && targetNode.nodeType === 1;
   }
 
   /**
