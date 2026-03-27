@@ -28,7 +28,7 @@ jobs:
         run: npm ci
       - name: Install dependencies (Python)
         run: npm run install-docs-deps
-      - name: Fetch gh-pages
+      - name: Fetch docs branch
         run: git fetch origin docs-site:docs-site || true
       - name: Build and deploy docs
         run: npm run publish:docs
