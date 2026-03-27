@@ -80,10 +80,12 @@ class XPathGenerator extends LocatorGeneratorBase {
    */
   _determineXpathUniqueness(xpath) {
     let othersWithAttr = [];
+    // Searches under a context node must start with '.'
+    const contextedXpath = this._contextNode ? '.' + xpath : xpath;
 
     // If the XPath does not parse, move to the next unique attribute
     try {
-      othersWithAttr = xpathSelect(xpath, this._doc);
+      othersWithAttr = xpathSelect(contextedXpath, this._contextNode || this._doc);
     } catch {
       return undefined;
     }
@@ -103,7 +105,7 @@ class XPathGenerator extends LocatorGeneratorBase {
    * @returns {{nodeXpath: string, nodeIndex: number}|{}} the XPath and index if unique, or empty object if not unique
    */
   _tryNodeTagNameForUniqueXPath() {
-    let nodeXpath = `//${this._domNode.tagName}`;
+    let nodeXpath = `${this._nodeAxis}${this._domNode.tagName}`;
     const nodeIndex = this._determineXpathUniqueness(nodeXpath);
     if (nodeIndex !== 0) {
       return {};
@@ -128,7 +130,7 @@ class XPathGenerator extends LocatorGeneratorBase {
     if (!attrValue) {
       return undefined;
     }
-    return `//${tagForXpath}[@${attrName}="${attrValue}"]`;
+    return `${this._nodeAxis}${tagForXpath}[@${attrName}="${attrValue}"]`;
   }
 
   /**
@@ -145,7 +147,7 @@ class XPathGenerator extends LocatorGeneratorBase {
     if (!attr1Value || !attr2Value) {
       return undefined;
     }
-    return `//${tagForXpath}[@${attr1Name}="${attr1Value}" and @${attr2Name}="${attr2Value}"]`;
+    return `${this._nodeAxis}${tagForXpath}[@${attr1Name}="${attr1Value}" and @${attr2Name}="${attr2Value}"]`;
   }
 
   /**
@@ -316,14 +318,23 @@ class XPathGenerator extends LocatorGeneratorBase {
     let currentNode = this._domNode;
     let cumulativeDescendantXpath = '';
 
-    // Assemble the path upwards from the target node to the ancestor, adding indices as needed
+    // Assemble the path upwards from the target node to the ancestor,
+    // trying to use unique identifiers for each node along the path when possible
     while (this._isValidElementNode(currentNode) && currentNode !== ancestorNode) {
-      const siblings = this._getSiblingsWithSameTag(currentNode);
-      const relativeCurrentNodeXpath =
-        siblings.length > 1
-          ? `/${currentNode.tagName}[${siblings.indexOf(currentNode) + 1}]`
-          : `/${currentNode.tagName}`;
-      cumulativeDescendantXpath = relativeCurrentNodeXpath + cumulativeDescendantXpath;
+      // Try to uniquely identify the current node within the context of its parent node
+      const nodeParentScopeGenerator = new XPathGenerator(this._doc, currentNode, currentNode.parentNode);
+      const {nodeXpath, nodeIndex} = nodeParentScopeGenerator._findBestNodeScopeXPath();
+
+      if (nodeXpath && nodeIndex === 0) {
+        // If the path is fully unique, use that
+        cumulativeDescendantXpath = nodeXpath + cumulativeDescendantXpath;
+      } else {
+        // If not unique, keep only the tag name and add a sibling index
+        // This can probably be optimized further if the sibling index is greater than nodeIndex
+        const siblings = this._getSiblingsWithSameTag(currentNode);
+        const nodeTagNameXpath = `/${currentNode.tagName}[${siblings.indexOf(currentNode) + 1}]`;
+        cumulativeDescendantXpath = nodeTagNameXpath + cumulativeDescendantXpath;
+      }
       currentNode = currentNode.parentNode;
     }
 
@@ -331,7 +342,7 @@ class XPathGenerator extends LocatorGeneratorBase {
   }
 
   /**
-   * Optimize a parent-scoped XPath by attempting to reduce or eliminate its final index, if any
+   * Optimize a parent-scoped XPath by attempting to reduce its final index, if any
    *
    * @param {string} parentScopedXpath - the parent-scoped XPath to optimize
    * @param {string|null} nodeScopeXpath - the semi-unique XPath from Phase 1, without index
@@ -343,17 +354,23 @@ class XPathGenerator extends LocatorGeneratorBase {
     if (!nodeScopeXpath || !parentScopedXpath.endsWith(']')) {
       return this._determineXpathUniqueness(parentScopedXpath) === 0 ? parentScopedXpath : null;
     }
-    // First, try just replacing the tag name + index with the Phase 1 xpath (without its index),
-    // and see if that is unique
+    // Replace the last tag name + index with the Phase 1 xpath (without its index).
+    // It is guaranteed to NOT be unique (otherwise it would have been picked up by _buildParentScopedXPath),
+    // but it could still give us a better index than the one in parentScopedXpath.
     const combinedScopeXpath = parentScopedXpath.replace(
       XPathGenerator.LAST_TAG_REGEX,
       nodeScopeXpath.replace(/^\/\//, '/'),
     );
     const combinedScopeXpathIndex = this._determineXpathUniqueness(combinedScopeXpath);
+    if (_.isUndefined(combinedScopeXpathIndex)) {
+      // Should never happen
+      return null;
+    }
     if (combinedScopeXpathIndex === 0) {
+      // Should never happen
       return combinedScopeXpath;
     }
-    // Index is still needed, so compare the three indices we have.
+    // Compare the three indices we have:
     // * The index from Phase 1 for the node scope xpath (nodeScopeIndex)
     // * The index of just the node in parentScopedXpath (parentScopedXpathNodeIndex)
     // * The index of combinedScopeXpath (combinedScopeXpathIndex)

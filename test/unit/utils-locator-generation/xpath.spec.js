@@ -207,7 +207,7 @@ describe('utils/locator-generation/xpath.js', function () {
         testXPath(doc, nodes[1], '//parent[@id="baz"]/node');
       });
 
-      it('should use parent tagnames even if only the node has attributes', function () {
+      it('should use parent tagnames and node attributes if only the node has attributes', function () {
         const doc = xmlToDOM(`<root>
           <parent>
             <node id='foo'></node>
@@ -217,11 +217,11 @@ describe('utils/locator-generation/xpath.js', function () {
           </other-parent>
         </root>`);
         const nodes = doc.getElementsByTagName('node');
-        testXPath(doc, nodes[0], '//parent/node');
-        testXPath(doc, nodes[1], '//other-parent/node');
+        testXPath(doc, nodes[0], '//parent/node[@id="foo"]');
+        testXPath(doc, nodes[1], '//other-parent/node[@id="foo"]');
       });
 
-      it('should use parent attributes even if the node also has them', function () {
+      it('should use parent and node attributes if both have them', function () {
         const doc = xmlToDOM(`<root>
           <parent id='foo'>
             <node id='baz'></node>
@@ -231,8 +231,8 @@ describe('utils/locator-generation/xpath.js', function () {
           </parent>
         </root>`);
         const nodes = doc.getElementsByTagName('node');
-        testXPath(doc, nodes[0], '//parent[@id="foo"]/node');
-        testXPath(doc, nodes[1], '//parent[@id="bar"]/node');
+        testXPath(doc, nodes[0], '//parent[@id="foo"]/node[@id="baz"]');
+        testXPath(doc, nodes[1], '//parent[@id="bar"]/node[@id="baz"]');
       });
     });
 
@@ -266,7 +266,7 @@ describe('utils/locator-generation/xpath.js', function () {
         testXPath(doc, nodes[1], '/root/parent[2]/node');
       });
 
-      it('should use the next ancestor if only the node has unique attributes', function () {
+      it('should use the next ancestor and node attributes if only the node has unique attributes', function () {
         const doc = xmlToDOM(`<root>
           <parent>
             <node id='bar'></node>
@@ -276,11 +276,11 @@ describe('utils/locator-generation/xpath.js', function () {
           </parent>
         </root>`);
         const nodes = doc.getElementsByTagName('node');
-        testXPath(doc, nodes[0], '/root/parent[1]/node');
-        testXPath(doc, nodes[1], '/root/parent[2]/node');
+        testXPath(doc, nodes[0], '/root/parent[1]/node[@id="bar"]');
+        testXPath(doc, nodes[1], '/root/parent[2]/node[@id="bar"]');
       });
 
-      it('should use the next ancestor if both parent and node have unique attributes', function () {
+      it('should use the next ancestor and node attributes if both parent and node have unique attributes', function () {
         const doc = xmlToDOM(`<root>
           <parent id='foo'>
             <node id='bar'></node>
@@ -290,13 +290,13 @@ describe('utils/locator-generation/xpath.js', function () {
           </parent>
         </root>`);
         const nodes = doc.getElementsByTagName('node');
-        testXPath(doc, nodes[0], '/root/parent[1]/node');
-        testXPath(doc, nodes[1], '/root/parent[2]/node');
+        testXPath(doc, nodes[0], '/root/parent[1]/node[@id="bar"]');
+        testXPath(doc, nodes[1], '/root/parent[2]/node[@id="bar"]');
       });
     });
 
     describe('using multiple pairs of identical nodes', function () {
-      it('should only use attributes if there are no identical nodes under the same parent', function () {
+      it('should use only attributes if there are no identical nodes under the same parent', function () {
         const doc = xmlToDOM(`<root>
           <parent id='foo'>
             <node id='baz'></node>

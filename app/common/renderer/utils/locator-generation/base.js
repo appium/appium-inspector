@@ -7,10 +7,14 @@ export class LocatorGeneratorBase {
   /**
    * @param {Document} doc - the document containing the DOM
    * @param {Node} domNode - the DOM node to generate locators for
+   * @param {Node} [contextNode] - optional context node to scope locator evaluation
    */
-  constructor(doc, domNode) {
+  constructor(doc, domNode, contextNode = null) {
     this._doc = doc;
     this._domNode = domNode;
+    this._contextNode = contextNode;
+    // We only use contextNode as the direct parent of domNode, so all axes will be '/'
+    this._nodeAxis = this._contextNode ? '/' : '//';
   }
 
   /**
