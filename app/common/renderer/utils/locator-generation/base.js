@@ -7,7 +7,7 @@ export class LocatorGeneratorBase {
   /**
    * @param {Document} doc - the document containing the DOM
    * @param {Node} domNode - the DOM node to generate locators for
-   * @param {Node} [contextNode] - optional context node to scope locator evaluation
+   * @param {Node | null} [contextNode] - optional context node to scope locator evaluation
    */
   constructor(doc, domNode, contextNode = null) {
     this._doc = doc;
@@ -39,7 +39,7 @@ export class LocatorGeneratorBase {
    * @returns {boolean} true if the node is a valid element
    */
   _isValidElementNode(targetNode = this._domNode) {
-    return targetNode && targetNode.tagName && targetNode.nodeType === 1;
+    return targetNode?.tagName && targetNode?.nodeType === 1;
   }
 
   /**
