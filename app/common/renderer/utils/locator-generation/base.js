@@ -7,35 +7,39 @@ export class LocatorGeneratorBase {
   /**
    * @param {Document} doc - the document containing the DOM
    * @param {Node} domNode - the DOM node to generate locators for
+   * @param {Node | null} [contextNode] - optional context node to scope locator evaluation
    */
-  constructor(doc, domNode) {
+  constructor(doc, domNode, contextNode = null) {
     this._doc = doc;
     this._domNode = domNode;
+    this._contextNode = contextNode;
+    // We only use contextNode as the direct parent of domNode, so all axes will be '/'
+    this._nodeAxis = this._contextNode ? '/' : '//';
   }
 
   /**
    * Get sibling nodes with the same tag name
    *
+   * @param {Node} targetNode - the node to find siblings for, defaults to the main DOM node if not provided
    * @returns {Node[]} array of sibling nodes with the same tag name
    */
-  _getSiblingsWithSameTag() {
-    if (!this._domNode.parentNode) {
+  _getSiblingsWithSameTag(targetNode = this._domNode) {
+    if (!targetNode.parentNode) {
       return [];
     }
     return Array.prototype.slice
-      .call(this._domNode.parentNode.childNodes, 0)
-      .filter(
-        (childNode) => childNode.nodeType === 1 && childNode.tagName === this._domNode.tagName,
-      );
+      .call(targetNode.parentNode.childNodes, 0)
+      .filter((childNode) => childNode.nodeType === 1 && childNode.tagName === targetNode.tagName);
   }
 
   /**
    * Check if a node is a valid element node
    *
+   * @param {Node} targetNode - the node to check, defaults to the main DOM node if not provided
    * @returns {boolean} true if the node is a valid element
    */
-  _isValidElementNode() {
-    return this._domNode.tagName && this._domNode.nodeType === 1;
+  _isValidElementNode(targetNode = this._domNode) {
+    return targetNode?.tagName && targetNode?.nodeType === 1;
   }
 
   /**
