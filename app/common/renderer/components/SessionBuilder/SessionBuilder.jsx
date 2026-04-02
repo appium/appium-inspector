@@ -176,7 +176,7 @@ const Session = (props) => {
               label: t('Attach to Session'),
               key: SESSION_BUILDER_TABS.ATTACH_TO_SESSION,
               className: styles.scrollingTab,
-              children: <AttachToSession {...props} />,
+              children: <AttachToSession loadNewSession={loadNewSession} {...props} />,
             },
           ]}
         />
