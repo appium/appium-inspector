@@ -78,7 +78,7 @@
     "electron-updater": "6.8.3",
     "i18next": "26.0.3",
     "i18next-chained-backend": "5.0.3",
-    "i18next-fs-backend": "2.6.1",
+    "i18next-fs-backend": "2.6.3",
     "i18next-http-backend": "3.0.2",
     "i18next-localstorage-backend": "4.3.1",
     "ky": "1.14.3",
