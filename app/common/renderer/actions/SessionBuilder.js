@@ -90,6 +90,9 @@ const CAPS_INCLUDE_SAFARI_IN_WEBVIEWS = 'appium:includeSafariInWebviews';
 
 const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to turn it on
 
+// For validating user-provided session ID when attaching to session
+const UUIDV4_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 const MJPEG_CAP = 'mjpegScreenshotUrl';
 const MJPEG_PORT_CAP = 'mjpegServerPort';
 
@@ -219,6 +222,10 @@ export function removeCapability(id) {
 // When attaching to a session id, webdriver does not fully populate client information, so
 // we should supplement this with the session capabilities
 async function getCapsFromAttachSessionId(attachSessId, sessionBuilder, serverUrl, headers) {
+  if (!UUIDV4_REGEX.test(attachSessId)) {
+    throw new Error(i18n.t('invalidSessionId', {attachSessId}));
+  }
+
   const foundSession = sessionBuilder.runningAppiumSessions.find(
     (session) => session.id === attachSessId,
   );
