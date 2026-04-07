@@ -308,6 +308,7 @@ export function quitSession({reason, manualQuit = true, detachOnly = false} = {}
       await applyAction(dispatch, getState);
     }
     dispatch({type: QUIT_SESSION_DONE});
+    InspectorDriver.clearInstance(); // clear the 'cached' driver instance
     if (!manualQuit) {
       showError(new Error(reason || i18n.t('Session has been terminated')), {secs: 0});
     }
