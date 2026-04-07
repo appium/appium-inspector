@@ -1,7 +1,7 @@
 import {IconLinkPlus, IconRefresh} from '@tabler/icons-react';
 import {Button, Card, Col, Empty, Form, Input, Row, Select, Spin, Tooltip} from 'antd';
 import _ from 'lodash';
-import {useRef} from 'react';
+import {useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
@@ -19,8 +19,9 @@ const AttachToSession = ({
   loadNewSession,
 }) => {
   const {t} = useTranslation();
-  const debouncedSetAttachSessId = useRef(
-    _.debounce((value) => setAttachSessId(value), 200),
+  const [manualSessionId, setManualSessionId] = useState(null);
+  const debouncedSetManualSessionId = useRef(
+    _.debounce((value) => setManualSessionId(value), 200),
   ).current;
 
   // list is reversed in order to place the most recent sessions at the top
@@ -47,14 +48,14 @@ const AttachToSession = ({
             <Input
               placeholder={t('enterSessionID')}
               allowClear={true}
-              onChange={(e) => debouncedSetAttachSessId(e.target.value)}
+              onChange={(e) => debouncedSetManualSessionId(e.target.value)}
             />
           </Col>
           <Col span={4}>
             <Button
               type={BUTTON.PRIMARY}
-              disabled={!attachSessId}
-              onClick={() => loadNewSession(null, attachSessId)}
+              disabled={!manualSessionId}
+              onClick={() => loadNewSession(null, manualSessionId)}
               icon={<IconLinkPlus size={18} />}
             >
               {t('attachToSession')}

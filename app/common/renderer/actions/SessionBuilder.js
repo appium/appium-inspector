@@ -250,7 +250,7 @@ async function getCapsFromAttachSessionId(attachSessId, sessionBuilder, serverUr
       headers,
       timeout: CONN_TIMEOUT,
     });
-    return res.value;
+    return res.value?.capabilities ?? res.value;
   } catch (err) {
     // rethrow the error as session not running, but first log the original error to console
     log.error(err);
