@@ -216,6 +216,42 @@ export function removeCapability(id) {
   };
 }
 
+// When attaching to a session id, webdriver does not fully populate client information, so
+// we should supplement this with the session capabilities
+async function getCapsFromAttachSessionId(attachSessId, sessionBuilder, serverUrl, headers) {
+  const foundSession = sessionBuilder.runningAppiumSessions.find(
+    (session) => session.id === attachSessId,
+  );
+  if (foundSession) {
+    let foundSessionCaps = foundSession.capabilities;
+    if (sessionBuilder.serverType === SERVER_TYPES.TESTMUAI) {
+      // adjust for TestMu AI-specific format
+      if ('capabilities' in foundSessionCaps) {
+        foundSessionCaps = foundSessionCaps.capabilities;
+      }
+      if ('desired' in foundSessionCaps) {
+        foundSessionCaps = foundSessionCaps.desired;
+      }
+    }
+    return foundSessionCaps;
+  }
+  // If the target session was not automatically discovered, or we are attaching via autostart,
+  // retrieve session details via server call
+  try {
+    const detailsUrl = `${serverUrl}/session/${attachSessId}`;
+    const res = await fetchSessionInformation({
+      url: detailsUrl,
+      headers,
+      timeout: CONN_TIMEOUT,
+    });
+    return res.value;
+  } catch (err) {
+    // rethrow the error as session not running, but first log the original error to console
+    log.error(err);
+    throw new Error(i18n.t('attachSessionNotRunning', {attachSessId}));
+  }
+}
+
 /**
  * Start a new appium session with the given caps
  */
@@ -291,45 +327,18 @@ export function newSession(originalCaps, attachSessId = null) {
     let driver = null;
     try {
       if (attachSessId) {
-        // When attaching to a session id, webdriver does not fully populate client information, so
-        // we should supplement by attaching session capabilities that we are attaching to, if they
-        // exist in our cache of running appium sessions. Otherwise (in the case where we are
-        // autostarting and attaching to a new session, retrieve session details via a server call)
-        serverOpts.isMobile = true;
-        const attachedSession = session.runningAppiumSessions.find(
-          (session) => session.id === attachSessId,
+        const attachedSessionCaps = await getCapsFromAttachSessionId(
+          attachSessId,
+          session,
+          serverUrl,
+          headers,
         );
-        let attachedSessionCaps = {};
-        if (attachedSession) {
-          attachedSessionCaps = attachedSession.capabilities;
-          if (session.serverType === SERVER_TYPES.TESTMUAI) {
-            // adjust for TestMu AI-specific format
-            if ('capabilities' in attachedSessionCaps) {
-              attachedSessionCaps = attachedSessionCaps.capabilities;
-            }
-            if ('desired' in attachedSessionCaps) {
-              attachedSessionCaps = attachedSessionCaps.desired;
-            }
-          }
-        } else {
-          try {
-            const detailsUrl = `${serverUrl}/session/${attachSessId}`;
-            const res = await fetchSessionInformation({
-              url: detailsUrl,
-              headers,
-              timeout: CONN_TIMEOUT,
-            });
-            attachedSessionCaps = res.value;
-          } catch (err) {
-            // rethrow the error as session not running, but first log the original error to console
-            log.error(err);
-            throw new Error(i18n.t('attachSessionNotRunning', {attachSessId}));
-          }
-        }
+        // In addition to the session caps, specify some WDIO-specific session flags.
         // Chrome MJSONWP mode returns "platform" instead of "platformName"
         const platformName = attachedSessionCaps.platformName || attachedSessionCaps.platform;
         serverOpts.isIOS = Boolean(platformName.match(/iOS/i));
         serverOpts.isAndroid = Boolean(platformName.match(/Android/i));
+        serverOpts.isMobile = serverOpts.isIOS || serverOpts.isAndroid;
         driver = WDSessionStarter.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
       } else {
         driver = await WDSessionStarter.newSession(serverOpts, sessionCaps);
