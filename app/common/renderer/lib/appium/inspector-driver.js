@@ -42,6 +42,10 @@ export default class InspectorDriver {
     return _instance;
   }
 
+  static clearInstance() {
+    _instance = null;
+  }
+
   constructor(driver) {
     this.driver = driver;
     this.elementCache = {};
@@ -67,10 +71,7 @@ export default class InspectorDriver {
         await this.driver.deleteSession();
       } catch {}
 
-      _instance = null;
-
-      // when we've quit the session, there's no source/screenshot to send
-      // back
+      // when we've quit the session, there's no source/screenshot to send back
       return {
         source: null,
         screenshot: null,
