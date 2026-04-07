@@ -1,5 +1,6 @@
 import {IconLinkPlus, IconRefresh} from '@tabler/icons-react';
 import {Button, Card, Col, Empty, Form, Input, Row, Select, Spin, Tooltip} from 'antd';
+import _ from 'lodash';
 import {useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 
@@ -18,7 +19,9 @@ const AttachToSession = ({
   loadNewSession,
 }) => {
   const {t} = useTranslation();
-  const manualSessionIdRef = useRef(null);
+  const debouncedSetAttachSessId = useRef(
+    _.debounce((value) => setAttachSessId(value), 200),
+  ).current;
 
   // list is reversed in order to place the most recent sessions at the top
   // slice() is added because reverse() mutates the original array
@@ -44,13 +47,14 @@ const AttachToSession = ({
             <Input
               placeholder={t('enterSessionID')}
               allowClear={true}
-              onChange={(e) => (manualSessionIdRef.current = e.target.value)}
+              onChange={(e) => debouncedSetAttachSessId(e.target.value)}
             />
           </Col>
           <Col span={4}>
             <Button
               type={BUTTON.PRIMARY}
-              onClick={() => loadNewSession(null, manualSessionIdRef.current)}
+              disabled={!attachSessId}
+              onClick={() => loadNewSession(null, attachSessId)}
               icon={<IconLinkPlus size={18} />}
             >
               {t('attachToSession')}

@@ -222,10 +222,6 @@ export function removeCapability(id) {
 // When attaching to a session id, webdriver does not fully populate client information, so
 // we should supplement this with the session capabilities
 async function getCapsFromAttachSessionId(attachSessId, sessionBuilder, serverUrl, headers) {
-  if (!UUIDV4_REGEX.test(attachSessId)) {
-    throw new Error(i18n.t('invalidSessionId', {attachSessId}));
-  }
-
   const foundSession = sessionBuilder.runningAppiumSessions.find(
     (session) => session.id === attachSessId,
   );
@@ -244,6 +240,9 @@ async function getCapsFromAttachSessionId(attachSessId, sessionBuilder, serverUr
   }
   // If the target session was not automatically discovered, or we are attaching via autostart,
   // retrieve session details via server call
+  if (!UUIDV4_REGEX.test(attachSessId)) {
+    throw new Error(i18n.t('invalidSessionId', {attachSessId}));
+  }
   try {
     const detailsUrl = `${serverUrl}/session/${attachSessId}`;
     const res = await fetchSessionInformation({
