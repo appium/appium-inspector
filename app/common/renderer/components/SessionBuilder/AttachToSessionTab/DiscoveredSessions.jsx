@@ -1,5 +1,5 @@
 import {IconRefresh} from '@tabler/icons-react';
-import {Button, Col, Form, Row, Select, Tooltip} from 'antd';
+import {Button, Col, Row, Select, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import styles from './AttachToSession.module.css';
@@ -16,28 +16,27 @@ const DiscoveredSessions = ({
   const {t} = useTranslation();
 
   return (
-    <Form.Item>
-      <Row>
-        <Col span={23}>
-          <Select
-            showSearch
-            placeholder={t('searchSessions')}
-            value={attachSessId || undefined}
-            onChange={(value) => setAttachSessId(value)}
-            options={sortedRunningSessions}
+    <Row>
+      <Col span={23}>
+        <Select
+          style={{width: '100%'}}
+          showSearch
+          placeholder={t('searchSessions')}
+          value={attachSessId || undefined}
+          onChange={(value) => setAttachSessId(value)}
+          options={sortedRunningSessions}
+        />
+      </Col>
+      <Col span={1}>
+        <Tooltip title={t('Reload')}>
+          <Button
+            className={styles.btnReload}
+            onClick={getRunningSessions}
+            icon={<IconRefresh size={18} />}
           />
-        </Col>
-        <Col span={1}>
-          <Tooltip title={t('Reload')}>
-            <Button
-              className={styles.btnReload}
-              onClick={getRunningSessions}
-              icon={<IconRefresh size={18} />}
-            />
-          </Tooltip>
-        </Col>
-      </Row>
-    </Form.Item>
+        </Tooltip>
+      </Col>
+    </Row>
   );
 };
 

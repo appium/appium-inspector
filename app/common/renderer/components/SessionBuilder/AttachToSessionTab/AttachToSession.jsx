@@ -1,6 +1,7 @@
-import {Form, Spin} from 'antd';
+import {Space, Spin} from 'antd';
 
 import {getSessionInfo} from '../../../utils/attaching-to-session.js';
+import styles from './AttachToSession.module.css';
 import AttachToSessionInstructions from './AttachToSessionInstructions.jsx';
 import DiscoveredSessions from './DiscoveredSessions.jsx';
 import ManualSessionIdInput from './ManualSessionIdInput.jsx';
@@ -25,7 +26,7 @@ const AttachToSession = ({
     .map((session) => ({value: session.id, label: getSessionInfo(session, serverType)}));
 
   return (
-    <Form>
+    <Space className={styles.spaceContainer} orientation="vertical" size="large">
       <AttachToSessionInstructions />
       <ManualSessionIdInput loadNewSession={loadNewSession} />
       <Spin spinning={gettingSessions}>
@@ -40,7 +41,7 @@ const AttachToSession = ({
           <NoSessionsDiscovered getRunningSessions={getRunningSessions} />
         )}
       </Spin>
-    </Form>
+    </Space>
   );
 };
 

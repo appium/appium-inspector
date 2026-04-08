@@ -2,3 +2,8 @@
   float: right;
   margin-left: 8px;
 }
+
+.spaceContainer {
+  display: flex;
+  word-break: break-word;
+}
