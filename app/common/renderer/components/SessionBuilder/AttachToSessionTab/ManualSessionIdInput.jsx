@@ -1,7 +1,6 @@
 import {IconLinkPlus} from '@tabler/icons-react';
 import {Button, Col, Form, Input, Row} from 'antd';
-import _ from 'lodash';
-import {useRef, useState} from 'react';
+import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
@@ -12,9 +11,6 @@ import {BUTTON} from '../../../constants/antd-types.js';
 const ManualSessionIdInput = ({loadNewSession}) => {
   const {t} = useTranslation();
   const [manualSessionId, setManualSessionId] = useState(null);
-  const debouncedSetManualSessionId = useRef(
-    _.debounce((value) => setManualSessionId(value), 200),
-  ).current;
 
   return (
     <Form.Item>
@@ -23,7 +19,7 @@ const ManualSessionIdInput = ({loadNewSession}) => {
           <Input
             placeholder={t('enterSessionID')}
             allowClear={true}
-            onChange={(e) => debouncedSetManualSessionId(e.target.value)}
+            onChange={(e) => setManualSessionId(e.target.value)}
           />
         </Col>
         <Col span={4}>
