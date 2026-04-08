@@ -1,14 +1,14 @@
-import {IconLinkPlus, IconRefresh} from '@tabler/icons-react';
-import {Button, Card, Col, Empty, Form, Input, Row, Select, Spin, Tooltip} from 'antd';
-import _ from 'lodash';
-import {useRef, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import {Form, Spin} from 'antd';
 
-import {BUTTON} from '../../../constants/antd-types.js';
 import {getSessionInfo} from '../../../utils/attaching-to-session.js';
-import builderStyles from '../SessionBuilder.module.css';
-import styles from './AttachToSession.module.css';
+import AttachToSessionInstructions from './AttachToSessionInstructions.jsx';
+import DiscoveredSessions from './DiscoveredSessions.jsx';
+import ManualSessionIdInput from './ManualSessionIdInput.jsx';
+import NoSessionsDiscovered from './NoSessionsDiscovered.jsx';
 
+/**
+ * The full Attach to Session tab.
+ */
 const AttachToSession = ({
   serverType,
   attachSessId,
@@ -18,12 +18,6 @@ const AttachToSession = ({
   getRunningSessions,
   loadNewSession,
 }) => {
-  const {t} = useTranslation();
-  const [manualSessionId, setManualSessionId] = useState(null);
-  const debouncedSetManualSessionId = useRef(
-    _.debounce((value) => setManualSessionId(value), 200),
-  ).current;
-
   // list is reversed in order to place the most recent sessions at the top
   // slice() is added because reverse() mutates the original array
   const sortedRunningSessions = [...runningAppiumSessions]
@@ -32,66 +26,18 @@ const AttachToSession = ({
 
   return (
     <Form>
-      <Form.Item>
-        <Card>
-          <p className={builderStyles.localDesc}>
-            {t('connectToExistingSessionInstructions')}
-            <br />
-            {t('selectSessionID')}
-          </p>
-        </Card>
-      </Form.Item>
-      <Form.Item>
-        <Row gutter={8}>
-          <Col span={8} offset={6}>
-            <Input
-              placeholder={t('enterSessionID')}
-              allowClear={true}
-              onChange={(e) => debouncedSetManualSessionId(e.target.value)}
-            />
-          </Col>
-          <Col span={4}>
-            <Button
-              type={BUTTON.PRIMARY}
-              disabled={!manualSessionId || manualSessionId.trim() === ''}
-              onClick={() => loadNewSession(null, manualSessionId)}
-              icon={<IconLinkPlus size={18} />}
-            >
-              {t('attachToSession')}
-            </Button>
-          </Col>
-        </Row>
-      </Form.Item>
+      <AttachToSessionInstructions />
+      <ManualSessionIdInput loadNewSession={loadNewSession} />
       <Spin spinning={gettingSessions}>
         {sortedRunningSessions.length !== 0 ? (
-          <Form.Item>
-            <Row>
-              <Col span={23}>
-                <Select
-                  showSearch
-                  placeholder={t('searchSessions')}
-                  value={attachSessId || undefined}
-                  onChange={(value) => setAttachSessId(value)}
-                  options={sortedRunningSessions}
-                />
-              </Col>
-              <Col span={1}>
-                <Tooltip title={t('Reload')}>
-                  <Button
-                    className={styles.btnReload}
-                    onClick={getRunningSessions}
-                    icon={<IconRefresh size={18} />}
-                  />
-                </Tooltip>
-              </Col>
-            </Row>
-          </Form.Item>
+          <DiscoveredSessions
+            attachSessId={attachSessId}
+            setAttachSessId={setAttachSessId}
+            getRunningSessions={getRunningSessions}
+            sortedRunningSessions={sortedRunningSessions}
+          />
         ) : (
-          <Empty description={t('noRunningSessionsFound')} image={Empty.PRESENTED_IMAGE_SIMPLE}>
-            <Button onClick={getRunningSessions} icon={<IconRefresh size={18} />}>
-              {t('Reload')}
-            </Button>
-          </Empty>
+          <NoSessionsDiscovered getRunningSessions={getRunningSessions} />
         )}
       </Spin>
     </Form>
