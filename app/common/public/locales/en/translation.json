@@ -323,6 +323,5 @@
   "useScreenshotApi": "Use Screenshot API",
   "Box Model": "Box Model",
   "detachFromSession": "Detach from Session",
-  "enterSessionID": "Enter session ID for attaching manually",
-  "invalidSessionId": "Session ID '{{attachSessId}}' is not a valid Appium session ID"
+  "enterSessionID": "Enter session ID for attaching manually"
 }

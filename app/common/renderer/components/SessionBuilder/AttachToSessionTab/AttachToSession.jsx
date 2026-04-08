@@ -26,8 +26,7 @@ const AttachToSession = ({
 
   // list is reversed in order to place the most recent sessions at the top
   // slice() is added because reverse() mutates the original array
-  const sortedRunningSessions = runningAppiumSessions
-    .slice()
+  const sortedRunningSessions = [...runningAppiumSessions]
     .reverse()
     .map((session) => ({value: session.id, label: getSessionInfo(session, serverType)}));
 
@@ -54,7 +53,7 @@ const AttachToSession = ({
           <Col span={4}>
             <Button
               type={BUTTON.PRIMARY}
-              disabled={!manualSessionId}
+              disabled={!manualSessionId || manualSessionId.trim() === ''}
               onClick={() => loadNewSession(null, manualSessionId)}
               icon={<IconLinkPlus size={18} />}
             >
