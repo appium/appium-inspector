@@ -323,5 +323,6 @@
   "useScreenshotApi": "Use Screenshot API",
   "Box Model": "Box Model",
   "detachFromSession": "Detach from Session",
-  "enterSessionID": "Enter session ID for attaching manually"
+  "enterSessionID": "Enter session ID for attaching manually",
+  "refreshDiscoveredSessions": "Refresh Discovered Sessions"
 }
