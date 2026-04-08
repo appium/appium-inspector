@@ -1,11 +1,11 @@
-import {Space, Spin} from 'antd';
+import {Empty, Space, Spin} from 'antd';
+import {useTranslation} from 'react-i18next';
 
 import {getSessionInfo} from '../../../utils/attaching-to-session.js';
 import styles from './AttachToSession.module.css';
 import AttachToSessionInstructions from './AttachToSessionInstructions.jsx';
 import DiscoveredSessions from './DiscoveredSessions.jsx';
-import ManualSessionIdInput from './ManualSessionIdInput.jsx';
-import NoSessionsDiscovered from './NoSessionsDiscovered.jsx';
+import ManualIdInputAndRefreshBtn from './ManualIdInputAndRefreshBtn.jsx';
 
 /**
  * The full Attach to Session tab.
@@ -19,6 +19,7 @@ const AttachToSession = ({
   getRunningSessions,
   loadNewSession,
 }) => {
+  const {t} = useTranslation();
   // list is reversed in order to place the most recent sessions at the top
   // slice() is added because reverse() mutates the original array
   const sortedRunningSessions = [...runningAppiumSessions]
@@ -28,17 +29,19 @@ const AttachToSession = ({
   return (
     <Space className={styles.spaceContainer} orientation="vertical" size="large">
       <AttachToSessionInstructions />
-      <ManualSessionIdInput loadNewSession={loadNewSession} />
+      <ManualIdInputAndRefreshBtn
+        loadNewSession={loadNewSession}
+        getRunningSessions={getRunningSessions}
+      />
       <Spin spinning={gettingSessions}>
         {sortedRunningSessions.length !== 0 ? (
           <DiscoveredSessions
             attachSessId={attachSessId}
             setAttachSessId={setAttachSessId}
-            getRunningSessions={getRunningSessions}
             sortedRunningSessions={sortedRunningSessions}
           />
         ) : (
-          <NoSessionsDiscovered getRunningSessions={getRunningSessions} />
+          <Empty description={t('noRunningSessionsFound')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
         )}
       </Spin>
     </Space>
