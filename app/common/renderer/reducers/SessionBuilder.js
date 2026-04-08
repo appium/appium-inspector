@@ -27,7 +27,6 @@ import {
   SESSION_UPLOAD_DONE,
   SESSION_UPLOAD_REQUESTED,
   SET_ADD_VENDOR_PREFIXES,
-  SET_ATTACH_SESS_ID,
   SET_CAPABILITY_NAME_ERROR,
   SET_CAPABILITY_PARAM,
   SET_CAPS_AND_SERVER,
@@ -257,12 +256,6 @@ export default function builder(state = INITIAL_STATE, action) {
           })(state.server, action.server),
         },
         serverType: action.serverType || SERVER_TYPES.LOCAL,
-      };
-
-    case SET_ATTACH_SESS_ID:
-      return {
-        ...state,
-        attachSessId: action.attachSessId,
       };
 
     case GET_SESSIONS_REQUESTED:

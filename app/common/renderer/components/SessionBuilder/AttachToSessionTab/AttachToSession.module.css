@@ -2,3 +2,7 @@
   display: flex;
   word-break: break-word;
 }
+
+.monoFont {
+  font-family: monospace;
+}

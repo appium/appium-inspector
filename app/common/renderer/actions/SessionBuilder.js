@@ -53,8 +53,6 @@ export const CHANGE_SERVER_TYPE = 'CHANGE_SERVER_TYPE';
 export const SET_SERVER_PARAM = 'SET_SERVER_PARAM';
 export const SET_SERVER = 'SET_SERVER';
 
-export const SET_ATTACH_SESS_ID = 'SET_ATTACH_SESS_ID';
-
 export const GET_SESSIONS_REQUESTED = 'GET_SESSIONS_REQUESTED';
 export const GET_SESSIONS_DONE = 'GET_SESSIONS_DONE';
 
@@ -511,15 +509,6 @@ export function deleteSavedSession(uuid) {
 }
 
 /**
- * Set the session id to attach to
- */
-export function setAttachSessId(attachSessId) {
-  return (dispatch) => {
-    dispatch({type: SET_ATTACH_SESS_ID, attachSessId});
-  };
-}
-
-/**
  * Change the server type
  */
 export function changeServerType(serverType) {
@@ -746,7 +735,7 @@ export function getRunningSessions() {
   return async (dispatch, getState) => {
     const avoidServerTypes = ['sauce'];
     const state = getState().builder;
-    const {server, serverType, attachSessId} = state;
+    const {server, serverType} = state;
     const vendorProperties = await retrieveVendorProperties({
       server,
       serverType,
@@ -793,17 +782,6 @@ export function getRunningSessions() {
     const baseUrl = `${protocol}://${host}:${port}${adjPath}`;
     const sessions = await fetchAllSessions(baseUrl, headers);
     dispatch({type: GET_SESSIONS_DONE, sessions});
-
-    // set attachSessId if only one session found
-    if (sessions.length === 1) {
-      dispatch({type: SET_ATTACH_SESS_ID, attachSessId: sessions[0].id});
-    } else if (attachSessId) {
-      // clear attachSessId if it is no longer present in the found session list
-      const attachSessIdFound = sessions.find((session) => session.id === attachSessId);
-      if (!attachSessIdFound) {
-        dispatch({type: SET_ATTACH_SESS_ID, attachSessId: null});
-      }
-    }
   };
 }
 
@@ -1063,6 +1041,7 @@ export function initFromQueryString(loadNewSession) {
     }
 
     if (autoStartSession === AUTO_START_URL_PARAM) {
+      // at this point these can only be set using SET_STATE_FROM_URL
       const {attachSessId, caps} = getState().builder;
       if (attachSessId) {
         return loadNewSession(null, attachSessId);
