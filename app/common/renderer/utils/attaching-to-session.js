@@ -103,6 +103,10 @@ export function formatSeleniumGridSessions(res) {
         // not a valid Appium 2+ session
         continue;
       }
+      // Add automationName directly to capabilities.
+      // This is OK because we only use this method for displaying session info
+      sessionDetails.capabilities.desired.automationName =
+        sessionDetails.capabilities['appium:automationName'];
       formattedGridSessions.push({
         id: sessionDetails.sessionId,
         capabilities: sessionDetails.capabilities.desired,
