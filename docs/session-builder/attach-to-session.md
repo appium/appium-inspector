@@ -12,8 +12,8 @@ The Attach to Session tab of the Session Builder allows attaching to an already-
 
 There are 2 ways of attaching to a session:
 
-* Manually entering the ID of the target session
-* Selecting from a list of automatically discovered sessions
+- Manually entering the ID of the target session
+- Selecting from a list of automatically discovered sessions
 
 !!! warning
 
