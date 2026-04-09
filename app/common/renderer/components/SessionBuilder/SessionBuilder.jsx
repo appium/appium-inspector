@@ -48,7 +48,6 @@ const Session = (props) => {
     newSession,
     savedSessions,
     newSessionLoading,
-    attachSessId,
     setLocalServerParams,
     getSavedSessions,
     setSavedServerParams,
@@ -173,7 +172,7 @@ const Session = (props) => {
               children: <SavedCapabilitySets {...props} />,
             },
             {
-              label: t('Attach to Session'),
+              label: t('attachToSession'),
               key: SESSION_BUILDER_TABS.ATTACH_TO_SESSION,
               className: styles.scrollingTab,
               children: <AttachToSession loadNewSession={loadNewSession} {...props} />,
@@ -216,15 +215,6 @@ const Session = (props) => {
               className={styles.startSessionBtn}
             >
               {t('startSession')}
-            </Button>
-          )}
-          {isAttaching && (
-            <Button
-              type={BUTTON.PRIMARY}
-              disabled={!attachSessId}
-              onClick={() => loadNewSession(null, attachSessId)}
-            >
-              {t('attachToSession')}
             </Button>
           )}
         </div>

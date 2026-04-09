@@ -22,9 +22,14 @@ describe('utils/attaching-to-session.js', function () {
         },
       };
       const serverType = SERVER_TYPES.HEADSPIN;
-      expect(getSessionInfo(session, serverType)).toEqual(
-        '2025-02-02T12:49:45.000Z — Vitest Session / Vitest Phone / Android 100 / UiAutomator2 / bestapp.apk',
-      );
+      expect(getSessionInfo(session, serverType)).toEqual({
+        id: '12345',
+        timestamp: '2025-02-02T12:49:45.000Z',
+        sessionName: 'Vitest Session',
+        deviceId: 'Vitest Phone',
+        platformInfo: 'Android 100 (UiAutomator2)',
+        appId: 'bestapp.apk',
+      });
     });
     it('should show correct info if some expected parameters are missing', function () {
       const session = {
@@ -37,9 +42,14 @@ describe('utils/attaching-to-session.js', function () {
         },
       };
       const serverType = SERVER_TYPES.LOCAL;
-      expect(getSessionInfo(session, serverType)).toEqual(
-        '12345 — AAAAA-BBBBB / Android / UiAutomator2 / com.best.app',
-      );
+      expect(getSessionInfo(session, serverType)).toEqual({
+        id: '12345',
+        timestamp: undefined,
+        sessionName: undefined,
+        deviceId: 'AAAAA-BBBBB',
+        platformInfo: 'Android (UiAutomator2)',
+        appId: 'com.best.app',
+      });
     });
     it('should show correct info for TestMu AI-specific capability format', function () {
       const session = {
@@ -58,9 +68,14 @@ describe('utils/attaching-to-session.js', function () {
         },
       };
       const serverType = SERVER_TYPES.TESTMUAI;
-      expect(getSessionInfo(session, serverType)).toEqual(
-        '12345 — Vitest Session / Vitest Phone / Android 100 / UiAutomator2 / bestapp.apk',
-      );
+      expect(getSessionInfo(session, serverType)).toEqual({
+        id: '12345',
+        timestamp: undefined,
+        sessionName: 'Vitest Session',
+        deviceId: 'Vitest Phone',
+        platformInfo: 'Android 100 (UiAutomator2)',
+        appId: 'bestapp.apk',
+      });
     });
   });
 

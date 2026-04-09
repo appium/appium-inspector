@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 import {SERVER_TYPES} from '../constants/session-builder.js';
 
-class DefaultSessionDescription {
+class DefaultKeySessionCaps {
   constructor(caps) {
     this._caps = caps;
   }
@@ -13,7 +13,7 @@ class DefaultSessionDescription {
     return this._caps.sessionName;
   }
 
-  _fetchDeviceInfo() {
+  _fetchDeviceIdentifier() {
     return this._caps.deviceName || this._caps.avd || this._caps.udid;
   }
 
@@ -22,57 +22,61 @@ class DefaultSessionDescription {
       const platformInfo = this._caps.platformVersion
         ? `${this._caps.platformName} ${this._caps.platformVersion}`
         : this._caps.platformName;
-      return platformInfo;
+      // Capabilities may not have automationName for e.g. Selenium Grid
+      return this._caps.automationName
+        ? `${platformInfo} (${this._caps.automationName})`
+        : platformInfo;
     }
-  }
-
-  _fetchAutomationName() {
     return this._caps.automationName;
   }
 
-  _fetchAppInfo() {
+  _fetchAppIdentifier() {
     return this._caps.app || this._caps.bundleId || this._caps.appPackage;
   }
 
   assemble() {
-    const suffixItems = [
-      this._fetchSessionName(),
-      this._fetchDeviceInfo(),
-      this._fetchPlatformInfo(),
-      this._fetchAutomationName(),
-      this._fetchAppInfo(),
-    ];
-    return _.compact(suffixItems).join(' / ');
+    return {
+      sessionName: this._fetchSessionName(),
+      deviceId: this._fetchDeviceIdentifier(),
+      platformInfo: this._fetchPlatformInfo(),
+      appId: this._fetchAppIdentifier(),
+    };
   }
 }
 
-class TestMuAISessionDescription extends DefaultSessionDescription {
+class TestMuAIKeySessionCaps extends DefaultKeySessionCaps {
   constructor(caps) {
     super('capabilities' in caps ? caps.capabilities : caps);
   }
 
-  _fetchDeviceInfo() {
+  _fetchDeviceIdentifier() {
     return 'desired' in this._caps ? this._caps.desired.deviceName : this._caps.deviceName;
   }
 }
 
-const getSessionDescription = (caps, serverType) => {
+const getKeySessionCaps = (caps, serverType) => {
   switch (serverType) {
     case SERVER_TYPES.TESTMUAI:
-      return new TestMuAISessionDescription(caps);
+      return new TestMuAIKeySessionCaps(caps);
     default:
-      return new DefaultSessionDescription(caps);
+      return new DefaultKeySessionCaps(caps);
   }
 };
 
 export const getSessionInfo = (session, serverType) => {
-  let identifier = session.id;
+  let timestamp;
   if ('created' in session && !_.isUndefined(session.created)) {
-    // For Appium 3+ sessions, replace session ID with timestamp
-    identifier = new Date(session.created).toJSON();
+    // Add the timestamp for Appium 3+ sessions
+    timestamp = new Date(session.created).toJSON();
   }
-  const description = getSessionDescription(session.capabilities, serverType).assemble();
-  return `${identifier} — ${description}`;
+
+  const keyCaps = getKeySessionCaps(session.capabilities, serverType).assemble();
+
+  return {
+    id: session.id,
+    timestamp,
+    ...keyCaps,
+  };
 };
 
 // Make a session-related HTTP GET request to the provided Appium server URL
