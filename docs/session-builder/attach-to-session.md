@@ -5,37 +5,40 @@ hide:
 title: Attach to Session Tab
 ---
 
-The Attach to Session tab of the Session Builder provides the ability to connect to an existing
-Appium session using the Inspector.
+The Attach to Session tab of the Session Builder allows attaching to an already-running session
+[on the specified Appium server](./server-details.md).
 
 ![Attach to Session](assets/images/attach-to-session/attach-to-session.png)
 
-The Inspector will automatically try to discover existing sessions when the Attach to Session tab is
-opened. The dropdown can then be opened to list all the discovered sessions and their details:
+There are 2 ways of attaching to a session:
 
-![Found Sessions](assets/images/attach-to-session/found-sessions.png)
-
-The most recently created sessions will be shown at the top of the list. If exactly one session is
-discovered, the dropdown will also auto-populate with the details of that session.
-
-Additionally, a refresh button is available to retry the session discovery process.
-
-!!! tip
-
-    The session discovery process uses the current [server details](./server-details.md). Make sure
-    to select the correct server tab and enter the expected server details before selecting the
-    Attach to Server tab or pressing the refresh button.
+* Manually entering the ID of the target session
+* Selecting from a list of automatically discovered sessions
 
 !!! warning
 
     Discovering sessions from servers running Appium 3 or later requires the server to have enabled
     the `session_discovery` [insecure feature](https://appium.io/docs/en/latest/guides/security/).
+    Note that, even if session discovery is disabled, it is still possible to manually attach to a
+    session using its ID.
 
-!!! info
+Session discovery is run automatically upon switching to the Attach to Session tab, but there is
+also a dedicated button for refreshing the list of discovered sessions.
+
+If the server has no active sessions, or the discovery process failed (for example, if the target
+server is running Appium 3 or later with session discovery disabled), an empty indicator is shown:
+
+![No Found Sessions](assets/images/attach-to-session/no-found-sessions.png)
+
+If the discovery process _does_ find one or more sessions, they are shown in a grid of cards, with
+each card listing key information extracted from the session's capabilities, and a button to
+attach to that session. The cards are sorted in reverse order, with the first card corresponding to
+the most recently started session.
+
+![Found Sessions](assets/images/attach-to-session/found-sessions.png)
+
+!!! note
 
     Support for discovering sessions from cloud provider-hosted servers depends on the provider. If
     the Inspector does not discover any sessions for your cloud provider, contact them to check
     whether they support this functionality.
-
-The footer of this screen contains a link the Appium documentation, and a single button for
-connecting to the selected session.
