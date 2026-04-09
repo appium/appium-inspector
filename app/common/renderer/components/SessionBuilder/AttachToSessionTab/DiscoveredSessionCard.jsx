@@ -49,12 +49,14 @@ const DiscoveredSessionCard = ({session, serverType, loadNewSession}) => {
           )}
           <Col span={12}>{addIcon(IconDeviceMobileCog, sessionDetails.platformInfo)}</Col>
         </Row>
-        <Row>
-          {sessionDetails.appId && <Col span={12}>{addIcon(IconApps, sessionDetails.appId)}</Col>}
-          {sessionDetails.timestamp && (
-            <Col span={12}>{addIcon(IconClockHour4, sessionDetails.timestamp)}</Col>
-          )}
-        </Row>
+        {sessionDetails.appId || sessionDetails.timestamp ? (
+          <Row>
+            {sessionDetails.appId && <Col span={12}>{addIcon(IconApps, sessionDetails.appId)}</Col>}
+            {sessionDetails.timestamp && (
+              <Col span={12}>{addIcon(IconClockHour4, sessionDetails.timestamp)}</Col>
+            )}
+          </Row>
+        ) : null}
       </Space>
     </Card>
   );
