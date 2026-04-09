@@ -118,7 +118,6 @@ describe('utils/attaching-to-session.js', function () {
           capabilities: {
             platformName: 'Android',
             app: 'bestapp.apk',
-            automationName: 'UiAutomator2',
           },
         },
       ]);
@@ -205,7 +204,6 @@ describe('utils/attaching-to-session.js', function () {
           capabilities: {
             platformName: 'Android',
             app: 'bestapp.apk',
-            automationName: 'UiAutomator2',
           },
         },
         {
@@ -213,7 +211,6 @@ describe('utils/attaching-to-session.js', function () {
           capabilities: {
             platformName: 'iOS',
             app: 'bestapp.ipa',
-            automationName: 'XCUITest',
           },
         },
         {
@@ -221,7 +218,6 @@ describe('utils/attaching-to-session.js', function () {
           capabilities: {
             platformName: 'Android',
             app: 'secondbestapp.apk',
-            automationName: 'UiAutomator2',
           },
         },
         {
@@ -229,7 +225,6 @@ describe('utils/attaching-to-session.js', function () {
           capabilities: {
             platformName: 'iOS',
             app: 'secondbestapp.ipa',
-            automationName: 'XCUITest',
           },
         },
       ]);
