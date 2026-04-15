@@ -36,6 +36,7 @@
     "target": ["nsis", "zip"]
   },
   "nsis": {
+    "allowToChangeInstallationDirectory": true,
     "oneClick": false
   },
   "linux": {
