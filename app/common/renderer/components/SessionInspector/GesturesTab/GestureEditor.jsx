@@ -658,11 +658,11 @@ const GestureEditor = (props) => {
   const pointerTicksGrid = (pointer) => (
     <Row gutter={[24, 24]}>
       {pointer.ticks.map((tick) => (
-        <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4} key={tick.id}>
+        <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4} xxxl={3} key={tick.id}>
           {tickCard(tick)}
         </Col>
       ))}
-      <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
+      <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4} xxxl={3}>
         <div className={styles.tickPlusBtnWrapper}>
           <Tooltip title={t('Add')}>
             <Button icon={<IconPlus size={18} />} onClick={() => addTick(pointer.id)} />
