@@ -10,7 +10,7 @@ jobs:
     name: PR Title
     runs-on: ubuntu-latest
     steps:
-      - uses: beemojs/conventional-pr-action@v3
+      - uses: beemojs/conventional-pr-action@v3.0.0
         with:
           config-preset: angular
         env:
