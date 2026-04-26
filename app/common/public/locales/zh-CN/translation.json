@@ -152,7 +152,7 @@
   "number": "数字",
   "JSON object": "JSON 对象",
   "connectToExistingSessionInstructions": "如果您有上述服务器类型的已运行会话, 则可以直接将检查器附加到该会话。",
-  "selectSessionID": "",
+  "selectSessionID": "You can manually enter your session ID, or, if the server supports session discovery, simply select from a list of active sessions.",
   "allowUnauthorizedCerts": "允许未经授权的证书",
   "Use Proxy": "使用代理",
   "JSON Representation": "JSON表示",
