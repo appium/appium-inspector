@@ -11,7 +11,14 @@ export function setupIPCListeners(getOpenFilePath) {
   ipcMain.handle('settings:has', async (_evt, key) => await settings.has(key));
   ipcMain.handle('settings:set', async (_evt, key, value) => await settings.set(key, value));
   ipcMain.handle('settings:get', async (_evt, key) => await settings.get(key));
-  ipcMain.on('electron:openLink', (_evt, link) => shell.openExternal(link));
+  ipcMain.on('electron:openLink', (_evt, link) => {
+    try {
+      const url = new URL(link);
+      if (url.protocol === 'https:') {
+        shell.openExternal(url.toString());
+      }
+    } catch {}
+  });
   ipcMain.on('electron:setTheme', (_evt, theme) => (nativeTheme.themeSource = theme));
   ipcMain.handle('sessionfile:loadIfOpened', async () => {
     const openFilePath = getOpenFilePath();
