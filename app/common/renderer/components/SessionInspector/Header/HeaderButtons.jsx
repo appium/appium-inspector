@@ -17,11 +17,17 @@ import {
   IconWorld,
   IconX,
 } from '@tabler/icons-react';
-import {Button, Divider, Select, Space, Tooltip} from 'antd';
+import {Button, Divider, Select, Space, Switch, Tooltip} from 'antd';
+import {useCallback, useEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
-import {LINKS} from '../../../constants/common.js';
+import {
+  INSTRUMENTATION_WINDOW_MESSAGE_EVENT,
+  LINKS,
+  NORMAL_WINDOW_MESSAGE_EVENT,
+  WINDOW_MESSAGE_TARGET_ORIGIN,
+} from '../../../constants/common.js';
 import {APP_MODE} from '../../../constants/session-inspector.js';
 import {openLink} from '../../../polyfills.js';
 import styles from './Header.module.css';
@@ -46,8 +52,59 @@ const HeaderButtons = (props) => {
     setContext,
     autoSessionRestart,
     toggleAutoSessionRestart,
+    isAutoReloadEnabled,
+    toggleAutoReload,
   } = props;
   const {t} = useTranslation();
+
+  const isAutoReloadEnabledRef = useRef(isAutoReloadEnabled);
+
+  const handleReloadClicked = () => {
+    applyClientMethod({methodName: 'getPageSource'});
+    window.parent.postMessage(
+      {type: INSTRUMENTATION_WINDOW_MESSAGE_EVENT, action: 'manual-refresh', sessionId: window.AppLiveSessionId},
+      WINDOW_MESSAGE_TARGET_ORIGIN,
+    );
+  };
+
+  const handleToggleAutoReloadClicked = useCallback(
+    (checked) => {
+      isAutoReloadEnabledRef.current = !isAutoReloadEnabled;
+      toggleAutoReload(checked);
+      applyClientMethod({methodName: 'getPageSource'});
+      window.parent.postMessage(
+        {
+          type: INSTRUMENTATION_WINDOW_MESSAGE_EVENT,
+          action: isAutoReloadEnabled ? 'disabled-auto-refresh' : 'enabled-auto-refresh',
+          sessionId: window.AppLiveSessionId,
+        },
+        WINDOW_MESSAGE_TARGET_ORIGIN,
+      );
+    },
+    [isAutoReloadEnabled, toggleAutoReload, applyClientMethod],
+  );
+
+  const handleHomeButtonClicked = () => {
+    window.parent.postMessage(
+      {type: INSTRUMENTATION_WINDOW_MESSAGE_EVENT, action: 'home-cta-clicked', sessionId: window.AppLiveSessionId},
+      WINDOW_MESSAGE_TARGET_ORIGIN,
+    );
+  };
+
+  const windowMessageCallback = useCallback((event) => {
+    if (event.data.type === NORMAL_WINDOW_MESSAGE_EVENT) {
+      if (event.data.data === 'triggerAutoRefresh' && isAutoReloadEnabledRef.current) {
+        applyClientMethod({methodName: 'getPageSource'});
+      }
+    }
+  }, [applyClientMethod]);
+
+  useEffect(() => {
+    window.addEventListener('message', windowMessageCallback);
+    return () => {
+      window.removeEventListener('message', windowMessageCallback);
+    };
+  }, [windowMessageCallback]);
 
   const deviceControls = (
     <Space.Compact>
@@ -57,12 +114,13 @@ const HeaderButtons = (props) => {
             <Button
               id="btnPressHomeButton"
               icon={<IconHome size={18} />}
-              onClick={() =>
+              onClick={() => {
                 applyClientMethod({
                   methodName: 'executeScript',
                   args: ['mobile:pressButton', [{name: 'home'}]],
-                })
-              }
+                });
+                handleHomeButtonClicked();
+              }}
             />
           </Tooltip>
           <Tooltip title={t('Execute Siri Command')}>
@@ -92,12 +150,13 @@ const HeaderButtons = (props) => {
             <Button
               id="btnPressHomeButton"
               icon={<IconCircle size={16} />}
-              onClick={() =>
+              onClick={() => {
                 applyClientMethod({
                   methodName: 'executeScript',
                   args: ['mobile:pressKey', [{keycode: 3}]],
-                })
-              }
+                });
+                handleHomeButtonClicked();
+              }}
             />
           </Tooltip>
           <Tooltip title={t('Press App Switch Button')}>
@@ -179,6 +238,21 @@ const HeaderButtons = (props) => {
     </Space.Compact>
   );
 
+  const refreshControls = (
+    <Space.Compact className="refresh-button-group">
+      <Tooltip title={t('refreshSource')}>
+        <Button id="btnReload" icon={<IconRefresh size={18} />} onClick={handleReloadClicked} />
+      </Tooltip>
+      <Tooltip title={isAutoReloadEnabled ? t('Disable Auto-Refresh') : t('Enable Auto-Refresh')}>
+        <Switch
+          id="btnAutoReload"
+          defaultChecked={isAutoReloadEnabled}
+          onChange={handleToggleAutoReloadClicked}
+        />
+      </Tooltip>
+    </Space.Compact>
+  );
+
   const generalControls = (
     <Space.Compact>
       {isUsingMjpegMode && !isSourceRefreshOn && (
@@ -199,13 +273,6 @@ const HeaderButtons = (props) => {
           />
         </Tooltip>
       )}
-      <Tooltip title={t('refreshSource')}>
-        <Button
-          id="btnReload"
-          icon={<IconRefresh size={18} />}
-          onClick={() => applyClientMethod({methodName: 'getPageSource'})}
-        />
-      </Tooltip>
       <Tooltip title={t('Search for element')}>
         <Button
           id="searchForElement"
@@ -263,6 +330,7 @@ const HeaderButtons = (props) => {
       <Space size="middle">
         {deviceControls}
         {appModeControls}
+        {refreshControls}
         {generalControls}
         {sessionReloadButton}
         {quitControls}
