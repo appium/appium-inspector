@@ -142,13 +142,12 @@ const Session = (props) => {
   // Auto-attach: when exactly 1 session is found after the fetch above, attach automatically
   const hasAutoAttachedRef = useRef(false);
   useEffect(() => {
-    if (
-      !hasAutoAttachedRef.current &&
-      checkIfAllParamsPresent() &&
-      runningAppiumSessions.length === 1
-    ) {
+    // Deduplicate by session ID — fetchAllSessions merges 3 endpoints so the same
+    // session can appear multiple times (e.g. both /appium/sessions and /sessions on Appium 1.x)
+    const uniqueSessions = [...new Map(runningAppiumSessions.map((s) => [s.id, s])).values()];
+    if (!hasAutoAttachedRef.current && checkIfAllParamsPresent() && uniqueSessions.length === 1) {
       hasAutoAttachedRef.current = true;
-      loadNewSession(null, runningAppiumSessions[0].id);
+      loadNewSession(null, uniqueSessions[0].id);
     }
   }, [loadNewSession, runningAppiumSessions]);
 
