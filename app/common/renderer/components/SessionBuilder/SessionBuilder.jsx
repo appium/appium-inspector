@@ -1,12 +1,17 @@
 import {IconLink} from '@tabler/icons-react';
 import {Badge, Button, Divider, Space, Spin, Tabs} from 'antd';
 import _ from 'lodash';
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useNavigate} from 'react-router';
 
 import {BUTTON} from '../../constants/antd-types.js';
-import {LINKS} from '../../constants/common.js';
+import {
+  LINKS,
+  NORMAL_WINDOW_MESSAGE_EVENT,
+  WINDOW_MESSAGE_TARGET_ORIGIN,
+} from '../../constants/common.js';
+import {checkIfAllParamsPresent} from '../../../shared/setting-defs.js';
 import {
   ADD_CLOUD_PROVIDER_TAB_KEY,
   SERVER_TYPES,
@@ -49,6 +54,7 @@ const Session = (props) => {
     savedSessions,
     newSessionLoading,
     attachSessId,
+    runningAppiumSessions = [],
     setLocalServerParams,
     getSavedSessions,
     setSavedServerParams,
@@ -57,6 +63,7 @@ const Session = (props) => {
     bindWindowClose,
     initFromQueryString,
     setPortFromUrl,
+    getRunningSessions,
     showError,
   } = props;
 
@@ -81,6 +88,14 @@ const Session = (props) => {
       }
       if (await newSession(_.cloneDeep(caps), attachSessId)) {
         navigate('/inspector', {replace: true});
+        window.parent.postMessage(
+          {
+            type: NORMAL_WINDOW_MESSAGE_EVENT,
+            data: 'sessionEstablished',
+            sessionId: window.AppLiveSessionId,
+          },
+          WINDOW_MESSAGE_TARGET_ORIGIN,
+        );
       }
     },
     [navigate, newSession, showError, t],
@@ -90,7 +105,7 @@ const Session = (props) => {
     (async () => {
       try {
         bindWindowClose();
-        switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER);
+        switchTabs(SESSION_BUILDER_TABS.ATTACH_TO_SESSION);
         await getSavedSessions();
         await setVisibleProviders();
         await setSavedServerParams();
@@ -115,6 +130,27 @@ const Session = (props) => {
     setVisibleProviders,
     switchTabs,
   ]);
+
+  // On mount: if AppLive URL params are present, fetch running sessions to enable auto-attach
+  useEffect(() => {
+    if (checkIfAllParamsPresent()) {
+      const timer = setTimeout(() => getRunningSessions(), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [getRunningSessions]);
+
+  // Auto-attach: when exactly 1 session is found after the fetch above, attach automatically
+  const hasAutoAttachedRef = useRef(false);
+  useEffect(() => {
+    if (
+      !hasAutoAttachedRef.current &&
+      checkIfAllParamsPresent() &&
+      runningAppiumSessions.length === 1
+    ) {
+      hasAutoAttachedRef.current = true;
+      loadNewSession(null, runningAppiumSessions[0].id);
+    }
+  }, [loadNewSession, runningAppiumSessions]);
 
   return [
     <Spin size="large" spinning={!!newSessionLoading} key="main">
@@ -145,7 +181,7 @@ const Session = (props) => {
                 label: <span className="addCloudProviderTab">{t('Select Cloud Providers')}</span>,
                 key: ADD_CLOUD_PROVIDER_TAB_KEY,
               },
-            ]}
+            ].filter((tab) => tab.key === SERVER_TYPES.REMOTE)}
           />
           <AppSettings />
         </div>
@@ -178,7 +214,7 @@ const Session = (props) => {
               className: styles.scrollingTab,
               children: <AttachToSession {...props} />,
             },
-          ]}
+          ].filter((tab) => tab.key === SESSION_BUILDER_TABS.ATTACH_TO_SESSION)}
         />
         <Divider />
         <div className={styles.sessionFooter}>
@@ -186,9 +222,11 @@ const Session = (props) => {
             type="link"
             className={styles.desiredCapsLink}
             icon={<IconLink size={16} />}
-            onClick={() => openLink(LINKS.CAPS_DOCS)}
+            onClick={() =>
+              openLink('https://github.com/appium/appium-inspector/releases/tag/v2026.2.1')
+            }
           >
-            {t('desiredCapabilitiesDocumentation')}
+            {t('Appium Inspector v2026.2.1')}
           </Button>
           {!isAttaching && (
             <Space.Compact>
