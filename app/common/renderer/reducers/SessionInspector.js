@@ -3,6 +3,8 @@ import _ from 'lodash';
 import {
   ADD_ASSIGNED_VAR_CACHE,
   CLEAR_ASSIGNED_VAR_CACHE,
+  DISABLE_AUTO_RELOAD,
+  ENABLE_AUTO_RELOAD,
   CLEAR_COORD_ACTION,
   CLEAR_RECORDING,
   CLEAR_SEARCH_RESULTS,
@@ -126,6 +128,7 @@ const INITIAL_STATE = {
   showSourceAttrs: false,
   isUploadingGestureFiles: false,
   autoSessionRestart: false,
+  isAutoReloadEnabled: false,
 };
 
 let nextState;
@@ -633,6 +636,12 @@ export default function inspector(state = INITIAL_STATE, action) {
         ...state,
         autoSessionRestart: action.autoSessionRestart,
       };
+
+    case ENABLE_AUTO_RELOAD:
+      return {...state, isAutoReloadEnabled: true};
+
+    case DISABLE_AUTO_RELOAD:
+      return {...state, isAutoReloadEnabled: false};
 
     default:
       return {...state};
