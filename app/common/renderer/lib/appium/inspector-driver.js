@@ -1,5 +1,9 @@
 import _ from 'lodash';
 
+import {
+  API_METHOD_INSTRUMENTATION_WINDOW_MESSAGE_EVENT,
+  WINDOW_MESSAGE_TARGET_ORIGIN,
+} from '../../constants/common.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot.js';
 import {
   APP_MODE,
@@ -79,6 +83,7 @@ export default class InspectorDriver {
       };
     }
 
+    const _start = performance.now();
     let res = {};
     if (methodName) {
       if (elementId) {
@@ -106,6 +111,17 @@ export default class InspectorDriver {
           skipScreenshot,
           appMode,
         });
+      }
+      if (methodName !== 'status') {
+        window.parent.postMessage(
+          {
+            type: API_METHOD_INSTRUMENTATION_WINDOW_MESSAGE_EVENT,
+            method: methodName,
+            durationInMs: performance.now() - _start,
+            sessionId: window.AppLiveSessionId,
+          },
+          WINDOW_MESSAGE_TARGET_ORIGIN,
+        );
       }
     } else if (strategy && selector) {
       if (fetchArray) {

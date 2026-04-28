@@ -12,6 +12,7 @@ import {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON, ROW} from '../../../constants/antd-types.js';
+import {INSTRUMENTATION_WINDOW_MESSAGE_EVENT, WINDOW_MESSAGE_TARGET_ORIGIN} from '../../../constants/common.js';
 import {IMPORTANT_SOURCE_ATTRS} from '../../../constants/source.js';
 import {copyToClipboard} from '../../../polyfills.js';
 import {downloadFile} from '../../../utils/file-handling.js';
@@ -109,6 +110,10 @@ const AppSource = (props) => {
     } else {
       selectElement(path);
     }
+    window.parent.postMessage(
+      {type: INSTRUMENTATION_WINDOW_MESSAGE_EVENT, action: 'app-source-hierarchy-interacted', sessionId: window.AppLiveSessionId},
+      WINDOW_MESSAGE_TARGET_ORIGIN,
+    );
   };
 
   // Recursives through the source and renders a TreeNode for an element

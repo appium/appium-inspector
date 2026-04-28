@@ -2,7 +2,12 @@ import _ from 'lodash';
 import sanitize from 'sanitize-filename';
 
 import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs.js';
-import {APP_MODE, NATIVE_APP, UNKNOWN_ERROR} from '../constants/session-inspector.js';
+import {
+  INSTRUMENTATION_WINDOW_MESSAGE_EVENT,
+  NORMAL_WINDOW_MESSAGE_EVENT,
+  WINDOW_MESSAGE_TARGET_ORIGIN,
+} from '../constants/common.js';
+import {APP_MODE, INSPECTOR_TABS, NATIVE_APP, UNKNOWN_ERROR} from '../constants/session-inspector.js';
 import i18n from '../i18next.js';
 import InspectorDriver from '../lib/appium/inspector-driver.js';
 import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map.js';
@@ -113,6 +118,9 @@ export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
 export const SET_REFRESHING_STATE = 'SET_REFRESHING_STATE';
 
 export const SET_AUTO_SESSION_RESTART = 'SET_AUTO_SESSION_RESTART';
+
+export const ENABLE_AUTO_RELOAD = 'ENABLE_AUTO_RELOAD';
+export const DISABLE_AUTO_RELOAD = 'DISABLE_AUTO_RELOAD';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -307,6 +315,10 @@ export function quitSession({reason, manualQuit = true, detachOnly = false} = {}
       await applyAction(dispatch, getState);
     }
     dispatch({type: QUIT_SESSION_DONE});
+    window.parent.postMessage(
+      {type: NORMAL_WINDOW_MESSAGE_EVENT, data: 'quitSession', sessionId: window.AppLiveSessionId},
+      WINDOW_MESSAGE_TARGET_ORIGIN,
+    );
     if (!manualQuit) {
       showError(new Error(reason || i18n.t('Session has been terminated')), {secs: 0});
     }
@@ -392,6 +404,10 @@ export function storeSessionSettings(updatedSessionSettings = null) {
 export function showLocatorTestModal() {
   return (dispatch) => {
     dispatch({type: SHOW_LOCATOR_TEST_MODAL});
+    window.parent.postMessage(
+      {type: INSTRUMENTATION_WINDOW_MESSAGE_EVENT, action: 'element-search-tool-clicked', sessionId: window.AppLiveSessionId},
+      WINDOW_MESSAGE_TARGET_ORIGIN,
+    );
   };
 }
 
@@ -751,6 +767,24 @@ export function clearCoordAction() {
 export function selectInspectorTab(interaction) {
   return (dispatch) => {
     dispatch({type: SELECT_INSPECTOR_TAB, interaction});
+    const tabActionMap = {
+      [INSPECTOR_TABS.SOURCE]: 'source-tab-clicked',
+      [INSPECTOR_TABS.COMMANDS]: 'commands-tab-clicked',
+      [INSPECTOR_TABS.GESTURES]: 'gestures-tab-clicked',
+      [INSPECTOR_TABS.RECORDER]: 'recorder-tab-clicked',
+      [INSPECTOR_TABS.SESSION_INFO]: 'session-info-tab-clicked',
+    };
+    const action = tabActionMap[interaction] || '';
+    window.parent.postMessage(
+      {type: INSTRUMENTATION_WINDOW_MESSAGE_EVENT, action, sessionId: window.AppLiveSessionId},
+      WINDOW_MESSAGE_TARGET_ORIGIN,
+    );
+  };
+}
+
+export function toggleAutoReload(enable) {
+  return (dispatch) => {
+    dispatch({type: enable ? ENABLE_AUTO_RELOAD : DISABLE_AUTO_RELOAD});
   };
 }
 
