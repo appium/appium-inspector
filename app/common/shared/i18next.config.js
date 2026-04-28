@@ -33,5 +33,5 @@ export const commonI18NextOptions = {
   },
   load: 'currentOnly',
   fallbackLng,
-  supportedLngs: languageList.map((language) => language.code),
+  supportedLngs: languageList.map((language) => language.code).filter((code) => code === fallbackLng),
 };
