@@ -301,13 +301,15 @@ const HeaderButtons = (props) => {
 
   const quitControls = (
     <Space.Compact>
-      <Tooltip title={t('detachFromSession')}>
-        <Button
-          id="btnDetach"
-          icon={<IconPlugConnectedX size={18} />}
-          onClick={() => quitSessionAndReturn({detachOnly: true})}
-        />
-      </Tooltip>
+      {!window.AppLiveSessionId && (
+        <Tooltip title={t('detachFromSession')}>
+          <Button
+            id="btnDetach"
+            icon={<IconPlugConnectedX size={18} />}
+            onClick={() => quitSessionAndReturn({detachOnly: true})}
+          />
+        </Tooltip>
+      )}
       <Tooltip title={t('Quit Session')}>
         <Button id="btnClose" icon={<IconX size={18} />} onClick={quitSessionAndReturn} />
       </Tooltip>
