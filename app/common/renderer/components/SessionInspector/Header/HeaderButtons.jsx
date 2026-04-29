@@ -334,7 +334,7 @@ const HeaderButtons = (props) => {
         {appModeControls}
         {refreshControls}
         {generalControls}
-        {sessionReloadButton}
+        {!window.AppLiveSessionId && sessionReloadButton}
         {quitControls}
       </Space>
       <Divider />
