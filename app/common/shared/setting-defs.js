@@ -46,3 +46,9 @@ export const DEFAULT_SETTINGS = {
   [SAVED_CLIENT_FRAMEWORK]: 'java',
   [VISIBLE_PROVIDERS]: null,
 };
+
+// When running inside AppLive (URL params present), overwrite any stale localStorage
+// SESSION_SERVER_PARAMS so getSetting() always uses the current session's credentials.
+if (typeof window !== 'undefined' && DEFAULT_SETTINGS[SESSION_SERVER_PARAMS] !== null) {
+  localStorage.setItem(SESSION_SERVER_PARAMS, JSON.stringify(DEFAULT_SETTINGS[SESSION_SERVER_PARAMS]));
+}
