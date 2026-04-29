@@ -139,9 +139,10 @@ const HeaderButtons = (props) => {
               id="btnPressHomeButton"
               icon={<IconChevronLeft size={20} />}
               onClick={() =>
-                window.AppLiveSessionId
-                  ? applyClientMethod({methodName: 'appiumPressKeyCode', args: [4]})
-                  : applyClientMethod({methodName: 'executeScript', args: ['mobile:pressKey', [{keycode: 4}]]})
+                applyClientMethod({
+                  methodName: 'executeScript',
+                  args: ['mobile:pressKey', [{keycode: 4}]],
+                })
               }
             />
           </Tooltip>
@@ -150,9 +151,10 @@ const HeaderButtons = (props) => {
               id="btnPressHomeButton"
               icon={<IconCircle size={16} />}
               onClick={() => {
-                window.AppLiveSessionId
-                  ? applyClientMethod({methodName: 'appiumPressKeyCode', args: [3]})
-                  : applyClientMethod({methodName: 'executeScript', args: ['mobile:pressKey', [{keycode: 3}]]});
+                applyClientMethod({
+                  methodName: 'executeScript',
+                  args: ['mobile:pressKey', [{keycode: 3}]],
+                });
                 handleHomeButtonClicked();
               }}
             />
@@ -162,9 +164,10 @@ const HeaderButtons = (props) => {
               id="btnPressHomeButton"
               icon={<IconSquare size={16} />}
               onClick={() =>
-                window.AppLiveSessionId
-                  ? applyClientMethod({methodName: 'appiumPressKeyCode', args: [187]})
-                  : applyClientMethod({methodName: 'executeScript', args: ['mobile:pressKey', [{keycode: 187}]]})
+                applyClientMethod({
+                  methodName: 'executeScript',
+                  args: ['mobile:pressKey', [{keycode: 187}]],
+                })
               }
             />
           </Tooltip>
