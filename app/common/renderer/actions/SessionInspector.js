@@ -709,11 +709,9 @@ export function getActiveAppId(isIOS, isAndroid) {
         dispatch({type: SET_APP_ID, appId: bundleId});
       }
       if (isAndroid) {
-        const action = applyClientMethod({
-          methodName: 'executeScript',
-          args: ['mobile:getCurrentPackage', []],
-          skipRefresh: true,
-        });
+        const action = window.AppLiveSessionId
+          ? applyClientMethod({methodName: 'getCurrentPackage', args: [], skipRefresh: true})
+          : applyClientMethod({methodName: 'executeScript', args: ['mobile:getCurrentPackage', []], skipRefresh: true});
         const appPackage = await action(dispatch, getState);
         dispatch({type: SET_APP_ID, appId: appPackage});
       }
