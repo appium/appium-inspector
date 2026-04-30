@@ -64,12 +64,12 @@
     "electron": "./node_modules/.bin/electron"
   },
   "dependencies": {
-    "@ant-design/icons": "6.1.1",
+    "@ant-design/icons": "6.2.2",
     "@reduxjs/toolkit": "2.11.2",
     "@tabler/icons-react": "3.41.1",
     "@wdio/protocols": "9.27.0",
     "@xmldom/xmldom": "0.9.10",
-    "antd": "6.3.6",
+    "antd": "6.3.7",
     "cheerio": "1.2.0",
     "css.escape": "1.5.1",
     "dayjs": "1.11.20",
