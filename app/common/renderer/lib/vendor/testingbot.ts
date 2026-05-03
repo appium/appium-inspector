@@ -8,8 +8,7 @@ export class TestingbotVendor extends BaseVendor {
     const key =
       (testingbot.username as string | undefined) || (process.env.TB_KEY as string | undefined);
     const secret =
-      (testingbot.accessKey as string | undefined) ||
-      (process.env.TB_SECRET as string | undefined);
+      (testingbot.accessKey as string | undefined) || (process.env.TB_SECRET as string | undefined);
     this._checkInputPropertyPresence(vendorName, [
       {name: 'Key', val: key},
       {name: 'Secret', val: secret},
