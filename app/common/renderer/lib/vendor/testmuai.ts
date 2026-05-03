@@ -5,7 +5,7 @@ import {BaseVendor} from './base.js';
 export class TestMuAIVendor extends BaseVendor {
   override async configureProperties(): Promise<void> {
     const testmuai = this._server.lambdatest;
-    const advanced = this._server.advanced ?? {};
+    const advanced = this._server.advanced;
     const vendorName = 'TestMu AI';
 
     const username =
@@ -30,17 +30,17 @@ export class TestMuAIVendor extends BaseVendor {
         source: 'appiumdesktop',
         isRealMobile: true,
       };
-      if (advanced.useProxy) {
-        options.proxyUrl = _.isUndefined(advanced.proxy) ? '' : advanced.proxy;
+      if (advanced?.useProxy) {
+        options.proxyUrl = _.isUndefined(advanced?.proxy) ? '' : advanced.proxy;
       }
       this._updateSessionCap('lt:options', options);
     } else {
       this._updateSessionCap('lambdatest:source', 'appiumdesktop');
       this._updateSessionCap('lambdatest:isRealMobile', true);
-      if (advanced.useProxy) {
+      if (advanced?.useProxy) {
         this._updateSessionCap(
           'lambdatest:proxyUrl',
-          _.isUndefined(advanced.proxy) ? '' : advanced.proxy,
+          _.isUndefined(advanced?.proxy) ? '' : advanced.proxy,
         );
       }
     }

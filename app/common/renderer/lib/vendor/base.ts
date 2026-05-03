@@ -12,17 +12,6 @@ export interface VendorProperties {
   headers?: Record<string, string>;
 }
 
-/** Fields written to Redux and mirrored on the vendor instance */
-export type VendorConnectionFields = {
-  host: string;
-  port: number | string;
-  path?: string;
-  https?: boolean;
-  username?: string;
-  accessKey?: string;
-  headers?: Record<string, string>;
-};
-
 export interface InputProperty {
   name: string;
   val: string | undefined;
@@ -39,8 +28,8 @@ type MutableVendorSlice = Record<string, unknown> & {
 };
 
 export abstract class BaseVendor {
-  host!: string;
-  port!: number | string;
+  host?: string;
+  port?: number | string;
   path?: string;
   https?: boolean;
   username?: string;
@@ -93,7 +82,7 @@ export abstract class BaseVendor {
     }
   }
 
-  protected _saveProperties(vendor: MutableVendorSlice, props: VendorConnectionFields): void {
+  protected _saveProperties(vendor: MutableVendorSlice, props: VendorProperties): void {
     const {host, path, port, https, username, accessKey, headers} = props;
     this.host = vendor.host = host;
     this.path = vendor.path = path;

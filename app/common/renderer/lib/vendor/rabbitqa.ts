@@ -2,11 +2,11 @@ import {BaseVendor} from './base.js';
 
 export class RabbitQAVendor extends BaseVendor {
   override async configureProperties(): Promise<void> {
-    const rabbitQA = this._server.rabbitqa ?? {};
+    const rabbitQA = this._server.rabbitqa;
     const vendorName = 'RabbitQA';
 
     const apiKey =
-      (rabbitQA?.apiKey as string | undefined) ||
+      (rabbitQA.apiKey as string | undefined) ||
       (process.env.RABBITQA_API_KEY as string | undefined);
 
     this._checkInputPropertyPresence(vendorName, [{name: 'API Key', val: apiKey}]);
