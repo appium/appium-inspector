@@ -922,14 +922,6 @@ export function importGestureFiles(fileList) {
   };
 }
 
-function parseAndValidateGestureFileString(gestureFileString) {
-  const gestureJSON = parseGestureFileContents(gestureFileString);
-  if (gestureJSON === null) {
-    return null;
-  }
-  return _.omit(gestureJSON, ['id', 'date']);
-}
-
 export function exportSavedGesture(gestureJSON) {
   return async () => {
     const cleanedName = `gesture-${gestureJSON.name}`;
@@ -1062,4 +1054,12 @@ export function toggleAutoSessionRestart() {
     const autoSessionRestart = !getState().inspector.autoSessionRestart;
     dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart});
   };
+}
+
+function parseAndValidateGestureFileString(gestureFileString) {
+  const gestureJSON = parseGestureFileContents(gestureFileString);
+  if (gestureJSON === null) {
+    return null;
+  }
+  return _.omit(gestureJSON, ['id', 'date']);
 }

@@ -4,17 +4,6 @@ import {select as xpathSelect} from 'xpath';
 import {LocatorGeneratorBase} from './base.js';
 
 /**
- * Get an optimal class chain for a Node
- *
- * @param {Document} doc
- * @param {Node} domNode
- * @returns {string|null}
- */
-export function getOptimalClassChain(doc, domNode) {
-  return new ClassChainGenerator(doc, domNode).generate();
-}
-
-/**
  * Generator for iOS Class Chain locators
  * @private
  */
@@ -148,4 +137,15 @@ class ClassChainGenerator extends LocatorGeneratorBase {
     const parentGenerator = new ClassChainGenerator(this._doc, this._domNode.parentNode);
     return parentGenerator.generate() + classChain;
   }
+}
+
+/**
+ * Get an optimal class chain for a Node
+ *
+ * @param {Document} doc
+ * @param {Node} domNode
+ * @returns {string|null}
+ */
+export function getOptimalClassChain(doc, domNode) {
+  return new ClassChainGenerator(doc, domNode).generate();
 }

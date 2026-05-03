@@ -18,38 +18,6 @@ const pathLoadMethod = isDev ? 'loadURL' : 'loadFile';
 
 let mainWindow = null;
 
-function buildSplashWindow(backgroundColor) {
-  return new BrowserWindow({
-    width: 300,
-    height: 300,
-    minWidth: 300,
-    minHeight: 300,
-    frame: false,
-    backgroundColor,
-    webPreferences: {
-      devTools: false,
-    },
-  });
-}
-
-function buildSessionWindow(backgroundColor) {
-  return new BrowserWindow({
-    show: false,
-    width: 1100,
-    height: 710,
-    minWidth: 890,
-    minHeight: 710,
-    titleBarStyle: 'hiddenInset',
-    backgroundColor,
-    webPreferences: {
-      preload: join(__dirname, '..', 'preload', 'preload.mjs'), // from 'main' in package.json
-      sandbox: false,
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
-  });
-}
-
 export async function setupMainWindow() {
   const preferredTheme = await settings.get(PREFERRED_THEME);
   const isDarkTheme =
@@ -106,4 +74,36 @@ export function launchNewSessionWindow() {
   const win = buildSessionWindow();
   win[pathLoadMethod](mainPath);
   win.show();
+}
+
+function buildSplashWindow(backgroundColor) {
+  return new BrowserWindow({
+    width: 300,
+    height: 300,
+    minWidth: 300,
+    minHeight: 300,
+    frame: false,
+    backgroundColor,
+    webPreferences: {
+      devTools: false,
+    },
+  });
+}
+
+function buildSessionWindow(backgroundColor) {
+  return new BrowserWindow({
+    show: false,
+    width: 1100,
+    height: 710,
+    minWidth: 890,
+    minHeight: 710,
+    titleBarStyle: 'hiddenInset',
+    backgroundColor,
+    webPreferences: {
+      preload: join(__dirname, '..', 'preload', 'preload.mjs'), // from 'main' in package.json
+      sandbox: false,
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
 }

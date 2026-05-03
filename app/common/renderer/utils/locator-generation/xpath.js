@@ -4,17 +4,6 @@ import {select as xpathSelect} from 'xpath';
 import {LocatorGeneratorBase} from './base.js';
 
 /**
- * Get an optimal XPath for a Node
- *
- * @param {Document} doc
- * @param {Node} domNode
- * @returns {string|null}
- */
-export function getOptimalXPath(doc, domNode) {
-  return new XPathGenerator(doc, domNode).generate();
-}
-
-/**
  * Generator for XPath locators
  * @private
  */
@@ -434,4 +423,15 @@ class XPathGenerator extends LocatorGeneratorBase {
   }
 
   // #endregion
+}
+
+/**
+ * Get an optimal XPath for a Node
+ *
+ * @param {Document} doc
+ * @param {Node} domNode
+ * @returns {string|null}
+ */
+export function getOptimalXPath(doc, domNode) {
+  return new XPathGenerator(doc, domNode).generate();
 }

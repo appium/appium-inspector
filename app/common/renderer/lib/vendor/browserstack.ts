@@ -1,15 +1,16 @@
 import {BaseVendor} from './base.js';
 
 export class BrowserstackVendor extends BaseVendor {
-  /**
-   * @override
-   */
-  async configureProperties() {
+  override async configureProperties(): Promise<void> {
     const browserstack = this._server.browserstack;
     const vendorName = 'BrowserStack';
 
-    const username = browserstack.username || process.env.BROWSERSTACK_USERNAME;
-    const accessKey = browserstack.accessKey || process.env.BROWSERSTACK_ACCESS_KEY;
+    const username =
+      (browserstack.username as string | undefined) ||
+      (process.env.BROWSERSTACK_USERNAME as string | undefined);
+    const accessKey =
+      (browserstack.accessKey as string | undefined) ||
+      (process.env.BROWSERSTACK_ACCESS_KEY as string | undefined);
     this._checkInputPropertyPresence(vendorName, [
       {name: 'Username', val: username},
       {name: 'Access Key', val: accessKey},
@@ -18,7 +19,7 @@ export class BrowserstackVendor extends BaseVendor {
     const host = process.env.BROWSERSTACK_HOST || 'hub-cloud.browserstack.com';
     const port = process.env.BROWSERSTACK_PORT || 443;
     const path = '/wd/hub';
-    const https = parseInt(port, 10) === 443;
+    const https = parseInt(String(port), 10) === 443;
     this._saveProperties(browserstack, {host, path, port, https, username, accessKey});
 
     this._updateSessionCap('bstack:options', {

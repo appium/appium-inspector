@@ -1,15 +1,15 @@
 import {BaseVendor} from './base.js';
 
 export class TestingbotVendor extends BaseVendor {
-  /**
-   * @override
-   */
-  async configureProperties() {
+  override async configureProperties(): Promise<void> {
     const testingbot = this._server.testingbot;
     const vendorName = 'TestingBot';
 
-    const key = testingbot.username || process.env.TB_KEY;
-    const secret = testingbot.accessKey || process.env.TB_SECRET;
+    const key =
+      (testingbot.username as string | undefined) || (process.env.TB_KEY as string | undefined);
+    const secret =
+      (testingbot.accessKey as string | undefined) ||
+      (process.env.TB_SECRET as string | undefined);
     this._checkInputPropertyPresence(vendorName, [
       {name: 'Key', val: key},
       {name: 'Secret', val: secret},

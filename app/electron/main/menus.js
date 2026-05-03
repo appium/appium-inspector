@@ -12,6 +12,18 @@ const CROWDIN_URL = 'https://crowdin.com/project/appium-desktop';
 
 const separator = {type: 'separator'};
 
+export function rebuildMenus(mainWindow) {
+  const isMac = process.platform === 'darwin';
+
+  const menu = Menu.buildFromTemplate(menuTemplate(isMac));
+
+  if (isMac) {
+    Menu.setApplicationMenu(menu);
+  } else {
+    mainWindow.setMenu(menu);
+  }
+}
+
 function showAppInfoPopup() {
   dialog.showMessageBox({
     title: t('appiumInspector'),
@@ -144,16 +156,4 @@ function menuTemplate(isMac) {
     ...(isMac ? [dropdownWindow()] : []),
     dropdownHelp(),
   ];
-}
-
-export function rebuildMenus(mainWindow) {
-  const isMac = process.platform === 'darwin';
-
-  const menu = Menu.buildFromTemplate(menuTemplate(isMac));
-
-  if (isMac) {
-    Menu.setApplicationMenu(menu);
-  } else {
-    mainWindow.setMenu(menu);
-  }
 }
