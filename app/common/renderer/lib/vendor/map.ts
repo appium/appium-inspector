@@ -1,4 +1,5 @@
-import {SERVER_TYPES} from '../../constants/session-builder';
+import {SERVER_TYPES} from '../../constants/session-builder.js';
+import {BaseVendor, type SessionBuilderServer} from './base.js';
 import {BitbarVendor} from './bitbar.js';
 import {BrowserstackVendor} from './browserstack.js';
 import {ExperitestVendor} from './experitest.js';
@@ -20,7 +21,12 @@ import {TestMuAIVendor} from './testmuai.js';
 import {TvlabsVendor} from './tvlabs.js';
 import {WebmateVendor} from './webmate.js';
 
-export const VENDOR_MAP = {
+type VendorConstructor = new (
+  server: SessionBuilderServer,
+  sessionCaps: Record<string, unknown>,
+) => BaseVendor;
+
+export const VENDOR_MAP: Partial<Record<string, VendorConstructor>> = {
   [SERVER_TYPES.LOCAL]: LocalVendor,
   [SERVER_TYPES.REMOTE]: RemoteVendor,
   [SERVER_TYPES.SAUCE]: SaucelabsVendor,

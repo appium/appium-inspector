@@ -1,14 +1,12 @@
 import {BaseVendor} from './base.js';
 
 export class BitbarVendor extends BaseVendor {
-  /**
-   * @override
-   */
-  async configureProperties() {
+  override async configureProperties(): Promise<void> {
     const bitbar = this._server.bitbar;
     const vendorName = 'BitBar';
 
-    const apiKey = bitbar.apiKey || process.env.BITBAR_API_KEY;
+    const apiKey =
+      (bitbar.apiKey as string | undefined) || (process.env.BITBAR_API_KEY as string | undefined);
     this._checkInputPropertyPresence(vendorName, [{name: 'API Key', val: apiKey}]);
 
     const host = process.env.BITBAR_HOST || 'appium.bitbar.com';

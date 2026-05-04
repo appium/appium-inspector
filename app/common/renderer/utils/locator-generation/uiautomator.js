@@ -5,19 +5,6 @@ import {childNodesOf, domToXML, findDOMNodeByPath, xmlToDOM} from '../source-par
 import {LocatorGeneratorBase} from './base.js';
 
 /**
- * Get an optimal UiAutomator selector for a Node
- * Only works for elements inside the last direct child of the hierarchy (xpath: /hierarchy/*[last()] )
- *
- * @param {Document} doc
- * @param {Node} domNode
- * @param {string} path a dot-separated string of indices
- * @returns {string|null}
- */
-export function getOptimalUiAutomatorSelector(doc, domNode, path) {
-  return new UiAutomatorGenerator(doc, domNode, path).generate();
-}
-
-/**
  * Generator for Android UiAutomator locators
  * @private
  */
@@ -203,4 +190,17 @@ class UiAutomatorGenerator extends LocatorGeneratorBase {
 
     return mostUniqueSelector;
   }
+}
+
+/**
+ * Get an optimal UiAutomator selector for a Node
+ * Only works for elements inside the last direct child of the hierarchy (xpath: /hierarchy/*[last()] )
+ *
+ * @param {Document} doc
+ * @param {Node} domNode
+ * @param {string} path a dot-separated string of indices
+ * @returns {string|null}
+ */
+export function getOptimalUiAutomatorSelector(doc, domNode, path) {
+  return new UiAutomatorGenerator(doc, domNode, path).generate();
 }

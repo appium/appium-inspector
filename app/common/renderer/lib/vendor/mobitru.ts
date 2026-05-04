@@ -1,17 +1,21 @@
 import {BaseVendor} from './base.js';
 
 export class MobitruVendor extends BaseVendor {
-  /**
-   * @override
-   */
-  async configureProperties() {
+  override async configureProperties(): Promise<void> {
     const mobitru = this._server.mobitru;
     const vendorName = 'Mobitru';
 
-    const username = mobitru.username || process.env.MOBITRU_BILLING_UNIT || 'personal';
-    const accessKey = mobitru.accessKey || process.env.MOBITRU_ACCESS_KEY;
+    const username =
+      (mobitru.username as string | undefined) ||
+      (process.env.MOBITRU_BILLING_UNIT as string | undefined) ||
+      'personal';
+    const accessKey =
+      (mobitru.accessKey as string | undefined) ||
+      (process.env.MOBITRU_ACCESS_KEY as string | undefined);
     const url =
-      mobitru.webDriverUrl || process.env.MOBITRU_WEBDRIVER_URL || 'https://app.mobitru.com/wd/hub';
+      (mobitru.webDriverUrl as string | undefined) ||
+      (process.env.MOBITRU_WEBDRIVER_URL as string | undefined) ||
+      'https://app.mobitru.com/wd/hub';
     this._checkInputPropertyPresence(vendorName, [{name: 'Access Key', val: accessKey}]);
     const mobitruUrl = this._validateUrl(url);
 

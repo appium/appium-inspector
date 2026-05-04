@@ -93,56 +93,6 @@ export function extractParamsFromCommandPath(path) {
 }
 
 /**
- * Filter and transform a given map of command paths/methods/details.
- *
- * @param {Object} pathsToCmdsMap map of command paths to their HTTP methods and details
- * @returns flat map of command names to their details
- */
-function transformInnerCommandsMap(pathsToCmdsMap) {
-  const transformedMap = {};
-  for (const path in pathsToCmdsMap) {
-    const pathsCmdsMap = pathsToCmdsMap[path];
-    // pathsCmdsMap: HTTP methods to commands map
-    for (const method in pathsCmdsMap) {
-      // Skip commands that don't have the command name
-      if (_.isEmpty(pathsCmdsMap[method]) || !('command' in pathsCmdsMap[method])) {
-        continue;
-      }
-      const cmdName = pathsCmdsMap[method].command;
-      // Skip commands not supported by WDIO
-      if (!(cmdName in APPIUM_TO_WD_COMMANDS)) {
-        continue;
-      }
-      // Filter out any entries with empty values
-      const commandDetails = deepFilterEmpty(pathsCmdsMap[method]);
-      // If we have multiple entries for the same method name in the same source (e.g. /execute
-      // and /execute/sync in Appium 2 are both named 'execute'), skip any deprecated entries
-      if (APPIUM_TO_WD_COMMANDS[cmdName] in transformedMap && 'deprecated' in commandDetails) {
-        continue;
-      }
-      // Some commands require parameter adjustments due to WDIO method signature differences
-      if (cmdName in COMMANDS_WITH_MISMATCHED_PARAMS) {
-        commandDetails.params = COMMANDS_WITH_MISMATCHED_PARAMS[cmdName];
-      }
-      // For commands that include additional parameters in the path (e.g. /session/:sessionId/element/:elementId),
-      // WDIO includes them in the method itself, so we need to extract their names from the path
-      // and add them to the start of the parameters array
-      const commandPathParamNames = extractParamsFromCommandPath(path);
-      if (commandPathParamNames.length > 0) {
-        const commandPathParamEntries = commandPathParamNames.map((paramName) => ({
-          name: paramName,
-          required: true,
-        }));
-        commandDetails.params = [...commandPathParamEntries, ...(commandDetails.params || [])];
-      }
-      // Add the adjusted command details to the result map, using the WDIO command name.
-      transformedMap[APPIUM_TO_WD_COMMANDS[cmdName]] = commandDetails;
-    }
-  }
-  return transformedMap;
-}
-
-/**
  * Filter and transform the map of commands supported by the current driver using certain criteria:
  *   * Remove entries with empty values (similarly to {@link deepFilterEmpty})
  *   * Remove commands not supported by WDIO
@@ -227,4 +177,54 @@ export function transformExecMethodsMap(execMethodsResponse) {
     }
   }
   return _.toPairs(adjExecMethodsMap);
+}
+
+/**
+ * Filter and transform a given map of command paths/methods/details.
+ *
+ * @param {Object} pathsToCmdsMap map of command paths to their HTTP methods and details
+ * @returns flat map of command names to their details
+ */
+function transformInnerCommandsMap(pathsToCmdsMap) {
+  const transformedMap = {};
+  for (const path in pathsToCmdsMap) {
+    const pathsCmdsMap = pathsToCmdsMap[path];
+    // pathsCmdsMap: HTTP methods to commands map
+    for (const method in pathsCmdsMap) {
+      // Skip commands that don't have the command name
+      if (_.isEmpty(pathsCmdsMap[method]) || !('command' in pathsCmdsMap[method])) {
+        continue;
+      }
+      const cmdName = pathsCmdsMap[method].command;
+      // Skip commands not supported by WDIO
+      if (!(cmdName in APPIUM_TO_WD_COMMANDS)) {
+        continue;
+      }
+      // Filter out any entries with empty values
+      const commandDetails = deepFilterEmpty(pathsCmdsMap[method]);
+      // If we have multiple entries for the same method name in the same source (e.g. /execute
+      // and /execute/sync in Appium 2 are both named 'execute'), skip any deprecated entries
+      if (APPIUM_TO_WD_COMMANDS[cmdName] in transformedMap && 'deprecated' in commandDetails) {
+        continue;
+      }
+      // Some commands require parameter adjustments due to WDIO method signature differences
+      if (cmdName in COMMANDS_WITH_MISMATCHED_PARAMS) {
+        commandDetails.params = COMMANDS_WITH_MISMATCHED_PARAMS[cmdName];
+      }
+      // For commands that include additional parameters in the path (e.g. /session/:sessionId/element/:elementId),
+      // WDIO includes them in the method itself, so we need to extract their names from the path
+      // and add them to the start of the parameters array
+      const commandPathParamNames = extractParamsFromCommandPath(path);
+      if (commandPathParamNames.length > 0) {
+        const commandPathParamEntries = commandPathParamNames.map((paramName) => ({
+          name: paramName,
+          required: true,
+        }));
+        commandDetails.params = [...commandPathParamEntries, ...(commandDetails.params || [])];
+      }
+      // Add the adjusted command details to the result map, using the WDIO command name.
+      transformedMap[APPIUM_TO_WD_COMMANDS[cmdName]] = commandDetails;
+    }
+  }
+  return transformedMap;
 }

@@ -661,19 +661,6 @@ export function importSessionFiles(fileList) {
   };
 }
 
-function parseAndValidateSessionFileString(sessionFileString) {
-  const sessionJSON = parseSessionFileContents(sessionFileString);
-  if (sessionJSON === null) {
-    return null;
-  }
-  sessionJSON.serverType = Object.keys(sessionJSON.server).find(
-    (type) => type !== SERVER_TYPES.ADVANCED,
-  );
-  sessionJSON.visibleProviders =
-    sessionJSON.serverType !== SERVER_TYPES.REMOTE ? [sessionJSON.serverType] : [];
-  return sessionJSON;
-}
-
 /**
  * Packages the current server and capability details in an .appiumsession file
  */
@@ -698,34 +685,6 @@ export function exportSavedSession(session) {
     const fileName = `${escapedName}.appiumsession`;
     downloadFile(href, fileName);
   };
-}
-
-/**
- * @returns {Promise<VendorProperties | false | {}>}
- */
-async function retrieveVendorProperties({server, serverType, sessionCaps}) {
-  //
-  // To register a new session vendor:
-  // - Implement a new class inherited from VendorBase in app/common/renderer/lib/vendor/<vendor_name>.js
-  // - Add the newly created class to the VENDOR_MAP defined in app/common/renderer/lib/vendor/map.js
-  //
-  const VendorClass = VENDOR_MAP[serverType];
-
-  if (!VendorClass) {
-    log.info(`No vendor mapping is defined for the server type '${serverType}'. Using defaults`);
-
-    return {};
-  }
-
-  log.info(`Using ${VendorClass.name}`);
-
-  try {
-    const vendor = new VendorClass(server, sessionCaps);
-    return await vendor.apply();
-  } catch (e) {
-    showError(e);
-    return false;
-  }
 }
 
 /**
@@ -783,29 +742,6 @@ export function getRunningSessions() {
     const sessions = await fetchAllSessions(baseUrl, headers);
     dispatch({type: GET_SESSIONS_DONE, sessions});
   };
-}
-
-async function fetchAllSessions(baseUrl, headers) {
-  const appiumSessionsEndpoint = `${baseUrl}appium/sessions`; // Appium 3+
-  const oldAppiumSessionsEndpoint = `${baseUrl}sessions`; // Appium 1-2
-  const seleniumSessionsEndpoint = `${baseUrl}status`;
-
-  async function fetchSessionsFromEndpoint(url) {
-    try {
-      const res = await fetchSessionInformation({url, headers});
-      return url === seleniumSessionsEndpoint ? formatSeleniumGridSessions(res) : (res.value ?? []);
-    } catch {
-      return [];
-    }
-  }
-
-  const [appiumSessions, oldAppiumSessions, seleniumSessions] = await Promise.all([
-    fetchSessionsFromEndpoint(appiumSessionsEndpoint),
-    fetchSessionsFromEndpoint(oldAppiumSessionsEndpoint),
-    fetchSessionsFromEndpoint(seleniumSessionsEndpoint),
-  ]);
-
-  return [...appiumSessions, ...oldAppiumSessions, ...seleniumSessions];
 }
 
 export function startDesiredCapsNameEditor() {
@@ -940,32 +876,6 @@ export function setVisibleProviders() {
   };
 }
 
-/**
- * Add custom capabilities
- *
- * @param {object} caps
- */
-function addCustomCaps(caps) {
-  const {platformName = ''} = caps;
-  const androidCustomCaps = {};
-  // @TODO: remove when this is defaulted in the newest Appium 1.8.x release
-  androidCustomCaps[CAPS_ENSURE_WEBVIEW_HAVE_PAGES] = true;
-  // Make sure the screenshot is taken of the whole screen when the ChromeDriver is used
-  androidCustomCaps[CAPS_NATIVE_WEB_SCREENSHOT] = true;
-
-  const iosCustomCaps = {};
-  // Always add the includeSafariInWebviews for future HTML detection
-  // This will ensure that if you use AD to switch between App and browser
-  // that it can detect Safari as a webview
-  iosCustomCaps[CAPS_INCLUDE_SAFARI_IN_WEBVIEWS] = true;
-
-  return {
-    ...caps,
-    ...(platformName.toLowerCase() === 'android' ? androidCustomCaps : {}),
-    ...(platformName.toLowerCase() === 'ios' ? iosCustomCaps : {}),
-  };
-}
-
 export function bindWindowClose() {
   return (dispatch, getState) => {
     window.addEventListener('beforeunload', async (evt) => {
@@ -1048,5 +958,95 @@ export function initFromQueryString(loadNewSession) {
       }
       loadNewSession(caps);
     }
+  };
+}
+
+function parseAndValidateSessionFileString(sessionFileString) {
+  const sessionJSON = parseSessionFileContents(sessionFileString);
+  if (sessionJSON === null) {
+    return null;
+  }
+  sessionJSON.serverType = Object.keys(sessionJSON.server).find(
+    (type) => type !== SERVER_TYPES.ADVANCED,
+  );
+  sessionJSON.visibleProviders =
+    sessionJSON.serverType !== SERVER_TYPES.REMOTE ? [sessionJSON.serverType] : [];
+  return sessionJSON;
+}
+
+/**
+ * @returns {Promise<VendorProperties | false | {}>}
+ */
+async function retrieveVendorProperties({server, serverType, sessionCaps}) {
+  //
+  // To register a new session vendor:
+  // - Implement a new class inherited from BaseVendor in app/common/renderer/lib/vendor/<vendor_name>.ts
+  // - Add the newly created class to the VENDOR_MAP defined in app/common/renderer/lib/vendor/map.ts
+  //
+  const VendorClass = VENDOR_MAP[serverType];
+
+  if (!VendorClass) {
+    log.info(`No vendor mapping is defined for the server type '${serverType}'. Using defaults`);
+
+    return {};
+  }
+
+  log.info(`Using ${VendorClass.name}`);
+
+  try {
+    const vendor = new VendorClass(server, sessionCaps);
+    return await vendor.apply();
+  } catch (e) {
+    showError(e);
+    return false;
+  }
+}
+
+async function fetchAllSessions(baseUrl, headers) {
+  const appiumSessionsEndpoint = `${baseUrl}appium/sessions`; // Appium 3+
+  const oldAppiumSessionsEndpoint = `${baseUrl}sessions`; // Appium 1-2
+  const seleniumSessionsEndpoint = `${baseUrl}status`;
+
+  async function fetchSessionsFromEndpoint(url) {
+    try {
+      const res = await fetchSessionInformation({url, headers});
+      return url === seleniumSessionsEndpoint ? formatSeleniumGridSessions(res) : (res.value ?? []);
+    } catch {
+      return [];
+    }
+  }
+
+  const [appiumSessions, oldAppiumSessions, seleniumSessions] = await Promise.all([
+    fetchSessionsFromEndpoint(appiumSessionsEndpoint),
+    fetchSessionsFromEndpoint(oldAppiumSessionsEndpoint),
+    fetchSessionsFromEndpoint(seleniumSessionsEndpoint),
+  ]);
+
+  return [...appiumSessions, ...oldAppiumSessions, ...seleniumSessions];
+}
+
+/**
+ * Add custom capabilities
+ *
+ * @param {object} caps
+ */
+function addCustomCaps(caps) {
+  const {platformName = ''} = caps;
+  const androidCustomCaps = {};
+  // @TODO: remove when this is defaulted in the newest Appium 1.8.x release
+  androidCustomCaps[CAPS_ENSURE_WEBVIEW_HAVE_PAGES] = true;
+  // Make sure the screenshot is taken of the whole screen when the ChromeDriver is used
+  androidCustomCaps[CAPS_NATIVE_WEB_SCREENSHOT] = true;
+
+  const iosCustomCaps = {};
+  // Always add the includeSafariInWebviews for future HTML detection
+  // This will ensure that if you use AD to switch between App and browser
+  // that it can detect Safari as a webview
+  iosCustomCaps[CAPS_INCLUDE_SAFARI_IN_WEBVIEWS] = true;
+
+  return {
+    ...caps,
+    ...(platformName.toLowerCase() === 'android' ? androidCustomCaps : {}),
+    ...(platformName.toLowerCase() === 'ios' ? iosCustomCaps : {}),
   };
 }

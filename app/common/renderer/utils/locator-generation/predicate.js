@@ -4,18 +4,6 @@ import {select as xpathSelect} from 'xpath';
 import {LocatorGeneratorBase} from './base.js';
 
 /**
- * Get an optimal predicate string for a Node
- * Only works for a single element - no parent/child scope
- *
- * @param {Document} doc
- * @param {Node} domNode
- * @returns {string|null}
- */
-export function getOptimalPredicateString(doc, domNode) {
-  return new PredicateStringGenerator(doc, domNode).generate();
-}
-
-/**
  * Generator for iOS Predicate String locators
  * @private
  */
@@ -69,4 +57,16 @@ class PredicateStringGenerator extends LocatorGeneratorBase {
       return null;
     }
   }
+}
+
+/**
+ * Get an optimal predicate string for a Node
+ * Only works for a single element - no parent/child scope
+ *
+ * @param {Document} doc
+ * @param {Node} domNode
+ * @returns {string|null}
+ */
+export function getOptimalPredicateString(doc, domNode) {
+  return new PredicateStringGenerator(doc, domNode).generate();
 }

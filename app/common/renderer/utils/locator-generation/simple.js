@@ -5,6 +5,69 @@ import XPath from 'xpath';
 import {LOCATOR_STRATEGIES as STRATS} from '../../constants/session-inspector.js';
 
 /**
+ * Generator for simple locator strategies in both native and webview contexts
+ * @private
+ */
+class SimpleLocatorGenerator {
+  // Map of native element attributes to their matching simple (optimal) locator strategies
+  static NATIVE_STRATEGY_MAP = [
+    ['name', STRATS.ACCESSIBILITY_ID],
+    ['content-desc', STRATS.ACCESSIBILITY_ID],
+    ['id', STRATS.ID],
+    ['rntestid', STRATS.ID],
+    ['resource-id', STRATS.ID],
+    ['class', STRATS.CLASS_NAME],
+    ['type', STRATS.CLASS_NAME],
+  ];
+
+  /**
+   * @param {Record<string, string|object>} elementProps relevant element properties
+   * @param {Document} sourceDoc - the source document
+   */
+  constructor(elementProps, sourceDoc) {
+    this._doc = sourceDoc;
+    this._tag = elementProps.tag;
+    this._attributes = elementProps.attributes;
+  }
+
+  /**
+   * Get suggested selectors for simple locator strategies in native context:
+   * id, class name, and accessibility id
+   *
+   * @returns {Record<string, string>} mapping of native strategies to selectors
+   */
+  generateNativeSelectors() {
+    return SimpleLocatorGenerator.NATIVE_STRATEGY_MAP.reduce((res, [strategyAlias, strategy]) => {
+      const value = this._attributes?.[strategyAlias];
+      if (value && areAttrAndValueUnique(strategyAlias, value, this._doc)) {
+        res[strategy] = value;
+      }
+      return res;
+    }, {});
+  }
+
+  /**
+   * Get suggested selectors for simple locator strategies in webview context:
+   * id (css) and tag name
+   *
+   * @returns {Record<string, string>} mapping of web strategies to selectors
+   */
+  generateWebSelectors() {
+    const webStrategyMap = {};
+    // id (css)
+    const idValue = this._attributes?.id;
+    if (idValue && areAttrAndValueUnique('id', idValue, this._doc)) {
+      webStrategyMap[STRATS.CSS] = `#${cssEscape(idValue)}`;
+    }
+    // tag name
+    if (isTagUnique(this._tag, this._doc)) {
+      webStrategyMap[STRATS.TAG_NAME] = this._tag;
+    }
+    return webStrategyMap;
+  }
+}
+
+/**
  * Get suggested selectors for simple locator strategies (which match a specific attribute)
  *
  * @param {Record<string, string|object>} elementProps relevant element properties
@@ -93,67 +156,4 @@ function doesDocumentExist(node) {
  */
 function isXpathUnique(xpath, options) {
   return XPath.parse(xpath).select(options).length === 1;
-}
-
-/**
- * Generator for simple locator strategies in both native and webview contexts
- * @private
- */
-class SimpleLocatorGenerator {
-  // Map of native element attributes to their matching simple (optimal) locator strategies
-  static NATIVE_STRATEGY_MAP = [
-    ['name', STRATS.ACCESSIBILITY_ID],
-    ['content-desc', STRATS.ACCESSIBILITY_ID],
-    ['id', STRATS.ID],
-    ['rntestid', STRATS.ID],
-    ['resource-id', STRATS.ID],
-    ['class', STRATS.CLASS_NAME],
-    ['type', STRATS.CLASS_NAME],
-  ];
-
-  /**
-   * @param {Record<string, string|object>} elementProps relevant element properties
-   * @param {Document} sourceDoc - the source document
-   */
-  constructor(elementProps, sourceDoc) {
-    this._doc = sourceDoc;
-    this._tag = elementProps.tag;
-    this._attributes = elementProps.attributes;
-  }
-
-  /**
-   * Get suggested selectors for simple locator strategies in native context:
-   * id, class name, and accessibility id
-   *
-   * @returns {Record<string, string>} mapping of native strategies to selectors
-   */
-  generateNativeSelectors() {
-    return SimpleLocatorGenerator.NATIVE_STRATEGY_MAP.reduce((res, [strategyAlias, strategy]) => {
-      const value = this._attributes?.[strategyAlias];
-      if (value && areAttrAndValueUnique(strategyAlias, value, this._doc)) {
-        res[strategy] = value;
-      }
-      return res;
-    }, {});
-  }
-
-  /**
-   * Get suggested selectors for simple locator strategies in webview context:
-   * id (css) and tag name
-   *
-   * @returns {Record<string, string>} mapping of web strategies to selectors
-   */
-  generateWebSelectors() {
-    const webStrategyMap = {};
-    // id (css)
-    const idValue = this._attributes?.id;
-    if (idValue && areAttrAndValueUnique('id', idValue, this._doc)) {
-      webStrategyMap[STRATS.CSS] = `#${cssEscape(idValue)}`;
-    }
-    // tag name
-    if (isTagUnique(this._tag, this._doc)) {
-      webStrategyMap[STRATS.TAG_NAME] = this._tag;
-    }
-    return webStrategyMap;
-  }
 }
