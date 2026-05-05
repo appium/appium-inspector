@@ -245,7 +245,14 @@ const AppSource = (props) => {
               <Tree
                 defaultExpandAll={true}
                 showLine={true}
-                switcherIcon={<CaretDownOutlined />}
+                switcherIcon={({expanded}) => (
+                  <CaretDownOutlined
+                    style={{
+                      transform: `rotate(${expanded ? 0 : -90}deg)`,
+                      transition: 'transform 0.3s',
+                    }}
+                  />
+                )}
                 onExpand={onExpand}
                 expandedKeys={expandedKeys}
                 autoExpandParent={autoExpandParent}
