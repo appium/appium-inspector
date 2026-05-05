@@ -69,9 +69,9 @@
 
 .sourceTree :global(.ant-tree-node-content-wrapper) {
   margin: 0 0 2px 4px;
+  padding: 0;
 }
 
-.sourceTree :global(.ant-tree-switcher-icon) {
-  font-size: 14px !important;
-  vertical-align: middle !important;
+.sourceTree :global(.ant-tree-switcher-line-icon) {
+  vertical-align: -0.2em;
 }
