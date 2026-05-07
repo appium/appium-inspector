@@ -30,7 +30,7 @@ export default defineConfig([
       },
       'react-x': {
         compilationMode: 'all',
-      }
+      },
     },
   },
   {
