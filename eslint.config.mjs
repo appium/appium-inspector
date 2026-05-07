@@ -28,6 +28,9 @@ export default defineConfig([
       react: {
         version: 'detect',
       },
+      'react-x': {
+        compilationMode: 'all',
+      },
     },
   },
   {
