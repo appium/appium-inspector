@@ -19,6 +19,24 @@ const locatorStrategyDocsLink = (name, docsLink) => (
   </span>
 );
 
+const modifySuggestedLocatorsData = (suggestedLocatorsData) => {
+  const suggestedLocsDataCopy = structuredClone(suggestedLocatorsData);
+  for (const locator of suggestedLocsDataCopy) {
+    switch (locator.key) {
+      case LOCATOR_STRATEGIES.CLASS_CHAIN:
+        locator.find = locatorStrategyDocsLink(locator.key, LINKS.CLASS_CHAIN_DOCS);
+        break;
+      case LOCATOR_STRATEGIES.PREDICATE:
+        locator.find = locatorStrategyDocsLink(locator.key, LINKS.PREDICATE_DOCS);
+        break;
+      case LOCATOR_STRATEGIES.UIAUTOMATOR:
+        locator.find = locatorStrategyDocsLink(locator.key, LINKS.UIAUTOMATOR_DOCS);
+        break;
+    }
+  }
+  return suggestedLocsDataCopy;
+};
+
 /**
  * Table listing the selected element's suggested locators.
  */
@@ -54,24 +72,9 @@ const SelectedElementLocatorsTable = (props) => {
     });
   }
 
-  const suggestedLocsData = structuredClone(
+  const suggestedLocsData = modifySuggestedLocatorsData(
     executionTimesExist ? findElementsExecutionTimes : elementLocatorsData,
   );
-
-  // Add documentation links to supported strategies
-  for (const locator of suggestedLocsData) {
-    switch (locator.key) {
-      case LOCATOR_STRATEGIES.CLASS_CHAIN:
-        locator.find = locatorStrategyDocsLink(locator.key, LINKS.CLASS_CHAIN_DOCS);
-        break;
-      case LOCATOR_STRATEGIES.PREDICATE:
-        locator.find = locatorStrategyDocsLink(locator.key, LINKS.PREDICATE_DOCS);
-        break;
-      case LOCATOR_STRATEGIES.UIAUTOMATOR:
-        locator.find = locatorStrategyDocsLink(locator.key, LINKS.UIAUTOMATOR_DOCS);
-        break;
-    }
-  }
 
   return (
     <Spin spinning={isFindingElementsTimes}>
