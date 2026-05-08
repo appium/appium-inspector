@@ -286,7 +286,7 @@ export function newSession(originalCaps, attachSessId = null) {
       sessionCaps[CAPS_CONNECT_HARDWARE_KEYBOARD] = true;
     }
 
-    let driver = null;
+    let driver;
     try {
       if (attachSessId) {
         // When attaching to a session id, webdriver does not fully populate client information, so
@@ -321,7 +321,7 @@ export function newSession(originalCaps, attachSessId = null) {
           } catch (err) {
             // rethrow the error as session not running, but first log the original error to console
             log.error(err);
-            throw new Error(i18n.t('attachSessionNotRunning', {attachSessId}));
+            throw new Error(i18n.t('attachSessionNotRunning', {attachSessId}), {cause: err});
           }
         }
         // Chrome MJSONWP mode returns "platform" instead of "platformName"
@@ -878,20 +878,14 @@ export function setVisibleProviders() {
 
 export function bindWindowClose() {
   return (dispatch, getState) => {
-    window.addEventListener('beforeunload', async (evt) => {
+    window.addEventListener('beforeunload', async () => {
       let {driver} = getState().inspector;
       if (driver) {
         try {
           const action = quitSession();
           await action(dispatch, getState);
-        } finally {
-          driver = null;
-        }
+        } catch {}
       }
-
-      // to allow the window close to continue, the thing we must do is make sure the event no
-      // longer has any 'returnValue' property
-      delete evt.returnValue;
     });
   };
 }

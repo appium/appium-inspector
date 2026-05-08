@@ -1,5 +1,5 @@
 import {SERVER_TYPES} from '../../constants/session-builder.js';
-import {BaseVendor, type SessionBuilderServer} from './base.js';
+import type {BaseVendor, SessionBuilderServer} from './base.js';
 import {BitbarVendor} from './bitbar.js';
 import {BrowserstackVendor} from './browserstack.js';
 import {ExperitestVendor} from './experitest.js';
