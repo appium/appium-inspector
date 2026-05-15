@@ -36,6 +36,7 @@ export const SERVER_TYPES = {
   WEBMATE: 'webmate',
   FIREFLINKDEVICEFARM: 'fireflinkdevicefarm',
   RABBITQA: 'rabbitqa',
+  ROBOTACTIONS: 'robotactions',
 };
 
 export const SAVED_SESSIONS_TABLE_VALUES = {
