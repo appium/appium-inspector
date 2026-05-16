@@ -13,6 +13,7 @@ import {PerfectoVendor} from './perfecto.js';
 import {RabbitQAVendor} from './rabbitqa.js';
 import {RemoteVendor} from './remote.js';
 import {RemotetestkitVendor} from './remotetestkit.js';
+import {RobotActionsVendor} from './robotactions.js';
 import {RobotqaVendor} from './robotqa.js';
 import {SaucelabsVendor} from './saucelabs.js';
 import {TestcribeVendor} from './testcribe.js';
@@ -47,4 +48,5 @@ export const VENDOR_MAP: Partial<Record<string, VendorConstructor>> = {
   [SERVER_TYPES.WEBMATE]: WebmateVendor,
   [SERVER_TYPES.FIREFLINKDEVICEFARM]: FireflinkDeviceFarmVendor,
   [SERVER_TYPES.RABBITQA]: RabbitQAVendor,
+  [SERVER_TYPES.ROBOTACTIONS]: RobotActionsVendor,
 };

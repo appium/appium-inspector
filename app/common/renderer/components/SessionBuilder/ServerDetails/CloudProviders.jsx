@@ -14,6 +14,8 @@ import PerfectoLogo from '../../../assets/images/perfecto_logo.svg';
 import RabbitQALogo from '../../../assets/images/rabbitqa_logo.svg';
 import RabbitQALogoDark from '../../../assets/images/rabbitqa_logo_dark.svg';
 import RemoteTestKitLogo from '../../../assets/images/remotetestkit_logo.svg';
+import RobotActionsLogo from '../../../assets/images/robotactions_logo.svg';
+import RobotActionsLogoDark from '../../../assets/images/robotactions_logo_dark.svg';
 import RobotQALogo from '../../../assets/images/robotqa_logo.svg';
 import RobotQALogoDark from '../../../assets/images/robotqa_logo_dark.svg';
 import SauceLogo from '../../../assets/images/sauce_logo.svg';
@@ -42,6 +44,7 @@ import ServerTabPcloudy from './ServerTabPcloudy.jsx';
 import ServerTabPerfecto from './ServerTabPerfecto.jsx';
 import ServerTabRabbitQA from './ServerTabRabbitqa.jsx';
 import ServerTabRemoteTestKit from './ServerTabRemoteTestKit.jsx';
+import ServerTabRobotActions from './ServerTabRobotActions.jsx';
 import ServerTabRobotQA from './ServerTabRobotQA.jsx';
 import ServerTabSauce from './ServerTabSauce.jsx';
 import ServerTabTestcribe from './ServerTabTestcribe.jsx';
@@ -175,6 +178,13 @@ const providers = {
     logos: {
       light: RabbitQALogo,
       dark: RabbitQALogoDark,
+    },
+  },
+  [SERVER_TYPES.ROBOTACTIONS]: {
+    tab: ServerTabRobotActions,
+    logos: {
+      light: RobotActionsLogo,
+      dark: RobotActionsLogoDark,
     },
   },
 };
