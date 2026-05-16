@@ -64,7 +64,7 @@
     "electron": "./node_modules/.bin/electron"
   },
   "dependencies": {
-    "@ant-design/icons": "6.2.2",
+    "@ant-design/icons": "6.2.3",
     "@reduxjs/toolkit": "2.11.2",
     "@tabler/icons-react": "3.44.0",
     "@wdio/protocols": "9.27.1",
