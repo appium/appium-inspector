@@ -189,6 +189,8 @@
   "Bitbar API Key": "Bitbar API 키",
   "RemoteTestKit AccessToken": "RemoteTestKit 액세스 토큰",
   "RobotQA Token": "RobotQA 토큰",
+  "RobotActions Host": "RobotActions Host",
+  "RobotActions Token": "RobotActions Token",
   "Add": "추가",
   "Name": "이름",
   "Description": "설명",
