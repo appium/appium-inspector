@@ -189,6 +189,8 @@
   "Bitbar API Key": "BitbarのAPIキー",
   "RemoteTestKit AccessToken": "RemoteTestKit AccessToken",
   "RobotQA Token": "RobotQA Token",
+  "RobotActions Host": "RobotActions Host",
+  "RobotActions Token": "RobotActions Token",
   "Add": "追加",
   "Name": "キー名",
   "Description": "備考",

@@ -189,6 +189,8 @@
   "Bitbar API Key": "کلید API برای Bitbar",
   "RemoteTestKit AccessToken": "RemoteTestKit AccessToken",
   "RobotQA Token": "RobotQA Token",
+  "RobotActions Host": "RobotActions Host",
+  "RobotActions Token": "RobotActions Token",
   "Add": "Add",
   "Name": "نام",
   "Description": "Description",
