@@ -1,5 +1,6 @@
 import {SERVER_TYPES} from '../../constants/session-builder.js';
 import type {BaseVendor, SessionBuilderServer} from './base.js';
+import {AstrofarmVendor} from './astrofarm.js';
 import {BitbarVendor} from './bitbar.js';
 import {BrowserstackVendor} from './browserstack.js';
 import {ExperitestVendor} from './experitest.js';
@@ -49,4 +50,5 @@ export const VENDOR_MAP: Partial<Record<string, VendorConstructor>> = {
   [SERVER_TYPES.FIREFLINKDEVICEFARM]: FireflinkDeviceFarmVendor,
   [SERVER_TYPES.RABBITQA]: RabbitQAVendor,
   [SERVER_TYPES.ROBOTACTIONS]: RobotActionsVendor,
+  [SERVER_TYPES.ASTROFARM]: AstrofarmVendor,
 };

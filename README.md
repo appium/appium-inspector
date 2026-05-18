@@ -226,6 +226,15 @@ The Inspector has built-in integrations with various cloud service provider plat
         </picture>
       </a>
     </td>
+    <td align="center" valign="center">
+      <a href="https://www.42gears.com/products/device-farm">
+        <picture>
+          <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/astrofarm_logo.svg">
+          <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/astrofarm_logo.svg">
+          <img width="200" height="30" alt="AstroFarm">
+        </picture>
+      </a>
+    </td>
   </tr>
 </table>
 

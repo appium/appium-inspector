@@ -37,6 +37,7 @@ export const SERVER_TYPES = {
   FIREFLINKDEVICEFARM: 'fireflinkdevicefarm',
   RABBITQA: 'rabbitqa',
   ROBOTACTIONS: 'robotactions',
+  ASTROFARM: 'astrofarm',
 };
 
 export const SAVED_SESSIONS_TABLE_VALUES = {
