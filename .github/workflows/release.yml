@@ -1,0 +1,88 @@
+name: Semantic Release
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Generate Semantic Release Config
+        run: |
+          cat << 'EOF' > .releaserc.json
+          {
+            "branches": ["master"],
+            "plugins": [
+              ["@semantic-release/commit-analyzer", {
+                "preset": "conventionalcommits",
+                "releaseRules": [
+                  {"type": "feat", "release": "minor"},
+                  {"type": "FEAT", "release": "minor"},
+                  {"type": "fix", "release": "minor"},
+                  {"type": "FIX", "release": "minor"},
+                  {"type": "hotfix", "release": "minor"},
+                  {"type": "HOTFIX", "release": "minor"},
+                  {"type": "improvement", "release": "minor"},
+                  {"type": "IMPROVEMENT", "release": "minor"},
+                  {"type": "breaking", "release": "major"},
+                  {"type": "BREAKING", "release": "major"},
+                  {"type": "perf", "release": "minor"},
+                  {"type": "PERF", "release": "minor"},
+                  {"type": "refactor", "release": "minor"},
+                  {"type": "REFACTOR", "release": "minor"},
+                  {"type": "chore", "release": "minor"},
+                  {"type": "CHORE", "release": "minor"},
+                  {"type": "docs", "release": "minor"},
+                  {"type": "DOCS", "release": "minor"},
+                  {"type": "test", "release": "minor"},
+                  {"type": "TEST", "release": "minor"},
+                  {"type": "ci", "release": "minor"},
+                  {"type": "CI", "release": "minor"},
+                  {"type": "revert", "release": "minor"},
+                  {"type": "REVERT", "release": "minor"}
+                ]
+              }],
+              ["@semantic-release/release-notes-generator", { "preset": "conventionalcommits" }],
+              ["@semantic-release/github", {
+                "successComment": false,
+                "failComment": false,
+                "failTitle": false
+              }]
+            ]
+          }
+          EOF
+
+      - name: Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm install conventional-changelog-conventionalcommits
+          npx semantic-release
+
+  trigger-orchestrator:
+    needs: release
+    uses: projectxyzio/gh-actions/.github/workflows/semantic-orchestrator.yml@master
+    secrets:
+      SEMANTIC_RELEASE_PAT: ${{ secrets.SEMANTIC_RELEASE_PAT }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
