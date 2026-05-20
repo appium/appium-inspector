@@ -76,7 +76,7 @@
     "electron-debug": "4.1.0",
     "electron-settings": "4.0.4",
     "electron-updater": "6.8.3",
-    "i18next": "26.1.0",
+    "i18next": "26.2.0",
     "i18next-fs-backend": "2.6.5",
     "i18next-http-backend": "4.0.0",
     "ky": "1.14.3",
