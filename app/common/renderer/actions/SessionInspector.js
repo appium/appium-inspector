@@ -14,6 +14,7 @@ import {getOptimalXPath} from '../utils/locator-generation/xpath.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
 import {getRandomId} from '../utils/other.js';
+import {rankSmartLocators} from '../utils/smart-locators/locator-scoring.js';
 import {
   findDOMNodeByPath,
   findJSONElementByPath,
@@ -34,6 +35,8 @@ export const METHOD_CALL_REQUESTED = 'METHOD_CALL_REQUESTED';
 export const METHOD_CALL_DONE = 'METHOD_CALL_DONE';
 export const SET_EXPANDED_PATHS = 'SET_EXPANDED_PATHS';
 export const SET_OPTIMAL_LOCATORS = 'SET_OPTIMAL_LOCATORS';
+export const VALIDATE_SMART_LOCATORS_REQUESTED = 'VALIDATE_SMART_LOCATORS_REQUESTED';
+export const VALIDATE_SMART_LOCATORS_COMPLETED = 'VALIDATE_SMART_LOCATORS_COMPLETED';
 
 export const SELECT_CENTROID = 'SELECT_CENTROID';
 export const UNSELECT_CENTROID = 'UNSELECT_CENTROID';
@@ -164,8 +167,23 @@ export function selectElement(path) {
     const strategyMap = getSuggestedLocators(selectedElement, sourceXML, isNative, automationName);
     dispatch({type: SET_OPTIMAL_LOCATORS, strategyMap});
 
+    const rankedLocators = rankSmartLocators({
+      selectedElement: {...selectedElement, strategyMap},
+      sourceXML,
+      currentContext,
+      automationName,
+    });
+    const smartStrategyMap = rankedLocators
+      .filter(({matchCount, status}) => matchCount !== 0 && status !== 'Invalid')
+      .map(({strategy, value}) => [strategy, value]);
+
     // Debounce find element so that if another element is selected shortly after, cancel the previous search
-    await findElement(strategyMap, dispatch, getState, path);
+    await findElement(
+      smartStrategyMap.length ? smartStrategyMap : strategyMap,
+      dispatch,
+      getState,
+      path,
+    );
   };
 }
 
@@ -481,6 +499,52 @@ export function getFindElementsTimes(findDataSource) {
     } catch (error) {
       dispatch({type: GET_FIND_ELEMENTS_TIMES_COMPLETED});
       showError(error, {methodName: 10});
+    }
+  };
+}
+
+/**
+ * Validate smart locator candidates by running real Appium findElements calls.
+ *
+ * @param {Array<object>} locators
+ * @param {string} selectedElementId
+ * @returns {Function}
+ */
+export function validateSmartLocators(locators, selectedElementId) {
+  return async (dispatch, getState) => {
+    const {driver, selectedElementPath} = getState().inspector;
+    dispatch({type: VALIDATE_SMART_LOCATORS_REQUESTED});
+    const validationResults = {};
+
+    for (const locator of locators) {
+      const start = Date.now();
+      try {
+        const elements = await driver.findElements(locator.strategy, locator.value);
+        const elementIds = elements.map((element) => element.elementId);
+        validationResults[locator.key] = {
+          key: locator.key,
+          executionTime: Date.now() - start,
+          matchCount: elements.length,
+          elementIds,
+          matchesSelectedElement: selectedElementId ? elementIds.includes(selectedElementId) : null,
+        };
+      } catch (error) {
+        validationResults[locator.key] = {
+          key: locator.key,
+          executionTime: Date.now() - start,
+          matchCount: 0,
+          elementIds: [],
+          matchesSelectedElement: false,
+          error: error?.message || String(error),
+        };
+      }
+    }
+
+    if (getState().inspector.selectedElementPath === selectedElementPath) {
+      dispatch({
+        type: VALIDATE_SMART_LOCATORS_COMPLETED,
+        validationResults,
+      });
     }
   };
 }

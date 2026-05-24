@@ -8,6 +8,7 @@ import SelectedElementAttributesTable from './SelectedElementAttributesTable.jsx
 import SelectedElementBoxModel from './SelectedElementBoxModel.jsx';
 import SelectedElementCard from './SelectedElementCard.jsx';
 import SelectedElementLocatorsTable from './SelectedElementLocatorsTable.jsx';
+import SmartLocatorRecommendation from './SmartLocatorRecommendation.jsx';
 import SnapshotMaxDepthReachedMessage from './SnapshotMaxDepthReachedMessage.jsx';
 import XpathNotRecommendedMessage from './XpathNotRecommendedMessage.jsx';
 
@@ -31,6 +32,11 @@ const SelectedElement = (props) => {
     elementInteractionsNotAvailable,
     selectedElementSearchInProgress,
     sessionSettings,
+    sourceXML,
+    automationName,
+    isValidatingSmartLocators,
+    smartLocatorRuntimeValidationResults,
+    validateSmartLocators,
   } = props;
 
   const elementActionsDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
@@ -73,6 +79,16 @@ const SelectedElement = (props) => {
           {...props}
           elementActionsDisabled={elementActionsDisabled}
           elementLocatorsData={elementLocatorsData}
+        />
+        <SmartLocatorRecommendation
+          selectedElement={selectedElement}
+          sourceXML={sourceXML}
+          currentContext={currentContext}
+          automationName={automationName}
+          selectedElementId={selectedElementId}
+          isValidatingSmartLocators={isValidatingSmartLocators}
+          runtimeValidationResults={smartLocatorRuntimeValidationResults}
+          validateSmartLocators={validateSmartLocators}
         />
         <SelectedElementLocatorsTable
           findElementsExecutionTimes={findElementsExecutionTimes}

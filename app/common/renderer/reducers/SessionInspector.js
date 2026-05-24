@@ -80,6 +80,8 @@ import {
   UNSELECT_CENTROID,
   UNSELECT_ELEMENT,
   UNSELECT_TICK_ELEMENT,
+  VALIDATE_SMART_LOCATORS_COMPLETED,
+  VALIDATE_SMART_LOCATORS_REQUESTED,
 } from '../actions/SessionInspector.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot.js';
 import {
@@ -177,6 +179,7 @@ export default function inspector(state = INITIAL_STATE, action) {
         selectedElementSearchInProgress: true,
         elementInteractionsNotAvailable: false,
         findElementsExecutionTimes: [],
+        smartLocatorRuntimeValidationResults: {},
       };
 
     case SET_OPTIMAL_LOCATORS:
@@ -195,6 +198,8 @@ export default function inspector(state = INITIAL_STATE, action) {
         selectedElementPath: null,
         selectedElementId: null,
         selectedElementSearchInProgress: false,
+        isValidatingSmartLocators: false,
+        smartLocatorRuntimeValidationResults: {},
       };
 
     case SELECT_CENTROID:
@@ -212,6 +217,19 @@ export default function inspector(state = INITIAL_STATE, action) {
         selectedElementId: action.elementId,
         selectedElementSearchInProgress: false,
         findElementsExecutionTimes: [],
+      };
+
+    case VALIDATE_SMART_LOCATORS_REQUESTED:
+      return {
+        ...state,
+        isValidatingSmartLocators: true,
+      };
+
+    case VALIDATE_SMART_LOCATORS_COMPLETED:
+      return {
+        ...state,
+        isValidatingSmartLocators: false,
+        smartLocatorRuntimeValidationResults: action.validationResults,
       };
 
     case SET_INTERACTIONS_NOT_AVAILABLE:
