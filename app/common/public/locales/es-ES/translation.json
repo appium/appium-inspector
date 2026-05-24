@@ -189,6 +189,8 @@
   "Bitbar API Key": "Clave de la API de Bitbar",
   "RemoteTestKit AccessToken": "RemoteTestKit AccessToken",
   "RobotQA Token": "RobotQA Token",
+  "RobotActions Host": "RobotActions Host",
+  "RobotActions Token": "RobotActions Token",
   "Add": "Add",
   "Name": "Nombre",
   "Description": "Description",

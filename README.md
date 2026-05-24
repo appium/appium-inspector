@@ -217,6 +217,15 @@ The Inspector has built-in integrations with various cloud service provider plat
         </picture>
       </a>
     </td>
+    <td align="center" valign="center">
+      <a href="https://robotactions.com">
+        <picture>
+          <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/robotactions_logo.svg">
+          <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/robotactions_logo_dark.svg">
+          <img width="200" height="50" alt="RobotActions">
+        </picture>
+      </a>
+    </td>
   </tr>
 </table>
 

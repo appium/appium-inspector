@@ -189,6 +189,8 @@
   "Bitbar API Key": "Bitbar API 密钥",
   "RemoteTestKit AccessToken": "RemoteTestKit 访问令牌",
   "RobotQA Token": "RobotQA 令牌",
+  "RobotActions Host": "RobotActions Host",
+  "RobotActions Token": "RobotActions Token",
   "Add": "添加",
   "Name": "名称",
   "Description": "描述",

@@ -189,6 +189,8 @@
   "Bitbar API Key": "ಬಿಟ್ಬಾರ್ API ಕೀ",
   "RemoteTestKit AccessToken": "RemoteTestKit AccessToken",
   "RobotQA Token": "RobotQA Token",
+  "RobotActions Host": "RobotActions Host",
+  "RobotActions Token": "RobotActions Token",
   "Add": "Add",
   "Name": "ಹೆಸರು",
   "Description": "Description",
