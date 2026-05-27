@@ -21,6 +21,8 @@ export function rebuildMenus(mainWindow) {
     Menu.setApplicationMenu(menu);
   } else {
     mainWindow.setMenu(menu);
+    mainWindow.setAutoHideMenuBar(true);
+    mainWindow.setMenuBarVisibility(false);
   }
 }
 
