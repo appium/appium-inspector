@@ -69,6 +69,8 @@ for a more comprehensive list!
 
 This fork includes a more practical mobile test authoring workflow inside the **Test Flow Recorder** tab.
 
+![Test Flow Recorder improvements](./app/common/renderer/assets/images/test-flow-recorder.png)
+
 ### What's Improved
 
 - Add a configurable delay between recorded steps to reduce flaky failures during replay and pytest export
