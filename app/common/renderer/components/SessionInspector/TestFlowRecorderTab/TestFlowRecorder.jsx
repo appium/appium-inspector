@@ -29,7 +29,6 @@ import {useTranslation} from 'react-i18next';
 import {Refractor} from 'react-refractor';
 
 import {BUTTON} from '../../../constants/antd-types.js';
-import {SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
 import {TEST_FLOW_EXPORT_FORMATS} from '../../../constants/session-inspector.js';
 import {DEFAULT_TEST_FLOW_STEP_DELAY_MS} from '../../../lib/test-flow-recorder/common.js';
 import {getPytestTestFlowCode} from '../../../lib/test-flow-recorder/pytest.js';
@@ -37,8 +36,8 @@ import {copyToClipboard} from '../../../utils/other.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './TestFlowRecorder.module.css';
 
-const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 const DEFAULT_PYTEST_FILENAME = 'test_recorded_flow.py';
+const TEST_FLOW_DRAFT_KEY = 'draft';
 
 const STEP_TAG_COLORS = {
   action: 'blue',
@@ -120,6 +119,33 @@ const getRunStatus = ({isRunning, exitCode}, t) => {
     return {color: 'error', label: t('Failed')};
   }
   return {color: 'default', label: t('Ready')};
+};
+
+const formatRunTimestamp = (timestamp) => {
+  if (!timestamp) {
+    return null;
+  }
+
+  return new Date(timestamp).toLocaleString();
+};
+
+const getRunHistoryLabel = (run, t) => {
+  if (!run) {
+    return '';
+  }
+
+  const modeLabel = run.mode === 'currentSession' ? t('Current Session') : t('Pytest');
+  const statusLabel =
+    run.status === 'running'
+      ? t('Running')
+      : run.exitCode === 0
+        ? t('Passed')
+        : run.exitCode !== null && run.exitCode !== undefined
+          ? t('Failed')
+          : t('Ready');
+  const startedAtLabel = formatRunTimestamp(run.startedAt);
+
+  return [modeLabel, statusLabel, startedAtLabel].filter(Boolean).join(' | ');
 };
 
 const parseSuccessOutput = (output, t) => {
@@ -236,9 +262,7 @@ const TestFlowRecorder = (props) => {
     reorderTestFlowSteps,
     runTestFlowCurrentSession,
     runTestFlowPytest,
-    screenshotInteractionMode,
     selectElementByLocator,
-    selectScreenshotInteractionMode,
     selectedElement,
     selectedElementId,
     selectedElementSearchInProgress,
@@ -249,16 +273,8 @@ const TestFlowRecorder = (props) => {
     startTestFlowRecording,
     testFlowExportFilePath,
     testFlowExportFormat,
-    testFlowCurrentSessionExitCode,
-    testFlowCurrentSessionOutput,
-    testFlowCurrentSessionResult,
-    testFlowLastRunMode,
     testFlowStepDelayMs,
-    testFlowPytestCommand,
-    testFlowPytestExitCode,
-    testFlowPytestFilePath,
-    testFlowPytestOutput,
-    testFlowRuntimeError,
+    testFlowRunHistoryByFlowKey = {},
     updateTestFlowStep,
     savedTestFlows = [],
     currentTestFlowId = null,
@@ -277,6 +293,7 @@ const TestFlowRecorder = (props) => {
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [flowNameInput, setFlowNameInput] = useState('');
   const [expandedStepId, setExpandedStepId] = useState(null);
+  const [selectedLogRunId, setSelectedLogRunId] = useState(null);
 
   const toggleExpandStep = (id) => {
     setExpandedStepId((prevId) => (prevId === id ? null : id));
@@ -286,24 +303,34 @@ const TestFlowRecorder = (props) => {
     getSavedTestFlows();
   }, [getSavedTestFlows]);
 
+  const currentFlow = savedTestFlows?.find((f) => f.id === currentTestFlowId);
+  const currentFlowKey = currentTestFlowId || TEST_FLOW_DRAFT_KEY;
+  const currentFlowName = currentFlow?.name || t('Draft Flow');
+  const flowRunHistory = testFlowRunHistoryByFlowKey[currentFlowKey] || [];
+  const activeRunRecord =
+    flowRunHistory.find((run) => run.id === selectedLogRunId) || flowRunHistory[0] || null;
+
+  useEffect(() => {
+    if (!flowRunHistory.length) {
+      setSelectedLogRunId(null);
+      return;
+    }
+
+    if (
+      !selectedLogRunId ||
+      !flowRunHistory.some((run) => run.id === selectedLogRunId) ||
+      flowRunHistory[0]?.status === 'running'
+    ) {
+      setSelectedLogRunId(flowRunHistory[0].id);
+    }
+  }, [flowRunHistory, selectedLogRunId]);
+
   useEffect(() => {
     if (terminalRef.current) {
-      terminalRef.current.scrollTop =
-        isRunningTestFlowCurrentSession || isRunningTestFlowPytest
-          ? terminalRef.current.scrollHeight
-          : 0;
+      terminalRef.current.scrollTop = activeRunRecord?.status === 'running' ? 999999 : 0;
     }
-  }, [
-    isRunningTestFlowCurrentSession,
-    isRunningTestFlowPytest,
-    showResultSummary,
-    testFlowCurrentSessionOutput,
-    testFlowPytestExitCode,
-    testFlowPytestOutput,
-    testFlowRuntimeError,
-  ]);
+  }, [activeRunRecord?.id, activeRunRecord?.output, activeRunRecord?.status, showResultSummary]);
 
-  const currentFlow = savedTestFlows?.find((f) => f.id === currentTestFlowId);
   const hasStepChanges = currentTestFlowId
     ? JSON.stringify(currentFlow?.steps || []) !== JSON.stringify(recordedTestFlowSteps)
     : recordedTestFlowSteps.length > 0;
@@ -414,18 +441,19 @@ const TestFlowRecorder = (props) => {
   const hasSelectedElement = !!selectedElementLocator;
   const deviceInteractionDisabled =
     !(elementInteractionsNotAvailable || selectedElementId) || selectedElementSearchInProgress;
-  const isSwipeModeActive = screenshotInteractionMode === TAP_SWIPE;
   const isRunningAnyTestFlow = isRunningTestFlowCurrentSession || isRunningTestFlowPytest;
-  const activeRunMode = isRunningTestFlowCurrentSession
-    ? 'currentSession'
-    : isRunningTestFlowPytest
-      ? 'pytest'
-      : testFlowLastRunMode;
-  const activeRunExitCode =
-    activeRunMode === 'currentSession' ? testFlowCurrentSessionExitCode : testFlowPytestExitCode;
-  const activeRunOutput =
-    activeRunMode === 'currentSession' ? testFlowCurrentSessionOutput : testFlowPytestOutput;
+  const activeRunMode = activeRunRecord?.mode || null;
+  const activeRunExitCode = activeRunRecord?.exitCode;
+  const activeRunOutput = activeRunRecord?.output || '';
+  const activeRunSteps = activeRunRecord?.steps || [];
+  const activeRunCodeLines = (activeRunRecord?.code || '').split('\n');
+  const activeRunError = activeRunRecord?.error || null;
   const logMetadataItems = [
+    {
+      key: 'flow',
+      label: t('Flow'),
+      value: activeRunRecord?.flowName || currentFlowName,
+    },
     {
       key: 'mode',
       label: t('Mode'),
@@ -437,9 +465,14 @@ const TestFlowRecorder = (props) => {
             : null,
     },
     {
+      key: 'startedAt',
+      label: t('Started'),
+      value: formatRunTimestamp(activeRunRecord?.startedAt),
+    },
+    {
       key: 'file',
       label: t('Last Run File'),
-      value: activeRunMode === 'pytest' ? testFlowPytestFilePath : null,
+      value: activeRunRecord?.filePath || null,
     },
     {
       key: 'export',
@@ -449,10 +482,17 @@ const TestFlowRecorder = (props) => {
     {
       key: 'command',
       label: t('Command'),
-      value: activeRunMode === 'pytest' ? testFlowPytestCommand : null,
+      value: activeRunRecord?.command || null,
     },
   ].filter(({value}) => Boolean(value));
-  const runStatus = getRunStatus({isRunning: isRunningAnyTestFlow, exitCode: activeRunExitCode}, t);
+  const runStatus = getRunStatus(
+    {isRunning: activeRunRecord?.status === 'running', exitCode: activeRunExitCode},
+    t,
+  );
+  const runHistoryOptions = flowRunHistory.map((run) => ({
+    value: run.id,
+    label: getRunHistoryLabel(run, t),
+  }));
 
   const pytestCode = getPytestTestFlowCode({
     serverUrl: serverDetails?.serverUrl,
@@ -464,26 +504,27 @@ const TestFlowRecorder = (props) => {
 
   const failureSummary =
     showResultSummary && activeRunMode === 'currentSession'
-      ? getCurrentSessionFailureSummary(testFlowCurrentSessionResult, recordedTestFlowSteps, t)
+      ? getCurrentSessionFailureSummary(activeRunRecord?.result, activeRunSteps, t)
       : showResultSummary &&
-          testFlowPytestExitCode !== 0 &&
-          testFlowPytestExitCode !== null &&
-          testFlowPytestExitCode !== undefined
+          activeRunMode === 'pytest' &&
+          activeRunExitCode !== 0 &&
+          activeRunExitCode !== null &&
+          activeRunExitCode !== undefined
         ? parseFailureOutput(
-            testFlowPytestOutput || testFlowRuntimeError,
-            codeLines,
-            recordedTestFlowSteps,
+            activeRunOutput || activeRunError,
+            activeRunCodeLines,
+            activeRunSteps,
             t,
           )
         : null;
 
   const successSummary =
     showResultSummary && activeRunMode === 'currentSession'
-      ? testFlowCurrentSessionResult?.ok
+      ? activeRunRecord?.result?.ok
         ? t('Current session run completed successfully.')
         : null
-      : showResultSummary && testFlowPytestExitCode === 0
-        ? parseSuccessOutput(testFlowPytestOutput, t)
+      : showResultSummary && activeRunMode === 'pytest' && activeRunExitCode === 0
+        ? parseSuccessOutput(activeRunOutput, t)
         : null;
 
   const updateStep = (stepId, updates) => updateTestFlowStep(stepId, updates);
@@ -869,23 +910,6 @@ const TestFlowRecorder = (props) => {
                     >
                       {t('Tap on Device')}
                     </Button>
-                    <Button
-                      type={isSwipeModeActive ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-                      size="small"
-                      onClick={() => selectScreenshotInteractionMode(TAP_SWIPE)}
-                      className={styles.actionBtn}
-                    >
-                      {t('Swipe Mode')}
-                    </Button>
-                    <Button
-                      type={!isSwipeModeActive ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-                      size="small"
-                      onClick={() => selectScreenshotInteractionMode(SELECT)}
-                      className={styles.actionBtn}
-                    >
-                      {t('Select Mode')}
-                    </Button>
-
                     <Button size="small" onClick={addActionStep} className={styles.actionBtn}>
                       {t('+ Tap Step')}
                     </Button>
@@ -1105,7 +1129,12 @@ const TestFlowRecorder = (props) => {
                       size="small"
                       onClick={() => {
                         setShowResultSummary(true);
-                        runTestFlowCurrentSession(recordedTestFlowSteps, testFlowStepDelayMs);
+                        runTestFlowCurrentSession({
+                          flowId: currentTestFlowId,
+                          flowName: currentFlowName,
+                          steps: recordedTestFlowSteps,
+                          stepDelayMs: testFlowStepDelayMs,
+                        });
                       }}
                       disabled={!recordedTestFlowSteps.length || isRunningAnyTestFlow}
                     >
@@ -1116,7 +1145,14 @@ const TestFlowRecorder = (props) => {
                     size="small"
                     onClick={() => {
                       setShowResultSummary(true);
-                      runTestFlowPytest(pytestCode, DEFAULT_PYTEST_FILENAME);
+                      runTestFlowPytest({
+                        flowId: currentTestFlowId,
+                        flowName: currentFlowName,
+                        steps: recordedTestFlowSteps,
+                        stepDelayMs: testFlowStepDelayMs,
+                        code: pytestCode,
+                        suggestedName: DEFAULT_PYTEST_FILENAME,
+                      });
                     }}
                     disabled={!recordedTestFlowSteps.length || isRunningAnyTestFlow}
                   >
@@ -1139,8 +1175,8 @@ const TestFlowRecorder = (props) => {
                   {rightPanelTab === 'logs' && (
                     <Button
                       size="small"
-                      onClick={clearTestFlowPytestOutput}
-                      disabled={!activeRunOutput && !testFlowRuntimeError}
+                      onClick={() => clearTestFlowPytestOutput(currentFlowKey)}
+                      disabled={!flowRunHistory.length}
                     >
                       {t('Clear logs')}
                     </Button>
@@ -1188,6 +1224,15 @@ const TestFlowRecorder = (props) => {
                     size="small"
                     className={styles.localThemeSwitcher}
                   />
+                  {rightPanelTab === 'logs' && flowRunHistory.length > 0 && (
+                    <Select
+                      value={activeRunRecord?.id}
+                      onChange={setSelectedLogRunId}
+                      size="small"
+                      options={runHistoryOptions}
+                      className={styles.runHistorySelect}
+                    />
+                  )}
                 </Flex>
               </div>
             </div>
@@ -1244,7 +1289,7 @@ const TestFlowRecorder = (props) => {
                                       gap: 4,
                                     }}
                                   >
-                                    {recordedTestFlowSteps.map((step, index) => {
+                                    {activeRunSteps.map((step, index) => {
                                       const stepNum = index + 1;
                                       let statusIcon = <span style={{color: '#1890ff'}}>○</span>; // not executed
                                       let statusText = t('Not executed');
@@ -1331,7 +1376,7 @@ const TestFlowRecorder = (props) => {
                                       gap: 4,
                                     }}
                                   >
-                                    {recordedTestFlowSteps.map((step, index) => (
+                                    {activeRunSteps.map((step, index) => (
                                       <div
                                         key={step.id}
                                         style={{
@@ -1361,15 +1406,17 @@ const TestFlowRecorder = (props) => {
                           />
                         </div>
                       )}
-                      {!activeRunOutput && !testFlowRuntimeError ? (
+                      {!activeRunOutput && !activeRunError ? (
                         <div className={styles.emptyTerminal}>
-                          {t(
-                            'No execution logs yet. Click Run or Run Pytest above to start the test.',
-                          )}
+                          {!activeRunRecord
+                            ? t(
+                                'No execution logs yet. Click Run or Run Pytest above to start the test.',
+                              )
+                            : t('Selected run has no output.')}
                         </div>
                       ) : (
                         <pre className={styles.terminalTextArea}>
-                          {activeRunOutput || testFlowRuntimeError || ''}
+                          {activeRunOutput || activeRunError || ''}
                         </pre>
                       )}
                     </div>

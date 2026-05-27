@@ -461,6 +461,12 @@
   "Current Session": "Current Session",
   "Run in Current Session": "Run in Current Session",
   "Run Pytest": "Run Pytest",
+  "Light": "Light",
+  "Balanced": "Balanced",
+  "Smooth": "Smooth",
+  "mjpegLightPreset": "Low CPU and bandwidth MJPEG preset",
+  "mjpegBalancedPreset": "Balanced MJPEG preset",
+  "mjpegSmoothPreset": "Smoother MJPEG preset",
   "Summary": "Summary",
   "Executed Steps": "Executed Steps",
   "Step Execution Status": "Step Execution Status",
@@ -479,5 +485,8 @@
   "Flow name is required": "Flow name is required",
   "Delay between steps": "Delay between steps",
   "0 disables extra waiting": "0 disables extra waiting",
+  "Started": "Started",
+  "Latest Run": "Latest Run",
+  "Selected run has no output.": "Selected run has no output.",
   "No execution logs yet. Click Run or Run Pytest above to start the test.": "No execution logs yet. Click Run or Run Pytest above to start the test."
 }

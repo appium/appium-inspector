@@ -65,7 +65,7 @@ body::-webkit-scrollbar-corner {
 }
 
 .ant-space-addon {
-  padding: 0 8px;
+  padding: 0 3px;
   white-space: nowrap;
 }
 

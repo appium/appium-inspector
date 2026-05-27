@@ -440,7 +440,7 @@
 }
 
 .delayInput {
-  min-width: 160px;
+  min-width: 50px;
 }
 
 .outputSelectorRow {
@@ -720,16 +720,18 @@
 
 .terminalTextArea {
   flex: 1;
+  display: block;
   min-height: 100%;
   margin: 0;
   font-family: 'Fira Code', 'Consolas', 'Courier New', monospace !important;
   font-size: 11px !important;
-  line-height: 1.6 !important;
+  line-height: 1.4 !important;
   padding: 12px !important;
   border: none !important;
   border-radius: 0 !important;
   overflow: visible !important;
-  white-space: pre-wrap !important;
+  white-space: break-spaces !important;
+  overflow-wrap: anywhere !important;
   word-break: break-word !important;
 }
 
@@ -846,4 +848,29 @@
     transform: scale(0.95);
     box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
   }
+}
+
+.runHistorySelect {
+  width: 220px;
+  min-width: 220px;
+  max-width: 220px;
+}
+
+.runHistorySelect :global(.ant-select-selector) {
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+}
+
+.runHistorySelect :global(.ant-select-selection-item) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap !important;
+}
+
+.runHistorySelect :global(.ant-select-selection-search) {
+  display: none;
+}
+
+.runHistorySelect :global(.ant-select-selection-overflow) {
+  flex-wrap: nowrap !important;
 }

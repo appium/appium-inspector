@@ -203,6 +203,8 @@ const TEST_FLOW_IGNORED_METHODS = new Set([
   'switchAppiumContext',
 ]);
 
+const TEST_FLOW_DRAFT_KEY = 'draft';
+
 export function selectElement(path) {
   return async (dispatch, getState) => {
     const {sourceJSON, sourceXML, expandedPaths, currentContext, automationName} =
@@ -491,22 +493,31 @@ export function setTestFlowStepDelayMs(stepDelayMs) {
   };
 }
 
-export function clearTestFlowPytestOutput() {
+export function clearTestFlowPytestOutput(flowKey = null) {
   return (dispatch) => {
-    dispatch({type: CLEAR_TEST_FLOW_PYTEST_OUTPUT});
+    dispatch({type: CLEAR_TEST_FLOW_PYTEST_OUTPUT, flowKey});
   };
 }
 
-export function runTestFlowCurrentSession(steps, stepDelayMs) {
+export function runTestFlowCurrentSession(runConfigOrSteps, stepDelayMs) {
   return async (dispatch, getState) => {
-    dispatch({type: RUN_TEST_FLOW_CURRENT_SESSION_REQUESTED});
-    const normalizedStepDelayMs = normalizeTestFlowStepDelayMs(stepDelayMs);
+    const run = buildTestFlowRunContext({
+      mode: 'currentSession',
+      ...(Array.isArray(runConfigOrSteps)
+        ? {steps: runConfigOrSteps, stepDelayMs}
+        : runConfigOrSteps),
+    });
+
+    dispatch({type: RUN_TEST_FLOW_CURRENT_SESSION_REQUESTED, run});
 
     try {
-      await executeCurrentSessionStepSequence(steps, normalizedStepDelayMs, dispatch, getState);
+      await executeCurrentSessionStepSequence(run.steps, run.stepDelayMs, dispatch, getState, {
+        runId: run.id,
+      });
       await refreshInspectorAfterCurrentSessionRun(dispatch, getState);
       dispatch({
         type: RUN_TEST_FLOW_CURRENT_SESSION_COMPLETED,
+        runId: run.id,
         result: {
           ok: true,
           exitCode: 0,
@@ -528,11 +539,12 @@ export function runTestFlowCurrentSession(steps, stepDelayMs) {
 
       dispatch({
         type: APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT,
+        runId: run.id,
         chunk:
           `\n[current-session] Failed${failure.failedStepIndex ? ` at step ${failure.failedStepIndex}` : ''}: ` +
           `${failure.failedStepName || 'Unknown step'}\n${failure.errorReason}\n`,
       });
-      dispatch({type: RUN_TEST_FLOW_CURRENT_SESSION_COMPLETED, result: failure});
+      dispatch({type: RUN_TEST_FLOW_CURRENT_SESSION_COMPLETED, runId: run.id, result: failure});
     }
   };
 }
@@ -560,15 +572,22 @@ export function exportTestFlowPytestFile(code, suggestedName) {
   };
 }
 
-export function runTestFlowPytest(code, suggestedName) {
+export function runTestFlowPytest(runConfigOrCode, suggestedName) {
   return async (dispatch, getState) => {
-    dispatch({type: RUN_TEST_FLOW_PYTEST_REQUESTED});
+    const run = buildTestFlowRunContext({
+      mode: 'pytest',
+      ...(typeof runConfigOrCode === 'string'
+        ? {code: runConfigOrCode, suggestedName}
+        : runConfigOrCode),
+    });
+
+    dispatch({type: RUN_TEST_FLOW_PYTEST_REQUESTED, run});
     const shouldReconnectInspector = shouldReconnectInspectorAfterPytest(getState());
     const unsubscribe = onPytestLog((chunk) => {
-      dispatch({type: APPEND_TEST_FLOW_PYTEST_OUTPUT, chunk});
+      dispatch({type: APPEND_TEST_FLOW_PYTEST_OUTPUT, runId: run.id, chunk});
     });
     try {
-      const result = await runPytestFile({code, suggestedName});
+      const result = await runPytestFile({code: run.code, suggestedName: run.suggestedName});
       const sections = [];
       if (result.command) {
         sections.push(['[command]', result.command].join('\n'));
@@ -585,6 +604,7 @@ export function runTestFlowPytest(code, suggestedName) {
       const output = sections.filter(Boolean).join('\n\n').trim();
       dispatch({
         type: RUN_TEST_FLOW_PYTEST_COMPLETED,
+        runId: run.id,
         result: {
           ...result,
           output,
@@ -594,6 +614,7 @@ export function runTestFlowPytest(code, suggestedName) {
       if (shouldReconnectInspector && result.command) {
         dispatch({
           type: APPEND_TEST_FLOW_PYTEST_OUTPUT,
+          runId: run.id,
           chunk: '\n\n[inspector]\nReconnecting Inspector session after pytest run...\n',
         });
         await reconnectInspectorSession(dispatch, getState);
@@ -601,6 +622,7 @@ export function runTestFlowPytest(code, suggestedName) {
     } catch (err) {
       dispatch({
         type: RUN_TEST_FLOW_PYTEST_FAILED,
+        runId: run.id,
         error: err?.message || String(err),
       });
     } finally {
@@ -625,13 +647,17 @@ async function executeCurrentSessionStepSequence(
 
     dispatch({
       type: APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT,
+      runId: context.runId,
       chunk: `${prefix} Step ${topLevelStepIndex}: ${stepLabel}\n`,
     });
 
     try {
-      await executeCurrentSessionStep(step, dispatch, getState, topLevelStepIndex, stepDelayMs);
+      await executeCurrentSessionStep(step, dispatch, getState, topLevelStepIndex, stepDelayMs, {
+        runId: context.runId,
+      });
       dispatch({
         type: APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT,
+        runId: context.runId,
         chunk: `${prefix} Step ${topLevelStepIndex}: passed\n`,
       });
     } catch (err) {
@@ -647,6 +673,7 @@ async function executeCurrentSessionStepSequence(
     if (stepDelayMs > 0 && index < steps.length - 1) {
       dispatch({
         type: APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT,
+        runId: context.runId,
         chunk: `${prefix} Waiting ${stepDelayMs}ms before next step\n`,
       });
       await waitForTestFlowDelay(stepDelayMs);
@@ -655,13 +682,21 @@ async function executeCurrentSessionStepSequence(
     if (isTopLevelStep) {
       dispatch({
         type: APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT,
+        runId: context.runId,
         chunk: '\n',
       });
     }
   }
 }
 
-async function executeCurrentSessionStep(step, dispatch, getState, topLevelStepIndex, stepDelayMs) {
+async function executeCurrentSessionStep(
+  step,
+  dispatch,
+  getState,
+  topLevelStepIndex,
+  stepDelayMs,
+  context = {},
+) {
   if (step.type === 'assertion') {
     await executeCurrentSessionAssertion(step, dispatch, getState);
     return;
@@ -676,11 +711,13 @@ async function executeCurrentSessionStep(step, dispatch, getState, topLevelStepI
     const branchSteps = branchConditionPassed ? step.thenSteps || [] : step.elseSteps || [];
     dispatch({
       type: APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT,
+      runId: context.runId,
       chunk: `[current-session] Branch selected: ${branchConditionPassed ? 'then' : 'else'}\n`,
     });
     await executeCurrentSessionStepSequence(branchSteps, stepDelayMs, dispatch, getState, {
       topLevelStepIndex,
       logPrefix: '[current-session][branch]',
+      runId: context.runId,
     });
     return;
   }
@@ -2011,6 +2048,29 @@ function normalizePersistedTestFlowStep(step = {}) {
   }
 
   return normalizedStep;
+}
+
+function buildTestFlowRunContext({
+  mode,
+  flowId = null,
+  flowName = 'Draft Flow',
+  steps = [],
+  stepDelayMs = 0,
+  code = '',
+  suggestedName = null,
+} = {}) {
+  return {
+    id: getRandomId(),
+    mode,
+    flowId,
+    flowKey: flowId || TEST_FLOW_DRAFT_KEY,
+    flowName,
+    startedAt: Date.now(),
+    stepDelayMs: normalizeTestFlowStepDelayMs(stepDelayMs),
+    steps: normalizePersistedTestFlowSteps(steps),
+    code,
+    suggestedName,
+  };
 }
 
 function shouldReconnectInspectorAfterPytest(state) {
