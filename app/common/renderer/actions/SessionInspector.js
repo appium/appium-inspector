@@ -808,32 +808,32 @@ async function executeCurrentSessionAssertion(step, _dispatch, getState) {
     }
 
     case 'visible': {
-      const element = await findCurrentSessionElement(step.locator, getState);
-      if (!(await element.isDisplayed())) {
+      const elementId = await resolveCurrentSessionElementId(step.locator, _dispatch, getState);
+      if (!(await getState().inspector.driver.isElementDisplayed(elementId))) {
         throw new Error('Expected element to be visible');
       }
       return;
     }
 
     case 'enabled': {
-      const element = await findCurrentSessionElement(step.locator, getState);
-      if (!(await element.isEnabled())) {
+      const elementId = await resolveCurrentSessionElementId(step.locator, _dispatch, getState);
+      if (!(await getState().inspector.driver.isElementEnabled(elementId))) {
         throw new Error('Expected element to be enabled');
       }
       return;
     }
 
     case 'disabled': {
-      const element = await findCurrentSessionElement(step.locator, getState);
-      if (await element.isEnabled()) {
+      const elementId = await resolveCurrentSessionElementId(step.locator, _dispatch, getState);
+      if (await getState().inspector.driver.isElementEnabled(elementId)) {
         throw new Error('Expected element to be disabled');
       }
       return;
     }
 
     case 'textEquals': {
-      const element = await findCurrentSessionElement(step.locator, getState);
-      const actualText = await element.getText();
+      const elementId = await resolveCurrentSessionElementId(step.locator, _dispatch, getState);
+      const actualText = await getState().inspector.driver.getElementText(elementId);
       if (actualText !== (step.expectedText || '')) {
         throw new Error(`Expected text '${step.expectedText || ''}' but received '${actualText}'`);
       }
@@ -841,8 +841,11 @@ async function executeCurrentSessionAssertion(step, _dispatch, getState) {
     }
 
     case 'attributeEquals': {
-      const element = await findCurrentSessionElement(step.locator, getState);
-      const actualValue = await element.getAttribute(step.attributeName || '');
+      const elementId = await resolveCurrentSessionElementId(step.locator, _dispatch, getState);
+      const actualValue = await getState().inspector.driver.getElementAttribute(
+        elementId,
+        step.attributeName || '',
+      );
       if (actualValue !== (step.expectedValue || '')) {
         throw new Error(
           `Expected attribute '${step.attributeName || ''}' to equal '${step.expectedValue || ''}' but received '${actualValue}'`,
@@ -867,11 +870,13 @@ async function evaluateCurrentSessionBranchCondition(step, _dispatch, getState) 
     }
 
     case 'visible': {
-      const elements = await findCurrentSessionElements(conditionLocator, getState);
-      if (!elements.length) {
+      const elementId = await resolveCurrentSessionElementId(conditionLocator, _dispatch, getState).catch(
+        () => null,
+      );
+      if (!elementId) {
         return false;
       }
-      return await elements[0].isDisplayed();
+      return await getState().inspector.driver.isElementDisplayed(elementId);
     }
 
     default:

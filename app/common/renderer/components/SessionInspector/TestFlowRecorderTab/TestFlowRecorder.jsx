@@ -1128,6 +1128,7 @@ const TestFlowRecorder = (props) => {
                       type={BUTTON.PRIMARY}
                       size="small"
                       onClick={() => {
+                        setRightPanelTab('logs');
                         setShowResultSummary(true);
                         runTestFlowCurrentSession({
                           flowId: currentTestFlowId,
@@ -1144,6 +1145,7 @@ const TestFlowRecorder = (props) => {
                   <Button
                     size="small"
                     onClick={() => {
+                      setRightPanelTab('logs');
                       setShowResultSummary(true);
                       runTestFlowPytest({
                         flowId: currentTestFlowId,

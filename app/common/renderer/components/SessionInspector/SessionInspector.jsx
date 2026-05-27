@@ -128,6 +128,7 @@ const Inspector = (props) => {
   const didInitializeMjpegRef = useRef(false);
 
   const [scaleRatio, setScaleRatio] = useState(1);
+  const [mjpegReloadKey, setMjpegReloadKey] = useState(0);
 
   const navigate = useNavigate();
   const {t} = useTranslation();
@@ -190,8 +191,13 @@ const Inspector = (props) => {
   }, []);
 
   const checkMjpegStream = useCallback(async () => {
+    if (!serverDetails.mjpegScreenshotUrl) {
+      return;
+    }
+
     const img = new Image();
-    img.src = serverDetails.mjpegScreenshotUrl;
+    const separator = serverDetails.mjpegScreenshotUrl.includes('?') ? '&' : '?';
+    img.src = `${serverDetails.mjpegScreenshotUrl}${separator}_inspectorPing=${Date.now()}`;
     let imgReady = false;
     try {
       await img.decode();
@@ -212,6 +218,16 @@ const Inspector = (props) => {
     setAwaitingMjpegStream,
     updateScreenshotScaleDebounced,
   ]);
+
+  const resumeMjpegStream = useCallback(() => {
+    if (!isUsingMjpegMode || !serverDetails.mjpegScreenshotUrl) {
+      return;
+    }
+
+    setAwaitingMjpegStream(true);
+    setMjpegReloadKey((prevKey) => prevKey + 1);
+    void checkMjpegStream();
+  }, [checkMjpegStream, isUsingMjpegMode, serverDetails.mjpegScreenshotUrl, setAwaitingMjpegStream]);
 
   const screenshotInteractionChange = (mode) => {
     const {selectScreenshotInteractionMode, clearCoordAction} = props;
@@ -288,6 +304,26 @@ const Inspector = (props) => {
       setRefreshingState({source: false});
     }
   }, [isSourceRefreshOn, isUsingMjpegMode, setRefreshingState]);
+
+  useEffect(() => {
+    const handleWindowFocus = () => {
+      resumeMjpegStream();
+    };
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        resumeMjpegStream();
+      }
+    };
+
+    window.addEventListener('focus', handleWindowFocus);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('focus', handleWindowFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [resumeMjpegStream]);
 
   /**
    * Ensures component dimensions are adjusted only once windowSize exists.
@@ -432,7 +468,7 @@ const Inspector = (props) => {
         ref={screenshotContainerElRef}
       >
         {screenShotControls}
-        {showScreenshot && <Screenshot {...props} scaleRatio={scaleRatio} />}
+        {showScreenshot && <Screenshot {...props} scaleRatio={scaleRatio} mjpegReloadKey={mjpegReloadKey} />}
         {screenshotError && t('couldNotObtainScreenshot', {screenshotError})}
         {!showScreenshot && (
           <Spin size="large" spinning={true}>
