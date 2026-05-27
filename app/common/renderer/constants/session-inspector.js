@@ -60,7 +60,12 @@ export const INSPECTOR_TABS = {
   COMMANDS: 'commands',
   GESTURES: 'gestures',
   RECORDER: 'recorder',
+  TEST_FLOW_RECORDER: 'testFlowRecorder',
   SESSION_INFO: 'sessionInfo',
+};
+
+export const TEST_FLOW_EXPORT_FORMATS = {
+  PYTEST: 'pytest',
 };
 
 export const CLIENT_FRAMEWORKS = {

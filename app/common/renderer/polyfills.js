@@ -20,9 +20,12 @@ export async function setSetting(setting, value) {
 }
 
 export {
+  exportPytestFile,
   loadSessionFileIfOpened,
   localesPath,
+  onPytestLog,
   openLink,
+  runPytestFile,
   setTheme,
   updateLanguage,
 } from '#local-polyfills'; // eslint-disable-line import-x/no-unresolved

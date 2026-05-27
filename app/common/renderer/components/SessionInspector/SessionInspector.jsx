@@ -30,6 +30,7 @@ import Screenshot from './Screenshot/Screenshot.jsx';
 import SessionInfo from './SessionInfoTab/SessionInfo.jsx';
 import styles from './SessionInspector.module.css';
 import SourceTab from './SourceTab/SourceTab.jsx';
+import TestFlowRecorder from './TestFlowRecorderTab/TestFlowRecorder.jsx';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 
@@ -364,6 +365,12 @@ const Inspector = (props) => {
               key: INSPECTOR_TABS.RECORDER,
               disabled: !showScreenshot,
               children: <Recorder {...props} />,
+            },
+            {
+              label: t('Test Flow Recorder*'),
+              key: INSPECTOR_TABS.TEST_FLOW_RECORDER,
+              disabled: !showScreenshot,
+              children: <TestFlowRecorder {...props} />,
             },
             {
               label: t('Session Information'),

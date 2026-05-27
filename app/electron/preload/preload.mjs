@@ -8,4 +8,14 @@ window.electronIPC = {
   setTheme: (theme) => ipcRenderer.send('electron:setTheme', theme),
   updateLanguage: (lngCode) => ipcRenderer.send('electron:updateLanguage', lngCode),
   loadSessionFileIfOpened: async () => await ipcRenderer.invoke('sessionfile:loadIfOpened'),
+  exportPytestFile: async (payload) => await ipcRenderer.invoke('testflow:exportPytestFile', payload),
+  runPytestFile: async (payload) => await ipcRenderer.invoke('testflow:runPytestFile', payload),
+  onPytestLog: (onLog) => {
+    const listener = (_evt, chunk) => onLog(chunk);
+    ipcRenderer.on('testflow:pytest-log', listener);
+    return () => {
+      ipcRenderer.removeListener('testflow:pytest-log', listener);
+    };
+  },
 };
+
