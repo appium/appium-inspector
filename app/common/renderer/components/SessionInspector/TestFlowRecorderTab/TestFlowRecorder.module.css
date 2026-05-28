@@ -1,0 +1,876 @@
+/* Custom theme classes for TestFlowRecorder */
+
+.testFlowCard :global(.ant-card-body) {
+  height: calc(100% - 48px);
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: #f8fafc;
+}
+
+.recorderShell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.recordingStatusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 10px;
+  font-weight: normal;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #94a3b8;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.recordingDot {
+  background-color: #ef4444;
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  animation: pulse-red 1.8s infinite;
+}
+
+@keyframes pulse-red {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.statusText {
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.runnerStatusTag {
+  margin-left: 8px !important;
+  font-weight: normal !important;
+  font-size: 11px !important;
+}
+
+.compactTag {
+  font-size: 11px !important;
+  padding: 0 5px !important;
+  margin-inline-end: 0 !important;
+}
+
+/* Workspace Grid (2 Columns) */
+.workspaceGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 16px;
+  flex: 1;
+  min-height: 0;
+  background: #f1f5f9;
+}
+
+.leftColumn,
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+/* Panel Card Style */
+.elementPanel,
+.stepsPanel,
+.runnerPanel,
+.outputDisplayPanel {
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.01),
+    0 2px 4px -2px rgba(0, 0, 0, 0.01);
+  overflow: hidden;
+}
+
+.elementPanel {
+  flex-shrink: 0;
+  padding: 10px 10px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  gap: 10px;
+}
+
+.stepsPanel {
+  flex: 1;
+  min-height: 0;
+}
+
+.runnerPanel {
+  flex-shrink: 0;
+  padding: 10px 10px;
+  gap: 10px;
+}
+
+.outputDisplayPanel {
+  flex: 1;
+  min-height: 0;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: transparent;
+}
+
+/* Panel Headers */
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 5px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: #ffffff;
+  flex-shrink: 0;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+/* Element Panel UI components */
+.elementNameTag {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.elementDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.locatorCode {
+  background: rgba(15, 23, 42, 0.03);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  word-break: break-all;
+}
+
+.metaArrow {
+  color: #1677ff;
+  font-weight: 600;
+}
+
+.actionGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.actionBtn {
+  font-size: 11px !important;
+  padding: 0 4px !important;
+}
+
+.inputActionRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.typeInput {
+  flex: 1;
+  font-size: 12px !important;
+}
+
+.noElementPlaceholder {
+  padding: 24px;
+  text-align: center;
+  color: #64748b;
+  font-size: 13px;
+  background: rgba(15, 23, 42, 0.02);
+  border-radius: 8px;
+  border: 1px dashed rgba(15, 23, 42, 0.08);
+}
+
+.scrollActionsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
+  padding-top: 8px;
+  margin-top: 2px;
+}
+
+.scrollLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+/* Steps List styling */
+.stepsListWrapper {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.emptyStepsPlaceholder {
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.stepList {
+  background: transparent;
+}
+
+.stepItem {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch !important;
+  padding: 8px 12px !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06) !important;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.stepItem:hover {
+  background: #f8fafc;
+}
+
+.stepItemExpanded {
+  background: #fafbfe !important;
+  border-left: 3px solid #1677ff !important;
+}
+
+.stepHeaderRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.stepIndexBadge {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 11px;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stepNameText {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stepTypeTag {
+  font-size: 10px !important;
+  margin-inline-end: 0 !important;
+  padding: 0 4px !important;
+}
+
+.stepDetailMeta {
+  font-size: 11px;
+  color: #475569;
+  margin-left: 28px;
+  margin-top: 2px;
+  word-break: break-all;
+}
+
+.metaLabel {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.expandCaret {
+  font-size: 10px;
+  color: #64748b;
+  width: 12px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.stepActionsContainer {
+  display: flex;
+  align-items: center;
+  min-height: 22px;
+  position: relative;
+}
+
+.hoverActions {
+  display: none;
+}
+
+.stepItem:hover .hoverActions {
+  display: block;
+}
+
+.stepItem:hover .stepTypeTag {
+  display: none;
+}
+
+.compactArrowBtn,
+.compactDeleteBtn {
+  height: 20px !important;
+  width: 20px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px !important;
+  line-height: 1 !important;
+}
+
+.expandedContent {
+  margin-top: 8px;
+  animation: slide-down 0.2s ease-out;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Step Editor inside item */
+.stepEditor {
+  margin-left: 28px;
+  margin-top: 10px;
+  padding: 10px;
+  background: #f8fafc;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.editorGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.editorBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.editorLabel {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.branchSummary {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+/* Runner Panel UI */
+.runnerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.runnerSettingsRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.delaySettingBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.delaySettingLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.delaySettingHint {
+  font-size: 11px;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.delayInput {
+  min-width: 50px;
+}
+
+.outputSelectorRow {
+  margin-top: 2px;
+}
+
+.tabSwitcher :global(.ant-segmented-item-selected) {
+  background-color: #1e293b;
+  color: #ffffff;
+}
+
+/* Code Preview Layout */
+.codeWrapper {
+  height: 100%;
+  overflow: auto;
+  padding: 12px;
+}
+
+.codeWrapperDark {
+  background: #282c34;
+}
+
+.codeWrapperLight {
+  background: #fafafa;
+}
+
+.codeContainer {
+  display: flex;
+  position: relative;
+  min-height: 100%;
+}
+
+.gutter {
+  position: sticky;
+  left: -12px;
+  margin-left: -12px;
+  padding: 0 12px 0 12px;
+  text-align: right;
+  user-select: none;
+  font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  z-index: 2;
+}
+
+.codeWrapperLight .gutter {
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.35);
+  background: #fafafa;
+}
+
+.codeWrapperDark .gutter {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.35);
+  background: #282c34;
+}
+
+/* Local dark theme Prism overrides */
+.codeWrapperDark,
+.codeWrapperDark :global(code[class*='language-']),
+.codeWrapperDark :global(pre[class*='language-']) {
+  color: hsl(220, 14%, 71%);
+}
+
+.codeWrapperDark :global(.token.comment),
+.codeWrapperDark :global(.token.prolog),
+.codeWrapperDark :global(.token.cdata) {
+  color: hsl(220, 10%, 40%);
+}
+
+.codeWrapperDark :global(.token.doctype),
+.codeWrapperDark :global(.token.punctuation),
+.codeWrapperDark :global(.token.entity) {
+  color: hsl(220, 14%, 71%);
+}
+
+.codeWrapperDark :global(.token.attr-name),
+.codeWrapperDark :global(.token.class-name),
+.codeWrapperDark :global(.token.boolean),
+.codeWrapperDark :global(.token.constant),
+.codeWrapperDark :global(.token.number),
+.codeWrapperDark :global(.token.atrule) {
+  color: hsl(29, 54%, 61%);
+}
+
+.codeWrapperDark :global(.token.keyword) {
+  color: hsl(286, 60%, 67%);
+}
+
+.codeWrapperDark :global(.token.property),
+.codeWrapperDark :global(.token.tag),
+.codeWrapperDark :global(.token.symbol),
+.codeWrapperDark :global(.token.deleted),
+.codeWrapperDark :global(.token.important) {
+  color: hsl(355, 65%, 65%);
+}
+
+.codeWrapperDark :global(.token.selector),
+.codeWrapperDark :global(.token.string),
+.codeWrapperDark :global(.token.char),
+.codeWrapperDark :global(.token.builtin),
+.codeWrapperDark :global(.token.inserted),
+.codeWrapperDark :global(.token.regex),
+.codeWrapperDark :global(.token.attr-value),
+.codeWrapperDark :global(.token.attr-value > .token.punctuation) {
+  color: hsl(95, 38%, 62%);
+}
+
+.codeWrapperDark :global(.token.variable),
+.codeWrapperDark :global(.token.operator),
+.codeWrapperDark :global(.token.function) {
+  color: hsl(207, 82%, 66%);
+}
+
+.codeWrapperDark :global(.token.url) {
+  color: hsl(187, 47%, 55%);
+}
+
+/* Local light theme Prism overrides */
+.codeWrapperLight,
+.codeWrapperLight :global(code[class*='language-']),
+.codeWrapperLight :global(pre[class*='language-']) {
+  color: hsl(230, 8%, 24%);
+}
+
+.codeWrapperLight :global(.token.comment),
+.codeWrapperLight :global(.token.prolog),
+.codeWrapperLight :global(.token.cdata) {
+  color: hsl(230, 4%, 64%);
+}
+
+.codeWrapperLight :global(.token.doctype),
+.codeWrapperLight :global(.token.punctuation),
+.codeWrapperLight :global(.token.entity) {
+  color: hsl(230, 8%, 24%);
+}
+
+.codeWrapperLight :global(.token.attr-name),
+.codeWrapperLight :global(.token.class-name),
+.codeWrapperLight :global(.token.boolean),
+.codeWrapperLight :global(.token.constant),
+.codeWrapperLight :global(.token.number),
+.codeWrapperLight :global(.token.atrule) {
+  color: hsl(35, 99%, 36%);
+}
+
+.codeWrapperLight :global(.token.keyword) {
+  color: hsl(301, 63%, 40%);
+}
+
+.codeWrapperLight :global(.token.property),
+.codeWrapperLight :global(.token.tag),
+.codeWrapperLight :global(.token.symbol),
+.codeWrapperLight :global(.token.deleted),
+.codeWrapperLight :global(.token.important) {
+  color: hsl(5, 74%, 59%);
+}
+
+.codeWrapperLight :global(.token.selector),
+.codeWrapperLight :global(.token.string),
+.codeWrapperLight :global(.token.char),
+.codeWrapperLight :global(.token.builtin),
+.codeWrapperLight :global(.token.inserted),
+.codeWrapperLight :global(.token.regex),
+.codeWrapperLight :global(.token.attr-value),
+.codeWrapperLight :global(.token.attr-value > .token.punctuation) {
+  color: hsl(119, 34%, 47%);
+}
+
+.codeWrapperLight :global(.token.variable),
+.codeWrapperLight :global(.token.operator),
+.codeWrapperLight :global(.token.function) {
+  color: hsl(221, 87%, 60%);
+}
+
+.codeWrapperLight :global(.token.url) {
+  color: hsl(198, 99%, 37%);
+}
+
+.codePreview {
+  margin: 0 !important;
+  font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre !important;
+  word-break: normal !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 0 0 12px !important;
+  flex: 1;
+}
+
+/* Logs and Terminal Output Layout */
+.logsWrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.logsWrapperDark {
+  background: #0f172a;
+}
+
+.logsWrapperLight {
+  background: #f8fafc;
+}
+
+.terminalContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.terminalScrollArea {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.logMetadataStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px 0;
+}
+
+.logMetadataChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+.logsWrapperDark .logMetadataChip {
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+}
+
+.logsWrapperLight .logMetadataChip {
+  background: rgba(148, 163, 184, 0.18);
+  color: #475569;
+}
+
+.logMetadataLabel {
+  font-weight: 700;
+}
+
+.logMetadataValue {
+  font-family: monospace;
+  word-break: break-all;
+}
+
+.logsWrapperDark .logMetadataValue {
+  color: #e2e8f0;
+}
+
+.logsWrapperLight .logMetadataValue {
+  color: #0f172a;
+}
+
+.emptyTerminal {
+  padding: 32px 16px;
+  color: #64748b;
+  font-size: 12px;
+  text-align: center;
+  font-style: italic;
+}
+
+.terminalTextArea {
+  flex: 1;
+  display: block;
+  min-height: 100%;
+  margin: 0;
+  font-family: 'Fira Code', 'Consolas', 'Courier New', monospace !important;
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+  padding: 12px !important;
+  border: none !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  white-space: break-spaces !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+
+.logsWrapperDark .terminalTextArea {
+  background: #090d16 !important;
+  color: #38bdf8 !important;
+}
+
+.logsWrapperLight .terminalTextArea {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.failureSummaryBox {
+  padding: 12px;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.logsWrapperDark .failureSummaryBox {
+  border-bottom: 1px solid rgba(239, 68, 68, 0.15);
+}
+
+.logsWrapperLight .failureSummaryBox {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Responsive constraints */
+@media (max-width: 1024px) {
+  .workspaceGrid {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+  .testFlowCard :global(.ant-card-body) {
+    overflow: auto !important;
+  }
+}
+
+/* Saved Flows Panel */
+.flowsPanelSingleRow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 8px;
+  padding: 6px 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+}
+
+.flowsPanelSingleRow:hover {
+  border-color: rgba(22, 119, 255, 0.25);
+}
+
+.flowLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+.flowSelect {
+  flex: 1;
+}
+
+.flowButtons {
+  display: flex;
+  gap: 4px;
+}
+
+@media (max-width: 768px) {
+  .runnerSettingsRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .delaySettingHint {
+    white-space: normal;
+  }
+
+  .delayInput {
+    width: 100%;
+  }
+}
+
+.dirtyDotCompact {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #f59e0b;
+  display: inline-block;
+  margin-left: 4px;
+  box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+  animation: pulse-yellow 2s infinite;
+}
+
+@keyframes pulse-yellow {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+}
+
+.runHistorySelect {
+  width: 220px;
+  min-width: 220px;
+  max-width: 220px;
+}
+
+.runHistorySelect :global(.ant-select-selector) {
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+}
+
+.runHistorySelect :global(.ant-select-selection-item) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap !important;
+}
+
+.runHistorySelect :global(.ant-select-selection-search) {
+  display: none;
+}
+
+.runHistorySelect :global(.ant-select-selection-overflow) {
+  flex-wrap: nowrap !important;
+}

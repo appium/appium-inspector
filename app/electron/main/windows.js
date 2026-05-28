@@ -98,6 +98,7 @@ function buildSessionWindow(backgroundColor) {
     minWidth: 890,
     minHeight: 710,
     titleBarStyle: 'hiddenInset',
+    autoHideMenuBar: process.platform !== 'darwin',
     backgroundColor,
     webPreferences: {
       preload: join(__dirname, '..', 'preload', 'preload.mjs'), // from 'main' in package.json

@@ -1,15 +1,28 @@
 import _ from 'lodash';
 
+import {DEFAULT_TEST_FLOW_STEP_DELAY_MS} from '../lib/test-flow-recorder/common.js';
 import {
   ADD_ASSIGNED_VAR_CACHE,
+  APPEND_TEST_FLOW_ACTION_STEP,
+  APPEND_TEST_FLOW_ASSERTION_STEP,
+  APPEND_TEST_FLOW_BRANCH_STEP,
+  APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT,
+  APPEND_TEST_FLOW_PYTEST_OUTPUT,
   CLEAR_ASSIGNED_VAR_CACHE,
   CLEAR_COORD_ACTION,
   CLEAR_RECORDING,
   CLEAR_SEARCH_RESULTS,
   CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS,
   CLEAR_TAP_COORDINATES,
+  CLEAR_TEST_FLOW,
+  CLEAR_TEST_FLOW_PYTEST_OUTPUT,
+  CREATE_NEW_TEST_FLOW,
   DELETE_SAVED_GESTURES_DONE,
   DELETE_SAVED_GESTURES_REQUESTED,
+  DELETE_TEST_FLOW_DONE,
+  EXPORT_TEST_FLOW_PYTEST_COMPLETED,
+  EXPORT_TEST_FLOW_PYTEST_FAILED,
+  EXPORT_TEST_FLOW_PYTEST_REQUESTED,
   FINDING_ELEMENT_IN_SOURCE,
   FINDING_ELEMENT_IN_SOURCE_COMPLETED,
   GESTURE_UPLOAD_DONE,
@@ -18,19 +31,31 @@ import {
   GET_FIND_ELEMENTS_TIMES_COMPLETED,
   GET_SAVED_GESTURES_DONE,
   GET_SAVED_GESTURES_REQUESTED,
+  GET_SAVED_TEST_FLOWS_DONE,
   HIDE_GESTURE_ACTION,
   HIDE_GESTURE_EDITOR,
   HIDE_LOCATOR_TEST_MODAL,
   HIDE_PROMPT_KEEP_ALIVE,
   HIDE_SIRI_COMMAND_MODAL,
+  LOAD_TEST_FLOW,
   METHOD_CALL_DONE,
   METHOD_CALL_REQUESTED,
   PAUSE_RECORDING,
+  PAUSE_TEST_FLOW_RECORDING,
   PROMPT_KEEP_ALIVE,
   QUIT_SESSION_DONE,
   QUIT_SESSION_REQUESTED,
   RECORD_ACTION,
   REMOVE_LOADED_GESTURE,
+  REMOVE_TEST_FLOW_STEP,
+  REORDER_TEST_FLOW_STEPS,
+  RUN_TEST_FLOW_CURRENT_SESSION_COMPLETED,
+  RUN_TEST_FLOW_CURRENT_SESSION_FAILED,
+  RUN_TEST_FLOW_CURRENT_SESSION_REQUESTED,
+  RUN_TEST_FLOW_PYTEST_COMPLETED,
+  RUN_TEST_FLOW_PYTEST_FAILED,
+  RUN_TEST_FLOW_PYTEST_REQUESTED,
+  SAVE_TEST_FLOW_DONE,
   SEARCHING_FOR_ELEMENTS,
   SEARCHING_FOR_ELEMENTS_COMPLETED,
   SELECT_CENTROID,
@@ -69,17 +94,21 @@ import {
   SET_SHOW_CENTROIDS,
   SET_SIRI_COMMAND_VALUE,
   SET_SOURCE_AND_SCREENSHOT,
+  SET_TEST_FLOW_EXPORT_FORMAT,
+  SET_TEST_FLOW_STEP_DELAY_MS,
   SET_USER_WAIT_TIMEOUT,
   SHOW_GESTURE_ACTION,
   SHOW_GESTURE_EDITOR,
   SHOW_LOCATOR_TEST_MODAL,
   SHOW_SIRI_COMMAND_MODAL,
   START_RECORDING,
+  START_TEST_FLOW_RECORDING,
   STORE_SESSION_SETTINGS,
   TOGGLE_SHOW_ATTRIBUTES,
   UNSELECT_CENTROID,
   UNSELECT_ELEMENT,
   UNSELECT_TICK_ELEMENT,
+  UPDATE_TEST_FLOW_STEP,
   VALIDATE_SMART_LOCATORS_COMPLETED,
   VALIDATE_SMART_LOCATORS_REQUESTED,
 } from '../actions/SessionInspector.js';
@@ -89,7 +118,56 @@ import {
   CLIENT_FRAMEWORKS,
   INSPECTOR_TABS,
   NATIVE_APP,
+  TEST_FLOW_EXPORT_FORMATS,
 } from '../constants/session-inspector.js';
+
+const TEST_FLOW_DRAFT_KEY = 'draft';
+
+function appendTestFlowRun(historyByFlowKey, run) {
+  const flowKey = run.flowKey || TEST_FLOW_DRAFT_KEY;
+  const currentRuns = historyByFlowKey[flowKey] || [];
+  return {
+    ...historyByFlowKey,
+    [flowKey]: [run, ...currentRuns.filter(({id}) => id !== run.id)],
+  };
+}
+
+function updateTestFlowRun(historyByFlowKey, runId, updater) {
+  if (!runId) {
+    return historyByFlowKey;
+  }
+
+  let hasUpdated = false;
+  const nextHistory = Object.fromEntries(
+    Object.entries(historyByFlowKey).map(([flowKey, runs]) => [
+      flowKey,
+      runs.map((run) => {
+        if (run.id !== runId) {
+          return run;
+        }
+
+        hasUpdated = true;
+        return updater(run);
+      }),
+    ]),
+  );
+
+  return hasUpdated ? nextHistory : historyByFlowKey;
+}
+
+function clearTestFlowRunHistory(historyByFlowKey, flowKey) {
+  if (!flowKey) {
+    return {};
+  }
+
+  if (!historyByFlowKey[flowKey]) {
+    return historyByFlowKey;
+  }
+
+  const nextHistory = {...historyByFlowKey};
+  delete nextHistory[flowKey];
+  return nextHistory;
+}
 
 const INITIAL_STATE = {
   savedGestures: [],
@@ -101,9 +179,32 @@ const INITIAL_STATE = {
   lastActiveMoment: null,
   expandedPaths: ['0'],
   isRecording: false,
+  isTestFlowRecording: false,
   isSourceRefreshOn: true,
   showBoilerplate: false,
   recordedActions: [],
+  recordedTestFlowSteps: [],
+  savedTestFlows: [],
+  currentTestFlowId: null,
+  testFlowExportFormat: TEST_FLOW_EXPORT_FORMATS.PYTEST,
+  testFlowStepDelayMs: DEFAULT_TEST_FLOW_STEP_DELAY_MS,
+  isRunningTestFlowCurrentSession: false,
+  isExportingTestFlowPytest: false,
+  isRunningTestFlowPytest: false,
+  testFlowLastRunMode: null,
+  testFlowCurrentSessionExitCode: null,
+  testFlowCurrentSessionLastRunAt: null,
+  testFlowCurrentSessionOutput: '',
+  testFlowCurrentSessionResult: null,
+  testFlowExportFilePath: null,
+  testFlowPytestCommand: null,
+  testFlowPytestExitCode: null,
+  testFlowPytestFilePath: null,
+  testFlowPytestLastRunAt: null,
+  testFlowPytestOutput: '',
+  testFlowCurrentRunId: null,
+  testFlowRunHistoryByFlowKey: {},
+  testFlowRuntimeError: null,
   clientFramework: CLIENT_FRAMEWORKS.JAVA_JUNIT4,
   serverDetails: {},
   sessionCaps: {},
@@ -275,6 +376,349 @@ export default function inspector(state = INITIAL_STATE, action) {
         ...state,
         recordedActions: [],
       };
+
+    case START_TEST_FLOW_RECORDING:
+      return {
+        ...state,
+        isTestFlowRecording: true,
+      };
+
+    case PAUSE_TEST_FLOW_RECORDING:
+      return {
+        ...state,
+        isTestFlowRecording: false,
+      };
+
+    case CLEAR_TEST_FLOW:
+      return {
+        ...state,
+        recordedTestFlowSteps: [],
+      };
+
+    case APPEND_TEST_FLOW_ACTION_STEP:
+    case APPEND_TEST_FLOW_ASSERTION_STEP:
+    case APPEND_TEST_FLOW_BRANCH_STEP:
+      return {
+        ...state,
+        recordedTestFlowSteps: [...state.recordedTestFlowSteps, action.step],
+      };
+
+    case UPDATE_TEST_FLOW_STEP:
+      return {
+        ...state,
+        recordedTestFlowSteps: state.recordedTestFlowSteps.map((step) =>
+          step.id === action.stepId ? {...step, ...action.updates} : step,
+        ),
+      };
+
+    case REMOVE_TEST_FLOW_STEP:
+      return {
+        ...state,
+        recordedTestFlowSteps: state.recordedTestFlowSteps.filter(({id}) => id !== action.stepId),
+      };
+
+    case REORDER_TEST_FLOW_STEPS:
+      return {
+        ...state,
+        recordedTestFlowSteps: action.steps || state.recordedTestFlowSteps,
+      };
+
+    case GET_SAVED_TEST_FLOWS_DONE:
+      return {
+        ...state,
+        savedTestFlows: action.savedFlows,
+      };
+
+    case SAVE_TEST_FLOW_DONE:
+      return {
+        ...state,
+        savedTestFlows: action.savedFlows,
+        currentTestFlowId: action.currentTestFlowId,
+        recordedTestFlowSteps: action.steps || state.recordedTestFlowSteps,
+        testFlowStepDelayMs: action.stepDelayMs ?? state.testFlowStepDelayMs,
+      };
+
+    case DELETE_TEST_FLOW_DONE: {
+      const isCurrentDeleted =
+        state.currentTestFlowId &&
+        !action.savedFlows.some((flow) => flow.id === state.currentTestFlowId);
+      return {
+        ...state,
+        savedTestFlows: action.savedFlows,
+        ...(isCurrentDeleted
+          ? {
+              currentTestFlowId: null,
+              recordedTestFlowSteps: [],
+              testFlowStepDelayMs: DEFAULT_TEST_FLOW_STEP_DELAY_MS,
+            }
+          : {}),
+      };
+    }
+
+    case LOAD_TEST_FLOW:
+      return {
+        ...state,
+        currentTestFlowId: action.id,
+        recordedTestFlowSteps: action.steps,
+        testFlowStepDelayMs: action.stepDelayMs ?? DEFAULT_TEST_FLOW_STEP_DELAY_MS,
+      };
+
+    case CREATE_NEW_TEST_FLOW:
+      return {
+        ...state,
+        currentTestFlowId: null,
+        recordedTestFlowSteps: [],
+        testFlowStepDelayMs: DEFAULT_TEST_FLOW_STEP_DELAY_MS,
+      };
+
+    case SET_TEST_FLOW_EXPORT_FORMAT:
+      return {
+        ...state,
+        testFlowExportFormat: action.format || TEST_FLOW_EXPORT_FORMATS.PYTEST,
+      };
+
+    case SET_TEST_FLOW_STEP_DELAY_MS:
+      return {
+        ...state,
+        testFlowStepDelayMs: action.stepDelayMs,
+      };
+
+    case CLEAR_TEST_FLOW_PYTEST_OUTPUT:
+      return {
+        ...state,
+        isRunningTestFlowCurrentSession: false,
+        testFlowLastRunMode: null,
+        testFlowCurrentSessionExitCode: null,
+        testFlowCurrentSessionLastRunAt: null,
+        testFlowCurrentSessionOutput: '',
+        testFlowCurrentSessionResult: null,
+        testFlowPytestCommand: null,
+        testFlowPytestExitCode: null,
+        testFlowPytestFilePath: null,
+        testFlowPytestLastRunAt: null,
+        testFlowPytestOutput: '',
+        testFlowCurrentRunId:
+          !action.flowKey ||
+          state.testFlowRunHistoryByFlowKey[action.flowKey]?.some(
+            ({id}) => id === state.testFlowCurrentRunId,
+          )
+            ? null
+            : state.testFlowCurrentRunId,
+        testFlowRunHistoryByFlowKey: clearTestFlowRunHistory(
+          state.testFlowRunHistoryByFlowKey,
+          action.flowKey,
+        ),
+        testFlowRuntimeError: null,
+      };
+
+    case RUN_TEST_FLOW_CURRENT_SESSION_REQUESTED: {
+      const run = {
+        ...action.run,
+        status: 'running',
+        exitCode: null,
+        output: '',
+        result: null,
+        command: null,
+        filePath: null,
+        completedAt: null,
+        error: null,
+      };
+      return {
+        ...state,
+        isRunningTestFlowCurrentSession: true,
+        testFlowLastRunMode: 'currentSession',
+        testFlowCurrentSessionExitCode: null,
+        testFlowCurrentSessionLastRunAt: null,
+        testFlowCurrentSessionOutput: '',
+        testFlowCurrentSessionResult: null,
+        testFlowCurrentRunId: run.id,
+        testFlowRunHistoryByFlowKey: appendTestFlowRun(state.testFlowRunHistoryByFlowKey, run),
+        testFlowRuntimeError: null,
+      };
+    }
+
+    case APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT: {
+      const runId = action.runId || state.testFlowCurrentRunId;
+      return {
+        ...state,
+        testFlowCurrentSessionOutput: (state.testFlowCurrentSessionOutput || '') + action.chunk,
+        testFlowRunHistoryByFlowKey: updateTestFlowRun(
+          state.testFlowRunHistoryByFlowKey,
+          runId,
+          (run) => ({
+            ...run,
+            output: (run.output || '') + action.chunk,
+          }),
+        ),
+      };
+    }
+
+    case RUN_TEST_FLOW_CURRENT_SESSION_COMPLETED: {
+      const runId = action.runId || state.testFlowCurrentRunId;
+      return {
+        ...state,
+        isRunningTestFlowCurrentSession: false,
+        testFlowLastRunMode: 'currentSession',
+        testFlowCurrentSessionExitCode: action.result?.exitCode,
+        testFlowCurrentSessionLastRunAt: Date.now(),
+        testFlowCurrentSessionResult: action.result || null,
+        testFlowRunHistoryByFlowKey: updateTestFlowRun(
+          state.testFlowRunHistoryByFlowKey,
+          runId,
+          (run) => ({
+            ...run,
+            status: action.result?.ok ? 'passed' : 'failed',
+            exitCode: action.result?.exitCode,
+            result: action.result || null,
+            error: action.result?.ok ? null : action.result?.errorReason || null,
+            completedAt: Date.now(),
+          }),
+        ),
+        testFlowRuntimeError: action.result?.ok ? null : action.result?.errorReason || null,
+      };
+    }
+
+    case RUN_TEST_FLOW_CURRENT_SESSION_FAILED: {
+      const runId = action.runId || state.testFlowCurrentRunId;
+      return {
+        ...state,
+        isRunningTestFlowCurrentSession: false,
+        testFlowLastRunMode: 'currentSession',
+        testFlowCurrentSessionExitCode: 1,
+        testFlowCurrentSessionLastRunAt: Date.now(),
+        testFlowCurrentSessionResult: action.result || null,
+        testFlowRunHistoryByFlowKey: updateTestFlowRun(
+          state.testFlowRunHistoryByFlowKey,
+          runId,
+          (run) => ({
+            ...run,
+            status: 'failed',
+            exitCode: 1,
+            error: action.error,
+            output: action.error || run.output || '',
+            completedAt: Date.now(),
+          }),
+        ),
+        testFlowRuntimeError: action.error,
+      };
+    }
+
+    case EXPORT_TEST_FLOW_PYTEST_REQUESTED:
+      return {
+        ...state,
+        isExportingTestFlowPytest: true,
+        testFlowRuntimeError: null,
+      };
+
+    case EXPORT_TEST_FLOW_PYTEST_COMPLETED:
+      return {
+        ...state,
+        isExportingTestFlowPytest: false,
+        testFlowExportFilePath: action.cancelled ? state.testFlowExportFilePath : action.filePath,
+      };
+
+    case EXPORT_TEST_FLOW_PYTEST_FAILED:
+      return {
+        ...state,
+        isExportingTestFlowPytest: false,
+        testFlowRuntimeError: action.error,
+      };
+
+    case RUN_TEST_FLOW_PYTEST_REQUESTED: {
+      const run = {
+        ...action.run,
+        status: 'running',
+        exitCode: null,
+        output: '',
+        result: null,
+        command: null,
+        filePath: null,
+        completedAt: null,
+        error: null,
+      };
+      return {
+        ...state,
+        isRunningTestFlowPytest: true,
+        testFlowLastRunMode: 'pytest',
+        testFlowPytestCommand: null,
+        testFlowPytestExitCode: null,
+        testFlowPytestFilePath: null,
+        testFlowPytestOutput: '',
+        testFlowCurrentRunId: run.id,
+        testFlowRunHistoryByFlowKey: appendTestFlowRun(state.testFlowRunHistoryByFlowKey, run),
+        testFlowRuntimeError: null,
+      };
+    }
+
+    case APPEND_TEST_FLOW_PYTEST_OUTPUT: {
+      const runId = action.runId || state.testFlowCurrentRunId;
+      return {
+        ...state,
+        testFlowPytestOutput: (state.testFlowPytestOutput || '') + action.chunk,
+        testFlowRunHistoryByFlowKey: updateTestFlowRun(
+          state.testFlowRunHistoryByFlowKey,
+          runId,
+          (run) => ({
+            ...run,
+            output: (run.output || '') + action.chunk,
+          }),
+        ),
+      };
+    }
+
+    case RUN_TEST_FLOW_PYTEST_COMPLETED: {
+      const runId = action.runId || state.testFlowCurrentRunId;
+      return {
+        ...state,
+        isRunningTestFlowPytest: false,
+        testFlowLastRunMode: 'pytest',
+        testFlowPytestCommand: action.result?.command || null,
+        testFlowPytestExitCode: action.result?.exitCode,
+        testFlowPytestFilePath: action.result?.filePath || null,
+        testFlowPytestLastRunAt: Date.now(),
+        testFlowPytestOutput: action.result?.output || '',
+        testFlowRunHistoryByFlowKey: updateTestFlowRun(
+          state.testFlowRunHistoryByFlowKey,
+          runId,
+          (run) => ({
+            ...run,
+            status: action.result?.ok ? 'passed' : 'failed',
+            exitCode: action.result?.exitCode,
+            output: action.result?.output || run.output || '',
+            result: action.result || null,
+            command: action.result?.command || null,
+            filePath: action.result?.filePath || null,
+            error: action.result?.ok ? null : action.result?.stderr || null,
+            completedAt: Date.now(),
+          }),
+        ),
+        testFlowRuntimeError: action.result?.ok ? null : action.result?.stderr || null,
+      };
+    }
+
+    case RUN_TEST_FLOW_PYTEST_FAILED: {
+      const runId = action.runId || state.testFlowCurrentRunId;
+      return {
+        ...state,
+        isRunningTestFlowPytest: false,
+        testFlowLastRunMode: 'pytest',
+        testFlowPytestLastRunAt: Date.now(),
+        testFlowPytestOutput: action.error,
+        testFlowRunHistoryByFlowKey: updateTestFlowRun(
+          state.testFlowRunHistoryByFlowKey,
+          runId,
+          (run) => ({
+            ...run,
+            status: 'failed',
+            exitCode: 1,
+            output: action.error,
+            error: action.error,
+            completedAt: Date.now(),
+          }),
+        ),
+        testFlowRuntimeError: action.error,
+      };
+    }
 
     case SET_CLIENT_FRAMEWORK:
       return {

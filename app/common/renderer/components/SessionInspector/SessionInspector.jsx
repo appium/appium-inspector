@@ -30,8 +30,44 @@ import Screenshot from './Screenshot/Screenshot.jsx';
 import SessionInfo from './SessionInfoTab/SessionInfo.jsx';
 import styles from './SessionInspector.module.css';
 import SourceTab from './SourceTab/SourceTab.jsx';
+import TestFlowRecorder from './TestFlowRecorderTab/TestFlowRecorder.jsx';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
+
+const MJPEG_STREAM_PRESETS = {
+  light: {
+    mjpegServerFramerate: 4,
+    mjpegScalingFactor: 30,
+    mjpegServerScreenshotQuality: 35,
+    trackScrollEvents: false,
+    simpleBoundsCalculation: true,
+  },
+  balanced: {
+    mjpegServerFramerate: 6,
+    mjpegScalingFactor: 40,
+    mjpegServerScreenshotQuality: 45,
+    trackScrollEvents: false,
+    simpleBoundsCalculation: true,
+  },
+  smooth: {
+    mjpegServerFramerate: 10,
+    mjpegScalingFactor: 50,
+    mjpegServerScreenshotQuality: 55,
+    trackScrollEvents: false,
+    simpleBoundsCalculation: true,
+  },
+};
+
+const getActiveMjpegPreset = (sessionSettings = {}) =>
+  Object.entries(MJPEG_STREAM_PRESETS).find(([, preset]) =>
+    Object.entries(preset).every(([key, expectedValue]) => {
+      const actualValue = sessionSettings[key];
+      if (typeof expectedValue === 'number') {
+        return Number(actualValue) === expectedValue;
+      }
+      return actualValue === expectedValue;
+    }),
+  )?.[0];
 
 // resize width to something sensible for using the inspector on first run
 const resizeWindowOnLaunch = () => {
@@ -77,6 +113,7 @@ const Inspector = (props) => {
     getSavedClientFramework,
     runKeepAliveLoop,
     setSessionTime,
+    sessionSettings,
     storeSessionSettings,
     setAwaitingMjpegStream,
   } = props;
@@ -88,11 +125,14 @@ const Inspector = (props) => {
 
   // Ref to persist session expiry timeout without resetting on re-renders
   const sessionExpiryTimeoutRef = useRef(null);
+  const didInitializeMjpegRef = useRef(false);
 
   const [scaleRatio, setScaleRatio] = useState(1);
+  const [mjpegReloadKey, setMjpegReloadKey] = useState(0);
 
   const navigate = useNavigate();
   const {t} = useTranslation();
+  const activeMjpegPreset = getActiveMjpegPreset(sessionSettings);
 
   const showScreenshot =
     (screenshot && !screenshotError) ||
@@ -151,8 +191,13 @@ const Inspector = (props) => {
   }, []);
 
   const checkMjpegStream = useCallback(async () => {
+    if (!serverDetails.mjpegScreenshotUrl) {
+      return;
+    }
+
     const img = new Image();
-    img.src = serverDetails.mjpegScreenshotUrl;
+    const separator = serverDetails.mjpegScreenshotUrl.includes('?') ? '&' : '?';
+    img.src = `${serverDetails.mjpegScreenshotUrl}${separator}_inspectorPing=${Date.now()}`;
     let imgReady = false;
     try {
       await img.decode();
@@ -174,19 +219,57 @@ const Inspector = (props) => {
     updateScreenshotScaleDebounced,
   ]);
 
+  const resumeMjpegStream = useCallback(() => {
+    if (!isUsingMjpegMode || !serverDetails.mjpegScreenshotUrl) {
+      return;
+    }
+
+    setAwaitingMjpegStream(true);
+    setMjpegReloadKey((prevKey) => prevKey + 1);
+    void checkMjpegStream();
+  }, [checkMjpegStream, isUsingMjpegMode, serverDetails.mjpegScreenshotUrl, setAwaitingMjpegStream]);
+
   const screenshotInteractionChange = (mode) => {
     const {selectScreenshotInteractionMode, clearCoordAction} = props;
     clearCoordAction(); // When the action changes, reset the swipe action
     selectScreenshotInteractionMode(mode);
   };
 
-  const switchScreenCaptureMode = (shouldUseMjpeg) => {
-    setMjpegState(shouldUseMjpeg);
-    if (!shouldUseMjpeg) {
+  const switchScreenCaptureMode = useCallback(
+    async (shouldUseMjpeg) => {
+      if (shouldUseMjpeg) {
+        setRefreshingState({source: false});
+        setMjpegState(true);
+        return;
+      }
+
+      setMjpegState(false);
       setRefreshingState({source: true});
-    }
-    applyClientMethod({methodName: 'getPageSource'});
-  };
+      await applyClientMethod({methodName: 'getPageSource'});
+    },
+    [applyClientMethod, setMjpegState, setRefreshingState],
+  );
+
+  const applyMjpegPreset = useCallback(
+    async (presetName) => {
+      const settings = MJPEG_STREAM_PRESETS[presetName];
+      if (!settings) {
+        return;
+      }
+
+      const result = await applyClientMethod({
+        methodName: 'updateSettings',
+        args: settings,
+        skipRefresh: true,
+        skipRecord: true,
+      });
+
+      if (result !== undefined) {
+        storeSessionSettings(settings);
+      }
+    },
+    [applyClientMethod, storeSessionSettings],
+  );
 
   const quitSessionAndReturn = useCallback(
     async ({reason, manualQuit = true, detachOnly = false} = {}) => {
@@ -210,6 +293,37 @@ const Inspector = (props) => {
     setSessionTime,
     storeSessionSettings,
   ]);
+
+  useEffect(() => {
+    if (didInitializeMjpegRef.current) {
+      return;
+    }
+
+    didInitializeMjpegRef.current = true;
+    if (isUsingMjpegMode && isSourceRefreshOn) {
+      setRefreshingState({source: false});
+    }
+  }, [isSourceRefreshOn, isUsingMjpegMode, setRefreshingState]);
+
+  useEffect(() => {
+    const handleWindowFocus = () => {
+      resumeMjpegStream();
+    };
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        resumeMjpegStream();
+      }
+    };
+
+    window.addEventListener('focus', handleWindowFocus);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('focus', handleWindowFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [resumeMjpegStream]);
 
   /**
    * Ensures component dimensions are adjusted only once windowSize exists.
@@ -261,22 +375,53 @@ const Inspector = (props) => {
     <div className={styles.screenshotControls}>
       <Space size="middle">
         {serverDetails.mjpegScreenshotUrl !== null && (
-          <Space.Compact>
-            <Tooltip title={t('useMjpegStream')} placement="topLeft">
-              <Button
-                icon={<IconMovie size={18} />}
-                onClick={() => switchScreenCaptureMode(true)}
-                type={isUsingMjpegMode ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-              />
-            </Tooltip>
-            <Tooltip title={t('useScreenshotApi')} placement="topLeft">
-              <Button
-                icon={<IconPhoto size={18} />}
-                onClick={() => switchScreenCaptureMode(false)}
-                type={!isUsingMjpegMode ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-              />
-            </Tooltip>
-          </Space.Compact>
+          <Space size={8} align="center" wrap>
+            <Space.Compact>
+              <Tooltip title={t('useMjpegStream')} placement="topLeft">
+                <Button
+                  icon={<IconMovie size={18} />}
+                  onClick={() => switchScreenCaptureMode(true)}
+                  type={isUsingMjpegMode ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+                />
+              </Tooltip>
+              <Tooltip title={t('useScreenshotApi')} placement="topLeft">
+                <Button
+                  icon={<IconPhoto size={18} />}
+                  onClick={() => switchScreenCaptureMode(false)}
+                  type={!isUsingMjpegMode ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+                />
+              </Tooltip>
+            </Space.Compact>
+            <Space.Compact className={styles.mjpegPresetGroup}>
+              <Tooltip title={t('mjpegLightPreset')} placement="topLeft">
+                <Button
+                  size="small"
+                  onClick={() => applyMjpegPreset('light')}
+                  type={activeMjpegPreset === 'light' ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+                >
+                  {t('L')}
+                </Button>
+              </Tooltip>
+              <Tooltip title={t('mjpegBalancedPreset')} placement="topLeft">
+                <Button
+                  size="small"
+                  onClick={() => applyMjpegPreset('balanced')}
+                  type={activeMjpegPreset === 'balanced' ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+                >
+                  {t('B')}
+                </Button>
+              </Tooltip>
+              <Tooltip title={t('mjpegSmoothPreset')} placement="topLeft">
+                <Button
+                  size="small"
+                  onClick={() => applyMjpegPreset('smooth')}
+                  type={activeMjpegPreset === 'smooth' ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+                >
+                  {t('S')}
+                </Button>
+              </Tooltip>
+            </Space.Compact>
+          </Space>
         )}
         <Tooltip title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')}>
           <Button
@@ -323,7 +468,7 @@ const Inspector = (props) => {
         ref={screenshotContainerElRef}
       >
         {screenShotControls}
-        {showScreenshot && <Screenshot {...props} scaleRatio={scaleRatio} />}
+        {showScreenshot && <Screenshot {...props} scaleRatio={scaleRatio} mjpegReloadKey={mjpegReloadKey} />}
         {screenshotError && t('couldNotObtainScreenshot', {screenshotError})}
         {!showScreenshot && (
           <Spin size="large" spinning={true}>
@@ -364,6 +509,12 @@ const Inspector = (props) => {
               key: INSPECTOR_TABS.RECORDER,
               disabled: !showScreenshot,
               children: <Recorder {...props} />,
+            },
+            {
+              label: t('Test Flow Recorder*'),
+              key: INSPECTOR_TABS.TEST_FLOW_RECORDER,
+              disabled: !showScreenshot,
+              children: <TestFlowRecorder {...props} />,
             },
             {
               label: t('Session Information'),

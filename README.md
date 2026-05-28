@@ -65,6 +65,47 @@ The Inspector has many features in addition to its app inspection abilities:
 Check the [Features documentation](https://appium.github.io/appium-inspector/latest/overview/#features-overview)
 for a more comprehensive list!
 
+## Test Flow Recorder Improvements
+
+This fork includes a more practical mobile test authoring workflow inside the **Test Flow Recorder** tab.
+
+![Test Flow Recorder improvements](./app/common/renderer/assets/images/test-flow-recorder.png)
+
+### What's Improved
+
+- Add a configurable delay between recorded steps to reduce flaky failures during replay and pytest export
+- Keep saved flows editable after reload, including branch steps and nested children
+- Improve recorder actions so **Tap on Device** and **Type** can append steps reliably while recording
+- Re-focus the related element when clicking a recorded step, so the selected element panel stays in sync
+- Add a split execution model:
+  - **Run** executes the current flow in the existing Inspector session
+  - **Run Pytest** keeps the export-and-pytest path for isolated execution
+- Preserve the active Appium session during normal flow replay to avoid losing the live Inspector context
+- Improve execution log behavior:
+  - auto-scroll to the latest output while running
+  - jump to the top when finished so failure or summary details are visible first
+  - keep logs grouped per flow and per run snapshot
+  - avoid mutating old logs when the current flow is edited later
+- Compact run metadata inside the log panel to save vertical space
+- Add MJPEG stream quality presets and automatically pause source refresh when MJPEG mode is enabled to reduce resource usage
+
+### How to Use These Improvements
+
+1. Open **Test Flow Recorder** and select or create a flow.
+2. Use **Tap on Device**, **Type**, **+ Tap Step**, **+ Assert Step**, **+ Branch Step**, or scroll step actions to build the flow.
+3. Set **Delay between steps** if the app needs a short wait between actions.
+4. Use **Run** to replay the flow inside the current Inspector session without creating a second session.
+5. Use **Run Pytest** if you want the separate exported test execution path.
+6. Open **Execution Log** to inspect run output. Logs are stored by flow and by run, so switching flows shows the correct history.
+7. If MJPEG is available, enable it for lighter live streaming, then choose a preset such as **Light**, **Balanced**, or **Smooth** depending on your device performance.
+
+### Recommended Workflow
+
+- Use **Run** for daily debugging and fast iteration because it keeps the current Inspector session alive
+- Use **Run Pytest** when you want to validate the generated pytest path separately
+- Use a small step delay when replay occasionally fails because the app is still animating or loading
+- Use MJPEG with paused source refresh when you mainly need live screen streaming and want to reduce resource usage
+
 ### Cloud Platforms
 
 The Inspector has built-in integrations with various cloud service provider platforms:

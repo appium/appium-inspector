@@ -13,6 +13,15 @@ const openLink = (url) => window.open(url, '');
 const setTheme = () => {}; // only relevant in Electron build
 const updateLanguage = () => {}; // only relevant in Electron build
 const loadSessionFileIfOpened = () => null; // only relevant in Electron build
+const exportPytestFile = async () => ({
+  cancelled: true,
+  error: 'Exporting pytest files is only supported in the Electron build.',
+});
+const runPytestFile = async () => ({
+  ok: false,
+  error: 'Running pytest is only supported in the Electron build.',
+});
+const onPytestLog = () => () => {};
 
 class BrowserSettings {
   has(key) {
@@ -30,4 +39,14 @@ class BrowserSettings {
 
 const settings = new BrowserSettings();
 
-export {loadSessionFileIfOpened, localesPath, openLink, setTheme, settings, updateLanguage};
+export {
+  exportPytestFile,
+  loadSessionFileIfOpened,
+  localesPath,
+  onPytestLog,
+  openLink,
+  runPytestFile,
+  setTheme,
+  settings,
+  updateLanguage,
+};

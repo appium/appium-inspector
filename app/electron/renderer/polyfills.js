@@ -4,6 +4,9 @@ const openLink = (link) => window.electronIPC.openLink(link);
 const setTheme = (theme) => window.electronIPC.setTheme(theme);
 const updateLanguage = (lngCode) => window.electronIPC.updateLanguage(lngCode);
 const loadSessionFileIfOpened = () => window.electronIPC.loadSessionFileIfOpened();
+const exportPytestFile = (payload) => window.electronIPC.exportPytestFile(payload);
+const runPytestFile = (payload) => window.electronIPC.runPytestFile(payload);
+const onPytestLog = (onLog) => window.electronIPC.onPytestLog(onLog);
 
 class ElectronSettings {
   async has(key) {
@@ -21,4 +24,14 @@ class ElectronSettings {
 
 const settings = new ElectronSettings();
 
-export {loadSessionFileIfOpened, localesPath, openLink, setTheme, settings, updateLanguage};
+export {
+  exportPytestFile,
+  loadSessionFileIfOpened,
+  localesPath,
+  onPytestLog,
+  openLink,
+  runPytestFile,
+  setTheme,
+  settings,
+  updateLanguage,
+};

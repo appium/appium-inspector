@@ -180,7 +180,7 @@ const SmartLocatorRecommendation = ({
       <Flex className={styles.smartLocatorHeader} align="center" justify="space-between" gap={8}>
         <Flex align="center" gap={6} className={styles.smartLocatorTitle}>
           <IconSparkles size={18} />
-          <span>{t('Smart Locator Ranking')}</span>
+          <span>{t('Smart Locator Ranking*')}</span>
         </Flex>
         <Space.Compact>
           <Tooltip title={t('Copy locator')}>

@@ -1,12 +1,28 @@
 import _ from 'lodash';
 import sanitize from 'sanitize-filename';
 
-import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs.js';
-import {APP_MODE, NATIVE_APP, UNKNOWN_ERROR} from '../constants/session-inspector.js';
+import {
+  SAVED_CLIENT_FRAMEWORK,
+  SAVED_TEST_FLOWS,
+  SET_SAVED_GESTURES,
+} from '../../shared/setting-defs.js';
+import {
+  APP_MODE,
+  NATIVE_APP,
+  TEST_FLOW_EXPORT_FORMATS,
+  UNKNOWN_ERROR,
+} from '../constants/session-inspector.js';
 import i18n from '../i18next.js';
 import InspectorDriver from '../lib/appium/inspector-driver.js';
 import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map.js';
-import {getSetting, setSetting} from '../polyfills.js';
+import {normalizeTestFlowStepDelayMs} from '../lib/test-flow-recorder/common.js';
+import {
+  exportPytestFile,
+  getSetting,
+  onPytestLog,
+  runPytestFile,
+  setSetting,
+} from '../polyfills.js';
 import {downloadFile, readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {parseGestureFileContents} from '../utils/gesturefile-parsing.js';
 import {getSuggestedLocators} from '../utils/locator-generation/common.js';
@@ -52,6 +68,38 @@ export const CLEAR_RECORDING = 'CLEAR_RECORDING';
 export const SET_CLIENT_FRAMEWORK = 'SET_CLIENT_FRAMEWORK';
 export const RECORD_ACTION = 'RECORD_ACTION';
 export const SET_SHOW_BOILERPLATE = 'SET_SHOW_BOILERPLATE';
+export const START_TEST_FLOW_RECORDING = 'START_TEST_FLOW_RECORDING';
+export const PAUSE_TEST_FLOW_RECORDING = 'PAUSE_TEST_FLOW_RECORDING';
+export const CLEAR_TEST_FLOW = 'CLEAR_TEST_FLOW';
+export const APPEND_TEST_FLOW_ACTION_STEP = 'APPEND_TEST_FLOW_ACTION_STEP';
+export const APPEND_TEST_FLOW_ASSERTION_STEP = 'APPEND_TEST_FLOW_ASSERTION_STEP';
+export const APPEND_TEST_FLOW_BRANCH_STEP = 'APPEND_TEST_FLOW_BRANCH_STEP';
+export const UPDATE_TEST_FLOW_STEP = 'UPDATE_TEST_FLOW_STEP';
+export const REMOVE_TEST_FLOW_STEP = 'REMOVE_TEST_FLOW_STEP';
+export const REORDER_TEST_FLOW_STEPS = 'REORDER_TEST_FLOW_STEPS';
+export const SET_TEST_FLOW_EXPORT_FORMAT = 'SET_TEST_FLOW_EXPORT_FORMAT';
+export const SET_TEST_FLOW_STEP_DELAY_MS = 'SET_TEST_FLOW_STEP_DELAY_MS';
+export const CLEAR_TEST_FLOW_PYTEST_OUTPUT = 'CLEAR_TEST_FLOW_PYTEST_OUTPUT';
+export const RUN_TEST_FLOW_CURRENT_SESSION_REQUESTED = 'RUN_TEST_FLOW_CURRENT_SESSION_REQUESTED';
+export const RUN_TEST_FLOW_CURRENT_SESSION_COMPLETED = 'RUN_TEST_FLOW_CURRENT_SESSION_COMPLETED';
+export const RUN_TEST_FLOW_CURRENT_SESSION_FAILED = 'RUN_TEST_FLOW_CURRENT_SESSION_FAILED';
+export const APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT = 'APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT';
+export const EXPORT_TEST_FLOW_PYTEST_REQUESTED = 'EXPORT_TEST_FLOW_PYTEST_REQUESTED';
+export const EXPORT_TEST_FLOW_PYTEST_COMPLETED = 'EXPORT_TEST_FLOW_PYTEST_COMPLETED';
+export const EXPORT_TEST_FLOW_PYTEST_FAILED = 'EXPORT_TEST_FLOW_PYTEST_FAILED';
+export const RUN_TEST_FLOW_PYTEST_REQUESTED = 'RUN_TEST_FLOW_PYTEST_REQUESTED';
+export const RUN_TEST_FLOW_PYTEST_COMPLETED = 'RUN_TEST_FLOW_PYTEST_COMPLETED';
+export const RUN_TEST_FLOW_PYTEST_FAILED = 'RUN_TEST_FLOW_PYTEST_FAILED';
+export const APPEND_TEST_FLOW_PYTEST_OUTPUT = 'APPEND_TEST_FLOW_PYTEST_OUTPUT';
+
+export const GET_SAVED_TEST_FLOWS_REQUESTED = 'GET_SAVED_TEST_FLOWS_REQUESTED';
+export const GET_SAVED_TEST_FLOWS_DONE = 'GET_SAVED_TEST_FLOWS_DONE';
+export const SAVE_TEST_FLOW_REQUESTED = 'SAVE_TEST_FLOW_REQUESTED';
+export const SAVE_TEST_FLOW_DONE = 'SAVE_TEST_FLOW_DONE';
+export const DELETE_TEST_FLOW_REQUESTED = 'DELETE_TEST_FLOW_REQUESTED';
+export const DELETE_TEST_FLOW_DONE = 'DELETE_TEST_FLOW_DONE';
+export const LOAD_TEST_FLOW = 'LOAD_TEST_FLOW';
+export const CREATE_NEW_TEST_FLOW = 'CREATE_NEW_TEST_FLOW';
 
 export const SHOW_LOCATOR_TEST_MODAL = 'SHOW_LOCATOR_TEST_MODAL';
 export const HIDE_LOCATOR_TEST_MODAL = 'HIDE_LOCATOR_TEST_MODAL';
@@ -141,6 +189,22 @@ const findElement = _.debounce(async function (strategyMap, dispatch, getState, 
   return dispatch({type: SET_INTERACTIONS_NOT_AVAILABLE});
 }, 1000);
 
+const TEST_FLOW_IGNORED_METHODS = new Set([
+  'deleteSession',
+  'getPageSource',
+  'gesture',
+  'getSettings',
+  'status',
+  'getSession',
+  'getTimeouts',
+  'getAppiumCommands',
+  'getAppiumExtensions',
+  'getElementRect',
+  'switchAppiumContext',
+]);
+
+const TEST_FLOW_DRAFT_KEY = 'draft';
+
 export function selectElement(path) {
   return async (dispatch, getState) => {
     const {sourceJSON, sourceXML, expandedPaths, currentContext, automationName} =
@@ -210,11 +274,16 @@ export function unselectCentroid() {
  */
 export function applyClientMethod(params) {
   return async (dispatch, getState) => {
+    const inspectorState = getState().inspector;
     const isRecording =
       params.methodName !== 'deleteSession' &&
       params.methodName !== 'getPageSource' &&
       params.methodName !== 'gesture' &&
-      getState().inspector.isRecording;
+      inspectorState.isRecording;
+    const isTestFlowRecording =
+      !params.skipRecord &&
+      !TEST_FLOW_IGNORED_METHODS.has(params.methodName) &&
+      inspectorState.isTestFlowRecording;
     dispatch({type: METHOD_CALL_REQUESTED});
     const callAction = callClientMethod(params);
     const {
@@ -248,6 +317,12 @@ export function applyClientMethod(params) {
       args = args.concat(params.args || []);
       dispatch({type: RECORD_ACTION, action: params.methodName, params: args});
     }
+    if (isTestFlowRecording) {
+      const testFlowStep = buildTestFlowActionStep(params, getState().inspector);
+      if (testFlowStep) {
+        dispatch({type: APPEND_TEST_FLOW_ACTION_STEP, step: testFlowStep});
+      }
+    }
     dispatch({type: METHOD_CALL_DONE});
 
     if (source) {
@@ -271,6 +346,7 @@ export function applyClientMethod(params) {
   };
 }
 
+// eslint-disable-next-line jsdoc/require-jsdoc
 export function restartSession(error, params) {
   return async (dispatch, getState) => {
     if (error?.name !== UNKNOWN_ERROR) {
@@ -282,23 +358,7 @@ export function restartSession(error, params) {
       title: i18n.t('RestartSessionMessage'),
       duration: 3,
     });
-    const quitSes = quitSession();
-    const newSes = newSession(getState().builder.caps);
-    const getPageSrc = applyClientMethod({methodName: 'getPageSource'});
-    const storeSessionSet = storeSessionSettings();
-    const getSavedClientFrame = getSavedClientFramework();
-    const runKeepAliveLp = runKeepAliveLoop();
-    const setSesTime = setSessionTime(Date.now());
-
-    await quitSes(dispatch, getState);
-    await newSes(dispatch, getState);
-    await getPageSrc(dispatch, getState);
-    await storeSessionSet(dispatch, getState);
-    await getSavedClientFrame(dispatch);
-    runKeepAliveLp(dispatch, getState);
-    setSesTime(dispatch);
-    dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart: true});
-    dispatch({type: METHOD_CALL_DONE});
+    await reconnectInspectorSession(dispatch, getState);
   };
 }
 
@@ -352,6 +412,681 @@ export function clearRecording() {
   };
 }
 
+export function startTestFlowRecording() {
+  return (dispatch) => {
+    dispatch({type: START_TEST_FLOW_RECORDING});
+  };
+}
+
+export function pauseTestFlowRecording() {
+  return (dispatch) => {
+    dispatch({type: PAUSE_TEST_FLOW_RECORDING});
+  };
+}
+
+export function clearTestFlow() {
+  return (dispatch) => {
+    dispatch({type: CLEAR_TEST_FLOW});
+  };
+}
+
+export function appendTestFlowActionStep(step = {}) {
+  return (dispatch) => {
+    dispatch({
+      type: APPEND_TEST_FLOW_ACTION_STEP,
+      step: normalizeTestFlowStep('action', step),
+    });
+  };
+}
+
+export function appendTestFlowAssertionStep(step = {}) {
+  return (dispatch) => {
+    dispatch({
+      type: APPEND_TEST_FLOW_ASSERTION_STEP,
+      step: normalizeTestFlowStep('assertion', step),
+    });
+  };
+}
+
+export function appendTestFlowBranchStep(step = {}) {
+  return (dispatch) => {
+    dispatch({
+      type: APPEND_TEST_FLOW_BRANCH_STEP,
+      step: normalizeTestFlowStep('branch', step),
+    });
+  };
+}
+
+export function updateTestFlowStep(stepId, updates) {
+  return (dispatch) => {
+    dispatch({type: UPDATE_TEST_FLOW_STEP, stepId, updates});
+  };
+}
+
+export function removeTestFlowStep(stepId) {
+  return (dispatch) => {
+    dispatch({type: REMOVE_TEST_FLOW_STEP, stepId});
+  };
+}
+
+export function reorderTestFlowSteps(steps) {
+  return (dispatch) => {
+    dispatch({type: REORDER_TEST_FLOW_STEPS, steps});
+  };
+}
+
+export function setTestFlowExportFormat(format) {
+  return (dispatch) => {
+    dispatch({
+      type: SET_TEST_FLOW_EXPORT_FORMAT,
+      format: format || TEST_FLOW_EXPORT_FORMATS.PYTEST,
+    });
+  };
+}
+
+export function setTestFlowStepDelayMs(stepDelayMs) {
+  return (dispatch) => {
+    dispatch({
+      type: SET_TEST_FLOW_STEP_DELAY_MS,
+      stepDelayMs: normalizeTestFlowStepDelayMs(stepDelayMs),
+    });
+  };
+}
+
+export function clearTestFlowPytestOutput(flowKey = null) {
+  return (dispatch) => {
+    dispatch({type: CLEAR_TEST_FLOW_PYTEST_OUTPUT, flowKey});
+  };
+}
+
+export function runTestFlowCurrentSession(runConfigOrSteps, stepDelayMs) {
+  return async (dispatch, getState) => {
+    const run = buildTestFlowRunContext({
+      mode: 'currentSession',
+      ...(Array.isArray(runConfigOrSteps)
+        ? {steps: runConfigOrSteps, stepDelayMs}
+        : runConfigOrSteps),
+    });
+
+    dispatch({type: RUN_TEST_FLOW_CURRENT_SESSION_REQUESTED, run});
+
+    try {
+      await executeCurrentSessionStepSequence(run.steps, run.stepDelayMs, dispatch, getState, {
+        runId: run.id,
+      });
+      await refreshInspectorAfterCurrentSessionRun(dispatch, getState);
+      dispatch({
+        type: RUN_TEST_FLOW_CURRENT_SESSION_COMPLETED,
+        runId: run.id,
+        result: {
+          ok: true,
+          exitCode: 0,
+          failedStepIndex: null,
+          failedStepName: null,
+          errorReason: null,
+        },
+      });
+    } catch (err) {
+      await refreshInspectorAfterCurrentSessionRun(dispatch, getState);
+
+      const failure = {
+        ok: false,
+        exitCode: 1,
+        failedStepIndex: err?.failedStepIndex ?? null,
+        failedStepName: err?.failedStepName ?? null,
+        errorReason: err?.errorReason || err?.message || String(err),
+      };
+
+      dispatch({
+        type: APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT,
+        runId: run.id,
+        chunk:
+          `\n[current-session] Failed${failure.failedStepIndex ? ` at step ${failure.failedStepIndex}` : ''}: ` +
+          `${failure.failedStepName || 'Unknown step'}\n${failure.errorReason}\n`,
+      });
+      dispatch({type: RUN_TEST_FLOW_CURRENT_SESSION_COMPLETED, runId: run.id, result: failure});
+    }
+  };
+}
+
+export function exportTestFlowPytestFile(code, suggestedName) {
+  return async (dispatch) => {
+    dispatch({type: EXPORT_TEST_FLOW_PYTEST_REQUESTED});
+    try {
+      const result = await exportPytestFile({code, suggestedName});
+      if (result.cancelled) {
+        dispatch({type: EXPORT_TEST_FLOW_PYTEST_COMPLETED, cancelled: true});
+      } else {
+        dispatch({
+          type: EXPORT_TEST_FLOW_PYTEST_COMPLETED,
+          cancelled: false,
+          filePath: result.filePath,
+        });
+      }
+    } catch (err) {
+      dispatch({
+        type: EXPORT_TEST_FLOW_PYTEST_FAILED,
+        error: err?.message || String(err),
+      });
+    }
+  };
+}
+
+export function runTestFlowPytest(runConfigOrCode, suggestedName) {
+  return async (dispatch, getState) => {
+    const run = buildTestFlowRunContext({
+      mode: 'pytest',
+      ...(typeof runConfigOrCode === 'string'
+        ? {code: runConfigOrCode, suggestedName}
+        : runConfigOrCode),
+    });
+
+    dispatch({type: RUN_TEST_FLOW_PYTEST_REQUESTED, run});
+    const shouldReconnectInspector = shouldReconnectInspectorAfterPytest(getState());
+    const unsubscribe = onPytestLog((chunk) => {
+      dispatch({type: APPEND_TEST_FLOW_PYTEST_OUTPUT, runId: run.id, chunk});
+    });
+    try {
+      const result = await runPytestFile({code: run.code, suggestedName: run.suggestedName});
+      const sections = [];
+      if (result.command) {
+        sections.push(['[command]', result.command].join('\n'));
+      }
+      if (result.filePath) {
+        sections.push(['[file]', result.filePath].join('\n'));
+      }
+      if (result.stdout) {
+        sections.push(['[stdout]', result.stdout.trim()].join('\n'));
+      }
+      if (result.stderr || result.error) {
+        sections.push(['[stderr]', (result.stderr || result.error || '').trim()].join('\n'));
+      }
+      const output = sections.filter(Boolean).join('\n\n').trim();
+      dispatch({
+        type: RUN_TEST_FLOW_PYTEST_COMPLETED,
+        runId: run.id,
+        result: {
+          ...result,
+          output,
+        },
+      });
+
+      if (shouldReconnectInspector && result.command) {
+        dispatch({
+          type: APPEND_TEST_FLOW_PYTEST_OUTPUT,
+          runId: run.id,
+          chunk: '\n\n[inspector]\nReconnecting Inspector session after pytest run...\n',
+        });
+        await reconnectInspectorSession(dispatch, getState);
+      }
+    } catch (err) {
+      dispatch({
+        type: RUN_TEST_FLOW_PYTEST_FAILED,
+        runId: run.id,
+        error: err?.message || String(err),
+      });
+    } finally {
+      unsubscribe();
+    }
+  };
+}
+
+async function executeCurrentSessionStepSequence(
+  steps,
+  stepDelayMs,
+  dispatch,
+  getState,
+  context = {},
+) {
+  for (let index = 0; index < steps.length; index++) {
+    const step = steps[index];
+    const topLevelStepIndex = context.topLevelStepIndex || index + 1;
+    const isTopLevelStep = !context.topLevelStepIndex;
+    const stepLabel = getTestFlowStepLabel(step);
+    const prefix = context.logPrefix || '[current-session]';
+
+    dispatch({
+      type: APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT,
+      runId: context.runId,
+      chunk: `${prefix} Step ${topLevelStepIndex}: ${stepLabel}\n`,
+    });
+
+    try {
+      await executeCurrentSessionStep(step, dispatch, getState, topLevelStepIndex, stepDelayMs, {
+        runId: context.runId,
+      });
+      dispatch({
+        type: APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT,
+        runId: context.runId,
+        chunk: `${prefix} Step ${topLevelStepIndex}: passed\n`,
+      });
+    } catch (err) {
+      const stepError = new Error(err?.errorReason || err?.message || String(err));
+      Object.assign(stepError, {
+        failedStepIndex: topLevelStepIndex,
+        failedStepName: stepLabel,
+        errorReason: err?.errorReason || err?.message || String(err),
+      });
+      throw stepError;
+    }
+
+    if (stepDelayMs > 0 && index < steps.length - 1) {
+      dispatch({
+        type: APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT,
+        runId: context.runId,
+        chunk: `${prefix} Waiting ${stepDelayMs}ms before next step\n`,
+      });
+      await waitForTestFlowDelay(stepDelayMs);
+    }
+
+    if (isTopLevelStep) {
+      dispatch({
+        type: APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT,
+        runId: context.runId,
+        chunk: '\n',
+      });
+    }
+  }
+}
+
+async function executeCurrentSessionStep(
+  step,
+  dispatch,
+  getState,
+  topLevelStepIndex,
+  stepDelayMs,
+  context = {},
+) {
+  if (step.type === 'assertion') {
+    await executeCurrentSessionAssertion(step, dispatch, getState);
+    return;
+  }
+
+  if (step.type === 'branch') {
+    const branchConditionPassed = await evaluateCurrentSessionBranchCondition(
+      step,
+      dispatch,
+      getState,
+    );
+    const branchSteps = branchConditionPassed ? step.thenSteps || [] : step.elseSteps || [];
+    dispatch({
+      type: APPEND_TEST_FLOW_CURRENT_SESSION_OUTPUT,
+      runId: context.runId,
+      chunk: `[current-session] Branch selected: ${branchConditionPassed ? 'then' : 'else'}\n`,
+    });
+    await executeCurrentSessionStepSequence(branchSteps, stepDelayMs, dispatch, getState, {
+      topLevelStepIndex,
+      logPrefix: '[current-session][branch]',
+      runId: context.runId,
+    });
+    return;
+  }
+
+  await executeCurrentSessionAction(step, dispatch, getState);
+}
+
+async function executeCurrentSessionAction(step, dispatch, getState) {
+  switch (step.action) {
+    case 'tap': {
+      const elementId = await resolveCurrentSessionElementId(step.locator, dispatch, getState);
+      await callClientMethod({
+        methodName: 'elementClick',
+        elementId,
+        skipRefresh: true,
+        skipRecord: true,
+      })(dispatch, getState);
+      return;
+    }
+
+    case 'sendKeys': {
+      const elementId = await resolveCurrentSessionElementId(step.locator, dispatch, getState);
+      await callClientMethod({
+        methodName: 'elementSendKeys',
+        elementId,
+        args: [step.value || ''],
+        skipRefresh: true,
+        skipRecord: true,
+      })(dispatch, getState);
+      return;
+    }
+
+    case 'clear': {
+      const elementId = await resolveCurrentSessionElementId(step.locator, dispatch, getState);
+      await callClientMethod({
+        methodName: 'elementClear',
+        elementId,
+        skipRefresh: true,
+        skipRecord: true,
+      })(dispatch, getState);
+      return;
+    }
+
+    case 'scrollViewport': {
+      await performCurrentSessionViewportScroll(step.direction, getState);
+      return;
+    }
+
+    case 'back':
+    case 'pressBack':
+      await callClientMethod({methodName: 'back', skipRefresh: true, skipRecord: true})(
+        dispatch,
+        getState,
+      );
+      return;
+
+    case 'pressHome':
+      await callClientMethod({
+        methodName: 'executeScript',
+        args: ['mobile: pressButton', [{name: 'home'}]],
+        skipRefresh: true,
+        skipRecord: true,
+      })(dispatch, getState);
+      return;
+
+    case 'openAppSwitcher':
+      await callClientMethod({
+        methodName: 'executeScript',
+        args: ['mobile: pressKey', [{keycode: 187}]],
+        skipRefresh: true,
+        skipRecord: true,
+      })(dispatch, getState);
+      return;
+
+    default:
+      throw new Error(`Unsupported current-session action '${step.action || 'custom'}'`);
+  }
+}
+
+async function executeCurrentSessionAssertion(step, _dispatch, getState) {
+  switch (step.assertion) {
+    case 'exists': {
+      const elements = await findCurrentSessionElements(step.locator, getState);
+      if (!elements.length) {
+        throw new Error('Expected element to exist');
+      }
+      return;
+    }
+
+    case 'visible': {
+      const elementId = await resolveCurrentSessionElementId(step.locator, _dispatch, getState);
+      if (!(await getState().inspector.driver.isElementDisplayed(elementId))) {
+        throw new Error('Expected element to be visible');
+      }
+      return;
+    }
+
+    case 'enabled': {
+      const elementId = await resolveCurrentSessionElementId(step.locator, _dispatch, getState);
+      if (!(await getState().inspector.driver.isElementEnabled(elementId))) {
+        throw new Error('Expected element to be enabled');
+      }
+      return;
+    }
+
+    case 'disabled': {
+      const elementId = await resolveCurrentSessionElementId(step.locator, _dispatch, getState);
+      if (await getState().inspector.driver.isElementEnabled(elementId)) {
+        throw new Error('Expected element to be disabled');
+      }
+      return;
+    }
+
+    case 'textEquals': {
+      const elementId = await resolveCurrentSessionElementId(step.locator, _dispatch, getState);
+      const actualText = await getState().inspector.driver.getElementText(elementId);
+      if (actualText !== (step.expectedText || '')) {
+        throw new Error(`Expected text '${step.expectedText || ''}' but received '${actualText}'`);
+      }
+      return;
+    }
+
+    case 'attributeEquals': {
+      const elementId = await resolveCurrentSessionElementId(step.locator, _dispatch, getState);
+      const actualValue = await getState().inspector.driver.getElementAttribute(
+        elementId,
+        step.attributeName || '',
+      );
+      if (actualValue !== (step.expectedValue || '')) {
+        throw new Error(
+          `Expected attribute '${step.attributeName || ''}' to equal '${step.expectedValue || ''}' but received '${actualValue}'`,
+        );
+      }
+      return;
+    }
+
+    default:
+      throw new Error(`Unsupported assertion '${step.assertion || 'exists'}'`);
+  }
+}
+
+async function evaluateCurrentSessionBranchCondition(step, _dispatch, getState) {
+  const conditionLocator = step.condition?.locator || step.locator;
+  const conditionType = step.condition?.assertion || 'exists';
+
+  switch (conditionType) {
+    case 'exists': {
+      const elements = await findCurrentSessionElements(conditionLocator, getState);
+      return elements.length > 0;
+    }
+
+    case 'visible': {
+      const elementId = await resolveCurrentSessionElementId(conditionLocator, _dispatch, getState).catch(
+        () => null,
+      );
+      if (!elementId) {
+        return false;
+      }
+      return await getState().inspector.driver.isElementDisplayed(elementId);
+    }
+
+    default:
+      throw new Error(`Unsupported branch condition '${conditionType}'`);
+  }
+}
+
+async function resolveCurrentSessionElementId(locator, dispatch, getState) {
+  if (!locator?.strategy || !locator?.value) {
+    throw new Error('Step is missing a valid locator');
+  }
+
+  const result = await callClientMethod({
+    strategy: locator.strategy,
+    selector: locator.value,
+    skipRefresh: true,
+    skipRecord: true,
+  })(dispatch, getState);
+
+  if (!result?.elementId) {
+    throw new Error(`Element not found for locator ${locator.strategy} = ${locator.value}`);
+  }
+
+  return result.elementId;
+}
+
+async function findCurrentSessionElement(locator, getState) {
+  if (!locator?.strategy || !locator?.value) {
+    throw new Error('Step is missing a valid locator');
+  }
+
+  return await getState().inspector.driver.findElement(locator.strategy, locator.value);
+}
+
+async function findCurrentSessionElements(locator, getState) {
+  if (!locator?.strategy || !locator?.value) {
+    throw new Error('Step is missing a valid locator');
+  }
+
+  return await getState().inspector.driver.findElements(locator.strategy, locator.value);
+}
+
+async function performCurrentSessionViewportScroll(direction = 'down', getState) {
+  const windowRect = await getState().inspector.driver.getWindowRect();
+  const ratios = getScrollRatios(direction);
+
+  const startX = Math.round(windowRect.width * ratios.startX);
+  const startY = Math.round(windowRect.height * ratios.startY);
+  const endX = Math.round(windowRect.width * ratios.endX);
+  const endY = Math.round(windowRect.height * ratios.endY);
+
+  await getState().inspector.driver.performActions([
+    {
+      type: 'pointer',
+      id: 'finger1',
+      parameters: {pointerType: 'touch'},
+      actions: [
+        {type: 'pointerMove', duration: 0, x: startX, y: startY},
+        {type: 'pointerDown', button: 0},
+        {type: 'pause', duration: 200},
+        {type: 'pointerMove', duration: 750, origin: 'viewport', x: endX, y: endY},
+        {type: 'pointerUp', button: 0},
+      ],
+    },
+  ]);
+}
+
+function getScrollRatios(direction = 'down') {
+  switch (direction) {
+    case 'up':
+      return {startX: 0.5, startY: 0.3, endX: 0.5, endY: 0.75};
+    case 'left':
+      return {startX: 0.25, startY: 0.5, endX: 0.8, endY: 0.5};
+    case 'right':
+      return {startX: 0.8, startY: 0.5, endX: 0.25, endY: 0.5};
+    case 'down':
+    default:
+      return {startX: 0.5, startY: 0.75, endX: 0.5, endY: 0.3};
+  }
+}
+
+function getTestFlowStepLabel(step = {}) {
+  return step.name || step.type || 'Step';
+}
+
+function waitForTestFlowDelay(delayMs) {
+  return new Promise((resolve) => setTimeout(resolve, delayMs));
+}
+
+async function refreshInspectorAfterCurrentSessionRun(dispatch, getState) {
+  try {
+    await applyClientMethod({methodName: 'getPageSource', skipRecord: true})(dispatch, getState);
+  } catch {}
+}
+
+// eslint-disable-next-line jsdoc/require-jsdoc
+export function getSavedTestFlows() {
+  return async (dispatch) => {
+    dispatch({type: GET_SAVED_TEST_FLOWS_REQUESTED});
+    try {
+      const savedFlows = await getSetting(SAVED_TEST_FLOWS);
+      dispatch({
+        type: GET_SAVED_TEST_FLOWS_DONE,
+        savedFlows: (savedFlows || []).map(normalizeSavedTestFlow),
+      });
+    } catch (err) {
+      log.error(err);
+      dispatch({
+        type: GET_SAVED_TEST_FLOWS_DONE,
+        savedFlows: [],
+      });
+    }
+  };
+}
+
+// eslint-disable-next-line jsdoc/require-jsdoc
+export function saveTestFlow(name, steps, id = null, stepDelayMs) {
+  return async (dispatch) => {
+    dispatch({type: SAVE_TEST_FLOW_REQUESTED});
+    try {
+      const savedFlows = (await getSetting(SAVED_TEST_FLOWS)) || [];
+      let nextFlows = [...savedFlows];
+      let targetId = id;
+      const normalizedStepDelayMs = normalizeTestFlowStepDelayMs(stepDelayMs);
+      const normalizedSteps = normalizePersistedTestFlowSteps(steps);
+
+      if (targetId) {
+        // Update existing flow
+        nextFlows = nextFlows.map((flow) =>
+          flow.id === targetId
+            ? {
+                ...flow,
+                name,
+                steps: normalizedSteps,
+                stepDelayMs: normalizedStepDelayMs,
+                updatedAt: Date.now(),
+              }
+            : flow,
+        );
+      } else {
+        // Save new flow
+        targetId = getRandomId();
+        nextFlows.push({
+          id: targetId,
+          name,
+          steps: normalizedSteps,
+          stepDelayMs: normalizedStepDelayMs,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        });
+      }
+
+      nextFlows = nextFlows.map(normalizeSavedTestFlow);
+
+      await setSetting(SAVED_TEST_FLOWS, nextFlows);
+      dispatch({
+        type: SAVE_TEST_FLOW_DONE,
+        savedFlows: nextFlows,
+        currentTestFlowId: targetId,
+        steps: normalizedSteps,
+        stepDelayMs: normalizedStepDelayMs,
+      });
+    } catch (err) {
+      log.error(err);
+    }
+  };
+}
+
+// eslint-disable-next-line jsdoc/require-jsdoc
+export function deleteTestFlow(id) {
+  return async (dispatch) => {
+    dispatch({type: DELETE_TEST_FLOW_REQUESTED});
+    try {
+      const savedFlows = (await getSetting(SAVED_TEST_FLOWS)) || [];
+      const nextFlows = savedFlows.filter((flow) => flow.id !== id);
+      await setSetting(SAVED_TEST_FLOWS, nextFlows);
+      dispatch({
+        type: DELETE_TEST_FLOW_DONE,
+        savedFlows: nextFlows,
+      });
+    } catch (err) {
+      log.error(err);
+    }
+  };
+}
+
+// eslint-disable-next-line jsdoc/require-jsdoc
+export function loadTestFlow(id) {
+  return (dispatch, getState) => {
+    const {savedTestFlows} = getState().inspector;
+    const flow = savedTestFlows.find((f) => f.id === id);
+    if (flow) {
+      const normalizedSteps = normalizePersistedTestFlowSteps(flow.steps);
+      dispatch({
+        type: LOAD_TEST_FLOW,
+        id,
+        steps: normalizedSteps,
+        stepDelayMs: normalizeTestFlowStepDelayMs(flow.stepDelayMs),
+      });
+    }
+  };
+}
+
+// eslint-disable-next-line jsdoc/require-jsdoc
+export function createNewTestFlow() {
+  return (dispatch) => {
+    dispatch({type: CREATE_NEW_TEST_FLOW});
+  };
+}
+
 export function getSavedClientFramework() {
   return async (dispatch) => {
     let framework = await getSetting(SAVED_CLIENT_FRAMEWORK);
@@ -369,19 +1104,21 @@ export function setClientFramework(framework) {
   };
 }
 
+// eslint-disable-next-line jsdoc/require-jsdoc
 export function recordAction(action, params) {
   return (dispatch) => {
     dispatch({type: RECORD_ACTION, action, params});
   };
 }
 
+// eslint-disable-next-line jsdoc/require-jsdoc
 export function toggleShowBoilerplate() {
   return (dispatch, getState) => {
     const show = !getState().inspector.showBoilerplate;
     dispatch({type: SET_SHOW_BOILERPLATE, show});
   };
 }
-
+// eslint-disable-next-line jsdoc/require-jsdoc
 export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, isUsingMjpegMode}) {
   return (dispatch) => {
     dispatch({
@@ -395,6 +1132,7 @@ export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, 
   };
 }
 
+// eslint-disable-next-line jsdoc/require-jsdoc
 export function storeSessionSettings(updatedSessionSettings = null) {
   return async (dispatch, getState) => {
     let sessionSettings = updatedSessionSettings;
@@ -409,6 +1147,7 @@ export function storeSessionSettings(updatedSessionSettings = null) {
   };
 }
 
+// eslint-disable-next-line jsdoc/require-jsdoc
 export function showLocatorTestModal() {
   return (dispatch) => {
     dispatch({type: SHOW_LOCATOR_TEST_MODAL});
@@ -470,10 +1209,37 @@ export function searchForElement(strategy, selector) {
       }
       elements = elements.map((el) => el.id);
       dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED, elements, executionTime});
+      return elements;
     } catch (error) {
       dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED});
       showError(error, {methodName: 10});
+      return [];
     }
+  };
+}
+
+export function selectElementByLocator(strategy, selector) {
+  return async (dispatch, getState) => {
+    dispatch({type: SET_LOCATOR_TEST_STRATEGY, locatorTestStrategy: strategy});
+    dispatch({type: SET_LOCATOR_TEST_VALUE, locatorTestValue: selector});
+
+    const elementIds = await searchForElement(strategy, selector)(dispatch, getState);
+    if (!elementIds.length) {
+      return null;
+    }
+
+    const targetElementId = elementIds[0];
+    await setLocatorTestElement(targetElementId)(dispatch, getState);
+
+    const {sourceJSON, sourceXML, searchedForElementBounds} = getState().inspector;
+    await selectLocatedElement(
+      sourceJSON,
+      sourceXML,
+      searchedForElementBounds,
+      targetElementId,
+    )(dispatch, getState);
+
+    return targetElementId;
   };
 }
 
@@ -1118,6 +1884,228 @@ export function toggleAutoSessionRestart() {
     const autoSessionRestart = !getState().inspector.autoSessionRestart;
     dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart});
   };
+}
+
+function normalizeTestFlowStep(type, payload = {}) {
+  const baseStep = {
+    id: payload.id || getRandomId(),
+    createdAt: payload.createdAt || Date.now(),
+    type,
+    ...payload,
+  };
+
+  if (type === 'branch') {
+    return {
+      name: 'Conditional branch',
+      condition: null,
+      thenSteps: [],
+      elseSteps: [],
+      ...baseStep,
+    };
+  }
+
+  if (type === 'assertion') {
+    return {
+      name: 'Assertion',
+      assertion: 'exists',
+      ...baseStep,
+    };
+  }
+
+  return {
+    name: 'Recorded action',
+    action: 'custom',
+    ...baseStep,
+  };
+}
+
+function getSelectedElementLocator(selectedElement) {
+  const [strategy, value] = selectedElement?.strategyMap?.[0] || [];
+  if (!strategy || !value) {
+    return null;
+  }
+  return {strategy, value};
+}
+
+function buildExecuteScriptTestFlowAction(args = []) {
+  const [scriptName, scriptArgs = []] = args;
+
+  if (scriptName === 'mobile:pressButton' && scriptArgs?.[0]?.name === 'home') {
+    return {
+      action: 'pressHome',
+      name: 'Press home button',
+      args,
+    };
+  }
+
+  if (scriptName === 'mobile:pressKey') {
+    const keycode = scriptArgs?.[0]?.keycode;
+    if (keycode === 4) {
+      return {
+        action: 'pressBack',
+        name: 'Press Android back',
+        args,
+      };
+    }
+    if (keycode === 3) {
+      return {
+        action: 'pressHome',
+        name: 'Press Android home',
+        args,
+      };
+    }
+    if (keycode === 187) {
+      return {
+        action: 'openAppSwitcher',
+        name: 'Open app switcher',
+        args,
+      };
+    }
+  }
+
+  return null;
+}
+
+function buildTestFlowActionStep(params, inspectorState) {
+  const locator =
+    params.strategy && params.selector
+      ? {strategy: params.strategy, value: params.selector}
+      : getSelectedElementLocator(inspectorState.selectedElement);
+  const context = {
+    appMode: inspectorState.appMode,
+    currentContext: inspectorState.currentContext,
+  };
+
+  switch (params.methodName) {
+    case 'elementClick':
+      return normalizeTestFlowStep('action', {
+        name: 'Tap element',
+        action: 'tap',
+        locator,
+        context,
+      });
+
+    case 'elementSendKeys':
+      return normalizeTestFlowStep('action', {
+        name: 'Send keys',
+        action: 'sendKeys',
+        locator,
+        value: params.args?.[0] || '',
+        context,
+      });
+
+    case 'elementClear':
+      return normalizeTestFlowStep('action', {
+        name: 'Clear element',
+        action: 'clear',
+        locator,
+        context,
+      });
+
+    case 'back':
+      return normalizeTestFlowStep('action', {
+        name: 'Navigate back',
+        action: 'back',
+        context,
+      });
+
+    case 'executeScript': {
+      const deviceAction = buildExecuteScriptTestFlowAction(params.args || []);
+      if (!deviceAction) {
+        return null;
+      }
+      return normalizeTestFlowStep('action', {
+        ...deviceAction,
+        context,
+      });
+    }
+
+    default:
+      return null;
+  }
+}
+
+function normalizeSavedTestFlow(flow = {}) {
+  return {
+    ...flow,
+    steps: normalizePersistedTestFlowSteps(flow.steps),
+    stepDelayMs: normalizeTestFlowStepDelayMs(flow.stepDelayMs),
+  };
+}
+
+function normalizePersistedTestFlowSteps(steps = []) {
+  if (!Array.isArray(steps)) {
+    return [];
+  }
+
+  return steps.map((step) => normalizePersistedTestFlowStep(step));
+}
+
+function normalizePersistedTestFlowStep(step = {}) {
+  const normalizedStep = normalizeTestFlowStep(step.type || 'action', step);
+
+  if (normalizedStep.type === 'branch') {
+    return {
+      ...normalizedStep,
+      thenSteps: normalizePersistedTestFlowSteps(normalizedStep.thenSteps),
+      elseSteps: normalizePersistedTestFlowSteps(normalizedStep.elseSteps),
+    };
+  }
+
+  return normalizedStep;
+}
+
+function buildTestFlowRunContext({
+  mode,
+  flowId = null,
+  flowName = 'Draft Flow',
+  steps = [],
+  stepDelayMs = 0,
+  code = '',
+  suggestedName = null,
+} = {}) {
+  return {
+    id: getRandomId(),
+    mode,
+    flowId,
+    flowKey: flowId || TEST_FLOW_DRAFT_KEY,
+    flowName,
+    startedAt: Date.now(),
+    stepDelayMs: normalizeTestFlowStepDelayMs(stepDelayMs),
+    steps: normalizePersistedTestFlowSteps(steps),
+    code,
+    suggestedName,
+  };
+}
+
+function shouldReconnectInspectorAfterPytest(state) {
+  return Boolean(state?.inspector?.driver) && state?.inspector?.automationName === 'uiautomator2';
+}
+
+async function reconnectInspectorSession(dispatch, getState) {
+  const caps = getState().builder?.caps;
+  if (!caps || _.isEmpty(caps)) {
+    return false;
+  }
+
+  const quitSes = quitSession();
+  const newSes = newSession(caps);
+  const getPageSrc = applyClientMethod({methodName: 'getPageSource'});
+  const storeSessionSet = storeSessionSettings();
+  const getSavedClientFrame = getSavedClientFramework();
+  const runKeepAliveLp = runKeepAliveLoop();
+  const setSesTime = setSessionTime(Date.now());
+
+  await quitSes(dispatch, getState);
+  await newSes(dispatch, getState);
+  await getPageSrc(dispatch, getState);
+  await storeSessionSet(dispatch, getState);
+  await getSavedClientFrame(dispatch);
+  runKeepAliveLp(dispatch, getState);
+  setSesTime(dispatch);
+  dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart: true});
+  dispatch({type: METHOD_CALL_DONE});
+  return true;
 }
 
 function parseAndValidateGestureFileString(gestureFileString) {

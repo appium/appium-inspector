@@ -33,6 +33,7 @@ const Screenshot = (props) => {
     selectedTick,
     selectedInspectorTab,
     applyClientMethod,
+    mjpegReloadKey,
   } = props;
   const {t} = useTranslation();
 
@@ -167,7 +168,7 @@ const Screenshot = (props) => {
   }
 
   const screenSrc = isUsingMjpegMode
-    ? serverDetails.mjpegScreenshotUrl
+    ? `${serverDetails.mjpegScreenshotUrl}${serverDetails.mjpegScreenshotUrl.includes('?') ? '&' : '?'}_inspectorReload=${mjpegReloadKey}`
     : `data:image/gif;base64,${screenshot}`;
   const points = getGestureCoordinates();
 
