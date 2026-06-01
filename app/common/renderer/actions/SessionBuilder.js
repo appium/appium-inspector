@@ -748,10 +748,14 @@ export function getRunningSessions() {
 
     // LambdaTest: fetch running sessions directly from LTMA API.
     // Derive LTMA host from hub host:
-    //   mobile-hub.lambdatest.com            → api.lambdatest.com
-    //   hub-{cluster}.lambdatestinternal.com → api-{cluster}.lambdatestinternal.com
+    //   mobile-hub.lambdatest.com                  → api.lambdatest.com
+    //   hub-{cluster}.lambdatestinternal.com        → api-{cluster}.lambdatestinternal.com
+    //   mobile-hub-{cluster}.lambdatestinternal.com → api-{cluster}.lambdatestinternal.com
     if (serverType === SERVER_TYPES.TESTMUAI) {
-      const ltmaHost = host.replace(/^mobile-hub\./, 'api.').replace(/^hub-/, 'api-');
+      const ltmaHost = host
+        .replace(/^mobile-hub\./, 'api.')
+        .replace(/^mobile-hub-/, 'api-')
+        .replace(/^hub-/, 'api-');
       const ltmaUrl = `https://${ltmaHost}/automation/api/v1/appium/inspector/sessions`;
       try {
         const res = await fetchSessionInformation({url: ltmaUrl, headers});
