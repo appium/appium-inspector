@@ -318,6 +318,13 @@ export function newSession(originalCaps, attachSessId = null) {
               timeout: CONN_TIMEOUT,
             });
             attachedSessionCaps = res.value;
+            // adjust for TestMu AI-specific format
+            if (attachedSessionCaps && 'capabilities' in attachedSessionCaps) {
+              attachedSessionCaps = attachedSessionCaps.capabilities;
+            }
+            if (attachedSessionCaps && 'desired' in attachedSessionCaps) {
+              attachedSessionCaps = attachedSessionCaps.desired;
+            }
           } catch (err) {
             // rethrow the error as session not running, but first log the original error to console
             log.error(err);
@@ -344,7 +351,10 @@ export function newSession(originalCaps, attachSessId = null) {
     // The homepage arg in ChromeDriver is not working with Appium. iOS can have a default url, but
     // we want to keep the process equal to prevent complexity so we launch a default url here to make
     // sure we don't start with an empty page which will not show proper HTML in the inspector
-    const {browserName = ''} = sessionCaps;
+    // When attaching to an existing session, sessionCaps is empty (user only provided a session ID).
+    // Use driver.capabilities instead, which the WebDriver client populates from the actual running
+    // session after a successful attach — correctly reflecting browserName for web sessions.
+    const {browserName = ''} = attachSessId ? driver.capabilities : sessionCaps;
     let appMode = APP_MODE.NATIVE;
 
     if (browserName.trim() !== '') {
@@ -733,6 +743,22 @@ export function getRunningSessions() {
     dispatch({type: GET_SESSIONS_REQUESTED});
     if (avoidServerTypes.includes(serverType)) {
       dispatch({type: GET_SESSIONS_DONE});
+      return;
+    }
+
+    // LambdaTest: fetch running sessions directly from LTMA API.
+    // Derive LTMA host from hub host:
+    //   mobile-hub.lambdatest.com            → api.lambdatest.com
+    //   hub-{cluster}.lambdatestinternal.com → api-{cluster}.lambdatestinternal.com
+    if (serverType === SERVER_TYPES.TESTMUAI) {
+      const ltmaHost = host.replace(/^mobile-hub\./, 'api.').replace(/^hub-/, 'api-');
+      const ltmaUrl = `https://${ltmaHost}/automation/api/v1/appium/inspector/sessions`;
+      try {
+        const res = await fetchSessionInformation({url: ltmaUrl, headers});
+        dispatch({type: GET_SESSIONS_DONE, sessions: res.value ?? []});
+      } catch {
+        dispatch({type: GET_SESSIONS_DONE, sessions: []});
+      }
       return;
     }
 
