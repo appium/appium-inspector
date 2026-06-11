@@ -286,7 +286,7 @@ export default class InspectorDriver {
       const {realDisplaySize} = await this.driver.executeScript('mobile:deviceInfo', []);
       // realDisplaySize value fits portrait mode for phones, but landscape mode for tablets
       const [width, height] = realDisplaySize.split('x').map((param) => parseInt(param, 10));
-      // check if the orientation for windowSize matches orientation for realDisplaySize
+      // check if the orientation for driverWindowSize matches orientation for realDisplaySize
       if (driverWindowSize.height >= driverWindowSize.width === height >= width) {
         adjustedWindowSize.height = height;
         adjustedWindowSize.width = width;
