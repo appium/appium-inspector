@@ -42,6 +42,7 @@ export default class InspectorDriver {
     this.elementCache = {};
     this.elVarCount = 0;
     this.elArrayVarCount = 0;
+    this.windowSizeCache = {raw: {}, adjusted: {}};
   }
 
   static instance(driver) {
@@ -265,37 +266,45 @@ export default class InspectorDriver {
   }
 
   async getWindowUpdate() {
-    let windowSize, windowSizeError;
     const {
       client: {
-        capabilities: {deviceScreenSize, platformName, automationName},
+        capabilities: {platformName, automationName},
       },
     } = this.driver;
     try {
-      windowSize = await this.driver.getWindowRect();
-      if (_.toLower(platformName) === 'android' && _.toLower(automationName) === 'uiautomator2') {
-        // returned Android height and width can both be affected by UiAutomator2 calculations
-        // we stick with device dimensions, but swap them depending on detected orientation
-        // deviceScreenSize value fits portrait mode for phones, but landscape mode for tablets
-        const [width, height] = deviceScreenSize.split('x').map((param) => parseInt(param, 10));
-        // check if the orientation for windowSize matches orientation for deviceScreenSize
-        if (windowSize.height >= windowSize.width === height >= width) {
-          windowSize.height = height;
-          windowSize.width = width;
-        } else {
-          // orientations do not match - swap dimensions
-          windowSize.height = width;
-          windowSize.width = height;
-        }
+      const driverWindowSize = await this.driver.getWindowRect();
+      if (_.toLower(platformName) !== 'android' || _.toLower(automationName) !== 'uiautomator2') {
+        return {windowSize: driverWindowSize};
       }
-    } catch (e) {
-      if (e.name === UNKNOWN_ERROR) {
-        throw e;
+      // UiAutomator2 requires adjustments depending on the result of `mobile: deviceInfo`.
+      // Use a cache to avoid re-triggering this method every time.
+      if (_.isEqual(driverWindowSize, this.windowSizeCache.raw)) {
+        return {windowSize: this.windowSizeCache.adjusted};
       }
-      windowSizeError = e;
+      // Window size has changed since the cached value - trigger the method
+      const adjustedWindowSize = {...driverWindowSize};
+      const {realDisplaySize} = await this.driver.executeScript('mobile:deviceInfo', []);
+      // realDisplaySize value fits portrait mode for phones, but landscape mode for tablets
+      const [width, height] = realDisplaySize.split('x').map((param) => parseInt(param, 10));
+      // check if the orientation for driverWindowSize matches orientation for realDisplaySize
+      if (driverWindowSize.height >= driverWindowSize.width === height >= width) {
+        adjustedWindowSize.height = height;
+        adjustedWindowSize.width = width;
+      } else {
+        // orientations do not match - swap dimensions
+        adjustedWindowSize.height = width;
+        adjustedWindowSize.width = height;
+      }
+      // Finally, update the cache
+      this.windowSizeCache.raw = driverWindowSize;
+      this.windowSizeCache.adjusted = adjustedWindowSize;
+      return {windowSize: adjustedWindowSize};
+    } catch (err) {
+      if (err.name === UNKNOWN_ERROR) {
+        throw err;
+      }
+      return {windowSizeError: err};
     }
-
-    return {windowSize, windowSizeError};
   }
 
   // Retrieve all detected contexts, as well as the current context
