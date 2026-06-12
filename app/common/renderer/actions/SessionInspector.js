@@ -426,9 +426,8 @@ export function setSiriCommandValue(siriCommandValue) {
 export function toggleMultiDisplayMode(displays) {
   return async (dispatch, getState) => {
     if (displays) {
-      // Toggling off: reset to the default display, then set displays to null
-      const defaultDisplayId = displays[0].id;
-      await setCurrentDisplayId(defaultDisplayId)(dispatch, getState);
+      // Toggling off: reset to the default display (0), then set displays to null
+      await setCurrentDisplayId(0)(dispatch, getState);
       return dispatch({type: SET_FOUND_DISPLAYS, displays: null});
     }
     // Toggling on: run search, set displays and currentDisplayId
@@ -440,7 +439,7 @@ export function toggleMultiDisplayMode(displays) {
     });
     const foundDisplays = await action(dispatch, getState);
     dispatch({type: SET_FOUND_DISPLAYS, displays: foundDisplays});
-    dispatch({type: SET_CURRENT_DISPLAY_ID, displayId: foundDisplays[0].id});
+    dispatch({type: SET_CURRENT_DISPLAY_ID, displayId: 0});
   };
 }
 
