@@ -19,11 +19,34 @@ the system buttons, which simulate the equivalent Android or iOS system function
     - The Siri button will open a prompt for input text, which will be used as the Siri command.
       Please note that the command will not work if Siri is disabled.
 
+## Display Switcher
+
+!!! note
+
+    This functionality is only supported for the UiAutomator2 driver `6.6.0`+, on devices
+    running Android 11 or newer.
+
+![Multi-Display Button](./assets/images/header/multi-display-button.png)
+
+The display switcher allows selecting the currently active device display. Pressing the
+multi-display button will trigger discovery of available displays, and a new dropdown will be
+created, listing all discovered displays.
+
+![Multi-Display Dropdown](./assets/images/header/multi-display-dropdown.png)
+
+Selecting a different display in the dropdown will automatically switch the screenshot and app
+source to those of the new display. Most screenshot and element interactions will work as normal,
+though some functionality will still only target the default display (such as device system buttons
+and MJPEG screenshot stream).
+
+Pressing the multi-display button while multi-display mode is active will switch to the default
+display and hide the dropdown.
+
 ## Context Switcher
 
 ![Context Button Group](./assets/images/header/context-group.png)
 
-The context switcher button group allows to change to a
+The context switcher button group allows changing to a
 [different application context](https://appium.io/docs/en/latest/guides/context/). By default, the
 Inspector works in _native mode_, and makes no attempts to discover other contexts. Pressing the
 globe icon will switch to _hybrid mode_, and the Inspector will start the context discovery process.

@@ -46,8 +46,10 @@ import {
   SET_CONTEXT,
   SET_COORD_END,
   SET_COORD_START,
+  SET_CURRENT_DISPLAY_ID,
   SET_EXPANDED_PATHS,
   SET_FLAT_SESSION_CAPS,
+  SET_FOUND_DISPLAYS,
   SET_GESTURE_TAP_COORDS_MODE,
   SET_INTERACTIONS_NOT_AVAILABLE,
   SET_KEEP_ALIVE_INTERVAL,
@@ -335,6 +337,18 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         siriCommandValue: action.siriCommandValue,
+      };
+
+    case SET_FOUND_DISPLAYS:
+      return {
+        ...state,
+        displays: action.displays,
+      };
+
+    case SET_CURRENT_DISPLAY_ID:
+      return {
+        ...state,
+        currentDisplayId: action.displayId,
       };
 
     case SET_LOCATOR_TEST_STRATEGY:
