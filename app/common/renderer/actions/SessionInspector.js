@@ -72,6 +72,8 @@ export const SET_SCREENSHOT_INTERACTION_MODE = 'SET_SCREENSHOT_INTERACTION_MODE'
 export const SET_APP_MODE = 'SET_APP_MODE';
 export const SET_SEARCHED_FOR_ELEMENT_BOUNDS = 'SET_SEARCHED_FOR_ELEMENT_BOUNDS';
 export const CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS = 'CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS';
+export const SET_FOUND_DISPLAYS = 'SET_FOUND_DISPLAYS';
+export const SET_CURRENT_DISPLAY_ID = 'SET_CURRENT_DISPLAY_ID';
 
 export const SET_COORD_START = 'SET_COORD_START';
 export const SET_COORD_END = 'SET_COORD_END';
@@ -418,6 +420,39 @@ export function hideSiriCommandModal() {
 export function setSiriCommandValue(siriCommandValue) {
   return (dispatch) => {
     dispatch({type: SET_SIRI_COMMAND_VALUE, siriCommandValue});
+  };
+}
+
+export function toggleMultiDisplayMode(displays) {
+  return async (dispatch, getState) => {
+    if (displays) {
+      // Toggling off: reset to the default display, then set displays to null
+      const defaultDisplayId = displays[0].id;
+      await setCurrentDisplayId(defaultDisplayId)(dispatch, getState);
+      return dispatch({type: SET_FOUND_DISPLAYS, displays: null});
+    }
+    // Toggling on: run search, set displays and currentDisplayId
+    // Any errors will be surfaced as part of callClientMethod
+    const action = applyClientMethod({
+      methodName: 'executeScript',
+      args: ['mobile:listDisplays', []],
+      skipRefresh: true,
+    });
+    const foundDisplays = await action(dispatch, getState);
+    dispatch({type: SET_FOUND_DISPLAYS, displays: foundDisplays});
+    dispatch({type: SET_CURRENT_DISPLAY_ID, displayId: foundDisplays[0].id});
+  };
+}
+
+export function setCurrentDisplayId(displayId) {
+  return async (dispatch, getState) => {
+    const action = applyClientMethod({
+      methodName: 'updateSettings',
+      // without enableMultiWindows: true, app source is retrieved from default display
+      args: [{currentDisplayId: displayId, enableMultiWindows: true}],
+    });
+    await action(dispatch, getState);
+    dispatch({type: SET_CURRENT_DISPLAY_ID, displayId});
   };
 }
 

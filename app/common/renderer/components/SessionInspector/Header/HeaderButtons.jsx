@@ -1,4 +1,5 @@
 import {
+  IconCarouselHorizontal,
   IconChevronLeft,
   IconCircle,
   IconExclamationCircle,
@@ -21,7 +22,7 @@ import {Button, Divider, Select, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
-import {LINKS} from '../../../constants/common.js';
+import {DRIVERS, LINKS} from '../../../constants/common.js';
 import {APP_MODE} from '../../../constants/session-inspector.js';
 import {openLink} from '../../../polyfills.js';
 import styles from './Header.module.css';
@@ -46,6 +47,11 @@ const HeaderButtons = (props) => {
     setContext,
     autoSessionRestart,
     toggleAutoSessionRestart,
+    toggleMultiDisplayMode,
+    displays,
+    setCurrentDisplayId,
+    currentDisplayId,
+    automationName,
   } = props;
   const {t} = useTranslation();
 
@@ -113,6 +119,30 @@ const HeaderButtons = (props) => {
             />
           </Tooltip>
         </>
+      )}
+    </Space.Compact>
+  );
+
+  const displayControls = (
+    <Space.Compact>
+      <Tooltip title={t('toggleMultiDisplayMode')}>
+        <Button
+          icon={<IconCarouselHorizontal size={18} />}
+          type={displays ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+          onClick={() => toggleMultiDisplayMode(displays)}
+        />
+      </Tooltip>
+      {displays && (
+        <Select
+          styles={{root: {width: 250}}}
+          value={currentDisplayId}
+          popupMatchSelectWidth={false}
+          onChange={(value) => value !== currentDisplayId && setCurrentDisplayId(value)}
+          options={displays.map(({id, name}) => ({
+            value: id,
+            label: name ? `${name} (ID ${id})` : id,
+          }))}
+        />
       )}
     </Space.Compact>
   );
@@ -262,6 +292,7 @@ const HeaderButtons = (props) => {
     <div className={styles.headerButtons}>
       <Space size="middle">
         {deviceControls}
+        {automationName === DRIVERS.UIAUTOMATOR2 && displayControls}
         {appModeControls}
         {generalControls}
         {sessionReloadButton}
