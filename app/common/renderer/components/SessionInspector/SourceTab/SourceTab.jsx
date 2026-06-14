@@ -1,6 +1,6 @@
 import {Splitter} from 'antd';
 
-import AppSource from './AppSource.jsx';
+import AppSource from './AppSource/AppSource.jsx';
 import SelectedElement from './SelectedElement/SelectedElement.jsx';
 
 const SourceTab = (props) => {
