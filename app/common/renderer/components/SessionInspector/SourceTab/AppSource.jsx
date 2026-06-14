@@ -15,8 +15,6 @@ import {BUTTON, ROW} from '../../../constants/antd-types.js';
 import {IMPORTANT_SOURCE_ATTRS} from '../../../constants/source.js';
 import {downloadFile} from '../../../utils/file-handling.js';
 import {copyToClipboard} from '../../../utils/other.js';
-import LocatorTestModal from '../Header/LocatorTestModal.jsx';
-import SiriCommandModal from '../Header/SiriCommandModal.jsx';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Source.module.css';
 
@@ -266,8 +264,6 @@ const AppSource = (props) => {
             <Tree treeData={[]} />
           )}
         </Spin>
-        <LocatorTestModal {...props} />
-        <SiriCommandModal {...props} />
       </div>
     </Card>
   );
