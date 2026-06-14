@@ -326,5 +326,6 @@
   "Box Model": "方框模型",
   "detachFromSession": "从会话中分离",
   "enterSessionID": "请输入会话ID以手动连接",
-  "refreshDiscoveredSessions": "刷新发现的会话"
+  "refreshDiscoveredSessions": "刷新发现的会话",
+  "toggleMultiDisplayMode": "Toggle Multi-Display Mode"
 }
