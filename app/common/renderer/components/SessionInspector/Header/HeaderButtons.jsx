@@ -26,6 +26,8 @@ import {DRIVERS, LINKS} from '../../../constants/common.js';
 import {APP_MODE} from '../../../constants/session-inspector.js';
 import {openLink} from '../../../polyfills.js';
 import styles from './Header.module.css';
+import LocatorTestModal from './LocatorTestModal.jsx';
+import SiriCommandModal from './SiriCommandModal.jsx';
 
 const HeaderButtons = (props) => {
   const {
@@ -299,6 +301,8 @@ const HeaderButtons = (props) => {
         {quitControls}
       </Space>
       <Divider />
+      <LocatorTestModal {...props} />
+      <SiriCommandModal {...props} />
     </div>
   );
 };
