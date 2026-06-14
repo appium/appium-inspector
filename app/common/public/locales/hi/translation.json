@@ -326,5 +326,6 @@
   "Box Model": "Box Model",
   "detachFromSession": "Detach from Session",
   "enterSessionID": "Enter session ID for attaching manually",
-  "refreshDiscoveredSessions": "Refresh Discovered Sessions"
+  "refreshDiscoveredSessions": "Refresh Discovered Sessions",
+  "toggleMultiDisplayMode": "Toggle Multi-Display Mode"
 }
