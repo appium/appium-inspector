@@ -92,10 +92,10 @@
     "xpath": "0.0.34"
   },
   "devDependencies": {
-    "@appium/docutils": "2.4.3",
-    "@appium/eslint-config-appium-ts": "3.2.2",
-    "@appium/fake-driver": "6.2.0",
-    "@appium/support": "7.2.3",
+    "@appium/docutils": "2.5.1",
+    "@appium/eslint-config-appium-ts": "3.2.3",
+    "@appium/fake-driver": "6.2.1",
+    "@appium/support": "7.2.5",
     "@eslint-react/eslint-plugin": "5.9.0",
     "@tomjs/electron-devtools-installer": "4.0.1",
     "@types/lodash": "4.17.24",
