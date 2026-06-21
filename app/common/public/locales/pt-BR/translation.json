@@ -327,5 +327,5 @@
   "detachFromSession": "Desanexar da sessão",
   "enterSessionID": "Insira a ID de sessão para anexar manualmente",
   "refreshDiscoveredSessions": "Atualizar Sessões Descobertas",
-  "toggleMultiDisplayMode": "Toggle Multi-Display Mode"
+  "toggleMultiDisplayMode": "Ativar/desativar Modo Exibição Múltipla"
 }

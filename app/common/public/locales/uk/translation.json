@@ -327,5 +327,5 @@
   "detachFromSession": "Відʼєднатися від сесії",
   "enterSessionID": "Введіть ідентифікатор сесії для приєднання вручну",
   "refreshDiscoveredSessions": "Оновити відкриті сесії",
-  "toggleMultiDisplayMode": "Toggle Multi-Display Mode"
+  "toggleMultiDisplayMode": "Перемкнути багатоекранний режим"
 }
