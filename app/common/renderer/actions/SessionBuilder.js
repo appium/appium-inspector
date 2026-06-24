@@ -753,18 +753,8 @@ export function getRunningSessions() {
     }
 
     if (serverType === SERVER_TYPES.TESTMUAI) {
-      const sessionListHost = host
-        .replace(/^mobile-hub\./, 'api.')
-        .replace(/^mobile-hub-/, 'api-')
-        .replace(/^hub-/, 'api-');
-      const sessionListUrl = `https://${sessionListHost}/automation/api/v1/appium/inspector/sessions`;
-      try {
-        const res = await fetchSessionInformation({url: sessionListUrl, headers});
-        dispatch({type: GET_SESSIONS_DONE, sessions: res.value ?? []});
-      } catch (err) {
-        log.error('Failed to fetch running sessions', err);
-        dispatch({type: GET_SESSIONS_DONE, sessions: []});
-      }
+      const sessions = await fetchTestMuAISessions(host, headers);
+      dispatch({type: GET_SESSIONS_DONE, sessions});
       return;
     }
 
@@ -1049,6 +1039,43 @@ async function fetchAllSessions(baseUrl, headers) {
   ]);
 
   return [...appiumSessions, ...oldAppiumSessions, ...seleniumSessions];
+}
+
+/**
+ * Fetch running sessions for a TestMu AI server.
+ *
+ * Combines the provider's session-list API (derived from the hub host) with the
+ * standard /wd/hub/sessions endpoint, tolerating failures from either source so
+ * one unavailable endpoint doesn't hide the sessions from the other.
+ *
+ * @param {string} host
+ * @param {object} headers
+ * @returns {Promise<object[]>}
+ */
+async function fetchTestMuAISessions(host, headers) {
+  const sessionListHost = host
+    .replace(/^mobile-hub\./, 'api.')
+    .replace(/^mobile-hub-/, 'api-')
+    .replace(/^hub-/, 'api-');
+  const sessionListUrl = `https://${sessionListHost}/automation/api/v1/appium/inspector/sessions`;
+  const hubSessionsUrl = `https://${host}/wd/hub/sessions`;
+
+  async function fetchSessionsFromEndpoint(url) {
+    try {
+      const res = await fetchSessionInformation({url, headers});
+      return res.value ?? [];
+    } catch (err) {
+      log.error(`Failed to fetch running sessions from ${url}`, err);
+      return [];
+    }
+  }
+
+  const [webSessions, appSessions] = await Promise.all([
+    fetchSessionsFromEndpoint(sessionListUrl),
+    fetchSessionsFromEndpoint(hubSessionsUrl),
+  ]);
+
+  return [...webSessions, ...appSessions];
 }
 
 /**
