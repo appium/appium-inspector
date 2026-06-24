@@ -18,7 +18,7 @@ import {
   IconWorld,
   IconX,
 } from '@tabler/icons-react';
-import {Button, Divider, Select, Space, Tooltip} from 'antd';
+import {Button, Divider, Select, Space, Tooltip, Dropdown} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
@@ -28,6 +28,9 @@ import {openLink} from '../../../polyfills.js';
 import styles from './Header.module.css';
 import LocatorTestModal from './LocatorTestModal.jsx';
 import SiriCommandModal from './SiriCommandModal.jsx';
+import CustomExportModal from './CustomExportModal.jsx';
+import {useState} from 'react';
+import {IconFileExport} from '@tabler/icons-react';
 
 const HeaderButtons = (props) => {
   const {
@@ -56,6 +59,29 @@ const HeaderButtons = (props) => {
     automationName,
   } = props;
   const {t} = useTranslation();
+  const [isCustomExportOpen, setIsCustomExportOpen] = useState(false);
+
+  // Export menu / controls (placed here so we can access `t` and `props`)
+  const exportMenuItems = [
+    {
+      key: 'visible-json',
+      label: t('Visible Elements (JSON)'),
+      onClick: () => props.exportVisibleElements && props.exportVisibleElements(),
+    },
+    {
+      key: 'custom-export',
+      label: t('Custom Export'),
+      onClick: () => setIsCustomExportOpen(true),
+    },
+  ];
+
+  const exportControls = (
+    <Dropdown menu={{items: exportMenuItems}} trigger={['click']}>
+      <Button id="btnExport" icon={<IconFileExport size={18} />}>
+        {t('Export Elements')}
+      </Button>
+    </Dropdown>
+  );
 
   const deviceControls = (
     <Space.Compact>
@@ -297,14 +323,24 @@ const HeaderButtons = (props) => {
         {automationName === DRIVERS.UIAUTOMATOR2 && displayControls}
         {appModeControls}
         {generalControls}
+        {exportControls}
         {sessionReloadButton}
         {quitControls}
       </Space>
       <Divider />
       <LocatorTestModal {...props} />
       <SiriCommandModal {...props} />
+      <CustomExportModal
+        open={isCustomExportOpen}
+        onClose={() => setIsCustomExportOpen(false)}
+        sourceJSON={props.sourceJSON}
+        sourceXML={props.sourceXML}
+        currentContext={props.currentContext}
+        automationName={props.automationName}
+      />
     </div>
   );
 };
+
 
 export default HeaderButtons;

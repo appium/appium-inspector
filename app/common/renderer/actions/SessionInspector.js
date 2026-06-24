@@ -1097,3 +1097,191 @@ function parseAndValidateGestureFileString(gestureFileString) {
   }
   return _.omit(gestureJSON, ['id', 'date']);
 }
+
+function hasUsableLocatorAttrs(attributes) {
+  if (!attributes) return false;
+  const locatorAttrs = [
+    'resource-id',
+    'id',
+    'content-desc',
+    'contentDescription',
+    'text',
+    'value',
+    'name',
+    'label',
+  ];
+  return locatorAttrs.some((k) => typeof attributes[k] === 'string' && attributes[k].trim() !== '');
+}
+
+function isDisplayedAndEnabled(attributes) {
+  if (!attributes) return false;
+  const enabled = attributes.enabled ?? attributes['enabled'];
+  const displayed = attributes.displayed ?? attributes.visible ?? attributes['visible'];
+  // values are strings like 'true' / 'false' in xmlToJSON
+  const isEnabled = typeof enabled === 'undefined' ? true : String(enabled) === 'true';
+  const isDisplayed = typeof displayed === 'undefined' ? true : String(displayed) === 'true';
+  return isEnabled && isDisplayed;
+}
+
+function safeNameFrom(attrValue, fallback) {
+  if (attrValue && typeof attrValue === 'string') {
+    return attrValue.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '').replace(/^(\d)/, '_$1') || fallback;
+  }
+  return fallback;
+}
+
+/**
+ * Export Visible Elements (JSON)
+ */
+export function exportVisibleElements() {
+  return async (dispatch, getState) => {
+    try {
+      const {sourceJSON, sourceXML, driver, flatSessionCaps, automationName, currentContext} =
+        getState().inspector;
+      if (!sourceJSON) {
+        notification.error({title: i18n.t('noSourceToExport') || 'No source available to export', duration: 5});
+        return;
+      }
+
+      // Platform detection
+      const platform = driver?.isAndroid ? 'android' : driver?.isIOS ? 'ios' : 'web';
+
+      // Screen name heuristic: prefer activity/package or bundleId from caps, fallback to root tag
+      let screenName = 'CurrentScreen';
+      try {
+        if (flatSessionCaps) {
+          screenName = flatSessionCaps.appActivity || flatSessionCaps.appPackage || flatSessionCaps.bundleId || screenName;
+        }
+      } catch {}
+      // Try a doc-level heuristic if available
+      if (!screenName || screenName === 'CurrentScreen') {
+        try {
+          const topTag = sourceJSON.tagName;
+          if (topTag) screenName = topTag;
+        } catch {}
+      }
+
+      // Excluded android class names (unless they have usable locator)
+      const EXCLUDED_CLASSES = new Set([
+        'android.view.View',
+        'android.view.ViewGroup',
+        'android.widget.FrameLayout',
+        'android.widget.LinearLayout',
+        'android.widget.RelativeLayout',
+      ]);
+
+      // Walk the source tree recursively and collect nodes
+      const collected = [];
+
+      function traverse(node) {
+        if (!node) return;
+        const attrs = node.attributes || {};
+        const className = attrs.class || node.tagName || '';
+
+        // Check displayed & enabled
+        if (isDisplayedAndEnabled(attrs)) {
+          // Check usable attribute (Phase 1 rule: resource-id OR content-desc OR text)
+          const hasLocatorProp =
+            Boolean(attrs['resource-id'] || attrs['content-desc'] || attrs['text'] || attrs.id || attrs.value || attrs.name || attrs.label);
+          // Exclusion by class (unless it has usable locator)
+          const isExcludedClass = EXCLUDED_CLASSES.has(className);
+          if (hasLocatorProp && !isExcludedClass || (hasLocatorProp && isExcludedClass && hasUsableLocatorAttrs(attrs))) {
+            // Build ExportedElement
+            collected.push({
+              jsonNode: node, // keep reference if needed for later locator generation
+            });
+          } else if (!isExcludedClass && hasLocatorProp) {
+            // include normally
+            collected.push({jsonNode: node});
+          }
+        }
+        // Recurse
+        for (const child of node.children || []) {
+          traverse(child);
+        }
+      }
+
+      traverse(sourceJSON);
+
+      // Map collected nodes to ExportedElement model using smart locator selection
+      const elements = collected.map(({jsonNode}) => {
+        const attrs = jsonNode.attributes || {};
+        const className = jsonNode.tagName || attrs.class || '';
+
+        // Determine best locator using existing utilities
+        // getSuggestedLocators(selectedElement, sourceXML, isNative, automationName) => returns pairs
+        // selectedElement needs to be the JSON node
+        const isNative = currentContext === NATIVE_APP;
+        let bestStrategy = null;
+        let bestSelector = null;
+
+        try {
+          const strategyPairs = getSuggestedLocators(jsonNode, sourceXML, isNative, automationName);
+          // strategyPairs is Array<[strategy, selector]>
+          // Apply Phase 2 priority:
+          const PRIORITY = ['accessibility id', 'id', 'name', 'text', 'xpath'];
+          // Helper map for finding by canonical names
+          const stratMap = Object.fromEntries(strategyPairs);
+          for (const p of PRIORITY) {
+            if (stratMap[p]) {
+              bestStrategy = p;
+              bestSelector = stratMap[p];
+              break;
+            }
+          }
+          // If still not found, try any available strategy
+          if (!bestStrategy && strategyPairs.length > 0) {
+            bestStrategy = strategyPairs[0][0];
+            bestSelector = strategyPairs[0][1];
+          }
+        } catch (err) {
+          // fallback: compute xpath
+          try {
+            const domNode = xmlToDOM(sourceXML) && findDOMNodeByPath(jsonNode.path, xmlToDOM(sourceXML));
+            bestStrategy = 'xpath';
+            bestSelector = getOptimalXPath(xmlToDOM(sourceXML), domNode);
+          } catch {}
+        }
+
+        // fallback to attribute-based name & locator
+        const accessibilityId = attrs['content-desc'] || attrs.name || attrs.label || attrs['accessibility-id'] || attrs['accessibilityLabel'];
+        const resourceId = attrs['resource-id'] || attrs.id;
+        const text = attrs.text || attrs.value || attrs.label;
+
+        // Determine a friendly export name (Phase2 wants 'name' field)
+        const nameCandidate = accessibilityId || resourceId || attrs.name || attrs.id || text;
+        const safeName = safeNameFrom(nameCandidate, `${className.replace(/\./g, '_')}_${jsonNode.path.replace(/\./g, '_')}`);
+
+        const exported = {
+          name: safeName,
+          className,
+          locatorStrategy: bestStrategy || 'xpath',
+          locatorValue: bestSelector || resourceId || accessibilityId || text || '',
+        };
+
+        // enrich with optional fields
+        if (resourceId) exported.resourceId = resourceId;
+        if (accessibilityId) exported.accessibilityId = accessibilityId;
+        if (text) exported.text = text;
+
+        return exported;
+      });
+
+      const exportJson = {
+        platform,
+        screen: screenName,
+        elements,
+      };
+
+      const cleanedName = `visible-elements-${platform}-${new Date().toISOString()}`;
+      const escapedName = sanitize(cleanedName, {replacement: '_'});
+      const fileName = `${escapedName}.json`;
+      const href = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(exportJson, null, 2))}`;
+      downloadFile(href, fileName);
+      notification.info({title: i18n.t('exportCompleted') || 'Export completed', duration: 3});
+    } catch (err) {
+      log.error('exportVisibleElements failed', err);
+      notification.error({title: i18n.t('exportFailed') || 'Export failed', duration: 5});
+    }
+  };
+}
