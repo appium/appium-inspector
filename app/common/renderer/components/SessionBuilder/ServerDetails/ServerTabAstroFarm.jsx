@@ -1,8 +1,8 @@
 import {Col, Input, Row, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import builderStyles from '../SessionBuilder.module.css';
 import {PROVIDER_VALUES} from '../../../constants/session-builder.js';
+import builderStyles from '../SessionBuilder.module.css';
 
 const ServerTabAstrofarm = ({server, setServerParam}) => {
   const {t} = useTranslation();

@@ -1,5 +1,5 @@
-import BitBarLogo from '../../../assets/images/bitbar_logo.svg';
 import AstrofarmLogo from '../../../assets/images/astrofarm_logo.svg';
+import BitBarLogo from '../../../assets/images/bitbar_logo.svg';
 import BrowserStackLogo from '../../../assets/images/browserstack_logo.svg';
 import BrowserStackLogoDark from '../../../assets/images/browserstack_logo_dark.svg';
 import ExperitestLogo from '../../../assets/images/experitest_logo.svg';
