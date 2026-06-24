@@ -56,6 +56,7 @@ export const PROVIDER_VALUES = {
   PERFECTO_URL: 'cloud.Perfectomobile.com',
   TESTCRIBE_API_KEY: 'your-api-key',
   RABBITQA_API_KEY: 'your-api-key',
+  ASTROFARM_URL: 'https://astrofarm-domain/d/appium/your-authentication-token'
 };
 
 export const ADD_CLOUD_PROVIDER_TAB_KEY = 'addCloudProvider';

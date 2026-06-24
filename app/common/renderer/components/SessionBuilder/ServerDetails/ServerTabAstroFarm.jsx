@@ -2,6 +2,7 @@ import {Col, Input, Row, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import builderStyles from '../SessionBuilder.module.css';
+import {PROVIDER_VALUES} from '../../../constants/session-builder.js';
 
 const ServerTabAstrofarm = ({server, setServerParam}) => {
   const {t} = useTranslation();
@@ -12,7 +13,7 @@ const ServerTabAstrofarm = ({server, setServerParam}) => {
           <Space.Addon>{t('serverTabAstrofarmWebDriverURL')}</Space.Addon>
           <Input
             id="astrofarmServerHost"
-            placeholder="https://astrofarm-domain/d/appium/your-authentication-token"
+            placeholder={PROVIDER_VALUES.ASTROFARM_URL}
             value={server.astrofarm.webDriverUrl}
             onChange={(e) => setServerParam('webDriverUrl', e.target.value)}
           />
