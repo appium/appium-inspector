@@ -361,10 +361,13 @@ export function newSession(originalCaps, attachSessId = null) {
     let appMode = APP_MODE.NATIVE;
 
     if (browserName.trim() !== '') {
-      try {
-        appMode = APP_MODE.WEB_HYBRID;
-        await driver.navigateTo('https://appium.io');
-      } catch {}
+      appMode = APP_MODE.WEB_HYBRID;
+      // Don't hijack the page when attaching to an existing session.
+      if (!attachSessId) {
+        try {
+          await driver.navigateTo('https://appium.io');
+        } catch {}
+      }
     }
 
     let mjpegScreenshotUrl =
