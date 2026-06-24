@@ -326,5 +326,6 @@
   "Box Model": "Коробкова модель",
   "detachFromSession": "Відʼєднатися від сесії",
   "enterSessionID": "Введіть ідентифікатор сесії для приєднання вручну",
-  "refreshDiscoveredSessions": "Оновити відкриті сесії"
+  "refreshDiscoveredSessions": "Оновити відкриті сесії",
+  "toggleMultiDisplayMode": "Перемкнути багатоекранний режим"
 }

@@ -46,7 +46,7 @@
   "updateIsDownloaded": "Appium Inspector {{releaseName}} 已经下载。必须重新启动以应用更新(注意：它可能需要几分钟时间，以便安装并重启)",
   "updateDownloadFailed": "下载更新失败。原因: {{message}}",
   "OK": "OK",
-  "Install Now": "立即安装​​​​​​​",
+  "Install Now": "马上安装",
   "Install Later": "稍后安装",
   "Update Download Started": "已经成功下载更新",
   "No update available": "没有可用的更新",
@@ -326,5 +326,6 @@
   "Box Model": "方框模型",
   "detachFromSession": "从会话中分离",
   "enterSessionID": "请输入会话ID以手动连接",
-  "refreshDiscoveredSessions": "刷新发现的会话"
+  "refreshDiscoveredSessions": "刷新发现的会话",
+  "toggleMultiDisplayMode": "Toggle Multi-Display Mode"
 }

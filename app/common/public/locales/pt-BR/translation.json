@@ -326,5 +326,6 @@
   "Box Model": "Modelo da caixa",
   "detachFromSession": "Desanexar da sessão",
   "enterSessionID": "Insira a ID de sessão para anexar manualmente",
-  "refreshDiscoveredSessions": "Atualizar Sessões Descobertas"
+  "refreshDiscoveredSessions": "Atualizar Sessões Descobertas",
+  "toggleMultiDisplayMode": "Ativar/desativar Modo Exibição Múltipla"
 }
