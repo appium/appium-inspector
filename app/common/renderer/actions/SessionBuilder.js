@@ -107,9 +107,15 @@ const NEW_COMMAND_TIMEOUT_SEC = 3600;
  * The server may wrap capabilities under a 'capabilities' key and/or a 'desired' key.
  */
 function unwrapTestMuAICaps(caps) {
-  if (!caps) {return caps;}
-  if ('capabilities' in caps) {caps = caps.capabilities;}
-  if ('desired' in caps) {caps = caps.desired;}
+  if (!caps) {
+    return caps;
+  }
+  if ('capabilities' in caps) {
+    caps = caps.capabilities;
+  }
+  if ('desired' in caps) {
+    caps = caps.desired;
+  }
   return caps;
 }
 
@@ -322,9 +328,10 @@ export function newSession(originalCaps, attachSessId = null) {
               headers,
               timeout: CONN_TIMEOUT,
             });
-            attachedSessionCaps = session.serverType === SERVER_TYPES.TESTMUAI
-              ? unwrapTestMuAICaps(res.value)
-              : res.value;
+            attachedSessionCaps =
+              session.serverType === SERVER_TYPES.TESTMUAI
+                ? unwrapTestMuAICaps(res.value)
+                : res.value;
           } catch (err) {
             // rethrow the error as session not running, but first log the original error to console
             log.error(err);
