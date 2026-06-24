@@ -854,7 +854,7 @@ export function callClientMethod(params) {
     try {
       const action = keepSessionAlive();
       action(dispatch, getState);
-      const inspectorDriver = InspectorDriver.instance(driver);
+      const inspectorDriver = InspectorDriver.instance(driver, getState().builder.serverType);
       const res = await inspectorDriver.run(params);
       res.elementId = res.id;
       return res;
@@ -876,7 +876,7 @@ export function executeDriverCommand(params) {
   return async (getState) => {
     const {driver} = getState().inspector;
     params.skipRefresh = true;
-    const inspectorDriver = InspectorDriver.instance(driver);
+    const inspectorDriver = InspectorDriver.instance(driver, getState().builder.serverType);
     return await inspectorDriver.run(params);
   };
 }
