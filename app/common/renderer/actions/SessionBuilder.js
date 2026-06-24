@@ -107,9 +107,9 @@ const NEW_COMMAND_TIMEOUT_SEC = 3600;
  * The server may wrap capabilities under a 'capabilities' key and/or a 'desired' key.
  */
 function unwrapTestMuAICaps(caps) {
-  if (!caps) return caps;
-  if ('capabilities' in caps) caps = caps.capabilities;
-  if ('desired' in caps) caps = caps.desired;
+  if (!caps) {return caps;}
+  if ('capabilities' in caps) {caps = caps.capabilities;}
+  if ('desired' in caps) {caps = caps.desired;}
   return caps;
 }
 
