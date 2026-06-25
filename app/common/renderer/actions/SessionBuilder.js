@@ -160,8 +160,6 @@ export function showError(e, params = {methodName: null, secs: 5, url: null}) {
     } catch {}
     if (e.data.value?.message) {
       errMessage = e.data.value.message;
-    } else {
-      errMessage = e.data;
     }
   } else if (e.message) {
     errMessage = e.message;
@@ -217,7 +215,7 @@ export function addCapability() {
  * Update value of a capability parameter
  */
 export function setCapabilityParam(id, name, value) {
-  return (dispatch) => {
+  return (dispatch) => { 
     dispatch({type: SET_CAPABILITY_PARAM, id, name, value});
   };
 }
@@ -251,7 +249,7 @@ export function newSession(originalCaps, attachSessId = null) {
     let sessionCaps = prefixedCaps ? getCapsObject(prefixedCaps) : {};
     sessionCaps = addCustomCaps(sessionCaps);
 
-    const vendorProperties = await retrieveVendorProperties({
+    const vendorProperties = await retrieveVendorProperties({ 
       server: session.server,
       serverType: session.serverType,
       sessionCaps,
@@ -632,7 +630,7 @@ export function initFromSessionFile() {
       dispatch({type: SET_STATE_FROM_FILE, sessionJSON});
       switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER)(dispatch, getState);
     } else {
-      notification.error({
+      notification.error({ 
         title: i18n.t('invalidSessionFile'),
         duration: 0,
       });
@@ -704,6 +702,20 @@ export function exportSavedSession(session) {
     const fileName = `${escapedName}.appiumsession`;
     downloadFile(href, fileName);
   };
+}
+
+/**
+ * Shared helper to run requests to session endpoints with safe fallbacks and logging
+ */
+async function fetchSessionsWithFallback(url, headers, formatter = (res) => res.value ?? []) {
+  try {
+    const res = await fetchSessionInformation({url, headers});
+    const data = formatter(res);
+    return Array.isArray(data) ? data : [];
+  } catch (err) {
+    log.error(`Failed to fetch running sessions from ${url}: ${err.message}`);
+    return [];
+  }
 }
 
 /**
@@ -1026,19 +1038,10 @@ async function fetchAllSessions(baseUrl, headers) {
   const oldAppiumSessionsEndpoint = `${baseUrl}sessions`; // Appium 1-2
   const seleniumSessionsEndpoint = `${baseUrl}status`;
 
-  async function fetchSessionsFromEndpoint(url) {
-    try {
-      const res = await fetchSessionInformation({url, headers});
-      return url === seleniumSessionsEndpoint ? formatSeleniumGridSessions(res) : (res.value ?? []);
-    } catch {
-      return [];
-    }
-  }
-
   const [appiumSessions, oldAppiumSessions, seleniumSessions] = await Promise.all([
-    fetchSessionsFromEndpoint(appiumSessionsEndpoint),
-    fetchSessionsFromEndpoint(oldAppiumSessionsEndpoint),
-    fetchSessionsFromEndpoint(seleniumSessionsEndpoint),
+    fetchSessionsWithFallback(appiumSessionsEndpoint, headers),
+    fetchSessionsWithFallback(oldAppiumSessionsEndpoint, headers),
+    fetchSessionsWithFallback(seleniumSessionsEndpoint, headers, formatSeleniumGridSessions),
   ]);
 
   return [...appiumSessions, ...oldAppiumSessions, ...seleniumSessions];
@@ -1063,19 +1066,9 @@ async function fetchTestMuAISessions(host, headers) {
   const sessionListUrl = `https://${sessionListHost}/automation/api/v1/appium/inspector/sessions`;
   const hubSessionsUrl = `https://${host}/wd/hub/sessions`;
 
-  async function fetchSessionsFromEndpoint(url) {
-    try {
-      const res = await fetchSessionInformation({url, headers});
-      return res.value ?? [];
-    } catch (err) {
-      log.error(`Failed to fetch running sessions from ${url}`, err);
-      return [];
-    }
-  }
-
   const [webSessions, appSessions] = await Promise.all([
-    fetchSessionsFromEndpoint(sessionListUrl),
-    fetchSessionsFromEndpoint(hubSessionsUrl),
+    fetchSessionsWithFallback(sessionListUrl, headers),
+    fetchSessionsWithFallback(hubSessionsUrl, headers),
   ]);
 
   return [...webSessions, ...appSessions];
