@@ -358,13 +358,9 @@ export function newSession(originalCaps, attachSessId = null) {
     // The homepage arg in ChromeDriver is not working with Appium. iOS can have a default url, but
     // we want to keep the process equal to prevent complexity so we launch a default url here to make
     // sure we don't start with an empty page which will not show proper HTML in the inspector
-    // When attaching via TestMu AI, sessionCaps is empty (user only provided a session ID).
-    // Use driver.capabilities in that case, which the WebDriver client populates from the actual
-    // running session after a successful attach — correctly reflecting browserName for web sessions.
-    const {browserName = ''} =
-      attachSessId && session.serverType === SERVER_TYPES.TESTMUAI
-        ? driver.capabilities
-        : sessionCaps;
+    // When attaching to an existing session, sessionCaps doesn't carry browserName,
+    // so read it from driver.capabilities (populated from the running session after attach).
+    const {browserName = ''} = attachSessId ? driver.capabilities : sessionCaps;
     let appMode = APP_MODE.NATIVE;
 
     if (browserName.trim() !== '') {
