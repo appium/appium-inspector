@@ -888,7 +888,7 @@ export function callClientMethod(params) {
     try {
       const action = keepSessionAlive();
       action(dispatch, getState);
-      const inspectorDriver = InspectorDriver.instance(driver, getState().builder.serverType);
+      const inspectorDriver = InspectorDriver.instance(driver);
       const res = await inspectorDriver.run(params);
       res.elementId = res.id;
       return res;
@@ -910,7 +910,7 @@ export function executeDriverCommand(params) {
   return async (getState) => {
     const {driver} = getState().inspector;
     params.skipRefresh = true;
-    const inspectorDriver = InspectorDriver.instance(driver, getState().builder.serverType);
+    const inspectorDriver = InspectorDriver.instance(driver);
     return await inspectorDriver.run(params);
   };
 }
