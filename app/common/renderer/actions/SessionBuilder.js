@@ -102,6 +102,23 @@ const CONN_TIMEOUT = 5 * 60 * 1000;
 // 1 hour default newCommandTimeout
 const NEW_COMMAND_TIMEOUT_SEC = 3600;
 
+/**
+ * Unwraps nested capability structures returned by the TestMu AI server.
+ * The server may wrap capabilities under a 'capabilities' key and/or a 'desired' key.
+ */
+function unwrapTestMuAICaps(caps) {
+  if (!caps) {
+    return caps;
+  }
+  if ('capabilities' in caps) {
+    caps = caps.capabilities;
+  }
+  if ('desired' in caps) {
+    caps = caps.desired;
+  }
+  return caps;
+}
+
 let isFirstRun = true; // we only want to auto start a session on a first run
 
 const JSON_TYPES = ['object', 'number', 'boolean'];
@@ -301,13 +318,7 @@ export function newSession(originalCaps, attachSessId = null) {
         if (attachedSession) {
           attachedSessionCaps = attachedSession.capabilities;
           if (session.serverType === SERVER_TYPES.TESTMUAI) {
-            // adjust for TestMu AI-specific format
-            if ('capabilities' in attachedSessionCaps) {
-              attachedSessionCaps = attachedSessionCaps.capabilities;
-            }
-            if ('desired' in attachedSessionCaps) {
-              attachedSessionCaps = attachedSessionCaps.desired;
-            }
+            attachedSessionCaps = unwrapTestMuAICaps(attachedSessionCaps);
           }
         } else {
           try {
@@ -317,7 +328,10 @@ export function newSession(originalCaps, attachSessId = null) {
               headers,
               timeout: CONN_TIMEOUT,
             });
-            attachedSessionCaps = res.value;
+            attachedSessionCaps =
+              session.serverType === SERVER_TYPES.TESTMUAI
+                ? unwrapTestMuAICaps(res.value)
+                : res.value;
           } catch (err) {
             // rethrow the error as session not running, but first log the original error to console
             log.error(err);
@@ -344,14 +358,19 @@ export function newSession(originalCaps, attachSessId = null) {
     // The homepage arg in ChromeDriver is not working with Appium. iOS can have a default url, but
     // we want to keep the process equal to prevent complexity so we launch a default url here to make
     // sure we don't start with an empty page which will not show proper HTML in the inspector
-    const {browserName = ''} = sessionCaps;
+    // When attaching to an existing session, sessionCaps doesn't carry browserName,
+    // so read it from driver.capabilities (populated from the running session after attach).
+    const {browserName = ''} = attachSessId ? driver.capabilities : sessionCaps;
     let appMode = APP_MODE.NATIVE;
 
     if (browserName.trim() !== '') {
-      try {
-        appMode = APP_MODE.WEB_HYBRID;
-        await driver.navigateTo('https://appium.io');
-      } catch {}
+      appMode = APP_MODE.WEB_HYBRID;
+      // Don't hijack the page when attaching to an existing session.
+      if (!attachSessId) {
+        try {
+          await driver.navigateTo('https://appium.io');
+        } catch {}
+      }
     }
 
     let mjpegScreenshotUrl =
@@ -736,6 +755,12 @@ export function getRunningSessions() {
       return;
     }
 
+    if (serverType === SERVER_TYPES.TESTMUAI) {
+      const sessions = await fetchTestMuAISessions(host, headers);
+      dispatch({type: GET_SESSIONS_DONE, sessions});
+      return;
+    }
+
     const protocol = https ? 'https' : 'http';
     const adjPath = path.endsWith('/') ? path : `${path}/`;
     const baseUrl = `${protocol}://${host}:${port}${adjPath}`;
@@ -1017,6 +1042,43 @@ async function fetchAllSessions(baseUrl, headers) {
   ]);
 
   return [...appiumSessions, ...oldAppiumSessions, ...seleniumSessions];
+}
+
+/**
+ * Fetch running sessions for a TestMu AI server.
+ *
+ * Combines the provider's session-list API (derived from the hub host) with the
+ * standard /wd/hub/sessions endpoint, tolerating failures from either source so
+ * one unavailable endpoint doesn't hide the sessions from the other.
+ *
+ * @param {string} host
+ * @param {object} headers
+ * @returns {Promise<object[]>}
+ */
+async function fetchTestMuAISessions(host, headers) {
+  const sessionListHost = host
+    .replace(/^mobile-hub\./, 'api.')
+    .replace(/^mobile-hub-/, 'api-')
+    .replace(/^hub-/, 'api-');
+  const sessionListUrl = `https://${sessionListHost}/automation/api/v1/appium/inspector/sessions`;
+  const hubSessionsUrl = `https://${host}/wd/hub/sessions`;
+
+  async function fetchSessionsFromEndpoint(url) {
+    try {
+      const res = await fetchSessionInformation({url, headers});
+      return res.value ?? [];
+    } catch (err) {
+      log.error(`Failed to fetch running sessions from ${url}`, err);
+      return [];
+    }
+  }
+
+  const [webSessions, appSessions] = await Promise.all([
+    fetchSessionsFromEndpoint(sessionListUrl),
+    fetchSessionsFromEndpoint(hubSessionsUrl),
+  ]);
+
+  return [...webSessions, ...appSessions];
 }
 
 /**
