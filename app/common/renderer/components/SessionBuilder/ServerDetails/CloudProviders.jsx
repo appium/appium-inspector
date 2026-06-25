@@ -1,3 +1,4 @@
+import AstrofarmLogo from '../../../assets/images/astrofarm_logo.svg';
 import BitBarLogo from '../../../assets/images/bitbar_logo.svg';
 import BrowserStackLogo from '../../../assets/images/browserstack_logo.svg';
 import BrowserStackLogoDark from '../../../assets/images/browserstack_logo_dark.svg';
@@ -33,6 +34,7 @@ import WebmateLogoDark from '../../../assets/images/webmate_logo_dark.svg';
 import {SERVER_TYPES} from '../../../constants/session-builder.js';
 import {useTheme} from '../../../hooks/use-theme.jsx';
 import styles from './ServerDetails.module.css';
+import ServerTabAstrofarm from './ServerTabAstroFarm.jsx';
 import ServerTabBitbar from './ServerTabBitbar.jsx';
 import ServerTabBrowserstack from './ServerTabBrowserstack.jsx';
 import ServerTabExperitest from './ServerTabExperitest.jsx';
@@ -185,6 +187,13 @@ const providers = {
     logos: {
       light: RobotActionsLogo,
       dark: RobotActionsLogoDark,
+    },
+  },
+  [SERVER_TYPES.ASTROFARM]: {
+    tab: ServerTabAstrofarm,
+    logos: {
+      light: AstrofarmLogo,
+      dark: null,
     },
   },
 };
