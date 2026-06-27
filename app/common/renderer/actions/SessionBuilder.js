@@ -980,6 +980,20 @@ export function initFromQueryString(loadNewSession) {
   };
 }
 
+/**
+ * Shared helper to run requests to session endpoints with safe fallbacks and logging
+ */
+async function fetchSessionsWithFallback(url, headers, formatter = (res) => res.value ?? []) {
+  try {
+    const res = await fetchSessionInformation({url, headers});
+    const data = formatter(res);
+    return Array.isArray(data) ? data : [];
+  } catch (err) {
+    log.error(`Failed to fetch running sessions from ${url}: ${err.message}`);
+    return [];
+  }
+}
+
 function parseAndValidateSessionFileString(sessionFileString) {
   const sessionJSON = parseSessionFileContents(sessionFileString);
   if (sessionJSON === null) {
@@ -1026,19 +1040,10 @@ async function fetchAllSessions(baseUrl, headers) {
   const oldAppiumSessionsEndpoint = `${baseUrl}sessions`; // Appium 1-2
   const seleniumSessionsEndpoint = `${baseUrl}status`;
 
-  async function fetchSessionsFromEndpoint(url) {
-    try {
-      const res = await fetchSessionInformation({url, headers});
-      return url === seleniumSessionsEndpoint ? formatSeleniumGridSessions(res) : (res.value ?? []);
-    } catch {
-      return [];
-    }
-  }
-
   const [appiumSessions, oldAppiumSessions, seleniumSessions] = await Promise.all([
-    fetchSessionsFromEndpoint(appiumSessionsEndpoint),
-    fetchSessionsFromEndpoint(oldAppiumSessionsEndpoint),
-    fetchSessionsFromEndpoint(seleniumSessionsEndpoint),
+    fetchSessionsWithFallback(appiumSessionsEndpoint, headers),
+    fetchSessionsWithFallback(oldAppiumSessionsEndpoint, headers),
+    fetchSessionsWithFallback(seleniumSessionsEndpoint, headers, formatSeleniumGridSessions),
   ]);
 
   return [...appiumSessions, ...oldAppiumSessions, ...seleniumSessions];
@@ -1063,19 +1068,9 @@ async function fetchTestMuAISessions(host, headers) {
   const sessionListUrl = `https://${sessionListHost}/automation/api/v1/appium/inspector/sessions`;
   const hubSessionsUrl = `https://${host}/wd/hub/sessions`;
 
-  async function fetchSessionsFromEndpoint(url) {
-    try {
-      const res = await fetchSessionInformation({url, headers});
-      return res.value ?? [];
-    } catch (err) {
-      log.error(`Failed to fetch running sessions from ${url}`, err);
-      return [];
-    }
-  }
-
   const [webSessions, appSessions] = await Promise.all([
-    fetchSessionsFromEndpoint(sessionListUrl),
-    fetchSessionsFromEndpoint(hubSessionsUrl),
+    fetchSessionsWithFallback(sessionListUrl, headers),
+    fetchSessionsWithFallback(hubSessionsUrl, headers),
   ]);
 
   return [...webSessions, ...appSessions];
