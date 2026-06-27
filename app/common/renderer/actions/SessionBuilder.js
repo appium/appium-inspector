@@ -160,6 +160,8 @@ export function showError(e, params = {methodName: null, secs: 5, url: null}) {
     } catch {}
     if (e.data.value?.message) {
       errMessage = e.data.value.message;
+    } else {
+      errMessage = e.data;
     }
   } else if (e.message) {
     errMessage = e.message;
@@ -215,7 +217,7 @@ export function addCapability() {
  * Update value of a capability parameter
  */
 export function setCapabilityParam(id, name, value) {
-  return (dispatch) => { 
+  return (dispatch) => {
     dispatch({type: SET_CAPABILITY_PARAM, id, name, value});
   };
 }
@@ -249,7 +251,7 @@ export function newSession(originalCaps, attachSessId = null) {
     let sessionCaps = prefixedCaps ? getCapsObject(prefixedCaps) : {};
     sessionCaps = addCustomCaps(sessionCaps);
 
-    const vendorProperties = await retrieveVendorProperties({ 
+    const vendorProperties = await retrieveVendorProperties({
       server: session.server,
       serverType: session.serverType,
       sessionCaps,
@@ -630,7 +632,7 @@ export function initFromSessionFile() {
       dispatch({type: SET_STATE_FROM_FILE, sessionJSON});
       switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER)(dispatch, getState);
     } else {
-      notification.error({ 
+      notification.error({
         title: i18n.t('invalidSessionFile'),
         duration: 0,
       });
@@ -702,20 +704,6 @@ export function exportSavedSession(session) {
     const fileName = `${escapedName}.appiumsession`;
     downloadFile(href, fileName);
   };
-}
-
-/**
- * Shared helper to run requests to session endpoints with safe fallbacks and logging
- */
-async function fetchSessionsWithFallback(url, headers, formatter = (res) => res.value ?? []) {
-  try {
-    const res = await fetchSessionInformation({url, headers});
-    const data = formatter(res);
-    return Array.isArray(data) ? data : [];
-  } catch (err) {
-    log.error(`Failed to fetch running sessions from ${url}: ${err.message}`);
-    return [];
-  }
 }
 
 /**
@@ -990,6 +978,20 @@ export function initFromQueryString(loadNewSession) {
       loadNewSession(caps);
     }
   };
+}
+
+/**
+ * Shared helper to run requests to session endpoints with safe fallbacks and logging
+ */
+async function fetchSessionsWithFallback(url, headers, formatter = (res) => res.value ?? []) {
+  try {
+    const res = await fetchSessionInformation({url, headers});
+    const data = formatter(res);
+    return Array.isArray(data) ? data : [];
+  } catch (err) {
+    log.error(`Failed to fetch running sessions from ${url}: ${err.message}`);
+    return [];
+  }
 }
 
 function parseAndValidateSessionFileString(sessionFileString) {
