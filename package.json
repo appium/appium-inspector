@@ -86,7 +86,7 @@
     "react-i18next": "17.0.8",
     "react-redux": "9.3.0",
     "react-refractor": "4.0.0",
-    "react-router": "7.18.0",
+    "react-router": "8.0.1",
     "sanitize-filename": "1.6.4",
     "webdriver": "9.29.0",
     "xpath": "0.0.34"
