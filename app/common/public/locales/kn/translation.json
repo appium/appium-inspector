@@ -179,6 +179,8 @@
   "Kobiton Access Key": "ಕೋಬಿಟೋನ್ ಪ್ರವೇಶ ಕೀ",
   "serverTabHeasdpinWebDriverURL": "ಹೆಡ್ ಸ್ಪಿನ್ ವೆಬ್ ಡ್ರೈವರ್ URL",
   "sessionHeadspinWebDriverURLDescription": "URLನನ್ನ ಹೆಡ್ ಸ್ಪಿನ್ ಬಳಕೆದಾರರ ಅಂತರಮುಖ ಮೂಲಕ ಅಥವಾ ಆಟೋಮೇಷನ್ ಸಂರಚನೆ ಮಾರ್ಗ ಬಳಿಸಿ ಹೆಡ್ ಸ್ಪಿನ್ API ಮೂಲಕ ಪಡೆಯಿರಿ",
+  "serverTabAstrofarmWebDriverURL": "AstroFarm Web Driver URL",
+  "sessionAstrofarmWebDriverURLDescription": "Please retrieve the AstroFarm Appium URL (including your authentication token) from either the AstroFarm UI or API, and enter it here.",
   "Remote Host": "ರಿಮೋಟ್ ಹೋಸ್ಟ್",
   "Remote Port": "ರಿಮೋಟ್ ಸಂಪರ್ಕ ಕಿಂಡಿ",
   "Remote Path": "ರಿಮೋಟ್ ವಿಳಾಸ ಪಥ",

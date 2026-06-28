@@ -179,6 +179,8 @@
   "Kobiton Access Key": "Klucz dostępu Kobiton",
   "serverTabHeasdpinWebDriverURL": "HeadSpin Web Driver URL",
   "sessionHeadspinWebDriverURLDescription": "Pobierz adres URL z interfejsu HeadSpin lub API HeadSpin za pomocą trasy konfiguracji automatyzacji",
+  "serverTabAstrofarmWebDriverURL": "AstroFarm Web Driver URL",
+  "sessionAstrofarmWebDriverURLDescription": "Please retrieve the AstroFarm Appium URL (including your authentication token) from either the AstroFarm UI or API, and enter it here.",
   "Remote Host": "Zdalny host",
   "Remote Port": "Port zdalny",
   "Remote Path": "Zdalna ścieżka",
