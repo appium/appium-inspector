@@ -107,7 +107,7 @@
     "electron": "41.9.2",
     "electron-builder": "26.15.3",
     "electron-vite": "5.0.0",
-    "eslint": "10.5.0",
+    "eslint": "10.6.0",
     "eslint-plugin-react-hooks": "7.1.1",
     "eslint-plugin-simple-import-sort": "13.0.0",
     "globals": "17.7.0",
