@@ -180,7 +180,7 @@
   "serverTabHeasdpinWebDriverURL": "Адреса Web-драйвера HeadSpin",
   "sessionHeadspinWebDriverURLDescription": "Отримайте адресу з інтерфейсу HeadSpin або через HeadSpin API за допомогою маршруту автоматизації конфігурації",
   "serverTabAstrofarmWebDriverURL": "URL-адреса веб-сервісу AstroFarm",
-  "sessionAstrofarmWebDriverURLDescription": "",
+  "sessionAstrofarmWebDriverURLDescription": "Please retrieve the AstroFarm Appium URL (including your authentication token) from either the AstroFarm UI or API, and enter it here.",
   "Remote Host": "Віддалений хост",
   "Remote Port": "Віддалений порт",
   "Remote Path": "Віддалений шлях",
