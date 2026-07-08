@@ -1,5 +1,4 @@
-import {IconInfoCircle} from '@tabler/icons-react';
-import {Card, Flex, Space, Table} from 'antd';
+import {Space, Table} from 'antd';
 import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -7,9 +6,20 @@ import {useTranslation} from 'react-i18next';
 import inspectorStyles from '../SessionInspector.module.css';
 import SessionCodeBox from './SessionCodeBox.jsx';
 import styles from './SessionInfo.module.css';
+import SessionInfoCard from './SessionInfoCard.jsx';
 
 const SessionInfo = (props) => {
-  const {driver, getActiveAppId, getServerStatus, getFlatSessionCaps, sessionStartTime} = props;
+  const {
+    driver,
+    getActiveAppId,
+    getServerStatus,
+    getFlatSessionCaps,
+    sessionStartTime,
+    clientFramework,
+    setClientFramework,
+    serverDetails,
+    sessionCaps,
+  } = props;
   const {t} = useTranslation();
 
   const intervalRef = useRef(null);
@@ -113,15 +123,7 @@ const SessionInfo = (props) => {
   }, [driver, getActiveAppId, getServerStatus, getFlatSessionCaps, sessionStartTime]);
 
   return (
-    <Card
-      title={
-        <Flex gap={4} align="center">
-          <IconInfoCircle size={18} />
-          {t('Session Information')}
-        </Flex>
-      }
-      className={inspectorStyles.interactionTabCard}
-    >
+    <SessionInfoCard>
       <Space orientation="vertical" size="middle">
         <Table
           columns={columns}
@@ -131,9 +133,14 @@ const SessionInfo = (props) => {
           bordered={true}
           size="small"
         />
-        <SessionCodeBox {...props} />
+        <SessionCodeBox
+          clientFramework={clientFramework}
+          setClientFramework={setClientFramework}
+          serverDetails={serverDetails}
+          sessionCaps={sessionCaps}
+        />
       </Space>
-    </Card>
+    </SessionInfoCard>
   );
 };
 
