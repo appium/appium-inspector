@@ -74,7 +74,7 @@ const SessionInfoTable = (props) => {
   const [sessionLength, setSessionLength] = useState(0);
 
   const outerDataSource = () => {
-    const {sessionId} = driver || '';
+    const {sessionId} = driver ?? {};
 
     // TODO: Fetch URL from Cloud Providers
     const sessionUrl = sessionId
