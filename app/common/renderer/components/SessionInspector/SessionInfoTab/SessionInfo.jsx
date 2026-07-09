@@ -4,6 +4,9 @@ import SessionInfoCard from './SessionInfoCard.jsx';
 import SessionInfoCodeBox from './SessionInfoCodeBox.jsx';
 import SessionInfoTable from './SessionInfoTable.jsx';
 
+/**
+ * Contents of the session information tab.
+ */
 const SessionInfo = (props) => {
   const {clientFramework, setClientFramework, serverDetails, sessionCaps} = props;
 

@@ -38,6 +38,9 @@ const innerDataSource = (tableData) =>
     value: formatMono(String(propValue)),
   }));
 
+/**
+ * Inner table component for session information cells with multiple values.
+ */
 const SessionInfoInnerTable = ({tableData}) => (
   <Table
     className={styles.sessionInnerTable}
@@ -50,6 +53,9 @@ const SessionInfoInnerTable = ({tableData}) => (
   />
 );
 
+/**
+ * Main table containing session information details.
+ */
 const SessionInfoTable = (props) => {
   const {
     driver,
