@@ -40,25 +40,12 @@
   max-width: 95%;
 }
 
-.serverTabs :global(.ant-tabs-bar) {
-  padding-top: 2em;
-  margin-top: -1em;
-}
-
 .serverTabs :global(.ant-tabs-nav-wrap) {
   -webkit-app-region: drag;
 }
 
 .serverTabs :global(.ant-tabs-tab) {
   -webkit-app-region: no-drag;
-}
-
-.serverTabs :global(.ant-form > .ant-row > div) {
-  padding-bottom: 12px;
-}
-
-.serverTabs :global(.ant-form-item) {
-  margin: 0;
 }
 
 .scrollingTabCont {
@@ -70,11 +57,7 @@
   overflow: auto;
 }
 
-.scrollingTabCont :global(.ant-tabs-bar) {
-  margin-bottom: 0px;
-}
-
-.scrollingTabCont :global(.ant-tabs-content) {
+.scrollingTabCont :global(.ant-tabs-body) {
   height: 100%;
 }
 
