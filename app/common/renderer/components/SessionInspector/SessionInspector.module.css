@@ -85,11 +85,11 @@
   height: 100%;
 }
 
-.inspectorTabsContainer :global(.ant-tabs-content) {
+.inspectorTabsContainer :global(.ant-tabs-body) {
   height: 100%;
 }
 
-.inspectorTabsContainer :global(.ant-tabs-tabpane) {
+.inspectorTabsContainer :global(.ant-tabs-content) {
   height: 100%;
 }
 
