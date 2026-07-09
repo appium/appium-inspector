@@ -10,7 +10,7 @@ import inspectorStyles from '../SessionInspector.module.css';
 /**
  * Title of the session information code box card.
  */
-const SessionCodeBoxPanelTitle = () => {
+const SessionInfoCodeBoxPanelTitle = () => {
   const {t} = useTranslation();
 
   return (
@@ -24,7 +24,7 @@ const SessionCodeBoxPanelTitle = () => {
 /**
  * Options shown in the session information code box card header.
  */
-const SessionCodeBoxHeaderOptions = ({clientCode, clientFramework, setClientFramework}) => {
+const SessionInfoCodeBoxHeaderOptions = ({clientCode, clientFramework, setClientFramework}) => {
   const {t} = useTranslation();
 
   return (
@@ -49,11 +49,11 @@ const SessionCodeBoxHeaderOptions = ({clientCode, clientFramework, setClientFram
 /**
  * Wrapper card for the session information code box.
  */
-const SessionCodeBoxCard = ({clientCode, clientFramework, setClientFramework, children}) => (
+const SessionInfoCodeBoxCard = ({clientCode, clientFramework, setClientFramework, children}) => (
   <Card
-    title={<SessionCodeBoxPanelTitle />}
+    title={<SessionInfoCodeBoxPanelTitle />}
     extra={
-      <SessionCodeBoxHeaderOptions
+      <SessionInfoCodeBoxHeaderOptions
         clientCode={clientCode}
         clientFramework={clientFramework}
         setClientFramework={setClientFramework}
@@ -64,4 +64,4 @@ const SessionCodeBoxCard = ({clientCode, clientFramework, setClientFramework, ch
   </Card>
 );
 
-export default SessionCodeBoxCard;
+export default SessionInfoCodeBoxCard;
