@@ -1,139 +1,27 @@
-import {IconInfoCircle} from '@tabler/icons-react';
-import {Card, Flex, Space, Table} from 'antd';
-import _ from 'lodash';
-import {useEffect, useRef, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import {Space} from 'antd';
 
-import inspectorStyles from '../SessionInspector.module.css';
-import SessionCodeBox from './SessionCodeBox.jsx';
-import styles from './SessionInfo.module.css';
+import SessionInfoCard from './SessionInfoCard.jsx';
+import SessionInfoCodeBox from './SessionInfoCodeBox.jsx';
+import SessionInfoTable from './SessionInfoTable.jsx';
 
+/**
+ * Contents of the session information tab.
+ */
 const SessionInfo = (props) => {
-  const {driver, getActiveAppId, getServerStatus, getFlatSessionCaps, sessionStartTime} = props;
-  const {t} = useTranslation();
-
-  const intervalRef = useRef(null);
-  const [sessionLength, setSessionLength] = useState(0);
-
-  const formatMono = (node) => <span className={inspectorStyles.monoFont}>{node}</span>;
-
-  const formatSessionLength = () => {
-    const sessionLengthDate = new Date(sessionLength);
-    const hours = sessionLengthDate.getUTCHours();
-    const minutes = sessionLengthDate.getUTCMinutes();
-    const seconds = sessionLengthDate.getUTCSeconds();
-
-    const padTime = (timeUnit) => String(timeUnit).padStart(2, '0');
-
-    return formatMono(`${padTime(hours)}:${padTime(minutes)}:${padTime(seconds)}`);
-  };
-
-  const columns = [
-    {
-      dataIndex: 'property',
-      key: 'property',
-      width: 200,
-    },
-    {
-      dataIndex: 'value',
-      key: 'value',
-    },
-  ];
-
-  const innerDataSource = (dataObject) =>
-    _.toPairs(dataObject).map(([propName, propValue]) => ({
-      key: propName,
-      property: formatMono(propName),
-      value: formatMono(String(propValue)),
-    }));
-
-  const getInnerTable = (dataObject) => (
-    <Table
-      className={styles.sessionInnerTable}
-      columns={columns}
-      dataSource={innerDataSource(dataObject)}
-      pagination={false}
-      showHeader={false}
-      size="small"
-      scroll={{y: 125}}
-    />
-  );
-
-  const outerDataSource = () => {
-    const {serverDetails, appId, status, flatSessionCaps} = props;
-    const {sessionId} = driver || '';
-
-    // TODO: Fetch URL from Cloud Providers
-    const sessionUrl = sessionId
-      ? formatMono(`${serverDetails.serverUrl}/session/${sessionId}`)
-      : t('Error Fetching Session URL');
-
-    return [
-      {
-        key: 'session_url',
-        property: t('Session URL'),
-        value: sessionUrl,
-      },
-      {
-        key: 'session_length',
-        property: t('Session Length'),
-        value: formatSessionLength(),
-      },
-      {
-        key: 'server_details',
-        property: t('Server Details'),
-        value: getInnerTable(status),
-      },
-      {
-        key: 'session_details',
-        property: t('Session Details'),
-        value: getInnerTable(flatSessionCaps),
-      },
-      {
-        key: 'active_appId',
-        property: t('Currently Active App ID'),
-        value: formatMono(appId),
-      },
-    ];
-  };
-
-  useEffect(() => {
-    if (!driver) {
-      return;
-    }
-    const {isIOS, isAndroid} = driver;
-    getActiveAppId(isIOS, isAndroid);
-    getServerStatus();
-    getFlatSessionCaps();
-
-    intervalRef.current = setInterval(() => {
-      setSessionLength(Date.now() - sessionStartTime);
-    }, 1000);
-    return () => clearInterval(intervalRef.current);
-  }, [driver, getActiveAppId, getServerStatus, getFlatSessionCaps, sessionStartTime]);
+  const {clientFramework, setClientFramework, serverDetails, sessionCaps} = props;
 
   return (
-    <Card
-      title={
-        <Flex gap={4} align="center">
-          <IconInfoCircle size={18} />
-          {t('Session Information')}
-        </Flex>
-      }
-      className={inspectorStyles.interactionTabCard}
-    >
+    <SessionInfoCard>
       <Space orientation="vertical" size="middle">
-        <Table
-          columns={columns}
-          dataSource={outerDataSource()}
-          pagination={false}
-          showHeader={false}
-          bordered={true}
-          size="small"
+        <SessionInfoTable {...props} />
+        <SessionInfoCodeBox
+          clientFramework={clientFramework}
+          setClientFramework={setClientFramework}
+          serverDetails={serverDetails}
+          sessionCaps={sessionCaps}
         />
-        <SessionCodeBox {...props} />
       </Space>
-    </Card>
+    </SessionInfoCard>
   );
 };
 
