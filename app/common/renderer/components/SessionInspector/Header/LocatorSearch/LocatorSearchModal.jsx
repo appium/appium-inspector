@@ -1,33 +1,33 @@
 import {Button, Modal} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import ElementLocator from './ElementLocator.jsx';
-import LocatedElements from './LocatedElements.jsx';
+import LocatorSearchForm from './LocatorSearchForm.jsx';
+import LocatorSearchResults from './LocatorSearchResults.jsx';
 
-const LocatorTestModal = (props) => {
-  const {isLocatorTestModalVisible, isSearchingForElements, clearSearchResults, locatedElements} =
+const LocatorSearchModal = (props) => {
+  const {isLocatorSearchModalVisible, isSearchingForElements, clearSearchResults, locatedElements} =
     props;
   const {t} = useTranslation();
 
   const onCancel = () => {
-    const {hideLocatorTestModal} = props;
-    hideLocatorTestModal();
+    const {hideLocatorSearchModal} = props;
+    hideLocatorSearchModal();
     clearSearchResults();
   };
 
   const onSubmit = () => {
-    const {locatorTestStrategy, locatorTestValue, searchForElement} = props;
+    const {locatorSearchStrategy, locatorSearchValue, searchForElement} = props;
     if (locatedElements) {
       onCancel();
     } else {
-      searchForElement(locatorTestStrategy, locatorTestValue);
+      searchForElement(locatorSearchStrategy, locatorSearchValue);
     }
   };
 
   // Footer displays all the buttons at the bottom of the Modal
   return (
     <Modal
-      open={isLocatorTestModalVisible}
+      open={isLocatorSearchModalVisible}
       title={t('Search for element')}
       onCancel={onCancel}
       footer={
@@ -41,10 +41,10 @@ const LocatorTestModal = (props) => {
         </>
       }
     >
-      {!locatedElements && <ElementLocator {...props} />}
-      {locatedElements && <LocatedElements {...props} />}
+      {!locatedElements && <LocatorSearchForm {...props} />}
+      {locatedElements && <LocatorSearchResults {...props} />}
     </Modal>
   );
 };
 
-export default LocatorTestModal;
+export default LocatorSearchModal;

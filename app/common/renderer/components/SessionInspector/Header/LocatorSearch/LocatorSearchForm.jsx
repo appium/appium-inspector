@@ -1,16 +1,16 @@
 import {Alert, Button, Input, Row, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import {ALERT, BUTTON} from '../../../constants/antd-types.js';
-import {DRIVERS} from '../../../constants/common.js';
+import {ALERT, BUTTON} from '../../../../constants/antd-types.js';
+import {DRIVERS} from '../../../../constants/common.js';
 import {
   NATIVE_APP,
   NATIVE_COMMON_LOCATOR_STRATEGY_MAP,
   NATIVE_DRIVER_LOCATOR_STRATEGY_MAP,
   WEB_LOCATOR_STRATEGY_MAP,
-} from '../../../constants/session-inspector.js';
-import inspectorStyles from '../SessionInspector.module.css';
-import styles from './Header.module.css';
+} from '../../../../constants/session-inspector.js';
+import inspectorStyles from '../../SessionInspector.module.css';
+import styles from './LocatorSearch.module.css';
 
 const locatorStrategies = (automationName, currentContext) => {
   if (currentContext && currentContext !== NATIVE_APP) {
@@ -38,12 +38,12 @@ const locatorStrategies = (automationName, currentContext) => {
   return strategies;
 };
 
-const ElementLocator = (props) => {
+const LocatorSearchForm = (props) => {
   const {
-    setLocatorTestValue,
-    locatorTestValue,
-    setLocatorTestStrategy,
-    locatorTestStrategy,
+    setLocatorSearchValue,
+    locatorSearchValue,
+    setLocatorSearchStrategy,
+    locatorSearchStrategy,
     automationName,
     currentContext,
   } = props;
@@ -55,9 +55,9 @@ const ElementLocator = (props) => {
       <Row justify="center">
         {locatorStrategies(automationName, currentContext).map(([strategyValue, strategyName]) => (
           <Button
-            type={strategyValue === locatorTestStrategy ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+            type={strategyValue === locatorSearchStrategy ? BUTTON.PRIMARY : BUTTON.DEFAULT}
             className={styles.locatorStrategyBtn}
-            onClick={() => setLocatorTestStrategy(strategyValue)}
+            onClick={() => setLocatorSearchStrategy(strategyValue)}
             key={strategyValue}
           >
             {strategyName}
@@ -70,8 +70,8 @@ const ElementLocator = (props) => {
       {t('selector')}
       <Input.TextArea
         className={styles.locatorSelectorTextArea}
-        onChange={(e) => setLocatorTestValue(e.target.value)}
-        value={locatorTestValue}
+        onChange={(e) => setLocatorSearchValue(e.target.value)}
+        value={locatorSearchValue}
         allowClear={true}
         rows={3}
       />
@@ -79,4 +79,4 @@ const ElementLocator = (props) => {
   );
 };
 
-export default ElementLocator;
+export default LocatorSearchForm;

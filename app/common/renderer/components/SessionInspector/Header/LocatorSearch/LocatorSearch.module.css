@@ -1,0 +1,42 @@
+.locatorStrategyBtn {
+  margin: 2px;
+  min-width: 24%;
+  max-width: 49%;
+  flex-grow: 1;
+}
+
+.locatorSelectorTextArea {
+  width: 100%;
+}
+
+.locatorSelectorTextArea textarea {
+  font-family: monospace;
+}
+
+.searchResultsList {
+  width: 100%;
+  flex: 1;
+  min-height: 24px;
+  max-height: 150px;
+  overflow: auto;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #303030;
+  border-radius: 6px 6px 0 0;
+}
+
+.searchResultsList :global(.ant-table-cell) {
+  padding: 4px 6px !important;
+  height: 25px;
+  text-align: left;
+  font-family: monospace;
+}
+
+.searchResultsActions {
+  width: 350px;
+}
+
+.searchResultsKeyInput {
+  height: 32px;
+  width: calc(100% - 64px);
+}

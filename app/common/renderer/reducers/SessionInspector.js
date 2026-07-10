@@ -20,7 +20,7 @@ import {
   GET_SAVED_GESTURES_REQUESTED,
   HIDE_GESTURE_ACTION,
   HIDE_GESTURE_EDITOR,
-  HIDE_LOCATOR_TEST_MODAL,
+  HIDE_LOCATOR_SEARCH_MODAL,
   HIDE_PROMPT_KEEP_ALIVE,
   HIDE_SIRI_COMMAND_MODAL,
   METHOD_CALL_DONE,
@@ -36,6 +36,7 @@ import {
   SELECT_CENTROID,
   SELECT_ELEMENT,
   SELECT_INSPECTOR_TAB,
+  SELECT_LOCATED_ELEMENT,
   SELECT_TICK_ELEMENT,
   SESSION_DONE,
   SET_APP_ID,
@@ -55,9 +56,8 @@ import {
   SET_KEEP_ALIVE_INTERVAL,
   SET_LAST_ACTIVE_MOMENT,
   SET_LOADED_GESTURE,
-  SET_LOCATOR_TEST_ELEMENT,
-  SET_LOCATOR_TEST_STRATEGY,
-  SET_LOCATOR_TEST_VALUE,
+  SET_LOCATOR_SEARCH_STRATEGY,
+  SET_LOCATOR_SEARCH_VALUE,
   SET_MJPEG_STATE,
   SET_OPTIMAL_LOCATORS,
   SET_REFRESHING_STATE,
@@ -74,7 +74,7 @@ import {
   SET_USER_WAIT_TIMEOUT,
   SHOW_GESTURE_ACTION,
   SHOW_GESTURE_EDITOR,
-  SHOW_LOCATOR_TEST_MODAL,
+  SHOW_LOCATOR_SEARCH_MODAL,
   SHOW_SIRI_COMMAND_MODAL,
   START_RECORDING,
   STORE_SESSION_SETTINGS,
@@ -109,12 +109,12 @@ const INITIAL_STATE = {
   sessionCaps: {},
   sessionSettings: {},
   isGestureEditorVisible: false,
-  isLocatorTestModalVisible: false,
+  isLocatorSearchModalVisible: false,
   isSiriCommandModalVisible: false,
   siriCommandValue: '',
   showCentroids: false,
-  locatorTestStrategy: 'id',
-  locatorTestValue: '',
+  locatorSearchStrategy: 'id',
+  locatorSearchValue: '',
   isSearchingForElements: false,
   assignedVarCache: {},
   screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
@@ -309,16 +309,16 @@ export default function inspector(state = INITIAL_STATE, action) {
         sessionSettings: {...state.sessionSettings, ...action.sessionSettings},
       };
 
-    case SHOW_LOCATOR_TEST_MODAL:
+    case SHOW_LOCATOR_SEARCH_MODAL:
       return {
         ...state,
-        isLocatorTestModalVisible: true,
+        isLocatorSearchModalVisible: true,
       };
 
-    case HIDE_LOCATOR_TEST_MODAL:
+    case HIDE_LOCATOR_SEARCH_MODAL:
       return {
         ...state,
-        isLocatorTestModalVisible: false,
+        isLocatorSearchModalVisible: false,
       };
 
     case SHOW_SIRI_COMMAND_MODAL:
@@ -351,16 +351,16 @@ export default function inspector(state = INITIAL_STATE, action) {
         currentDisplayId: action.displayId,
       };
 
-    case SET_LOCATOR_TEST_STRATEGY:
+    case SET_LOCATOR_SEARCH_STRATEGY:
       return {
         ...state,
-        locatorTestStrategy: action.locatorTestStrategy,
+        locatorSearchStrategy: action.locatorSearchStrategy,
       };
 
-    case SET_LOCATOR_TEST_VALUE:
+    case SET_LOCATOR_SEARCH_VALUE:
       return {
         ...state,
-        locatorTestValue: action.locatorTestValue,
+        locatorSearchValue: action.locatorSearchValue,
       };
 
     case SEARCHING_FOR_ELEMENTS:
@@ -368,7 +368,7 @@ export default function inspector(state = INITIAL_STATE, action) {
         ...state,
         locatedElements: null,
         locatedElementsExecutionTime: null,
-        locatorTestElement: null,
+        locatedElement: null,
         isSearchingForElements: true,
       };
 
@@ -393,10 +393,10 @@ export default function inspector(state = INITIAL_STATE, action) {
         isFindingElementsTimes: false,
       };
 
-    case SET_LOCATOR_TEST_ELEMENT:
+    case SELECT_LOCATED_ELEMENT:
       return {
         ...state,
-        locatorTestElement: action.elementId,
+        locatedElement: action.elementId,
       };
 
     case FINDING_ELEMENT_IN_SOURCE:

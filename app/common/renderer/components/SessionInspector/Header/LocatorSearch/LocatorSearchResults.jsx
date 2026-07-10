@@ -3,24 +3,24 @@ import {Alert, Badge, Button, Col, Input, Row, Space, Spin, Table, Tooltip} from
 import {useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 
-import {ALERT} from '../../../constants/antd-types.js';
-import inspectorStyles from '../SessionInspector.module.css';
-import styles from './Header.module.css';
+import {ALERT} from '../../../../constants/antd-types.js';
+import inspectorStyles from '../../SessionInspector.module.css';
+import styles from './LocatorSearch.module.css';
 
-const LocatedElements = (props) => {
+const LocatorSearchResults = (props) => {
   const {
     locatedElements,
     locatedElementsExecutionTime,
     applyClientMethod,
-    setLocatorTestElement,
-    locatorTestElement,
+    selectLocatedElement,
+    locatedElement,
     isFindingLocatedElementInSource,
     searchedForElementBounds,
-    selectLocatedElement,
+    findLocatedElementInSource,
     sourceJSON,
     sourceXML,
-    locatorTestStrategy,
-    locatorTestValue,
+    locatorSearchStrategy,
+    locatorSearchValue,
   } = props;
   const {t} = useTranslation();
 
@@ -30,8 +30,8 @@ const LocatedElements = (props) => {
     const {automationName, sessionSettings} = props;
     if (
       automationName === 'uiautomator2' &&
-      locatorTestStrategy === 'id' &&
-      !locatorTestValue.includes(':id/') &&
+      locatorSearchStrategy === 'id' &&
+      !locatorSearchValue.includes(':id/') &&
       !sessionSettings.disableIdLocatorAutocompletion
     ) {
       return (
@@ -52,13 +52,13 @@ const LocatedElements = (props) => {
           <Row>
             <Col span={6}>{t('locatorStrategy')}</Col>
             <Col span={18}>
-              <span className={inspectorStyles.monoFont}>{locatorTestStrategy}</span>
+              <span className={inspectorStyles.monoFont}>{locatorSearchStrategy}</span>
             </Col>
           </Row>
           <Row>
             <Col span={6}>{t('selector')}</Col>
             <Col span={18}>
-              <span className={inspectorStyles.monoFont}>{locatorTestValue}</span>
+              <span className={inspectorStyles.monoFont}>{locatorSearchValue}</span>
             </Col>
           </Row>
           {showIdAutocompleteInfo()}
@@ -90,10 +90,10 @@ const LocatedElements = (props) => {
                 ]}
                 showHeader={false}
                 onRow={(row) => ({
-                  onClick: () => locatorTestElement !== row.key && setLocatorTestElement(row.key),
+                  onClick: () => locatedElement !== row.key && selectLocatedElement(row.key),
                 })}
                 rowSelection={{
-                  selectedRowKeys: [locatorTestElement],
+                  selectedRowKeys: [locatedElement],
                   hideSelectAll: true,
                   columnWidth: 0,
                   renderCell: () => null,
@@ -104,43 +104,43 @@ const LocatedElements = (props) => {
               <Space orientation="horizontal" size="small">
                 <Tooltip title={t('Find and Select in Source')} placement="bottom">
                   <Button
-                    disabled={!locatorTestElement}
+                    disabled={!locatedElement}
                     icon={<IconListSearch size={18} />}
                     onClick={() =>
-                      selectLocatedElement(
+                      findLocatedElementInSource(
                         sourceJSON,
                         sourceXML,
                         searchedForElementBounds,
-                        locatorTestElement,
+                        locatedElement,
                       )
                     }
                   />
                 </Tooltip>
                 <Tooltip title={t('Tap')} placement="bottom">
                   <Button
-                    disabled={!locatorTestElement}
+                    disabled={!locatedElement}
                     icon={<IconFocus2 size={18} />}
                     onClick={() =>
-                      applyClientMethod({methodName: 'elementClick', elementId: locatorTestElement})
+                      applyClientMethod({methodName: 'elementClick', elementId: locatedElement})
                     }
                   />
                 </Tooltip>
                 <Space.Compact className={styles.searchResultsActions}>
                   <Input
                     className={styles.searchResultsKeyInput}
-                    disabled={!locatorTestElement}
+                    disabled={!locatedElement}
                     placeholder={t('Enter Keys to Send')}
                     allowClear={true}
                     onChange={(e) => (sendKeysRef.current = e.target.value)}
                   />
                   <Tooltip title={t('Send Keys')} placement="bottom">
                     <Button
-                      disabled={!locatorTestElement}
+                      disabled={!locatedElement}
                       icon={<IconSend2 size={18} />}
                       onClick={() =>
                         applyClientMethod({
                           methodName: 'elementSendKeys',
-                          elementId: locatorTestElement,
+                          elementId: locatedElement,
                           args: [sendKeysRef.current || ''],
                         })
                       }
@@ -148,13 +148,13 @@ const LocatedElements = (props) => {
                   </Tooltip>
                   <Tooltip title={t('Clear')} placement="bottom">
                     <Button
-                      disabled={!locatorTestElement}
+                      disabled={!locatedElement}
                       id="btnClearElement"
                       icon={<IconEraser size={18} />}
                       onClick={() =>
                         applyClientMethod({
                           methodName: 'elementClear',
-                          elementId: locatorTestElement,
+                          elementId: locatedElement,
                         })
                       }
                     />
@@ -169,4 +169,4 @@ const LocatedElements = (props) => {
   );
 };
 
-export default LocatedElements;
+export default LocatorSearchResults;

@@ -50,18 +50,18 @@ export const SET_CLIENT_FRAMEWORK = 'SET_CLIENT_FRAMEWORK';
 export const RECORD_ACTION = 'RECORD_ACTION';
 export const SET_SHOW_BOILERPLATE = 'SET_SHOW_BOILERPLATE';
 
-export const SHOW_LOCATOR_TEST_MODAL = 'SHOW_LOCATOR_TEST_MODAL';
-export const HIDE_LOCATOR_TEST_MODAL = 'HIDE_LOCATOR_TEST_MODAL';
+export const SHOW_LOCATOR_SEARCH_MODAL = 'SHOW_LOCATOR_SEARCH_MODAL';
+export const HIDE_LOCATOR_SEARCH_MODAL = 'HIDE_LOCATOR_SEARCH_MODAL';
 export const SHOW_SIRI_COMMAND_MODAL = 'SHOW_SIRI_COMMAND_MODAL';
 export const HIDE_SIRI_COMMAND_MODAL = 'HIDE_SIRI_COMMAND_MODAL';
 export const SET_SIRI_COMMAND_VALUE = 'SET_SIRI_COMMAND_VALUE';
-export const SET_LOCATOR_TEST_STRATEGY = 'SET_LOCATOR_TEST_STRATEGY';
-export const SET_LOCATOR_TEST_VALUE = 'SET_LOCATOR_TEST_VALUE';
+export const SET_LOCATOR_SEARCH_STRATEGY = 'SET_LOCATOR_SEARCH_STRATEGY';
+export const SET_LOCATOR_SEARCH_VALUE = 'SET_LOCATOR_SEARCH_VALUE';
 export const SEARCHING_FOR_ELEMENTS = 'SEARCHING_FOR_ELEMENTS';
 export const SEARCHING_FOR_ELEMENTS_COMPLETED = 'SEARCHING_FOR_ELEMENTS_COMPLETED';
 export const GET_FIND_ELEMENTS_TIMES = 'GET_FIND_ELEMENTS_TIMES';
 export const GET_FIND_ELEMENTS_TIMES_COMPLETED = 'GET_FIND_ELEMENTS_TIMES_COMPLETED';
-export const SET_LOCATOR_TEST_ELEMENT = 'SET_LOCATOR_TEST_ELEMENT';
+export const SELECT_LOCATED_ELEMENT = 'SELECT_LOCATED_ELEMENT';
 export const FINDING_ELEMENT_IN_SOURCE = 'FINDING_ELEMENT_IN_SOURCE';
 export const FINDING_ELEMENT_IN_SOURCE_COMPLETED = 'FINDING_ELEMENT_IN_SOURCE_COMPLETED';
 export const CLEAR_SEARCH_RESULTS = 'CLEAR_SEARCH_RESULTS';
@@ -393,15 +393,15 @@ export function storeSessionSettings(updatedSessionSettings = null) {
   };
 }
 
-export function showLocatorTestModal() {
+export function showLocatorSearchModal() {
   return (dispatch) => {
-    dispatch({type: SHOW_LOCATOR_TEST_MODAL});
+    dispatch({type: SHOW_LOCATOR_SEARCH_MODAL});
   };
 }
 
-export function hideLocatorTestModal() {
+export function hideLocatorSearchModal() {
   return (dispatch) => {
-    dispatch({type: HIDE_LOCATOR_TEST_MODAL});
+    dispatch({type: HIDE_LOCATOR_SEARCH_MODAL});
   };
 }
 
@@ -455,15 +455,15 @@ export function setCurrentDisplayId(displayId) {
   };
 }
 
-export function setLocatorTestValue(locatorTestValue) {
+export function setLocatorSearchValue(locatorSearchValue) {
   return (dispatch) => {
-    dispatch({type: SET_LOCATOR_TEST_VALUE, locatorTestValue});
+    dispatch({type: SET_LOCATOR_SEARCH_VALUE, locatorSearchValue});
   };
 }
 
-export function setLocatorTestStrategy(locatorTestStrategy) {
+export function setLocatorSearchStrategy(locatorSearchStrategy) {
   return (dispatch) => {
-    dispatch({type: SET_LOCATOR_TEST_STRATEGY, locatorTestStrategy});
+    dispatch({type: SET_LOCATOR_SEARCH_STRATEGY, locatorSearchStrategy});
   };
 }
 
@@ -535,9 +535,9 @@ export function findAndAssign(strategy, selector, variableName, isArray) {
   };
 }
 
-export function setLocatorTestElement(elementId) {
+export function selectLocatedElement(elementId) {
   return async (dispatch, getState) => {
-    dispatch({type: SET_LOCATOR_TEST_ELEMENT, elementId});
+    dispatch({type: SELECT_LOCATED_ELEMENT, elementId});
     dispatch({type: CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS});
     if (elementId) {
       try {
@@ -562,7 +562,7 @@ export function setLocatorTestElement(elementId) {
  * Given an element ID found through search, and its bounds,
  * attempt to find and select this element in the source tree
  */
-export function selectLocatedElement(sourceJSON, sourceXML, bounds, id) {
+export function findLocatedElementInSource(sourceJSON, sourceXML, bounds, id) {
   const UPPER_FILTER_LIMIT = 10;
 
   // Parse the source tree and find all nodes whose bounds match the expected bounds

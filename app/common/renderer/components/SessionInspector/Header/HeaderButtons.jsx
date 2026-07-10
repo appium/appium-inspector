@@ -26,7 +26,7 @@ import {DRIVERS, LINKS} from '../../../constants/common.js';
 import {APP_MODE} from '../../../constants/session-inspector.js';
 import {openLink} from '../../../polyfills.js';
 import styles from './Header.module.css';
-import LocatorTestModal from './LocatorTestModal.jsx';
+import LocatorSearchModal from './LocatorSearch/LocatorSearchModal.jsx';
 import SiriCommandModal from './SiriCommandModal.jsx';
 
 const HeaderButtons = (props) => {
@@ -39,7 +39,7 @@ const HeaderButtons = (props) => {
     isRecording,
     startRecording,
     pauseRecording,
-    showLocatorTestModal,
+    showLocatorSearchModal,
     showSiriCommandModal,
     applyClientMethod,
     quitSessionAndReturn,
@@ -242,7 +242,7 @@ const HeaderButtons = (props) => {
         <Button
           id="searchForElement"
           icon={<IconSearch size={18} />}
-          onClick={showLocatorTestModal}
+          onClick={showLocatorSearchModal}
         />
       </Tooltip>
       {!isRecording && (
@@ -301,7 +301,7 @@ const HeaderButtons = (props) => {
         {quitControls}
       </Space>
       <Divider />
-      <LocatorTestModal {...props} />
+      <LocatorSearchModal {...props} />
       <SiriCommandModal {...props} />
     </div>
   );
