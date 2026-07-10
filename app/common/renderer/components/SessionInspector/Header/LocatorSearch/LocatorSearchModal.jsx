@@ -1,12 +1,24 @@
 import {Button, Modal} from 'antd';
 import {useTranslation} from 'react-i18next';
 
+import LocatorSearchEmptyResults from './LocatorSearchEmptyResults.jsx';
 import LocatorSearchForm from './LocatorSearchForm.jsx';
-import LocatorSearchResults from './LocatorSearchResults.jsx';
+import LocatorSearchFoundResults from './LocatorSearchFoundResults.jsx';
 
+/**
+ * Modal container used for locator search.
+ */
 const LocatorSearchModal = (props) => {
-  const {isLocatorSearchModalVisible, isSearchingForElements, clearSearchResults, locatedElements} =
-    props;
+  const {
+    isLocatorSearchModalVisible,
+    isSearchingForElements,
+    clearSearchResults,
+    locatedElements,
+    locatorSearchStrategy,
+    locatorSearchValue,
+    automationName,
+    sessionSettings,
+  } = props;
   const {t} = useTranslation();
 
   const onCancel = () => {
@@ -24,7 +36,6 @@ const LocatorSearchModal = (props) => {
     }
   };
 
-  // Footer displays all the buttons at the bottom of the Modal
   return (
     <Modal
       open={isLocatorSearchModalVisible}
@@ -42,7 +53,19 @@ const LocatorSearchModal = (props) => {
       }
     >
       {!locatedElements && <LocatorSearchForm {...props} />}
-      {locatedElements && <LocatorSearchResults {...props} />}
+      {locatedElements && (
+        <>
+          {locatedElements.length === 0 && (
+            <LocatorSearchEmptyResults
+              locatorSearchStrategy={locatorSearchStrategy}
+              locatorSearchValue={locatorSearchValue}
+              automationName={automationName}
+              sessionSettings={sessionSettings}
+            />
+          )}
+          {locatedElements.length > 0 && <LocatorSearchFoundResults {...props} />}
+        </>
+      )}
     </Modal>
   );
 };

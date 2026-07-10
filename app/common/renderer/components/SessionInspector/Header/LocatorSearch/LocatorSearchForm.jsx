@@ -38,6 +38,59 @@ const locatorStrategies = (automationName, currentContext) => {
   return strategies;
 };
 
+/**
+ * Locator strategy selector for locator search.
+ */
+const LocatorSearchFormStrategySelector = ({
+  automationName,
+  currentContext,
+  locatorSearchStrategy,
+  setLocatorSearchStrategy,
+}) => (
+  <Row justify="center">
+    {locatorStrategies(automationName, currentContext).map(([strategyValue, strategyName]) => (
+      <Button
+        type={strategyValue === locatorSearchStrategy ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+        className={styles.locatorStrategyBtn}
+        onClick={() => setLocatorSearchStrategy(strategyValue)}
+        key={strategyValue}
+      >
+        {strategyName}
+      </Button>
+    ))}
+  </Row>
+);
+
+/**
+ * Info message shown when the session has no defined automationName,
+ * meaning no driver-specific locator strategies are available.
+ */
+const LocatorSearchFormMissingAutomationNameMessage = ({automationName}) => {
+  const {t} = useTranslation();
+
+  return (
+    !automationName && (
+      <Alert title={t('missingAutomationNameForStrategies')} type={ALERT.INFO} showIcon />
+    )
+  );
+};
+
+/**
+ * Selector input field for locator search.
+ */
+const LocatorSearchFormValueInputField = ({locatorSearchValue, setLocatorSearchValue}) => (
+  <Input.TextArea
+    className={styles.locatorSelectorTextArea}
+    onChange={(e) => setLocatorSearchValue(e.target.value)}
+    value={locatorSearchValue}
+    allowClear={true}
+    rows={3}
+  />
+);
+
+/**
+ * Input form for locator search related data.
+ */
 const LocatorSearchForm = (props) => {
   const {
     setLocatorSearchValue,
@@ -52,28 +105,17 @@ const LocatorSearchForm = (props) => {
   return (
     <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="small">
       {t('locatorStrategy')}
-      <Row justify="center">
-        {locatorStrategies(automationName, currentContext).map(([strategyValue, strategyName]) => (
-          <Button
-            type={strategyValue === locatorSearchStrategy ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-            className={styles.locatorStrategyBtn}
-            onClick={() => setLocatorSearchStrategy(strategyValue)}
-            key={strategyValue}
-          >
-            {strategyName}
-          </Button>
-        ))}
-      </Row>
-      {!automationName && (
-        <Alert title={t('missingAutomationNameForStrategies')} type={ALERT.INFO} showIcon />
-      )}
+      <LocatorSearchFormStrategySelector
+        automationName={automationName}
+        currentContext={currentContext}
+        locatorSearchStrategy={locatorSearchStrategy}
+        setLocatorSearchStrategy={setLocatorSearchStrategy}
+      />
+      <LocatorSearchFormMissingAutomationNameMessage automationName={automationName} />
       {t('selector')}
-      <Input.TextArea
-        className={styles.locatorSelectorTextArea}
-        onChange={(e) => setLocatorSearchValue(e.target.value)}
-        value={locatorSearchValue}
-        allowClear={true}
-        rows={3}
+      <LocatorSearchFormValueInputField
+        locatorSearchValue={locatorSearchValue}
+        setLocatorSearchValue={setLocatorSearchValue}
       />
     </Space>
   );
