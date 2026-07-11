@@ -8,14 +8,12 @@ import {
   IconMessageChatbot,
   IconPlayerPause,
   IconPlayerPlay,
-  IconPlugConnectedX,
   IconRefresh,
   IconSearch,
   IconSquare,
   IconTriangleSquareCircle,
   IconVideo,
   IconWorld,
-  IconX,
 } from '@tabler/icons-react';
 import {Button, Divider, Select, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
@@ -24,6 +22,7 @@ import {BUTTON} from '../../../constants/antd-types.js';
 import {DRIVERS, LINKS} from '../../../constants/common.js';
 import {APP_MODE} from '../../../constants/session-inspector.js';
 import {openLink} from '../../../polyfills.js';
+import SessionQuitControlsGroup from './ElementGroups/SessionQuitControlsGroup.jsx';
 import SessionReloadButton from './ElementGroups/SessionReloadButton.jsx';
 import styles from './Header.module.css';
 import LocatorSearchModal from './LocatorSearch/LocatorSearchModal.jsx';
@@ -268,21 +267,6 @@ const HeaderButtons = (props) => {
     </Space.Compact>
   );
 
-  const quitControls = (
-    <Space.Compact>
-      <Tooltip title={t('detachFromSession')}>
-        <Button
-          id="btnDetach"
-          icon={<IconPlugConnectedX size={18} />}
-          onClick={() => quitSessionAndReturn({detachOnly: true})}
-        />
-      </Tooltip>
-      <Tooltip title={t('Quit Session')}>
-        <Button id="btnClose" icon={<IconX size={18} />} onClick={quitSessionAndReturn} />
-      </Tooltip>
-    </Space.Compact>
-  );
-
   return (
     <div className={styles.headerButtons}>
       <Space size="middle">
@@ -294,7 +278,7 @@ const HeaderButtons = (props) => {
           autoSessionRestart={autoSessionRestart}
           toggleAutoSessionRestart={toggleAutoSessionRestart}
         />
-        {quitControls}
+        <SessionQuitControlsGroup quitSessionAndReturn={quitSessionAndReturn} />
       </Space>
       <Divider />
       <LocatorSearchModal {...props} />
