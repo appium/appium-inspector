@@ -1,45 +1,18 @@
-import {
-  IconCarouselHorizontal,
-  IconChevronLeft,
-  IconCircle,
-  IconExclamationCircle,
-  IconHome,
-  IconInfoCircle,
-  IconMessageChatbot,
-  IconPlayerPause,
-  IconPlayerPlay,
-  IconPlugConnectedX,
-  IconRecycle,
-  IconRefresh,
-  IconSearch,
-  IconSquare,
-  IconTriangleSquareCircle,
-  IconVideo,
-  IconWorld,
-  IconX,
-} from '@tabler/icons-react';
-import {Button, Divider, Select, Space, Tooltip} from 'antd';
-import {useTranslation} from 'react-i18next';
+import {Divider, Space} from 'antd';
 
-import {BUTTON} from '../../../constants/antd-types.js';
-import {DRIVERS, LINKS} from '../../../constants/common.js';
-import {APP_MODE} from '../../../constants/session-inspector.js';
 import {openLink} from '../../../polyfills.js';
+import ContextControlsGroup from './ContextControlsGroup.jsx';
+import DeviceControlsGroup from './DeviceControlsGroup.jsx';
+import DisplayControlsGroup from './DisplayControlsGroup.jsx';
+import GeneralControlsGroup from './GeneralControlsGroup.jsx';
 import styles from './Header.module.css';
-import LocatorTestModal from './LocatorTestModal.jsx';
-import SiriCommandModal from './SiriCommandModal.jsx';
+import SessionQuitControlsGroup from './SessionQuitControlsGroup.jsx';
+import SessionReloadButton from './SessionReloadButton.jsx';
 
 const HeaderButtons = (props) => {
   const {
     selectAppMode,
     appMode,
-    isUsingMjpegMode,
-    isSourceRefreshOn,
-    setRefreshingState,
-    isRecording,
-    startRecording,
-    pauseRecording,
-    showLocatorTestModal,
     showSiriCommandModal,
     applyClientMethod,
     quitSessionAndReturn,
@@ -54,255 +27,48 @@ const HeaderButtons = (props) => {
     setCurrentDisplayId,
     currentDisplayId,
     automationName,
+    siriCommandValue,
+    setSiriCommandValue,
+    isSiriCommandModalVisible,
+    hideSiriCommandModal,
   } = props;
-  const {t} = useTranslation();
-
-  const deviceControls = (
-    <Space.Compact>
-      {driver && driver.isIOS && (
-        <>
-          <Tooltip title={t('Press Home Button')}>
-            <Button
-              id="btnPressHomeButton"
-              icon={<IconHome size={18} />}
-              onClick={() =>
-                applyClientMethod({
-                  methodName: 'executeScript',
-                  args: ['mobile:pressButton', [{name: 'home'}]],
-                })
-              }
-            />
-          </Tooltip>
-          <Tooltip title={t('Execute Siri Command')}>
-            <Button
-              id="siriCommand"
-              icon={<IconMessageChatbot size={18} />}
-              onClick={showSiriCommandModal}
-            />
-          </Tooltip>
-        </>
-      )}
-      {driver && driver.isAndroid && (
-        <>
-          <Tooltip title={t('Press Back Button')}>
-            <Button
-              id="btnPressHomeButton"
-              icon={<IconChevronLeft size={20} />}
-              onClick={() =>
-                applyClientMethod({
-                  methodName: 'executeScript',
-                  args: ['mobile:pressKey', [{keycode: 4}]],
-                })
-              }
-            />
-          </Tooltip>
-          <Tooltip title={t('Press Home Button')}>
-            <Button
-              id="btnPressHomeButton"
-              icon={<IconCircle size={16} />}
-              onClick={() =>
-                applyClientMethod({
-                  methodName: 'executeScript',
-                  args: ['mobile:pressKey', [{keycode: 3}]],
-                })
-              }
-            />
-          </Tooltip>
-          <Tooltip title={t('Press App Switch Button')}>
-            <Button
-              id="btnPressHomeButton"
-              icon={<IconSquare size={16} />}
-              onClick={() =>
-                applyClientMethod({
-                  methodName: 'executeScript',
-                  args: ['mobile:pressKey', [{keycode: 187}]],
-                })
-              }
-            />
-          </Tooltip>
-        </>
-      )}
-    </Space.Compact>
-  );
-
-  const displayControls = (
-    <Space.Compact>
-      <Tooltip title={t('toggleMultiDisplayMode')}>
-        <Button
-          icon={<IconCarouselHorizontal size={18} />}
-          type={displays ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          onClick={() => toggleMultiDisplayMode(displays)}
-        />
-      </Tooltip>
-      {displays && (
-        <Select
-          styles={{root: {width: 250}}}
-          value={currentDisplayId}
-          popupMatchSelectWidth={false}
-          onChange={(value) => value !== currentDisplayId && setCurrentDisplayId(value)}
-          options={displays.map(({id, name}) => ({
-            value: id,
-            label: name ? `${name} (ID ${id})` : id,
-          }))}
-        />
-      )}
-    </Space.Compact>
-  );
-
-  const appModeControls = (
-    <Space.Compact>
-      <Tooltip title={t('Native App Mode')}>
-        <Button
-          icon={<IconTriangleSquareCircle size={18} />}
-          onClick={() => selectAppMode(APP_MODE.NATIVE)}
-          type={appMode === APP_MODE.NATIVE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-        />
-      </Tooltip>
-      <Tooltip title={t('Web/Hybrid App Mode')}>
-        <Button
-          icon={<IconWorld size={18} />}
-          onClick={() => selectAppMode(APP_MODE.WEB_HYBRID)}
-          type={appMode === APP_MODE.WEB_HYBRID ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-        />
-      </Tooltip>
-      {contexts && contexts.length === 1 && (
-        <Tooltip title={t('noAdditionalContextsFound')} classNames={{root: styles.wideTooltip}}>
-          <Button
-            disabled
-            icon={<IconExclamationCircle size={20} />}
-            styles={{root: {backgroundColor: '#faad14', color: '#ffffff'}}}
-          />
-        </Tooltip>
-      )}
-      {contexts && contexts.length > 1 && (
-        <>
-          <Select
-            styles={{root: {width: 350}}}
-            value={currentContext}
-            popupMatchSelectWidth={false}
-            onChange={(value) => {
-              setContext(value);
-              applyClientMethod({methodName: 'switchAppiumContext', args: [value]});
-            }}
-            options={contexts.map(({id, title}) => ({
-              value: id,
-              label: title ? `${title} (${id})` : id,
-            }))}
-          />
-          <Tooltip
-            title={
-              <>
-                {t('contextDropdownInfo')}{' '}
-                <a onClick={(e) => e.preventDefault() || openLink(LINKS.HYBRID_MODE_DOCS)}>
-                  {LINKS.HYBRID_MODE_DOCS}
-                </a>
-              </>
-            }
-            classNames={{root: styles.wideTooltip}}
-          >
-            <Button
-              disabled
-              icon={<IconInfoCircle size={20} />}
-              styles={{root: {backgroundColor: 'var(--ant-color-primary)', color: '#ffffff'}}}
-            />
-          </Tooltip>
-        </>
-      )}
-    </Space.Compact>
-  );
-
-  const generalControls = (
-    <Space.Compact>
-      {isUsingMjpegMode && !isSourceRefreshOn && (
-        <Tooltip title={t('Start Refreshing Source')}>
-          <Button
-            id="btnStartRefreshing"
-            icon={<IconPlayerPlay size={18} />}
-            onClick={() => setRefreshingState({source: true})}
-          />
-        </Tooltip>
-      )}
-      {isUsingMjpegMode && isSourceRefreshOn && (
-        <Tooltip title={t('Pause Refreshing Source')}>
-          <Button
-            id="btnPauseRefreshing"
-            icon={<IconPlayerPause size={18} />}
-            onClick={() => setRefreshingState({source: false})}
-          />
-        </Tooltip>
-      )}
-      <Tooltip title={t('refreshSource')}>
-        <Button
-          id="btnReload"
-          icon={<IconRefresh size={18} />}
-          onClick={() => applyClientMethod({methodName: 'getPageSource'})}
-        />
-      </Tooltip>
-      <Tooltip title={t('Search for element')}>
-        <Button
-          id="searchForElement"
-          icon={<IconSearch size={18} />}
-          onClick={showLocatorTestModal}
-        />
-      </Tooltip>
-      {!isRecording && (
-        <Tooltip title={t('Start Recording')}>
-          <Button id="btnStartRecording" icon={<IconVideo size={18} />} onClick={startRecording} />
-        </Tooltip>
-      )}
-      {isRecording && (
-        <Tooltip title={t('Pause Recording')}>
-          <Button
-            id="btnPause"
-            icon={<IconVideo size={18} />}
-            type={BUTTON.PRIMARY}
-            danger
-            onClick={pauseRecording}
-          />
-        </Tooltip>
-      )}
-    </Space.Compact>
-  );
-
-  const quitControls = (
-    <Space.Compact>
-      <Tooltip title={t('detachFromSession')}>
-        <Button
-          id="btnDetach"
-          icon={<IconPlugConnectedX size={18} />}
-          onClick={() => quitSessionAndReturn({detachOnly: true})}
-        />
-      </Tooltip>
-      <Tooltip title={t('Quit Session')}>
-        <Button id="btnClose" icon={<IconX size={18} />} onClick={quitSessionAndReturn} />
-      </Tooltip>
-    </Space.Compact>
-  );
-
-  const sessionReloadButton = (
-    <Tooltip title={t('ToggleRestartSession')}>
-      <Button
-        id={autoSessionRestart ? 'btnDisableRestartSession' : 'btnEnableRestartSession'}
-        icon={<IconRecycle size={16} />}
-        type={autoSessionRestart ? BUTTON.PRIMARY : undefined}
-        onClick={toggleAutoSessionRestart}
-      />
-    </Tooltip>
-  );
 
   return (
     <div className={styles.headerButtons}>
       <Space size="middle">
-        {deviceControls}
-        {automationName === DRIVERS.UIAUTOMATOR2 && displayControls}
-        {appModeControls}
-        {generalControls}
-        {sessionReloadButton}
-        {quitControls}
+        <DeviceControlsGroup
+          driver={driver}
+          applyClientMethod={applyClientMethod}
+          showSiriCommandModal={showSiriCommandModal}
+          siriCommandValue={siriCommandValue}
+          setSiriCommandValue={setSiriCommandValue}
+          isSiriCommandModalVisible={isSiriCommandModalVisible}
+          hideSiriCommandModal={hideSiriCommandModal}
+        />
+        <DisplayControlsGroup
+          automationName={automationName}
+          displays={displays}
+          currentDisplayId={currentDisplayId}
+          setCurrentDisplayId={setCurrentDisplayId}
+          toggleMultiDisplayMode={toggleMultiDisplayMode}
+        />
+        <ContextControlsGroup
+          selectAppMode={selectAppMode}
+          appMode={appMode}
+          contexts={contexts}
+          currentContext={currentContext}
+          setContext={setContext}
+          applyClientMethod={applyClientMethod}
+          openLink={openLink}
+        />
+        <GeneralControlsGroup {...props} />
+        <SessionReloadButton
+          autoSessionRestart={autoSessionRestart}
+          toggleAutoSessionRestart={toggleAutoSessionRestart}
+        />
+        <SessionQuitControlsGroup quitSessionAndReturn={quitSessionAndReturn} />
       </Space>
       <Divider />
-      <LocatorTestModal {...props} />
-      <SiriCommandModal {...props} />
     </div>
   );
 };

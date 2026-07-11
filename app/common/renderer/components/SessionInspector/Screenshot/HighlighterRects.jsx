@@ -15,7 +15,7 @@ const HighlighterRects = (props) => {
     searchedForElementBounds,
     scaleRatio,
     showCentroids,
-    isLocatorTestModalVisible,
+    isLocatorSearchModalVisible,
     isSiriCommandModalVisible,
   } = props;
 
@@ -200,7 +200,7 @@ const HighlighterRects = (props) => {
   const elements = getElements(sourceJSON);
 
   // If the user selected an element that they searched for, highlight that element
-  if (searchedForElementBounds && isLocatorTestModalVisible) {
+  if (searchedForElementBounds && isLocatorSearchModalVisible) {
     const {location, size} = searchedForElementBounds;
     highlighterRects.push(
       <HighlighterRectForBounds
@@ -213,7 +213,7 @@ const HighlighterRects = (props) => {
   }
 
   // Don't show highlighter rects when Search Elements modal is open
-  if (!isLocatorTestModalVisible && !isSiriCommandModalVisible) {
+  if (!isLocatorSearchModalVisible && !isSiriCommandModalVisible) {
     renderElements(elements);
     if (showCentroids) {
       renderCentroids(elements);
