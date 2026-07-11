@@ -1,18 +1,16 @@
 import {
-  IconCarouselHorizontal,
   IconChevronLeft,
   IconCircle,
   IconHome,
   IconMessageChatbot,
   IconSquare,
 } from '@tabler/icons-react';
-import {Button, Divider, Select, Space, Tooltip} from 'antd';
+import {Button, Divider, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import {BUTTON} from '../../../constants/antd-types.js';
-import {DRIVERS} from '../../../constants/common.js';
 import {openLink} from '../../../polyfills.js';
 import ContextControlsGroup from './ElementGroups/ContextControlsGroup.jsx';
+import DisplayControlsGroup from './ElementGroups/DisplayControlsGroup.jsx';
 import GeneralControlsGroup from './ElementGroups/GeneralControlsGroup.jsx';
 import SessionQuitControlsGroup from './ElementGroups/SessionQuitControlsGroup.jsx';
 import SessionReloadButton from './ElementGroups/SessionReloadButton.jsx';
@@ -113,35 +111,17 @@ const HeaderButtons = (props) => {
     </Space.Compact>
   );
 
-  const displayControls = (
-    <Space.Compact>
-      <Tooltip title={t('toggleMultiDisplayMode')}>
-        <Button
-          icon={<IconCarouselHorizontal size={18} />}
-          type={displays ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          onClick={() => toggleMultiDisplayMode(displays)}
-        />
-      </Tooltip>
-      {displays && (
-        <Select
-          styles={{root: {width: 250}}}
-          value={currentDisplayId}
-          popupMatchSelectWidth={false}
-          onChange={(value) => value !== currentDisplayId && setCurrentDisplayId(value)}
-          options={displays.map(({id, name}) => ({
-            value: id,
-            label: name ? `${name} (ID ${id})` : id,
-          }))}
-        />
-      )}
-    </Space.Compact>
-  );
-
   return (
     <div className={styles.headerButtons}>
       <Space size="middle">
         {deviceControls}
-        {automationName === DRIVERS.UIAUTOMATOR2 && displayControls}
+        <DisplayControlsGroup
+          automationName={automationName}
+          displays={displays}
+          currentDisplayId={currentDisplayId}
+          setCurrentDisplayId={setCurrentDisplayId}
+          toggleMultiDisplayMode={toggleMultiDisplayMode}
+        />
         <ContextControlsGroup
           selectAppMode={selectAppMode}
           appMode={appMode}
