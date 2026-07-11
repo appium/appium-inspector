@@ -8,7 +8,7 @@ import inspectorStyles from '../../SessionInspector.module.css';
 
 /**
  * Info message shown when an ID locator search for a UiAutomator2 session returns no results,
- * which may be due to the disableIdLocatorAutocompletion setting being enabled.
+ * which may be due to the disableIdLocatorAutocompletion setting not being enabled.
  */
 const DisableIdAutocompletionMessage = ({
   locatorSearchStrategy,
