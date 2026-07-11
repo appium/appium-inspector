@@ -8,7 +8,6 @@ import GeneralControlsGroup from './ElementGroups/GeneralControlsGroup.jsx';
 import SessionQuitControlsGroup from './ElementGroups/SessionQuitControlsGroup.jsx';
 import SessionReloadButton from './ElementGroups/SessionReloadButton.jsx';
 import styles from './Header.module.css';
-import LocatorSearchModal from './LocatorSearch/LocatorSearchModal.jsx';
 
 const HeaderButtons = (props) => {
   const {
@@ -70,7 +69,6 @@ const HeaderButtons = (props) => {
         <SessionQuitControlsGroup quitSessionAndReturn={quitSessionAndReturn} />
       </Space>
       <Divider />
-      <LocatorSearchModal {...props} />
     </div>
   );
 };

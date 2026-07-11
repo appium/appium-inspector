@@ -9,20 +9,22 @@ import {Button, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../../constants/antd-types.js';
+import LocatorSearchModal from '../LocatorSearch/LocatorSearchModal.jsx';
 
 /**
  * Controls for general session actions.
  */
-const GeneralControlsGroup = ({
-  isUsingMjpegMode,
-  isSourceRefreshOn,
-  setRefreshingState,
-  applyClientMethod,
-  showLocatorSearchModal,
-  isRecording,
-  startRecording,
-  pauseRecording,
-}) => {
+const GeneralControlsGroup = (props) => {
+  const {
+    isUsingMjpegMode,
+    isSourceRefreshOn,
+    setRefreshingState,
+    applyClientMethod,
+    showLocatorSearchModal,
+    isRecording,
+    startRecording,
+    pauseRecording,
+  } = props;
   const {t} = useTranslation();
 
   return (
@@ -59,6 +61,7 @@ const GeneralControlsGroup = ({
           onClick={showLocatorSearchModal}
         />
       </Tooltip>
+      <LocatorSearchModal {...props} />
       {!isRecording && (
         <Tooltip title={t('Start Recording')}>
           <Button id="btnStartRecording" icon={<IconVideo size={18} />} onClick={startRecording} />
