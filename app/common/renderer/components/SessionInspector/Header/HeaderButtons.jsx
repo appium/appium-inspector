@@ -9,7 +9,6 @@ import SessionQuitControlsGroup from './ElementGroups/SessionQuitControlsGroup.j
 import SessionReloadButton from './ElementGroups/SessionReloadButton.jsx';
 import styles from './Header.module.css';
 import LocatorSearchModal from './LocatorSearch/LocatorSearchModal.jsx';
-import SiriCommandModal from './SiriCommandModal.jsx';
 
 const HeaderButtons = (props) => {
   const {
@@ -42,6 +41,10 @@ const HeaderButtons = (props) => {
           driver={driver}
           applyClientMethod={applyClientMethod}
           showSiriCommandModal={showSiriCommandModal}
+          siriCommandValue={siriCommandValue}
+          setSiriCommandValue={setSiriCommandValue}
+          isSiriCommandModalVisible={isSiriCommandModalVisible}
+          hideSiriCommandModal={hideSiriCommandModal}
         />
         <DisplayControlsGroup
           automationName={automationName}
@@ -68,13 +71,6 @@ const HeaderButtons = (props) => {
       </Space>
       <Divider />
       <LocatorSearchModal {...props} />
-      <SiriCommandModal
-        siriCommandValue={siriCommandValue}
-        setSiriCommandValue={setSiriCommandValue}
-        isSiriCommandModalVisible={isSiriCommandModalVisible}
-        applyClientMethod={applyClientMethod}
-        hideSiriCommandModal={hideSiriCommandModal}
-      />
     </div>
   );
 };

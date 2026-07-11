@@ -8,6 +8,8 @@ import {
 import {Button, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
+import SiriCommandModal from './SiriCommandModal.jsx';
+
 /**
  * Device controls used for Android sessions.
  */
@@ -59,7 +61,14 @@ const AndroidControlsGroup = ({applyClientMethod}) => {
 /**
  * Device controls used for iOS sessions.
  */
-const IosControlsGroup = ({applyClientMethod, showSiriCommandModal}) => {
+const IosControlsGroup = ({
+  applyClientMethod,
+  showSiriCommandModal,
+  siriCommandValue,
+  setSiriCommandValue,
+  isSiriCommandModalVisible,
+  hideSiriCommandModal,
+}) => {
   const {t} = useTranslation();
 
   return (
@@ -83,6 +92,13 @@ const IosControlsGroup = ({applyClientMethod, showSiriCommandModal}) => {
           onClick={showSiriCommandModal}
         />
       </Tooltip>
+      <SiriCommandModal
+        siriCommandValue={siriCommandValue}
+        setSiriCommandValue={setSiriCommandValue}
+        isSiriCommandModalVisible={isSiriCommandModalVisible}
+        applyClientMethod={applyClientMethod}
+        hideSiriCommandModal={hideSiriCommandModal}
+      />
     </Space.Compact>
   );
 };
@@ -90,13 +106,25 @@ const IosControlsGroup = ({applyClientMethod, showSiriCommandModal}) => {
 /**
  * Controls used for buttons on the device under test.
  */
-const DeviceControlsGroup = ({driver, applyClientMethod, showSiriCommandModal}) =>
+const DeviceControlsGroup = ({
+  driver,
+  applyClientMethod,
+  showSiriCommandModal,
+  siriCommandValue,
+  setSiriCommandValue,
+  isSiriCommandModalVisible,
+  hideSiriCommandModal,
+}) =>
   driver && (
     <>
       {driver.isIOS && (
         <IosControlsGroup
           applyClientMethod={applyClientMethod}
           showSiriCommandModal={showSiriCommandModal}
+          siriCommandValue={siriCommandValue}
+          setSiriCommandValue={setSiriCommandValue}
+          isSiriCommandModalVisible={isSiriCommandModalVisible}
+          hideSiriCommandModal={hideSiriCommandModal}
         />
       )}
       {driver.isAndroid && <AndroidControlsGroup applyClientMethod={applyClientMethod} />}
