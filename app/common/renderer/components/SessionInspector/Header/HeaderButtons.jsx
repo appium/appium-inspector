@@ -54,6 +54,10 @@ const HeaderButtons = (props) => {
     setCurrentDisplayId,
     currentDisplayId,
     automationName,
+    siriCommandValue,
+    setSiriCommandValue,
+    isSiriCommandModalVisible,
+    hideSiriCommandModal,
   } = props;
   const {t} = useTranslation();
 
@@ -302,7 +306,13 @@ const HeaderButtons = (props) => {
       </Space>
       <Divider />
       <LocatorSearchModal {...props} />
-      <SiriCommandModal {...props} />
+      <SiriCommandModal
+        siriCommandValue={siriCommandValue}
+        setSiriCommandValue={setSiriCommandValue}
+        isSiriCommandModalVisible={isSiriCommandModalVisible}
+        applyClientMethod={applyClientMethod}
+        hideSiriCommandModal={hideSiriCommandModal}
+      />
     </div>
   );
 };

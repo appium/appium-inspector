@@ -1,30 +1,28 @@
 import {Button, Input, Modal, Row} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-const SiriCommandModal = (props) => {
-  const {siriCommandValue, setSiriCommandValue, isSiriCommandModalVisible} = props;
+const SiriCommandModal = ({
+  siriCommandValue,
+  setSiriCommandValue,
+  isSiriCommandModalVisible,
+  hideSiriCommandModal,
+  applyClientMethod,
+}) => {
   const {t} = useTranslation();
 
   const onSubmit = () => {
-    const {applyClientMethod} = props;
     applyClientMethod({
       methodName: 'executeScript',
       args: ['mobile:siriCommand', [{text: siriCommandValue}]],
     });
-    onCancel();
-  };
-
-  const onCancel = () => {
-    const {hideSiriCommandModal} = props;
     hideSiriCommandModal();
   };
 
-  // Footer displays all the buttons at the bottom of the Modal
   return (
     <Modal
       open={isSiriCommandModalVisible}
       title={t('Execute Siri Command')}
-      onCancel={onCancel}
+      onCancel={hideSiriCommandModal}
       footer={
         <Button onClick={onSubmit} type="primary">
           {t('Execute Command')}
