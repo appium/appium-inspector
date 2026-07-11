@@ -2,6 +2,8 @@ import {Alert, Col, Row, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {ALERT} from '../../../../constants/antd-types.js';
+import {DRIVERS} from '../../../../constants/common.js';
+import {LOCATOR_STRATEGIES} from '../../../../constants/session-inspector.js';
 import inspectorStyles from '../../SessionInspector.module.css';
 
 /**
@@ -17,8 +19,8 @@ const DisableIdAutocompletionMessage = ({
   const {t} = useTranslation();
 
   const shouldShowMessage =
-    automationName === 'uiautomator2' &&
-    locatorSearchStrategy === 'id' &&
+    automationName === DRIVERS.UIAUTOMATOR2 &&
+    locatorSearchStrategy === LOCATOR_STRATEGIES.ID &&
     !locatorSearchValue.includes(':id/') &&
     !sessionSettings.disableIdLocatorAutocompletion;
 

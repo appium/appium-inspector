@@ -46,7 +46,7 @@ const LocatorSearchResultsTable = ({locatedElements, locatedElement, selectLocat
         onClick: () => locatedElement !== row.key && selectLocatedElement(row.key),
       })}
       rowSelection={{
-        selectedRowKeys: [locatedElement],
+        selectedRowKeys: locatedElement ? [locatedElement] : [],
         hideSelectAll: true,
         columnWidth: 0,
         renderCell: () => null,

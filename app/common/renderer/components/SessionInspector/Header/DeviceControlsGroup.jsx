@@ -20,7 +20,7 @@ const AndroidControlsGroup = ({applyClientMethod}) => {
     <Space.Compact>
       <Tooltip title={t('Press Back Button')}>
         <Button
-          id="btnPressHomeButton"
+          id="btnPressBackButton"
           icon={<IconChevronLeft size={20} />}
           onClick={() =>
             applyClientMethod({
@@ -44,7 +44,7 @@ const AndroidControlsGroup = ({applyClientMethod}) => {
       </Tooltip>
       <Tooltip title={t('Press App Switch Button')}>
         <Button
-          id="btnPressHomeButton"
+          id="btnPressAppSwitchButton"
           icon={<IconSquare size={16} />}
           onClick={() =>
             applyClientMethod({
