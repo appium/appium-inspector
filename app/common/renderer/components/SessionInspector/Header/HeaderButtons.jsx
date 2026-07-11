@@ -9,7 +9,6 @@ import {
   IconPlayerPause,
   IconPlayerPlay,
   IconPlugConnectedX,
-  IconRecycle,
   IconRefresh,
   IconSearch,
   IconSquare,
@@ -25,6 +24,7 @@ import {BUTTON} from '../../../constants/antd-types.js';
 import {DRIVERS, LINKS} from '../../../constants/common.js';
 import {APP_MODE} from '../../../constants/session-inspector.js';
 import {openLink} from '../../../polyfills.js';
+import SessionReloadButton from './ElementGroups/SessionReloadButton.jsx';
 import styles from './Header.module.css';
 import LocatorSearchModal from './LocatorSearch/LocatorSearchModal.jsx';
 import SiriCommandModal from './SiriCommandModal.jsx';
@@ -283,17 +283,6 @@ const HeaderButtons = (props) => {
     </Space.Compact>
   );
 
-  const sessionReloadButton = (
-    <Tooltip title={t('ToggleRestartSession')}>
-      <Button
-        id={autoSessionRestart ? 'btnDisableRestartSession' : 'btnEnableRestartSession'}
-        icon={<IconRecycle size={16} />}
-        type={autoSessionRestart ? BUTTON.PRIMARY : undefined}
-        onClick={toggleAutoSessionRestart}
-      />
-    </Tooltip>
-  );
-
   return (
     <div className={styles.headerButtons}>
       <Space size="middle">
@@ -301,7 +290,10 @@ const HeaderButtons = (props) => {
         {automationName === DRIVERS.UIAUTOMATOR2 && displayControls}
         {appModeControls}
         {generalControls}
-        {sessionReloadButton}
+        <SessionReloadButton
+          autoSessionRestart={autoSessionRestart}
+          toggleAutoSessionRestart={toggleAutoSessionRestart}
+        />
         {quitControls}
       </Space>
       <Divider />
