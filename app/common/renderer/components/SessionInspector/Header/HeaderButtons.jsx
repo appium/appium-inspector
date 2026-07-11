@@ -1,13 +1,13 @@
 import {Divider, Space} from 'antd';
 
 import {openLink} from '../../../polyfills.js';
-import ContextControlsGroup from './ElementGroups/ContextControlsGroup.jsx';
-import DeviceControlsGroup from './ElementGroups/DeviceControlsGroup.jsx';
-import DisplayControlsGroup from './ElementGroups/DisplayControlsGroup.jsx';
-import GeneralControlsGroup from './ElementGroups/GeneralControlsGroup.jsx';
-import SessionQuitControlsGroup from './ElementGroups/SessionQuitControlsGroup.jsx';
-import SessionReloadButton from './ElementGroups/SessionReloadButton.jsx';
+import ContextControlsGroup from './ContextControlsGroup.jsx';
+import DeviceControlsGroup from './DeviceControlsGroup.jsx';
+import DisplayControlsGroup from './DisplayControlsGroup.jsx';
+import GeneralControlsGroup from './GeneralControlsGroup.jsx';
 import styles from './Header.module.css';
+import SessionQuitControlsGroup from './SessionQuitControlsGroup.jsx';
+import SessionReloadButton from './SessionReloadButton.jsx';
 
 const HeaderButtons = (props) => {
   const {

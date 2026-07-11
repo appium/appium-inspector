@@ -2,8 +2,8 @@ import {IconCarouselHorizontal} from '@tabler/icons-react';
 import {Button, Select, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import {BUTTON} from '../../../../constants/antd-types.js';
-import {DRIVERS} from '../../../../constants/common.js';
+import {BUTTON} from '../../../constants/antd-types.js';
+import {DRIVERS} from '../../../constants/common.js';
 
 /**
  * Controls used to switch available displays (Android UiAutomator2 only)

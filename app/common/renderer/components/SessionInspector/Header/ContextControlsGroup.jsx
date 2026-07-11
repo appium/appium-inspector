@@ -7,10 +7,10 @@ import {
 import {Button, Select, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import {BUTTON} from '../../../../constants/antd-types.js';
-import {LINKS} from '../../../../constants/common.js';
-import {APP_MODE} from '../../../../constants/session-inspector.js';
-import styles from '../Header.module.css';
+import {BUTTON} from '../../../constants/antd-types.js';
+import {LINKS} from '../../../constants/common.js';
+import {APP_MODE} from '../../../constants/session-inspector.js';
+import styles from './Header.module.css';
 
 /**
  * Element (disabled button) used to indicate the lack of additional contexts.

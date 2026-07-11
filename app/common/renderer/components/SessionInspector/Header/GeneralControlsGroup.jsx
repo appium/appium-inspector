@@ -8,8 +8,8 @@ import {
 import {Button, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import {BUTTON} from '../../../../constants/antd-types.js';
-import LocatorSearchModal from '../LocatorSearch/LocatorSearchModal.jsx';
+import {BUTTON} from '../../../constants/antd-types.js';
+import LocatorSearchModal from './LocatorSearch/LocatorSearchModal.jsx';
 
 /**
  * Controls for general session actions.
