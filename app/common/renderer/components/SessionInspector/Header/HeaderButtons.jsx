@@ -1,15 +1,8 @@
-import {
-  IconChevronLeft,
-  IconCircle,
-  IconHome,
-  IconMessageChatbot,
-  IconSquare,
-} from '@tabler/icons-react';
-import {Button, Divider, Space, Tooltip} from 'antd';
-import {useTranslation} from 'react-i18next';
+import {Divider, Space} from 'antd';
 
 import {openLink} from '../../../polyfills.js';
 import ContextControlsGroup from './ElementGroups/ContextControlsGroup.jsx';
+import DeviceControlsGroup from './ElementGroups/DeviceControlsGroup.jsx';
 import DisplayControlsGroup from './ElementGroups/DisplayControlsGroup.jsx';
 import GeneralControlsGroup from './ElementGroups/GeneralControlsGroup.jsx';
 import SessionQuitControlsGroup from './ElementGroups/SessionQuitControlsGroup.jsx';
@@ -41,80 +34,15 @@ const HeaderButtons = (props) => {
     isSiriCommandModalVisible,
     hideSiriCommandModal,
   } = props;
-  const {t} = useTranslation();
-
-  const deviceControls = (
-    <Space.Compact>
-      {driver && driver.isIOS && (
-        <>
-          <Tooltip title={t('Press Home Button')}>
-            <Button
-              id="btnPressHomeButton"
-              icon={<IconHome size={18} />}
-              onClick={() =>
-                applyClientMethod({
-                  methodName: 'executeScript',
-                  args: ['mobile:pressButton', [{name: 'home'}]],
-                })
-              }
-            />
-          </Tooltip>
-          <Tooltip title={t('Execute Siri Command')}>
-            <Button
-              id="siriCommand"
-              icon={<IconMessageChatbot size={18} />}
-              onClick={showSiriCommandModal}
-            />
-          </Tooltip>
-        </>
-      )}
-      {driver && driver.isAndroid && (
-        <>
-          <Tooltip title={t('Press Back Button')}>
-            <Button
-              id="btnPressHomeButton"
-              icon={<IconChevronLeft size={20} />}
-              onClick={() =>
-                applyClientMethod({
-                  methodName: 'executeScript',
-                  args: ['mobile:pressKey', [{keycode: 4}]],
-                })
-              }
-            />
-          </Tooltip>
-          <Tooltip title={t('Press Home Button')}>
-            <Button
-              id="btnPressHomeButton"
-              icon={<IconCircle size={16} />}
-              onClick={() =>
-                applyClientMethod({
-                  methodName: 'executeScript',
-                  args: ['mobile:pressKey', [{keycode: 3}]],
-                })
-              }
-            />
-          </Tooltip>
-          <Tooltip title={t('Press App Switch Button')}>
-            <Button
-              id="btnPressHomeButton"
-              icon={<IconSquare size={16} />}
-              onClick={() =>
-                applyClientMethod({
-                  methodName: 'executeScript',
-                  args: ['mobile:pressKey', [{keycode: 187}]],
-                })
-              }
-            />
-          </Tooltip>
-        </>
-      )}
-    </Space.Compact>
-  );
 
   return (
     <div className={styles.headerButtons}>
       <Space size="middle">
-        {deviceControls}
+        <DeviceControlsGroup
+          driver={driver}
+          applyClientMethod={applyClientMethod}
+          showSiriCommandModal={showSiriCommandModal}
+        />
         <DisplayControlsGroup
           automationName={automationName}
           displays={displays}
