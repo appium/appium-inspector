@@ -152,6 +152,7 @@ const LocatorSearchFoundResults = (props) => {
     sourceJSON,
     sourceXML,
   } = props;
+
   return (
     <Spin spinning={isFindingLocatedElementInSource}>
       <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="small">

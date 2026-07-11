@@ -13,11 +13,14 @@ const LocatorSearchModal = (props) => {
     isLocatorSearchModalVisible,
     isSearchingForElements,
     clearSearchResults,
+    setLocatorSearchStrategy,
+    setLocatorSearchValue,
     locatedElements,
     locatorSearchStrategy,
     locatorSearchValue,
     automationName,
     sessionSettings,
+    currentContext,
   } = props;
   const {t} = useTranslation();
 
@@ -52,7 +55,16 @@ const LocatorSearchModal = (props) => {
         </>
       }
     >
-      {!locatedElements && <LocatorSearchForm {...props} />}
+      {!locatedElements && (
+        <LocatorSearchForm
+          setLocatorSearchValue={setLocatorSearchValue}
+          locatorSearchValue={locatorSearchValue}
+          setLocatorSearchStrategy={setLocatorSearchStrategy}
+          locatorSearchStrategy={locatorSearchStrategy}
+          automationName={automationName}
+          currentContext={currentContext}
+        />
+      )}
       {locatedElements && (
         <>
           {locatedElements.length === 0 && (

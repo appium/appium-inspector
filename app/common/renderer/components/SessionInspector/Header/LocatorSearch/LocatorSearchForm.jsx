@@ -91,15 +91,14 @@ const LocatorSearchFormValueInputField = ({locatorSearchValue, setLocatorSearchV
 /**
  * Input form for locator search related data.
  */
-const LocatorSearchForm = (props) => {
-  const {
-    setLocatorSearchValue,
-    locatorSearchValue,
-    setLocatorSearchStrategy,
-    locatorSearchStrategy,
-    automationName,
-    currentContext,
-  } = props;
+const LocatorSearchForm = ({
+  setLocatorSearchValue,
+  locatorSearchValue,
+  setLocatorSearchStrategy,
+  locatorSearchStrategy,
+  automationName,
+  currentContext,
+}) => {
   const {t} = useTranslation();
 
   return (
