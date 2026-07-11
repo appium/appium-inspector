@@ -6,13 +6,8 @@ import {
   IconHome,
   IconInfoCircle,
   IconMessageChatbot,
-  IconPlayerPause,
-  IconPlayerPlay,
-  IconRefresh,
-  IconSearch,
   IconSquare,
   IconTriangleSquareCircle,
-  IconVideo,
   IconWorld,
 } from '@tabler/icons-react';
 import {Button, Divider, Select, Space, Tooltip} from 'antd';
@@ -22,6 +17,7 @@ import {BUTTON} from '../../../constants/antd-types.js';
 import {DRIVERS, LINKS} from '../../../constants/common.js';
 import {APP_MODE} from '../../../constants/session-inspector.js';
 import {openLink} from '../../../polyfills.js';
+import GeneralControlsGroup from './ElementGroups/GeneralControlsGroup.jsx';
 import SessionQuitControlsGroup from './ElementGroups/SessionQuitControlsGroup.jsx';
 import SessionReloadButton from './ElementGroups/SessionReloadButton.jsx';
 import styles from './Header.module.css';
@@ -32,13 +28,6 @@ const HeaderButtons = (props) => {
   const {
     selectAppMode,
     appMode,
-    isUsingMjpegMode,
-    isSourceRefreshOn,
-    setRefreshingState,
-    isRecording,
-    startRecording,
-    pauseRecording,
-    showLocatorSearchModal,
     showSiriCommandModal,
     applyClientMethod,
     quitSessionAndReturn,
@@ -214,66 +203,13 @@ const HeaderButtons = (props) => {
     </Space.Compact>
   );
 
-  const generalControls = (
-    <Space.Compact>
-      {isUsingMjpegMode && !isSourceRefreshOn && (
-        <Tooltip title={t('Start Refreshing Source')}>
-          <Button
-            id="btnStartRefreshing"
-            icon={<IconPlayerPlay size={18} />}
-            onClick={() => setRefreshingState({source: true})}
-          />
-        </Tooltip>
-      )}
-      {isUsingMjpegMode && isSourceRefreshOn && (
-        <Tooltip title={t('Pause Refreshing Source')}>
-          <Button
-            id="btnPauseRefreshing"
-            icon={<IconPlayerPause size={18} />}
-            onClick={() => setRefreshingState({source: false})}
-          />
-        </Tooltip>
-      )}
-      <Tooltip title={t('refreshSource')}>
-        <Button
-          id="btnReload"
-          icon={<IconRefresh size={18} />}
-          onClick={() => applyClientMethod({methodName: 'getPageSource'})}
-        />
-      </Tooltip>
-      <Tooltip title={t('Search for element')}>
-        <Button
-          id="searchForElement"
-          icon={<IconSearch size={18} />}
-          onClick={showLocatorSearchModal}
-        />
-      </Tooltip>
-      {!isRecording && (
-        <Tooltip title={t('Start Recording')}>
-          <Button id="btnStartRecording" icon={<IconVideo size={18} />} onClick={startRecording} />
-        </Tooltip>
-      )}
-      {isRecording && (
-        <Tooltip title={t('Pause Recording')}>
-          <Button
-            id="btnPause"
-            icon={<IconVideo size={18} />}
-            type={BUTTON.PRIMARY}
-            danger
-            onClick={pauseRecording}
-          />
-        </Tooltip>
-      )}
-    </Space.Compact>
-  );
-
   return (
     <div className={styles.headerButtons}>
       <Space size="middle">
         {deviceControls}
         {automationName === DRIVERS.UIAUTOMATOR2 && displayControls}
         {appModeControls}
-        {generalControls}
+        <GeneralControlsGroup {...props} />
         <SessionReloadButton
           autoSessionRestart={autoSessionRestart}
           toggleAutoSessionRestart={toggleAutoSessionRestart}
