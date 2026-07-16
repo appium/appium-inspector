@@ -1,6 +1,9 @@
 import {Button, Input, Modal, Row} from 'antd';
 import {useTranslation} from 'react-i18next';
 
+/**
+ * Modal used for entering the Siri command to execute (iOS only).
+ */
 const SiriCommandModal = ({
   siriCommandValue,
   setSiriCommandValue,

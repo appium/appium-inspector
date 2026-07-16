@@ -9,6 +9,9 @@ import styles from './Header.module.css';
 import SessionQuitControlsGroup from './SessionQuitControlsGroup.jsx';
 import SessionReloadButton from './SessionReloadButton.jsx';
 
+/**
+ * Parent container for control buttons located in the application header.
+ */
 const HeaderButtons = (props) => {
   const {
     selectAppMode,

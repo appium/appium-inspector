@@ -11,6 +11,9 @@ import {useTranslation} from 'react-i18next';
 import {BUTTON} from '../../../constants/antd-types.js';
 import LocatorSearchModal from './LocatorSearch/LocatorSearchModal.jsx';
 
+/**
+ * Controls related to refreshing the app source/screenshot.
+ */
 const RefreshControlsGroup = ({
   isUsingMjpegMode,
   isSourceRefreshOn,
@@ -50,6 +53,9 @@ const RefreshControlsGroup = ({
   );
 };
 
+/**
+ * Controls related to locator search.
+ */
 const SearchControlsGroup = (props) => {
   const {showLocatorSearchModal} = props;
   const {t} = useTranslation();
@@ -68,6 +74,9 @@ const SearchControlsGroup = (props) => {
   );
 };
 
+/**
+ * Controls related to recording user interactions.
+ */
 const RecordingControlsGroup = ({isRecording, startRecording, pauseRecording}) => {
   const {t} = useTranslation();
 
