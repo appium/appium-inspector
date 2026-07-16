@@ -72,7 +72,7 @@ const MethodMapCommandButton = ({methodName, methodDetails, isExecute, startComm
 
 /**
  * Dynamic list of driver commands, generated from the driver's method map responses.
- * Unlike StaticCommandsList, we cannot predict the contents of the method map response,
+ * Unlike StaticCommandsContent, we cannot predict the contents of the method map response,
  * and we also want to be able to filter it, so just render all methods in a single grid.
  */
 const MethodMapCommandsContent = ({driverMethods, isExecute, startCommand}) => {
