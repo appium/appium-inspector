@@ -14,34 +14,34 @@ const MethodMapBaseCommandButton = ({methodName, buttonStyle, startNamedCommand}
 );
 
 /**
- * Container for a deprecated dynamically retrieved driver command button.
+ * Container for a dynamically retrieved driver command button with extra details
+ * (deprecation and/or additional information).
  */
-const MethodMapDeprecatedCommandButton = ({methodName, startNamedCommand}) => {
+const MethodMapCommandButtonWithExtra = ({methodName, methodDetails, startNamedCommand}) => {
   const {t} = useTranslation();
 
+  const buttonStyle = methodDetails.deprecated
+    ? `${styles.methodBtn} ${styles.deprecatedMethod}`
+    : styles.methodBtn;
+
   return (
-    <Tooltip title={t('methodDeprecated')} destroyOnHidden={true}>
+    <Tooltip
+      title={
+        <>
+          {methodDetails.deprecated && <div>{t('methodDeprecated')}</div>}
+          {methodDetails.info && <div>{methodDetails.info}</div>}
+        </>
+      }
+      destroyOnHidden={true}
+    >
       <MethodMapBaseCommandButton
         methodName={methodName}
-        buttonStyle={`${styles.methodBtn} ${styles.deprecatedMethod}`}
+        buttonStyle={buttonStyle}
         startNamedCommand={startNamedCommand}
       />
     </Tooltip>
   );
 };
-
-/**
- * Container for a dynamically retrieved driver command button with info.
- */
-const MethodMapCommandButtonWithInfo = ({methodName, methodDetails, startNamedCommand}) => (
-  <Tooltip title={methodDetails.info} destroyOnHidden={true}>
-    <MethodMapBaseCommandButton
-      methodName={methodName}
-      buttonStyle={styles.methodBtn}
-      startNamedCommand={startNamedCommand}
-    />
-  </Tooltip>
-);
 
 /**
  * Parent container for a dynamically retrieved driver command button.
@@ -59,14 +59,8 @@ const MethodMapCommandButton = ({methodName, methodDetails, isExecute, startComm
           startNamedCommand={startNamedCommand}
         />
       )}
-      {methodDetails.deprecated && (
-        <MethodMapDeprecatedCommandButton
-          methodName={methodName}
-          startNamedCommand={startNamedCommand}
-        />
-      )}
-      {methodDetails.info && (
-        <MethodMapCommandButtonWithInfo
+      {(methodDetails.deprecated || methodDetails.info) && (
+        <MethodMapCommandButtonWithExtra
           methodName={methodName}
           methodDetails={methodDetails}
           startNamedCommand={startNamedCommand}
