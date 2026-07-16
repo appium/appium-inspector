@@ -22,7 +22,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
       - name: Use Node.js LTS
-        uses: actions/setup-node@v6.4.0
+        uses: actions/setup-node@v7.0.0
         with:
           node-version: lts/*
           cache: 'npm'
