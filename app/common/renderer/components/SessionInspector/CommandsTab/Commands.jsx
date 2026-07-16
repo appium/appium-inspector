@@ -1,38 +1,26 @@
-import {IconTerminal} from '@tabler/icons-react';
-import {Card, Flex, Input, Modal, Space, Typography} from 'antd';
 import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
-import {useTranslation} from 'react-i18next';
 
 import {
   adjustParamValueType,
   transformCommandsMap,
   transformExecMethodsMap,
 } from '../../../utils/commands-tab.js';
-import inspectorStyles from '../SessionInspector.module.css';
-import CommandResultModal from './CommandResultModal.jsx';
+import CommandParametersModal from './CommandParametersModal.jsx';
+import CommandResultModal from './CommandResult/CommandResultModal.jsx';
 import styles from './Commands.module.css';
-import MethodMapCommandsList from './MethodMapCommandsList.jsx';
-import StaticCommandsList from './StaticCommandsList.jsx';
+import CommandsCard from './CommandsCard.jsx';
+import MethodMapCommandsTabs from './MethodMapCommandsTabs.jsx';
+import StaticCommandsContent from './StaticCommandsContent.jsx';
 
 const COMMAND_EXECUTE_SCRIPT = 'executeScript';
 const COMMAND_UPDATE_SETTINGS = 'updateSettings';
 
-const formatParamInputLabel = (param) => {
-  const monoName = <span className={inspectorStyles.monoFont}>{param.name}</span>;
-  if (param.required) {
-    return (
-      <>
-        <Typography.Text type="danger">*</Typography.Text>&nbsp;{monoName}
-      </>
-    );
-  }
-  return monoName;
-};
-
+/**
+ * Contents of the commands tab.
+ */
 const Commands = (props) => {
   const {applyClientMethod, getSupportedSessionMethods, storeSessionSettings} = props;
-  const {t} = useTranslation();
 
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
   const [driverCommands, setDriverCommands] = useState(null);
@@ -119,40 +107,25 @@ const Commands = (props) => {
   }, [getSupportedSessionMethods]);
 
   return (
-    <Card
-      title={
-        <Flex gap={4} align="center">
-          <IconTerminal size={18} />
-          {t('Execute Commands')}
-        </Flex>
-      }
-      className={inspectorStyles.interactionTabCard}
-    >
+    <CommandsCard>
       <div className={styles.commandsContainer}>
-        {hasMethodsMap === false && <StaticCommandsList startCommand={startCommand} />}
+        {/* do not use ternary operator, as that will show the static list
+            while getSupportedSessionMethods is running */}
+        {hasMethodsMap === false && <StaticCommandsContent startCommand={startCommand} />}
         {hasMethodsMap && (
-          <MethodMapCommandsList
+          <MethodMapCommandsTabs
             driverCommands={driverCommands}
             driverExecuteMethods={driverExecuteMethods}
             startCommand={startCommand}
           />
         )}
         {!!curCommandDetails && (
-          <Modal
-            title={t('enterMethodParameters', {methodName: curCommandDetails.name})}
-            okText={t('Execute Command')}
-            open={!_.isEmpty(curCommandDetails.details.params)}
-            onOk={() => prepareAndRunCommand(curCommandDetails)}
-            onCancel={() => clearCurrentCommand()}
-            footer={(_, {OkBtn}) => <OkBtn />}
-          >
-            {_.map(curCommandDetails.details.params, (param, index) => (
-              <Space.Compact block key={index} className={styles.commandArgInputRow}>
-                <Space.Addon>{formatParamInputLabel(param)}</Space.Addon>
-                <Input onChange={(e) => (curCommandParamValsRef.current[index] = e.target.value)} />
-              </Space.Compact>
-            ))}
-          </Modal>
+          <CommandParametersModal
+            curCommandDetails={curCommandDetails}
+            curCommandParamValsRef={curCommandParamValsRef}
+            prepareAndRunCommand={prepareAndRunCommand}
+            clearCurrentCommand={clearCurrentCommand}
+          />
         )}
         {commandResult !== undefined && (
           <CommandResultModal
@@ -162,7 +135,7 @@ const Commands = (props) => {
           />
         )}
       </div>
-    </Card>
+    </CommandsCard>
   );
 };
 
