@@ -47,11 +47,6 @@ Check the [System Requirements](https://appium.github.io/appium-inspector/latest
 and [Installation](https://appium.github.io/appium-inspector/latest/quickstart/installation/)
 documentation for more details.
 
-> [!NOTE]
->
-> The Inspector was also formerly released as a web application hosted at <https://inspector.appiumpro.com>. The Appium team no longer has developer access to this site, so even though it remains operational, it is highly unlikely to be updated to a newer Inspector version, and may be taken down without notice. We recommend migrating to the standalone app or the plugin version.
-> The Appium team is exploring the idea of hosting an up-to-date version of the web app in the future.
-
 ## Features
 
 The Inspector has many features in addition to its app inspection abilities:
