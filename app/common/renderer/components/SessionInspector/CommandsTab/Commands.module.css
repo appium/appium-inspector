@@ -29,29 +29,6 @@
   padding: 4px 0 0 0;
 }
 
-.commandResultModal :global(.ant-modal-footer) {
-  text-align: unset;
-}
-
-.commandResultModalOkButtonCol {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.commandResultRawPreBlock {
-  margin: 0;
-}
-
-.commandResultTable :global(.ant-table-tbody > tr > td) {
-  vertical-align: top;
-}
-
-.commandResultTableCell {
-  margin: 0;
-  white-space: pre-wrap;
-  cursor: pointer;
-}
-
 .methodBtn {
   white-space: normal;
   word-break: break-all;
