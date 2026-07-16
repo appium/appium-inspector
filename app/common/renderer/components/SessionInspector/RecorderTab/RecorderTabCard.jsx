@@ -11,7 +11,7 @@ import inspectorStyles from '../SessionInspector.module.css';
 /**
  * Title of the recorder tab card.
  */
-const RecorderPanelTitle = () => {
+const RecorderTabTitle = () => {
   const {t} = useTranslation();
 
   return (
@@ -25,7 +25,7 @@ const RecorderPanelTitle = () => {
 /**
  * Header action options for the recorded code.
  */
-const RecorderHeaderButtons = ({
+const RecorderTabHeaderButtons = ({
   clientFramework,
   clientCode,
   recordedActions,
@@ -72,7 +72,7 @@ const RecorderHeaderButtons = ({
 /**
  * Wrapper card for the recorder tab.
  */
-const RecorderCard = ({
+const RecorderTabCard = ({
   children,
   clientFramework,
   clientCode,
@@ -83,10 +83,10 @@ const RecorderCard = ({
   clearRecording,
 }) => (
   <Card
-    title={<RecorderPanelTitle />}
+    title={<RecorderTabTitle />}
     className={inspectorStyles.interactionTabCard}
     extra={
-      <RecorderHeaderButtons
+      <RecorderTabHeaderButtons
         clientFramework={clientFramework}
         clientCode={clientCode}
         recordedActions={recordedActions}
@@ -101,4 +101,4 @@ const RecorderCard = ({
   </Card>
 );
 
-export default RecorderCard;
+export default RecorderTabCard;

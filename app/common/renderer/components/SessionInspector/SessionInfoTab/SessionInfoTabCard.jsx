@@ -7,7 +7,7 @@ import inspectorStyles from '../SessionInspector.module.css';
 /**
  * Title of the session information tab card.
  */
-const SessionInfoPanelTitle = () => {
+const SessionInfoTabTitle = () => {
   const {t} = useTranslation();
 
   return (
@@ -21,10 +21,10 @@ const SessionInfoPanelTitle = () => {
 /**
  * Wrapper card for the session information tab.
  */
-const SessionInfoCard = ({children}) => (
-  <Card title={<SessionInfoPanelTitle />} className={inspectorStyles.interactionTabCard}>
+const SessionInfoTabCard = ({children}) => (
+  <Card title={<SessionInfoTabTitle />} className={inspectorStyles.interactionTabCard}>
     {children}
   </Card>
 );
 
-export default SessionInfoCard;
+export default SessionInfoTabCard;
