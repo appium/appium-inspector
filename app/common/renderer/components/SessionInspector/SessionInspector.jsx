@@ -22,7 +22,7 @@ import {
 } from '../../constants/session-inspector.js';
 import {downloadFile} from '../../utils/file-handling.js';
 import Commands from './CommandsTab/Commands.jsx';
-import GestureEditor from './GesturesTab/GestureEditor.jsx';
+import GestureEditor from './GesturesTab/GestureEditor/GestureEditor.jsx';
 import SavedGestures from './GesturesTab/SavedGestures.jsx';
 import HeaderButtons from './Header/HeaderButtons.jsx';
 import Recorder from './RecorderTab/Recorder.jsx';
