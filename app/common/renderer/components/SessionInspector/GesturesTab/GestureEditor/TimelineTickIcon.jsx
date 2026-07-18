@@ -22,6 +22,9 @@ const TIMELINE_ICON_SIZE = 18;
 
 const coordSuffix = (coordType) => (coordType === POINTER_MOVE_COORDS_TYPE.PIXELS ? 'px' : '%');
 
+/**
+ * Label shown in the tooltip of an action that uses duration.
+ */
 const TickDurationLabel = ({duration}) => {
   const {t} = useTranslation();
 
@@ -32,6 +35,9 @@ const TickDurationLabel = ({duration}) => {
   );
 };
 
+/**
+ * Label shown in the tooltip of an action that uses the X coordinate.
+ */
 const TickXLabel = ({tickX, coordType}) => (
   <p>
     X: {tickX}
@@ -39,6 +45,9 @@ const TickXLabel = ({tickX, coordType}) => (
   </p>
 );
 
+/**
+ * Label shown in the tooltip of an action that uses the Y coordinate.
+ */
 const TickYLabel = ({tickY, coordType}) => (
   <p>
     Y: {tickY}
@@ -46,6 +55,9 @@ const TickYLabel = ({tickY, coordType}) => (
   </p>
 );
 
+/**
+ * Label shown in the tooltip of an action that uses a button.
+ */
 const TickButtonLabel = ({button}) => {
   const {t} = useTranslation();
 
@@ -56,6 +68,9 @@ const TickButtonLabel = ({button}) => {
   );
 };
 
+/**
+ * Label shown in the tooltip of an undefined action.
+ */
 const TickUndefinedLabel = () => {
   const {t} = useTranslation();
 
