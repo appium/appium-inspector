@@ -18,7 +18,7 @@ import GestureEditorTimeline from './GestureEditorTimeline.jsx';
 const {POINTER_MOVE} = POINTER_TYPES;
 
 /**
- * Shows the gesture editor interface
+ * Contents of the gesture editor.
  */
 const GestureEditor = (props) => {
   const {loadedGesture, tickCoordinates, selectedTick, selectTick, unselectTick, windowSize} =
