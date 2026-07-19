@@ -31,9 +31,6 @@ const SavedGesturesTableFooter = ({showGestureEditor, importGestureFiles}) => {
 };
 
 const convertCoordinates = (pointers, windowSize) => {
-  if (!windowSize?.width || !windowSize?.height) {
-    return pointers;
-  }
   const newPointers = JSON.parse(JSON.stringify(pointers));
   for (const pointer of newPointers) {
     for (const tick of pointer.ticks) {
