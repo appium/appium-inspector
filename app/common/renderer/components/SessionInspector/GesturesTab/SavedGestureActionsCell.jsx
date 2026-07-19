@@ -11,19 +11,20 @@ import {SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
 const SavedGestureActionsCell = (props) => {
   const {
     gesture,
-    gesturePointers,
     showGestureEditor,
     removeGestureDisplay,
     exportSavedGesture,
     setLoadedGesture,
     deleteSavedGesture,
+    convertCoordinates,
+    windowSize,
     applyClientMethod,
   } = props;
   const {t} = useTranslation();
 
   const playGesture = () => {
     const actions = {};
-    for (const pointer of gesturePointers) {
+    for (const pointer of convertCoordinates(gesture.actions, windowSize)) {
       actions[pointer.name] = pointer.ticks.map((tick) => _.omit(tick, 'id'));
     }
     applyClientMethod({methodName: SCREENSHOT_INTERACTION_MODE.GESTURE, args: [actions]});
