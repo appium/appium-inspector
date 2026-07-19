@@ -18,7 +18,7 @@ const addPointer = (pointers) => {
     id: pointerId,
     color: POINTER_COLORS[key - 1],
   });
-  return {copiedPointers, pointerId};
+  return [copiedPointers, pointerId];
 };
 
 const deletePointer = (targetKey, pointers, unselectTick) => {
@@ -27,12 +27,13 @@ const deletePointer = (targetKey, pointers, unselectTick) => {
   let newActivePointerId = '1';
   const pointersExceptCurrent = pointers.filter((pointer) => pointer.id !== targetKey);
   const newPointers = pointersExceptCurrent.map((pointer, index) => {
-    const id = String(index + 1);
-    if (id !== pointer.id) {
-      pointer.id = id;
+    const newPointerId = String(index + 1);
+    if (newPointerId !== pointer.id) {
+      pointer.id = newPointerId;
       pointer.color = POINTER_COLORS[index];
       pointer.ticks = pointer.ticks.map((tick) => {
-        tick.id = `${id}.${tick.id[2]}`;
+        const tickIndex = tick.id.split('.')[1];
+        tick.id = `${newPointerId}.${tickIndex}`;
         return tick;
       });
     } else {
@@ -41,7 +42,7 @@ const deletePointer = (targetKey, pointers, unselectTick) => {
     return pointer;
   });
   unselectTick();
-  return {newPointers, newActivePointerId};
+  return [newPointers, newActivePointerId];
 };
 
 /**
@@ -116,9 +117,9 @@ const GestureEditorPointerTabs = ({
   const addOrRemovePointer = (targetKey, action) => {
     let newPointers, newActivePointerId;
     if (action === TABLE_TAB.ADD) {
-      ({newPointers, newActivePointerId} = addPointer(pointers));
+      [newPointers, newActivePointerId] = addPointer(pointers);
     } else {
-      ({newPointers, newActivePointerId} = deletePointer(targetKey, pointers, unselectTick));
+      [newPointers, newActivePointerId] = deletePointer(targetKey, pointers, unselectTick);
     }
     setPointers(newPointers);
     setActivePointerId(newActivePointerId);

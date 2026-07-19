@@ -66,7 +66,7 @@ const GestureEditor = (props) => {
   // Update tapped coordinates within local state
   const updateCoordinates = useCallback(
     (tickKey, updateX, updateY) => {
-      if (!updateX || !updateY) {
+      if (updateX == null || updateY == null) {
         return null;
       }
       const {width, height} = windowSize;
