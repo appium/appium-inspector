@@ -7,7 +7,7 @@ import inspectorStyles from '../SessionInspector.module.css';
 /**
  * Title of the commands tab card.
  */
-const CommandsPanelTitle = () => {
+const CommandsTabTitle = () => {
   const {t} = useTranslation();
 
   return (
@@ -21,10 +21,10 @@ const CommandsPanelTitle = () => {
 /**
  * Wrapper card for the commands tab.
  */
-const CommandsCard = ({children}) => (
-  <Card title={<CommandsPanelTitle />} className={inspectorStyles.interactionTabCard}>
+const CommandsTabCard = ({children}) => (
+  <Card title={<CommandsTabTitle />} className={inspectorStyles.interactionTabCard}>
     {children}
   </Card>
 );
 
-export default CommandsCard;
+export default CommandsTabCard;

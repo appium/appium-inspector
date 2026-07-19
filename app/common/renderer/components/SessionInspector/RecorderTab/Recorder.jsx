@@ -3,7 +3,7 @@ import {Refractor} from 'react-refractor';
 
 import {CLIENT_FRAMEWORK_MAP} from '../../../lib/client-frameworks/map.js';
 import styles from './Recorder.module.css';
-import RecorderCard from './RecorderCard.jsx';
+import RecorderTabCard from './RecorderTabCard.jsx';
 
 /**
  * Contents of the recorder tab.
@@ -29,7 +29,7 @@ const Recorder = (props) => {
   const clientCode = framework.getCodeString(showBoilerplate);
 
   return (
-    <RecorderCard
+    <RecorderTabCard
       clientFramework={clientFramework}
       clientCode={clientCode}
       recordedActions={recordedActions}
@@ -44,7 +44,7 @@ const Recorder = (props) => {
       {!!recordedActions.length && (
         <Refractor language={ClientFrameworkClass.refractorLang} value={clientCode} />
       )}
-    </RecorderCard>
+    </RecorderTabCard>
   );
 };
 

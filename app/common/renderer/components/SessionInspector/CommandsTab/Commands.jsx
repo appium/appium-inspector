@@ -9,7 +9,7 @@ import {
 import CommandParametersModal from './CommandParametersModal.jsx';
 import CommandResultModal from './CommandResult/CommandResultModal.jsx';
 import styles from './Commands.module.css';
-import CommandsCard from './CommandsCard.jsx';
+import CommandsTabCard from './CommandsTabCard.jsx';
 import MethodMapCommandsTabs from './MethodMapCommandsTabs.jsx';
 import StaticCommandsContent from './StaticCommandsContent.jsx';
 
@@ -107,7 +107,7 @@ const Commands = (props) => {
   }, [getSupportedSessionMethods]);
 
   return (
-    <CommandsCard>
+    <CommandsTabCard>
       <div className={styles.commandsContainer}>
         {/* do not use ternary operator, as that will show the static list
             while getSupportedSessionMethods is running */}
@@ -135,7 +135,7 @@ const Commands = (props) => {
           />
         )}
       </div>
-    </CommandsCard>
+    </CommandsTabCard>
   );
 };
 

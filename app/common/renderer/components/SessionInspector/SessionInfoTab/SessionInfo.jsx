@@ -1,7 +1,7 @@
 import {Space} from 'antd';
 
-import SessionInfoCard from './SessionInfoCard.jsx';
 import SessionInfoCodeBox from './SessionInfoCodeBox.jsx';
+import SessionInfoTabCard from './SessionInfoTabCard.jsx';
 import SessionInfoTable from './SessionInfoTable.jsx';
 
 /**
@@ -11,7 +11,7 @@ const SessionInfo = (props) => {
   const {clientFramework, setClientFramework, serverDetails, sessionCaps} = props;
 
   return (
-    <SessionInfoCard>
+    <SessionInfoTabCard>
       <Space orientation="vertical" size="middle">
         <SessionInfoTable {...props} />
         <SessionInfoCodeBox
@@ -21,7 +21,7 @@ const SessionInfo = (props) => {
           sessionCaps={sessionCaps}
         />
       </Space>
-    </SessionInfoCard>
+    </SessionInfoTabCard>
   );
 };
 
