@@ -10,7 +10,7 @@ import {
 } from '../../../constants/screenshot.js';
 import {INSPECTOR_TABS} from '../../../constants/session-inspector.js';
 import inspectorStyles from '../SessionInspector.module.css';
-import HighlighterRects from './Overlays/ElementOverlays.jsx';
+import ElementOverlays from './Overlays/ElementOverlays.jsx';
 import styles from './Screenshot.module.css';
 
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
@@ -193,7 +193,7 @@ const Screenshot = (props) => {
             </div>
           )}
           <img src={screenSrc} id="screenshot" />
-          {screenshotInteractionMode === SELECT && <HighlighterRects {...props} />}
+          {screenshotInteractionMode === SELECT && <ElementOverlays {...props} />}
           {screenshotInteractionMode === TAP_SWIPE && (
             <svg className={styles.swipeSvg}>
               {coordStart && (
