@@ -90,3 +90,66 @@
   font-weight: 800;
   color: red;
 }
+
+.coordinatesContainer {
+  position: absolute;
+  background: rgba(255, 250, 205, 0.8);
+  color: black;
+  z-index: 100;
+  padding: 2px;
+}
+
+.swipeSvg {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.swipeSvg line {
+  stroke-width: 15;
+  stroke: rgba(255, 153, 153, 0.8);
+  stroke-linecap: round;
+}
+
+.swipeSvg circle {
+  fill: rgba(255, 153, 153, 0.8);
+}
+
+.gestureSvg {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.gestureSvg line {
+  opacity: 0.35;
+}
+
+.gestureSvg .filled,
+.dashed {
+  stroke-dasharray: 10;
+  stroke-width: 5;
+}
+
+.gestureSvg .whole,
+.newDashed {
+  stroke-linecap: round;
+  stroke-width: 15;
+}
+
+.gestureSvg circle {
+  fill: none;
+  stroke-width: 0.4%;
+}
+
+.gestureSvg .dashedCircle,
+.newDashedCircle {
+  stroke-dasharray: 0.9%;
+  border-style: dashed;
+}
