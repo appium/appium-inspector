@@ -26,10 +26,10 @@ export const DEFAULT_TAP = {
   BUTTON: 0,
 };
 
-// 3 Types of Centroids:
-// CENTROID is the circle/square displayed on the screen
-// EXPAND is the +/- circle displayed on the screen
-// OVERLAP is the same as CENTROID but is only visible when clicked on +/- circle
+// 3 Types of centroids:
+// CENTROID is the circle/square for an individual element
+// EXPAND is the +/- circle for a group of overlapping elements
+// OVERLAP is the circle for an individual element, shown in a circle around an EXPAND centroid
 export const RENDER_CENTROID_AS = {
   CENTROID: 'centroid',
   EXPAND: 'expand',

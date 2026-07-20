@@ -1,15 +1,16 @@
-import {RENDER_CENTROID_AS} from '../../../constants/screenshot.js';
-import {parseCoordinates} from '../../../utils/other.js';
-import HighlighterCentroid from './HighlighterCentroid.jsx';
-import HighlighterRectForBounds from './HighlighterRectForBounds.jsx';
-import HighlighterRectForElem from './HighlighterRectForElem.jsx';
+import {RENDER_CENTROID_AS} from '../../../../constants/screenshot.js';
+import {parseCoordinates} from '../../../../utils/other.js';
+import ElementCentroid from './ElementCentroid.jsx';
+import ElementRect from './ElementRect.jsx';
+import FoundElementRect from './FoundElementRect.jsx';
 
 const {CENTROID, OVERLAP, EXPAND} = RENDER_CENTROID_AS;
 
 /**
- * Shows screenshot of running application and divs that highlight the elements' bounding boxes
+ * All element-related overlays shown on the app screenshot:
+ * rectangle highlighters for bounds, and centroids for midpoints
  */
-const HighlighterRects = (props) => {
+const ElementOverlays = (props) => {
   const {
     sourceJSON,
     searchedForElementBounds,
@@ -169,9 +170,8 @@ const HighlighterRects = (props) => {
         continue;
       }
       highlighterRects.push(
-        <HighlighterRectForElem
-          properties={elem.properties}
-          path={elem.element.path}
+        <ElementRect
+          elemProperties={elem.properties}
           key={elem.properties.path}
           selectedElementPath={props.selectedElementPath}
           selectElement={props.selectElement}
@@ -185,7 +185,7 @@ const HighlighterRects = (props) => {
   const renderCentroids = (centroids) => {
     for (const elem of centroids) {
       highlighterCentroids.push(
-        <HighlighterCentroid
+        <ElementCentroid
           centroidType={elem.type}
           elementProperties={elem.properties}
           element={elem.element}
@@ -203,7 +203,7 @@ const HighlighterRects = (props) => {
   if (searchedForElementBounds && isLocatorSearchModalVisible) {
     const {location, size} = searchedForElementBounds;
     highlighterRects.push(
-      <HighlighterRectForBounds
+      <FoundElementRect
         elSize={size}
         elLocation={location}
         scaleRatio={scaleRatio}
@@ -228,4 +228,4 @@ const HighlighterRects = (props) => {
   );
 };
 
-export default HighlighterRects;
+export default ElementOverlays;

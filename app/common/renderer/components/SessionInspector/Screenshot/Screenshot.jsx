@@ -10,7 +10,7 @@ import {
 } from '../../../constants/screenshot.js';
 import {INSPECTOR_TABS} from '../../../constants/session-inspector.js';
 import inspectorStyles from '../SessionInspector.module.css';
-import HighlighterRects from './HighlighterRects.jsx';
+import HighlighterRects from './Overlays/ElementOverlays.jsx';
 import styles from './Screenshot.module.css';
 
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
