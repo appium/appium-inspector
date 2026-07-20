@@ -9,15 +9,17 @@ const getCentroidStyle = (centroidType, elemProps, selectedCentroid, element) =>
   const centroidPos = (angle, coord) =>
     centroidType === OVERLAP ? `calc((${angle} * 2.6vh) + ${coord}px)` : coord;
 
+  const overlapDivStyle = {
+    visibility:
+      elemProps.keyCode === selectedCentroid ? CENTROID_STYLES.VISIBLE : CENTROID_STYLES.HIDDEN,
+  };
+
   return {
     left: centroidPos(elemProps.angleX, elemProps.centerX),
     top: centroidPos(elemProps.angleY, elemProps.centerY),
     borderRadius:
       element && !elemProps.container ? CENTROID_STYLES.NON_CONTAINER : CENTROID_STYLES.CONTAINER,
-    visibility:
-      centroidType === OVERLAP && elemProps.keyCode === selectedCentroid
-        ? CENTROID_STYLES.VISIBLE
-        : CENTROID_STYLES.HIDDEN,
+    ...(centroidType === OVERLAP ? overlapDivStyle : {}),
   };
 };
 
