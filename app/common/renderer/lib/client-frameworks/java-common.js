@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import refractorJava from 'refractor/java';
 
 import CommonClientFramework from './common.js';
@@ -12,10 +11,11 @@ export default class JavaFramework extends CommonClientFramework {
       const convertedItems = jsonVal.map((item) => this.getJavaVal(item));
       return `{${convertedItems.join(', ')}}`;
     } else if (typeof jsonVal === 'object') {
-      const cleanedJson = _.omitBy(jsonVal, _.isUndefined);
-      const convertedItems = _.map(
-        cleanedJson,
-        (v, k) => `Map.entry(${JSON.stringify(k)}, ${this.getJavaVal(v)})`,
+      const cleanedJson = Object.fromEntries(
+        Object.entries(jsonVal).filter(([, v]) => v !== undefined),
+      );
+      const convertedItems = Object.entries(cleanedJson).map(
+        ([k, v]) => `Map.entry(${JSON.stringify(k)}, ${this.getJavaVal(v)})`,
       );
       return `Map.ofEntries(${convertedItems.join(', ')})`;
     }
@@ -46,7 +46,9 @@ export default class JavaFramework extends CommonClientFramework {
       }
     })();
     const capStr = this.indent(
-      _.map(this.caps, (v, k) => `.amend(${JSON.stringify(k)}, ${this.getJavaVal(v)})`).join('\n'),
+      Object.entries(this.caps)
+        .map(([k, v]) => `.amend(${JSON.stringify(k)}, ${this.getJavaVal(v)})`)
+        .join('\n'),
       6,
     );
     return [pkg, cls, capStr];
@@ -147,7 +149,7 @@ driver.perform(Arrays.asList(swipe));
 
   codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
     try {
-      const settings = _.toPairs(settingsJson).map(
+      const settings = Object.entries(settingsJson).map(
         ([settingName, settingValue]) =>
           `driver.setSetting("${settingName}", ${this.getJavaVal(settingValue)});`,
       );

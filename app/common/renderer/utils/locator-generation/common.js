@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import {DRIVERS} from '../../constants/common.js';
 import {findDOMNodeByPath, xmlToDOM} from '../source-parsing.js';
 import {getOptimalClassChain} from './class-chain.js';
@@ -30,7 +28,7 @@ export function getSuggestedLocators(selectedElement, sourceXML, isNative, autom
     isNative,
     automationName,
   );
-  return _.toPairs({...simpleLocators, ...complexLocators});
+  return Object.entries({...simpleLocators, ...complexLocators});
 }
 
 /**
@@ -67,5 +65,7 @@ export function getComplexSuggestedLocators(path, sourceDoc, isNative, automatio
   complexLocators.xpath = getOptimalXPath(sourceDoc, domNode);
 
   // Remove entries for locators where the optimal selector could not be found
-  return _.omitBy(complexLocators, _.isNil);
+  return Object.fromEntries(
+    Object.entries(complexLocators).filter(([, v]) => v !== null && v !== undefined),
+  );
 }

@@ -1,5 +1,4 @@
 import {Tooltip} from 'antd';
-import _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 
 import {copyToClipboard} from '../../../../utils/other.js';
@@ -9,7 +8,8 @@ import CommandResultBaseTable from './CommandResultBaseTable.jsx';
 const LABEL_PROPERTY = 'property';
 const LABEL_VALUE = 'value';
 
-const stringifyValue = (val) => (_.isObject(val) ? JSON.stringify(val, null, 2) : String(val));
+const stringifyValue = (val) =>
+  typeof val === 'object' && val !== null ? JSON.stringify(val, null, 2) : String(val);
 
 /**
  * Title of a column in the table rendering the formatted command results.
@@ -56,7 +56,7 @@ const createColumn = (colDataArray, colName, options = {}) => ({
   },
   // hide filters for object values, and convert all others to strings to handle booleans
   filters: [...new Set(colDataArray)]
-    .filter((item) => !_.isObject(item))
+    .filter((item) => !(typeof item === 'object' && item !== null))
     .map((item) => ({
       text: String(item),
       value: String(item),
@@ -97,7 +97,9 @@ const handleArrayOfNonObjects = (data) => {
 // Will not render any non-object entries!
 const handleArrayOfObjects = (data) => {
   // Filter to only objects (excluding arrays) to avoid runtime errors
-  const safeData = data.filter((entry) => _.isObject(entry) && !Array.isArray(entry));
+  const safeData = data.filter(
+    (entry) => typeof entry === 'object' && entry !== null && !Array.isArray(entry),
+  );
   const allObjectKeys = [...new Set(safeData.flatMap(Object.keys))];
   const columns = allObjectKeys.map((key) =>
     createColumn(
@@ -113,12 +115,12 @@ const handleArrayOfObjects = (data) => {
 const createTableResult = (data) => {
   let tableContents;
   if (Array.isArray(data)) {
-    if (_.isObject(data[0]) && !Array.isArray(data[0])) {
+    if (typeof data[0] === 'object' && data[0] !== null && !Array.isArray(data[0])) {
       tableContents = handleArrayOfObjects(data);
     } else {
       tableContents = handleArrayOfNonObjects(data);
     }
-  } else if (_.isObject(data)) {
+  } else if (typeof data === 'object' && data !== null) {
     tableContents = handleObjectData(data);
   } else {
     tableContents = handlePrimitiveData(data);

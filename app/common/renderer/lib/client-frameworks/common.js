@@ -1,6 +1,5 @@
-import _ from 'lodash';
-
 import {DEFAULT_SWIPE, DEFAULT_TAP} from '../../constants/screenshot.js';
+import {isEmpty} from '../../utils/lang.js';
 
 export default class CommonClientFramework {
   constructor(serverUrl, serverUrlParts, caps) {
@@ -108,7 +107,7 @@ export default class CommonClientFramework {
 
   codeFor_executeScript(varNameIgnore, varIndexIgnore, scriptCmd, jsonArg) {
     // jsonArg is expected to be an array with 0-1 objects
-    if (_.isEmpty(jsonArg)) {
+    if (isEmpty(jsonArg)) {
       return this.codeFor_executeScriptNoArgs(scriptCmd);
     }
     return this.codeFor_executeScriptWithArgs(scriptCmd, jsonArg);

@@ -1,6 +1,6 @@
-import _ from 'lodash';
 import {select as xpathSelect} from 'xpath';
 
+import {isEmpty} from '../lang.js';
 import {LocatorGeneratorBase} from './base.js';
 
 /**
@@ -89,7 +89,7 @@ class ClassChainGenerator extends LocatorGeneratorBase {
   _tryAttributeBasedClassChain() {
     for (const attrName of ClassChainGenerator.CHECKED_ATTRIBUTES) {
       const attrValue = this._domNode.getAttribute(attrName);
-      if (_.isEmpty(attrValue)) {
+      if (isEmpty(attrValue)) {
         continue;
       }
 

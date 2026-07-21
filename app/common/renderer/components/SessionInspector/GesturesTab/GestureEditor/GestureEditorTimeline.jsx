@@ -1,6 +1,5 @@
 import {IconQuestionMark} from '@tabler/icons-react';
 import {Steps} from 'antd';
-import _ from 'lodash';
 
 import {POINTER_TYPES} from '../../../../constants/gestures.js';
 import styles from './GestureEditor.module.css';
@@ -13,7 +12,7 @@ const TIMELINE_ICON_SIZE = 18;
 // Reformats the gesture for the timeline by adding 'filler' ticks
 // so that all pointers have the same length, ensuring consistency
 const updateGestureForTimeline = (pointers) => {
-  const copiedPointers = _.cloneDeep(pointers);
+  const copiedPointers = structuredClone(pointers);
   const allTickLengths = copiedPointers.map((pointer) => pointer.ticks.length);
   const maxTickLength = Math.max(...allTickLengths);
   return copiedPointers.map((pointer) => {

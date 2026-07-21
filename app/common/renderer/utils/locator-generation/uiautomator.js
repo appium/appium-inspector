@@ -1,6 +1,6 @@
-import _ from 'lodash';
 import {select as xpathSelect} from 'xpath';
 
+import {isEmpty} from '../lang.js';
 import {childNodesOf, domToXML, findDOMNodeByPath, xmlToDOM} from '../source-parsing.js';
 import {LocatorGeneratorBase} from './base.js';
 
@@ -63,7 +63,7 @@ class UiAutomatorGenerator extends LocatorGeneratorBase {
    */
   _getHierarchyChildren() {
     const docChildren = childNodesOf(this._doc);
-    if (_.isEmpty(docChildren)) {
+    if (isEmpty(docChildren)) {
       return [];
     }
     const hierarchyChildren = childNodesOf(docChildren[0]);
@@ -77,7 +77,7 @@ class UiAutomatorGenerator extends LocatorGeneratorBase {
    */
   _isInLastHierarchyChild() {
     const hierarchyChildren = this._getHierarchyChildren();
-    if (_.isEmpty(hierarchyChildren)) {
+    if (isEmpty(hierarchyChildren)) {
       return false;
     }
 
@@ -160,7 +160,7 @@ class UiAutomatorGenerator extends LocatorGeneratorBase {
 
     for (const [attrName, attrTranslation] of UiAutomatorGenerator.CHECKED_ATTRIBUTES) {
       const attrValue = domNode.getAttribute(attrName);
-      if (_.isEmpty(attrValue)) {
+      if (isEmpty(attrValue)) {
         continue;
       }
 

@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import {
   ABORT_DESIRED_CAPS_EDITOR,
   ABORT_DESIRED_CAPS_NAME_EDITOR,
@@ -42,12 +40,13 @@ import {
   SWITCHED_TABS,
 } from '../actions/SessionBuilder.js';
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder.js';
+import {omit} from '../utils/lang.js';
 import {getRandomId} from '../utils/other.js';
 
 const visibleProviders = []; // Pull this from the VISIBLE_PROVIDERS setting
 
 const server = {};
-for (const serverType of _.values(SERVER_TYPES)) {
+for (const serverType of Object.values(SERVER_TYPES)) {
   server[serverType] = serverType === SERVER_TYPES.SAUCE ? {dataCenter: 'us-west-1'} : {};
 }
 
@@ -97,10 +96,10 @@ export default function builder(state = INITIAL_STATE, action) {
         ...state,
         newSessionLoading: true,
       };
-      return _.omit(nextState, 'newSessionRequested');
+      return omit(nextState, 'newSessionRequested');
 
     case NEW_SESSION_DONE:
-      return _.omit(state, 'newSessionLoading');
+      return omit(state, 'newSessionLoading');
 
     case ADD_CAPABILITY:
       return {
@@ -143,17 +142,17 @@ export default function builder(state = INITIAL_STATE, action) {
         capsName: action.name,
         visibleProviders:
           action.serverType !== SERVER_TYPES.REMOTE
-            ? _.union(state.visibleProviders, [action.serverType])
+            ? [...new Set([...state.visibleProviders, action.serverType])]
             : state.visibleProviders,
       };
-      return _.omit(nextState, 'isCapsDirty');
+      return omit(nextState, 'isCapsDirty');
 
     case SAVE_SESSION_REQUESTED:
       nextState = {
         ...state,
         saveSessionRequested: true,
       };
-      return _.omit(nextState, 'showSaveAsModal');
+      return omit(nextState, 'showSaveAsModal');
 
     case SAVE_SESSION_DONE:
       nextState = {
@@ -161,7 +160,7 @@ export default function builder(state = INITIAL_STATE, action) {
         isEditingDesiredCapsName: false,
         isDuplicateCapsName: false,
       };
-      return _.omit(nextState, ['saveSessionRequested', 'saveAsText']);
+      return omit(nextState, ['saveSessionRequested', 'saveAsText']);
 
     case GET_SAVED_SESSIONS_REQUESTED:
       return {
@@ -174,7 +173,7 @@ export default function builder(state = INITIAL_STATE, action) {
         ...state,
         savedSessions: action.savedSessions || [],
       };
-      return _.omit(nextState, 'getSavedSessionsRequested');
+      return omit(nextState, 'getSavedSessionsRequested');
 
     case DELETE_SAVED_SESSION_REQUESTED:
       return {
@@ -207,7 +206,7 @@ export default function builder(state = INITIAL_STATE, action) {
         ...state,
         isDuplicateCapsName: false,
       };
-      return _.omit(nextState, ['saveAsText', 'showSaveAsModal']);
+      return omit(nextState, ['saveAsText', 'showSaveAsModal']);
 
     case SET_SAVE_AS_TEXT:
       return {
@@ -243,10 +242,10 @@ export default function builder(state = INITIAL_STATE, action) {
             newServerState,
           ) {
             // Copy current server state and extend it with new server state
-            const nextServerState = _.cloneDeep(currentServerState || {});
+            const nextServerState = structuredClone(currentServerState || {});
 
             // Extend each server (sauce, remote, kobiton, etc...)
-            for (let serverName of _.keys(nextServerState)) {
+            for (let serverName of Object.keys(nextServerState)) {
               nextServerState[serverName] = {
                 ...(nextServerState[serverName] || {}),
                 ...(newServerState[serverName] || {}),
@@ -306,8 +305,7 @@ export default function builder(state = INITIAL_STATE, action) {
         isEditingDesiredCaps: true,
         rawDesiredCaps: JSON.stringify(
           // Translate the caps definition to a proper capabilities JS Object
-          _.reduce(
-            state.caps,
+          state.caps.reduce(
             (result, obj) => ({
               ...result,
               [obj.name]: obj.value,
@@ -373,8 +371,8 @@ export default function builder(state = INITIAL_STATE, action) {
     case SET_STATE_FROM_URL:
       return {
         ...state,
-        server: _.merge({}, state.server, action.state.server || {}),
-        ..._.omit(action.state, ['server']),
+        server: mergeServerState(state.server, action.state.server || {}),
+        ...omit(action.state, ['server']),
       };
 
     case SET_CAPABILITY_NAME_ERROR:
@@ -399,10 +397,9 @@ export default function builder(state = INITIAL_STATE, action) {
           ...action.sessionJSON.server,
         },
         serverType: action.sessionJSON.serverType,
-        visibleProviders: _.union(
-          state.visibleProviders,
-          action.sessionJSON.visibleProviders || [],
-        ),
+        visibleProviders: [
+          ...new Set([...state.visibleProviders, ...(action.sessionJSON.visibleProviders || [])]),
+        ],
       };
 
     case SESSION_UPLOAD_REQUESTED:
@@ -420,4 +417,14 @@ export default function builder(state = INITIAL_STATE, action) {
     default:
       return {...state};
   }
+}
+
+// `server` is always exactly two levels deep (serverType -> flat scalar config), so merging
+// each serverType's config one level deep is equivalent to a full recursive deep merge here.
+function mergeServerState(currentServer, incomingServer) {
+  const nextServer = {...currentServer};
+  for (const [serverType, config] of Object.entries(incomingServer)) {
+    nextServer[serverType] = {...(nextServer[serverType] || {}), ...config};
+  }
+  return nextServer;
 }

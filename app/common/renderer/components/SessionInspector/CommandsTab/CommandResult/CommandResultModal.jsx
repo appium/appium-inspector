@@ -1,6 +1,5 @@
 import {IconFiles, IconTable} from '@tabler/icons-react';
 import {Button, Col, Modal, Row, Space, Tooltip} from 'antd';
-import _ from 'lodash';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
@@ -10,7 +9,8 @@ import styles from './CommandResult.module.css';
 import CommandResultFormattedTable from './CommandResultFormattedTable.jsx';
 import CommandResultRawTable from './CommandResultRawTable.jsx';
 
-const stringifyValue = (val) => (_.isObject(val) ? JSON.stringify(val, null, 2) : String(val));
+const stringifyValue = (val) =>
+  typeof val === 'object' && val !== null ? JSON.stringify(val, null, 2) : String(val);
 
 /**
  * Footer buttons of the modal rendering the command results.

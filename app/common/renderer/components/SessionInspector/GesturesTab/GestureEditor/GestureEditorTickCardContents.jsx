@@ -1,5 +1,4 @@
 import {Button, Input, Select, Space} from 'antd';
-import _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 
 import {
@@ -16,7 +15,7 @@ const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
 // Updates the current tick type by creating a new tick,
 // to ensure previous properties are removed
 const updateTickType = (tick, value, selectTick, pointers, setPointers) => {
-  const copiedPointers = _.cloneDeep(pointers);
+  const copiedPointers = structuredClone(pointers);
   const currentPointer = copiedPointers.find((p) => p.id === tick.id[0]);
   const targetTickIdx = currentPointer.ticks.findIndex((t) => t.id === tick.id);
 
@@ -36,7 +35,7 @@ const updateTickType = (tick, value, selectTick, pointers, setPointers) => {
 
 // Updates the current tick values
 const updateTickValues = (tick, msg, value, getDefaultMoveDuration, pointers, setPointers) => {
-  const copiedPointers = _.cloneDeep(pointers);
+  const copiedPointers = structuredClone(pointers);
   const currentPointer = copiedPointers.find((p) => p.id === tick.id[0]);
   const targetTickIdx = currentPointer.ticks.findIndex((t) => t.id === tick.id);
   const currentTick = currentPointer.ticks[targetTickIdx];

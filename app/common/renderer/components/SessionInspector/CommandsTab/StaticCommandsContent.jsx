@@ -1,5 +1,4 @@
 import {Button, Col, Collapse, Row, Space} from 'antd';
-import _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 
 import {COMMAND_DEFINITIONS, TOP_LEVEL_COMMANDS} from '../../../constants/commands.js';
@@ -11,7 +10,7 @@ import styles from './Commands.module.css';
  */
 const StaticCommandsRow = ({startCommand, commands}) => (
   <Row>
-    {_.toPairs(commands).map(([cmdName, cmdDetails]) => (
+    {Object.entries(commands).map(([cmdName, cmdDetails]) => (
       <Col key={cmdName} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
         <div className={styles.btnContainer}>
           <Button onClick={() => startCommand({name: cmdName, details: cmdDetails})}>
@@ -31,7 +30,7 @@ const StaticCommandsCollapseGroups = ({startCommand}) => {
 
   return (
     <Collapse
-      items={_.toPairs(COMMAND_DEFINITIONS).map(([commandGroup, commands]) => ({
+      items={Object.entries(COMMAND_DEFINITIONS).map(([commandGroup, commands]) => ({
         key: commandGroup,
         label: t(commandGroup),
         children: <StaticCommandsRow startCommand={startCommand} commands={commands} />,

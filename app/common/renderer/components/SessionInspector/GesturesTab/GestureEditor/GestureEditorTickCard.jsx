@@ -1,13 +1,12 @@
 import {IconFocus2, IconX} from '@tabler/icons-react';
 import {Button, Card, Tooltip} from 'antd';
-import _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 
 import {POINTER_TYPES} from '../../../../constants/gestures.js';
 import styles from './GestureEditor.module.css';
 
 const deleteTick = (pointerKey, tickKey, pointers, setPointers, unselectTick) => {
-  const copiedPointers = _.cloneDeep(pointers);
+  const copiedPointers = structuredClone(pointers);
   const currentPointer = copiedPointers.find((pointer) => pointer.id === pointerKey);
   const ticksToKeep = currentPointer.ticks.filter((tick) => tick.id !== tickKey);
   const newTicks = ticksToKeep.map((tick, index) => {

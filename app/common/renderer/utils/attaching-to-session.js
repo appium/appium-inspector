@@ -1,5 +1,4 @@
 import ky from 'ky';
-import _ from 'lodash';
 
 import {SERVER_TYPES} from '../constants/session-builder.js';
 
@@ -65,7 +64,7 @@ const getKeySessionCaps = (caps, serverType) => {
 
 export const getSessionInfo = (session, serverType) => {
   let timestamp;
-  if ('created' in session && !_.isUndefined(session.created)) {
+  if ('created' in session && session.created !== undefined) {
     // Add the timestamp for Appium 3+ sessions
     timestamp = new Date(session.created).toJSON();
   }
@@ -102,7 +101,7 @@ export function formatSeleniumGridSessions(res) {
     const slots = node.slots ?? [];
     for (const slot of slots) {
       const sessionDetails = slot.session;
-      if (_.isUndefined(sessionDetails?.capabilities?.['appium:automationName'])) {
+      if (sessionDetails?.capabilities?.['appium:automationName'] === undefined) {
         // not a valid Appium 2+ session
         continue;
       }

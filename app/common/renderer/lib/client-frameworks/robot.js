@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import refractorRobot from 'refractor/robotframework';
 
 import CommonClientFramework from './common.js';
@@ -18,7 +17,7 @@ export default class RobotFramework extends CommonClientFramework {
   }
 
   wrapWithBoilerplate(code) {
-    const capsParams = _.map(this.caps, (v, k) => `${k}=${this.getRobotVal(v)}`);
+    const capsParams = Object.entries(this.caps).map(([k, v]) => `${k}=${this.getRobotVal(v)}`);
     return `# This sample code supports Appium Robot client >=2
 # pip install robotframework-appiumlibrary
 # Then you can paste this into a file and simply run with Robot
@@ -95,8 +94,12 @@ Tap With Positions    $\{100}    $\{positions}`;
 
   codeFor_executeScriptWithArgs(scriptCmd, jsonArg, varAssignment = '') {
     // change the JSON object into a format accepted by Create Dictionary: a sequence of key=value
-    const cleanedJson = _.omitBy(jsonArg[0], _.isUndefined);
-    const argsValuesStrings = _.map(cleanedJson, (v, k) => `${k}=${this.getRobotVal(v)}`);
+    const cleanedJson = Object.fromEntries(
+      Object.entries(jsonArg[0]).filter(([, v]) => v !== undefined),
+    );
+    const argsValuesStrings = Object.entries(cleanedJson).map(
+      ([k, v]) => `${k}=${this.getRobotVal(v)}`,
+    );
     return `&{scriptArgument} =    Create Dictionary    ${argsValuesStrings.join('    ')}
 ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
   }

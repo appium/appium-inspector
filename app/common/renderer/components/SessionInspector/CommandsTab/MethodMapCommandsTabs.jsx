@@ -1,10 +1,10 @@
 import {IconSearch} from '@tabler/icons-react';
 import {Input, Tabs} from 'antd';
-import _ from 'lodash';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {filterMethodPairs} from '../../../utils/commands-tab.js';
+import {isEmpty} from '../../../utils/lang.js';
 import styles from './Commands.module.css';
 import MethodMapCommandsContent from './MethodMapCommandsContent.jsx';
 
@@ -16,8 +16,8 @@ const MethodMapCommandsTabs = ({driverCommands, driverExecuteMethods, startComma
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const hasNoCommands = _.isEmpty(driverCommands);
-  const hasNoExecuteMethods = _.isEmpty(driverExecuteMethods);
+  const hasNoCommands = isEmpty(driverCommands);
+  const hasNoExecuteMethods = isEmpty(driverExecuteMethods);
 
   const filteredDriverCommands = filterMethodPairs(driverCommands, searchQuery);
   const filteredDriverExecuteMethods = filterMethodPairs(driverExecuteMethods, searchQuery);

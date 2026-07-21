@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import refractorRuby from 'refractor/ruby';
 
 import CommonClientFramework from './common.js';
@@ -14,18 +13,21 @@ export default class RubyFramework extends CommonClientFramework {
       const convertedItems = jsonVal.map((item) => this.getRubyVal(item));
       return `[${convertedItems.join(', ')}]`;
     } else if (typeof jsonVal === 'object') {
-      const cleanedJson = _.omitBy(jsonVal, _.isUndefined);
-      const convertedItems = _.map(cleanedJson, (v, k) => `${k}: ${this.getRubyVal(v)}`);
+      const cleanedJson = Object.fromEntries(
+        Object.entries(jsonVal).filter(([, v]) => v !== undefined),
+      );
+      const convertedItems = Object.entries(cleanedJson).map(
+        ([k, v]) => `${k}: ${this.getRubyVal(v)}`,
+      );
       return `{${convertedItems.join(', ')}}`;
     }
     return JSON.stringify(jsonVal);
   }
 
   wrapWithBoilerplate(code) {
-    const capStr = _.map(
-      this.caps,
-      (v, k) => `caps[${JSON.stringify(k)}] = ${this.getRubyVal(v)}`,
-    ).join('\n');
+    const capStr = Object.entries(this.caps)
+      .map(([k, v]) => `caps[${JSON.stringify(k)}] = ${this.getRubyVal(v)}`)
+      .join('\n');
     return `# This sample code supports Appium Ruby lib core client >=5
 # gem install appium_lib_core
 # Then you can paste this into a file and simply run with Ruby
@@ -159,7 +161,7 @@ driver.quit`;
   }
 
   codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
-    return `logs = driver.logs.get :${_.lowerCase(logType)}`;
+    return `logs = driver.logs.get :${lowerCaseWords(logType)}`;
   }
 
   // Context
@@ -195,7 +197,7 @@ driver.quit`;
   }
 
   codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
-    return `driver.rotation = :${_.lowerCase(orientation)}`;
+    return `driver.rotation = :${lowerCaseWords(orientation)}`;
   }
 
   codeFor_getGeoLocation() {
@@ -295,4 +297,20 @@ driver.quit`;
   codeFor_createWindow() {
     return `# Not supported: createWindow`;
   }
+}
+
+// Mimics lodash's `_.lowerCase`: splits a string into words on camelCase boundaries,
+// letter/digit boundaries, and non-alphanumeric separators, then lower-cases and
+// joins the words with a single space (e.g. 'fooBar' -> 'foo bar', 'FOO_BAR' -> 'foo bar').
+function lowerCaseWords(str) {
+  const words = String(str)
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+    .replace(/([a-zA-Z])([0-9])/g, '$1 $2')
+    .replace(/([0-9])([a-zA-Z])/g, '$1 $2')
+    .replace(/[^a-zA-Z0-9]+/g, ' ')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  return words.map((word) => word.toLowerCase()).join(' ');
 }

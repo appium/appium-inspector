@@ -2,7 +2,6 @@ import path from 'node:path';
 
 import {logger} from '@appium/support';
 import ky from 'ky';
-import _ from 'lodash';
 
 export const log = logger.getLogger('CROWDIN');
 
@@ -24,7 +23,7 @@ export async function performApiRequest(suffix = '', opts = {}) {
     : `${API_ROOT}${suffix}`;
   log.debug(`Sending ${method} request to ${url}`);
   let formattedPayload = payload;
-  if (_.isPlainObject(payload)) {
+  if (payload !== null && typeof payload === 'object' && !Array.isArray(payload)) {
     formattedPayload = JSON.stringify(payload);
     log.debug(`Request payload: ${formattedPayload}`);
   }

@@ -1,5 +1,4 @@
 import {retryInterval} from 'asyncbox';
-import _ from 'lodash';
 
 import BasePage from './base-page-object.js';
 import {setValueReact} from './utils.js';
@@ -42,7 +41,7 @@ export default class InspectorPage extends BasePage {
   }
 
   async addDCaps(dcaps) {
-    const dcapsPairs = _.toPairs(dcaps);
+    const dcapsPairs = Object.entries(dcaps);
     for (let i = 0; i < dcapsPairs.length; i++) {
       const [name, value] = dcapsPairs[i];
       await (await this.client.$(this.desiredCapabilityNameInput(i))).setValue(name);

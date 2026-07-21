@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import {
   CAPABILITY_TYPES,
   DEFAULT_SESSION_NAME,
@@ -7,6 +5,7 @@ import {
   SERVER_TYPES,
   SESSION_FILE_VERSIONS,
 } from '../constants/session-builder.js';
+import {isPlainObject} from './lang.js';
 import {log} from './logger.js';
 
 /**
@@ -106,11 +105,11 @@ function migrateSessionJsonToV2(sessionJSON) {
  * @returns true if the caps field is valid, otherwise false
  */
 function areSessionCapsValid(sessionJSON) {
-  if (!('caps' in sessionJSON && _.isArray(sessionJSON.caps))) {
+  if (!('caps' in sessionJSON && Array.isArray(sessionJSON.caps))) {
     return logValidationError("'caps' property is missing or not an array");
   }
   for (const cap of sessionJSON.caps) {
-    if (!_.isPlainObject(cap)) {
+    if (!isPlainObject(cap)) {
       return logValidationError(`capability '${JSON.stringify(cap)}' is not an object`);
     }
     for (const capProp of ['type', 'name', 'value']) {
@@ -120,7 +119,7 @@ function areSessionCapsValid(sessionJSON) {
         );
       }
     }
-    if (!_.values(CAPABILITY_TYPES).includes(cap.type)) {
+    if (!Object.values(CAPABILITY_TYPES).includes(cap.type)) {
       return logValidationError(`'${cap.type}' is not a valid capability type`);
     }
   }
@@ -150,14 +149,14 @@ function isSessionNameValid(sessionJSON) {
  * @returns true if the server field is valid, otherwise false
  */
 function isSessionServerValid(sessionJSON) {
-  if (!('server' in sessionJSON && _.isPlainObject(sessionJSON.server))) {
+  if (!('server' in sessionJSON && isPlainObject(sessionJSON.server))) {
     return logValidationError("'server' property is missing or not an object");
   }
   const serverKeys = Object.keys(sessionJSON.server);
   if (
     serverKeys.length !== 2 ||
     !serverKeys.includes(SERVER_TYPES.ADVANCED) ||
-    !_.isPlainObject(sessionJSON.server.advanced)
+    !isPlainObject(sessionJSON.server.advanced)
   ) {
     return logValidationError(
       "'server' property must have exactly two properties, " +
@@ -170,7 +169,7 @@ function isSessionServerValid(sessionJSON) {
       return logValidationError(`unsupported server type '${key}'`);
     }
     if (key !== SERVER_TYPES.ADVANCED) {
-      if (!_.isPlainObject(sessionJSON.server[key])) {
+      if (!isPlainObject(sessionJSON.server[key])) {
         return logValidationError(`'${key}' server property must be an object`);
       }
       continue;

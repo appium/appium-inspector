@@ -1,5 +1,4 @@
 import {DOMParser, MIME_TYPE, XMLSerializer} from '@xmldom/xmldom';
-import _ from 'lodash';
 
 const domParser = new DOMParser();
 const xmlSerializer = new XMLSerializer();
@@ -17,7 +16,9 @@ export function childNodesOf(domNode) {
   if (!domNode?.hasChildNodes()) {
     return [];
   }
-  return _.filter(domNode.childNodes, ['nodeType', domNode.ELEMENT_NODE]);
+  return Array.from(domNode.childNodes).filter(
+    (childNode) => childNode.nodeType === domNode.ELEMENT_NODE,
+  );
 }
 
 /**
@@ -66,7 +67,8 @@ export function xmlToJSON(sourceXML) {
     }
 
     // Dot Separated path of indices
-    const path = _.isNil(index) ? '' : `${!parentPath ? '' : parentPath + '.'}${index}`;
+    const path =
+      index === null || index === undefined ? '' : `${!parentPath ? '' : parentPath + '.'}${index}`;
 
     return {
       children: childNodesOf(domNode).map((childNode, childIndex) =>

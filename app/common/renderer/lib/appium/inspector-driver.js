@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot.js';
 import {
   APP_MODE,
@@ -8,6 +6,7 @@ import {
   SESSION_EXPIRED,
   UNKNOWN_ERROR,
 } from '../../constants/session-inspector.js';
+import {isEqual} from '../../utils/lang.js';
 import {log} from '../../utils/logger.js';
 import {parseHtmlSource, setHtmlElementAttributes} from '../../utils/webview.js';
 
@@ -125,7 +124,7 @@ export default class InspectorDriver {
   async executeMethod({elementId, methodName, args, skipRefresh, skipScreenshot, appMode}) {
     let cachedEl;
     let res = {};
-    if (!_.isArray(args) && !_.isUndefined(args)) {
+    if (!Array.isArray(args) && args !== undefined) {
       args = [args];
     }
 
@@ -273,12 +272,15 @@ export default class InspectorDriver {
     } = this.driver;
     try {
       const driverWindowSize = await this.driver.getWindowRect();
-      if (_.toLower(platformName) !== 'android' || _.toLower(automationName) !== 'uiautomator2') {
+      if (
+        (platformName ?? '').toLowerCase() !== 'android' ||
+        (automationName ?? '').toLowerCase() !== 'uiautomator2'
+      ) {
         return {windowSize: driverWindowSize};
       }
       // UiAutomator2 requires adjustments depending on the result of `mobile: deviceInfo`.
       // Use a cache to avoid re-triggering this method every time.
-      if (_.isEqual(driverWindowSize, this.windowSizeCache.raw)) {
+      if (isEqual(driverWindowSize, this.windowSizeCache.raw)) {
         return {windowSize: this.windowSizeCache.adjusted};
       }
       // Window size has changed since the cached value - trigger the method
@@ -489,7 +491,7 @@ export default class InspectorDriver {
     // Walk over every context and add all webviews into the parsedWebviews array
     contexts
       // Filter out all contexts that have a webviewName
-      .filter((webview) => _.has(webview, 'webviewName'))
+      .filter((webview) => Object.hasOwn(webview, 'webviewName'))
       // Now construct a new array with data
       .map(({info, pages, webviewName}) => {
         // The context result can have:
@@ -508,7 +510,7 @@ export default class InspectorDriver {
             //    an `attached`-value telling if the webview is active
             // 2. can be an empty string, this is most of the times for tabs
             //    in Chrome
-            const description = _.has(page, 'description') ? page.description : '';
+            const description = Object.hasOwn(page, 'description') ? page.description : '';
             let descriptionJSON = {attached: false};
             try {
               descriptionJSON = JSON.parse(page.description);
@@ -521,12 +523,12 @@ export default class InspectorDriver {
           .map((page) => {
             parsedWebviews.push({
               id: webviewName,
-              ...(page && _.has(page, 'title') ? {title: page.title} : {}),
-              ...(page && _.has(page, 'url') ? {url: page.url} : {}),
-              ...(page && _.has(info, 'Android-Package')
+              ...(page && Object.hasOwn(page, 'title') ? {title: page.title} : {}),
+              ...(page && Object.hasOwn(page, 'url') ? {url: page.url} : {}),
+              ...(page && Object.hasOwn(info, 'Android-Package')
                 ? {packageName: info['Android-Package']}
                 : {}),
-              ...(page && _.has(page, 'id') ? {handle: page.id} : {}),
+              ...(page && Object.hasOwn(page, 'id') ? {handle: page.id} : {}),
             });
           });
 

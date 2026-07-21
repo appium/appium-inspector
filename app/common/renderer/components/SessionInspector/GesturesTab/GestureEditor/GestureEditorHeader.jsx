@@ -1,12 +1,12 @@
 import {IconArrowLeft, IconPlayerPlay} from '@tabler/icons-react';
 import {Button, Col, Input, Row, Space, Tooltip} from 'antd';
-import _ from 'lodash';
 import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {NOTIF} from '../../../../constants/antd-types.js';
 import {POINTER_MOVE_COORDS_TYPE, POINTER_TYPES} from '../../../../constants/gestures.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../../../../constants/screenshot.js';
+import {omit} from '../../../../utils/lang.js';
 import {notification} from '../../../../utils/notification.js';
 import {percentageToPixels, pixelsToPercentage} from '../../../../utils/other.js';
 import styles from './GestureEditor.module.css';
@@ -38,7 +38,7 @@ const convertPointerCoordsType = (newCoordType, coordType, windowSize, pointers)
     return pointers;
   }
   const {width, height} = windowSize;
-  const newPointers = _.cloneDeep(pointers);
+  const newPointers = structuredClone(pointers);
   for (const pointer of newPointers) {
     for (const tick of pointer.ticks) {
       if (tick.type === POINTER_TYPES.POINTER_MOVE) {
@@ -230,7 +230,7 @@ const GestureEditorHeader = (props) => {
       pointers,
     );
     for (const pointer of currentPointers) {
-      formattedPointers[pointer.name] = pointer.ticks.map((tick) => _.omit(tick, 'id'));
+      formattedPointers[pointer.name] = pointer.ticks.map((tick) => omit(tick, 'id'));
     }
     applyClientMethod({methodName: SCREENSHOT_INTERACTION_MODE.GESTURE, args: [formattedPointers]});
   };

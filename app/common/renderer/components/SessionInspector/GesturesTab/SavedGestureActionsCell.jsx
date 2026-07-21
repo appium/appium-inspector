@@ -1,9 +1,9 @@
 import {IconEdit, IconFileExport, IconPlayerPlay, IconTrash} from '@tabler/icons-react';
 import {Button, Popconfirm, Space, Tooltip} from 'antd';
-import _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 
 import {SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
+import {omit} from '../../../utils/lang.js';
 
 /**
  * Final cell of each saved gestures row, containing gesture actions.
@@ -25,7 +25,7 @@ const SavedGestureActionsCell = (props) => {
   const playGesture = () => {
     const actions = {};
     for (const pointer of convertCoordinates(gesture.actions, windowSize)) {
-      actions[pointer.name] = pointer.ticks.map((tick) => _.omit(tick, 'id'));
+      actions[pointer.name] = pointer.ticks.map((tick) => omit(tick, 'id'));
     }
     applyClientMethod({methodName: SCREENSHOT_INTERACTION_MODE.GESTURE, args: [actions]});
   };

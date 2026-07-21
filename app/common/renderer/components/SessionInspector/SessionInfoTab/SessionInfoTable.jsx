@@ -1,5 +1,4 @@
 import {Table} from 'antd';
-import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
@@ -32,7 +31,7 @@ const tableColumns = [
 ];
 
 const innerDataSource = (tableData) =>
-  _.toPairs(tableData).map(([propName, propValue]) => ({
+  Object.entries(tableData).map(([propName, propValue]) => ({
     key: propName,
     property: formatMono(propName),
     value: formatMono(String(propValue)),
