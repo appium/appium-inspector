@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 
 import {
@@ -6,6 +5,7 @@ import {
   transformCommandsMap,
   transformExecMethodsMap,
 } from '../../../utils/commands-tab.js';
+import {isEmpty, isPlainObject} from '../../../utils/common.js';
 import CommandParametersModal from './CommandParametersModal.jsx';
 import CommandResultModal from './CommandResult/CommandResultModal.jsx';
 import styles from './Commands.module.css';
@@ -33,7 +33,7 @@ const Commands = (props) => {
 
   const startCommand = (commandDetails) => {
     setCurCommandDetails(commandDetails);
-    if (_.isEmpty(commandDetails.details.params)) {
+    if (isEmpty(commandDetails.details.params)) {
       prepareAndRunCommand(commandDetails);
     }
   };
@@ -46,8 +46,10 @@ const Commands = (props) => {
     // the parameters array needs to be turned into an object,
     // and the command name added as a separate parameter.
     if (isExecute) {
-      const cmdParamNames = _.map(cmdParams, 'name');
-      const mappedCmdParams = _.zipObject(cmdParamNames, adjustedCmdParams);
+      const cmdParamNames = cmdParams.map((p) => p.name);
+      const mappedCmdParams = Object.fromEntries(
+        cmdParamNames.map((name, i) => [name, adjustedCmdParams[i]]),
+      );
       adjustedCmdParams = [cmdName, mappedCmdParams];
     }
 
@@ -56,9 +58,9 @@ const Commands = (props) => {
     // but if the script doesn't use any arguments, we allow the user to omit it.
     // So we can have 5 cases for 'args': undefined, {}, [], {...}, [{...}]
     if (adjustedCmdName === COMMAND_EXECUTE_SCRIPT) {
-      if (_.isEmpty(adjustedCmdParams[1])) {
+      if (isEmpty(adjustedCmdParams[1])) {
         adjustedCmdParams[1] = [];
-      } else if (_.isPlainObject(adjustedCmdParams[1])) {
+      } else if (isPlainObject(adjustedCmdParams[1])) {
         adjustedCmdParams[1] = [adjustedCmdParams[1]];
       }
     }
@@ -100,7 +102,7 @@ const Commands = (props) => {
   useEffect(() => {
     (async () => {
       const {commands, executeMethods} = await getSupportedSessionMethods();
-      setHasMethodsMap(!(_.isEmpty(commands) && _.isEmpty(executeMethods)));
+      setHasMethodsMap(!(isEmpty(commands) && isEmpty(executeMethods)));
       setDriverCommands(transformCommandsMap(commands));
       setDriverExecuteMethods(transformExecMethodsMap(executeMethods));
     })();

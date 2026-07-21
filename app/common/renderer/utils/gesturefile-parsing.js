@@ -1,6 +1,5 @@
-import _ from 'lodash';
-
 import {POINTER_TYPES} from '../constants/gestures.js';
+import {isPlainObject} from './common.js';
 import {log} from './logger.js';
 
 /**
@@ -45,11 +44,11 @@ export function validateGestureJSON(gestureJSON) {
  * @returns {boolean} True if the actions field is valid, otherwise false
  */
 function areGestureActionsValid(gestureJSON) {
-  if (!('actions' in gestureJSON && _.isArray(gestureJSON.actions))) {
+  if (!('actions' in gestureJSON && Array.isArray(gestureJSON.actions))) {
     return logValidationError("'actions' property is missing or not an array");
   }
   for (const action of gestureJSON.actions) {
-    if (!_.isPlainObject(action)) {
+    if (!isPlainObject(action)) {
       return logValidationError(`action '${JSON.stringify(action)}' is not an object`);
     }
     for (const actionProp of ['name', 'color', 'id']) {
@@ -62,7 +61,7 @@ function areGestureActionsValid(gestureJSON) {
         `action '${JSON.stringify(action)}' color '${action.color}' is not a valid hex color`,
       );
     }
-    if (!('ticks' in action && _.isArray(action.ticks))) {
+    if (!('ticks' in action && Array.isArray(action.ticks))) {
       return logValidationError(
         `action '${JSON.stringify(action)}' 'ticks' property is missing or not an array`,
       );
@@ -83,7 +82,7 @@ function areGestureActionsValid(gestureJSON) {
  * @returns {boolean} True if the tick is valid, otherwise false
  */
 function isActionTickValid(tickJSON) {
-  if (!_.isPlainObject(tickJSON)) {
+  if (!isPlainObject(tickJSON)) {
     return logValidationError(`tick '${JSON.stringify(tickJSON)}' is not an object`);
   }
   if (!objectHasStringProperty(tickJSON, 'id', `tick '${JSON.stringify(tickJSON)}' `)) {

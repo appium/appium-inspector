@@ -1,5 +1,4 @@
 import {Input, Tabs, Tooltip} from 'antd';
-import _ from 'lodash';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
@@ -11,7 +10,7 @@ import GestureEditorPointerTabContents from './GestureEditorPointerTabContents.j
 const addPointer = (pointers) => {
   const key = pointers.length + 1;
   const pointerId = String(key);
-  const copiedPointers = _.cloneDeep(pointers);
+  const copiedPointers = structuredClone(pointers);
   copiedPointers.push({
     name: `pointer${key}`,
     ticks: [{id: `${key}.1`}],
@@ -52,7 +51,7 @@ const GestureEditorPointerLabel = ({pointer, index, activePointerId, pointers, s
   const {t} = useTranslation();
 
   const updatePointerName = (pointerName, pointerIndex) => {
-    const copiedPointers = _.cloneDeep(pointers);
+    const copiedPointers = structuredClone(pointers);
     copiedPointers[pointerIndex].name = pointerName;
     setPointers(copiedPointers);
   };

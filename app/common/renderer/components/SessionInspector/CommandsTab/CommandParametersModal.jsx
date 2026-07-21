@@ -1,7 +1,7 @@
 import {Input, Modal, Space, Typography} from 'antd';
-import _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 
+import {isEmpty} from '../../../utils/common.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
 
@@ -32,13 +32,13 @@ const CommandParametersModal = ({
     <Modal
       title={t('enterMethodParameters', {methodName: curCommandDetails.name})}
       okText={t('Execute Command')}
-      open={!_.isEmpty(curCommandDetails.details.params)}
+      open={!isEmpty(curCommandDetails.details.params)}
       onOk={() => prepareAndRunCommand(curCommandDetails)}
       onCancel={() => clearCurrentCommand()}
       footer={(_, {OkBtn}) => <OkBtn />}
     >
-      {_.map(curCommandDetails.details.params, (param, index) => (
-        <Space.Compact block key={index} className={styles.commandArgInputRow}>
+      {(curCommandDetails.details.params ?? []).map((param, index) => (
+        <Space.Compact block key={param.name} className={styles.commandArgInputRow}>
           <Space.Addon>{formatParamInputLabel(param)}</Space.Addon>
           <Input onChange={(e) => (curCommandParamValsRef.current[index] = e.target.value)} />
         </Space.Compact>

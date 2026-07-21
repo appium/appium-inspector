@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import refractorPython from 'refractor/python';
 
 import CommonClientFramework from './common.js';
@@ -15,21 +14,18 @@ export default class PythonFramework extends CommonClientFramework {
       const convertedItems = jsonVal.map((item) => this.getPythonVal(item));
       return `[${convertedItems.join(', ')}]`;
     } else if (typeof jsonVal === 'object') {
-      const cleanedJson = _.omitBy(jsonVal, _.isUndefined);
-      const convertedItems = _.map(
-        cleanedJson,
-        (v, k) => `${JSON.stringify(k)}: ${this.getPythonVal(v)}`,
-      );
+      const convertedItems = Object.entries(jsonVal)
+        .filter(([, v]) => v !== undefined)
+        .map(([k, v]) => `${JSON.stringify(k)}: ${this.getPythonVal(v)}`);
       return `{${convertedItems.join(', ')}}`;
     }
     return JSON.stringify(jsonVal);
   }
 
   wrapWithBoilerplate(code) {
-    let optionsStr = _.map(
-      this.caps,
-      (v, k) => `${JSON.stringify(k)}: ${this.getPythonVal(v)}`,
-    ).join(',\n\t');
+    let optionsStr = Object.entries(this.caps)
+      .map(([k, v]) => `${JSON.stringify(k)}: ${this.getPythonVal(v)}`)
+      .join(',\n\t');
     optionsStr = `{\n\t${optionsStr}\n}`;
     return `# This sample code supports Appium Python client >=2.3.0
 # pip install Appium-Python-Client

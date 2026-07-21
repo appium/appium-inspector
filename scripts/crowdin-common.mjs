@@ -2,7 +2,6 @@ import path from 'node:path';
 
 import {logger} from '@appium/support';
 import ky from 'ky';
-import _ from 'lodash';
 
 export const log = logger.getLogger('CROWDIN');
 
@@ -24,7 +23,7 @@ export async function performApiRequest(suffix = '', opts = {}) {
     : `${API_ROOT}${suffix}`;
   log.debug(`Sending ${method} request to ${url}`);
   let formattedPayload = payload;
-  if (_.isPlainObject(payload)) {
+  if (isPlainObject(payload)) {
     formattedPayload = JSON.stringify(payload);
     log.debug(`Request payload: ${formattedPayload}`);
   }
@@ -38,4 +37,19 @@ export async function performApiRequest(suffix = '', opts = {}) {
     },
     body: formattedPayload,
   }).json();
+}
+
+/**
+ * Excludes non-plain objects (e.g. ReadStream instances used for file uploads),
+ * which must be passed through to `ky` as-is rather than JSON-stringified.
+ *
+ * @param {*} value
+ * @returns {boolean}
+ */
+function isPlainObject(value) {
+  if (value == null || typeof value !== 'object') {
+    return false;
+  }
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === null || prototype === Object.prototype;
 }

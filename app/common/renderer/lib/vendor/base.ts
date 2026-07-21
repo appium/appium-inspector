@@ -1,6 +1,5 @@
-import _ from 'lodash';
-
 import i18n from '../../i18next.js';
+import {isPlainObject} from '../../utils/common.js';
 
 export interface VendorProperties {
   host?: string;
@@ -95,7 +94,7 @@ export abstract class BaseVendor {
 
   protected _updateSessionCap(name: string, value: unknown, merge = true): void {
     const previousValue = this._sessionCaps[name];
-    if (merge && _.isPlainObject(previousValue) && _.isPlainObject(value)) {
+    if (merge && isPlainObject(previousValue) && isPlainObject(value)) {
       this._sessionCaps[name] = {
         ...(previousValue as Record<string, unknown>),
         ...(value as Record<string, unknown>),

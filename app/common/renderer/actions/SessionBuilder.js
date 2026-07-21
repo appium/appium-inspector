@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import sanitize from 'sanitize-filename';
 
 import {
@@ -24,6 +23,7 @@ import {
   fetchSessionInformation,
   formatSeleniumGridSessions,
 } from '../utils/attaching-to-session.js';
+import {isEmpty, omit} from '../utils/common.js';
 import {downloadFile, readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
@@ -171,9 +171,10 @@ export function showError(e, params = {methodName: null, secs: 5, url: null}) {
     errMessage = i18n.t('Could not start session');
   }
   if (
-    errMessage === 'ECONNREFUSED' ||
-    _.includes(errMessage, 'Failed to fetch') ||
-    _.includes(errMessage, 'The requested resource could not be found')
+    typeof errMessage === 'string' &&
+    (errMessage === 'ECONNREFUSED' ||
+      errMessage.includes('Failed to fetch') ||
+      errMessage.includes('The requested resource could not be found'))
   ) {
     errMessage = i18n.t('couldNotConnect', {url});
   }
@@ -293,13 +294,13 @@ export function newSession(originalCaps, attachSessId = null) {
     // If a newCommandTimeout wasn't provided, set it to 60 * 60 so that sessions don't close on users in short term.
     // I saw sometimes infinite session timeout was not so good for cloud providers.
     // So, let me define this value as NEW_COMMAND_TIMEOUT_SEC by default.
-    if (_.isUndefined(sessionCaps[CAPS_NEW_COMMAND])) {
+    if (sessionCaps[CAPS_NEW_COMMAND] === undefined) {
       sessionCaps[CAPS_NEW_COMMAND] = NEW_COMMAND_TIMEOUT_SEC;
     }
 
     // If someone didn't specify connectHardwareKeyboard, set it to true by
     // default
-    if (_.isUndefined(sessionCaps[CAPS_CONNECT_HARDWARE_KEYBOARD])) {
+    if (sessionCaps[CAPS_CONNECT_HARDWARE_KEYBOARD] === undefined) {
       sessionCaps[CAPS_CONNECT_HARDWARE_KEYBOARD] = true;
     }
 
@@ -604,7 +605,10 @@ export function setSavedServerParams() {
     if (server) {
       // if we have a cloud provider as a saved server, but for some reason the
       // cloud provider is no longer in the list, revert server type to remote
-      if (_.values(SERVER_TYPES).includes(serverType) && !currentProviders.includes(serverType)) {
+      if (
+        Object.values(SERVER_TYPES).includes(serverType) &&
+        !currentProviders.includes(serverType)
+      ) {
         serverType = SERVER_TYPES.REMOTE;
       }
       dispatch({type: SET_SERVER, server, serverType});
@@ -671,7 +675,7 @@ export function importSessionFiles(fileList) {
     }
     dispatch({type: SESSION_UPLOAD_DONE});
 
-    if (!_.isEmpty(invalidSessionFiles)) {
+    if (!isEmpty(invalidSessionFiles)) {
       notification.error({
         title: i18n.t('unableToImportSessionFiles', {fileNames: invalidSessionFiles.join(', ')}),
         duration: 0,
@@ -690,7 +694,7 @@ export function exportSavedSession(session) {
       [session.serverType]: session.server[session.serverType],
       [SERVER_TYPES.ADVANCED]: session.server[SERVER_TYPES.ADVANCED],
     };
-    const cleanedCaps = session.caps.map((cap) => _.omit(cap, 'id'));
+    const cleanedCaps = session.caps.map((cap) => omit(cap, 'id'));
     const sessionFileDetails = {
       version: SESSION_FILE_VERSIONS.LATEST,
       name: cleanedName,
@@ -823,8 +827,8 @@ export function saveRawDesiredCaps(currentCapsArray, rawDesiredCaps) {
       // First, convert the current caps array to an object, in order to use name indexing.
       // This also removes any entries with duplicate names (the capability builder allows duplicates),
       // which is fine, since JSON only allows the latest entry anyway.
-      const currentCapsObj = _.fromPairs(
-        currentCapsArray.map((cap) => [cap.name, _.omit(cap, 'name')]),
+      const currentCapsObj = Object.fromEntries(
+        currentCapsArray.map((cap) => [cap.name, omit(cap, 'name')]),
       );
 
       // Translate the raw caps JSON to array format
@@ -875,7 +879,7 @@ export function stopAddCloudProvider() {
 export function addVisibleProvider(provider) {
   return async (dispatch, getState) => {
     let currentProviders = getState().builder.visibleProviders;
-    const providers = _.union(currentProviders, [provider]);
+    const providers = [...new Set([...currentProviders, provider])];
     await setSetting(VISIBLE_PROVIDERS, providers);
     dispatch({type: SET_PROVIDERS, providers});
   };
@@ -888,7 +892,7 @@ export function removeVisibleProvider(provider) {
       const action = changeServerType('remote');
       await action(dispatch, getState);
     }
-    const providers = _.without(visibleProviders, provider);
+    const providers = visibleProviders.filter((p) => p !== provider);
     await setSetting(VISIBLE_PROVIDERS, providers);
     dispatch({type: SET_PROVIDERS, providers});
   };

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import refractorRuby from 'refractor/ruby';
 
 import CommonClientFramework from './common.js';
@@ -14,18 +13,18 @@ export default class RubyFramework extends CommonClientFramework {
       const convertedItems = jsonVal.map((item) => this.getRubyVal(item));
       return `[${convertedItems.join(', ')}]`;
     } else if (typeof jsonVal === 'object') {
-      const cleanedJson = _.omitBy(jsonVal, _.isUndefined);
-      const convertedItems = _.map(cleanedJson, (v, k) => `${k}: ${this.getRubyVal(v)}`);
+      const convertedItems = Object.entries(jsonVal)
+        .filter(([, v]) => v !== undefined)
+        .map(([k, v]) => `${k}: ${this.getRubyVal(v)}`);
       return `{${convertedItems.join(', ')}}`;
     }
     return JSON.stringify(jsonVal);
   }
 
   wrapWithBoilerplate(code) {
-    const capStr = _.map(
-      this.caps,
-      (v, k) => `caps[${JSON.stringify(k)}] = ${this.getRubyVal(v)}`,
-    ).join('\n');
+    const capStr = Object.entries(this.caps)
+      .map(([k, v]) => `caps[${JSON.stringify(k)}] = ${this.getRubyVal(v)}`)
+      .join('\n');
     return `# This sample code supports Appium Ruby lib core client >=5
 # gem install appium_lib_core
 # Then you can paste this into a file and simply run with Ruby
@@ -159,7 +158,7 @@ driver.quit`;
   }
 
   codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
-    return `logs = driver.logs.get :${_.lowerCase(logType)}`;
+    return `logs = driver.logs.get :${logType.toLowerCase()}`;
   }
 
   // Context
@@ -195,7 +194,7 @@ driver.quit`;
   }
 
   codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
-    return `driver.rotation = :${_.lowerCase(orientation)}`;
+    return `driver.rotation = :${orientation.toLowerCase()}`;
   }
 
   codeFor_getGeoLocation() {

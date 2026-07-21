@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import {BaseVendor} from './base.js';
 
 export class TestMuAIVendor extends BaseVendor {
@@ -25,13 +23,13 @@ export class TestMuAIVendor extends BaseVendor {
     const https = parseInt(String(port), 10) === 443;
     this._saveProperties(testmuai, {host, path, port, https, username, accessKey});
 
-    if (_.has(this._sessionCaps, 'lt:options')) {
+    if (Object.hasOwn(this._sessionCaps, 'lt:options')) {
       const options: Record<string, unknown> = {
         source: 'appiumdesktop',
         isRealMobile: true,
       };
       if (advanced?.useProxy) {
-        options.proxyUrl = _.isUndefined(advanced?.proxy) ? '' : advanced.proxy;
+        options.proxyUrl = advanced?.proxy === undefined ? '' : advanced.proxy;
       }
       this._updateSessionCap('lt:options', options);
     } else {
@@ -40,7 +38,7 @@ export class TestMuAIVendor extends BaseVendor {
       if (advanced?.useProxy) {
         this._updateSessionCap(
           'lambdatest:proxyUrl',
-          _.isUndefined(advanced?.proxy) ? '' : advanced.proxy,
+          advanced?.proxy === undefined ? '' : advanced.proxy,
         );
       }
     }

@@ -1,8 +1,8 @@
 import cssEscape from 'css.escape';
-import _ from 'lodash';
 import XPath from 'xpath';
 
 import {LOCATOR_STRATEGIES as STRATS} from '../../constants/session-inspector.js';
+import {isEmpty} from '../common.js';
 
 /**
  * Generator for simple locator strategies in both native and webview contexts
@@ -142,7 +142,7 @@ function toTrimmedString(value) {
  */
 function doesDocumentExist(node) {
   // If no node provided, assume the xpath is unique
-  return Boolean(node) && !_.isEmpty(node);
+  return Boolean(node) && !isEmpty(node);
 }
 
 /**

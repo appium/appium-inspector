@@ -1,6 +1,5 @@
 import {IconEraser, IconEyeCode, IconFiles, IconVideo} from '@tabler/icons-react';
 import {Button, Card, Flex, Select, Space, Tooltip} from 'antd';
-import _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
@@ -60,7 +59,7 @@ const RecorderTabHeaderButtons = ({
         value={clientFramework}
         onChange={setClientFramework}
         className={inspectorStyles.frameworkDropdown}
-        options={_.map(CLIENT_FRAMEWORK_MAP, (fwClass, fwId) => ({
+        options={Object.entries(CLIENT_FRAMEWORK_MAP).map(([fwId, fwClass]) => ({
           value: fwId,
           label: fwClass.readableName,
         }))}

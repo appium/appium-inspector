@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import sanitize from 'sanitize-filename';
 
 import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs.js';
@@ -7,6 +6,7 @@ import i18n from '../i18next.js';
 import InspectorDriver from '../lib/appium/inspector-driver.js';
 import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map.js';
 import {getSetting, setSetting} from '../polyfills.js';
+import {debounce, isEmpty, omit} from '../utils/common.js';
 import {downloadFile, readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {parseGestureFileContents} from '../utils/gesturefile-parsing.js';
 import {getSuggestedLocators} from '../utils/locator-generation/common.js';
@@ -121,7 +121,7 @@ const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
 
 // A debounced function that calls findElement and gets info about the element
-const findElement = _.debounce(async function (strategyMap, dispatch, getState, path) {
+const findElement = debounce(async function (strategyMap, dispatch, getState, path) {
   for (let [strategy, selector] of strategyMap) {
     // Get the information about the element
     const action = callClientMethod({
@@ -510,7 +510,7 @@ export function getFindElementsTimes(findDataSource) {
 
       dispatch({
         type: GET_FIND_ELEMENTS_TIMES_COMPLETED,
-        findElementsExecutionTimes: _.sortBy(findElementsExecutionTimes, ['time']),
+        findElementsExecutionTimes: [...findElementsExecutionTimes].sort((a, b) => a.time - b.time),
       });
     } catch (error) {
       dispatch({type: GET_FIND_ELEMENTS_TIMES_COMPLETED});
@@ -947,7 +947,7 @@ export function importGestureFiles(fileList) {
     }
     dispatch({type: GESTURE_UPLOAD_DONE});
 
-    if (!_.isEmpty(invalidGestureFiles)) {
+    if (!isEmpty(invalidGestureFiles)) {
       notification.error({
         title: i18n.t('unableToImportGestureFiles', {fileNames: invalidGestureFiles.join(', ')}),
         duration: 0,
@@ -959,7 +959,7 @@ export function importGestureFiles(fileList) {
 export function exportSavedGesture(gestureJSON) {
   return async () => {
     const cleanedName = `gesture-${gestureJSON.name}`;
-    const gestureToExport = _.omit(gestureJSON, ['id', 'date']);
+    const gestureToExport = omit(gestureJSON, ['id', 'date']);
     const href = `data:text/json;charset=utf-8,${encodeURIComponent(
       JSON.stringify(gestureToExport, null, 2),
     )}`;
@@ -1095,5 +1095,5 @@ function parseAndValidateGestureFileString(gestureFileString) {
   if (gestureJSON === null) {
     return null;
   }
-  return _.omit(gestureJSON, ['id', 'date']);
+  return omit(gestureJSON, ['id', 'date']);
 }

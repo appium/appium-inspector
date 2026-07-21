@@ -1,6 +1,5 @@
-import _ from 'lodash';
-
 import {APPIUM_TO_WD_COMMANDS, COMMANDS_WITH_MISMATCHED_PARAMS} from '../constants/commands.js';
+import {isEmpty, isPlainObject} from './common.js';
 
 /**
  * Try to detect if the input value should be a boolean/number/array/object,
@@ -36,7 +35,7 @@ export function filterMethodPairs(methodPairs, searchQuery) {
   if (!searchQuery) {
     return methodPairs;
   }
-  return _.filter(methodPairs, ([methodName]) =>
+  return methodPairs.filter(([methodName]) =>
     methodName.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 }
@@ -47,7 +46,7 @@ export function filterMethodPairs(methodPairs, searchQuery) {
  * @param {*} value any value (object, array, primitive)
  * @returns whether the item is an empty object/array or not
  */
-const isEmptyObject = (value) => _.isObjectLike(value) && _.isEmpty(value);
+const isEmptyObject = (value) => typeof value === 'object' && value !== null && isEmpty(value);
 
 /**
  * Recursively remove key/value pairs (or array entries) whose values are empty objects or arrays.
@@ -58,20 +57,15 @@ const isEmptyObject = (value) => _.isObjectLike(value) && _.isEmpty(value);
  * @returns the value with empty entries removed
  */
 export function deepFilterEmpty(value) {
-  if (_.isArray(value)) {
+  if (Array.isArray(value)) {
     // Recurse into each array element, then remove empty entries
-    const recurse = (arr) => arr.map(deepFilterEmpty);
-    const clean = (arr) => arr.filter(_.negate(isEmptyObject));
-    const recurseAndClean = _.flow([recurse, clean]);
-    return recurseAndClean(value);
+    return value.map(deepFilterEmpty).filter((item) => !isEmptyObject(item));
   }
 
-  if (_.isPlainObject(value)) {
+  if (isPlainObject(value)) {
     // Recurse into object properties, then pick only non-empty values
-    const recurse = (obj) => _.mapValues(obj, deepFilterEmpty);
-    const clean = (obj) => _.pickBy(obj, _.negate(isEmptyObject));
-    const recurseAndClean = _.flow([recurse, clean]);
-    return recurseAndClean(value);
+    const recursed = Object.entries(value).map(([key, val]) => [key, deepFilterEmpty(val)]);
+    return Object.fromEntries(recursed.filter(([, val]) => !isEmptyObject(val)));
   }
 
   // Return primitives as-is
@@ -109,7 +103,7 @@ export function transformCommandsMap(cmdsResponse) {
     adjPluginCmdsMap = {};
   // cmdsResponse: REST/BiDi to base/driver/plugins source map
   // only use the REST commands for now
-  if (_.isEmpty(cmdsResponse) || !('rest' in cmdsResponse) || _.isEmpty(cmdsResponse.rest)) {
+  if (isEmpty(cmdsResponse) || !('rest' in cmdsResponse) || isEmpty(cmdsResponse.rest)) {
     return [];
   }
   const restCmdsMap = cmdsResponse.rest;
@@ -135,7 +129,7 @@ export function transformCommandsMap(cmdsResponse) {
     }
   }
   // Merge all maps in a logical priority order
-  return _.toPairs({...adjBaseCmdsMap, ...adjDriverCmdsMap, ...adjPluginCmdsMap});
+  return Object.entries({...adjBaseCmdsMap, ...adjDriverCmdsMap, ...adjPluginCmdsMap});
 }
 
 /**
@@ -151,9 +145,9 @@ export function transformExecMethodsMap(execMethodsResponse) {
   let adjExecMethodsMap = {};
   // execMethodsResponse: REST to driver/plugins source map
   if (
-    _.isEmpty(execMethodsResponse) ||
+    isEmpty(execMethodsResponse) ||
     !('rest' in execMethodsResponse) ||
-    _.isEmpty(execMethodsResponse.rest)
+    isEmpty(execMethodsResponse.rest)
   ) {
     return [];
   }
@@ -176,7 +170,7 @@ export function transformExecMethodsMap(execMethodsResponse) {
       adjExecMethodsMap = {...deepFilterEmpty(driverExecMethodsMap), ...adjExecMethodsMap};
     }
   }
-  return _.toPairs(adjExecMethodsMap);
+  return Object.entries(adjExecMethodsMap);
 }
 
 /**
@@ -192,7 +186,7 @@ function transformInnerCommandsMap(pathsToCmdsMap) {
     // pathsCmdsMap: HTTP methods to commands map
     for (const method in pathsCmdsMap) {
       // Skip commands that don't have the command name
-      if (_.isEmpty(pathsCmdsMap[method]) || !('command' in pathsCmdsMap[method])) {
+      if (isEmpty(pathsCmdsMap[method]) || !('command' in pathsCmdsMap[method])) {
         continue;
       }
       const cmdName = pathsCmdsMap[method].command;

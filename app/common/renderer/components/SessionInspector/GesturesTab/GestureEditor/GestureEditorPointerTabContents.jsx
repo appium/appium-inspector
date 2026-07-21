@@ -1,6 +1,5 @@
 import {IconPlus} from '@tabler/icons-react';
 import {Button, Col, Row, Tooltip} from 'antd';
-import _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 
 import styles from './GestureEditor.module.css';
@@ -8,7 +7,7 @@ import GestureEditorTickCard from './GestureEditorTickCard.jsx';
 import GestureEditorTickCardContents from './GestureEditorTickCardContents.jsx';
 
 const addTick = (pointerKey, pointers, setPointers) => {
-  const copiedPointers = _.cloneDeep(pointers);
+  const copiedPointers = structuredClone(pointers);
   const currentPointer = copiedPointers.find((pointer) => pointer.id === pointerKey);
   const id = `${pointerKey}.${currentPointer.ticks.length + 1}`;
   currentPointer.ticks.push({id});

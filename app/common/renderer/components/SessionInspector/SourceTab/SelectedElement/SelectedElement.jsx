@@ -1,5 +1,4 @@
 import {Space, Spin} from 'antd';
-import _ from 'lodash';
 
 import inspectorStyles from '../../SessionInspector.module.css';
 import InteractionsNotAvailableMessage from './InteractionsNotAvailableMessage.jsx';
@@ -36,7 +35,7 @@ const SelectedElement = (props) => {
   const elementActionsDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
 
   // Get the data for the attributes table
-  const elementAttributesData = _.toPairs(selectedElement.attributes).map(([key, value]) => ({
+  const elementAttributesData = Object.entries(selectedElement.attributes).map(([key, value]) => ({
     key,
     value,
     name: key,

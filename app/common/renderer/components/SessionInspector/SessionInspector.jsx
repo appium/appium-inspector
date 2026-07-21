@@ -7,7 +7,6 @@ import {
   IconPhoto,
 } from '@tabler/icons-react';
 import {Button, Modal, Space, Spin, Tabs, Tooltip} from 'antd';
-import _ from 'lodash';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useNavigate} from 'react-router';
@@ -20,6 +19,7 @@ import {
   MJPEG_STREAM_CHECK_INTERVAL,
   SESSION_EXPIRY_PROMPT_TIMEOUT,
 } from '../../constants/session-inspector.js';
+import {debounce} from '../../utils/common.js';
 import {downloadFile} from '../../utils/file-handling.js';
 import Commands from './CommandsTab/Commands.jsx';
 import GestureEditor from './GesturesTab/GestureEditor/GestureEditor.jsx';
@@ -133,7 +133,7 @@ const Inspector = (props) => {
   }, [windowSize]);
 
   useEffect(() => {
-    const debounced = _.debounce(() => {
+    const debounced = debounce(() => {
       updateScreenshotScale();
     }, 50);
     updateScreenshotScaleDebouncedRef.current = debounced;

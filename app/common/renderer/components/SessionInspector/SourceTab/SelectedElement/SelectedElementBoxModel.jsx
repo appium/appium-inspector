@@ -1,6 +1,6 @@
-import _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 
+import {isEmpty} from '../../../../utils/common.js';
 import {parseCoordinates} from '../../../../utils/other.js';
 import inspectorStyles from '../../SessionInspector.module.css';
 import styles from './SelectedElement.module.css';
@@ -39,7 +39,7 @@ const SelectedElementBoxModel = ({selectedElement}) => {
   const {t} = useTranslation();
 
   const extractedCoords = parseCoordinates(selectedElement);
-  if (_.isEmpty(extractedCoords)) {
+  if (isEmpty(extractedCoords)) {
     return null;
   }
   const {x1, y1, x2, y2} = extractedCoords;

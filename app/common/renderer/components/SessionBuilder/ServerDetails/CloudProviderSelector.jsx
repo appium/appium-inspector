@@ -1,5 +1,4 @@
 import {Button, Col, Modal, Row} from 'antd';
-import _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
@@ -15,7 +14,16 @@ const CloudProviderSelector = (props) => {
       {t('Done')}
     </Button>
   );
-  const providersGrid = _.chunk(_.keys(CloudProviders), 2); // Converts list of providers into list of pairs of providers
+  // Converts list of providers into list of pairs of providers
+  const keys = Object.keys(CloudProviders);
+  const providersGrid = keys.reduce((rows, key, i) => {
+    if (i % 2 === 0) {
+      rows.push([key]);
+    } else {
+      rows[rows.length - 1].push(key);
+    }
+    return rows;
+  }, []);
 
   const toggleVisibleProvider = (providerName) => {
     const {addVisibleProvider, removeVisibleProvider} = props;
@@ -36,10 +44,10 @@ const CloudProviderSelector = (props) => {
       title={t('Select Cloud Providers')}
     >
       {[
-        ..._.map(providersGrid, (row, key) => (
-          <Row gutter={16} key={key}>
+        ...providersGrid.map((row) => (
+          <Row gutter={16} key={row.join(',')}>
             {[
-              ..._(row).map((providerName) => {
+              ...row.map((providerName) => {
                 const providerIsVisible = visibleProviders.includes(providerName);
                 const style = {};
                 if (providerIsVisible) {

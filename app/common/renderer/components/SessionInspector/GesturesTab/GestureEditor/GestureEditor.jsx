@@ -1,5 +1,4 @@
 import {Divider} from 'antd';
-import _ from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
 import {
@@ -70,7 +69,7 @@ const GestureEditor = (props) => {
         return null;
       }
       const {width, height} = windowSize;
-      const copiedPointers = _.cloneDeep(pointers);
+      const copiedPointers = structuredClone(pointers);
       const currentPointer = copiedPointers.find((pointer) => pointer.id === tickKey[0]);
       const currentTick = currentPointer.ticks.find((tick) => tick.id === tickKey);
       const x = parseFloat(updateX);

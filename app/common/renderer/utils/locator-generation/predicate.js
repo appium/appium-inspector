@@ -1,6 +1,6 @@
-import _ from 'lodash';
 import {select as xpathSelect} from 'xpath';
 
+import {isEmpty} from '../common.js';
 import {LocatorGeneratorBase} from './base.js';
 
 /**
@@ -31,7 +31,7 @@ class PredicateStringGenerator extends LocatorGeneratorBase {
 
       for (const attrName of PredicateStringGenerator.CHECKED_ATTRIBUTES) {
         const attrValue = this._domNode.getAttribute(attrName);
-        if (_.isEmpty(attrValue)) {
+        if (isEmpty(attrValue)) {
           continue;
         }
 

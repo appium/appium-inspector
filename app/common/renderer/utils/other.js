@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import {STANDARD_W3C_CAPS} from '../constants/session-builder.js';
 
 export const copyToClipboard = (text) => navigator.clipboard.writeText(text);
@@ -16,9 +14,9 @@ export function addVendorPrefixes(caps) {
   return caps.map((cap) => {
     // if we don't have a valid unprefixed cap or a cap with an existing prefix, update it
     if (
-      !_.isUndefined(cap.name) &&
+      typeof cap.name === 'string' &&
       !STANDARD_W3C_CAPS.includes(cap.name) &&
-      !_.includes(cap.name, ':')
+      !cap.name.includes(':')
     ) {
       cap.name = `appium:${cap.name}`;
     }

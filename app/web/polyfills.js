@@ -1,8 +1,6 @@
-import _ from 'lodash';
-
 // Adjust locales path depending on Vite base (web vs plugin)
 const viteBase = import.meta.env.BASE_URL;
-const vitePath = `${_.trimEnd(viteBase, '/')}/`;
+const vitePath = `${viteBase.replace(/\/+$/, '')}/`;
 
 const localesPath =
   process.env.NODE_ENV === 'development'

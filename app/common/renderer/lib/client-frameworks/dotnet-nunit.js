@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import refractorCsharp from 'refractor/csharp';
 
 import CommonClientFramework from './common.js';
@@ -13,9 +12,8 @@ export default class DotNetNUnitFramework extends CommonClientFramework {
       const convertedItems = jsonVal.map((item) => this.getCSharpVal(item));
       return `{${convertedItems.join(', ')}}`;
     } else if (typeof jsonVal === 'object') {
-      const convertedItems = _.map(
-        jsonVal,
-        (v, k) => `{${JSON.stringify(k)}, ${this.getCSharpVal(v)}}`,
+      const convertedItems = Object.entries(jsonVal).map(
+        ([k, v]) => `{${JSON.stringify(k)}, ${this.getCSharpVal(v)}}`,
       );
       return `new Dictionary<string, dynamic> {${convertedItems.join(', ')}}`;
     }
@@ -42,11 +40,12 @@ export default class DotNetNUnitFramework extends CommonClientFramework {
       }
     })();
     let capStr = this.indent(
-      _.map(
-        this.caps,
-        (v, k) =>
-          `options.AddAdditionalAppiumOption(${JSON.stringify(k)}, ${this.getCSharpVal(v)});`,
-      ).join('\n'),
+      Object.entries(this.caps)
+        .map(
+          ([k, v]) =>
+            `options.AddAdditionalAppiumOption(${JSON.stringify(k)}, ${this.getCSharpVal(v)});`,
+        )
+        .join('\n'),
       8,
     );
 
@@ -177,7 +176,7 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
 
   codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
     try {
-      const settings = _.toPairs(settingsJson).map(
+      const settings = Object.entries(settingsJson).map(
         ([settingName, settingValue]) =>
           `_driver.SetSetting("${settingName}", ${this.getCSharpVal(settingValue)});`,
       );

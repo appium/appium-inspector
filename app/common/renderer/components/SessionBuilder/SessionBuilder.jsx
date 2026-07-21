@@ -1,6 +1,5 @@
 import {IconLink} from '@tabler/icons-react';
 import {Badge, Button, Divider, Space, Spin, Tabs} from 'antd';
-import _ from 'lodash';
 import {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useNavigate} from 'react-router';
@@ -13,6 +12,7 @@ import {
   SESSION_BUILDER_TABS,
 } from '../../constants/session-builder.js';
 import {openLink} from '../../polyfills.js';
+import {isEmpty} from '../../utils/common.js';
 import {log} from '../../utils/logger.js';
 import AppSettings from './AppSettings/AppSettings.jsx';
 import AttachToSession from './AttachToSessionTab/AttachToSession.jsx';
@@ -29,7 +29,7 @@ import styles from './SessionBuilder.module.css';
 // * User-modified state with all capabilities manually removed (empty list)
 // * null, if attachSessId is provided
 const isCapabilitySetEmpty = (caps) =>
-  _.isEmpty(caps) || (caps.length === 1 && !('name' in caps[0]) && !('value' in caps[0]));
+  isEmpty(caps) || (caps.length === 1 && !('name' in caps[0]) && !('value' in caps[0]));
 
 const Session = (props) => {
   const {
@@ -78,7 +78,7 @@ const Session = (props) => {
       if (isCapabilitySetEmpty(caps) && !attachSessId) {
         return showError(new Error(t('noCapsFound', {url: LINKS.ADD_CAPS_DOCS})), {secs: 0});
       }
-      if (await newSession(_.cloneDeep(caps), attachSessId)) {
+      if (await newSession(structuredClone(caps), attachSessId)) {
         navigate('/inspector', {replace: true});
       }
     },
@@ -129,7 +129,7 @@ const Session = (props) => {
                 key: SERVER_TYPES.REMOTE,
                 children: <ServerTabCustom {...props} />,
               },
-              ..._(visibleProviders).map((providerName) => {
+              ...visibleProviders.map((providerName) => {
                 const provider = CloudProviders[providerName];
                 if (!provider) {
                   return true;

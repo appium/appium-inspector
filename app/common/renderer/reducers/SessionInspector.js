@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import {
   ADD_ASSIGNED_VAR_CACHE,
   CLEAR_ASSIGNED_VAR_CACHE,
@@ -90,6 +88,7 @@ import {
   INSPECTOR_TABS,
   NATIVE_APP,
 } from '../constants/session-inspector.js';
+import {omit} from '../utils/common.js';
 
 const INITIAL_STATE = {
   savedGestures: [],
@@ -206,7 +205,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       };
 
     case UNSELECT_CENTROID:
-      return _.omit(state, 'selectedCentroid');
+      return omit(state, 'selectedCentroid');
 
     case SET_SELECTED_ELEMENT_ID:
       return {
@@ -586,7 +585,7 @@ export default function inspector(state = INITIAL_STATE, action) {
         ...state,
         savedGestures: action.savedGestures || [],
       };
-      return _.omit(nextState, 'getSavedGesturesRequested');
+      return omit(nextState, 'getSavedGesturesRequested');
 
     case DELETE_SAVED_GESTURES_REQUESTED:
       return {
@@ -595,7 +594,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       };
 
     case DELETE_SAVED_GESTURES_DONE:
-      return _.omit(state, 'deleteGesture');
+      return omit(state, 'deleteGesture');
 
     case SET_LOADED_GESTURE:
       return {
@@ -604,7 +603,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       };
 
     case REMOVE_LOADED_GESTURE:
-      return _.omit(state, 'loadedGesture');
+      return omit(state, 'loadedGesture');
 
     case SHOW_GESTURE_ACTION:
       return {
@@ -613,7 +612,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       };
 
     case HIDE_GESTURE_ACTION:
-      return _.omit(state, 'showGesture');
+      return omit(state, 'showGesture');
 
     case SELECT_TICK_ELEMENT:
       return {
@@ -622,7 +621,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       };
 
     case UNSELECT_TICK_ELEMENT:
-      return _.omit(state, 'selectedTick');
+      return omit(state, 'selectedTick');
 
     case SET_GESTURE_TAP_COORDS_MODE:
       return {
@@ -634,7 +633,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       };
 
     case CLEAR_TAP_COORDINATES:
-      return _.omit(state, 'tickCoordinates');
+      return omit(state, 'tickCoordinates');
 
     case TOGGLE_SHOW_ATTRIBUTES:
       return {...state, showSourceAttrs: !state.showSourceAttrs};

@@ -1,6 +1,6 @@
-import _ from 'lodash';
 import {select as xpathSelect} from 'xpath';
 
+import {isEmpty} from '../common.js';
 import {LocatorGeneratorBase} from './base.js';
 
 /**
@@ -168,7 +168,7 @@ class XPathGenerator extends LocatorGeneratorBase {
    */
   _tryNodeAttributesForUniqueXPath(attrs) {
     const tagForXpath = this._domNode.tagName || '*';
-    const isPairs = attrs.length > 0 && _.isArray(attrs[0]);
+    const isPairs = attrs.length > 0 && Array.isArray(attrs[0]);
     let semiUniqueXpath;
     let semiUniqueXpathIndex;
 
@@ -365,7 +365,7 @@ class XPathGenerator extends LocatorGeneratorBase {
       nodeScopeXpath.replace(/^\/\//, '/'),
     );
     const combinedScopeXpathIndex = this._determineXpathUniqueness(combinedScopeXpath);
-    if (_.isUndefined(combinedScopeXpathIndex)) {
+    if (combinedScopeXpathIndex === undefined) {
       // Should never happen
       return null;
     }
@@ -392,7 +392,7 @@ class XPathGenerator extends LocatorGeneratorBase {
    */
   _findBestParentScopeXPath(nodeScopeXpath) {
     const ancestor = this._findUniqueAncestor(nodeScopeXpath);
-    if (_.isEmpty(ancestor)) {
+    if (isEmpty(ancestor)) {
       return null;
     }
     const parentScopedXpath = this._buildParentScopedXPath(ancestor.node, ancestor.xpath);
