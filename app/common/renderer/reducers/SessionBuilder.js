@@ -40,7 +40,7 @@ import {
   SWITCHED_TABS,
 } from '../actions/SessionBuilder.js';
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder.js';
-import {omit} from '../utils/common.js';
+import {isPlainObject, omit} from '../utils/common.js';
 import {getRandomId} from '../utils/other.js';
 
 const visibleProviders = []; // Pull this from the VISIBLE_PROVIDERS setting
@@ -424,7 +424,9 @@ export default function builder(state = INITIAL_STATE, action) {
 function mergeServerState(currentServer, incomingServer) {
   const nextServer = {...currentServer};
   for (const [serverType, config] of Object.entries(incomingServer)) {
-    nextServer[serverType] = {...(nextServer[serverType] || {}), ...config};
+    nextServer[serverType] = isPlainObject(config)
+      ? {...(nextServer[serverType] || {}), ...config}
+      : config;
   }
   return nextServer;
 }
