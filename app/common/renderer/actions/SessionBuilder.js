@@ -171,9 +171,10 @@ export function showError(e, params = {methodName: null, secs: 5, url: null}) {
     errMessage = i18n.t('Could not start session');
   }
   if (
-    errMessage === 'ECONNREFUSED' ||
-    errMessage.includes('Failed to fetch') ||
-    errMessage.includes('The requested resource could not be found')
+    typeof errMessage === 'string' &&
+    (errMessage === 'ECONNREFUSED' ||
+      errMessage.includes('Failed to fetch') ||
+      errMessage.includes('The requested resource could not be found'))
   ) {
     errMessage = i18n.t('couldNotConnect', {url});
   }
