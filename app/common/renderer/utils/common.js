@@ -1,5 +1,5 @@
 /**
- * Small collection of generic language helpers that used to be provided by lodash.
+ * Small collection of generic helpers that used to be provided by lodash.
  * Kept minimal on purpose: only the semantics actually needed by this codebase are implemented.
  */
 

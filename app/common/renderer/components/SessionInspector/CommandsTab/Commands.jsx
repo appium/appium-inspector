@@ -5,7 +5,7 @@ import {
   transformCommandsMap,
   transformExecMethodsMap,
 } from '../../../utils/commands-tab.js';
-import {isEmpty, isPlainObject} from '../../../utils/lang.js';
+import {isEmpty, isPlainObject} from '../../../utils/common.js';
 import CommandParametersModal from './CommandParametersModal.jsx';
 import CommandResultModal from './CommandResult/CommandResultModal.jsx';
 import styles from './Commands.module.css';

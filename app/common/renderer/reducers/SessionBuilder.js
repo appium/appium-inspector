@@ -40,7 +40,7 @@ import {
   SWITCHED_TABS,
 } from '../actions/SessionBuilder.js';
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder.js';
-import {omit} from '../utils/lang.js';
+import {omit} from '../utils/common.js';
 import {getRandomId} from '../utils/other.js';
 
 const visibleProviders = []; // Pull this from the VISIBLE_PROVIDERS setting

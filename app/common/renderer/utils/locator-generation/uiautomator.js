@@ -1,6 +1,6 @@
 import {select as xpathSelect} from 'xpath';
 
-import {isEmpty} from '../lang.js';
+import {isEmpty} from '../common.js';
 import {childNodesOf, domToXML, findDOMNodeByPath, xmlToDOM} from '../source-parsing.js';
 import {LocatorGeneratorBase} from './base.js';
 

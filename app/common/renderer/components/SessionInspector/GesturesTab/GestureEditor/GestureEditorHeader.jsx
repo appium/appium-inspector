@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {NOTIF} from '../../../../constants/antd-types.js';
 import {POINTER_MOVE_COORDS_TYPE, POINTER_TYPES} from '../../../../constants/gestures.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../../../../constants/screenshot.js';
-import {omit} from '../../../../utils/lang.js';
+import {omit} from '../../../../utils/common.js';
 import {notification} from '../../../../utils/notification.js';
 import {percentageToPixels, pixelsToPercentage} from '../../../../utils/other.js';
 import styles from './GestureEditor.module.css';

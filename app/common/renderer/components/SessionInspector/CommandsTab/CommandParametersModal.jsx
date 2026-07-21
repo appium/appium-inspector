@@ -1,7 +1,7 @@
 import {Input, Modal, Space, Typography} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import {isEmpty} from '../../../utils/lang.js';
+import {isEmpty} from '../../../utils/common.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
 

@@ -3,7 +3,7 @@ import {Button, Popconfirm, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
-import {omit} from '../../../utils/lang.js';
+import {omit} from '../../../utils/common.js';
 
 /**
  * Final cell of each saved gestures row, containing gesture actions.

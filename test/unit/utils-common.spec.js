@@ -6,9 +6,9 @@ import {
   isEqual,
   isPlainObject,
   omit,
-} from '../../app/common/renderer/utils/lang.js';
+} from '../../app/common/renderer/utils/common.js';
 
-describe('utils/lang.js', function () {
+describe('utils/common.js', function () {
   describe('#isPlainObject', function () {
     it('should return true for plain objects', function () {
       expect(isPlainObject({})).toBe(true);

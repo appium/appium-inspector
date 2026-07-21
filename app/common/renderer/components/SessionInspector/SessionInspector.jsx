@@ -19,8 +19,8 @@ import {
   MJPEG_STREAM_CHECK_INTERVAL,
   SESSION_EXPIRY_PROMPT_TIMEOUT,
 } from '../../constants/session-inspector.js';
+import {debounce} from '../../utils/common.js';
 import {downloadFile} from '../../utils/file-handling.js';
-import {debounce} from '../../utils/lang.js';
 import Commands from './CommandsTab/Commands.jsx';
 import GestureEditor from './GesturesTab/GestureEditor/GestureEditor.jsx';
 import SavedGestures from './GesturesTab/SavedGestures.jsx';

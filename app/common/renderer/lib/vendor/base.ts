@@ -1,5 +1,5 @@
 import i18n from '../../i18next.js';
-import {isPlainObject} from '../../utils/lang.js';
+import {isPlainObject} from '../../utils/common.js';
 
 export interface VendorProperties {
   host?: string;

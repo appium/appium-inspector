@@ -1,5 +1,5 @@
 import {POINTER_TYPES} from '../constants/gestures.js';
-import {isPlainObject} from './lang.js';
+import {isPlainObject} from './common.js';
 import {log} from './logger.js';
 
 /**

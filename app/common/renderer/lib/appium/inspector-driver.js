@@ -6,7 +6,7 @@ import {
   SESSION_EXPIRED,
   UNKNOWN_ERROR,
 } from '../../constants/session-inspector.js';
-import {isEqual} from '../../utils/lang.js';
+import {isEqual} from '../../utils/common.js';
 import {log} from '../../utils/logger.js';
 import {parseHtmlSource, setHtmlElementAttributes} from '../../utils/webview.js';
 

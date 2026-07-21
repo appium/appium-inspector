@@ -4,7 +4,7 @@ import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {filterMethodPairs} from '../../../utils/commands-tab.js';
-import {isEmpty} from '../../../utils/lang.js';
+import {isEmpty} from '../../../utils/common.js';
 import styles from './Commands.module.css';
 import MethodMapCommandsContent from './MethodMapCommandsContent.jsx';
 

@@ -2,7 +2,7 @@ import cssEscape from 'css.escape';
 import XPath from 'xpath';
 
 import {LOCATOR_STRATEGIES as STRATS} from '../../constants/session-inspector.js';
-import {isEmpty} from '../lang.js';
+import {isEmpty} from '../common.js';
 
 /**
  * Generator for simple locator strategies in both native and webview contexts

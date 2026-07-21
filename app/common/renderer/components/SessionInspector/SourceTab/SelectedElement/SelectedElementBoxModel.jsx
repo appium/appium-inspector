@@ -1,6 +1,6 @@
 import {useTranslation} from 'react-i18next';
 
-import {isEmpty} from '../../../../utils/lang.js';
+import {isEmpty} from '../../../../utils/common.js';
 import {parseCoordinates} from '../../../../utils/other.js';
 import inspectorStyles from '../../SessionInspector.module.css';
 import styles from './SelectedElement.module.css';

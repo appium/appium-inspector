@@ -1,5 +1,5 @@
 import {APPIUM_TO_WD_COMMANDS, COMMANDS_WITH_MISMATCHED_PARAMS} from '../constants/commands.js';
-import {isEmpty, isPlainObject} from './lang.js';
+import {isEmpty, isPlainObject} from './common.js';
 
 /**
  * Try to detect if the input value should be a boolean/number/array/object,

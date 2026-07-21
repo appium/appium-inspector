@@ -1,5 +1,5 @@
 import {DEFAULT_SWIPE, DEFAULT_TAP} from '../../constants/screenshot.js';
-import {isEmpty} from '../../utils/lang.js';
+import {isEmpty} from '../../utils/common.js';
 
 export default class CommonClientFramework {
   constructor(serverUrl, serverUrlParts, caps) {

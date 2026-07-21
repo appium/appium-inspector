@@ -88,7 +88,7 @@ import {
   INSPECTOR_TABS,
   NATIVE_APP,
 } from '../constants/session-inspector.js';
-import {omit} from '../utils/lang.js';
+import {omit} from '../utils/common.js';
 
 const INITIAL_STATE = {
   savedGestures: [],

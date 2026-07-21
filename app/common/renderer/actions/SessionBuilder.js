@@ -23,8 +23,8 @@ import {
   fetchSessionInformation,
   formatSeleniumGridSessions,
 } from '../utils/attaching-to-session.js';
+import {isEmpty, omit} from '../utils/common.js';
 import {downloadFile, readTextFromUploadedFiles} from '../utils/file-handling.js';
-import {isEmpty, omit} from '../utils/lang.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
 import {addVendorPrefixes, getRandomId} from '../utils/other.js';

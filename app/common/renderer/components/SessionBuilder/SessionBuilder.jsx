@@ -12,7 +12,7 @@ import {
   SESSION_BUILDER_TABS,
 } from '../../constants/session-builder.js';
 import {openLink} from '../../polyfills.js';
-import {isEmpty} from '../../utils/lang.js';
+import {isEmpty} from '../../utils/common.js';
 import {log} from '../../utils/logger.js';
 import AppSettings from './AppSettings/AppSettings.jsx';
 import AttachToSession from './AttachToSessionTab/AttachToSession.jsx';
