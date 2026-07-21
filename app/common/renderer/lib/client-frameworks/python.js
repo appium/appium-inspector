@@ -14,12 +14,9 @@ export default class PythonFramework extends CommonClientFramework {
       const convertedItems = jsonVal.map((item) => this.getPythonVal(item));
       return `[${convertedItems.join(', ')}]`;
     } else if (typeof jsonVal === 'object') {
-      const cleanedJson = Object.fromEntries(
-        Object.entries(jsonVal).filter(([, v]) => v !== undefined),
-      );
-      const convertedItems = Object.entries(cleanedJson).map(
-        ([k, v]) => `${JSON.stringify(k)}: ${this.getPythonVal(v)}`,
-      );
+      const convertedItems = Object.entries(jsonVal)
+        .filter(([, v]) => v !== undefined)
+        .map(([k, v]) => `${JSON.stringify(k)}: ${this.getPythonVal(v)}`);
       return `{${convertedItems.join(', ')}}`;
     }
     return JSON.stringify(jsonVal);

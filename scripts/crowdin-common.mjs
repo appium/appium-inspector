@@ -47,7 +47,7 @@ export async function performApiRequest(suffix = '', opts = {}) {
  * @returns {boolean}
  */
 function isPlainObject(value) {
-  if (value === null || typeof value !== 'object') {
+  if (value == null || typeof value !== 'object') {
     return false;
   }
   const prototype = Object.getPrototypeOf(value);

@@ -11,7 +11,7 @@
  * @returns {boolean}
  */
 export function isPlainObject(value) {
-  if (value === null || typeof value !== 'object') {
+  if (value == null || typeof value !== 'object') {
     return false;
   }
   const prototype = Object.getPrototypeOf(value);
@@ -27,7 +27,7 @@ export function isPlainObject(value) {
  * @returns {boolean}
  */
 export function isEmpty(value) {
-  if (value === null || value === undefined) {
+  if (value == null) {
     return true;
   }
   if (typeof value === 'string' || Array.isArray(value)) {

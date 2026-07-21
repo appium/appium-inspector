@@ -67,8 +67,7 @@ export function xmlToJSON(sourceXML) {
     }
 
     // Dot Separated path of indices
-    const path =
-      index === null || index === undefined ? '' : `${!parentPath ? '' : parentPath + '.'}${index}`;
+    const path = index == null ? '' : `${!parentPath ? '' : parentPath + '.'}${index}`;
 
     return {
       children: childNodesOf(domNode).map((childNode, childIndex) =>

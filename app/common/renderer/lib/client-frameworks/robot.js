@@ -94,12 +94,9 @@ Tap With Positions    $\{100}    $\{positions}`;
 
   codeFor_executeScriptWithArgs(scriptCmd, jsonArg, varAssignment = '') {
     // change the JSON object into a format accepted by Create Dictionary: a sequence of key=value
-    const cleanedJson = Object.fromEntries(
-      Object.entries(jsonArg[0]).filter(([, v]) => v !== undefined),
-    );
-    const argsValuesStrings = Object.entries(cleanedJson).map(
-      ([k, v]) => `${k}=${this.getRobotVal(v)}`,
-    );
+    const argsValuesStrings = Object.entries(jsonArg[0])
+      .filter(([, v]) => v !== undefined)
+      .map(([k, v]) => `${k}=${this.getRobotVal(v)}`);
     return `&{scriptArgument} =    Create Dictionary    ${argsValuesStrings.join('    ')}
 ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
   }

@@ -2,6 +2,7 @@ import {Table} from 'antd';
 import {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
+import {isEmpty} from '../../../utils/common.js';
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './SessionInfo.module.css';
 
@@ -31,11 +32,13 @@ const tableColumns = [
 ];
 
 const innerDataSource = (tableData) =>
-  Object.entries(tableData).map(([propName, propValue]) => ({
-    key: propName,
-    property: formatMono(propName),
-    value: formatMono(String(propValue)),
-  }));
+  !isEmpty(tableData)
+    ? Object.entries(tableData).map(([propName, propValue]) => ({
+        key: propName,
+        property: formatMono(propName),
+        value: formatMono(String(propValue)),
+      }))
+    : [];
 
 /**
  * Inner table component for session information cells with multiple values.

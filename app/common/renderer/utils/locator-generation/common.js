@@ -65,7 +65,5 @@ export function getComplexSuggestedLocators(path, sourceDoc, isNative, automatio
   complexLocators.xpath = getOptimalXPath(sourceDoc, domNode);
 
   // Remove entries for locators where the optimal selector could not be found
-  return Object.fromEntries(
-    Object.entries(complexLocators).filter(([, v]) => v !== null && v !== undefined),
-  );
+  return Object.fromEntries(Object.entries(complexLocators).filter(([, v]) => v != null));
 }
