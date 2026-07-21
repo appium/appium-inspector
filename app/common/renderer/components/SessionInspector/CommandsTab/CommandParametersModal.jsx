@@ -37,7 +37,7 @@ const CommandParametersModal = ({
       onCancel={() => clearCurrentCommand()}
       footer={(_, {OkBtn}) => <OkBtn />}
     >
-      {curCommandDetails.details.params.map((param, index) => (
+      {(curCommandDetails.details.params ?? []).map((param, index) => (
         <Space.Compact block key={param.name} className={styles.commandArgInputRow}>
           <Space.Addon>{formatParamInputLabel(param)}</Space.Addon>
           <Input onChange={(e) => (curCommandParamValsRef.current[index] = e.target.value)} />
