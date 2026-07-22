@@ -1,0 +1,155 @@
+.highlighterBox {
+  position: absolute;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.highlighterBox.inspectedElementBox {
+  background-color: rgb(90, 90, 178);
+  visibility: visible;
+}
+
+.highlighterBox:hover {
+  background-color: yellow;
+  visibility: visible;
+}
+
+.highlighterBox.inspectedElementBox:hover {
+  background-color: rgb(100, 255, 100);
+}
+
+.centroidBox {
+  width: 2.2vh;
+  height: 2.2vh;
+  border: 2px solid red;
+  position: absolute;
+  opacity: 0.6;
+  overflow: hidden;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.centroidBox.centroid.inspectedElementBox {
+  background-color: rgb(90, 90, 178);
+  opacity: 0.8;
+}
+
+.centroidBox.centroid:hover {
+  background-color: yellow;
+  opacity: 0.8;
+}
+
+.centroidBox.centroid.inspectedElementBox:hover {
+  background-color: rgb(100, 255, 100);
+}
+
+.centroidBox.expand {
+  background-color: rgba(255, 255, 255, 0.6);
+  opacity: 1;
+}
+
+.centroidBox.expand.inspectedElementBox {
+  background-color: rgb(90, 90, 178);
+  opacity: 0.8;
+}
+
+.centroidBox.expand:hover {
+  background-color: yellow;
+  opacity: 0.8;
+}
+
+.centroidBox.expand.inspectedElementBox:hover {
+  background-color: rgb(100, 255, 100);
+}
+
+.centroidBox.overlap {
+  border-style: dashed;
+  border-color: green;
+  opacity: 1;
+}
+
+.centroidBox.overlap.inspectedElementBox {
+  background-color: rgb(90, 90, 178);
+  opacity: 0.8;
+}
+
+.centroidBox.overlap:hover {
+  background-color: yellow;
+  opacity: 0.8;
+}
+
+.centroidBox.overlap.inspectedElementBox:hover {
+  background-color: rgb(100, 255, 100);
+}
+
+.plusMinus {
+  position: relative;
+  top: -0.9vh;
+  text-align: center;
+  font-size: 2vh;
+  font-weight: 800;
+  color: red;
+}
+
+.coordinatesContainer {
+  position: absolute;
+  background: rgba(255, 250, 205, 0.8);
+  color: black;
+  z-index: 100;
+  padding: 2px;
+}
+
+.swipeSvg {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.swipeSvg line {
+  stroke-width: 15;
+  stroke: rgba(255, 153, 153, 0.8);
+  stroke-linecap: round;
+}
+
+.swipeSvg circle {
+  fill: rgba(255, 153, 153, 0.8);
+}
+
+.gestureSvg {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.gestureSvg line {
+  opacity: 0.35;
+}
+
+.gestureSvg .filled,
+.dashed {
+  stroke-dasharray: 10;
+  stroke-width: 5;
+}
+
+.gestureSvg .whole,
+.newDashed {
+  stroke-linecap: round;
+  stroke-width: 15;
+}
+
+.gestureSvg circle {
+  fill: none;
+  stroke-width: 0.4%;
+}
+
+.gestureSvg .dashedCircle,
+.newDashedCircle {
+  stroke-dasharray: 0.9%;
+  border-style: dashed;
+}
