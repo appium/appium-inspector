@@ -46,10 +46,9 @@ const Commands = (props) => {
     // the parameters array needs to be turned into an object,
     // and the command name added as a separate parameter.
     if (isExecute) {
-      const cmdParamNames = cmdParams.map((p) => p.name);
-      const mappedCmdParams = Object.fromEntries(
-        cmdParamNames.map((name, i) => [name, adjustedCmdParams[i]]),
-      );
+      const mappedCmdParams = !isEmpty(cmdParams)
+        ? Object.fromEntries(cmdParams.map((p, i) => [p.name, adjustedCmdParams[i]]))
+        : {};
       adjustedCmdParams = [cmdName, mappedCmdParams];
     }
 
