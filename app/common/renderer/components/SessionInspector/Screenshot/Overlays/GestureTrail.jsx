@@ -5,7 +5,7 @@ import styles from './Overlays.module.css';
 
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
 const {FILLED, NEW_DASHED, WHOLE, DASHED} = GESTURE_ITEM_STYLES;
-const defaultTypes = {pointerDown: WHOLE, pointerUp: DASHED};
+const defaultTypes = {[POINTER_DOWN]: WHOLE, [POINTER_UP]: DASHED};
 
 // retrieve and format gesture for svg drawings
 const getGestureCoordinates = (gesture) =>
@@ -92,8 +92,8 @@ const GestureTrailPointer = ({pointer, scaleRatio}) =>
  */
 const GestureTrail = ({gesture, scaleRatio}) => (
   <svg key="gestureSVG" className={styles.gestureSvg}>
-    {getGestureCoordinates(gesture).map((pointer) => (
-      <GestureTrailPointer key={pointer.id} pointer={pointer} scaleRatio={scaleRatio} />
+    {getGestureCoordinates(gesture).map((pointer, index) => (
+      <GestureTrailPointer key={gesture[index].id} pointer={pointer} scaleRatio={scaleRatio} />
     ))}
   </svg>
 );
