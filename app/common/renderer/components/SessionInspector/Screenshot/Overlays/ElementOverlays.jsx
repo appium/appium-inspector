@@ -101,7 +101,7 @@ const buildElementsWithProps = (sourceJSON, prevElement, elements, overlaps, sca
   return overlaps;
 };
 
-// Generate angles for circular positioning for overlaping elements
+// Generate angles for circular positioning for overlapping elements
 const updateOverlapsAngles = (elements, key) => {
   const steps = elements.length;
   for (let step = 0; step < steps; step++) {
@@ -178,15 +178,17 @@ const ElementOverlays = (props) => {
     const elements = getElements(sourceJSON, scaleRatio);
 
     for (const elem of elements) {
-      highlighterCentroids.push(
-        <ElementCentroid
-          centroidType={elem.type}
-          elementProperties={elem.properties}
-          element={elem.element}
-          key={elem.properties.path}
-          {...props}
-        />,
-      );
+      if (showCentroids) {
+        highlighterCentroids.push(
+          <ElementCentroid
+            centroidType={elem.type}
+            elementProperties={elem.properties}
+            element={elem.element}
+            key={elem.properties.path}
+            {...props}
+          />,
+        );
+      }
       // only render rectangles for elements with non-zero height and width
       if (!elem.properties.width || !elem.properties.height) {
         continue;
