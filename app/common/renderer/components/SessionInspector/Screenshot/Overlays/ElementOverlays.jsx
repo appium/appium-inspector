@@ -6,11 +6,19 @@ import FoundElementRect from './FoundElementRect.jsx';
 
 const {CENTROID, OVERLAP, EXPAND} = RENDER_CENTROID_AS;
 
-const isElementOverElement = (element1, element2) =>
-  element1.left <= element2.left &&
-  element1.width >= element2.width &&
-  element1.top >= element2.top &&
-  element1.height >= element2.height;
+const isElementOverElement = (element1, element2) => {
+  const right1 = element1.left + element1.width;
+  const bottom1 = element1.top + element1.height;
+  const right2 = element2.left + element2.width;
+  const bottom2 = element2.top + element2.height;
+
+  return (
+    element1.left <= element2.left &&
+    right1 >= right2 &&
+    element1.top <= element2.top &&
+    bottom1 >= bottom2
+  );
+};
 
 // Traverse through parent elements until we reach maybeAncestor
 const isAncestor = (curElement, maybeAncestor, elements) => {
