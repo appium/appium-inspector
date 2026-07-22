@@ -108,7 +108,7 @@
     "electron-vite": "5.0.0",
     "eslint": "10.7.0",
     "eslint-plugin-react-hooks": "7.1.1",
-    "eslint-plugin-simple-import-sort": "13.0.0",
+    "eslint-plugin-simple-import-sort": "14.0.0",
     "globals": "17.7.0",
     "prettier": "3.9.5",
     "rimraf": "6.1.3",
