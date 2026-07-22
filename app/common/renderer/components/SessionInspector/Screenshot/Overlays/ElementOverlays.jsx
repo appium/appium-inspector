@@ -170,7 +170,16 @@ const ElementOverlays = (props) => {
     const elements = getElements(sourceJSON, scaleRatio);
 
     for (const elem of elements) {
-      // only render elements with non-zero height and width
+      highlighterCentroids.push(
+        <ElementCentroid
+          centroidType={elem.type}
+          elementProperties={elem.properties}
+          element={elem.element}
+          key={elem.properties.path}
+          {...props}
+        />,
+      );
+      // only render rectangles for elements with non-zero height and width
       if (!elem.properties.width || !elem.properties.height) {
         continue;
       }
@@ -184,25 +193,12 @@ const ElementOverlays = (props) => {
         />,
       );
     }
-    if (showCentroids) {
-      for (const elem of elements) {
-        highlighterCentroids.push(
-          <ElementCentroid
-            centroidType={elem.type}
-            elementProperties={elem.properties}
-            element={elem.element}
-            key={elem.properties.path}
-            {...props}
-          />,
-        );
-      }
-    }
   }
 
   return (
     <>
       {highlighterRects}
-      {highlighterCentroids}
+      {showCentroids && highlighterCentroids}
       {/* If the user selected an element that they searched for, highlight that element */}
       {isLocatorSearchModalVisible && searchedForElementBounds && (
         <FoundElementRect

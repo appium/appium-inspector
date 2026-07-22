@@ -18,6 +18,44 @@ import styles from './Screenshot.module.css';
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
 const {TAP, SELECT, SWIPE, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 
+const handleTapOnScreenshot = async (tapPoint, applyClientMethod) => {
+  const {POINTER_NAME, DURATION_1, DURATION_2, BUTTON} = DEFAULT_TAP;
+  await applyClientMethod({
+    methodName: TAP,
+    args: [
+      {
+        [POINTER_NAME]: [
+          {type: POINTER_MOVE, duration: DURATION_1, x: tapPoint.x, y: tapPoint.y},
+          {type: POINTER_DOWN, button: BUTTON},
+          {type: PAUSE, duration: DURATION_2},
+          {type: POINTER_UP, button: BUTTON},
+        ],
+      },
+    ],
+  });
+};
+
+const handleSwipeOnScreenshot = async (swipeStartPoint, swipeEndPoint, applyClientMethod) => {
+  const {POINTER_NAME, DURATION_1, DURATION_2, BUTTON, ORIGIN} = DEFAULT_SWIPE;
+  await applyClientMethod({
+    methodName: SWIPE,
+    args: {
+      [POINTER_NAME]: [
+        {type: POINTER_MOVE, duration: DURATION_1, x: swipeStartPoint.x, y: swipeStartPoint.y},
+        {type: POINTER_DOWN, button: BUTTON},
+        {
+          type: POINTER_MOVE,
+          duration: DURATION_2,
+          origin: ORIGIN,
+          x: swipeEndPoint.x,
+          y: swipeEndPoint.y,
+        },
+        {type: POINTER_UP, button: BUTTON},
+      ],
+    },
+  });
+};
+
 /**
  * Shows the app screenshot along with various overlay elements,
  * such as divs that highlight the elements' bounding boxes
@@ -45,66 +83,31 @@ const Screenshot = (props) => {
   const [x, setX] = useState();
   const [y, setY] = useState();
 
+  // Used when creating a gesture and clicking on screenshot to set move coordinates
   const handleScreenshotClick = async () => {
     if (selectedTick) {
       await tapTickCoordinates(x, y);
     }
   };
 
+  // Used during screenshot Coordinates Mode
   const handleScreenshotDown = async () => {
     if (screenshotInteractionMode === TAP_SWIPE) {
       await setCoordStart(x, y);
     }
   };
 
+  // Used during screenshot Coordinates Mode
   const handleScreenshotUp = async () => {
     if (screenshotInteractionMode === TAP_SWIPE) {
       await setCoordEnd(x, y);
       if (Math.abs(coordStart.x - x) < 5 && Math.abs(coordStart.y - y) < 5) {
-        await handleDoTap({x, y}); // Pass coordEnd because otherwise it is not retrieved
+        await handleTapOnScreenshot({x, y}, applyClientMethod);
       } else {
-        await handleDoSwipe({x, y}); // Pass coordEnd because otherwise it is not retrieved
+        await handleSwipeOnScreenshot(coordStart, {x, y}, applyClientMethod);
       }
       await clearCoordAction();
     }
-  };
-
-  const handleDoTap = async (tapLocal) => {
-    const {POINTER_NAME, DURATION_1, DURATION_2, BUTTON} = DEFAULT_TAP;
-    await applyClientMethod({
-      methodName: TAP,
-      args: [
-        {
-          [POINTER_NAME]: [
-            {type: POINTER_MOVE, duration: DURATION_1, x: tapLocal.x, y: tapLocal.y},
-            {type: POINTER_DOWN, button: BUTTON},
-            {type: PAUSE, duration: DURATION_2},
-            {type: POINTER_UP, button: BUTTON},
-          ],
-        },
-      ],
-    });
-  };
-
-  const handleDoSwipe = async (swipeEndLocal) => {
-    const {POINTER_NAME, DURATION_1, DURATION_2, BUTTON, ORIGIN} = DEFAULT_SWIPE;
-    await applyClientMethod({
-      methodName: SWIPE,
-      args: {
-        [POINTER_NAME]: [
-          {type: POINTER_MOVE, duration: DURATION_1, x: coordStart.x, y: coordStart.y},
-          {type: POINTER_DOWN, button: BUTTON},
-          {
-            type: POINTER_MOVE,
-            duration: DURATION_2,
-            origin: ORIGIN,
-            x: swipeEndLocal.x,
-            y: swipeEndLocal.y,
-          },
-          {type: POINTER_UP, button: BUTTON},
-        ],
-      },
-    });
   };
 
   const handleScreenshotCoordsUpdate = (e) => {

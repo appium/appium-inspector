@@ -39,38 +39,62 @@ const getGestureCoordinates = (gesture) =>
   });
 
 /**
- * Points and lines overlaid on the app screenshot,
+ * Line connecting two points in a gesture,
+ * overlaid on the app screenshot.
+ */
+const GestureTrailPointerLine = ({tick, prevTick, scaleRatio}) => (
+  <line
+    className={styles[tick.type]}
+    key={`${tick.id}.line`}
+    x1={prevTick.x / scaleRatio}
+    y1={prevTick.y / scaleRatio}
+    x2={tick.x / scaleRatio}
+    y2={tick.y / scaleRatio}
+    style={{stroke: tick.color}}
+  />
+);
+
+/**
+ * Single point in a gesture, overlaid on the app screenshot.
+ */
+const GestureTrailPointerPoint = ({tick, scaleRatio}) => (
+  <circle
+    className={styles[`${tick.type}Circle`]}
+    key={`${tick.id}.circle`}
+    cx={tick.x / scaleRatio}
+    cy={tick.y / scaleRatio}
+    r={8}
+    style={tick.type === GESTURE_ITEM_STYLES.FILLED ? {fill: tick.color} : {stroke: tick.color}}
+  />
+);
+
+/**
+ * Points and lines of a single pointer in a gesture,
+ * overlaid on the app screenshot.
+ */
+const GestureTrailPointer = ({pointer, scaleRatio}) =>
+  pointer.map((tick, index) => (
+    <Fragment key={tick.id}>
+      {index > 0 && (
+        <GestureTrailPointerLine
+          tick={tick}
+          prevTick={pointer[index - 1]}
+          scaleRatio={scaleRatio}
+        />
+      )}
+      <GestureTrailPointerPoint tick={tick} scaleRatio={scaleRatio} />
+    </Fragment>
+  ));
+
+/**
+ * Points and lines of a gesture overlaid on the app screenshot,
  * showing positions of the currently highlighted gesture in the Gestures tab.
  */
 const GestureTrail = ({gesture, scaleRatio}) => (
   <svg key="gestureSVG" className={styles.gestureSvg}>
-    {getGestureCoordinates(gesture).map((pointer) =>
-      pointer.map((tick, index) => (
-        <Fragment key={tick.id}>
-          {index > 0 && (
-            <line
-              className={styles[tick.type]}
-              key={`${tick.id}.line`}
-              x1={pointer[index - 1].x / scaleRatio}
-              y1={pointer[index - 1].y / scaleRatio}
-              x2={tick.x / scaleRatio}
-              y2={tick.y / scaleRatio}
-              style={{stroke: tick.color}}
-            />
-          )}
-          <circle
-            className={styles[`${tick.type}Circle`]}
-            key={`${tick.id}.circle`}
-            cx={tick.x / scaleRatio}
-            cy={tick.y / scaleRatio}
-            r={8}
-            style={
-              tick.type === GESTURE_ITEM_STYLES.FILLED ? {fill: tick.color} : {stroke: tick.color}
-            }
-          />
-        </Fragment>
-      )),
-    )}
+    {getGestureCoordinates(gesture).map((pointer) => (
+      <GestureTrailPointer key={pointer.id} pointer={pointer} scaleRatio={scaleRatio} />
+    ))}
   </svg>
 );
 
