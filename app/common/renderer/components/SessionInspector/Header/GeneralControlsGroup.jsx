@@ -12,51 +12,51 @@ import {BUTTON} from '../../../constants/antd-types.js';
 import LocatorSearchModal from './LocatorSearch/LocatorSearchModal.jsx';
 
 /**
- * Controls related to refreshing the app source/screenshot.
+ * Button for toggling automatic source/screenshot refresh.
  */
-const RefreshControlsGroup = ({
-  isUsingMjpegMode,
-  isSourceRefreshOn,
-  setRefreshingState,
-  applyClientMethod,
-}) => {
+const ToggleAutomaticRefreshButton = ({isSourceRefreshOn, setRefreshingState}) => {
   const {t} = useTranslation();
 
-  return (
-    <>
-      {isUsingMjpegMode &&
-        (isSourceRefreshOn ? (
-          <Tooltip title={t('Pause Refreshing Source')}>
-            <Button
-              id="btnPauseRefreshing"
-              icon={<IconPlayerPause size={18} />}
-              onClick={() => setRefreshingState({source: false})}
-            />
-          </Tooltip>
-        ) : (
-          <Tooltip title={t('Start Refreshing Source')}>
-            <Button
-              id="btnStartRefreshing"
-              icon={<IconPlayerPlay size={18} />}
-              onClick={() => setRefreshingState({source: true})}
-            />
-          </Tooltip>
-        ))}
-      <Tooltip title={t('refreshSource')}>
-        <Button
-          id="btnReload"
-          icon={<IconRefresh size={18} />}
-          onClick={() => applyClientMethod({methodName: 'getPageSource'})}
-        />
-      </Tooltip>
-    </>
+  return isSourceRefreshOn ? (
+    <Tooltip title={t('Pause Refreshing Source')}>
+      <Button
+        id="btnPauseRefreshing"
+        icon={<IconPlayerPause size={18} />}
+        onClick={() => setRefreshingState({source: false})}
+      />
+    </Tooltip>
+  ) : (
+    <Tooltip title={t('Start Refreshing Source')}>
+      <Button
+        id="btnStartRefreshing"
+        icon={<IconPlayerPlay size={18} />}
+        onClick={() => setRefreshingState({source: true})}
+      />
+    </Tooltip>
   );
 };
 
 /**
- * Controls related to locator search.
+ * Button for explicitly refreshing the app source/screenshot.
  */
-const SearchControlsGroup = (props) => {
+const ManualRefreshButton = ({applyClientMethod}) => {
+  const {t} = useTranslation();
+
+  return (
+    <Tooltip title={t('refreshSource')}>
+      <Button
+        id="btnReload"
+        icon={<IconRefresh size={18} />}
+        onClick={() => applyClientMethod({methodName: 'getPageSource'})}
+      />
+    </Tooltip>
+  );
+};
+
+/**
+ * Button to open the locator search modal.
+ */
+const SearchForElementButton = (props) => {
   const {showLocatorSearchModal} = props;
   const {t} = useTranslation();
 
@@ -75,9 +75,9 @@ const SearchControlsGroup = (props) => {
 };
 
 /**
- * Controls related to recording user interactions.
+ * Button for toggling recording of user interactions.
  */
-const RecordingControlsGroup = ({isRecording, startRecording, pauseRecording}) => {
+const ToggleRecordingButton = ({isRecording, startRecording, pauseRecording}) => {
   const {t} = useTranslation();
 
   return isRecording ? (
@@ -112,14 +112,16 @@ const GeneralControlsGroup = (props) => {
   } = props;
   return (
     <Space.Compact>
-      <RefreshControlsGroup
-        isUsingMjpegMode={isUsingMjpegMode}
-        isSourceRefreshOn={isSourceRefreshOn}
-        setRefreshingState={setRefreshingState}
-        applyClientMethod={applyClientMethod}
-      />
-      <SearchControlsGroup {...props} />
-      <RecordingControlsGroup
+      {isUsingMjpegMode && (
+        <ToggleAutomaticRefreshButton
+          isUsingMjpegMode={isUsingMjpegMode}
+          isSourceRefreshOn={isSourceRefreshOn}
+          setRefreshingState={setRefreshingState}
+        />
+      )}
+      <ManualRefreshButton applyClientMethod={applyClientMethod} />
+      <SearchForElementButton {...props} />
+      <ToggleRecordingButton
         isRecording={isRecording}
         startRecording={startRecording}
         pauseRecording={pauseRecording}
