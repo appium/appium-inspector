@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {SESSION_EXPIRY_PROMPT_TIMEOUT} from '../../constants/session-inspector.js';
 
 /**
- * Modal used for entering the Siri command to execute (iOS only).
+ * Modal shown when the session is about to expire due to inactivity.
  */
 const SessionExpiryModal = ({
   showKeepAlivePrompt,

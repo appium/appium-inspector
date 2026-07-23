@@ -98,15 +98,16 @@ const ScreenshotImgWithOverlays = (props) => {
 
   // Used during screenshot Coordinates Mode
   const handleScreenshotUp = async () => {
-    if (screenshotInteractionMode === TAP_SWIPE) {
-      await setCoordEnd(x, y);
-      if (Math.abs(coordStart.x - x) < 5 && Math.abs(coordStart.y - y) < 5) {
-        await handleTapOnScreenshot({x, y}, applyClientMethod);
-      } else {
-        await handleSwipeOnScreenshot(coordStart, {x, y}, applyClientMethod);
-      }
-      await clearCoordAction();
+    if (screenshotInteractionMode !== TAP_SWIPE || !coordStart) {
+      return;
     }
+    await setCoordEnd(x, y);
+    if (Math.abs(coordStart.x - x) < 5 && Math.abs(coordStart.y - y) < 5) {
+      await handleTapOnScreenshot({x, y}, applyClientMethod);
+    } else {
+      await handleSwipeOnScreenshot(coordStart, {x, y}, applyClientMethod);
+    }
+    await clearCoordAction();
   };
 
   const handleScreenshotCoordsUpdate = (e) => {
@@ -134,7 +135,7 @@ const ScreenshotImgWithOverlays = (props) => {
 
   const screenSrc = isUsingMjpegMode
     ? serverDetails.mjpegScreenshotUrl
-    : `data:image/gif;base64,${screenshot}`;
+    : `data:image/png;base64,${screenshot}`;
 
   // Show loading indicator if a method call is in progress, unless using MJPEG mode.
   return (
