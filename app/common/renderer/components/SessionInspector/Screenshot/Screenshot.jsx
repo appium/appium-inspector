@@ -10,6 +10,24 @@ import ScreenshotControls from './ScreenshotControls.jsx';
 import ScreenshotImgWithOverlays from './ScreenshotImgWithOverlays.jsx';
 
 /**
+ * Label shown when the screenshot could not be retrieved.
+ */
+const ScreenshotErrorLabel = ({screenshotError}) => {
+  const {t} = useTranslation();
+
+  return t('couldNotObtainScreenshot', {screenshotError});
+};
+
+/**
+ * Spinner shown while the initial screenshot retrieval is in progress.
+ */
+const ScreenshotOuterSpinner = () => (
+  <Spin size="large" spinning={true}>
+    <div className={styles.screenshotBox} />
+  </Spin>
+);
+
+/**
  * Container that wraps the app screenshot, including screenshot interaction buttons
  * and handling for when the screenshot is not loaded
  */
@@ -31,12 +49,10 @@ const Screenshot = (props) => {
 
   const [scaleRatio, setScaleRatio] = useState(1);
 
-  const {t} = useTranslation();
-
+  // If the screenshot has too much space to the right or bottom, adjust the max width
+  // of its container, so the source tree always fills the remaining space.
+  // This keeps everything looking tight.
   const updateScreenshotScale = useCallback(() => {
-    // If the screenshot has too much space to the right or bottom, adjust the max width
-    // of its container, so the source tree always fills the remaining space.
-    // This keeps everything looking tight.
     const screenshotContainer = screenshotContainerElRef.current;
     if (!screenshotContainer) {
       return;
@@ -144,12 +160,8 @@ const Screenshot = (props) => {
     >
       <ScreenshotControls {...props} />
       {showScreenshot && <ScreenshotImgWithOverlays {...props} scaleRatio={scaleRatio} />}
-      {screenshotError && t('couldNotObtainScreenshot', {screenshotError})}
-      {!showScreenshot && (
-        <Spin size="large" spinning={true}>
-          <div className={styles.screenshotBox} />
-        </Spin>
-      )}
+      {screenshotError && <ScreenshotErrorLabel screenshotError={screenshotError} />}
+      {!showScreenshot && <ScreenshotOuterSpinner />}
     </div>
   );
 };
