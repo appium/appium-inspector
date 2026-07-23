@@ -1,34 +1,12 @@
-import {
-  IconCrosshair,
-  IconDownload,
-  IconEyePlus,
-  IconMovie,
-  IconObjectScan,
-  IconPhoto,
-} from '@tabler/icons-react';
-import {Button, Space, Spin, Tabs, Tooltip} from 'antd';
-import {useCallback, useEffect, useRef, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import {useCallback, useEffect} from 'react';
 import {useNavigate} from 'react-router';
 
-import {BUTTON} from '../../constants/antd-types.js';
 import {WINDOW_DIMENSIONS} from '../../constants/common.js';
-import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot.js';
-import {INSPECTOR_TABS, MJPEG_STREAM_CHECK_INTERVAL} from '../../constants/session-inspector.js';
-import {debounce} from '../../utils/common.js';
-import {downloadFile} from '../../utils/file-handling.js';
-import Commands from './CommandsTab/Commands.jsx';
-import GestureEditor from './GesturesTab/GestureEditor/GestureEditor.jsx';
-import SavedGestures from './GesturesTab/SavedGestures.jsx';
 import HeaderButtons from './Header/HeaderButtons.jsx';
-import Recorder from './RecorderTab/Recorder.jsx';
-import Screenshot from './Screenshot/Screenshot.jsx';
+import ScreenshotContainer from './Screenshot/ScreenshotContainer.jsx';
 import SessionExpiryModal from './SessionExpiryModal.jsx';
-import SessionInfo from './SessionInfoTab/SessionInfo.jsx';
 import styles from './SessionInspector.module.css';
-import SourceTab from './SourceTab/SourceTab.jsx';
-
-const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
+import SessionInspectorTabs from './SessionInspectorTabs.jsx';
 
 // resize width to something sensible for using the inspector on first run
 const resizeWindowOnLaunch = () => {
@@ -43,144 +21,28 @@ const resizeWindowOnLaunch = () => {
   }
 };
 
-const downloadScreenshot = (screenshot) => {
-  const href = `data:image/png;base64,${screenshot}`;
-  const filename = `appium-inspector-${new Date().toJSON()}.png`;
-  downloadFile(href, filename);
-};
-
+/**
+ * The root component of the Session Inspector screen.
+ */
 const Inspector = (props) => {
   const {
     screenshot,
     screenshotError,
+    isUsingMjpegMode,
+    isAwaitingMjpegStream,
+    isSourceRefreshOn,
     quitSession,
-    screenshotInteractionMode,
-    selectedInspectorTab,
-    selectInspectorTab,
     setUserWaitTimeout,
     showKeepAlivePrompt,
     keepSessionAlive,
-    serverDetails,
-    isUsingMjpegMode,
-    setMjpegState,
-    isAwaitingMjpegStream,
-    setRefreshingState,
-    toggleShowCentroids,
-    showCentroids,
-    isGestureEditorVisible,
-    isSourceRefreshOn,
-    windowSize,
     applyClientMethod,
     getSavedClientFramework,
     runKeepAliveLoop,
     setSessionTime,
     storeSessionSettings,
-    setAwaitingMjpegStream,
   } = props;
 
-  const screenshotContainerElRef = useRef(null);
-  const mjpegStreamCheckIntervalRef = useRef(null);
-  // Debounced updater stored in a ref to avoid creating it during render
-  const updateScreenshotScaleDebouncedRef = useRef(undefined);
-
-  const [scaleRatio, setScaleRatio] = useState(1);
-
   const navigate = useNavigate();
-  const {t} = useTranslation();
-
-  const showScreenshot =
-    (screenshot && !screenshotError) ||
-    (isUsingMjpegMode && (!isSourceRefreshOn || !isAwaitingMjpegStream));
-
-  const updateScreenshotScale = useCallback(() => {
-    // If the screenshot has too much space to the right or bottom, adjust the max width
-    // of its container, so the source tree always fills the remaining space.
-    // This keeps everything looking tight.
-    const screenshotContainer = screenshotContainerElRef.current;
-    if (!screenshotContainer) {
-      return;
-    }
-
-    const screenshotImg = screenshotContainer.querySelector('#screenshot');
-    if (!screenshotImg) {
-      return;
-    }
-
-    const imgRect = screenshotImg.getBoundingClientRect();
-    const containerRect = screenshotContainer.getBoundingClientRect();
-    if (imgRect.height < containerRect.height) {
-      // get the expected image width if the image would fill the screenshot box height
-      const attemptedImgWidth = (containerRect.height / imgRect.height) * imgRect.width;
-      // get the maximum image width as a fraction of the current window width
-      const maxImgWidth = window.innerWidth * WINDOW_DIMENSIONS.MAX_IMAGE_WIDTH_FRACTION;
-      // make sure not to exceed both the maximum allowed width and the full screenshot width
-      const curMaxImgWidth = Math.min(maxImgWidth, attemptedImgWidth, windowSize.width);
-      screenshotContainer.style.maxWidth = `${curMaxImgWidth}px`;
-    } else if (imgRect.width < containerRect.width) {
-      screenshotContainer.style.maxWidth = `${imgRect.width}px`;
-    }
-
-    // Calculate the ratio for scaling items overlaid on the screenshot
-    // (highlighter rectangles/circles, gestures, etc.)
-    const newImgWidth = screenshotImg.getBoundingClientRect().width;
-    setScaleRatio(windowSize.width / newImgWidth);
-  }, [windowSize]);
-
-  useEffect(() => {
-    const debounced = debounce(() => {
-      updateScreenshotScale();
-    }, 50);
-    updateScreenshotScaleDebouncedRef.current = debounced;
-    return () => {
-      debounced.cancel?.();
-      if (updateScreenshotScaleDebouncedRef.current === debounced) {
-        updateScreenshotScaleDebouncedRef.current = undefined;
-      }
-    };
-  }, [updateScreenshotScale]);
-
-  // Stable handler for events that calls the debounced function ref
-  const updateScreenshotScaleDebounced = useCallback(() => {
-    updateScreenshotScaleDebouncedRef.current?.();
-  }, []);
-
-  const checkMjpegStream = useCallback(async () => {
-    const img = new Image();
-    img.src = serverDetails.mjpegScreenshotUrl;
-    let imgReady = false;
-    try {
-      await img.decode();
-      imgReady = true;
-    } catch {}
-    if (imgReady && isAwaitingMjpegStream) {
-      setAwaitingMjpegStream(false);
-      updateScreenshotScaleDebounced();
-      // stream obtained - can clear the refresh interval
-      clearInterval(mjpegStreamCheckIntervalRef.current);
-      mjpegStreamCheckIntervalRef.current = null;
-    } else if (!imgReady && !isAwaitingMjpegStream) {
-      setAwaitingMjpegStream(true);
-    }
-  }, [
-    isAwaitingMjpegStream,
-    serverDetails.mjpegScreenshotUrl,
-    setAwaitingMjpegStream,
-    updateScreenshotScaleDebounced,
-  ]);
-
-  const screenshotInteractionChange = (mode) => {
-    const {selectScreenshotInteractionMode, clearCoordAction} = props;
-    clearCoordAction(); // When the action changes, reset the swipe action
-    selectScreenshotInteractionMode(mode);
-  };
-
-  const switchScreenCaptureMode = (shouldUseMjpeg) => {
-    setMjpegState(shouldUseMjpeg);
-    if (!shouldUseMjpeg) {
-      setRefreshingState({source: true});
-    }
-    applyClientMethod({methodName: 'getPageSource'});
-  };
 
   const quitSessionAndReturn = useCallback(
     async ({reason, manualQuit = true, detachOnly = false} = {}) => {
@@ -189,6 +51,10 @@ const Inspector = (props) => {
     },
     [navigate, quitSession],
   );
+
+  const showScreenshot =
+    (screenshot && !screenshotError) ||
+    (isUsingMjpegMode && (!isSourceRefreshOn || !isAwaitingMjpegStream));
 
   useEffect(() => {
     resizeWindowOnLaunch();
@@ -205,157 +71,13 @@ const Inspector = (props) => {
     storeSessionSettings,
   ]);
 
-  /**
-   * Ensures component dimensions are adjusted only once windowSize exists.
-   * Cannot be combined with the other useEffect hook, since inside it,
-   * windowSize is set to 'undefined', and the event listener and MJPEG checker
-   * would not update this value when invoked
-   */
-  useEffect(() => {
-    if (!windowSize || !JSON.stringify(windowSize)) {
-      return;
-    }
-    updateScreenshotScaleDebounced();
-    window.addEventListener('resize', updateScreenshotScaleDebounced);
-    if (isUsingMjpegMode) {
-      mjpegStreamCheckIntervalRef.current = setInterval(
-        checkMjpegStream,
-        MJPEG_STREAM_CHECK_INTERVAL,
-      );
-    }
-    return () => {
-      window.removeEventListener('resize', updateScreenshotScaleDebounced);
-      if (mjpegStreamCheckIntervalRef.current) {
-        clearInterval(mjpegStreamCheckIntervalRef.current);
-        mjpegStreamCheckIntervalRef.current = null;
-      }
-    };
-  }, [checkMjpegStream, isUsingMjpegMode, updateScreenshotScaleDebounced, windowSize]);
-
-  const screenShotControls = (
-    <div className={styles.screenshotControls}>
-      <Space size="middle">
-        {serverDetails.mjpegScreenshotUrl !== null && (
-          <Space.Compact>
-            <Tooltip title={t('useMjpegStream')} placement="topLeft">
-              <Button
-                icon={<IconMovie size={18} />}
-                onClick={() => switchScreenCaptureMode(true)}
-                type={isUsingMjpegMode ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-              />
-            </Tooltip>
-            <Tooltip title={t('useScreenshotApi')} placement="topLeft">
-              <Button
-                icon={<IconPhoto size={18} />}
-                onClick={() => switchScreenCaptureMode(false)}
-                type={!isUsingMjpegMode ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-              />
-            </Tooltip>
-          </Space.Compact>
-        )}
-        <Tooltip title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')}>
-          <Button
-            icon={<IconEyePlus size={18} />}
-            onClick={() => toggleShowCentroids()}
-            type={showCentroids ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-            disabled={isGestureEditorVisible}
-          />
-        </Tooltip>
-        <Space.Compact>
-          <Tooltip title={t('Select Elements')}>
-            <Button
-              icon={<IconObjectScan size={18} />}
-              onClick={() => screenshotInteractionChange(SELECT)}
-              type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-              disabled={isGestureEditorVisible}
-            />
-          </Tooltip>
-          <Tooltip title={t('Tap/Swipe By Coordinates')}>
-            <Button
-              icon={<IconCrosshair size={18} />}
-              onClick={() => screenshotInteractionChange(TAP_SWIPE)}
-              type={screenshotInteractionMode === TAP_SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-              disabled={isGestureEditorVisible}
-            />
-          </Tooltip>
-        </Space.Compact>
-        <Tooltip title={t('Download Screenshot')}>
-          <Button
-            icon={<IconDownload size={18} />}
-            onClick={() => downloadScreenshot(screenshot)}
-            disabled={!showScreenshot || isUsingMjpegMode}
-          />
-        </Tooltip>
-      </Space>
-    </div>
-  );
-
-  const main = (
-    <div className={styles.inspectorMain}>
-      <div
-        id="screenshotContainer"
-        className={styles.screenshotContainer}
-        ref={screenshotContainerElRef}
-      >
-        {screenShotControls}
-        {showScreenshot && <Screenshot {...props} scaleRatio={scaleRatio} />}
-        {screenshotError && t('couldNotObtainScreenshot', {screenshotError})}
-        {!showScreenshot && (
-          <Spin size="large" spinning={true}>
-            <div className={styles.screenshotBox} />
-          </Spin>
-        )}
-      </div>
-      <div className={styles.inspectorTabsContainer}>
-        <Tabs
-          activeKey={selectedInspectorTab}
-          size="small"
-          onChange={(tab) => selectInspectorTab(tab)}
-          items={[
-            {
-              label: t('Source'),
-              key: INSPECTOR_TABS.SOURCE,
-              disabled: !showScreenshot,
-              children: <SourceTab {...props} />,
-            },
-            {
-              label: t('Commands'),
-              key: INSPECTOR_TABS.COMMANDS,
-              disabled: !showScreenshot,
-              children: <Commands {...props} />,
-            },
-            {
-              label: t('Gestures'),
-              key: INSPECTOR_TABS.GESTURES,
-              disabled: !showScreenshot,
-              children: isGestureEditorVisible ? (
-                <GestureEditor {...props} />
-              ) : (
-                <SavedGestures {...props} />
-              ),
-            },
-            {
-              label: t('Recorder'),
-              key: INSPECTOR_TABS.RECORDER,
-              disabled: !showScreenshot,
-              children: <Recorder {...props} />,
-            },
-            {
-              label: t('Session Information'),
-              key: INSPECTOR_TABS.SESSION_INFO,
-              disabled: !showScreenshot,
-              children: <SessionInfo {...props} />,
-            },
-          ]}
-        />
-      </div>
-    </div>
-  );
-
   return (
     <div className={styles.inspectorContainer}>
-      <HeaderButtons quitSessionAndReturn={quitSessionAndReturn} {...props} />
-      {main}
+      <HeaderButtons {...props} quitSessionAndReturn={quitSessionAndReturn} />
+      <div className={styles.inspectorMain}>
+        <ScreenshotContainer {...props} showScreenshot={showScreenshot} />
+        <SessionInspectorTabs {...props} showScreenshot={showScreenshot} />
+      </div>
       <SessionExpiryModal
         showKeepAlivePrompt={showKeepAlivePrompt}
         keepSessionAlive={keepSessionAlive}
