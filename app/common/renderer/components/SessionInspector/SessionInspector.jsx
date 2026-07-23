@@ -6,7 +6,7 @@ import {
   IconObjectScan,
   IconPhoto,
 } from '@tabler/icons-react';
-import {Button, Modal, Space, Spin, Tabs, Tooltip} from 'antd';
+import {Button, Space, Spin, Tabs, Tooltip} from 'antd';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useNavigate} from 'react-router';
@@ -14,11 +14,7 @@ import {useNavigate} from 'react-router';
 import {BUTTON} from '../../constants/antd-types.js';
 import {WINDOW_DIMENSIONS} from '../../constants/common.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot.js';
-import {
-  INSPECTOR_TABS,
-  MJPEG_STREAM_CHECK_INTERVAL,
-  SESSION_EXPIRY_PROMPT_TIMEOUT,
-} from '../../constants/session-inspector.js';
+import {INSPECTOR_TABS, MJPEG_STREAM_CHECK_INTERVAL} from '../../constants/session-inspector.js';
 import {debounce} from '../../utils/common.js';
 import {downloadFile} from '../../utils/file-handling.js';
 import Commands from './CommandsTab/Commands.jsx';
@@ -27,6 +23,7 @@ import SavedGestures from './GesturesTab/SavedGestures.jsx';
 import HeaderButtons from './Header/HeaderButtons.jsx';
 import Recorder from './RecorderTab/Recorder.jsx';
 import Screenshot from './Screenshot/Screenshot.jsx';
+import SessionExpiryModal from './SessionExpiryModal.jsx';
 import SessionInfo from './SessionInfoTab/SessionInfo.jsx';
 import styles from './SessionInspector.module.css';
 import SourceTab from './SourceTab/SourceTab.jsx';
@@ -85,9 +82,6 @@ const Inspector = (props) => {
   const mjpegStreamCheckIntervalRef = useRef(null);
   // Debounced updater stored in a ref to avoid creating it during render
   const updateScreenshotScaleDebouncedRef = useRef(undefined);
-
-  // Ref to persist session expiry timeout without resetting on re-renders
-  const sessionExpiryTimeoutRef = useRef(null);
 
   const [scaleRatio, setScaleRatio] = useState(1);
 
@@ -238,25 +232,6 @@ const Inspector = (props) => {
     };
   }, [checkMjpegStream, isUsingMjpegMode, updateScreenshotScaleDebounced, windowSize]);
 
-  // If session expiry prompt is shown, start timeout until session is automatically quit.
-  // Timeout should remain active until it fires or user acts (keep alive / quit).
-  useEffect(() => {
-    if (showKeepAlivePrompt) {
-      // Create timeout only once while prompt is visible
-      if (!sessionExpiryTimeoutRef.current) {
-        sessionExpiryTimeoutRef.current = setTimeout(() => {
-          quitSessionAndReturn({reason: t('Session closed due to inactivity'), manualQuit: false});
-        }, SESSION_EXPIRY_PROMPT_TIMEOUT);
-        setUserWaitTimeout(sessionExpiryTimeoutRef.current);
-      }
-    } else if (sessionExpiryTimeoutRef.current) {
-      // Prompt dismissed by user action; clear timeout
-      clearTimeout(sessionExpiryTimeoutRef.current);
-      sessionExpiryTimeoutRef.current = null;
-      setUserWaitTimeout(null);
-    }
-  }, [quitSessionAndReturn, setUserWaitTimeout, showKeepAlivePrompt, t]);
-
   const screenShotControls = (
     <div className={styles.screenshotControls}>
       <Space size="middle">
@@ -381,16 +356,12 @@ const Inspector = (props) => {
     <div className={styles.inspectorContainer}>
       <HeaderButtons quitSessionAndReturn={quitSessionAndReturn} {...props} />
       {main}
-      <Modal
-        title={t('Session Inactive')}
-        open={showKeepAlivePrompt}
-        onOk={() => keepSessionAlive()}
-        onCancel={() => quitSessionAndReturn()}
-        okText={t('Keep Session Running')}
-        cancelText={t('Quit Session')}
-      >
-        <p>{t('Your session is about to expire')}</p>
-      </Modal>
+      <SessionExpiryModal
+        showKeepAlivePrompt={showKeepAlivePrompt}
+        keepSessionAlive={keepSessionAlive}
+        quitSessionAndReturn={quitSessionAndReturn}
+        setUserWaitTimeout={setUserWaitTimeout}
+      />
     </div>
   );
 };
