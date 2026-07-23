@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router';
 
 import {WINDOW_DIMENSIONS} from '../../constants/common.js';
 import HeaderButtons from './Header/HeaderButtons.jsx';
-import ScreenshotContainer from './Screenshot/ScreenshotContainer.jsx';
+import Screenshot from './Screenshot/Screenshot.jsx';
 import SessionExpiryModal from './SessionExpiryModal.jsx';
 import styles from './SessionInspector.module.css';
 import SessionInspectorTabs from './SessionInspectorTabs.jsx';
@@ -75,7 +75,7 @@ const Inspector = (props) => {
     <div className={styles.inspectorContainer}>
       <HeaderButtons {...props} quitSessionAndReturn={quitSessionAndReturn} />
       <div className={styles.inspectorMain}>
-        <ScreenshotContainer {...props} showScreenshot={showScreenshot} />
+        <Screenshot {...props} showScreenshot={showScreenshot} />
         <SessionInspectorTabs {...props} showScreenshot={showScreenshot} />
       </div>
       <SessionExpiryModal
