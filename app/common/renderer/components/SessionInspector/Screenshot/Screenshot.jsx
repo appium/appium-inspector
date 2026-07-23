@@ -27,6 +27,40 @@ const ScreenshotOuterSpinner = () => (
   </Spin>
 );
 
+// If the screenshot has too much space to the right or bottom, adjust the max width
+// of its container, so the source tree always fills the remaining space.
+// This keeps everything looking tight.
+const updateScreenshotScale = (screenshotContainerElRef, setScaleRatio, windowSize) => {
+  const screenshotContainer = screenshotContainerElRef.current;
+  if (!screenshotContainer) {
+    return;
+  }
+
+  const screenshotImg = screenshotContainer.querySelector('#screenshot');
+  if (!screenshotImg) {
+    return;
+  }
+
+  const imgRect = screenshotImg.getBoundingClientRect();
+  const containerRect = screenshotContainer.getBoundingClientRect();
+  if (imgRect.height < containerRect.height) {
+    // get the expected image width if the image would fill the screenshot box height
+    const attemptedImgWidth = (containerRect.height / imgRect.height) * imgRect.width;
+    // get the maximum image width as a fraction of the current window width
+    const maxImgWidth = window.innerWidth * WINDOW_DIMENSIONS.MAX_IMAGE_WIDTH_FRACTION;
+    // make sure not to exceed both the maximum allowed width and the full screenshot width
+    const curMaxImgWidth = Math.min(maxImgWidth, attemptedImgWidth, windowSize.width);
+    screenshotContainer.style.maxWidth = `${curMaxImgWidth}px`;
+  } else if (imgRect.width < containerRect.width) {
+    screenshotContainer.style.maxWidth = `${imgRect.width}px`;
+  }
+
+  // Calculate the ratio for scaling items overlaid on the screenshot
+  // (highlighter rectangles/circles, gestures, etc.)
+  const newImgWidth = screenshotImg.getBoundingClientRect().width;
+  setScaleRatio(windowSize.width / newImgWidth);
+};
+
 /**
  * Container that wraps the app screenshot, including screenshot interaction buttons
  * and handling for when the screenshot is not loaded
@@ -49,43 +83,9 @@ const Screenshot = (props) => {
 
   const [scaleRatio, setScaleRatio] = useState(1);
 
-  // If the screenshot has too much space to the right or bottom, adjust the max width
-  // of its container, so the source tree always fills the remaining space.
-  // This keeps everything looking tight.
-  const updateScreenshotScale = useCallback(() => {
-    const screenshotContainer = screenshotContainerElRef.current;
-    if (!screenshotContainer) {
-      return;
-    }
-
-    const screenshotImg = screenshotContainer.querySelector('#screenshot');
-    if (!screenshotImg) {
-      return;
-    }
-
-    const imgRect = screenshotImg.getBoundingClientRect();
-    const containerRect = screenshotContainer.getBoundingClientRect();
-    if (imgRect.height < containerRect.height) {
-      // get the expected image width if the image would fill the screenshot box height
-      const attemptedImgWidth = (containerRect.height / imgRect.height) * imgRect.width;
-      // get the maximum image width as a fraction of the current window width
-      const maxImgWidth = window.innerWidth * WINDOW_DIMENSIONS.MAX_IMAGE_WIDTH_FRACTION;
-      // make sure not to exceed both the maximum allowed width and the full screenshot width
-      const curMaxImgWidth = Math.min(maxImgWidth, attemptedImgWidth, windowSize.width);
-      screenshotContainer.style.maxWidth = `${curMaxImgWidth}px`;
-    } else if (imgRect.width < containerRect.width) {
-      screenshotContainer.style.maxWidth = `${imgRect.width}px`;
-    }
-
-    // Calculate the ratio for scaling items overlaid on the screenshot
-    // (highlighter rectangles/circles, gestures, etc.)
-    const newImgWidth = screenshotImg.getBoundingClientRect().width;
-    setScaleRatio(windowSize.width / newImgWidth);
-  }, [windowSize]);
-
   useEffect(() => {
     const debounced = debounce(() => {
-      updateScreenshotScale();
+      updateScreenshotScale(screenshotContainerElRef, setScaleRatio, windowSize);
     }, 50);
     updateScreenshotScaleDebouncedRef.current = debounced;
     return () => {
@@ -94,7 +94,7 @@ const Screenshot = (props) => {
         updateScreenshotScaleDebouncedRef.current = undefined;
       }
     };
-  }, [updateScreenshotScale]);
+  }, [windowSize]);
 
   // Stable handler for events that calls the debounced function ref
   const updateScreenshotScaleDebounced = useCallback(() => {
