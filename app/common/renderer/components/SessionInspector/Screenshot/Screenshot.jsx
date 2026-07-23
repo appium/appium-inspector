@@ -78,79 +78,58 @@ const Screenshot = (props) => {
 
   const screenshotContainerElRef = useRef(null);
   const mjpegStreamCheckIntervalRef = useRef(null);
-  // Debounced updater stored in a ref to avoid creating it during render
-  const updateScreenshotScaleDebouncedRef = useRef(undefined);
 
   const [scaleRatio, setScaleRatio] = useState(1);
 
-  useEffect(() => {
-    const debounced = debounce(() => {
-      updateScreenshotScale(screenshotContainerElRef, setScaleRatio, windowSize);
-    }, 50);
-    updateScreenshotScaleDebouncedRef.current = debounced;
-    return () => {
-      debounced.cancel?.();
-      if (updateScreenshotScaleDebouncedRef.current === debounced) {
-        updateScreenshotScaleDebouncedRef.current = undefined;
+  const checkMjpegStream = useCallback(
+    async (debouncedUpdateScale) => {
+      const img = new Image();
+      img.src = serverDetails.mjpegScreenshotUrl;
+      let imgReady = false;
+      try {
+        await img.decode();
+        imgReady = true;
+      } catch {}
+      if (imgReady && isAwaitingMjpegStream) {
+        setAwaitingMjpegStream(false);
+        debouncedUpdateScale();
+        // stream obtained - can clear the refresh interval
+        clearInterval(mjpegStreamCheckIntervalRef.current);
+        mjpegStreamCheckIntervalRef.current = null;
+      } else if (!imgReady && !isAwaitingMjpegStream) {
+        setAwaitingMjpegStream(true);
       }
-    };
-  }, [windowSize]);
-
-  // Stable handler for events that calls the debounced function ref
-  const updateScreenshotScaleDebounced = useCallback(() => {
-    updateScreenshotScaleDebouncedRef.current?.();
-  }, []);
-
-  const checkMjpegStream = useCallback(async () => {
-    const img = new Image();
-    img.src = serverDetails.mjpegScreenshotUrl;
-    let imgReady = false;
-    try {
-      await img.decode();
-      imgReady = true;
-    } catch {}
-    if (imgReady && isAwaitingMjpegStream) {
-      setAwaitingMjpegStream(false);
-      updateScreenshotScaleDebounced();
-      // stream obtained - can clear the refresh interval
-      clearInterval(mjpegStreamCheckIntervalRef.current);
-      mjpegStreamCheckIntervalRef.current = null;
-    } else if (!imgReady && !isAwaitingMjpegStream) {
-      setAwaitingMjpegStream(true);
-    }
-  }, [
-    isAwaitingMjpegStream,
-    serverDetails.mjpegScreenshotUrl,
-    setAwaitingMjpegStream,
-    updateScreenshotScaleDebounced,
-  ]);
+    },
+    [isAwaitingMjpegStream, serverDetails.mjpegScreenshotUrl, setAwaitingMjpegStream],
+  );
 
   /**
    * Ensures component dimensions are adjusted only once windowSize exists.
-   * Cannot be combined with the other useEffect hook, since inside it,
-   * windowSize is set to 'undefined', and the event listener and MJPEG checker
-   * would not update this value when invoked
    */
   useEffect(() => {
     if (!windowSize || !JSON.stringify(windowSize)) {
       return;
     }
-    updateScreenshotScaleDebounced();
-    window.addEventListener('resize', updateScreenshotScaleDebounced);
+    const debouncedUpdateScale = debounce(() => {
+      updateScreenshotScale(screenshotContainerElRef, setScaleRatio, windowSize);
+    }, 50);
+    debouncedUpdateScale();
+    window.addEventListener('resize', debouncedUpdateScale);
     if (isUsingMjpegMode) {
       mjpegStreamCheckIntervalRef.current = setInterval(
-        checkMjpegStream,
+        () => checkMjpegStream(debouncedUpdateScale),
         MJPEG_STREAM_CHECK_INTERVAL,
       );
     }
     return () => {
-      window.removeEventListener('resize', updateScreenshotScaleDebounced);
+      window.removeEventListener('resize', debouncedUpdateScale);
       if (mjpegStreamCheckIntervalRef.current) {
         clearInterval(mjpegStreamCheckIntervalRef.current);
         mjpegStreamCheckIntervalRef.current = null;
       }
+      debouncedUpdateScale.cancel?.();
     };
-  }, [checkMjpegStream, isUsingMjpegMode, updateScreenshotScaleDebounced, windowSize]);
+  }, [checkMjpegStream, isUsingMjpegMode, windowSize]);
 
   return (
     <div
