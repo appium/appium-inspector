@@ -1,175 +1,151 @@
 import {Spin} from 'antd';
-import {useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
-import {POINTER_TYPES} from '../../../constants/gestures.js';
-import {
-  DEFAULT_SWIPE,
-  DEFAULT_TAP,
-  SCREENSHOT_INTERACTION_MODE,
-} from '../../../constants/screenshot.js';
-import {INSPECTOR_TABS} from '../../../constants/session-inspector.js';
-import inspectorStyles from '../SessionInspector.module.css';
-import CoordinatesContainer from './Overlays/CoordinatesContainer.jsx';
-import ElementOverlays from './Overlays/ElementOverlays.jsx';
-import GestureTrail from './Overlays/GestureTrail.jsx';
-import TapSwipeTrail from './Overlays/TapSwipeTrail.jsx';
+import {WINDOW_DIMENSIONS} from '../../../constants/common.js';
+import {MJPEG_STREAM_CHECK_INTERVAL} from '../../../constants/session-inspector.js';
+import {debounce} from '../../../utils/common.js';
 import styles from './Screenshot.module.css';
+import ScreenshotControls from './ScreenshotControls.jsx';
+import ScreenshotImgWithOverlays from './ScreenshotImgWithOverlays.jsx';
 
-const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
-const {TAP, SELECT, SWIPE, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
+/**
+ * Label shown when the screenshot could not be retrieved.
+ */
+const ScreenshotErrorLabel = ({screenshotError}) => {
+  const {t} = useTranslation();
 
-const handleTapOnScreenshot = async (tapPoint, applyClientMethod) => {
-  const {POINTER_NAME, DURATION_1, DURATION_2, BUTTON} = DEFAULT_TAP;
-  await applyClientMethod({
-    methodName: TAP,
-    args: [
-      {
-        [POINTER_NAME]: [
-          {type: POINTER_MOVE, duration: DURATION_1, x: tapPoint.x, y: tapPoint.y},
-          {type: POINTER_DOWN, button: BUTTON},
-          {type: PAUSE, duration: DURATION_2},
-          {type: POINTER_UP, button: BUTTON},
-        ],
-      },
-    ],
-  });
-};
-
-const handleSwipeOnScreenshot = async (swipeStartPoint, swipeEndPoint, applyClientMethod) => {
-  const {POINTER_NAME, DURATION_1, DURATION_2, BUTTON, ORIGIN} = DEFAULT_SWIPE;
-  await applyClientMethod({
-    methodName: SWIPE,
-    args: {
-      [POINTER_NAME]: [
-        {type: POINTER_MOVE, duration: DURATION_1, x: swipeStartPoint.x, y: swipeStartPoint.y},
-        {type: POINTER_DOWN, button: BUTTON},
-        {
-          type: POINTER_MOVE,
-          duration: DURATION_2,
-          origin: ORIGIN,
-          x: swipeEndPoint.x,
-          y: swipeEndPoint.y,
-        },
-        {type: POINTER_UP, button: BUTTON},
-      ],
-    },
-  });
+  return t('couldNotObtainScreenshot', {screenshotError});
 };
 
 /**
- * Shows the app screenshot along with various overlay elements,
- * such as divs that highlight the elements' bounding boxes
+ * Spinner shown while the initial screenshot retrieval is in progress.
+ */
+const ScreenshotOuterSpinner = () => (
+  <Spin size="large" spinning={true}>
+    <div className={styles.screenshotBox} />
+  </Spin>
+);
+
+// If the screenshot has too much space to the right or bottom, adjust the max width
+// of its container, so the source tree always fills the remaining space.
+// This keeps everything looking tight.
+const updateScreenshotScale = (screenshotContainerElRef, setScaleRatio, windowSize) => {
+  const screenshotContainer = screenshotContainerElRef.current;
+  if (!screenshotContainer) {
+    return;
+  }
+
+  const screenshotImg = screenshotContainer.querySelector('#screenshot');
+  if (!screenshotImg) {
+    return;
+  }
+
+  const imgRect = screenshotImg.getBoundingClientRect();
+  if (!imgRect.width || !imgRect.height) {
+    return;
+  }
+
+  const containerRect = screenshotContainer.getBoundingClientRect();
+  if (imgRect.height < containerRect.height) {
+    // get the expected image width if the image would fill the screenshot box height
+    const attemptedImgWidth = (containerRect.height / imgRect.height) * imgRect.width;
+    // get the maximum image width as a fraction of the current window width
+    const maxImgWidth = window.innerWidth * WINDOW_DIMENSIONS.MAX_IMAGE_WIDTH_FRACTION;
+    // make sure not to exceed both the maximum allowed width and the full screenshot width
+    const curMaxImgWidth = Math.min(maxImgWidth, attemptedImgWidth, windowSize.width);
+    screenshotContainer.style.maxWidth = `${curMaxImgWidth}px`;
+  } else if (imgRect.width < containerRect.width) {
+    screenshotContainer.style.maxWidth = `${imgRect.width}px`;
+  }
+
+  // Calculate the ratio for scaling items overlaid on the screenshot
+  // (highlighter rectangles/circles, gestures, etc.)
+  const newImgWidth = screenshotImg.getBoundingClientRect().width;
+  setScaleRatio(windowSize.width / newImgWidth);
+};
+
+/**
+ * Container that wraps the app screenshot, including screenshot interaction buttons
+ * and handling for when the screenshot is not loaded
  */
 const Screenshot = (props) => {
   const {
-    screenshot,
+    showScreenshot,
+    screenshotError,
     serverDetails,
     isUsingMjpegMode,
-    methodCallInProgress,
-    screenshotInteractionMode,
-    coordStart,
-    coordEnd,
-    clearCoordAction,
-    scaleRatio,
-    selectedTick,
-    tapTickCoordinates,
-    setCoordStart,
-    setCoordEnd,
-    showGesture,
-    selectedInspectorTab,
-    applyClientMethod,
+    isAwaitingMjpegStream,
+    setAwaitingMjpegStream,
+    windowSize,
   } = props;
 
-  const [x, setX] = useState();
-  const [y, setY] = useState();
+  const screenshotContainerElRef = useRef(null);
+  const mjpegStreamCheckIntervalRef = useRef(null);
 
-  // Used when creating a gesture and clicking on screenshot to set move coordinates
-  const handleScreenshotClick = async () => {
-    if (selectedTick) {
-      await tapTickCoordinates(x, y);
-    }
-  };
+  const [scaleRatio, setScaleRatio] = useState(1);
 
-  // Used during screenshot Coordinates Mode
-  const handleScreenshotDown = async () => {
-    if (screenshotInteractionMode === TAP_SWIPE) {
-      await setCoordStart(x, y);
-    }
-  };
-
-  // Used during screenshot Coordinates Mode
-  const handleScreenshotUp = async () => {
-    if (screenshotInteractionMode === TAP_SWIPE) {
-      await setCoordEnd(x, y);
-      if (Math.abs(coordStart.x - x) < 5 && Math.abs(coordStart.y - y) < 5) {
-        await handleTapOnScreenshot({x, y}, applyClientMethod);
-      } else {
-        await handleSwipeOnScreenshot(coordStart, {x, y}, applyClientMethod);
+  const checkMjpegStream = useCallback(
+    async (debouncedUpdateScale) => {
+      const img = new Image();
+      img.src = serverDetails.mjpegScreenshotUrl;
+      let imgReady = false;
+      try {
+        await img.decode();
+        imgReady = true;
+      } catch {}
+      if (imgReady && isAwaitingMjpegStream) {
+        setAwaitingMjpegStream(false);
+        debouncedUpdateScale();
+        // stream obtained - can clear the refresh interval
+        clearInterval(mjpegStreamCheckIntervalRef.current);
+        mjpegStreamCheckIntervalRef.current = null;
+      } else if (!imgReady && !isAwaitingMjpegStream) {
+        setAwaitingMjpegStream(true);
       }
-      await clearCoordAction();
+    },
+    [isAwaitingMjpegStream, serverDetails.mjpegScreenshotUrl, setAwaitingMjpegStream],
+  );
+
+  /**
+   * Ensures component dimensions are adjusted only once windowSize exists.
+   */
+  useEffect(() => {
+    if (!windowSize || !JSON.stringify(windowSize)) {
+      return;
     }
-  };
-
-  const handleScreenshotCoordsUpdate = (e) => {
-    if (screenshotInteractionMode !== SELECT) {
-      const offsetX = e.nativeEvent.offsetX;
-      const offsetY = e.nativeEvent.offsetY;
-      const newX = offsetX * scaleRatio;
-      const newY = offsetY * scaleRatio;
-      setX(Math.round(newX));
-      setY(Math.round(newY));
+    const debouncedUpdateScale = debounce(() => {
+      updateScreenshotScale(screenshotContainerElRef, setScaleRatio, windowSize);
+    }, 50);
+    debouncedUpdateScale();
+    window.addEventListener('resize', debouncedUpdateScale);
+    if (isUsingMjpegMode) {
+      mjpegStreamCheckIntervalRef.current = setInterval(
+        () => checkMjpegStream(debouncedUpdateScale),
+        MJPEG_STREAM_CHECK_INTERVAL,
+      );
     }
-  };
+    return () => {
+      window.removeEventListener('resize', debouncedUpdateScale);
+      if (mjpegStreamCheckIntervalRef.current) {
+        clearInterval(mjpegStreamCheckIntervalRef.current);
+        mjpegStreamCheckIntervalRef.current = null;
+      }
+      debouncedUpdateScale.cancel?.();
+    };
+  }, [checkMjpegStream, isUsingMjpegMode, windowSize]);
 
-  const handleScreenshotLeave = async () => {
-    setX(null);
-    setY(null);
-    await clearCoordAction();
-  };
-
-  // If we're tapping or swiping, show the 'crosshair' cursor style
-  const screenshotStyle = {};
-  if (screenshotInteractionMode === TAP_SWIPE || selectedTick) {
-    screenshotStyle.cursor = 'crosshair';
-  }
-
-  const screenSrc = isUsingMjpegMode
-    ? serverDetails.mjpegScreenshotUrl
-    : `data:image/gif;base64,${screenshot}`;
-
-  // Show the screenshot and highlighter rects.
-  // Show loading indicator if a method call is in progress, unless using MJPEG mode.
   return (
-    <Spin size="large" spinning={!!methodCallInProgress && !isUsingMjpegMode}>
-      <div className={styles.innerScreenshotContainer}>
-        <div
-          style={screenshotStyle}
-          onMouseDown={handleScreenshotDown}
-          onMouseUp={handleScreenshotUp}
-          onMouseMove={handleScreenshotCoordsUpdate}
-          onMouseOver={handleScreenshotCoordsUpdate}
-          onMouseLeave={handleScreenshotLeave}
-          onClick={handleScreenshotClick}
-          className={inspectorStyles.screenshotBox}
-        >
-          {screenshotInteractionMode !== SELECT && <CoordinatesContainer x={x} y={y} />}
-          <img src={screenSrc} id="screenshot" />
-          {screenshotInteractionMode === SELECT && <ElementOverlays {...props} />}
-          {screenshotInteractionMode === TAP_SWIPE && (
-            <TapSwipeTrail
-              coordStart={coordStart}
-              coordEnd={coordEnd}
-              x={x}
-              y={y}
-              scaleRatio={scaleRatio}
-            />
-          )}
-          {selectedInspectorTab === INSPECTOR_TABS.GESTURES && showGesture && (
-            <GestureTrail gesture={showGesture} scaleRatio={scaleRatio} />
-          )}
-        </div>
-      </div>
-    </Spin>
+    <div
+      id="screenshotContainer"
+      className={styles.screenshotContainer}
+      ref={screenshotContainerElRef}
+    >
+      <ScreenshotControls {...props} />
+      {showScreenshot && <ScreenshotImgWithOverlays {...props} scaleRatio={scaleRatio} />}
+      {screenshotError && <ScreenshotErrorLabel screenshotError={screenshotError} />}
+      {!showScreenshot && <ScreenshotOuterSpinner />}
+    </div>
   );
 };
 
