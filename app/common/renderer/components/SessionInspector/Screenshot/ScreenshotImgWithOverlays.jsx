@@ -8,7 +8,6 @@ import {
   SCREENSHOT_INTERACTION_MODE,
 } from '../../../constants/screenshot.js';
 import {INSPECTOR_TABS} from '../../../constants/session-inspector.js';
-import inspectorStyles from '../SessionInspector.module.css';
 import CoordinatesContainer from './Overlays/CoordinatesContainer.jsx';
 import ElementOverlays from './Overlays/ElementOverlays.jsx';
 import GestureTrail from './Overlays/GestureTrail.jsx';
@@ -149,7 +148,7 @@ const ScreenshotImgWithOverlays = (props) => {
           onMouseOver={handleScreenshotCoordsUpdate}
           onMouseLeave={handleScreenshotLeave}
           onClick={handleScreenshotClick}
-          className={inspectorStyles.screenshotBox}
+          className={styles.screenshotBox}
         >
           {screenshotInteractionMode !== SELECT && <CoordinatesContainer x={x} y={y} />}
           <img src={screenSrc} id="screenshot" />

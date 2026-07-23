@@ -12,7 +12,7 @@ import {useTranslation} from 'react-i18next';
 import {BUTTON} from '../../../constants/antd-types.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
 import {downloadFile} from '../../../utils/file-handling.js';
-import styles from '../SessionInspector.module.css';
+import styles from './Screenshot.module.css';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 

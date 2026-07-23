@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {WINDOW_DIMENSIONS} from '../../../constants/common.js';
 import {MJPEG_STREAM_CHECK_INTERVAL} from '../../../constants/session-inspector.js';
 import {debounce} from '../../../utils/common.js';
-import styles from '../SessionInspector.module.css';
+import styles from './Screenshot.module.css';
 import ScreenshotControls from './ScreenshotControls.jsx';
 import ScreenshotImgWithOverlays from './ScreenshotImgWithOverlays.jsx';
 
