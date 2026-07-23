@@ -103,7 +103,7 @@
     "@vitejs/plugin-react": "5.2.0",
     "asyncbox": "6.3.5",
     "babel-plugin-react-compiler": "1.0.0",
-    "electron": "41.10.2",
+    "electron": "43.1.1",
     "electron-builder": "26.15.3",
     "electron-vite": "5.0.0",
     "eslint": "10.7.0",
