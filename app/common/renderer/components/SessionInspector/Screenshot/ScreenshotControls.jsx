@@ -24,7 +24,7 @@ const downloadScreenshot = (screenshot) => {
 
 /**
  * Button for switching between MJPEG and regular screenshot capture mode.
- * Only shown in MJPEG mode.
+ * Only shown if the session was started in MJPEG mode.
  */
 const ScreenshotCaptureModeControls = ({
   setMjpegState,

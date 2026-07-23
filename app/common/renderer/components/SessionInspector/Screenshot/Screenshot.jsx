@@ -42,6 +42,10 @@ const updateScreenshotScale = (screenshotContainerElRef, setScaleRatio, windowSi
   }
 
   const imgRect = screenshotImg.getBoundingClientRect();
+  if (!imgRect.width || !imgRect.height) {
+    return;
+  }
+
   const containerRect = screenshotContainer.getBoundingClientRect();
   if (imgRect.height < containerRect.height) {
     // get the expected image width if the image would fill the screenshot box height
