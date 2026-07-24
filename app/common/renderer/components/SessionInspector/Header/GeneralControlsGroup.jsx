@@ -20,6 +20,7 @@ const ToggleAutomaticRefreshButton = ({isSourceRefreshOn, setRefreshingState}) =
   return isSourceRefreshOn ? (
     <Tooltip title={t('Pause Refreshing Source')}>
       <Button
+        aria-label={t('Pause Refreshing Source')}
         id="btnPauseRefreshing"
         icon={<IconPlayerPause size={18} />}
         onClick={() => setRefreshingState({source: false})}
@@ -28,6 +29,7 @@ const ToggleAutomaticRefreshButton = ({isSourceRefreshOn, setRefreshingState}) =
   ) : (
     <Tooltip title={t('Start Refreshing Source')}>
       <Button
+        aria-label={t('Start Refreshing Source')}
         id="btnStartRefreshing"
         icon={<IconPlayerPlay size={18} />}
         onClick={() => setRefreshingState({source: true})}
@@ -45,6 +47,7 @@ const ManualRefreshButton = ({applyClientMethod}) => {
   return (
     <Tooltip title={t('refreshSource')}>
       <Button
+        aria-label={t('refreshSource')}
         id="btnReload"
         icon={<IconRefresh size={18} />}
         onClick={() => applyClientMethod({methodName: 'getPageSource'})}
@@ -64,6 +67,7 @@ const SearchForElementButton = (props) => {
     <>
       <Tooltip title={t('Search for element')}>
         <Button
+          aria-label={t('Search for element')}
           id="searchForElement"
           icon={<IconSearch size={18} />}
           onClick={showLocatorSearchModal}
@@ -83,6 +87,7 @@ const ToggleRecordingButton = ({isRecording, startRecording, pauseRecording}) =>
   return isRecording ? (
     <Tooltip title={t('Pause Recording')}>
       <Button
+        aria-label={t('Pause Recording')}
         id="btnPause"
         icon={<IconVideo size={18} />}
         type={BUTTON.PRIMARY}
@@ -92,7 +97,12 @@ const ToggleRecordingButton = ({isRecording, startRecording, pauseRecording}) =>
     </Tooltip>
   ) : (
     <Tooltip title={t('Start Recording')}>
-      <Button id="btnStartRecording" icon={<IconVideo size={18} />} onClick={startRecording} />
+      <Button
+        aria-label={t('Start Recording')}
+        id="btnStartRecording"
+        icon={<IconVideo size={18} />}
+        onClick={startRecording}
+      />
     </Tooltip>
   );
 };

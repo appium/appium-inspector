@@ -67,6 +67,7 @@ const CapabilityJSON = (props) => {
       return (
         <Tooltip title={t('Edit')}>
           <Button
+            aria-label={t('Edit')}
             size="small"
             onClick={startDesiredCapsNameEditor}
             icon={<IconEdit size={14} />}
@@ -79,6 +80,7 @@ const CapabilityJSON = (props) => {
         <>
           <Tooltip title={t('Cancel')}>
             <Button
+              aria-label={t('Cancel')}
               size="small"
               color="danger"
               variant="outlined"
@@ -89,6 +91,7 @@ const CapabilityJSON = (props) => {
           </Tooltip>
           <Tooltip title={t('Save')}>
             <Button
+              aria-label={t('Save')}
               size="small"
               color="primary"
               variant="outlined"
@@ -109,6 +112,7 @@ const CapabilityJSON = (props) => {
           {isEditingDesiredCaps && (
             <Tooltip title={t('Cancel')}>
               <Button
+                aria-label={t('Cancel')}
                 color="danger"
                 variant="outlined"
                 onClick={abortDesiredCapsEditor}
@@ -120,6 +124,7 @@ const CapabilityJSON = (props) => {
           {isEditingDesiredCaps && (
             <Tooltip title={t('Save')}>
               <Button
+                aria-label={t('Save')}
                 color="primary"
                 variant="outlined"
                 onClick={() => saveRawDesiredCaps(caps, rawDesiredCaps)}
@@ -130,7 +135,11 @@ const CapabilityJSON = (props) => {
           )}
           {!isEditingDesiredCaps && (
             <Tooltip title={t('Edit Raw JSON')} placement="topRight">
-              <Button onClick={startDesiredCapsEditor} icon={<IconEdit size={18} />} />
+              <Button
+                aria-label={t('Edit Raw JSON')}
+                onClick={startDesiredCapsEditor}
+                icon={<IconEdit size={18} />}
+              />
             </Tooltip>
           )}
         </div>

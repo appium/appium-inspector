@@ -44,6 +44,7 @@ const SavedGestureActionsCell = (props) => {
     <Space.Compact>
       <Tooltip zIndex={3} title={t('Play')}>
         <Button
+          aria-label={t('Play')}
           key="play"
           type="primary"
           icon={<IconPlayerPlay size={18} />}
@@ -51,10 +52,18 @@ const SavedGestureActionsCell = (props) => {
         />
       </Tooltip>
       <Tooltip zIndex={3} title={t('Edit')}>
-        <Button icon={<IconEdit size={18} />} onClick={() => loadGesture()} />
+        <Button
+          aria-label={t('Edit')}
+          icon={<IconEdit size={18} />}
+          onClick={() => loadGesture()}
+        />
       </Tooltip>
       <Tooltip zIndex={3} title={t('Export to File')}>
-        <Button icon={<IconFileExport size={18} />} onClick={() => exportSavedGesture(gesture)} />
+        <Button
+          aria-label={t('Export to File')}
+          icon={<IconFileExport size={18} />}
+          onClick={() => exportSavedGesture(gesture)}
+        />
       </Tooltip>
       <Tooltip zIndex={3} title={t('Delete')}>
         <Popconfirm
@@ -65,7 +74,7 @@ const SavedGestureActionsCell = (props) => {
           cancelText={t('Cancel')}
           onConfirm={() => deleteGesture()}
         >
-          <Button icon={<IconTrash size={18} />} />
+          <Button aria-label={t('Delete')} icon={<IconTrash size={18} />} />
         </Popconfirm>
       </Tooltip>
     </Space.Compact>

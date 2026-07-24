@@ -41,16 +41,25 @@ const RecorderTabHeaderButtons = ({
         <Space.Compact>
           <Tooltip title={t('Show/Hide Boilerplate Code')}>
             <Button
+              aria-label={t('Show/Hide Boilerplate Code')}
               onClick={toggleShowBoilerplate}
               icon={<IconEyeCode size={18} />}
               type={showBoilerplate ? BUTTON.PRIMARY : BUTTON.DEFAULT}
             />
           </Tooltip>
           <Tooltip title={t('Copy code to clipboard')}>
-            <Button icon={<IconFiles size={18} />} onClick={() => copyToClipboard(clientCode)} />
+            <Button
+              aria-label={t('Copy code to clipboard')}
+              icon={<IconFiles size={18} />}
+              onClick={() => copyToClipboard(clientCode)}
+            />
           </Tooltip>
           <Tooltip title={t('Clear Actions')}>
-            <Button icon={<IconEraser size={18} />} onClick={clearRecording} />
+            <Button
+              aria-label={t('Clear Actions')}
+              icon={<IconEraser size={18} />}
+              onClick={clearRecording}
+            />
           </Tooltip>
         </Space.Compact>
       )}

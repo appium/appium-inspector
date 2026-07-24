@@ -22,10 +22,16 @@ const AppSourceTreeActions = ({
     <Row justify="center" type={ROW.FLEX} align="middle" className={styles.treeActions}>
       <Space.Compact>
         <Tooltip title={t('Collapse All')}>
-          <Button id="btnCollapseAll" icon={<IconFold size={18} />} onClick={collapseAllNodes} />
+          <Button
+            aria-label={t('Collapse All')}
+            id="btnCollapseAll"
+            icon={<IconFold size={18} />}
+            onClick={collapseAllNodes}
+          />
         </Tooltip>
         <Tooltip title={t('Toggle Attributes')}>
           <Button
+            aria-label={t('Toggle Attributes')}
             id="btnToggleAttrs"
             icon={<IconEyeCode size={18} />}
             onClick={toggleShowAttributes}
