@@ -131,6 +131,7 @@ and translate them into code that can be used with various [Appium clients](http
 Interactions that can be recorded include:
 
 - Actions for a specific element (tap/send keys/clear)
+- Tapping an element directly on the screenshot, in [Tap By Element Mode](./screenshot.md#interaction-mode)
 - Generic tap/swipe actions on the application screenshot
 - [Mobile device system actions](#device-system-buttons)
 - [Driver commands](./commands.md)

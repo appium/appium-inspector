@@ -1,10 +1,11 @@
-import {RENDER_CENTROID_AS} from '../../../../constants/screenshot.js';
+import {RENDER_CENTROID_AS, SCREENSHOT_INTERACTION_MODE} from '../../../../constants/screenshot.js';
 import {parseCoordinates} from '../../../../utils/other.js';
 import ElementCentroid from './ElementCentroid.jsx';
 import ElementRect from './ElementRect.jsx';
 import FoundElementRect from './FoundElementRect.jsx';
 
 const {CENTROID, OVERLAP, EXPAND} = RENDER_CENTROID_AS;
+const {TAP_ELEMENT} = SCREENSHOT_INTERACTION_MODE;
 
 const isElementOverElement = (element1, element2) => {
   const right1 = element1.left + element1.width;
@@ -164,11 +165,21 @@ const ElementOverlays = (props) => {
     selectedElementPath,
     selectElement,
     unselectElement,
+    tapElement,
+    screenshotInteractionMode,
     scaleRatio,
     showCentroids,
     isLocatorSearchModalVisible,
     isSiriCommandModalVisible,
   } = props;
+
+  // In 'Tap By Element' mode, clicking a highlighter immediately taps that element
+  // (selects it and calls elementClick). Otherwise (Element Mode), clicking toggles
+  // selection, only updating the Selected Element panel.
+  const onElementInteract =
+    screenshotInteractionMode === TAP_ELEMENT
+      ? tapElement
+      : (path) => (path === selectedElementPath ? unselectElement() : selectElement(path));
 
   const highlighterRects = [];
   const highlighterCentroids = [];
@@ -186,6 +197,7 @@ const ElementOverlays = (props) => {
             element={elem.element}
             key={elem.properties.path}
             {...props}
+            onElementInteract={onElementInteract}
           />,
         );
       }
@@ -198,8 +210,7 @@ const ElementOverlays = (props) => {
           elemProperties={elem.properties}
           key={elem.properties.path}
           selectedElementPath={selectedElementPath}
-          selectElement={selectElement}
-          unselectElement={unselectElement}
+          onElementInteract={onElementInteract}
         />,
       );
     }

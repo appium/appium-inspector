@@ -2,6 +2,7 @@ import {
   IconCrosshair,
   IconDownload,
   IconEyePlus,
+  IconHandClick,
   IconMovie,
   IconObjectScan,
   IconPhoto,
@@ -14,7 +15,7 @@ import {SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
 import {downloadFile} from '../../../utils/file-handling.js';
 import styles from './Screenshot.module.css';
 
-const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
+const {SELECT, TAP_SWIPE, TAP_ELEMENT} = SCREENSHOT_INTERACTION_MODE;
 
 const downloadScreenshot = (screenshot) => {
   const href = `data:image/png;base64,${screenshot}`;
@@ -85,8 +86,8 @@ const ToggleElementHandlesButton = ({
 };
 
 /**
- * Button allowing to switch between the Element Mode and Coordinates Mode
- * when interacting with the screenshot.
+ * Button allowing to switch between the Element Mode, Tap By Element Mode, and
+ * Coordinates Mode when interacting with the screenshot.
  */
 const ScreenshotInteractionModeControls = ({
   screenshotInteractionMode,
@@ -108,6 +109,14 @@ const ScreenshotInteractionModeControls = ({
           icon={<IconObjectScan size={18} />}
           onClick={() => screenshotInteractionChange(SELECT)}
           type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+          disabled={isGestureEditorVisible}
+        />
+      </Tooltip>
+      <Tooltip title={t('Tap By Element')}>
+        <Button
+          icon={<IconHandClick size={18} />}
+          onClick={() => screenshotInteractionChange(TAP_ELEMENT)}
+          type={screenshotInteractionMode === TAP_ELEMENT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
           disabled={isGestureEditorVisible}
         />
       </Tooltip>

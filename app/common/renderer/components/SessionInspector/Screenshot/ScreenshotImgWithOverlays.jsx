@@ -15,7 +15,7 @@ import TapSwipeTrail from './Overlays/TapSwipeTrail.jsx';
 import styles from './Screenshot.module.css';
 
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
-const {TAP, SELECT, SWIPE, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
+const {TAP, SELECT, SWIPE, TAP_SWIPE, TAP_ELEMENT} = SCREENSHOT_INTERACTION_MODE;
 
 const handleTapOnScreenshot = async (tapPoint, applyClientMethod) => {
   const {POINTER_NAME, DURATION_1, DURATION_2, BUTTON} = DEFAULT_TAP;
@@ -111,7 +111,7 @@ const ScreenshotImgWithOverlays = (props) => {
   };
 
   const handleScreenshotCoordsUpdate = (e) => {
-    if (screenshotInteractionMode !== SELECT) {
+    if (screenshotInteractionMode !== SELECT && screenshotInteractionMode !== TAP_ELEMENT) {
       const offsetX = e.nativeEvent.offsetX;
       const offsetY = e.nativeEvent.offsetY;
       const newX = offsetX * scaleRatio;
@@ -151,9 +151,13 @@ const ScreenshotImgWithOverlays = (props) => {
           onClick={handleScreenshotClick}
           className={styles.screenshotBox}
         >
-          {screenshotInteractionMode !== SELECT && <CoordinatesContainer x={x} y={y} />}
+          {screenshotInteractionMode !== SELECT && screenshotInteractionMode !== TAP_ELEMENT && (
+            <CoordinatesContainer x={x} y={y} />
+          )}
           <img src={screenSrc} id="screenshot" />
-          {screenshotInteractionMode === SELECT && <ElementOverlays {...props} />}
+          {(screenshotInteractionMode === SELECT || screenshotInteractionMode === TAP_ELEMENT) && (
+            <ElementOverlays {...props} />
+          )}
           {screenshotInteractionMode === TAP_SWIPE && (
             <TapSwipeTrail
               coordStart={coordStart}
