@@ -21,6 +21,7 @@ const DisplayControlsGroup = ({
     <Space.Compact>
       <Tooltip title={t('toggleMultiDisplayMode')}>
         <Button
+          aria-label={t('toggleMultiDisplayMode')}
           icon={<IconCarouselHorizontal size={18} />}
           type={displays ? BUTTON.PRIMARY : BUTTON.DEFAULT}
           onClick={() => toggleMultiDisplayMode(displays)}

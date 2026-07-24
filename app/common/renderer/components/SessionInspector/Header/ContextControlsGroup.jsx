@@ -21,6 +21,7 @@ const NoContextsFoundButton = () => {
   return (
     <Tooltip title={t('noAdditionalContextsFound')} classNames={{root: styles.wideTooltip}}>
       <Button
+        aria-label={t('noAdditionalContextsFound')}
         disabled
         icon={<IconExclamationCircle size={20} />}
         styles={{root: {backgroundColor: '#faad14', color: '#ffffff'}}}
@@ -62,6 +63,7 @@ const ContextDropdown = ({contexts, currentContext, setContext, applyClientMetho
         classNames={{root: styles.wideTooltip}}
       >
         <Button
+          aria-label={t('contextDropdownInfo')}
           disabled
           icon={<IconInfoCircle size={20} />}
           styles={{root: {backgroundColor: 'var(--ant-color-primary)', color: '#ffffff'}}}
@@ -89,6 +91,7 @@ const ContextControlsGroup = ({
     <Space.Compact>
       <Tooltip title={t('Native App Mode')}>
         <Button
+          aria-label={t('Native App Mode')}
           icon={<IconTriangleSquareCircle size={18} />}
           onClick={() => selectAppMode(APP_MODE.NATIVE)}
           type={appMode === APP_MODE.NATIVE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
@@ -96,6 +99,7 @@ const ContextControlsGroup = ({
       </Tooltip>
       <Tooltip title={t('Web/Hybrid App Mode')}>
         <Button
+          aria-label={t('Web/Hybrid App Mode')}
           icon={<IconWorld size={18} />}
           onClick={() => selectAppMode(APP_MODE.WEB_HYBRID)}
           type={appMode === APP_MODE.WEB_HYBRID ? BUTTON.PRIMARY : BUTTON.DEFAULT}

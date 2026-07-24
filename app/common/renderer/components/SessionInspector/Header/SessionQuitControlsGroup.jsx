@@ -12,13 +12,19 @@ const SessionQuitControlsGroup = ({quitSessionAndReturn}) => {
     <Space.Compact>
       <Tooltip title={t('detachFromSession')}>
         <Button
+          aria-label={t('detachFromSession')}
           id="btnDetach"
           icon={<IconPlugConnectedX size={18} />}
           onClick={() => quitSessionAndReturn({detachOnly: true})}
         />
       </Tooltip>
       <Tooltip title={t('Quit Session')}>
-        <Button id="btnClose" icon={<IconX size={18} />} onClick={quitSessionAndReturn} />
+        <Button
+          aria-label={t('Quit Session')}
+          id="btnClose"
+          icon={<IconX size={18} />}
+          onClick={quitSessionAndReturn}
+        />
       </Tooltip>
     </Space.Compact>
   );

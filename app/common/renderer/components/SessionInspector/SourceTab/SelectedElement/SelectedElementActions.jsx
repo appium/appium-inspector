@@ -29,6 +29,7 @@ const SelectedElementActions = (props) => {
     <Row justify="center" type={ROW.FLEX} align="middle" className={styles.selectedElemActions}>
       <Tooltip title={t('Tap')}>
         <Button
+          aria-label={t('Tap')}
           disabled={elementActionsDisabled}
           icon={<IconFocus2 size={18} />}
           loading={tapButtonLoadingState}
@@ -48,6 +49,7 @@ const SelectedElementActions = (props) => {
         />
         <Tooltip title={t('Send Keys')}>
           <Button
+            aria-label={t('Send Keys')}
             disabled={elementActionsDisabled}
             id="btnSendKeysToElement"
             icon={<IconSend2 size={18} />}
@@ -62,6 +64,7 @@ const SelectedElementActions = (props) => {
         </Tooltip>
         <Tooltip title={t('Clear')}>
           <Button
+            aria-label={t('Clear')}
             disabled={elementActionsDisabled}
             id="btnClearElement"
             icon={<IconEraser size={18} />}
@@ -73,6 +76,7 @@ const SelectedElementActions = (props) => {
       </Space.Compact>
       <Tooltip title={t('Get Timing')}>
         <Button
+          aria-label={t('Get Timing')}
           disabled={elementActionsDisabled}
           id="btnGetTiming"
           icon={<IconStopwatch size={18} />}

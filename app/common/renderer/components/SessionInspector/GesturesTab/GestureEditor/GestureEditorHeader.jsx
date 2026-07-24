@@ -58,9 +58,18 @@ const convertPointerCoordsType = (newCoordType, coordType, windowSize, pointers)
 /**
  * Back button to return to the saved gestures list.
  */
-const GestureEditorBackButton = ({closeGestureEditor}) => (
-  <Button type="text" icon={<IconArrowLeft size={18} />} onClick={() => closeGestureEditor()} />
-);
+const GestureEditorBackButton = ({closeGestureEditor}) => {
+  const {t} = useTranslation();
+
+  return (
+    <Button
+      aria-label={t('Back')}
+      type="text"
+      icon={<IconArrowLeft size={18} />}
+      onClick={() => closeGestureEditor()}
+    />
+  );
+};
 
 /**
  * Editable title of the current gesture.
@@ -115,6 +124,7 @@ const GestureEditorHeaderButtons = ({
       </Space.Compact>
       <Tooltip title={t('Play')}>
         <Button
+          aria-label={t('Play')}
           type="primary"
           icon={<IconPlayerPlay size={18} />}
           onClick={() => playCurrentGesture()}

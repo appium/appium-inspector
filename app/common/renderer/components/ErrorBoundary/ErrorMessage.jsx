@@ -30,6 +30,7 @@ const ErrorMessage = ({error, copyTrace}) => {
             {t('Full error trace:')}
             <Tooltip title={t('Copy Error Trace')}>
               <Button
+                aria-label={t('Copy Error Trace')}
                 size="small"
                 className={styles.copyTraceBtn}
                 onClick={() => copyTrace(error.stack)}

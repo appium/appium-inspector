@@ -29,7 +29,11 @@ const SessionInfoCodeBoxHeaderOptions = ({clientCode, clientFramework, setClient
   return (
     <Space size="middle">
       <Tooltip title={t('Copy code to clipboard')}>
-        <Button icon={<IconFiles size={18} />} onClick={() => copyToClipboard(clientCode)} />
+        <Button
+          aria-label={t('Copy code to clipboard')}
+          icon={<IconFiles size={18} />}
+          onClick={() => copyToClipboard(clientCode)}
+        />
       </Tooltip>
       <Select
         defaultValue={clientFramework}

@@ -23,7 +23,11 @@ const AddNewTickButton = ({id, pointers, setPointers}) => {
   return (
     <div className={styles.tickPlusBtnWrapper}>
       <Tooltip title={t('Add')}>
-        <Button icon={<IconPlus size={18} />} onClick={() => addTick(id, pointers, setPointers)} />
+        <Button
+          aria-label={t('Add')}
+          icon={<IconPlus size={18} />}
+          onClick={() => addTick(id, pointers, setPointers)}
+        />
       </Tooltip>
     </div>
   );

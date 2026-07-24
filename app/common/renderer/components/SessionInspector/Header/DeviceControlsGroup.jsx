@@ -20,6 +20,7 @@ const AndroidControlsGroup = ({applyClientMethod}) => {
     <Space.Compact>
       <Tooltip title={t('Press Back Button')}>
         <Button
+          aria-label={t('Press Back Button')}
           id="btnPressBackButton"
           icon={<IconChevronLeft size={20} />}
           onClick={() =>
@@ -32,6 +33,7 @@ const AndroidControlsGroup = ({applyClientMethod}) => {
       </Tooltip>
       <Tooltip title={t('Press Home Button')}>
         <Button
+          aria-label={t('Press Home Button')}
           id="btnPressHomeButton"
           icon={<IconCircle size={16} />}
           onClick={() =>
@@ -44,6 +46,7 @@ const AndroidControlsGroup = ({applyClientMethod}) => {
       </Tooltip>
       <Tooltip title={t('Press App Switch Button')}>
         <Button
+          aria-label={t('Press App Switch Button')}
           id="btnPressAppSwitchButton"
           icon={<IconSquare size={16} />}
           onClick={() =>
@@ -75,6 +78,7 @@ const IosControlsGroup = ({
     <Space.Compact>
       <Tooltip title={t('Press Home Button')}>
         <Button
+          aria-label={t('Press Home Button')}
           id="btnPressHomeButton"
           icon={<IconHome size={18} />}
           onClick={() =>
@@ -87,6 +91,7 @@ const IosControlsGroup = ({
       </Tooltip>
       <Tooltip title={t('Execute Siri Command')}>
         <Button
+          aria-label={t('Execute Siri Command')}
           id="siriCommand"
           icon={<IconMessageChatbot size={18} />}
           onClick={showSiriCommandModal}
