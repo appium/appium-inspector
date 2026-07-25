@@ -91,11 +91,11 @@
     "xpath": "0.0.34"
   },
   "devDependencies": {
-    "@appium/docutils": "2.5.1",
-    "@appium/eslint-config-appium-ts": "3.2.3",
-    "@appium/fake-driver": "6.2.1",
-    "@appium/support": "7.2.5",
-    "@appium/tsconfig": "1.1.2",
+    "@appium/docutils": "2.5.2",
+    "@appium/eslint-config-appium-ts": "3.2.4",
+    "@appium/fake-driver": "6.2.2",
+    "@appium/support": "7.2.6",
+    "@appium/tsconfig": "1.2.0",
     "@eslint-react/eslint-plugin": "5.17.3",
     "@tomjs/electron-devtools-installer": "4.0.1",
     "@types/react": "19.2.17",
