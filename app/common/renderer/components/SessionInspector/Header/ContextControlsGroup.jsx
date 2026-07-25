@@ -63,7 +63,7 @@ const ContextDropdown = ({contexts, currentContext, setContext, applyClientMetho
         classNames={{root: styles.wideTooltip}}
       >
         <Button
-          aria-label={t('contextDropdownInfo')}
+          aria-label={`${t('contextDropdownInfo')} ${LINKS.HYBRID_MODE_DOCS}`}
           disabled
           icon={<IconInfoCircle size={20} />}
           styles={{root: {backgroundColor: 'var(--ant-color-primary)', color: '#ffffff'}}}
