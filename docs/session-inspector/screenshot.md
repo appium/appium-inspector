@@ -16,9 +16,8 @@ The panel supports all screenshots regardless of dimensions, in any orientation:
 The Inspector will try to automatically adjust how much of the window is taken up by the screenshot.
 Currently, the limit is either the full window height, or 40% of the window width.
 
-!!! note
-
-    Handling of multiple screenshots (for multi-screen devices) is not currently supported.
+For devices with multiple screens, the Inspector will only show a screenshot of the default display,
+however, on supported devices it is possible to switch the active display using [the Display Switcher button](./header.md#display-switcher).
 
 ## Refreshing the Screenshot
 
@@ -73,11 +72,11 @@ enabling the selection of each individual element.
 The Interaction Mode buttons allow switching between the default Element Mode, Tap By Element Mode,
 and the Coordinates Mode. The differences are as follows:
 
-| <div style="width:9em">Mode</div> | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Element Mode                      | In this mode, hovering over the screenshot will highlight any detected elements. Clicking on any highlighter will then select the corresponding element in the [application source](./source.md#application-source), and show its details in the [selected element panel](./source.md#selected-element).                                                                                                                                                                      |
-| Tap By Element Mode               | In this mode, hovering over the screenshot will highlight any detected elements, just like in Element Mode. However, clicking on a highlighter immediately selects **and** taps that element (equivalent to clicking [Tap Element](./source.md#element-action-buttons) in the selected element panel), using its element locator rather than raw coordinates. This is useful for quickly recording a sequence of element taps while [recording](./header.md#toggle-recorder). |
-| Coordinates Mode                  | In this mode, the top left corner of the screenshot will show an coordinates overlay. Hovering over the screenshot will update this overlay with the coordinates on the device screen, and clicking or swiping the screenshot will execute a tap/swipe action on the device.                                                                                                                                                                                                  |
+| <div style="width:10em">Mode</div> | Description |
+| ---------------------------------- | ----------- |
+| Element Mode | In this mode, hovering over the screenshot will highlight any detected elements. Clicking on any highlighter will then select the corresponding element in the [application source](./source.md#application-source), and show its details in the [selected element panel](./source.md#selected-element). |
+| Tap By Element Mode | In this mode, hovering over the screenshot will highlight any detected elements, just like in Element Mode. However, clicking on a highlighter immediately selects **and** taps that element (equivalent to clicking [Tap Element](./source.md#element-action-buttons) in the selected element panel), using its element locator rather than raw coordinates. This is useful for quickly recording a sequence of element taps while [recording](./header.md#toggle-recorder). |
+| Coordinates Mode | In this mode, the top left corner of the screenshot will show an coordinates overlay. Hovering over the screenshot will update this overlay with the coordinates on the device screen, and clicking or swiping the screenshot will execute a tap/swipe action on the device. |
 
 ### Download Screenshot
 
