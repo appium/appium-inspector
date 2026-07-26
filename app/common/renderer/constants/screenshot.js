@@ -1,11 +1,13 @@
 // Screenshot interaction modes
 // TAP_SWIPE refers to both TAP and SWIPE
+// TAP_ELEMENT refers to tapping an element highlighter to both select and tap it in one action
 // GESTURE refers to playback via gesture editor
 export const SCREENSHOT_INTERACTION_MODE = {
   SELECT: 'select',
   SWIPE: 'swipe',
   TAP: 'tap',
   TAP_SWIPE: 'tap_swipe',
+  TAP_ELEMENT: 'tap_element',
   GESTURE: 'gesture',
 };
 

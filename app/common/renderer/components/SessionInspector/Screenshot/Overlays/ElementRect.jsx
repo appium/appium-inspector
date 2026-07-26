@@ -15,14 +15,8 @@ const getHighlighterClass = (elemPath, selectedElementPath) => {
  * A single rectangle overlaid on the app screenshot,
  * highlighting the bounding box of an element in the app source.
  */
-const ElementRect = ({selectedElementPath, selectElement, unselectElement, elemProperties}) => {
-  const onClickHighlighter = () => {
-    if (elemProperties.path === selectedElementPath) {
-      unselectElement();
-    } else {
-      selectElement(elemProperties.path);
-    }
-  };
+const ElementRect = ({selectedElementPath, onElementInteract, elemProperties}) => {
+  const onClickHighlighter = () => onElementInteract(elemProperties.path);
 
   const highlighterClass = getHighlighterClass(elemProperties.path, selectedElementPath);
   const highlighterStyle = {

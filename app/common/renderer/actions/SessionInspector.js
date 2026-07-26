@@ -120,8 +120,42 @@ export const SET_AUTO_SESSION_RESTART = 'SET_AUTO_SESSION_RESTART';
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
 
-// A debounced function that calls findElement and gets info about the element
-const findElement = debounce(async function (strategyMap, dispatch, getState, path) {
+// Sets the selected element in the source tree/state based on its path, and
+// calculates the locator strategies that can later be used to look it up via Appium.
+// Shared by selectElement and tapElement.
+// Returns the computed strategy map.
+function prepareElementSelection(path, dispatch, getState) {
+  const {sourceJSON, sourceXML, expandedPaths, currentContext, automationName} =
+    getState().inspector;
+  const isNative = currentContext === NATIVE_APP;
+  // Set the selected element in the source tree
+  const selectedElement = findJSONElementByPath(path, sourceJSON);
+  dispatch({type: SELECT_ELEMENT, selectedElement});
+
+  // Expand all of this element's ancestors so that it's visible in the source tree
+  // Make a copy of the array to avoid state mutation
+  const copiedExpandedPaths = [...expandedPaths];
+  let pathArr = path.split('.').slice(0, path.length - 1);
+  while (pathArr.length > 1) {
+    pathArr.splice(pathArr.length - 1);
+    let ancestorPath = pathArr.join('.');
+    if (!copiedExpandedPaths.includes(ancestorPath)) {
+      copiedExpandedPaths.push(ancestorPath);
+    }
+  }
+  dispatch({type: SET_EXPANDED_PATHS, paths: copiedExpandedPaths});
+
+  // Calculate the recommended locator strategies
+  const strategyMap = getSuggestedLocators(selectedElement, sourceXML, isNative, automationName);
+  dispatch({type: SET_OPTIMAL_LOCATORS, strategyMap});
+
+  return strategyMap;
+}
+
+// Calls Appium's findElement for each candidate strategy/selector until one succeeds,
+// caches the resulting elementId, and returns it (or null if none of them worked).
+// Shared by selectElement (debounced below) and tapElement (called immediately).
+async function resolveElementId(strategyMap, dispatch, getState, path) {
   for (let [strategy, selector] of strategyMap) {
     // Get the information about the element
     const action = callClientMethod({
@@ -133,47 +167,51 @@ const findElement = debounce(async function (strategyMap, dispatch, getState, pa
     // Set the elementId for the selected element
     // (check first that the selectedElementPath didn't change, to avoid race conditions)
     if (elementId && getState().inspector.selectedElementPath === path) {
-      return dispatch({type: SET_SELECTED_ELEMENT_ID, elementId});
+      dispatch({type: SET_SELECTED_ELEMENT_ID, elementId});
+      return elementId;
     }
   }
 
-  return dispatch({type: SET_INTERACTIONS_NOT_AVAILABLE});
-}, 1000);
+  dispatch({type: SET_INTERACTIONS_NOT_AVAILABLE});
+  return null;
+}
+
+// A debounced wrapper around resolveElementId, used while browsing/selecting elements
+// one at a time (Element Mode), so that quickly selecting several elements in a row
+// doesn't trigger a redundant Appium findElement call for each one.
+const debouncedResolveElementId = debounce(resolveElementId, 1000);
 
 export function selectElement(path) {
   return async (dispatch, getState) => {
-    const {sourceJSON, sourceXML, expandedPaths, currentContext, automationName} =
-      getState().inspector;
-    const isNative = currentContext === NATIVE_APP;
-    // Set the selected element in the source tree
-    const selectedElement = findJSONElementByPath(path, sourceJSON);
-    dispatch({type: SELECT_ELEMENT, selectedElement});
-
-    // Expand all of this element's ancestors so that it's visible in the source tree
-    // Make a copy of the array to avoid state mutation
-    const copiedExpandedPaths = [...expandedPaths];
-    let pathArr = path.split('.').slice(0, path.length - 1);
-    while (pathArr.length > 1) {
-      pathArr.splice(pathArr.length - 1);
-      let path = pathArr.join('.');
-      if (!copiedExpandedPaths.includes(path)) {
-        copiedExpandedPaths.push(path);
-      }
-    }
-    dispatch({type: SET_EXPANDED_PATHS, paths: copiedExpandedPaths});
-
-    // Calculate the recommended locator strategies
-    const strategyMap = getSuggestedLocators(selectedElement, sourceXML, isNative, automationName);
-    dispatch({type: SET_OPTIMAL_LOCATORS, strategyMap});
+    const strategyMap = prepareElementSelection(path, dispatch, getState);
 
     // Debounce find element so that if another element is selected shortly after, cancel the previous search
-    await findElement(strategyMap, dispatch, getState, path);
+    await debouncedResolveElementId(strategyMap, dispatch, getState, path);
   };
 }
 
 export function unselectElement() {
   return (dispatch) => {
     dispatch({type: UNSELECT_ELEMENT});
+  };
+}
+
+// Selects the element at the given source path and immediately taps it (elementClick),
+// in a single action. Used by the 'Tap By Element' screenshot interaction mode, where
+// every click is a deliberate one-shot action rather than a browsing/hover selection,
+// so (unlike selectElement) this resolves the element right away instead of debouncing.
+export function tapElement(path) {
+  return async (dispatch, getState) => {
+    const strategyMap = prepareElementSelection(path, dispatch, getState);
+
+    // Cancel any pending debounced resolution left over from Element Mode, so it can't
+    // race with (and overwrite the result of) this immediate resolution.
+    debouncedResolveElementId.cancel();
+    const elementId = await resolveElementId(strategyMap, dispatch, getState, path);
+    if (elementId) {
+      const tapAction = applyClientMethod({methodName: 'elementClick', elementId});
+      await tapAction(dispatch, getState);
+    }
   };
 }
 

@@ -52,8 +52,7 @@ const ElementCentroid = (props) => {
     selectedElementPath,
     element,
     elementProperties,
-    selectElement,
-    unselectElement,
+    onElementInteract,
     centroidType,
     selectedCentroid,
     selectCentroid,
@@ -68,11 +67,7 @@ const ElementCentroid = (props) => {
         selectCentroid(elementProperties.path);
       }
     } else {
-      if (elementProperties.path === selectedElementPath) {
-        unselectElement();
-      } else {
-        selectElement(elementProperties.path);
-      }
+      onElementInteract(elementProperties.path);
     }
   };
 
