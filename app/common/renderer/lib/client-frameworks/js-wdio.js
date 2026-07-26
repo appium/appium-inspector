@@ -3,15 +3,17 @@ import refractorJs from 'refractor/javascript';
 import CommonClientFramework from './common.js';
 
 export default class JsWdIoFramework extends CommonClientFramework {
-  static readableName = 'JS - WebdriverIO';
+  static readableName = 'JS/TS - WebdriverIO';
   static refractorLang = 'js';
   static refractorLib = refractorJs;
 
   wrapWithBoilerplate(code) {
     return `// This sample code supports WebdriverIO client >=9.7.0
 // (npm i --save webdriverio)
-// Then paste this into a .js file and run with Node:
+// Then paste this into a .js or .ts file and run with Node
+// (modern Node can run TypeScript files directly if types are strippable):
 // node <file>.js
+// or: node <file>.ts
 
 import {remote} from 'webdriverio';
 async function main () {
