@@ -1,7 +1,7 @@
 # Code validation job, executed on pull request
 # Runs linting and formatting tests
 
-name: Check PR Formatting
+name: PR Formatting
 
 on:
   pull_request:

@@ -1,7 +1,7 @@
 # Code validation job, executed on pull request
 # Builds the app, and runs unit and integration tests
 
-name: Check PR Functionality
+name: PR Functionality
 
 on:
   pull_request:
