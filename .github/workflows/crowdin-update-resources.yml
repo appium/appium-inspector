@@ -1,6 +1,6 @@
 # Updates Crowdin with any changes in the English translation file (/app/common/public/locales/en/translation.json)
 
-name: Update Crowdin English Resources
+name: Sync to Crowdin
 
 on:
   push:
@@ -11,8 +11,8 @@ on:
 
 jobs:
   build:
+    name: Update English Translation Strings
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Use Node.js LTS

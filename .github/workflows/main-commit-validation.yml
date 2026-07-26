@@ -1,7 +1,7 @@
 # Code validation job, executed on new commit on main branch
 # Builds the app, and runs lint, unit and integration tests
 
-name: Commit Validation
+name: Check Main Branch Commit
 
 on:
   push:
@@ -17,9 +17,8 @@ on:
 
 jobs:
   build:
-    name: Build & Test
+    name: Run Tests
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Use Node.js LTS
