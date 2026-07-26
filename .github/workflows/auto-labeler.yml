@@ -1,16 +1,18 @@
-name: Labeler
+# Automatically applies one or more labels to a PR
+
+name: Auto-Labeler
 on:
-  pull_request_target:
-    types: [opened, synchronize]
+  pull_request:
+    types: [opened, edited, synchronize]
     branches: [main]
 
-permissions: read-all
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   labeler:
-    permissions:
-      pull-requests: write
-    name: Auto-Label PRs
+    name: Label PRs
     runs-on: ubuntu-latest
     steps:
       - uses: fuxingloh/multi-labeler@v5.0.0

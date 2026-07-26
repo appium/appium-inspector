@@ -1,12 +1,13 @@
 # Checks that the PR title follows conventional commit standards
 
-name: Conventional Commits
+name: Check PR Title
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
 
 jobs:
   lint:
+    name: Validate Against Angular Preset
     uses: appium/appium-workflows/.github/workflows/pr-title.yml@main
     with:
       config-preset: angular
