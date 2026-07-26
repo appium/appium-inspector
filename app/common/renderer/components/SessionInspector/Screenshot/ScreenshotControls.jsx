@@ -2,10 +2,10 @@ import {
   IconCrosshair,
   IconDownload,
   IconEyePlus,
-  IconHandClick,
   IconMovie,
   IconObjectScan,
   IconPhoto,
+  IconSquarePlus,
 } from '@tabler/icons-react';
 import {Button, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
@@ -114,7 +114,7 @@ const ScreenshotInteractionModeControls = ({
       </Tooltip>
       <Tooltip title={t('Tap By Element')}>
         <Button
-          icon={<IconHandClick size={18} />}
+          icon={<IconSquarePlus size={18} />}
           onClick={() => screenshotInteractionChange(TAP_ELEMENT)}
           type={screenshotInteractionMode === TAP_ELEMENT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
           disabled={isGestureEditorVisible}
@@ -171,7 +171,7 @@ const ScreenshotControls = (props) => {
 
   return (
     <div className={styles.screenshotControls}>
-      <Space size="middle">
+      <Space size="small">
         {serverDetails.mjpegScreenshotUrl !== null && (
           <ScreenshotCaptureModeControls
             setMjpegState={setMjpegState}
