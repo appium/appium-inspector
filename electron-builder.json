@@ -41,7 +41,16 @@
   },
   "linux": {
     "target": ["AppImage", "tar.gz"],
-    "category": "Development"
+    "category": "Development",
+    "desktop": {
+      "entry": {
+        "Name": "Appium Inspector",
+        "Comment": "GUI inspector for apps, powered by Appium",
+        "Categories": "Development",
+        "Terminal": false,
+        "Type": "Application"
+      }
+    }
   },
   "publish": {
     "provider": "github",
