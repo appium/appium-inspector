@@ -1,4 +1,10 @@
-import {IconDownload, IconFiles, IconTag} from '@tabler/icons-react';
+import {
+  IconChevronDown,
+  IconChevronUp,
+  IconDownload,
+  IconFiles,
+  IconTag,
+} from '@tabler/icons-react';
 import {Button, Card, Flex, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
@@ -66,6 +72,26 @@ const SelectedElementHeaderButtons = ({
 };
 
 /**
+ * Toggle button that collapses/expands the card body while keeping its
+ * header visible. Only shown when panels are stacked (narrow layout),
+ * since the side-by-side layout already offers a full collapse via the
+ * Splitter divider.
+ */
+const CollapseToggleButton = ({collapsed, onClick}) => {
+  const {t} = useTranslation();
+
+  return (
+    <Tooltip title={t(collapsed ? 'Expand Panel' : 'Collapse Panel')}>
+      <Button
+        type="text"
+        icon={collapsed ? <IconChevronDown size={18} /> : <IconChevronUp size={18} />}
+        onClick={onClick}
+      />
+    </Tooltip>
+  );
+};
+
+/**
  * The selected element panel's wrapper card, with title and action buttons.
  */
 const SelectedElementCard = ({
@@ -73,21 +99,27 @@ const SelectedElementCard = ({
   selectedElementId,
   elementActionsDisabled,
   elementAttributesData,
+  collapsible,
+  collapsed,
+  onToggleCollapse,
   children,
 }) => (
   <Card
     title={<SelectedElementPanelTitle />}
     className={styles.selectedElementCard}
     extra={
-      <SelectedElementHeaderButtons
-        elementAttributesData={elementAttributesData}
-        elementActionsDisabled={elementActionsDisabled}
-        selectedElementId={selectedElementId}
-        applyClientMethod={applyClientMethod}
-      />
+      <span>
+        <SelectedElementHeaderButtons
+          elementAttributesData={elementAttributesData}
+          elementActionsDisabled={elementActionsDisabled}
+          selectedElementId={selectedElementId}
+          applyClientMethod={applyClientMethod}
+        />
+        {collapsible && <CollapseToggleButton collapsed={collapsed} onClick={onToggleCollapse} />}
+      </span>
     }
   >
-    {children}
+    {!collapsed && children}
   </Card>
 );
 

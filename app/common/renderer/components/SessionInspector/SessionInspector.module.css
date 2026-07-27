@@ -15,6 +15,7 @@
   padding: 1em;
   max-width: 100%;
   height: calc(100% - 50px);
+  overflow-x: auto;
 }
 
 .inspectorMain :global(.ant-card-head-wrapper) {
