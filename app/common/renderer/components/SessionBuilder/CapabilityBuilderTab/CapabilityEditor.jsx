@@ -12,14 +12,19 @@ import {
   Splitter,
   Tooltip,
 } from 'antd';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {CAPABILITY_TYPES} from '../../../constants/session-builder.js';
+import {debounce} from '../../../utils/common.js';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
 import builderStyles from '../SessionBuilder.module.css';
 import styles from './CapabilityBuilderTab.module.css';
 import CapabilityControl from './CapabilityControl.jsx';
+
+// Below this window width, the JSON preview panel no longer has enough room
+// to sit beside the capability builder panel, so it wraps below it instead.
+const NARROW_LAYOUT_BREAKPOINT = 700;
 
 const whitespaces = /^\s|\s$/;
 
@@ -84,6 +89,19 @@ const CapabilityEditor = (props) => {
   const latestCapFieldRef = useRef(null);
   const {t} = useTranslation();
 
+  const [isNarrow, setIsNarrow] = useState(window.innerWidth < NARROW_LAYOUT_BREAKPOINT);
+  useEffect(() => {
+    const updateIsNarrow = debounce(
+      () => setIsNarrow(window.innerWidth < NARROW_LAYOUT_BREAKPOINT),
+      100,
+    );
+    window.addEventListener('resize', updateIsNarrow);
+    return () => {
+      window.removeEventListener('resize', updateIsNarrow);
+      updateIsNarrow.cancel();
+    };
+  }, []);
+
   // if we have more than one cap and the most recent cap name is empty,
   // it means we've just added a new cap field, so focus that input element
   useEffect(() => {
@@ -93,7 +111,12 @@ const CapabilityEditor = (props) => {
   }, [caps.length, latestCapFieldRef]);
 
   return (
-    <Splitter>
+    // Remounting on orientation change avoids Splitter retaining stale panel
+    // sizes/state from the previous layout when switching back and forth.
+    <Splitter
+      key={isNarrow ? 'vertical' : 'horizontal'}
+      layout={isNarrow ? 'vertical' : 'horizontal'}
+    >
       <Splitter.Panel collapsible resizable={false}>
         <Form className={styles.newSessionForm}>
           {caps.map((cap, index) => (
