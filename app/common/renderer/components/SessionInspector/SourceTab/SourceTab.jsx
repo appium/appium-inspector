@@ -1,7 +1,6 @@
 import {Splitter} from 'antd';
 import {useEffect, useState} from 'react';
 
-import {debounce} from '../../../utils/common.js';
 import AppSource from './AppSource/AppSource.jsx';
 import SelectedElement from './SelectedElement/SelectedElement.jsx';
 
@@ -21,15 +20,15 @@ const SourceTab = (props) => {
 
   const [isNarrow, setIsNarrow] = useState(window.innerWidth < NARROW_LAYOUT_BREAKPOINT);
   useEffect(() => {
-    const updateIsNarrow = debounce(
-      () => setIsNarrow(window.innerWidth < NARROW_LAYOUT_BREAKPOINT),
-      100,
-    );
+    // Deliberately not debounced: Splitter measures its container via its
+    // own ResizeObserver, which can fire before a debounced update here
+    // would land. If that happens while this is still reporting the old
+    // orientation, Splitter reads the wrong axis (width vs height) and
+    // caches a stale container size, leaving panels stuck at the wrong
+    // size until another resize happens to nudge it again.
+    const updateIsNarrow = () => setIsNarrow(window.innerWidth < NARROW_LAYOUT_BREAKPOINT);
     window.addEventListener('resize', updateIsNarrow);
-    return () => {
-      window.removeEventListener('resize', updateIsNarrow);
-      updateIsNarrow.cancel();
-    };
+    return () => window.removeEventListener('resize', updateIsNarrow);
   }, []);
 
   const [appSourceCollapsed, setAppSourceCollapsed] = useState(false);
@@ -64,12 +63,7 @@ const SourceTab = (props) => {
   const canAccordionCollapse = isNarrow && hasSelectedElement;
 
   return (
-    // Remounting on orientation change avoids Splitter retaining stale panel
-    // sizes/state from the previous layout when switching back and forth.
-    <Splitter
-      key={isNarrow ? 'vertical' : 'horizontal'}
-      layout={isNarrow ? 'vertical' : 'horizontal'}
-    >
+    <Splitter orientation={isNarrow ? 'vertical' : 'horizontal'}>
       <Splitter.Panel
         collapsible={
           !isNarrow && hasSelectedElement
