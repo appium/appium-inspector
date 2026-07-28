@@ -16,7 +16,6 @@ import {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {CAPABILITY_TYPES} from '../../../constants/session-builder.js';
-import {debounce} from '../../../utils/common.js';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
 import builderStyles from '../SessionBuilder.module.css';
 import styles from './CapabilityBuilderTab.module.css';
@@ -91,15 +90,15 @@ const CapabilityEditor = (props) => {
 
   const [isNarrow, setIsNarrow] = useState(window.innerWidth < NARROW_LAYOUT_BREAKPOINT);
   useEffect(() => {
-    const updateIsNarrow = debounce(
-      () => setIsNarrow(window.innerWidth < NARROW_LAYOUT_BREAKPOINT),
-      100,
-    );
+    // Deliberately not debounced: Splitter measures its container via its
+    // own ResizeObserver, which can fire before a debounced update here
+    // would land. If that happens while this is still reporting the old
+    // orientation, Splitter reads the wrong axis (width vs height) and
+    // caches a stale container size, leaving panels stuck at the wrong
+    // size until another resize happens to nudge it again.
+    const updateIsNarrow = () => setIsNarrow(window.innerWidth < NARROW_LAYOUT_BREAKPOINT);
     window.addEventListener('resize', updateIsNarrow);
-    return () => {
-      window.removeEventListener('resize', updateIsNarrow);
-      updateIsNarrow.cancel();
-    };
+    return () => window.removeEventListener('resize', updateIsNarrow);
   }, []);
 
   // if we have more than one cap and the most recent cap name is empty,
@@ -111,12 +110,7 @@ const CapabilityEditor = (props) => {
   }, [caps.length, latestCapFieldRef]);
 
   return (
-    // Remounting on orientation change avoids Splitter retaining stale panel
-    // sizes/state from the previous layout when switching back and forth.
-    <Splitter
-      key={isNarrow ? 'vertical' : 'horizontal'}
-      layout={isNarrow ? 'vertical' : 'horizontal'}
-    >
+    <Splitter orientation={isNarrow ? 'vertical' : 'horizontal'}>
       <Splitter.Panel collapsible resizable={false}>
         <Form className={styles.newSessionForm}>
           {caps.map((cap, index) => (

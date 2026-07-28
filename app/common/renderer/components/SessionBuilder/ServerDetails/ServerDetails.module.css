@@ -15,18 +15,19 @@
 .serverPortPathGroup {
   display: flex;
   flex: 2 1 320px;
-  align-items: center;
   gap: 8px;
 }
 
 .serverPortInput {
-  width: 4.5em;
-  flex: 0 0 auto;
+  width: 5em;
 }
 
 .serverPathCompact {
   flex: 1 1 auto;
-  min-width: 120px;
+}
+
+.serverPathInput {
+  min-width: 50px;
 }
 
 .advancedSettingsContainer :global(.ant-form-item) {

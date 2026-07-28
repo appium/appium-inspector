@@ -34,6 +34,7 @@ const ServerTabCustom = ({server, setServerParam}) => {
           <Space.Addon>{t('Remote Path')}</Space.Addon>
           <Input
             id="customServerPath"
+            className={styles.serverPathInput}
             placeholder={DEFAULT_SERVER_PROPS.path}
             value={server.remote.path}
             onChange={(e) => setServerParam('path', e.target.value)}
