@@ -2,6 +2,30 @@
   width: 100%;
 }
 
+.serverRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.serverHostGroup {
+  flex: 1 1 240px;
+}
+
+.serverPortPathGroup {
+  display: flex;
+  flex: 2 1 320px;
+  gap: 8px;
+}
+
+.serverPortInput {
+  width: 5em;
+}
+
+.serverPathInput {
+  min-width: 50px;
+}
+
 .advancedSettingsContainer :global(.ant-form-item) {
   margin: 0;
 }

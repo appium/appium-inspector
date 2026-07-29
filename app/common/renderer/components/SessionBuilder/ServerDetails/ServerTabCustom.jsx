@@ -1,4 +1,4 @@
-import {Checkbox, Col, Input, Row, Space} from 'antd';
+import {Checkbox, Input, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {DEFAULT_SERVER_PROPS} from '../../../constants/webdriver.js';
@@ -7,8 +7,8 @@ import styles from './ServerDetails.module.css';
 const ServerTabCustom = ({server, setServerParam}) => {
   const {t} = useTranslation();
   return (
-    <Row gutter={8}>
-      <Col span={9}>
+    <div className={styles.serverRow}>
+      <div className={styles.serverHostGroup}>
         <Space.Compact block>
           <Space.Addon>{t('Remote Host')}</Space.Addon>
           <Input
@@ -18,30 +18,28 @@ const ServerTabCustom = ({server, setServerParam}) => {
             onChange={(e) => setServerParam('hostname', e.target.value)}
           />
         </Space.Compact>
-      </Col>
-      <Col span={4}>
-        <Space.Compact block>
+      </div>
+      <div className={styles.serverPortPathGroup}>
+        <Space.Compact>
           <Space.Addon>{t('Remote Port')}</Space.Addon>
           <Input
             id="customServerPort"
+            className={styles.serverPortInput}
             placeholder={DEFAULT_SERVER_PROPS.port}
             value={server.remote.port}
             onChange={(e) => setServerParam('port', e.target.value)}
           />
         </Space.Compact>
-      </Col>
-      <Col span={9}>
         <Space.Compact block>
           <Space.Addon>{t('Remote Path')}</Space.Addon>
           <Input
             id="customServerPath"
+            className={styles.serverPathInput}
             placeholder={DEFAULT_SERVER_PROPS.path}
             value={server.remote.path}
             onChange={(e) => setServerParam('path', e.target.value)}
           />
         </Space.Compact>
-      </Col>
-      <Col span={2}>
         <Checkbox
           className={styles.addonCheckbox}
           id="customServerSSL"
@@ -51,8 +49,8 @@ const ServerTabCustom = ({server, setServerParam}) => {
         >
           {t('SSL')}
         </Checkbox>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 };
 
