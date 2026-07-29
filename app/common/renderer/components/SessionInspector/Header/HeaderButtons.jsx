@@ -38,7 +38,7 @@ const HeaderButtons = (props) => {
 
   return (
     <div className={styles.headerButtons}>
-      <Space size="middle">
+      <Space size="middle" wrap>
         <DeviceControlsGroup
           driver={driver}
           applyClientMethod={applyClientMethod}

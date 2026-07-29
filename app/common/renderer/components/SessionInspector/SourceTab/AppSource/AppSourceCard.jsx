@@ -32,9 +32,12 @@ const AppSourcePanelTitle = () => {
 };
 
 /**
- * Header action buttons for source XML copy and download.
+ * Header action buttons for source XML copy and download, plus (when panels
+ * are stacked) the toggle that collapses/expands the card body while keeping
+ * its header visible - the side-by-side layout already offers a full
+ * collapse via the Splitter divider.
  */
-const AppSourceHeaderButtons = ({sourceXML}) => {
+const AppSourceHeaderButtons = ({sourceXML, collapsible, collapsed, onToggleCollapse}) => {
   const {t} = useTranslation();
 
   return (
@@ -55,27 +58,16 @@ const AppSourceHeaderButtons = ({sourceXML}) => {
           onClick={() => downloadXML(sourceXML)}
         />
       </Tooltip>
+      {collapsible && (
+        <Tooltip title={t(collapsed ? 'Expand Panel' : 'Collapse Panel')}>
+          <Button
+            type="text"
+            icon={collapsed ? <IconChevronDown size={18} /> : <IconChevronUp size={18} />}
+            onClick={onToggleCollapse}
+          />
+        </Tooltip>
+      )}
     </span>
-  );
-};
-
-/**
- * Toggle button that collapses/expands the card body while keeping its
- * header visible. Only shown when panels are stacked (narrow layout),
- * since the side-by-side layout already offers a full collapse via the
- * Splitter divider.
- */
-const CollapseToggleButton = ({collapsed, onClick}) => {
-  const {t} = useTranslation();
-
-  return (
-    <Tooltip title={t(collapsed ? 'Expand Panel' : 'Collapse Panel')}>
-      <Button
-        type="text"
-        icon={collapsed ? <IconChevronDown size={18} /> : <IconChevronUp size={18} />}
-        onClick={onClick}
-      />
-    </Tooltip>
   );
 };
 
@@ -86,10 +78,12 @@ const AppSourceCard = ({sourceXML, collapsible, collapsed, onToggleCollapse, chi
   <Card
     title={<AppSourcePanelTitle />}
     extra={
-      <span>
-        <AppSourceHeaderButtons sourceXML={sourceXML} />
-        {collapsible && <CollapseToggleButton collapsed={collapsed} onClick={onToggleCollapse} />}
-      </span>
+      <AppSourceHeaderButtons
+        sourceXML={sourceXML}
+        collapsible={collapsible}
+        collapsed={collapsed}
+        onToggleCollapse={onToggleCollapse}
+      />
     }
   >
     {!collapsed && children}

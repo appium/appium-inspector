@@ -26,13 +26,19 @@ const SelectedElementPanelTitle = () => {
 };
 
 /**
- * Buttons shown in the selected element's wrapper card.
+ * Buttons shown in the selected element's wrapper card, plus (when panels
+ * are stacked) the toggle that collapses/expands the card body while keeping
+ * its header visible - the side-by-side layout already offers a full
+ * collapse via the Splitter divider.
  */
 const SelectedElementHeaderButtons = ({
   elementAttributesData,
   elementActionsDisabled,
   selectedElementId,
   applyClientMethod,
+  collapsible,
+  collapsed,
+  onToggleCollapse,
 }) => {
   const {t} = useTranslation();
 
@@ -67,27 +73,16 @@ const SelectedElementHeaderButtons = ({
           onClick={() => downloadElementScreenshot(selectedElementId)}
         />
       </Tooltip>
+      {collapsible && (
+        <Tooltip title={t(collapsed ? 'Expand Panel' : 'Collapse Panel')}>
+          <Button
+            type="text"
+            icon={collapsed ? <IconChevronDown size={18} /> : <IconChevronUp size={18} />}
+            onClick={onToggleCollapse}
+          />
+        </Tooltip>
+      )}
     </span>
-  );
-};
-
-/**
- * Toggle button that collapses/expands the card body while keeping its
- * header visible. Only shown when panels are stacked (narrow layout),
- * since the side-by-side layout already offers a full collapse via the
- * Splitter divider.
- */
-const CollapseToggleButton = ({collapsed, onClick}) => {
-  const {t} = useTranslation();
-
-  return (
-    <Tooltip title={t(collapsed ? 'Expand Panel' : 'Collapse Panel')}>
-      <Button
-        type="text"
-        icon={collapsed ? <IconChevronDown size={18} /> : <IconChevronUp size={18} />}
-        onClick={onClick}
-      />
-    </Tooltip>
   );
 };
 
@@ -108,15 +103,15 @@ const SelectedElementCard = ({
     title={<SelectedElementPanelTitle />}
     className={styles.selectedElementCard}
     extra={
-      <span>
-        <SelectedElementHeaderButtons
-          elementAttributesData={elementAttributesData}
-          elementActionsDisabled={elementActionsDisabled}
-          selectedElementId={selectedElementId}
-          applyClientMethod={applyClientMethod}
-        />
-        {collapsible && <CollapseToggleButton collapsed={collapsed} onClick={onToggleCollapse} />}
-      </span>
+      <SelectedElementHeaderButtons
+        elementAttributesData={elementAttributesData}
+        elementActionsDisabled={elementActionsDisabled}
+        selectedElementId={selectedElementId}
+        applyClientMethod={applyClientMethod}
+        collapsible={collapsible}
+        collapsed={collapsed}
+        onToggleCollapse={onToggleCollapse}
+      />
     }
   >
     {!collapsed && children}

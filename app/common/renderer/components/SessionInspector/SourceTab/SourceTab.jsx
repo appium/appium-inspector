@@ -1,11 +1,15 @@
 import {Splitter} from 'antd';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 import AppSource from './AppSource/AppSource.jsx';
 import SelectedElement from './SelectedElement/SelectedElement.jsx';
+import styles from './SourceTab.module.css';
 
-// Below this window width, the selected element panel no longer has enough
-// room to sit beside the app source panel, so it wraps below it instead.
+// Below this width, the selected element panel no longer has enough room to
+// sit beside the app source panel, so it wraps below it instead. Measured
+// against this tab's own container width (not the window's), since the tab
+// shares horizontal space with the screenshot, whose width can vary
+// independently (e.g. portrait vs landscape orientation).
 const NARROW_LAYOUT_BREAKPOINT = 700;
 
 // Height of a card's header row (title + action buttons). Used as the
@@ -18,19 +22,8 @@ const SourceTab = (props) => {
 
   const hasSelectedElement = Object.keys(selectedElement).length > 0;
 
-  const [isNarrow, setIsNarrow] = useState(window.innerWidth < NARROW_LAYOUT_BREAKPOINT);
-  useEffect(() => {
-    // Deliberately not debounced: Splitter measures its container via its
-    // own ResizeObserver, which can fire before a debounced update here
-    // would land. If that happens while this is still reporting the old
-    // orientation, Splitter reads the wrong axis (width vs height) and
-    // caches a stale container size, leaving panels stuck at the wrong
-    // size until another resize happens to nudge it again.
-    const updateIsNarrow = () => setIsNarrow(window.innerWidth < NARROW_LAYOUT_BREAKPOINT);
-    window.addEventListener('resize', updateIsNarrow);
-    return () => window.removeEventListener('resize', updateIsNarrow);
-  }, []);
-
+  const containerRef = useRef(null);
+  const [isNarrow, setIsNarrow] = useState(false);
   const [appSourceCollapsed, setAppSourceCollapsed] = useState(false);
   const [selectedElementCollapsed, setSelectedElementCollapsed] = useState(false);
 
@@ -62,45 +55,75 @@ const SourceTab = (props) => {
   // are present - otherwise fall back to the Splitter's own full collapse.
   const canAccordionCollapse = isNarrow && hasSelectedElement;
 
+  // Splitter's own collapse (via the divider) fully hides a panel, header
+  // included, which only makes sense side-by-side with both panels present.
+  const splitterCollapsible =
+    !isNarrow && hasSelectedElement ? {start: true, end: true, showCollapsibleIcon: true} : false;
+
+  // Shared size/min for a panel that supports the accordion-style collapse:
+  // shrink to just its header height when collapsed, otherwise fall back to
+  // its own default size/min.
+  const getPanelSizing = (collapsed, defaultSize, defaultMin) => ({
+    size: canAccordionCollapse && collapsed ? PANEL_HEADER_HEIGHT : defaultSize,
+    min: canAccordionCollapse && collapsed ? PANEL_HEADER_HEIGHT : defaultMin,
+  });
+
+  const appSourceSizing = getPanelSizing(
+    appSourceCollapsed,
+    hasSelectedElement ? undefined : 100,
+    210,
+  );
+  const selectedElementSizing = getPanelSizing(selectedElementCollapsed, undefined, 250);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) {
+      return;
+    }
+    // Deliberately not debounced: Splitter measures its container via its
+    // own ResizeObserver, which can fire before a debounced update here
+    // would land. If that happens while this is still reporting the old
+    // orientation, Splitter reads the wrong axis (width vs height) and
+    // caches a stale container size, leaving panels stuck at the wrong
+    // size until another resize happens to nudge it again.
+    const observer = new ResizeObserver(([entry]) => {
+      setIsNarrow(entry.contentRect.width < NARROW_LAYOUT_BREAKPOINT);
+    });
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <Splitter orientation={isNarrow ? 'vertical' : 'horizontal'}>
-      <Splitter.Panel
-        collapsible={
-          !isNarrow && hasSelectedElement
-            ? {start: true, end: true, showCollapsibleIcon: true}
-            : false
-        }
-        size={
-          canAccordionCollapse && appSourceCollapsed
-            ? PANEL_HEADER_HEIGHT
-            : hasSelectedElement
-              ? undefined
-              : 100
-        }
-        min={canAccordionCollapse && appSourceCollapsed ? PANEL_HEADER_HEIGHT : 210}
-      >
-        <AppSource
-          {...props}
-          collapsible={canAccordionCollapse}
-          collapsed={canAccordionCollapse && appSourceCollapsed}
-          onToggleCollapse={toggleAppSourceCollapse}
-        />
-      </Splitter.Panel>
-      {hasSelectedElement && (
+    <div ref={containerRef} className={styles.sourceTabContainer}>
+      <Splitter orientation={isNarrow ? 'vertical' : 'horizontal'}>
         <Splitter.Panel
-          collapsible={!isNarrow ? {start: true, end: true, showCollapsibleIcon: true} : false}
-          size={canAccordionCollapse && selectedElementCollapsed ? PANEL_HEADER_HEIGHT : undefined}
-          min={canAccordionCollapse && selectedElementCollapsed ? PANEL_HEADER_HEIGHT : 250}
+          collapsible={splitterCollapsible}
+          size={appSourceSizing.size}
+          min={appSourceSizing.min}
         >
-          <SelectedElement
+          <AppSource
             {...props}
             collapsible={canAccordionCollapse}
-            collapsed={canAccordionCollapse && selectedElementCollapsed}
-            onToggleCollapse={toggleSelectedElementCollapse}
+            collapsed={canAccordionCollapse && appSourceCollapsed}
+            onToggleCollapse={toggleAppSourceCollapse}
           />
         </Splitter.Panel>
-      )}
-    </Splitter>
+        {hasSelectedElement && (
+          <Splitter.Panel
+            collapsible={splitterCollapsible}
+            size={selectedElementSizing.size}
+            min={selectedElementSizing.min}
+          >
+            <SelectedElement
+              {...props}
+              collapsible={canAccordionCollapse}
+              collapsed={canAccordionCollapse && selectedElementCollapsed}
+              onToggleCollapse={toggleSelectedElementCollapse}
+            />
+          </Splitter.Panel>
+        )}
+      </Splitter>
+    </div>
   );
 };
 
