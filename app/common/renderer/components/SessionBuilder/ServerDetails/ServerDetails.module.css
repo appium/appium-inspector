@@ -22,10 +22,6 @@
   width: 5em;
 }
 
-.serverPathCompact {
-  flex: 1 1 auto;
-}
-
 .serverPathInput {
   min-width: 50px;
 }

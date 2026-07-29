@@ -30,7 +30,7 @@ const ServerTabCustom = ({server, setServerParam}) => {
             onChange={(e) => setServerParam('port', e.target.value)}
           />
         </Space.Compact>
-        <Space.Compact block className={styles.serverPathCompact}>
+        <Space.Compact block>
           <Space.Addon>{t('Remote Path')}</Space.Addon>
           <Input
             id="customServerPath"
