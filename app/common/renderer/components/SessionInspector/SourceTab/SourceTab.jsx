@@ -10,7 +10,7 @@ import styles from './SourceTab.module.css';
 // against this tab's own container width (not the window's), since the tab
 // shares horizontal space with the screenshot, whose width can vary
 // independently (e.g. portrait vs landscape orientation).
-const NARROW_LAYOUT_BREAKPOINT = 700;
+const NARROW_LAYOUT_BREAKPOINT = 600;
 
 // Height of a card's header row (title + action buttons). Used as the
 // collapsed size for a stacked panel, so its header stays visible while its
