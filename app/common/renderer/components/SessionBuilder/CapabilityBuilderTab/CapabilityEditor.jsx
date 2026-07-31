@@ -84,11 +84,16 @@ const CapabilityEditor = (props) => {
     isDuplicateCapsName,
   } = props;
 
-  const onSaveAsOk = () => saveSession({server, serverType, caps, name: saveAsText}, true);
-  const latestCapFieldRef = useRef(null);
   const {t} = useTranslation();
 
-  const [isNarrow, setIsNarrow] = useState(window.innerWidth < NARROW_LAYOUT_BREAKPOINT);
+  const latestCapFieldRef = useRef(null);
+
+  const [isNarrow, setIsNarrow] = useState(
+    window.innerWidth > 0 && window.innerWidth < NARROW_LAYOUT_BREAKPOINT,
+  );
+
+  const onSaveAsOk = () => saveSession({server, serverType, caps, name: saveAsText}, true);
+
   useEffect(() => {
     // Deliberately not debounced: Splitter measures its container via its
     // own ResizeObserver, which can fire before a debounced update here
