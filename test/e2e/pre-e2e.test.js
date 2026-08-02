@@ -3,14 +3,14 @@ import {join} from 'node:path';
 
 import {fs, logger} from '@appium/support';
 import {retryInterval} from 'asyncbox';
-import {expect} from 'vitest';
+import {afterAll, beforeAll, expect} from 'vitest';
 
 const platform = os.platform();
 const appName = 'inspector';
 const log = logger.getLogger('E2E Test');
 
 describe('E2E tests', function () {
-  before(async function () {
+  beforeAll(async function () {
     let appPath;
     // let args = [];
     if (process.env.SPECTRON_TEST_PROD_BINARIES) {
@@ -81,7 +81,7 @@ describe('E2E tests', function () {
     log.info(`App ready for automation`);
   });
 
-  after(function () {
+  afterAll(function () {
     if (this.app && this.app.isRunning()) {
       return this.app.stop();
     }
