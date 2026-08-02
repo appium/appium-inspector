@@ -123,5 +123,8 @@
   "desktopName": "io.appium.inspector",
   "allowScripts": {
     "electron": true
+  },
+  "overrides": {
+    "brace-expansion": "2.1.3"
   }
 }
