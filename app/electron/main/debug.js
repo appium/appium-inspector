@@ -38,9 +38,9 @@ export async function installExtensions() {
 }
 
 function logEmptyLine() {
-  console.log(''); // eslint-disable-line no-console
+  console.log(''); // oxlint-disable-line no-console
 }
 
 function logWithExtPrefix(textString) {
-  console.log(`[🧩 Extensions 🧩] ${textString}`); // eslint-disable-line no-console
+  console.log(`[🧩 Extensions 🧩] ${textString}`); // oxlint-disable-line no-console
 }

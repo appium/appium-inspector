@@ -1,14 +1,14 @@
 class Logger {
   info(...args) {
-    console.info(...args); // eslint-disable-line no-console
+    console.info(...args); // oxlint-disable-line no-console
   }
 
   warn(...args) {
-    console.warn(...args); // eslint-disable-line no-console
+    console.warn(...args); // oxlint-disable-line no-console
   }
 
   error(...args) {
-    console.error(...args); // eslint-disable-line no-console
+    console.error(...args); // oxlint-disable-line no-console
   }
 }
 
