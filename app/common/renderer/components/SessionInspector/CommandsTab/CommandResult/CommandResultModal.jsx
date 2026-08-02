@@ -30,6 +30,7 @@ const CommandResultModalFooter = ({
         <Space>
           <Tooltip title={t('toggleTableFormatting')}>
             <Button
+              aria-label={t('toggleTableFormatting')}
               icon={<IconTable size={18} />}
               disabled={isPrimitive}
               type={formatResult ? BUTTON.PRIMARY : BUTTON.DEFAULT}
@@ -38,6 +39,7 @@ const CommandResultModalFooter = ({
           </Tooltip>
           <Tooltip title={t('copyResultToClipboard')}>
             <Button
+              aria-label={t('copyResultToClipboard')}
               icon={<IconFiles size={18} />}
               disabled={formatResult}
               onClick={() => copyToClipboard(result)}

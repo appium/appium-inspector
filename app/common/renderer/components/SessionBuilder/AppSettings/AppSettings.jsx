@@ -13,7 +13,11 @@ const AppSettings = () => {
   return (
     <>
       <Tooltip title={t('App Settings')}>
-        <Button icon={<IconSettings size={18} />} onClick={() => setModalOpen(true)} />
+        <Button
+          aria-label={t('App Settings')}
+          icon={<IconSettings size={18} />}
+          onClick={() => setModalOpen(true)}
+        />
       </Tooltip>
 
       <Modal

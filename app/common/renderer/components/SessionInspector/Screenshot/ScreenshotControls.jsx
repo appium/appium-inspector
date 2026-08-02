@@ -47,6 +47,7 @@ const ScreenshotCaptureModeControls = ({
     <Space.Compact>
       <Tooltip title={t('useMjpegStream')} placement="topLeft">
         <Button
+          aria-label={t('useMjpegStream')}
           icon={<IconMovie size={18} />}
           onClick={() => switchScreenCaptureMode(true)}
           type={isUsingMjpegMode ? BUTTON.PRIMARY : BUTTON.DEFAULT}
@@ -54,6 +55,7 @@ const ScreenshotCaptureModeControls = ({
       </Tooltip>
       <Tooltip title={t('useScreenshotApi')} placement="topLeft">
         <Button
+          aria-label={t('useScreenshotApi')}
           icon={<IconPhoto size={18} />}
           onClick={() => switchScreenCaptureMode(false)}
           type={!isUsingMjpegMode ? BUTTON.PRIMARY : BUTTON.DEFAULT}
@@ -76,6 +78,7 @@ const ToggleElementHandlesButton = ({
   return (
     <Tooltip title={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')}>
       <Button
+        aria-label={t(showCentroids ? 'Hide Element Handles' : 'Show Element Handles')}
         icon={<IconEyePlus size={18} />}
         onClick={() => toggleShowCentroids()}
         type={showCentroids ? BUTTON.PRIMARY : BUTTON.DEFAULT}
@@ -106,6 +109,7 @@ const ScreenshotInteractionModeControls = ({
     <Space.Compact>
       <Tooltip title={t('Select Elements')}>
         <Button
+          aria-label={t('Select Elements')}
           icon={<IconObjectScan size={18} />}
           onClick={() => screenshotInteractionChange(SELECT)}
           type={screenshotInteractionMode === SELECT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
@@ -122,6 +126,7 @@ const ScreenshotInteractionModeControls = ({
       </Tooltip>
       <Tooltip title={t('Tap/Swipe By Coordinates')}>
         <Button
+          aria-label={t('Tap/Swipe By Coordinates')}
           icon={<IconCrosshair size={18} />}
           onClick={() => screenshotInteractionChange(TAP_SWIPE)}
           type={screenshotInteractionMode === TAP_SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
@@ -141,6 +146,7 @@ const DownloadScreenshotButton = ({screenshot, showScreenshot, isUsingMjpegMode}
   return (
     <Tooltip title={t('Download Screenshot')}>
       <Button
+        aria-label={t('Download Screenshot')}
         icon={<IconDownload size={18} />}
         onClick={() => downloadScreenshot(screenshot)}
         disabled={!showScreenshot || isUsingMjpegMode}

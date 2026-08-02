@@ -39,6 +39,7 @@ const GestureEditorTickCardHeaderButtons = ({
       {tick.type === POINTER_TYPES.POINTER_MOVE && (
         <Tooltip title={t('toggleMoveActionCoordPicker')}>
           <Button
+            aria-label={t('toggleMoveActionCoordPicker')}
             size="small"
             type={selectedTick === tick.id ? 'primary' : 'text'}
             icon={<IconFocus2 size={18} />}
@@ -48,6 +49,7 @@ const GestureEditorTickCardHeaderButtons = ({
       )}
       <Tooltip title={t('Delete')}>
         <Button
+          aria-label={t('Delete')}
           size="small"
           type="text"
           icon={<IconX size={18} />}

@@ -35,6 +35,7 @@ const AppSourceHeaderButtons = ({sourceXML}) => {
     <span>
       <Tooltip title={t('Copy XML Source to Clipboard')}>
         <Button
+          aria-label={t('Copy XML Source to Clipboard')}
           type="text"
           id="btnSourceXML"
           icon={<IconFiles size={18} />}
@@ -43,6 +44,7 @@ const AppSourceHeaderButtons = ({sourceXML}) => {
       </Tooltip>
       <Tooltip title={t('Download Source as .XML File')}>
         <Button
+          aria-label={t('Download Source as .XML File')}
           type="text"
           id="btnDownloadSourceXML"
           icon={<IconDownload size={18} />}

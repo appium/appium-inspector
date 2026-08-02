@@ -13,6 +13,7 @@ const SessionReloadButton = ({autoSessionRestart, toggleAutoSessionRestart}) => 
   return (
     <Tooltip title={t('ToggleRestartSession')}>
       <Button
+        aria-label={t('ToggleRestartSession')}
         id={autoSessionRestart ? 'btnDisableRestartSession' : 'btnEnableRestartSession'}
         icon={<IconRecycle size={16} />}
         type={autoSessionRestart ? BUTTON.PRIMARY : undefined}

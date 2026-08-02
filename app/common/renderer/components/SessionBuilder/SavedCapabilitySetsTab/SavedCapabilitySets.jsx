@@ -101,6 +101,7 @@ const SavedCapabilitySets = (props) => {
         <Space.Compact>
           <Tooltip zIndex={3} title={t('Edit')}>
             <Button
+              aria-label={t('Edit')}
               icon={<IconEdit size={18} />}
               onClick={() => {
                 handleCapsAndServer(record.key);
@@ -110,6 +111,7 @@ const SavedCapabilitySets = (props) => {
           </Tooltip>
           <Tooltip zIndex={3} title={t('Export to File')}>
             <Button
+              aria-label={t('Export to File')}
               icon={<IconFileExport size={18} />}
               onClick={() => findAndExportSavedSession(record.key)}
             />
@@ -122,7 +124,7 @@ const SavedCapabilitySets = (props) => {
               cancelText={t('Cancel')}
               onConfirm={() => deleteSavedSession(record.key)}
             >
-              <Button icon={<IconTrash size={18} />} />
+              <Button aria-label={t('Delete')} icon={<IconTrash size={18} />} />
             </Popconfirm>
           </Tooltip>
         </Space.Compact>

@@ -75,6 +75,7 @@ const LocatorSearchResultsElementActions = ({
       <Space orientation="horizontal" size="small">
         <Tooltip title={t('Find and Select in Source')} placement="bottom">
           <Button
+            aria-label={t('Find and Select in Source')}
             disabled={!locatedElement}
             icon={<IconListSearch size={18} />}
             onClick={() =>
@@ -89,6 +90,7 @@ const LocatorSearchResultsElementActions = ({
         </Tooltip>
         <Tooltip title={t('Tap')} placement="bottom">
           <Button
+            aria-label={t('Tap')}
             disabled={!locatedElement}
             icon={<IconFocus2 size={18} />}
             onClick={() =>
@@ -106,6 +108,7 @@ const LocatorSearchResultsElementActions = ({
           />
           <Tooltip title={t('Send Keys')} placement="bottom">
             <Button
+              aria-label={t('Send Keys')}
               disabled={!locatedElement}
               icon={<IconSend2 size={18} />}
               onClick={() =>
@@ -119,6 +122,7 @@ const LocatorSearchResultsElementActions = ({
           </Tooltip>
           <Tooltip title={t('Clear')} placement="bottom">
             <Button
+              aria-label={t('Clear')}
               disabled={!locatedElement}
               id="btnClearElement"
               icon={<IconEraser size={18} />}

@@ -175,6 +175,7 @@ const CapabilityEditor = (props) => {
                     </Tooltip>
                     <Tooltip title={t('Delete')} placement="right">
                       <Button
+                        aria-label={t('Delete')}
                         {...{disabled: caps.length <= 1 || isEditingDesiredCaps}}
                         icon={<IconTrash size={18} />}
                         onClick={() => removeCapability(cap.id)}
@@ -200,6 +201,7 @@ const CapabilityEditor = (props) => {
               <Form.Item>
                 <Tooltip title={t('Add')} placement="right">
                   <Button
+                    aria-label={t('Add')}
                     disabled={isEditingDesiredCaps}
                     id="btnAddDesiredCapability"
                     icon={<IconPlus size={18} />}

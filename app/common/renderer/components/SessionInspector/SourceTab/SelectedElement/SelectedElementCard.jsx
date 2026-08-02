@@ -45,6 +45,7 @@ const SelectedElementHeaderButtons = ({
     <span>
       <Tooltip title={t('Copy Attributes to Clipboard')}>
         <Button
+          aria-label={t('Copy Attributes to Clipboard')}
           type="text"
           disabled={elementActionsDisabled}
           id="btnCopyAttributes"
@@ -54,6 +55,7 @@ const SelectedElementHeaderButtons = ({
       </Tooltip>
       <Tooltip title={t('Download Screenshot')}>
         <Button
+          aria-label={t('Download Screenshot')}
           type="text"
           disabled={elementActionsDisabled}
           icon={<IconDownload size={18} />}
