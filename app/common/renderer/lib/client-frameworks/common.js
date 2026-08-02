@@ -86,7 +86,7 @@ export default class CommonClientFramework {
 
   handleUnsupportedLocatorStrategy(strategy, locator) {
     return this.addComment(
-      `Code generation for locator strategy '${strategy}' ` + `(selector '${locator}') is not currently supported`,
+      `Code generation for locator strategy '${strategy}' (selector '${locator}') is not currently supported`,
     );
   }
 

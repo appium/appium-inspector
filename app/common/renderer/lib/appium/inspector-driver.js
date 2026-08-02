@@ -96,7 +96,7 @@ export default class InspectorDriver {
           appMode,
         });
       } else {
-        log.info(`Handling client method request with method '${methodName}' ` + `and args ${JSON.stringify(args)}`);
+        log.info(`Handling client method request with method '${methodName}' and args ${JSON.stringify(args)}`);
         res = await this.executeMethod({
           methodName,
           args,
