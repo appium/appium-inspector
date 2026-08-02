@@ -79,6 +79,7 @@
   "Show Element Handles": "エレメント操作を表示する",
   "Hide Element Handles": "エレメント操作を隠す",
   "Select Elements": "要素を選択する",
+  "Tap By Element": "Tap By Element",
   "Tap/Swipe By Coordinates": "座標でタップ/スワイプする",
   "Download Screenshot": "スクリーンショットをダウンロードする",
   "Back": "戻る",
