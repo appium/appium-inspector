@@ -56,7 +56,7 @@ export default defineConfig({
          * As of vite-plugin-electron-renderer v1, bundling webdriver (specifically, @wdio/utils)
          * adds `node:` imports to the top of the generated main.js, causing the renderer to fail.
          * These imports aren't needed by the Inspector, so just remove them from the file.
-         * 
+         *
          * Configuring vite-plugin-electron-renderer to import webdriver as CJS in turn causes errors
          * coming from its undici dependency, so that is not a solution.
          */
