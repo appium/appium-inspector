@@ -38,11 +38,7 @@ async function main() {
   }
 
   // The new line in the last is to avoid a formatter error.
-  await fs.writeFile(
-    PLUGIN_PKG_JSON_PATH,
-    `${JSON.stringify(pluginJsonContent, null, 2)}\n`,
-    'utf8',
-  );
+  await fs.writeFile(PLUGIN_PKG_JSON_PATH, `${JSON.stringify(pluginJsonContent, null, 2)}\n`, 'utf8');
 }
 
 (async () => await main())();

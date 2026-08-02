@@ -8,9 +8,7 @@ import {isDev} from './helpers.js';
 import i18n from './i18next.js';
 import {rebuildMenus} from './menus.js';
 
-const mainPath = isDev
-  ? process.env.ELECTRON_RENDERER_URL
-  : join(__dirname, '..', 'renderer', 'index.html'); // from 'main' in package.json
+const mainPath = isDev ? process.env.ELECTRON_RENDERER_URL : join(__dirname, '..', 'renderer', 'index.html'); // from 'main' in package.json
 const splashPath = isDev
   ? `${process.env.ELECTRON_RENDERER_URL}/splash.html`
   : join(__dirname, '..', 'renderer', 'splash.html'); // from 'main' in package.json
@@ -20,8 +18,7 @@ let mainWindow = null;
 
 export async function setupMainWindow() {
   const preferredTheme = await settings.get(PREFERRED_THEME);
-  const isDarkTheme =
-    preferredTheme === 'dark' || (preferredTheme === 'system' && nativeTheme.shouldUseDarkColors);
+  const isDarkTheme = preferredTheme === 'dark' || (preferredTheme === 'system' && nativeTheme.shouldUseDarkColors);
   const backgroundColor = isDarkTheme ? '#191919' : '#f5f5f5';
 
   const splashWindow = buildSplashWindow(backgroundColor);

@@ -7,13 +7,7 @@ import styles from './SelectedElement.module.css';
  */
 const SelectedElementTable = ({columns, dataSource}) => (
   <Row className={styles.selectedElemTableWrapper}>
-    <Table
-      columns={columns}
-      dataSource={dataSource}
-      size="small"
-      scroll={{x: 'max-content'}}
-      pagination={false}
-    />
+    <Table columns={columns} dataSource={dataSource} size="small" scroll={{x: 'max-content'}} pagination={false} />
   </Row>
 );
 

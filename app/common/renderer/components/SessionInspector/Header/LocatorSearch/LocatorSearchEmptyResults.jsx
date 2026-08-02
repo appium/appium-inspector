@@ -4,6 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {ALERT} from '../../../../constants/antd-types.js';
 import {DRIVERS} from '../../../../constants/common.js';
 import {LOCATOR_STRATEGIES} from '../../../../constants/session-inspector.js';
+
 import inspectorStyles from '../../SessionInspector.module.css';
 
 /**
@@ -38,12 +39,7 @@ const DisableIdAutocompletionMessage = ({
 /**
  * Locator search results for when no locators were found.
  */
-const LocatorSearchEmptyResults = ({
-  locatorSearchStrategy,
-  locatorSearchValue,
-  automationName,
-  sessionSettings,
-}) => {
+const LocatorSearchEmptyResults = ({locatorSearchStrategy, locatorSearchValue, automationName, sessionSettings}) => {
   const {t} = useTranslation();
 
   return (

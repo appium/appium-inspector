@@ -77,23 +77,14 @@ const LocatorSearchResultsElementActions = ({
           <Button
             disabled={!locatedElement}
             icon={<IconListSearch size={18} />}
-            onClick={() =>
-              findLocatedElementInSource(
-                sourceJSON,
-                sourceXML,
-                searchedForElementBounds,
-                locatedElement,
-              )
-            }
+            onClick={() => findLocatedElementInSource(sourceJSON, sourceXML, searchedForElementBounds, locatedElement)}
           />
         </Tooltip>
         <Tooltip title={t('Tap')} placement="bottom">
           <Button
             disabled={!locatedElement}
             icon={<IconFocus2 size={18} />}
-            onClick={() =>
-              applyClientMethod({methodName: 'elementClick', elementId: locatedElement})
-            }
+            onClick={() => applyClientMethod({methodName: 'elementClick', elementId: locatedElement})}
           />
         </Tooltip>
         <Space.Compact className={styles.searchResultsActions}>

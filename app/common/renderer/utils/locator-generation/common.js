@@ -22,12 +22,7 @@ export function getSuggestedLocators(selectedElement, sourceXML, isNative, autom
   };
   const sourceDoc = xmlToDOM(sourceXML);
   const simpleLocators = getSimpleSuggestedLocators(simpleLocElementProps, sourceDoc, isNative);
-  const complexLocators = getComplexSuggestedLocators(
-    selectedElement.path,
-    sourceDoc,
-    isNative,
-    automationName,
-  );
+  const complexLocators = getComplexSuggestedLocators(selectedElement.path, sourceDoc, isNative, automationName);
   return Object.entries({...simpleLocators, ...complexLocators});
 }
 
@@ -53,11 +48,7 @@ export function getComplexSuggestedLocators(path, sourceDoc, isNative, automatio
         break;
       }
       case DRIVERS.UIAUTOMATOR2: {
-        complexLocators['-android uiautomator'] = getOptimalUiAutomatorSelector(
-          sourceDoc,
-          domNode,
-          path,
-        );
+        complexLocators['-android uiautomator'] = getOptimalUiAutomatorSelector(sourceDoc, domNode, path);
         break;
       }
     }

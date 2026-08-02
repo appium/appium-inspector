@@ -4,8 +4,9 @@ import {useTranslation} from 'react-i18next';
 
 import {TABLE_TAB} from '../../../../constants/antd-types.js';
 import {CURSOR, POINTER_COLORS} from '../../../../constants/gestures.js';
-import styles from './GestureEditor.module.css';
 import GestureEditorPointerTabContents from './GestureEditorPointerTabContents.jsx';
+
+import styles from './GestureEditor.module.css';
 
 const addPointer = (pointers) => {
   const key = pointers.length + 1;

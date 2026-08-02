@@ -2,6 +2,7 @@ import {Checkbox, Col, Input, Row, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {PROVIDER_VALUES} from '../../../constants/session-builder.js';
+
 import styles from './ServerDetails.module.css';
 
 const portPlaceholder = (server) => (server.perfecto.ssl ? '443' : '80');

@@ -9,6 +9,7 @@ import {
   NATIVE_DRIVER_LOCATOR_STRATEGY_MAP,
   WEB_LOCATOR_STRATEGY_MAP,
 } from '../../../../constants/session-inspector.js';
+
 import inspectorStyles from '../../SessionInspector.module.css';
 import styles from './LocatorSearch.module.css';
 
@@ -20,16 +21,10 @@ const locatorStrategies = (automationName, currentContext) => {
   switch (automationName) {
     case DRIVERS.XCUITEST:
     case DRIVERS.MAC2:
-      strategies.push(
-        NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.PREDICATE,
-        NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.CLASS_CHAIN,
-      );
+      strategies.push(NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.PREDICATE, NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.CLASS_CHAIN);
       break;
     case DRIVERS.ESPRESSO:
-      strategies.push(
-        NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.DATAMATCHER,
-        NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.VIEWTAG,
-      );
+      strategies.push(NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.DATAMATCHER, NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.VIEWTAG);
       break;
     case DRIVERS.UIAUTOMATOR2:
       strategies.push(NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.UIAUTOMATOR);
@@ -68,11 +63,7 @@ const LocatorSearchFormStrategySelector = ({
 const LocatorSearchFormMissingAutomationNameMessage = ({automationName}) => {
   const {t} = useTranslation();
 
-  return (
-    !automationName && (
-      <Alert title={t('missingAutomationNameForStrategies')} type={ALERT.INFO} showIcon />
-    )
-  );
+  return !automationName && <Alert title={t('missingAutomationNameForStrategies')} type={ALERT.INFO} showIcon />;
 };
 
 /**

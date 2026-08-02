@@ -2,6 +2,7 @@ import {Checkbox, Col, Flex, Input, Row, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {INPUT} from '../../../constants/antd-types.js';
+
 import styles from './ServerDetails.module.css';
 
 const ServerTabWebmate = ({server, setServerParam}) => {

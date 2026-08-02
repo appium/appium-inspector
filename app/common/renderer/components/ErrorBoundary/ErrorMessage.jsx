@@ -5,6 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {ALERT} from '../../constants/antd-types.js';
 import {LINKS} from '../../constants/common.js';
 import {openLink} from '../../polyfills.js';
+
 import styles from './ErrorMessage.module.css';
 
 const ErrorMessage = ({error, copyTrace}) => {
@@ -23,9 +24,7 @@ const ErrorMessage = ({error, copyTrace}) => {
         description={
           <>
             {t('Please report this issue at:')}&nbsp;
-            <a onClick={(e) => e.preventDefault() || openLink(LINKS.CREATE_ISSUE)}>
-              {LINKS.CREATE_ISSUE}
-            </a>
+            <a onClick={(e) => e.preventDefault() || openLink(LINKS.CREATE_ISSUE)}>{LINKS.CREATE_ISSUE}</a>
             <br />
             {t('Full error trace:')}
             <Tooltip title={t('Copy Error Trace')}>

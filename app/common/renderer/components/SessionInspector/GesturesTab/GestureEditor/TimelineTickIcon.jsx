@@ -14,6 +14,7 @@ import {
   POINTER_TYPES,
   POINTER_TYPES_MAP,
 } from '../../../../constants/gestures.js';
+
 import styles from './GestureEditor.module.css';
 
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
@@ -119,10 +120,7 @@ const TimelineTickPointerIcon = ({tick}) => {
   const PointerUpDownIcon = tick.type === POINTER_DOWN ? IconArrowBigDownLine : IconArrowBigUpLine;
 
   return (
-    <TimelineTickIconWrapper
-      type={tick.type}
-      popoverContents={<TickButtonLabel button={tick.button} />}
-    >
+    <TimelineTickIconWrapper type={tick.type} popoverContents={<TickButtonLabel button={tick.button} />}>
       <PointerUpDownIcon size={TIMELINE_ICON_SIZE} />
     </TimelineTickIconWrapper>
   );
@@ -132,10 +130,7 @@ const TimelineTickPointerIcon = ({tick}) => {
  * Icon + tooltip of a pause action in the gesture timeline.
  */
 const TimelineTickPauseIcon = ({tick}) => (
-  <TimelineTickIconWrapper
-    type={tick.type}
-    popoverContents={<TickDurationLabel duration={tick.duration} />}
-  >
+  <TimelineTickIconWrapper type={tick.type} popoverContents={<TickDurationLabel duration={tick.duration} />}>
     <IconPlayerPause size={TIMELINE_ICON_SIZE} />
   </TimelineTickIconWrapper>
 );

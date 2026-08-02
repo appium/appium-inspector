@@ -82,12 +82,7 @@ import {
   UNSELECT_TICK_ELEMENT,
 } from '../actions/SessionInspector.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot.js';
-import {
-  APP_MODE,
-  CLIENT_FRAMEWORKS,
-  INSPECTOR_TABS,
-  NATIVE_APP,
-} from '../constants/session-inspector.js';
+import {APP_MODE, CLIENT_FRAMEWORKS, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector.js';
 import {omit} from '../utils/common.js';
 
 const INITIAL_STATE = {

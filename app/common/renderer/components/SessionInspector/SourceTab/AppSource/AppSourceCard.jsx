@@ -1,10 +1,4 @@
-import {
-  IconChevronDown,
-  IconChevronUp,
-  IconDownload,
-  IconFiles,
-  IconFileText,
-} from '@tabler/icons-react';
+import {IconChevronDown, IconChevronUp, IconDownload, IconFiles, IconFileText} from '@tabler/icons-react';
 import {Button, Card, Flex, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 

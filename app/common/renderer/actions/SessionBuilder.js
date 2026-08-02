@@ -19,10 +19,7 @@ import i18n from '../i18next.js';
 import WDSessionStarter from '../lib/appium/session-starter.js';
 import {VENDOR_MAP} from '../lib/vendor/map.js';
 import {getSetting, loadSessionFileIfOpened, setSetting} from '../polyfills.js';
-import {
-  fetchSessionInformation,
-  formatSeleniumGridSessions,
-} from '../utils/attaching-to-session.js';
+import {fetchSessionInformation, formatSeleniumGridSessions} from '../utils/attaching-to-session.js';
 import {isEmpty, omit} from '../utils/common.js';
 import {downloadFile, readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {log} from '../utils/logger.js';
@@ -312,9 +309,7 @@ export function newSession(originalCaps, attachSessId = null) {
         // exist in our cache of running appium sessions. Otherwise (in the case where we are
         // autostarting and attaching to a new session, retrieve session details via a server call)
         serverOpts.isMobile = true;
-        const attachedSession = session.runningAppiumSessions.find(
-          (session) => session.id === attachSessId,
-        );
+        const attachedSession = session.runningAppiumSessions.find((session) => session.id === attachSessId);
         let attachedSessionCaps = {};
         if (attachedSession) {
           attachedSessionCaps = attachedSession.capabilities;
@@ -330,9 +325,7 @@ export function newSession(originalCaps, attachSessId = null) {
               timeout: CONN_TIMEOUT,
             });
             attachedSessionCaps =
-              session.serverType === SERVER_TYPES.TESTMUAI
-                ? unwrapTestMuAICaps(res.value)
-                : res.value;
+              session.serverType === SERVER_TYPES.TESTMUAI ? unwrapTestMuAICaps(res.value) : res.value;
           } catch (err) {
             // rethrow the error as session not running, but first log the original error to console
             log.error(err);
@@ -374,13 +367,10 @@ export function newSession(originalCaps, attachSessId = null) {
       }
     }
 
-    let mjpegScreenshotUrl =
-      driver.capabilities[`appium:${MJPEG_CAP}`] || driver.capabilities[MJPEG_CAP] || null;
+    let mjpegScreenshotUrl = driver.capabilities[`appium:${MJPEG_CAP}`] || driver.capabilities[MJPEG_CAP] || null;
 
     let mjpegScreenshotPort =
-      driver.capabilities[`appium:${MJPEG_PORT_CAP}`] ||
-      driver.capabilities[MJPEG_PORT_CAP] ||
-      null;
+      driver.capabilities[`appium:${MJPEG_PORT_CAP}`] || driver.capabilities[MJPEG_PORT_CAP] || null;
 
     if (session.serverType === SERVER_TYPES.FIREFLINKDEVICEFARM) {
       mjpegScreenshotUrl = null;
@@ -605,10 +595,7 @@ export function setSavedServerParams() {
     if (server) {
       // if we have a cloud provider as a saved server, but for some reason the
       // cloud provider is no longer in the list, revert server type to remote
-      if (
-        Object.values(SERVER_TYPES).includes(serverType) &&
-        !currentProviders.includes(serverType)
-      ) {
+      if (Object.values(SERVER_TYPES).includes(serverType) && !currentProviders.includes(serverType)) {
         serverType = SERVER_TYPES.REMOTE;
       }
       dispatch({type: SET_SERVER, server, serverType});
@@ -701,9 +688,7 @@ export function exportSavedSession(session) {
       server: cleanedServer,
       caps: cleanedCaps,
     };
-    const href = `data:text/json;charset=utf-8,${encodeURIComponent(
-      JSON.stringify(sessionFileDetails, null, 2),
-    )}`;
+    const href = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(sessionFileDetails, null, 2))}`;
     const escapedName = sanitize(cleanedName, {replacement: '_'});
     const fileName = `${escapedName}.appiumsession`;
     downloadFile(href, fileName);
@@ -827,9 +812,7 @@ export function saveRawDesiredCaps(currentCapsArray, rawDesiredCaps) {
       // First, convert the current caps array to an object, in order to use name indexing.
       // This also removes any entries with duplicate names (the capability builder allows duplicates),
       // which is fine, since JSON only allows the latest entry anyway.
-      const currentCapsObj = Object.fromEntries(
-        currentCapsArray.map((cap) => [cap.name, omit(cap, 'name')]),
-      );
+      const currentCapsObj = Object.fromEntries(currentCapsArray.map((cap) => [cap.name, omit(cap, 'name')]));
 
       // Translate the raw caps JSON to array format
       const newCapsArray = Object.entries(rawCapsObj).map(([name, value]) => ({
@@ -1003,11 +986,8 @@ function parseAndValidateSessionFileString(sessionFileString) {
   if (sessionJSON === null) {
     return null;
   }
-  sessionJSON.serverType = Object.keys(sessionJSON.server).find(
-    (type) => type !== SERVER_TYPES.ADVANCED,
-  );
-  sessionJSON.visibleProviders =
-    sessionJSON.serverType !== SERVER_TYPES.REMOTE ? [sessionJSON.serverType] : [];
+  sessionJSON.serverType = Object.keys(sessionJSON.server).find((type) => type !== SERVER_TYPES.ADVANCED);
+  sessionJSON.visibleProviders = sessionJSON.serverType !== SERVER_TYPES.REMOTE ? [sessionJSON.serverType] : [];
   return sessionJSON;
 }
 

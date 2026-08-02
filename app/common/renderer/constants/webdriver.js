@@ -29,13 +29,7 @@ export const BROWSER_PROPERTIES = [
 ];
 
 // Various protocol commands that should not be added to WDSessionDriver
-export const AVOID_CMDS = [
-  'newSession',
-  'findElement',
-  'findElements',
-  'executeScript',
-  'executeAsyncScript',
-];
+export const AVOID_CMDS = ['newSession', 'findElement', 'findElements', 'executeScript', 'executeAsyncScript'];
 
 // All commands defined in the webdriver protocol that are specific to a single element
 // https://webdriver.io/docs/api/webdriver

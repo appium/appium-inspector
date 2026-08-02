@@ -5,9 +5,10 @@ import {useTranslation} from 'react-i18next';
 import {WINDOW_DIMENSIONS} from '../../../constants/common.js';
 import {MJPEG_STREAM_CHECK_INTERVAL} from '../../../constants/session-inspector.js';
 import {debounce} from '../../../utils/common.js';
-import styles from './Screenshot.module.css';
 import ScreenshotControls from './ScreenshotControls.jsx';
 import ScreenshotImgWithOverlays from './ScreenshotImgWithOverlays.jsx';
+
+import styles from './Screenshot.module.css';
 
 /**
  * Label shown when the screenshot could not be retrieved.
@@ -136,11 +137,7 @@ const Screenshot = (props) => {
   }, [checkMjpegStream, isUsingMjpegMode, windowSize]);
 
   return (
-    <div
-      id="screenshotContainer"
-      className={styles.screenshotContainer}
-      ref={screenshotContainerElRef}
-    >
+    <div id="screenshotContainer" className={styles.screenshotContainer} ref={screenshotContainerElRef}>
       <ScreenshotControls {...props} />
       {showScreenshot && <ScreenshotImgWithOverlays {...props} scaleRatio={scaleRatio} />}
       {screenshotError && <ScreenshotErrorLabel screenshotError={screenshotError} />}

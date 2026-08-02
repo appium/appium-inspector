@@ -1,4 +1,5 @@
 import {CENTROID_STYLES, RENDER_CENTROID_AS} from '../../../../constants/screenshot.js';
+
 import styles from './Overlays.module.css';
 
 const {CENTROID, OVERLAP, EXPAND} = RENDER_CENTROID_AS;
@@ -6,19 +7,16 @@ const {CENTROID, OVERLAP, EXPAND} = RENDER_CENTROID_AS;
 const getCentroidStyle = (centroidType, elemProps, selectedCentroid, element) => {
   // Generate new coordinates along a circular trajectory
   // for overlapping elements only
-  const centroidPos = (angle, coord) =>
-    centroidType === OVERLAP ? `calc((${angle} * 2.6vh) + ${coord}px)` : coord;
+  const centroidPos = (angle, coord) => (centroidType === OVERLAP ? `calc((${angle} * 2.6vh) + ${coord}px)` : coord);
 
   const overlapDivStyle = {
-    visibility:
-      elemProps.keyCode === selectedCentroid ? CENTROID_STYLES.VISIBLE : CENTROID_STYLES.HIDDEN,
+    visibility: elemProps.keyCode === selectedCentroid ? CENTROID_STYLES.VISIBLE : CENTROID_STYLES.HIDDEN,
   };
 
   return {
     left: centroidPos(elemProps.angleX, elemProps.centerX),
     top: centroidPos(elemProps.angleY, elemProps.centerY),
-    borderRadius:
-      element && !elemProps.container ? CENTROID_STYLES.NON_CONTAINER : CENTROID_STYLES.CONTAINER,
+    borderRadius: element && !elemProps.container ? CENTROID_STYLES.NON_CONTAINER : CENTROID_STYLES.CONTAINER,
     ...(centroidType === OVERLAP ? overlapDivStyle : {}),
   };
 };
@@ -78,19 +76,12 @@ const ElementCentroid = (props) => {
     selectedCentroid,
     element,
   );
-  const centroidStyle = getCentroidStyle(
-    centroidType,
-    elementProperties,
-    selectedCentroid,
-    element,
-  );
+  const centroidStyle = getCentroidStyle(centroidType, elementProperties, selectedCentroid, element);
 
   return (
     <div className={centroidClass} onClick={() => onClickCentroid()} style={centroidStyle}>
       {centroidType === EXPAND && (
-        <div className={styles.plusMinus}>
-          {elementProperties.keyCode === selectedCentroid ? '-' : '+'}
-        </div>
+        <div className={styles.plusMinus}>{elementProperties.keyCode === selectedCentroid ? '-' : '+'}</div>
       )}
     </div>
   );

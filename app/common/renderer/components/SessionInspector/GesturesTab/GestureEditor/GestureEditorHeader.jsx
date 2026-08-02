@@ -9,6 +9,7 @@ import {SCREENSHOT_INTERACTION_MODE} from '../../../../constants/screenshot.js';
 import {omit} from '../../../../utils/common.js';
 import {notification} from '../../../../utils/notification.js';
 import {percentageToPixels, pixelsToPercentage} from '../../../../utils/other.js';
+
 import styles from './GestureEditor.module.css';
 
 const displayNotificationMsg = (type, msg) => {
@@ -114,11 +115,7 @@ const GestureEditorHeaderButtons = ({
         </Tooltip>
       </Space.Compact>
       <Tooltip title={t('Play')}>
-        <Button
-          type="primary"
-          icon={<IconPlayerPlay size={18} />}
-          onClick={() => playCurrentGesture()}
-        />
+        <Button type="primary" icon={<IconPlayerPlay size={18} />} onClick={() => playCurrentGesture()} />
       </Tooltip>
       <Space.Compact>
         <Button onClick={() => saveCurrentGestureAs()}>{t('saveAs')}</Button>
@@ -187,12 +184,7 @@ const GestureEditorHeader = (props) => {
       description,
       id,
       date,
-      actions: convertPointerCoordsType(
-        POINTER_MOVE_COORDS_TYPE.PERCENTAGES,
-        coordType,
-        windowSize,
-        pointers,
-      ),
+      actions: convertPointerCoordsType(POINTER_MOVE_COORDS_TYPE.PERCENTAGES, coordType, windowSize, pointers),
     };
     saveGesture(gesture);
     displayNotificationMsg(NOTIF.SUCCESS, t('Gesture saved'));
@@ -205,12 +197,7 @@ const GestureEditorHeader = (props) => {
     const gesture = {
       name,
       description,
-      actions: convertPointerCoordsType(
-        POINTER_MOVE_COORDS_TYPE.PERCENTAGES,
-        coordType,
-        windowSize,
-        pointers,
-      ),
+      actions: convertPointerCoordsType(POINTER_MOVE_COORDS_TYPE.PERCENTAGES, coordType, windowSize, pointers),
     };
     saveGesture(gesture);
     displayNotificationMsg(NOTIF.SUCCESS, t('Gesture saved as', {gestureName: name}));
@@ -223,12 +210,7 @@ const GestureEditorHeader = (props) => {
     }
     const formattedPointers = {};
     // Change gesture datastructure to fit Webdriver spec
-    const currentPointers = convertPointerCoordsType(
-      POINTER_MOVE_COORDS_TYPE.PIXELS,
-      coordType,
-      windowSize,
-      pointers,
-    );
+    const currentPointers = convertPointerCoordsType(POINTER_MOVE_COORDS_TYPE.PIXELS, coordType, windowSize, pointers);
     for (const pointer of currentPointers) {
       formattedPointers[pointer.name] = pointer.ticks.map((tick) => omit(tick, 'id'));
     }

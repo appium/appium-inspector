@@ -1,12 +1,6 @@
 import {describe, expect, it, vi} from 'vitest';
 
-import {
-  debounce,
-  isEmpty,
-  isEqual,
-  isPlainObject,
-  omit,
-} from '../../app/common/renderer/utils/common.js';
+import {debounce, isEmpty, isEqual, isPlainObject, omit} from '../../app/common/renderer/utils/common.js';
 
 describe('utils/common.js', function () {
   describe('#isPlainObject', function () {

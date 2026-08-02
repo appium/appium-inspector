@@ -6,11 +6,9 @@ export class BrowserstackVendor extends BaseVendor {
     const vendorName = 'BrowserStack';
 
     const username =
-      (browserstack.username as string | undefined) ||
-      (process.env.BROWSERSTACK_USERNAME as string | undefined);
+      (browserstack.username as string | undefined) || (process.env.BROWSERSTACK_USERNAME as string | undefined);
     const accessKey =
-      (browserstack.accessKey as string | undefined) ||
-      (process.env.BROWSERSTACK_ACCESS_KEY as string | undefined);
+      (browserstack.accessKey as string | undefined) || (process.env.BROWSERSTACK_ACCESS_KEY as string | undefined);
     this._checkInputPropertyPresence(vendorName, [
       {name: 'Username', val: username},
       {name: 'Access Key', val: accessKey},

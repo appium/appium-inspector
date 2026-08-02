@@ -5,12 +5,9 @@ export class KobitonVendor extends BaseVendor {
     const kobiton = this._server.kobiton;
     const vendorName = 'Kobiton';
 
-    const username =
-      (kobiton.username as string | undefined) ||
-      (process.env.KOBITON_USERNAME as string | undefined);
+    const username = (kobiton.username as string | undefined) || (process.env.KOBITON_USERNAME as string | undefined);
     const accessKey =
-      (kobiton.accessKey as string | undefined) ||
-      (process.env.KOBITON_ACCESS_KEY as string | undefined);
+      (kobiton.accessKey as string | undefined) || (process.env.KOBITON_ACCESS_KEY as string | undefined);
     this._checkInputPropertyPresence(vendorName, [
       {name: 'Username', val: username},
       {name: 'API Key', val: accessKey},

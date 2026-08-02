@@ -27,8 +27,7 @@ export class AppiumInspectorPlugin extends BasePlugin {
    * @returns {Promise<void>}
    */
   static async openInspector(req, res) {
-    const reqPath =
-      req.path === PLUGIN_ROOT_PATH ? INDEX_HTML : req.path.substring(PLUGIN_ROOT_PATH.length);
+    const reqPath = req.path === PLUGIN_ROOT_PATH ? INDEX_HTML : req.path.substring(PLUGIN_ROOT_PATH.length);
     res.sendFile(reqPath, {root: ROOT_DIR});
   }
 

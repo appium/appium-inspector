@@ -3,6 +3,7 @@ import {useEffect, useRef, useState} from 'react';
 
 import AppSource from './AppSource/AppSource.jsx';
 import SelectedElement from './SelectedElement/SelectedElement.jsx';
+
 import styles from './SourceTab.module.css';
 
 // Below this width, the selected element panel no longer has enough room to
@@ -68,11 +69,7 @@ const SourceTab = (props) => {
     min: canAccordionCollapse && collapsed ? PANEL_HEADER_HEIGHT : defaultMin,
   });
 
-  const appSourceSizing = getPanelSizing(
-    appSourceCollapsed,
-    hasSelectedElement ? undefined : 100,
-    210,
-  );
+  const appSourceSizing = getPanelSizing(appSourceCollapsed, hasSelectedElement ? undefined : 100, 210);
   const selectedElementSizing = getPanelSizing(selectedElementCollapsed, undefined, 250);
 
   useEffect(() => {
@@ -96,11 +93,7 @@ const SourceTab = (props) => {
   return (
     <div ref={containerRef} className={styles.sourceTabContainer}>
       <Splitter orientation={isNarrow ? 'vertical' : 'horizontal'}>
-        <Splitter.Panel
-          collapsible={splitterCollapsible}
-          size={appSourceSizing.size}
-          min={appSourceSizing.min}
-        >
+        <Splitter.Panel collapsible={splitterCollapsible} size={appSourceSizing.size} min={appSourceSizing.min}>
           <AppSource
             {...props}
             collapsible={canAccordionCollapse}

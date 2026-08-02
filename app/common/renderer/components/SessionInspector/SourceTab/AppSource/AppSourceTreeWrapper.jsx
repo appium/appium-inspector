@@ -3,10 +3,11 @@ import {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {IMPORTANT_SOURCE_ATTRS} from '../../../../constants/source.js';
-import inspectorStyles from '../../SessionInspector.module.css';
-import styles from './AppSource.module.css';
 import AppSourceTree from './AppSourceTree.jsx';
 import AppSourceTreeActions from './AppSourceTreeActions.jsx';
+
+import inspectorStyles from '../../SessionInspector.module.css';
+import styles from './AppSource.module.css';
 
 /**
  * Wrapper around source tree + actions, including loading and empty/error states.
@@ -45,10 +46,7 @@ const AppSourceTreeWrapper = ({
   );
 
   const matchingElements = useMemo(
-    () =>
-      searchValue && flatTreeData
-        ? flatTreeData.filter((el) => elementMatchesSearch(el, searchValue))
-        : [],
+    () => (searchValue && flatTreeData ? flatTreeData.filter((el) => elementMatchesSearch(el, searchValue)) : []),
     [searchValue, flatTreeData, elementMatchesSearch],
   );
 
@@ -85,9 +83,7 @@ const AppSourceTreeWrapper = ({
           <span key={attr}>
             &nbsp;
             <span className={styles.sourceNodeAttrName}>{getHighlightedText(attr)}</span>=&quot;
-            <span className={styles.sourceNodeAttrValue}>
-              {getHighlightedText(attributes[attr])}
-            </span>
+            <span className={styles.sourceNodeAttrValue}>{getHighlightedText(attributes[attr])}</span>
             &quot;
           </span>,
         );

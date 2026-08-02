@@ -22,9 +22,7 @@ class DefaultKeySessionCaps {
         ? `${this._caps.platformName} ${this._caps.platformVersion}`
         : this._caps.platformName;
       // Capabilities may not have automationName for e.g. Selenium Grid
-      return this._caps.automationName
-        ? `${platformInfo} (${this._caps.automationName})`
-        : platformInfo;
+      return this._caps.automationName ? `${platformInfo} (${this._caps.automationName})` : platformInfo;
     }
     return this._caps.automationName;
   }

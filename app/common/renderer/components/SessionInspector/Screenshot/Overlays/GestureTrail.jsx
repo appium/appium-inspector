@@ -1,6 +1,7 @@
 import {Fragment} from 'react';
 
 import {GESTURE_ITEM_STYLES, POINTER_TYPES} from '../../../../constants/gestures.js';
+
 import styles from './Overlays.module.css';
 
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
@@ -75,13 +76,7 @@ const GestureTrailPointerPoint = ({tick, scaleRatio}) => (
 const GestureTrailPointer = ({pointer, scaleRatio}) =>
   pointer.map((tick, index) => (
     <Fragment key={tick.id}>
-      {index > 0 && (
-        <GestureTrailPointerLine
-          tick={tick}
-          prevTick={pointer[index - 1]}
-          scaleRatio={scaleRatio}
-        />
-      )}
+      {index > 0 && <GestureTrailPointerLine tick={tick} prevTick={pointer[index - 1]} scaleRatio={scaleRatio} />}
       <GestureTrailPointerPoint tick={tick} scaleRatio={scaleRatio} />
     </Fragment>
   ));

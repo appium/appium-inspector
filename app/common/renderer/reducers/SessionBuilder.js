@@ -237,10 +237,7 @@ export default function builder(state = INITIAL_STATE, action) {
       return {
         ...state,
         server: {
-          ...(function extendCurrentServerStateWithNewServerState(
-            currentServerState,
-            newServerState,
-          ) {
+          ...(function extendCurrentServerStateWithNewServerState(currentServerState, newServerState) {
             // Copy current server state and extend it with new server state
             const nextServerState = structuredClone(currentServerState || {});
 
@@ -397,9 +394,7 @@ export default function builder(state = INITIAL_STATE, action) {
           ...action.sessionJSON.server,
         },
         serverType: action.sessionJSON.serverType,
-        visibleProviders: [
-          ...new Set([...state.visibleProviders, ...(action.sessionJSON.visibleProviders || [])]),
-        ],
+        visibleProviders: [...new Set([...state.visibleProviders, ...(action.sessionJSON.visibleProviders || [])])],
       };
 
     case SESSION_UPLOAD_REQUESTED:
@@ -424,9 +419,7 @@ export default function builder(state = INITIAL_STATE, action) {
 function mergeServerState(currentServer, incomingServer) {
   const nextServer = {...currentServer};
   for (const [serverType, config] of Object.entries(incomingServer)) {
-    nextServer[serverType] = isPlainObject(config)
-      ? {...(nextServer[serverType] || {}), ...config}
-      : config;
+    nextServer[serverType] = isPlainObject(config) ? {...(nextServer[serverType] || {}), ...config} : config;
   }
   return nextServer;
 }

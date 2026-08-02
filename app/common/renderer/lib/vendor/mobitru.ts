@@ -10,8 +10,7 @@ export class MobitruVendor extends BaseVendor {
       (process.env.MOBITRU_BILLING_UNIT as string | undefined) ||
       'personal';
     const accessKey =
-      (mobitru.accessKey as string | undefined) ||
-      (process.env.MOBITRU_ACCESS_KEY as string | undefined);
+      (mobitru.accessKey as string | undefined) || (process.env.MOBITRU_ACCESS_KEY as string | undefined);
     const url =
       (mobitru.webDriverUrl as string | undefined) ||
       (process.env.MOBITRU_WEBDRIVER_URL as string | undefined) ||

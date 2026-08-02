@@ -14,12 +14,7 @@ import {getOptimalXPath} from '../utils/locator-generation/xpath.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
 import {getRandomId} from '../utils/other.js';
-import {
-  findDOMNodeByPath,
-  findJSONElementByPath,
-  xmlToDOM,
-  xmlToJSON,
-} from '../utils/source-parsing.js';
+import {findDOMNodeByPath, findJSONElementByPath, xmlToDOM, xmlToJSON} from '../utils/source-parsing.js';
 import {newSession, showError} from './SessionBuilder.js';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
@@ -125,8 +120,7 @@ const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
 // Shared by selectElement and tapElement.
 // Returns the computed strategy map.
 function prepareElementSelection(path, dispatch, getState) {
-  const {sourceJSON, sourceXML, expandedPaths, currentContext, automationName} =
-    getState().inspector;
+  const {sourceJSON, sourceXML, expandedPaths, currentContext, automationName} = getState().inspector;
   const isNative = currentContext === NATIVE_APP;
   // Set the selected element in the source tree
   const selectedElement = findJSONElementByPath(path, sourceJSON);
@@ -610,10 +604,7 @@ export function findLocatedElementInSource(sourceJSON, sourceXML, bounds, id) {
       return null;
     }
     if (sourceJSON.children[0].attributes.bounds) {
-      const [endX, endY] = [
-        bounds.location.x + bounds.size.width,
-        bounds.location.y + bounds.size.height,
-      ];
+      const [endX, endY] = [bounds.location.x + bounds.size.width, bounds.location.y + bounds.size.height];
       const coords = `[${bounds.location.x},${bounds.location.y}][${endX},${endY}]`;
       return findPathsFromCoords(sourceJSON.children, coords);
     } else if (sourceJSON.children[0].attributes.x) {
@@ -907,8 +898,7 @@ export function keepSessionAlive() {
 
 export function callClientMethod(params) {
   return async (dispatch, getState) => {
-    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} =
-      getState().inspector;
+    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} = getState().inspector;
     params.appMode = appMode;
     params.autoSessionRestart = autoSessionRestart;
 
@@ -998,9 +988,7 @@ export function exportSavedGesture(gestureJSON) {
   return async () => {
     const cleanedName = `gesture-${gestureJSON.name}`;
     const gestureToExport = omit(gestureJSON, ['id', 'date']);
-    const href = `data:text/json;charset=utf-8,${encodeURIComponent(
-      JSON.stringify(gestureToExport, null, 2),
-    )}`;
+    const href = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(gestureToExport, null, 2))}`;
     const escapedName = sanitize(cleanedName, {replacement: '_'});
     const fileName = `${escapedName}.json`;
     downloadFile(href, fileName);

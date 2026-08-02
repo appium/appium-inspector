@@ -2,6 +2,7 @@ import {Checkbox, Input, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {DEFAULT_SERVER_PROPS} from '../../../constants/webdriver.js';
+
 import styles from './ServerDetails.module.css';
 
 const ServerTabCustom = ({server, setServerParam}) => {

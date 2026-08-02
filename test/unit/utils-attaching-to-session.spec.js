@@ -1,10 +1,7 @@
 import {describe, expect, it} from 'vitest';
 
 import {SERVER_TYPES} from '../../app/common/renderer/constants/session-builder.js';
-import {
-  formatSeleniumGridSessions,
-  getSessionInfo,
-} from '../../app/common/renderer/utils/attaching-to-session.js';
+import {formatSeleniumGridSessions, getSessionInfo} from '../../app/common/renderer/utils/attaching-to-session.js';
 
 describe('utils/attaching-to-session.js', function () {
   describe('#getSessionInfo', function () {
@@ -87,9 +84,7 @@ describe('utils/attaching-to-session.js', function () {
       expect(formatSeleniumGridSessions({value: {nodes: [{slots: []}]}})).toEqual([]);
       expect(formatSeleniumGridSessions({value: {nodes: [{slots: [{}]}]}})).toEqual([]);
       expect(formatSeleniumGridSessions({value: {nodes: [{slots: [{session: {}}]}]}})).toEqual([]);
-      expect(
-        formatSeleniumGridSessions({value: {nodes: [{slots: [{session: {capabilities: {}}}]}]}}),
-      ).toEqual([]);
+      expect(formatSeleniumGridSessions({value: {nodes: [{slots: [{session: {capabilities: {}}}]}]}})).toEqual([]);
     });
     it('should find and format an Appium session', function () {
       expect(

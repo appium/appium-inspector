@@ -17,10 +17,4 @@ export async function setSetting(setting, value) {
   await settings.set(setting, value);
 }
 
-export {
-  loadSessionFileIfOpened,
-  localesPath,
-  openLink,
-  setTheme,
-  updateLanguage,
-} from '#local-polyfills';
+export {loadSessionFileIfOpened, localesPath, openLink, setTheme, updateLanguage} from '#local-polyfills';

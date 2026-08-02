@@ -2,16 +2,13 @@ import {Spin} from 'antd';
 import {useState} from 'react';
 
 import {POINTER_TYPES} from '../../../constants/gestures.js';
-import {
-  DEFAULT_SWIPE,
-  DEFAULT_TAP,
-  SCREENSHOT_INTERACTION_MODE,
-} from '../../../constants/screenshot.js';
+import {DEFAULT_SWIPE, DEFAULT_TAP, SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
 import {INSPECTOR_TABS} from '../../../constants/session-inspector.js';
 import CoordinatesContainer from './Overlays/CoordinatesContainer.jsx';
 import ElementOverlays from './Overlays/ElementOverlays.jsx';
 import GestureTrail from './Overlays/GestureTrail.jsx';
 import TapSwipeTrail from './Overlays/TapSwipeTrail.jsx';
+
 import styles from './Screenshot.module.css';
 
 const {POINTER_UP, POINTER_DOWN, PAUSE, POINTER_MOVE} = POINTER_TYPES;
@@ -133,9 +130,7 @@ const ScreenshotImgWithOverlays = (props) => {
     screenshotStyle.cursor = 'crosshair';
   }
 
-  const screenSrc = isUsingMjpegMode
-    ? serverDetails.mjpegScreenshotUrl
-    : `data:image/png;base64,${screenshot}`;
+  const screenSrc = isUsingMjpegMode ? serverDetails.mjpegScreenshotUrl : `data:image/png;base64,${screenshot}`;
 
   // Show loading indicator if a method call is in progress, unless using MJPEG mode.
   return (
@@ -159,13 +154,7 @@ const ScreenshotImgWithOverlays = (props) => {
             <ElementOverlays {...props} />
           )}
           {screenshotInteractionMode === TAP_SWIPE && (
-            <TapSwipeTrail
-              coordStart={coordStart}
-              coordEnd={coordEnd}
-              x={x}
-              y={y}
-              scaleRatio={scaleRatio}
-            />
+            <TapSwipeTrail coordStart={coordStart} coordEnd={coordEnd} x={x} y={y} scaleRatio={scaleRatio} />
           )}
           {selectedInspectorTab === INSPECTOR_TABS.GESTURES && showGesture && (
             <GestureTrail gesture={showGesture} scaleRatio={scaleRatio} />

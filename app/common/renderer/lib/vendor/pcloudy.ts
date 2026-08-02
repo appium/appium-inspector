@@ -6,12 +6,9 @@ export class PcloudyVendor extends BaseVendor {
     const vendorName = 'pCloudy';
 
     const host = pcloudy.hostname as string | undefined;
-    const username =
-      (pcloudy.username as string | undefined) ||
-      (process.env.PCLOUDY_USERNAME as string | undefined);
+    const username = (pcloudy.username as string | undefined) || (process.env.PCLOUDY_USERNAME as string | undefined);
     const accessKey =
-      (pcloudy.accessKey as string | undefined) ||
-      (process.env.PCLOUDY_ACCESS_KEY as string | undefined);
+      (pcloudy.accessKey as string | undefined) || (process.env.PCLOUDY_ACCESS_KEY as string | undefined);
     this._checkInputPropertyPresence(vendorName, [
       {name: 'Host', val: host},
       {name: 'Username', val: username},

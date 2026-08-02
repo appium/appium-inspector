@@ -20,9 +20,7 @@ const MethodMapBaseCommandButton = ({methodName, buttonStyle, startNamedCommand}
 const MethodMapCommandButtonWithExtra = ({methodName, methodDetails, startNamedCommand}) => {
   const {t} = useTranslation();
 
-  const buttonStyle = methodDetails.deprecated
-    ? `${styles.methodBtn} ${styles.deprecatedMethod}`
-    : styles.methodBtn;
+  const buttonStyle = methodDetails.deprecated ? `${styles.methodBtn} ${styles.deprecatedMethod}` : styles.methodBtn;
 
   return (
     <Tooltip
@@ -47,8 +45,7 @@ const MethodMapCommandButtonWithExtra = ({methodName, methodDetails, startNamedC
  * Parent container for a dynamically retrieved driver command button.
  */
 const MethodMapCommandButton = ({methodName, methodDetails, isExecute, startCommand}) => {
-  const startNamedCommand = () =>
-    startCommand({name: methodName, details: methodDetails, isExecute});
+  const startNamedCommand = () => startCommand({name: methodName, details: methodDetails, isExecute});
 
   return (
     <div className={styles.btnContainer}>

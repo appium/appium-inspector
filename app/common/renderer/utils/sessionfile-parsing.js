@@ -114,9 +114,7 @@ function areSessionCapsValid(sessionJSON) {
     }
     for (const capProp of ['type', 'name', 'value']) {
       if (!(capProp in cap)) {
-        return logValidationError(
-          `capability '${JSON.stringify(cap)}' must have the '${capProp}' property`,
-        );
+        return logValidationError(`capability '${JSON.stringify(cap)}' must have the '${capProp}' property`);
       }
     }
     if (!Object.values(CAPABILITY_TYPES).includes(cap.type)) {
@@ -179,9 +177,7 @@ function isSessionServerValid(sessionJSON) {
         return logValidationError(`unsupported advanced server property '${advKey}'`);
       }
       if (
-        [SERVER_ADVANCED_PARAMS.ALLOW_UNAUTHORIZED, SERVER_ADVANCED_PARAMS.USE_PROXY].includes(
-          advKey,
-        ) &&
+        [SERVER_ADVANCED_PARAMS.ALLOW_UNAUTHORIZED, SERVER_ADVANCED_PARAMS.USE_PROXY].includes(advKey) &&
         typeof advValue !== 'boolean'
       ) {
         return logValidationError(`'${advKey}' property is not a boolean`);

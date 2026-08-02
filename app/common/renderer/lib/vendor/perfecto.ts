@@ -6,8 +6,7 @@ export class PerfectoVendor extends BaseVendor {
     const vendorName = 'Perfecto';
 
     const host = perfecto.hostname as string | undefined;
-    const securityToken =
-      (perfecto.token as string | undefined) || (process.env.PERFECTO_TOKEN as string | undefined);
+    const securityToken = (perfecto.token as string | undefined) || (process.env.PERFECTO_TOKEN as string | undefined);
     this._checkInputPropertyPresence(vendorName, [
       {name: 'Host', val: host},
       {name: 'SecurityToken', val: securityToken},

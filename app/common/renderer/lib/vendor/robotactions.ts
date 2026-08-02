@@ -5,11 +5,8 @@ export class RobotActionsVendor extends BaseVendor {
     const robotactions = this._server.robotactions;
     const vendorName = 'RobotActions';
 
-    const token =
-      (robotactions.token as string | undefined) ||
-      (process.env.ROBOTACTIONS_TOKEN as string | undefined);
-    const rawHost =
-      process.env.ROBOTACTIONS_WEBDRIVER_URL || (robotactions.host as string | undefined);
+    const token = (robotactions.token as string | undefined) || (process.env.ROBOTACTIONS_TOKEN as string | undefined);
+    const rawHost = process.env.ROBOTACTIONS_WEBDRIVER_URL || (robotactions.host as string | undefined);
     // Parse via URL() so users who paste a full URL (https://acme.example.com),
     // include a port (host:443), or accidentally append a path / trailing slash
     // all end up with just the hostname.

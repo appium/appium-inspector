@@ -223,13 +223,8 @@ class XPathGenerator extends LocatorGeneratorBase {
    * @returns {Array<string[]|[string, string][]>} array of attribute configurations to test
    */
   _buildUniqueXPathFinderCases() {
-    const allAttributes = [
-      ...XPathGenerator.UNIQUE_ATTRIBUTES,
-      ...XPathGenerator.MAYBE_UNIQUE_ATTRIBUTES,
-    ];
-    const attrPairsPermutations = allAttributes.flatMap((v1, i) =>
-      allAttributes.slice(i + 1).map((v2) => [v1, v2]),
-    );
+    const allAttributes = [...XPathGenerator.UNIQUE_ATTRIBUTES, ...XPathGenerator.MAYBE_UNIQUE_ATTRIBUTES];
+    const attrPairsPermutations = allAttributes.flatMap((v1, i) => allAttributes.slice(i + 1).map((v2) => [v1, v2]));
 
     return [
       // Try unique attributes first
@@ -321,11 +316,7 @@ class XPathGenerator extends LocatorGeneratorBase {
     // trying to use unique identifiers for each node along the path when possible
     while (this._isValidElementNode(currentNode) && currentNode !== ancestorNode) {
       // Try to uniquely identify the current node within the context of its parent node
-      const nodeParentScopeGenerator = new XPathGenerator(
-        this._doc,
-        currentNode,
-        currentNode.parentNode,
-      );
+      const nodeParentScopeGenerator = new XPathGenerator(this._doc, currentNode, currentNode.parentNode);
       const {nodeXpath, nodeIndex} = nodeParentScopeGenerator._findBestNodeScopeXPath();
 
       if (nodeXpath && nodeIndex === 0) {

@@ -117,9 +117,7 @@ describe('utils/commands-tab.js', function () {
       expect(extractParamsFromCommandPath('/session/:sessionId')).toEqual([]);
     });
     it('should extract all other parameters', function () {
-      expect(extractParamsFromCommandPath('/session/:sessionId/element/:elementId')).toEqual([
-        'elementId',
-      ]);
+      expect(extractParamsFromCommandPath('/session/:sessionId/element/:elementId')).toEqual(['elementId']);
       expect(
         extractParamsFromCommandPath(
           '/session/:sessionId/webauthn/authenticator/:authenticatorId/credentials/:credentialId',
@@ -138,9 +136,7 @@ describe('utils/commands-tab.js', function () {
         {rest: {base: {'/status': {}}}},
         {rest: {base: {'/status': {GET: {}}}}},
       ];
-      structsWithoutRestCmdDetails.forEach((input) =>
-        expect(transformCommandsMap(input)).toEqual([]),
-      );
+      structsWithoutRestCmdDetails.forEach((input) => expect(transformCommandsMap(input)).toEqual([]));
     });
     it('should transform a basic response whose command names match those in WDIO', function () {
       const getCmdsResponse = {
@@ -185,9 +181,7 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformCommandsMap(getCmdsResponse)).toEqual([
-        ['getAppiumExtensions', {command: 'listExtensions'}],
-      ]);
+      expect(transformCommandsMap(getCmdsResponse)).toEqual([['getAppiumExtensions', {command: 'listExtensions'}]]);
     });
     it('should filter out empty command parameters', function () {
       const getCmdsResponse = {
@@ -278,9 +272,7 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformCommandsMap(getCmdsResponse)).toEqual([
-        ['forward', {command: 'forward', info: 'from-driver'}],
-      ]);
+      expect(transformCommandsMap(getCmdsResponse)).toEqual([['forward', {command: 'forward', info: 'from-driver'}]]);
     });
     it('should prefer plugin commands over driver commands in case of overrides', function () {
       const getCmdsResponse = {
@@ -295,9 +287,7 @@ describe('utils/commands-tab.js', function () {
           },
         },
       };
-      expect(transformCommandsMap(getCmdsResponse)).toEqual([
-        ['forward', {command: 'forward', info: 'from-plugin'}],
-      ]);
+      expect(transformCommandsMap(getCmdsResponse)).toEqual([['forward', {command: 'forward', info: 'from-plugin'}]]);
     });
     it('should not apply intra-source overrides using deprecated methods', function () {
       const getCmdsResponse = {
@@ -327,9 +317,7 @@ describe('utils/commands-tab.js', function () {
         {rest: {driver: {}}},
         {rest: {driver: {'mobile: shell': {}}}},
       ];
-      structsWithoutRestCmdDetails.forEach((input) =>
-        expect(transformCommandsMap(input)).toEqual([]),
-      );
+      structsWithoutRestCmdDetails.forEach((input) => expect(transformCommandsMap(input)).toEqual([]));
     });
     it('should transform a basic response', function () {
       const getExecMethodsResponse = {

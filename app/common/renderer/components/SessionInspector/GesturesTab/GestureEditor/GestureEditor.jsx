@@ -8,11 +8,12 @@ import {
   POINTER_TYPES,
 } from '../../../../constants/gestures.js';
 import {percentageToPixels, pixelsToPercentage} from '../../../../utils/other.js';
-import styles from './GestureEditor.module.css';
 import GestureEditorCard from './GestureEditorCard.jsx';
 import GestureEditorHeader from './GestureEditorHeader.jsx';
 import GestureEditorPointerTabs from './GestureEditorPointerTabs.jsx';
 import GestureEditorTimeline from './GestureEditorTimeline.jsx';
+
+import styles from './GestureEditor.module.css';
 
 const {POINTER_MOVE} = POINTER_TYPES;
 
@@ -20,8 +21,7 @@ const {POINTER_MOVE} = POINTER_TYPES;
  * Contents of the gesture editor.
  */
 const GestureEditor = (props) => {
-  const {loadedGesture, tickCoordinates, selectedTick, selectTick, unselectTick, windowSize} =
-    props;
+  const {loadedGesture, tickCoordinates, selectedTick, selectTick, unselectTick, windowSize} = props;
 
   const [pointers, setPointers] = useState(loadedGesture?.actions ?? DEFAULT_POINTER);
   const [coordType, setCoordType] = useState(POINTER_MOVE_COORDS_TYPE.PERCENTAGES);
@@ -83,13 +83,7 @@ const GestureEditor = (props) => {
       }
 
       if (currentTick.duration === undefined) {
-        currentTick.duration = getDefaultMoveDuration(
-          currentPointer.ticks,
-          currentTick.id,
-          x,
-          y,
-          true,
-        );
+        currentTick.duration = getDefaultMoveDuration(currentPointer.ticks, currentTick.id, x, y, true);
       }
       setPointers(copiedPointers);
     },

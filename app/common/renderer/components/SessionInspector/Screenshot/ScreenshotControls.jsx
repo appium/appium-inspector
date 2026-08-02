@@ -13,6 +13,7 @@ import {useTranslation} from 'react-i18next';
 import {BUTTON} from '../../../constants/antd-types.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
 import {downloadFile} from '../../../utils/file-handling.js';
+
 import styles from './Screenshot.module.css';
 
 const {SELECT, TAP_SWIPE, TAP_ELEMENT} = SCREENSHOT_INTERACTION_MODE;
@@ -27,12 +28,7 @@ const downloadScreenshot = (screenshot) => {
  * Button for switching between MJPEG and regular screenshot capture mode.
  * Only shown if the session was started in MJPEG mode.
  */
-const ScreenshotCaptureModeControls = ({
-  setMjpegState,
-  isUsingMjpegMode,
-  setRefreshingState,
-  applyClientMethod,
-}) => {
+const ScreenshotCaptureModeControls = ({setMjpegState, isUsingMjpegMode, setRefreshingState, applyClientMethod}) => {
   const {t} = useTranslation();
 
   const switchScreenCaptureMode = (shouldUseMjpeg) => {
@@ -66,11 +62,7 @@ const ScreenshotCaptureModeControls = ({
 /**
  * Button for toggling visibility of element handles (+/- centroids).
  */
-const ToggleElementHandlesButton = ({
-  showCentroids,
-  toggleShowCentroids,
-  isGestureEditorVisible,
-}) => {
+const ToggleElementHandlesButton = ({showCentroids, toggleShowCentroids, isGestureEditorVisible}) => {
   const {t} = useTranslation();
 
   return (

@@ -1,9 +1,6 @@
 import {describe, expect, it} from 'vitest';
 
-import {
-  parseGestureFileContents,
-  validateGestureJSON,
-} from '../../app/common/renderer/utils/gesturefile-parsing.js';
+import {parseGestureFileContents, validateGestureJSON} from '../../app/common/renderer/utils/gesturefile-parsing.js';
 
 describe('utils/gesturefile-parsing.js', function () {
   describe('#validateGestureJSON', function () {

@@ -12,9 +12,7 @@ export default class DotNetNUnitFramework extends CommonClientFramework {
       const convertedItems = jsonVal.map((item) => this.getCSharpVal(item));
       return `{${convertedItems.join(', ')}}`;
     } else if (typeof jsonVal === 'object') {
-      const convertedItems = Object.entries(jsonVal).map(
-        ([k, v]) => `{${JSON.stringify(k)}, ${this.getCSharpVal(v)}}`,
-      );
+      const convertedItems = Object.entries(jsonVal).map(([k, v]) => `{${JSON.stringify(k)}, ${this.getCSharpVal(v)}}`);
       return `new Dictionary<string, dynamic> {${convertedItems.join(', ')}}`;
     }
     return JSON.stringify(jsonVal);
@@ -41,10 +39,7 @@ export default class DotNetNUnitFramework extends CommonClientFramework {
     })();
     let capStr = this.indent(
       Object.entries(this.caps)
-        .map(
-          ([k, v]) =>
-            `options.AddAdditionalAppiumOption(${JSON.stringify(k)}, ${this.getCSharpVal(v)});`,
-        )
+        .map(([k, v]) => `options.AddAdditionalAppiumOption(${JSON.stringify(k)}, ${this.getCSharpVal(v)});`)
         .join('\n'),
       8,
     );
@@ -112,13 +107,9 @@ ${this.indent(code, 8)}
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `var ${localVar} = _driver.FindElements(MobileBy.${
-        suffixMap[strategy]
-      }(${JSON.stringify(locator)}));`;
+      return `var ${localVar} = _driver.FindElements(MobileBy.${suffixMap[strategy]}(${JSON.stringify(locator)}));`;
     } else {
-      return `var ${localVar} = _driver.FindElement(MobileBy.${
-        suffixMap[strategy]
-      }(${JSON.stringify(locator)}));`;
+      return `var ${localVar} = _driver.FindElement(MobileBy.${suffixMap[strategy]}(${JSON.stringify(locator)}));`;
     }
   }
 
@@ -177,8 +168,7 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
   codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
     try {
       const settings = Object.entries(settingsJson).map(
-        ([settingName, settingValue]) =>
-          `_driver.SetSetting("${settingName}", ${this.getCSharpVal(settingValue)});`,
+        ([settingName, settingValue]) => `_driver.SetSetting("${settingName}", ${this.getCSharpVal(settingValue)});`,
       );
       return settings.join('\n');
     } catch {

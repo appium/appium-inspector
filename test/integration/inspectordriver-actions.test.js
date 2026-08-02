@@ -43,11 +43,10 @@ describe('InspectorDriver actions', function () {
       expect(res).toEqual({});
     });
     it('should fetchElement and cache it', async function () {
-      const {id, variableName, variableType, strategy, selector} =
-        await inspectorDriver.fetchElement({
-          strategy: 'xpath',
-          selector: '//MockListItem',
-        });
+      const {id, variableName, variableType, strategy, selector} = await inspectorDriver.fetchElement({
+        strategy: 'xpath',
+        selector: '//MockListItem',
+      });
       expect(id).toBeTruthy();
       expect(strategy).toBe('xpath');
       expect(selector).toBe('//MockListItem');
@@ -157,8 +156,7 @@ describe('InspectorDriver actions', function () {
               title: 'Demo app title',
               type: 'page',
               url: 'https://demoapp.com/',
-              webSocketDebuggerUrl:
-                'ws://127.0.0.1:10900/devtools/page/7E1BAB0FC5AD6947AFD8AADE88E0D89F',
+              webSocketDebuggerUrl: 'ws://127.0.0.1:10900/devtools/page/7E1BAB0FC5AD6947AFD8AADE88E0D89F',
             },
             {
               description: '',
@@ -167,8 +165,7 @@ describe('InspectorDriver actions', function () {
               title: 'Service Worker title',
               type: 'service_worker',
               url: 'https://demoapp.com/sw.js?params=%7B%22offlineMode%22%3Afalse%2C%22debug%22%3Afalse%7D',
-              webSocketDebuggerUrl:
-                'ws://127.0.0.1:10900/devtools/page/A503B9A60433B84A065D5F98250D3853',
+              webSocketDebuggerUrl: 'ws://127.0.0.1:10900/devtools/page/A503B9A60433B84A065D5F98250D3853',
             },
           ],
           webviewName: 'WEBVIEW_com.demoapp',

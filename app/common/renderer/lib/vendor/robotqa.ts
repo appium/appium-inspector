@@ -5,8 +5,7 @@ export class RobotqaVendor extends BaseVendor {
     const robotqa = this._server.roboticmobi;
     const vendorName = 'RobotQA';
 
-    const token =
-      (robotqa.token as string | undefined) || (process.env.ROBOTQA_TOKEN as string | undefined);
+    const token = (robotqa.token as string | undefined) || (process.env.ROBOTQA_TOKEN as string | undefined);
     this._checkInputPropertyPresence(vendorName, [{name: 'Token', val: token}]);
 
     const host = 'remote.robotqa.com';

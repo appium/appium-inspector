@@ -2,24 +2,27 @@
   "name": "appium-inspector",
   "version": "2026.7.1",
   "description": "An app inspector for use with an Appium server",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/appium/appium-inspector.git"
-  },
-  "author": {
-    "name": "Appium Developers",
-    "url": "https://github.com/appium"
-  },
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/appium/appium-inspector/issues"
-  },
   "keywords": [
     "appium"
   ],
   "homepage": "https://github.com/appium/appium-inspector",
-  "main": "./dist/main/main.js",
+  "bugs": {
+    "url": "https://github.com/appium/appium-inspector/issues"
+  },
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Appium Developers",
+    "url": "https://github.com/appium"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appium/appium-inspector.git"
+  },
+  "bin": {
+    "electron": "./node_modules/.bin/electron"
+  },
   "type": "module",
+  "main": "./dist/main/main.js",
   "scripts": {
     "lint": "oxlint -c oxlint.config.mjs .",
     "lint:fix": "oxlint -c oxlint.config.mjs --fix .",
@@ -54,9 +57,6 @@
     "postversion": "git pull --tags && git push && git push --tags",
     "crowdin-sync": "node ./scripts/crowdin-sync-translations.mjs",
     "crowdin-update": "node ./scripts/crowdin-update-resources.mjs"
-  },
-  "bin": {
-    "electron": "./node_modules/.bin/electron"
   },
   "dependencies": {
     "@ant-design/icons": "6.3.2",
@@ -109,8 +109,8 @@
     "node": "^20.19.0 || ^22.12.0 || >=24.0.0",
     "npm": ">=10.x"
   },
-  "desktopName": "io.appium.inspector",
   "allowScripts": {
     "electron": true
-  }
+  },
+  "desktopName": "io.appium.inspector"
 }

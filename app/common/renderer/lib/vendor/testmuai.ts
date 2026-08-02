@@ -7,11 +7,9 @@ export class TestMuAIVendor extends BaseVendor {
     const vendorName = 'TestMu AI';
 
     const username =
-      (testmuai.username as string | undefined) ||
-      (process.env.LAMBDATEST_USERNAME as string | undefined);
+      (testmuai.username as string | undefined) || (process.env.LAMBDATEST_USERNAME as string | undefined);
     const accessKey =
-      (testmuai.accessKey as string | undefined) ||
-      (process.env.LAMBDATEST_ACCESS_KEY as string | undefined);
+      (testmuai.accessKey as string | undefined) || (process.env.LAMBDATEST_ACCESS_KEY as string | undefined);
     this._checkInputPropertyPresence(vendorName, [
       {name: 'Username', val: username},
       {name: 'Access Key', val: accessKey},
@@ -36,10 +34,7 @@ export class TestMuAIVendor extends BaseVendor {
       this._updateSessionCap('lambdatest:source', 'appiumdesktop');
       this._updateSessionCap('lambdatest:isRealMobile', true);
       if (advanced?.useProxy) {
-        this._updateSessionCap(
-          'lambdatest:proxyUrl',
-          advanced?.proxy === undefined ? '' : advanced.proxy,
-        );
+        this._updateSessionCap('lambdatest:proxyUrl', advanced?.proxy === undefined ? '' : advanced.proxy);
       }
     }
   }

@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
 import CloudProviders from './CloudProviders.jsx';
+
 import styles from './ServerDetails.module.css';
 
 const CloudProviderSelector = (props) => {
@@ -57,11 +58,7 @@ const CloudProviderSelector = (props) => {
                 return (
                   provider && (
                     <Col span={12} key={providerName}>
-                      <Button
-                        role="checkbox"
-                        style={style}
-                        onClick={() => toggleVisibleProvider(providerName)}
-                      >
+                      <Button role="checkbox" style={style} onClick={() => toggleVisibleProvider(providerName)}>
                         {provider.logo}
                       </Button>
                     </Col>

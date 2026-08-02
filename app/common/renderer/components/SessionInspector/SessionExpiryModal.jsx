@@ -7,12 +7,7 @@ import {SESSION_EXPIRY_PROMPT_TIMEOUT} from '../../constants/session-inspector.j
 /**
  * Modal shown when the session is about to expire due to inactivity.
  */
-const SessionExpiryModal = ({
-  showKeepAlivePrompt,
-  keepSessionAlive,
-  quitSessionAndReturn,
-  setUserWaitTimeout,
-}) => {
+const SessionExpiryModal = ({showKeepAlivePrompt, keepSessionAlive, quitSessionAndReturn, setUserWaitTimeout}) => {
   const {t} = useTranslation();
 
   // Ref to persist session expiry timeout without resetting on re-renders

@@ -2,6 +2,7 @@ import {Alert, Col, Row} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {ALERT, ROW} from '../../../../constants/antd-types.js';
+
 import styles from './SelectedElement.module.css';
 
 /**
@@ -17,11 +18,7 @@ const SnapshotMaxDepthReachedMessage = ({selectedElementPath, sessionSettings}) 
   return (
     <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemInfoMessage}>
       <Col>
-        <Alert
-          type={ALERT.INFO}
-          title={t('snapshotMaxDepthReached', {selectedElementDepth})}
-          showIcon
-        />
+        <Alert type={ALERT.INFO} title={t('snapshotMaxDepthReached', {selectedElementDepth})} showIcon />
       </Col>
     </Row>
   );

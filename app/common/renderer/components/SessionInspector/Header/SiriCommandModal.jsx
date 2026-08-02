@@ -34,10 +34,7 @@ const SiriCommandModal = ({
     >
       <Row>
         {t('Command')}
-        <Input.TextArea
-          onChange={(e) => setSiriCommandValue(e.target.value)}
-          value={siriCommandValue}
-        />
+        <Input.TextArea onChange={(e) => setSiriCommandValue(e.target.value)} value={siriCommandValue} />
       </Row>
     </Modal>
   );

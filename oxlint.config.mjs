@@ -12,9 +12,9 @@ export default defineConfig({
         vitest: true,
       },
       rules: {
-        "react/rules-of-hooks": "error",
-        "react/exhaustive-deps": "warn"
-      }
-    }
-  ]
+        'react/rules-of-hooks': 'error',
+        'react/exhaustive-deps': 'warn',
+      },
+    },
+  ],
 });
