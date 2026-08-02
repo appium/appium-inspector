@@ -1,9 +1,10 @@
 import {Space, Spin} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import inspectorStyles from '../SessionInspector.module.css';
 import GesturesTabCard from './GesturesTabCard.jsx';
 import SavedGesturesTable from './SavedGesturesTable.jsx';
+
+import inspectorStyles from '../SessionInspector.module.css';
 
 /**
  * Contents of the gestures tab: list of saved gestures.

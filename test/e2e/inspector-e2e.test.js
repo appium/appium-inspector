@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import {startServer as startAppiumFakeDriverServer} from '@appium/fake-driver';
 import {retryInterval} from 'asyncbox';
-import {expect} from 'vitest';
+import {afterAll, beforeAll, expect} from 'vitest';
 
 import InspectorPage from './pages/inspector-page-object.js';
 
@@ -19,7 +19,7 @@ let client;
 describe('inspector window', function () {
   let inspector, server;
 
-  before(async function () {
+  beforeAll(async function () {
     // Start an Appium fake driver server
     server = await startAppiumFakeDriverServer(FAKE_DRIVER_PORT, '127.0.0.1');
 
@@ -40,7 +40,7 @@ describe('inspector window', function () {
     await inspector.startSession();
   });
 
-  after(async function () {
+  afterAll(async function () {
     await server.close();
     await inspector.goHome();
   });
@@ -50,16 +50,12 @@ describe('inspector window', function () {
   });
 
   it('shows content in "Selected Element" pane when clicking on an item in the Source inspector', async function () {
-    expect(await (await client.$(inspector.selectedElementBody)).getHTML()).toContain(
-      'Select an element',
-    );
+    expect(await (await client.$(inspector.selectedElementBody)).getHTML()).toContain('Select an element');
     await (await client.$(inspector.sourceTreeNode)).waitForExist({timeout: 3000});
     await (await client.$(inspector.sourceTreeNode)).click();
     await (await client.$(inspector.tapSelectedElementButton)).waitForExist({timeout: 3000});
     await (await client.$(inspector.tapSelectedElementButton)).waitForEnabled({timeout: 4000});
-    expect(await (await client.$(inspector.selectedElementBody)).getHTML()).toContain(
-      'btnTapElement',
-    );
+    expect(await (await client.$(inspector.selectedElementBody)).getHTML()).toContain('btnTapElement');
     await (await client.$(inspector.tapSelectedElementButton)).click();
   });
 

@@ -12,11 +12,8 @@ export class SaucelabsVendor extends BaseVendor {
     const sauce = this._server.sauce;
     const vendorName = 'Sauce Labs';
 
-    const username =
-      (sauce.username as string | undefined) || (process.env.SAUCE_USERNAME as string | undefined);
-    const accessKey =
-      (sauce.accessKey as string | undefined) ||
-      (process.env.SAUCE_ACCESS_KEY as string | undefined);
+    const username = (sauce.username as string | undefined) || (process.env.SAUCE_USERNAME as string | undefined);
+    const accessKey = (sauce.accessKey as string | undefined) || (process.env.SAUCE_ACCESS_KEY as string | undefined);
     this._checkInputPropertyPresence(vendorName, [
       {name: 'Username', val: username},
       {name: 'Access Key', val: accessKey},

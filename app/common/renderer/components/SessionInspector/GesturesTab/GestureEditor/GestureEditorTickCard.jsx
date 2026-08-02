@@ -3,6 +3,7 @@ import {Button, Card, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {POINTER_TYPES} from '../../../../constants/gestures.js';
+
 import styles from './GestureEditor.module.css';
 
 const deleteTick = (pointerKey, tickKey, pointers, setPointers, unselectTick) => {
@@ -24,14 +25,7 @@ const deleteTick = (pointerKey, tickKey, pointers, setPointers, unselectTick) =>
 /**
  * Tick card action buttons for toggling the coordinate picker and deleting the tick.
  */
-const GestureEditorTickCardHeaderButtons = ({
-  tick,
-  pointers,
-  setPointers,
-  selectedTick,
-  selectTick,
-  unselectTick,
-}) => {
+const GestureEditorTickCardHeaderButtons = ({tick, pointers, setPointers, selectedTick, selectTick, unselectTick}) => {
   const {t} = useTranslation();
 
   return (
@@ -61,15 +55,7 @@ const GestureEditorTickCardHeaderButtons = ({
 /**
  * Wrapper card for a single tick in the gesture editor.
  */
-const GestureEditorTickCard = ({
-  children,
-  tick,
-  pointers,
-  setPointers,
-  selectedTick,
-  selectTick,
-  unselectTick,
-}) => (
+const GestureEditorTickCard = ({children, tick, pointers, setPointers, selectedTick, selectTick, unselectTick}) => (
   <Card
     hoverable={true}
     className={styles.tickCard}

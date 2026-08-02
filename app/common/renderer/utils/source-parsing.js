@@ -16,9 +16,7 @@ export function childNodesOf(domNode) {
   if (!domNode?.hasChildNodes()) {
     return [];
   }
-  return Array.from(domNode.childNodes).filter(
-    (childNode) => childNode.nodeType === domNode.ELEMENT_NODE,
-  );
+  return Array.from(domNode.childNodes).filter((childNode) => childNode.nodeType === domNode.ELEMENT_NODE);
 }
 
 /**
@@ -70,9 +68,7 @@ export function xmlToJSON(sourceXML) {
     const path = index == null ? '' : `${!parentPath ? '' : parentPath + '.'}${index}`;
 
     return {
-      children: childNodesOf(domNode).map((childNode, childIndex) =>
-        translateRecursively(childNode, path, childIndex),
-      ),
+      children: childNodesOf(domNode).map((childNode, childIndex) => translateRecursively(childNode, path, childIndex)),
       tagName: domNode.tagName,
       attributes,
       path,

@@ -18,9 +18,7 @@ const API_ROOT = 'https://api.crowdin.com/api/v2';
 
 export async function performApiRequest(suffix = '', opts = {}) {
   const {method = 'GET', payload, headers, isProjectSpecific = true} = opts;
-  const url = isProjectSpecific
-    ? `${API_ROOT}/projects/${PROJECT_ID}${suffix}`
-    : `${API_ROOT}${suffix}`;
+  const url = isProjectSpecific ? `${API_ROOT}/projects/${PROJECT_ID}${suffix}` : `${API_ROOT}${suffix}`;
   log.debug(`Sending ${method} request to ${url}`);
   let formattedPayload = payload;
   if (isPlainObject(payload)) {

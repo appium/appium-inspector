@@ -39,9 +39,7 @@ describe('utils/locator-generation/class-chain.js', function () {
           <grandchild>Bar</grandchild>
         </child>
       </root>`);
-      expect(getOptimalClassChain(doc, doc.getElementsByTagName('grandchild')[0])).toBe(
-        '/root/child[1]/grandchild[1]',
-      );
+      expect(getOptimalClassChain(doc, doc.getElementsByTagName('grandchild')[0])).toBe('/root/child[1]/grandchild[1]');
     });
   });
 });

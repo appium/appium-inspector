@@ -10,12 +10,9 @@ export const LINKS = {
   ADD_CAPS_DOCS:
     'https://appium.github.io/appium-inspector/latest/quickstart/starting-a-session/#adding-session-details',
   HYBRID_MODE_DOCS: 'https://appium.github.io/appium.io/docs/en/writing-running-appium/web/hybrid/',
-  CLASS_CHAIN_DOCS:
-    'https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules',
-  PREDICATE_DOCS:
-    'https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules',
-  UIAUTOMATOR_DOCS:
-    'https://github.com/appium/appium-uiautomator2-driver/blob/master/docs/uiautomator-uiselector.md',
+  CLASS_CHAIN_DOCS: 'https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules',
+  PREDICATE_DOCS: 'https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules',
+  UIAUTOMATOR_DOCS: 'https://github.com/appium/appium-uiautomator2-driver/blob/master/docs/uiautomator-uiselector.md',
 };
 
 export const DRIVERS = {

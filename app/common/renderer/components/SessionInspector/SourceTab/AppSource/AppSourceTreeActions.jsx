@@ -3,6 +3,7 @@ import {Button, Input, Row, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON, ROW} from '../../../../constants/antd-types.js';
+
 import styles from './AppSource.module.css';
 
 /**

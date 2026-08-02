@@ -13,11 +13,7 @@ export const getRandomId = () => crypto.getRandomValues(new Uint32Array(3)).join
 export function addVendorPrefixes(caps) {
   return caps.map((cap) => {
     // if we don't have a valid unprefixed cap or a cap with an existing prefix, update it
-    if (
-      typeof cap.name === 'string' &&
-      !STANDARD_W3C_CAPS.includes(cap.name) &&
-      !cap.name.includes(':')
-    ) {
+    if (typeof cap.name === 'string' && !STANDARD_W3C_CAPS.includes(cap.name) && !cap.name.includes(':')) {
       cap.name = `appium:${cap.name}`;
     }
     return cap;

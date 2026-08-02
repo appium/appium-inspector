@@ -42,8 +42,8 @@ npm run dev:electron
 Run tests:
 
 ```bash
-npm run test:lint
-npm run test:format
+npm run lint
+npm run format:check
 npm run test:unit
 npm run test:integration
 npm run test:e2e

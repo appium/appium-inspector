@@ -46,9 +46,7 @@ const LocatorSearchModal = (props) => {
       onCancel={onCancel}
       footer={
         <>
-          {locatedElements && (
-            <Button onClick={(e) => e.preventDefault() || clearSearchResults()}>{t('Back')}</Button>
-          )}
+          {locatedElements && <Button onClick={(e) => e.preventDefault() || clearSearchResults()}>{t('Back')}</Button>}
           <Button loading={isSearchingForElements} onClick={onSubmit} type="primary">
             {locatedElements ? t('Done') : t('Search')}
           </Button>

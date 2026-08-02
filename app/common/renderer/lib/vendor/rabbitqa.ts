@@ -5,9 +5,7 @@ export class RabbitQAVendor extends BaseVendor {
     const rabbitQA = this._server.rabbitqa;
     const vendorName = 'RabbitQA';
 
-    const apiKey =
-      (rabbitQA.apiKey as string | undefined) ||
-      (process.env.RABBITQA_API_KEY as string | undefined);
+    const apiKey = (rabbitQA.apiKey as string | undefined) || (process.env.RABBITQA_API_KEY as string | undefined);
 
     this._checkInputPropertyPresence(vendorName, [{name: 'API Key', val: apiKey}]);
     const apiKeyDefined = apiKey as string;

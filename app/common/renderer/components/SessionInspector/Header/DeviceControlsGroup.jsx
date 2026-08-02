@@ -1,10 +1,4 @@
-import {
-  IconChevronLeft,
-  IconCircle,
-  IconHome,
-  IconMessageChatbot,
-  IconSquare,
-} from '@tabler/icons-react';
+import {IconChevronLeft, IconCircle, IconHome, IconMessageChatbot, IconSquare} from '@tabler/icons-react';
 import {Button, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
@@ -86,11 +80,7 @@ const IosControlsGroup = ({
         />
       </Tooltip>
       <Tooltip title={t('Execute Siri Command')}>
-        <Button
-          id="siriCommand"
-          icon={<IconMessageChatbot size={18} />}
-          onClick={showSiriCommandModal}
-        />
+        <Button id="siriCommand" icon={<IconMessageChatbot size={18} />} onClick={showSiriCommandModal} />
       </Tooltip>
       <SiriCommandModal
         siriCommandValue={siriCommandValue}

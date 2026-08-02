@@ -1,5 +1,4 @@
 import './i18next.js';
-
 import {Suspense} from 'react';
 import {createRoot} from 'react-dom/client';
 import {Provider} from 'react-redux';

@@ -6,6 +6,7 @@ import json from 'refractor/json';
 
 import {getCapsObject} from '../../../actions/SessionBuilder.js';
 import {ALERT} from '../../../constants/antd-types.js';
+
 import builderStyles from '../SessionBuilder.module.css';
 import styles from './CapabilityJSON.module.css';
 
@@ -51,9 +52,7 @@ const CapabilityJSON = (props) => {
             onPressEnter={saveDesiredCapsName}
             status={isDuplicateCapsName ? 'error' : ''}
           />
-          {isDuplicateCapsName && (
-            <p className={builderStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>
-          )}
+          {isDuplicateCapsName && <p className={builderStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>}
         </Row>
       );
     }
@@ -146,9 +145,7 @@ const CapabilityJSON = (props) => {
             {!isValidCapsJson && <Alert title={invalidCapsJsonReason} type={ALERT.ERROR} />}
           </div>
         )}
-        {!isEditingDesiredCaps && (
-          <div className={styles.formattedCapsBody}>{getHighlightedCaps(caps)}</div>
-        )}
+        {!isEditingDesiredCaps && <div className={styles.formattedCapsBody}>{getHighlightedCaps(caps)}</div>}
       </Card>
     )
   );

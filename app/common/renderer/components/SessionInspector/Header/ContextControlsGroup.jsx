@@ -1,15 +1,11 @@
-import {
-  IconExclamationCircle,
-  IconInfoCircle,
-  IconTriangleSquareCircle,
-  IconWorld,
-} from '@tabler/icons-react';
+import {IconExclamationCircle, IconInfoCircle, IconTriangleSquareCircle, IconWorld} from '@tabler/icons-react';
 import {Button, Select, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
 import {LINKS} from '../../../constants/common.js';
 import {APP_MODE} from '../../../constants/session-inspector.js';
+
 import styles from './Header.module.css';
 
 /**
@@ -54,9 +50,7 @@ const ContextDropdown = ({contexts, currentContext, setContext, applyClientMetho
         title={
           <>
             {t('contextDropdownInfo')}{' '}
-            <a onClick={(e) => e.preventDefault() || openLink(LINKS.HYBRID_MODE_DOCS)}>
-              {LINKS.HYBRID_MODE_DOCS}
-            </a>
+            <a onClick={(e) => e.preventDefault() || openLink(LINKS.HYBRID_MODE_DOCS)}>{LINKS.HYBRID_MODE_DOCS}</a>
           </>
         }
         classNames={{root: styles.wideTooltip}}

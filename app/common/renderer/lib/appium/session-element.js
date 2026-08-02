@@ -53,10 +53,7 @@ export function getElementFromResponse(res, parent) {
   const elementKey = res[W3C_ELEMENT_KEY] ? W3C_ELEMENT_KEY : JWP_ELEMENT_KEY;
 
   if (!res[elementKey]) {
-    throw new Error(
-      `Bad findElement response; did not have element key. ` +
-        `Response was: ${JSON.stringify(res)}`,
-    );
+    throw new Error(`Bad findElement response; did not have element key. Response was: ${JSON.stringify(res)}`);
   }
 
   return new WDSessionElement(elementKey, res, parent);

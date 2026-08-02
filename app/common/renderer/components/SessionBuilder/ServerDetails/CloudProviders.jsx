@@ -33,7 +33,6 @@ import WebmateLogo from '../../../assets/images/webmate_logo.svg';
 import WebmateLogoDark from '../../../assets/images/webmate_logo_dark.svg';
 import {SERVER_TYPES} from '../../../constants/session-builder.js';
 import {useTheme} from '../../../hooks/use-theme.jsx';
-import styles from './ServerDetails.module.css';
 import ServerTabAstrofarm from './ServerTabAstroFarm.jsx';
 import ServerTabBitbar from './ServerTabBitbar.jsx';
 import ServerTabBrowserstack from './ServerTabBrowserstack.jsx';
@@ -54,6 +53,8 @@ import ServerTabTestingbot from './ServerTabTestingbot.jsx';
 import ServerTabTestMuAI from './ServerTabTestMuAI.jsx';
 import ServerTabTVLabs from './ServerTabTVLabs.jsx';
 import ServerTabWebmate from './ServerTabWebmate.jsx';
+
+import styles from './ServerDetails.module.css';
 
 const providers = {
   [SERVER_TYPES.SAUCE]: {

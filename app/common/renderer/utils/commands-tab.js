@@ -35,9 +35,7 @@ export function filterMethodPairs(methodPairs, searchQuery) {
   if (!searchQuery) {
     return methodPairs;
   }
-  return methodPairs.filter(([methodName]) =>
-    methodName.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  return methodPairs.filter(([methodName]) => methodName.toLowerCase().includes(searchQuery.toLowerCase()));
 }
 
 /**
@@ -81,9 +79,7 @@ export function deepFilterEmpty(value) {
 export function extractParamsFromCommandPath(path) {
   return path
     .split('/')
-    .flatMap((segment) =>
-      segment.startsWith(':') && segment !== ':sessionId' ? [segment.slice(1)] : [],
-    );
+    .flatMap((segment) => (segment.startsWith(':') && segment !== ':sessionId' ? [segment.slice(1)] : []));
 }
 
 /**
@@ -144,11 +140,7 @@ export function transformCommandsMap(cmdsResponse) {
 export function transformExecMethodsMap(execMethodsResponse) {
   let adjExecMethodsMap = {};
   // execMethodsResponse: REST to driver/plugins source map
-  if (
-    isEmpty(execMethodsResponse) ||
-    !('rest' in execMethodsResponse) ||
-    isEmpty(execMethodsResponse.rest)
-  ) {
+  if (isEmpty(execMethodsResponse) || !('rest' in execMethodsResponse) || isEmpty(execMethodsResponse.rest)) {
     return [];
   }
   const restExecMethodsMap = execMethodsResponse.rest;

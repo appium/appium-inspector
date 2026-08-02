@@ -20,13 +20,7 @@ const FileUploader = (props) => {
   };
 
   return (
-    <Upload
-      type="select"
-      accept={type}
-      multiple={!!multiple}
-      beforeUpload={beforeUpload}
-      showUploadList={false}
-    >
+    <Upload type="select" accept={type} multiple={!!multiple} beforeUpload={beforeUpload} showUploadList={false}>
       <Button icon={<IconFileImport size={16} />}>{title}</Button>
     </Upload>
   );

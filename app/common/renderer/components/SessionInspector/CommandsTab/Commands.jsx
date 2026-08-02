@@ -1,17 +1,14 @@
 import {useEffect, useRef, useState} from 'react';
 
-import {
-  adjustParamValueType,
-  transformCommandsMap,
-  transformExecMethodsMap,
-} from '../../../utils/commands-tab.js';
+import {adjustParamValueType, transformCommandsMap, transformExecMethodsMap} from '../../../utils/commands-tab.js';
 import {isEmpty, isPlainObject} from '../../../utils/common.js';
 import CommandParametersModal from './CommandParametersModal.jsx';
 import CommandResultModal from './CommandResult/CommandResultModal.jsx';
-import styles from './Commands.module.css';
 import CommandsTabCard from './CommandsTabCard.jsx';
 import MethodMapCommandsTabs from './MethodMapCommandsTabs.jsx';
 import StaticCommandsContent from './StaticCommandsContent.jsx';
+
+import styles from './Commands.module.css';
 
 const COMMAND_EXECUTE_SCRIPT = 'executeScript';
 const COMMAND_UPDATE_SETTINGS = 'updateSettings';

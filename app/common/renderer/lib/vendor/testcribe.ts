@@ -5,9 +5,7 @@ export class TestcribeVendor extends BaseVendor {
     const testcribe = this._server.testcribe;
     const vendorName = 'Testcribe';
 
-    const apiKey =
-      (testcribe.apiKey as string | undefined) ||
-      (process.env.TESTCRIBE_API_KEY as string | undefined);
+    const apiKey = (testcribe.apiKey as string | undefined) || (process.env.TESTCRIBE_API_KEY as string | undefined);
     this._checkInputPropertyPresence(vendorName, [{name: 'API Key', val: apiKey}]);
     const apiKeyDefined = apiKey as string;
 

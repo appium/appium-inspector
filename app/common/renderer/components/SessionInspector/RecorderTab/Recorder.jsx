@@ -2,8 +2,9 @@ import {useTranslation} from 'react-i18next';
 import {Refractor} from 'react-refractor';
 
 import {CLIENT_FRAMEWORK_MAP} from '../../../lib/client-frameworks/map.js';
-import styles from './Recorder.module.css';
 import RecorderTabCard from './RecorderTabCard.jsx';
+
+import styles from './Recorder.module.css';
 
 /**
  * Contents of the recorder tab.
@@ -41,9 +42,7 @@ const Recorder = (props) => {
       {!recordedActions.length && (
         <div className={styles.noRecordedActions}>{t('enableRecordingAndPerformActions')}</div>
       )}
-      {!!recordedActions.length && (
-        <Refractor language={ClientFrameworkClass.refractorLang} value={clientCode} />
-      )}
+      {!!recordedActions.length && <Refractor language={ClientFrameworkClass.refractorLang} value={clientCode} />}
     </RecorderTabCard>
   );
 };

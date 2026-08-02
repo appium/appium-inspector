@@ -49,13 +49,9 @@ ${code}`;
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `const ${localVar} = ${this.type}.findElements(${JSON.stringify(
-        `${strategy}:${locator}`,
-      )});`;
+      return `const ${localVar} = ${this.type}.findElements(${JSON.stringify(`${strategy}:${locator}`)});`;
     } else {
-      return `const ${localVar} = ${this.type}.findElement(${JSON.stringify(
-        `${strategy}:${locator}`,
-      )});`;
+      return `const ${localVar} = ${this.type}.findElement(${JSON.stringify(`${strategy}:${locator}`)});`;
     }
   }
 
@@ -88,9 +84,7 @@ ${code}`;
   }
 
   codeFor_executeScriptWithArgs(scriptCmd, jsonArg) {
-    return `${this.type}.getDriver().executeScript(${JSON.stringify(scriptCmd)}, ${JSON.stringify(
-      jsonArg,
-    )});`;
+    return `${this.type}.getDriver().executeScript(${JSON.stringify(scriptCmd)}, ${JSON.stringify(jsonArg)});`;
   }
 
   codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
@@ -183,16 +177,7 @@ ${code}`;
     return `${this.type}.getDriver().setGeoLocation({latitude: ${latitude}, longitude: ${longitude}, altitude: ${altitude}});`;
   }
 
-  codeFor_rotateDevice(
-    varNameIgnore,
-    varIndexIgnore,
-    x,
-    y,
-    radius,
-    rotation,
-    touchCount,
-    duration,
-  ) {
+  codeFor_rotateDevice(varNameIgnore, varIndexIgnore, x, y, radius, rotation, touchCount, duration) {
     return `${this.type}.getDriver().rotateDevice({x: ${x}, y: ${y}, duration: ${duration}, radius: ${radius}, rotation: ${rotation}, touchCount: ${touchCount}});`;
   }
 

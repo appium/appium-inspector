@@ -2,9 +2,10 @@ import {useTranslation} from 'react-i18next';
 
 import {isEmpty} from '../../../../utils/common.js';
 import {parseCoordinates} from '../../../../utils/other.js';
+import SelectedElementTable from './SelectedElementTable.jsx';
+
 import inspectorStyles from '../../SessionInspector.module.css';
 import styles from './SelectedElement.module.css';
-import SelectedElementTable from './SelectedElementTable.jsx';
 
 /**
  * Cell rendering the element's box model.

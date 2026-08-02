@@ -11,6 +11,7 @@ import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
 import {getSessionInfo} from '../../../utils/attaching-to-session.js';
+
 import styles from './AttachToSession.module.css';
 
 const addIcon = (Icon, label) => (
@@ -44,17 +45,13 @@ const DiscoveredSessionCard = ({session, serverType, loadNewSession}) => {
         </Row>
         {sessionDetails.sessionName && <Row>{addIcon(IconTag, sessionDetails.sessionName)}</Row>}
         <Row>
-          {sessionDetails.deviceId && (
-            <Col span={12}>{addIcon(IconDeviceMobile, sessionDetails.deviceId)}</Col>
-          )}
+          {sessionDetails.deviceId && <Col span={12}>{addIcon(IconDeviceMobile, sessionDetails.deviceId)}</Col>}
           <Col span={12}>{addIcon(IconDeviceMobileCog, sessionDetails.platformInfo)}</Col>
         </Row>
         {sessionDetails.appId || sessionDetails.timestamp ? (
           <Row>
             {sessionDetails.appId && <Col span={12}>{addIcon(IconApps, sessionDetails.appId)}</Col>}
-            {sessionDetails.timestamp && (
-              <Col span={12}>{addIcon(IconClockHour4, sessionDetails.timestamp)}</Col>
-            )}
+            {sessionDetails.timestamp && <Col span={12}>{addIcon(IconClockHour4, sessionDetails.timestamp)}</Col>}
           </Row>
         ) : null}
       </Space>

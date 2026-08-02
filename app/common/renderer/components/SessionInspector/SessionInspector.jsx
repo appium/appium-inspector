@@ -5,18 +5,17 @@ import {WINDOW_DIMENSIONS} from '../../constants/common.js';
 import HeaderButtons from './Header/HeaderButtons.jsx';
 import Screenshot from './Screenshot/Screenshot.jsx';
 import SessionExpiryModal from './SessionExpiryModal.jsx';
-import styles from './SessionInspector.module.css';
 import SessionInspectorTabs from './SessionInspectorTabs.jsx';
+
+import styles from './SessionInspector.module.css';
 
 // resize width to something sensible for using the inspector on first run
 const resizeWindowOnLaunch = () => {
   const curHeight = window.innerHeight;
   const curWidth = window.innerWidth;
   if (curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT || curWidth < WINDOW_DIMENSIONS.MIN_WIDTH) {
-    const newWidth =
-      curWidth < WINDOW_DIMENSIONS.MIN_WIDTH ? WINDOW_DIMENSIONS.MIN_WIDTH : curWidth;
-    const newHeight =
-      curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT ? WINDOW_DIMENSIONS.MIN_HEIGHT : curHeight;
+    const newWidth = curWidth < WINDOW_DIMENSIONS.MIN_WIDTH ? WINDOW_DIMENSIONS.MIN_WIDTH : curWidth;
+    const newHeight = curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT ? WINDOW_DIMENSIONS.MIN_HEIGHT : curHeight;
     window.resizeTo(newWidth, newHeight);
   }
 };
@@ -53,8 +52,7 @@ const Inspector = (props) => {
   );
 
   const showScreenshot =
-    (screenshot && !screenshotError) ||
-    (isUsingMjpegMode && (!isSourceRefreshOn || !isAwaitingMjpegStream));
+    (screenshot && !screenshotError) || (isUsingMjpegMode && (!isSourceRefreshOn || !isAwaitingMjpegStream));
 
   useEffect(() => {
     resizeWindowOnLaunch();
@@ -63,13 +61,7 @@ const Inspector = (props) => {
     getSavedClientFramework();
     runKeepAliveLoop();
     setSessionTime(Date.now());
-  }, [
-    applyClientMethod,
-    getSavedClientFramework,
-    runKeepAliveLoop,
-    setSessionTime,
-    storeSessionSettings,
-  ]);
+  }, [applyClientMethod, getSavedClientFramework, runKeepAliveLoop, setSessionTime, storeSessionSettings]);
 
   return (
     <div className={styles.inspectorContainer}>

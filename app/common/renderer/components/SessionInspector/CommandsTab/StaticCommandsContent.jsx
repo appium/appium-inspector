@@ -2,6 +2,7 @@ import {Button, Col, Collapse, Row, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {COMMAND_DEFINITIONS, TOP_LEVEL_COMMANDS} from '../../../constants/commands.js';
+
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
 

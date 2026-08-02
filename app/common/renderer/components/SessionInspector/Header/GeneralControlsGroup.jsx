@@ -1,10 +1,4 @@
-import {
-  IconPlayerPause,
-  IconPlayerPlay,
-  IconRefresh,
-  IconSearch,
-  IconVideo,
-} from '@tabler/icons-react';
+import {IconPlayerPause, IconPlayerPlay, IconRefresh, IconSearch, IconVideo} from '@tabler/icons-react';
 import {Button, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
@@ -63,11 +57,7 @@ const SearchForElementButton = (props) => {
   return (
     <>
       <Tooltip title={t('Search for element')}>
-        <Button
-          id="searchForElement"
-          icon={<IconSearch size={18} />}
-          onClick={showLocatorSearchModal}
-        />
+        <Button id="searchForElement" icon={<IconSearch size={18} />} onClick={showLocatorSearchModal} />
       </Tooltip>
       <LocatorSearchModal {...props} />
     </>
@@ -82,13 +72,7 @@ const ToggleRecordingButton = ({isRecording, startRecording, pauseRecording}) =>
 
   return isRecording ? (
     <Tooltip title={t('Pause Recording')}>
-      <Button
-        id="btnPause"
-        icon={<IconVideo size={18} />}
-        type={BUTTON.PRIMARY}
-        danger
-        onClick={pauseRecording}
-      />
+      <Button id="btnPause" icon={<IconVideo size={18} />} type={BUTTON.PRIMARY} danger onClick={pauseRecording} />
     </Tooltip>
   ) : (
     <Tooltip title={t('Start Recording')}>

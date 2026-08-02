@@ -123,8 +123,7 @@ describe('utils/source-parsing.js', function () {
     });
 
     it('should convert xml to json for Android', function () {
-      const json =
-        xmlToJSON(`<hierarchy index="0" class="hierarchy" rotation="0" width="1080" height="2028">
+      const json = xmlToJSON(`<hierarchy index="0" class="hierarchy" rotation="0" width="1080" height="2028">
           <android.widget.FrameLayout
               index="0"
               package="com.appiuminspector"

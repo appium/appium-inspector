@@ -43,12 +43,7 @@ const SavedGestureActionsCell = (props) => {
   return (
     <Space.Compact>
       <Tooltip zIndex={3} title={t('Play')}>
-        <Button
-          key="play"
-          type="primary"
-          icon={<IconPlayerPlay size={18} />}
-          onClick={() => playGesture()}
-        />
+        <Button key="play" type="primary" icon={<IconPlayerPlay size={18} />} onClick={() => playGesture()} />
       </Tooltip>
       <Tooltip zIndex={3} title={t('Edit')}>
         <Button icon={<IconEdit size={18} />} onClick={() => loadGesture()} />

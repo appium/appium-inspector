@@ -1,10 +1,6 @@
 import {join} from 'node:path';
 
-import {
-  installExtension,
-  REACT_DEVELOPER_TOOLS,
-  REDUX_DEVTOOLS,
-} from '@tomjs/electron-devtools-installer';
+import {installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} from '@tomjs/electron-devtools-installer';
 
 const EXTENSIONS_TO_INSTALL = [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS];
 
@@ -17,9 +13,7 @@ export async function installExtensions() {
   logEmptyLine();
   logWithExtPrefix('Installing development extensions...');
   logWithExtPrefix(
-    opts.forceDownload
-      ? 'Explicitly re-downloading all extensions'
-      : 'Set UPGRADE_EXTENSIONS=1 to force re-download',
+    opts.forceDownload ? 'Explicitly re-downloading all extensions' : 'Set UPGRADE_EXTENSIONS=1 to force re-download',
   );
   try {
     const installedExts = await installExtension(EXTENSIONS_TO_INSTALL, opts);
@@ -38,9 +32,9 @@ export async function installExtensions() {
 }
 
 function logEmptyLine() {
-  console.log(''); // eslint-disable-line no-console
+  console.log(''); // oxlint-disable-line no-console
 }
 
 function logWithExtPrefix(textString) {
-  console.log(`[🧩 Extensions 🧩] ${textString}`); // eslint-disable-line no-console
+  console.log(`[🧩 Extensions 🧩] ${textString}`); // oxlint-disable-line no-console
 }

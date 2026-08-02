@@ -5,23 +5,17 @@ import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../../constants/antd-types.js';
 import {copyToClipboard} from '../../../../utils/other.js';
-import styles from './CommandResult.module.css';
 import CommandResultFormattedTable from './CommandResultFormattedTable.jsx';
 import CommandResultRawTable from './CommandResultRawTable.jsx';
 
-const stringifyValue = (val) =>
-  typeof val === 'object' && val !== null ? JSON.stringify(val, null, 2) : String(val);
+import styles from './CommandResult.module.css';
+
+const stringifyValue = (val) => (typeof val === 'object' && val !== null ? JSON.stringify(val, null, 2) : String(val));
 
 /**
  * Footer buttons of the modal rendering the command results.
  */
-const CommandResultModalFooter = ({
-  result,
-  closeCommandModal,
-  setFormatResult,
-  formatResult,
-  isPrimitive,
-}) => {
+const CommandResultModalFooter = ({result, closeCommandModal, setFormatResult, formatResult, isPrimitive}) => {
   const {t} = useTranslation();
 
   return (
@@ -37,11 +31,7 @@ const CommandResultModalFooter = ({
             />
           </Tooltip>
           <Tooltip title={t('copyResultToClipboard')}>
-            <Button
-              icon={<IconFiles size={18} />}
-              disabled={formatResult}
-              onClick={() => copyToClipboard(result)}
-            />
+            <Button icon={<IconFiles size={18} />} disabled={formatResult} onClick={() => copyToClipboard(result)} />
           </Tooltip>
         </Space>
       </Col>
@@ -61,8 +51,7 @@ const CommandResultModal = ({commandName, commandResult, clearCurrentCommand}) =
   const {t} = useTranslation();
   const [formatResult, setFormatResult] = useState(false);
 
-  const resultType =
-    commandResult === null ? 'null' : Array.isArray(commandResult) ? 'array' : typeof commandResult;
+  const resultType = commandResult === null ? 'null' : Array.isArray(commandResult) ? 'array' : typeof commandResult;
   const isPrimitive = resultType !== 'object' && resultType !== 'array';
   const stringifiedResult = stringifyValue(commandResult);
 

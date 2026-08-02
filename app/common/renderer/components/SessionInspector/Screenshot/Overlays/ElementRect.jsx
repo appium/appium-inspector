@@ -26,13 +26,7 @@ const ElementRect = ({selectedElementPath, onElementInteract, elemProperties}) =
     height: elemProperties.height ?? 0,
   };
 
-  return (
-    <div
-      className={highlighterClass}
-      onClick={() => onClickHighlighter()}
-      style={highlighterStyle}
-    />
-  );
+  return <div className={highlighterClass} onClick={() => onClickHighlighter()} style={highlighterStyle} />;
 };
 
 export default ElementRect;

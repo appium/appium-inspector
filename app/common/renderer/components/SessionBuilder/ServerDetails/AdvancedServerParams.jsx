@@ -2,6 +2,7 @@ import {Checkbox, Col, Collapse, Form, Input, Row} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {SERVER_ADVANCED_PARAMS, SERVER_TYPES} from '../../../constants/session-builder.js';
+
 import styles from './ServerDetails.module.css';
 
 const AdvancedServerParams = ({server, setServerParam, serverType}) => {
@@ -39,11 +40,7 @@ const AdvancedServerParams = ({server, setServerParam, serverType}) => {
                         <Checkbox
                           checked={!!server.advanced.useProxy}
                           onChange={(e) =>
-                            setServerParam(
-                              SERVER_ADVANCED_PARAMS.USE_PROXY,
-                              e.target.checked,
-                              SERVER_TYPES.ADVANCED,
-                            )
+                            setServerParam(SERVER_ADVANCED_PARAMS.USE_PROXY, e.target.checked, SERVER_TYPES.ADVANCED)
                           }
                         >
                           {t('Use Proxy')}
@@ -55,11 +52,7 @@ const AdvancedServerParams = ({server, setServerParam, serverType}) => {
                         <Input
                           disabled={!server.advanced.useProxy}
                           onChange={(e) =>
-                            setServerParam(
-                              SERVER_ADVANCED_PARAMS.PROXY,
-                              e.target.value,
-                              SERVER_TYPES.ADVANCED,
-                            )
+                            setServerParam(SERVER_ADVANCED_PARAMS.PROXY, e.target.value, SERVER_TYPES.ADVANCED)
                           }
                           placeholder={t('Proxy URL')}
                           value={server.advanced.proxy}

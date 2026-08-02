@@ -173,9 +173,7 @@ ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
   }
 
   codeFor_isKeyboardShown() {
-    return `$\{is_keyboard_shown} =    ${this.codeFor_executeScriptNoArgs(
-      'mobile: isKeyboardShown',
-    )}`;
+    return `$\{is_keyboard_shown} =    ${this.codeFor_executeScriptNoArgs('mobile: isKeyboardShown')}`;
   }
 
   codeFor_getOrientation() {

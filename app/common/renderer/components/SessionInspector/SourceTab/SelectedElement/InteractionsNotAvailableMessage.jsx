@@ -2,6 +2,7 @@ import {Alert, Col, Row} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {ALERT, ROW} from '../../../../constants/antd-types.js';
+
 import styles from './SelectedElement.module.css';
 
 /**

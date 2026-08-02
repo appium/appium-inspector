@@ -1,9 +1,6 @@
 import {describe, expect, it} from 'vitest';
 
-import {
-  DEFAULT_SESSION_NAME,
-  SESSION_FILE_VERSIONS,
-} from '../../app/common/renderer/constants/session-builder.js';
+import {DEFAULT_SESSION_NAME, SESSION_FILE_VERSIONS} from '../../app/common/renderer/constants/session-builder.js';
 import {
   migrateSessionJSON,
   parseSessionFileContents,

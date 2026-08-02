@@ -13,12 +13,7 @@ const isElementOverElement = (element1, element2) => {
   const right2 = element2.left + element2.width;
   const bottom2 = element2.top + element2.height;
 
-  return (
-    element1.left <= element2.left &&
-    right1 >= right2 &&
-    element1.top <= element2.top &&
-    bottom1 >= bottom2
-  );
+  return element1.left <= element2.left && right1 >= right2 && element1.top <= element2.top && bottom1 >= bottom2;
 };
 
 // Traverse through parent elements until we reach maybeAncestor
@@ -222,10 +217,7 @@ const ElementOverlays = (props) => {
       {showCentroids && highlighterCentroids}
       {/* If the user selected an element that they searched for, highlight that element */}
       {isLocatorSearchModalVisible && searchedForElementBounds && (
-        <FoundElementRect
-          searchedForElementBounds={searchedForElementBounds}
-          scaleRatio={scaleRatio}
-        />
+        <FoundElementRect searchedForElementBounds={searchedForElementBounds} scaleRatio={scaleRatio} />
       )}
     </>
   );

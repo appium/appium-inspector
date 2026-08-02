@@ -23,10 +23,7 @@ import {TestMuAIVendor} from './testmuai.js';
 import {TvlabsVendor} from './tvlabs.js';
 import {WebmateVendor} from './webmate.js';
 
-type VendorConstructor = new (
-  server: SessionBuilderServer,
-  sessionCaps: Record<string, unknown>,
-) => BaseVendor;
+type VendorConstructor = new (server: SessionBuilderServer, sessionCaps: Record<string, unknown>) => BaseVendor;
 
 export const VENDOR_MAP: Partial<Record<string, VendorConstructor>> = {
   [SERVER_TYPES.LOCAL]: LocalVendor,

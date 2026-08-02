@@ -1,12 +1,8 @@
 import {Button, Input, Select, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import {
-  POINTER_DOWN_BTNS,
-  POINTER_TYPES,
-  POINTER_TYPES_MAP,
-  TICK_PROPS,
-} from '../../../../constants/gestures.js';
+import {POINTER_DOWN_BTNS, POINTER_TYPES, POINTER_TYPES_MAP, TICK_PROPS} from '../../../../constants/gestures.js';
+
 import inspectorStyles from '../../SessionInspector.module.css';
 import styles from './GestureEditor.module.css';
 
@@ -42,18 +38,8 @@ const updateTickValues = (tick, msg, value, getDefaultMoveDuration, pointers, se
   currentTick[msg] = parseFloat(value);
 
   // set default duration for if not set already
-  if (
-    currentTick.x !== undefined &&
-    currentTick.y !== undefined &&
-    currentTick.duration === undefined
-  ) {
-    currentTick.duration = getDefaultMoveDuration(
-      currentPointer.ticks,
-      tick.id,
-      currentTick.x,
-      currentTick.y,
-      false,
-    );
+  if (currentTick.x !== undefined && currentTick.y !== undefined && currentTick.duration === undefined) {
+    currentTick.duration = getDefaultMoveDuration(currentPointer.ticks, tick.id, currentTick.x, currentTick.y, false);
   }
 
   currentPointer.ticks[targetTickIdx] = currentTick;
@@ -104,14 +90,7 @@ const TickDurationInput = ({tick, getDefaultMoveDuration, pointers, setPointers}
           placeholder={t('Duration')}
           defaultValue={tick.duration}
           onChange={(e) =>
-            updateTickValues(
-              tick,
-              TICK_PROPS.DURATION,
-              e.target.value,
-              getDefaultMoveDuration,
-              pointers,
-              setPointers,
-            )
+            updateTickValues(tick, TICK_PROPS.DURATION, e.target.value, getDefaultMoveDuration, pointers, setPointers)
           }
         />
         <Space.Addon>ms</Space.Addon>
@@ -178,14 +157,7 @@ const TickCoordsInput = ({tick, getDefaultMoveDuration, pointers, setPointers}) 
         placeholder="X"
         defaultValue={tick.x}
         onChange={(e) =>
-          updateTickValues(
-            tick,
-            TICK_PROPS.X,
-            e.target.value,
-            getDefaultMoveDuration,
-            pointers,
-            setPointers,
-          )
+          updateTickValues(tick, TICK_PROPS.X, e.target.value, getDefaultMoveDuration, pointers, setPointers)
         }
       />
       <Input
@@ -194,14 +166,7 @@ const TickCoordsInput = ({tick, getDefaultMoveDuration, pointers, setPointers}) 
         placeholder="Y"
         defaultValue={tick.y}
         onChange={(e) =>
-          updateTickValues(
-            tick,
-            TICK_PROPS.Y,
-            e.target.value,
-            getDefaultMoveDuration,
-            pointers,
-            setPointers,
-          )
+          updateTickValues(tick, TICK_PROPS.Y, e.target.value, getDefaultMoveDuration, pointers, setPointers)
         }
       />
     </Space.Compact>
@@ -211,20 +176,9 @@ const TickCoordsInput = ({tick, getDefaultMoveDuration, pointers, setPointers}) 
 /**
  * Contents of a tick card.
  */
-const GestureEditorTickCardContents = ({
-  tick,
-  selectTick,
-  getDefaultMoveDuration,
-  pointers,
-  setPointers,
-}) => (
+const GestureEditorTickCardContents = ({tick, selectTick, getDefaultMoveDuration, pointers, setPointers}) => (
   <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="middle">
-    <TickTypeSelector
-      tick={tick}
-      selectTick={selectTick}
-      pointers={pointers}
-      setPointers={setPointers}
-    />
+    <TickTypeSelector tick={tick} selectTick={selectTick} pointers={pointers} setPointers={setPointers} />
     {(tick.type === POINTER_MOVE || tick.type === PAUSE) && (
       <TickDurationInput
         tick={tick}

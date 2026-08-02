@@ -2,8 +2,9 @@ import {IconQuestionMark} from '@tabler/icons-react';
 import {Steps} from 'antd';
 
 import {POINTER_TYPES} from '../../../../constants/gestures.js';
-import styles from './GestureEditor.module.css';
 import TimelineTickIcon from './TimelineTickIcon.jsx';
+
+import styles from './GestureEditor.module.css';
 
 const {FILLER} = POINTER_TYPES;
 

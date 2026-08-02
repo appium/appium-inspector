@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next';
 
 import {INPUT} from '../../../constants/antd-types.js';
 import {CAPABILITY_TYPES} from '../../../constants/session-builder.js';
+
 import styles from './CapabilityBuilderTab.module.css';
 
 const CapabilityControl = ({cap, onSetCapabilityParam, onPressEnter, isEditingDesiredCaps, id}) => {

@@ -10,9 +10,7 @@ describe('utils/locator-generation/predicate.js', function () {
         <child-node label='hello'>Hello</child-node>
         <child-node label='world'>World</child-node>
       </xml>`);
-      expect(getOptimalPredicateString(doc, doc.getElementsByTagName('child-node')[0])).toBe(
-        'label == "hello"',
-      );
+      expect(getOptimalPredicateString(doc, doc.getElementsByTagName('child-node')[0])).toBe('label == "hello"');
     });
 
     it('should not exist if the node does not have unique predicate string attributes', function () {
@@ -22,9 +20,7 @@ describe('utils/locator-generation/predicate.js', function () {
           <grandchild>World</grandchild>
         </child>
       </root>`);
-      expect(
-        getOptimalPredicateString(doc, doc.getElementsByTagName('grandchild')[0]),
-      ).toBeUndefined();
+      expect(getOptimalPredicateString(doc, doc.getElementsByTagName('grandchild')[0])).toBeUndefined();
     });
   });
 });

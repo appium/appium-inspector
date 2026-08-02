@@ -57,14 +57,10 @@ function areGestureActionsValid(gestureJSON) {
       }
     }
     if (!/^#[0-9A-F]{6}$/i.test(action.color)) {
-      return logValidationError(
-        `action '${JSON.stringify(action)}' color '${action.color}' is not a valid hex color`,
-      );
+      return logValidationError(`action '${JSON.stringify(action)}' color '${action.color}' is not a valid hex color`);
     }
     if (!('ticks' in action && Array.isArray(action.ticks))) {
-      return logValidationError(
-        `action '${JSON.stringify(action)}' 'ticks' property is missing or not an array`,
-      );
+      return logValidationError(`action '${JSON.stringify(action)}' 'ticks' property is missing or not an array`);
     }
     for (const tick of action.ticks) {
       if (!isActionTickValid(tick)) {
@@ -101,9 +97,7 @@ function isActionTickValid(tickJSON) {
     case POINTER_TYPES.PAUSE:
       return arePointerPropertiesValid(tickJSON, ['duration']);
     default:
-      return logValidationError(
-        `tick '${JSON.stringify(tickJSON)}' has unsupported type '${tickJSON.type}'`,
-      );
+      return logValidationError(`tick '${JSON.stringify(tickJSON)}' has unsupported type '${tickJSON.type}'`);
   }
 }
 
@@ -117,9 +111,7 @@ function isActionTickValid(tickJSON) {
 function arePointerPropertiesValid(tickJSON, propsArray) {
   for (const tickProp of propsArray) {
     if (!(tickProp in tickJSON && typeof tickJSON[tickProp] === 'number')) {
-      return logValidationError(
-        `tick '${JSON.stringify(tickJSON)}' property '${tickProp}' is missing or not a number`,
-      );
+      return logValidationError(`tick '${JSON.stringify(tickJSON)}' property '${tickProp}' is missing or not a number`);
     }
   }
   return true;

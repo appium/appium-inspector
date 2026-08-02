@@ -37,12 +37,8 @@ async function main() {
     pluginJsonContent[key] = rootJsonContent[key];
   }
 
-  // The new line in the last is to avoid prettier error.
-  await fs.writeFile(
-    PLUGIN_PKG_JSON_PATH,
-    `${JSON.stringify(pluginJsonContent, null, 2)}\n`,
-    'utf8',
-  );
+  // The new line in the last is to avoid a formatter error.
+  await fs.writeFile(PLUGIN_PKG_JSON_PATH, `${JSON.stringify(pluginJsonContent, null, 2)}\n`, 'utf8');
 }
 
 (async () => await main())();

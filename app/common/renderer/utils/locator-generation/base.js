@@ -49,8 +49,6 @@ export class LocatorGeneratorBase {
    * @param {Error} error - the error that occurred
    */
   _logLocatorError(strategy, error) {
-    log.error(
-      `The most optimal ${strategy} could not be determined because an error was thrown: '${error}'`,
-    );
+    log.error(`The most optimal ${strategy} could not be determined because an error was thrown: '${error}'`);
   }
 }

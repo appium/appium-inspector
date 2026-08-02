@@ -3,6 +3,7 @@ import {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {isEmpty} from '../../../utils/common.js';
+
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './SessionInfo.module.css';
 

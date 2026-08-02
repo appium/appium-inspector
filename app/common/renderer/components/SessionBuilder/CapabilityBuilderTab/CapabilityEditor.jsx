@@ -1,25 +1,14 @@
 import {IconPlus, IconTrash} from '@tabler/icons-react';
-import {
-  Button,
-  Checkbox,
-  Col,
-  Form,
-  Input,
-  Modal,
-  Row,
-  Select,
-  Space,
-  Splitter,
-  Tooltip,
-} from 'antd';
+import {Button, Checkbox, Col, Form, Input, Modal, Row, Select, Space, Splitter, Tooltip} from 'antd';
 import {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {CAPABILITY_TYPES} from '../../../constants/session-builder.js';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
+import CapabilityControl from './CapabilityControl.jsx';
+
 import builderStyles from '../SessionBuilder.module.css';
 import styles from './CapabilityBuilderTab.module.css';
-import CapabilityControl from './CapabilityControl.jsx';
 
 // Below this window width, the JSON preview panel no longer has enough room
 // to sit beside the capability builder panel, so it wraps below it instead.
@@ -88,9 +77,7 @@ const CapabilityEditor = (props) => {
 
   const latestCapFieldRef = useRef(null);
 
-  const [isNarrow, setIsNarrow] = useState(
-    window.innerWidth > 0 && window.innerWidth < NARROW_LAYOUT_BREAKPOINT,
-  );
+  const [isNarrow, setIsNarrow] = useState(window.innerWidth > 0 && window.innerWidth < NARROW_LAYOUT_BREAKPOINT);
 
   const onSaveAsOk = () => saveSession({server, serverType, caps, name: saveAsText}, true);
 
@@ -188,10 +175,7 @@ const CapabilityEditor = (props) => {
           <Row gutter={8}>
             <Col flex="auto">
               <Form.Item>
-                <Checkbox
-                  checked={addVendorPrefixes}
-                  onChange={(e) => setAddVendorPrefixes(e.target.checked)}
-                >
+                <Checkbox checked={addVendorPrefixes} onChange={(e) => setAddVendorPrefixes(e.target.checked)}>
                   {t('autoAddPrefixes')}
                 </Checkbox>
               </Form.Item>
@@ -231,9 +215,7 @@ const CapabilityEditor = (props) => {
               status={isDuplicateCapsName ? 'error' : ''}
             />
           </Space.Compact>
-          {isDuplicateCapsName && (
-            <p className={builderStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>
-          )}
+          {isDuplicateCapsName && <p className={builderStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>}
         </Modal>
       </Splitter.Panel>
     </Splitter>

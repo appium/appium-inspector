@@ -25,9 +25,7 @@ const SelectedElementAttributesTable = ({elementAttributesData}) => {
     },
   ];
 
-  return (
-    <SelectedElementTable columns={elementAttributesCols} dataSource={elementAttributesData} />
-  );
+  return <SelectedElementTable columns={elementAttributesCols} dataSource={elementAttributesData} />;
 };
 
 export default SelectedElementAttributesTable;

@@ -1,5 +1,6 @@
-import styles from './CommandResult.module.css';
 import CommandResultBaseTable from './CommandResultBaseTable.jsx';
+
+import styles from './CommandResult.module.css';
 
 /**
  * Table rendering the raw command results.

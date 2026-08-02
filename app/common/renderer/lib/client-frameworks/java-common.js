@@ -147,8 +147,7 @@ driver.perform(Arrays.asList(swipe));
   codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
     try {
       const settings = Object.entries(settingsJson).map(
-        ([settingName, settingValue]) =>
-          `driver.setSetting("${settingName}", ${this.getJavaVal(settingValue)});`,
+        ([settingName, settingValue]) => `driver.setSetting("${settingName}", ${this.getJavaVal(settingValue)});`,
       );
       return settings.join('\n');
     } catch {
@@ -251,16 +250,7 @@ var timeouts = Map.ofEntries(
     return `driver.setLocation(new Location(${latitude}, ${longitude}, ${altitude}));`;
   }
 
-  codeFor_rotateDevice(
-    varNameIgnore,
-    varIndexIgnore,
-    x,
-    y,
-    radius,
-    rotation,
-    touchCount,
-    duration,
-  ) {
+  codeFor_rotateDevice(varNameIgnore, varIndexIgnore, x, y, radius, rotation, touchCount, duration) {
     return `driver.rotate(new DeviceRotation(${x}, ${y}, ${radius}, ${rotation}, ${touchCount}, ${duration}));`;
   }
 

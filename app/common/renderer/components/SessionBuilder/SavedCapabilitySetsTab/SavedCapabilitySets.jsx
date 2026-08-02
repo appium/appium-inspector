@@ -10,6 +10,7 @@ import {
 } from '../../../constants/session-builder.js';
 import FileUploader from '../../FileUploader.jsx';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
+
 import styles from './SavedCapabilitySets.module.css';
 
 const dataSource = (savedSessions, t) => {
@@ -109,10 +110,7 @@ const SavedCapabilitySets = (props) => {
             />
           </Tooltip>
           <Tooltip zIndex={3} title={t('Export to File')}>
-            <Button
-              icon={<IconFileExport size={18} />}
-              onClick={() => findAndExportSavedSession(record.key)}
-            />
+            <Button icon={<IconFileExport size={18} />} onClick={() => findAndExportSavedSession(record.key)} />
           </Tooltip>
           <Tooltip zIndex={3} title={t('Delete')}>
             <Popconfirm
@@ -169,10 +167,7 @@ const SavedCapabilitySets = (props) => {
         </Spin>
       </Splitter.Panel>
       <Splitter.Panel collapsible min={400}>
-        <CapabilityJSON
-          {...props}
-          title={capsUUID ? getSessionById(savedSessions, capsUUID, t).name : null}
-        />
+        <CapabilityJSON {...props} title={capsUUID ? getSessionById(savedSessions, capsUUID, t).name : null} />
       </Splitter.Panel>
     </Splitter>
   );

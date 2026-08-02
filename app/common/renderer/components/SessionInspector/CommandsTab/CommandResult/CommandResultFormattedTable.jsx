@@ -2,14 +2,14 @@ import {Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {copyToClipboard} from '../../../../utils/other.js';
-import styles from './CommandResult.module.css';
 import CommandResultBaseTable from './CommandResultBaseTable.jsx';
+
+import styles from './CommandResult.module.css';
 
 const LABEL_PROPERTY = 'property';
 const LABEL_VALUE = 'value';
 
-const stringifyValue = (val) =>
-  typeof val === 'object' && val !== null ? JSON.stringify(val, null, 2) : String(val);
+const stringifyValue = (val) => (typeof val === 'object' && val !== null ? JSON.stringify(val, null, 2) : String(val));
 
 /**
  * Title of a column in the table rendering the formatted command results.
@@ -97,9 +97,7 @@ const handleArrayOfNonObjects = (data) => {
 // Will not render any non-object entries!
 const handleArrayOfObjects = (data) => {
   // Filter to only objects (excluding arrays) to avoid runtime errors
-  const safeData = data.filter(
-    (entry) => typeof entry === 'object' && entry !== null && !Array.isArray(entry),
-  );
+  const safeData = data.filter((entry) => typeof entry === 'object' && entry !== null && !Array.isArray(entry));
   const allObjectKeys = [...new Set(safeData.flatMap(Object.keys))];
   const columns = allObjectKeys.map((key) =>
     createColumn(
@@ -140,9 +138,7 @@ const createTableResult = (data) => {
 const CommandResultFormattedTable = ({result, isPrimitive}) => {
   const {dataSource, columns} = createTableResult(result);
 
-  return (
-    <CommandResultBaseTable dataSource={dataSource} columns={columns} showHeader={!isPrimitive} />
-  );
+  return <CommandResultBaseTable dataSource={dataSource} columns={columns} showHeader={!isPrimitive} />;
 };
 
 export default CommandResultFormattedTable;

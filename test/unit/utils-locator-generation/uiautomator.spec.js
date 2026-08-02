@@ -12,9 +12,9 @@ describe('utils/locator-generation/uiautomator.js', function () {
           <child-node resource-id='world'>World</child-node>
         </parent-node>
       </xml>`);
-      expect(
-        getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('child-node')[0], '0.0'),
-      ).toBe('new UiSelector().resourceId("hello")');
+      expect(getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('child-node')[0], '0.0')).toBe(
+        'new UiSelector().resourceId("hello")',
+      );
     });
 
     it('should use indices if the valid node attributes are not unique', function () {
@@ -24,9 +24,9 @@ describe('utils/locator-generation/uiautomator.js', function () {
           <grandchild class='grandchild'>World</grandchild>
         </child>
       </root>`);
-      expect(
-        getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('grandchild')[0], '0.0'),
-      ).toBe('new UiSelector().className("grandchild").instance(0)');
+      expect(getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('grandchild')[0], '0.0')).toBe(
+        'new UiSelector().className("grandchild").instance(0)',
+      );
     });
 
     it('should return null if looking for element outside the last direct child of the hierarchy', function () {
@@ -40,9 +40,7 @@ describe('utils/locator-generation/uiautomator.js', function () {
           <grandchild resource-id='bar'>Bar</grandchild>
         </child>
       </root>`);
-      expect(
-        getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('grandchild')[0], '0.0'),
-      ).toBeNull();
+      expect(getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('grandchild')[0], '0.0')).toBeNull();
     });
   });
 });

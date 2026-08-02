@@ -77,22 +77,12 @@ describe('utils/locator-generation/simple.js', function () {
     // Attribute name specification is a superset of the tag name spec:
     // https://www.w3.org/TR/REC-xml/#sec-attribute-types
     it('should handle valid attribute names and values with special characters', function () {
-      expect(areAttrAndValueUnique('_-.234·', 'ID', xmlToDOM(`<node _-.234·='ID'></node>`))).toBe(
-        true,
-      );
+      expect(areAttrAndValueUnique('_-.234·', 'ID', xmlToDOM(`<node _-.234·='ID'></node>`))).toBe(true);
       expect(
-        areAttrAndValueUnique(
-          'id',
-          `!@£$#%^&*(-_=/\\.>°§"`,
-          xmlToDOM(`<node id='!@£$#%^&*(-_=/\\.>°§"'></node>`),
-        ),
+        areAttrAndValueUnique('id', `!@£$#%^&*(-_=/\\.>°§"`, xmlToDOM(`<node id='!@£$#%^&*(-_=/\\.>°§"'></node>`)),
       ).toBe(true);
       expect(
-        areAttrAndValueUnique(
-          'id',
-          `!@£$#%^&*(-_=/\\.>°§'`,
-          xmlToDOM(`<node id="!@£$#%^&*(-_=/\\.>°§'"></node>`),
-        ),
+        areAttrAndValueUnique('id', `!@£$#%^&*(-_=/\\.>°§'`, xmlToDOM(`<node id="!@£$#%^&*(-_=/\\.>°§'"></node>`)),
       ).toBe(true);
     });
   });
@@ -100,13 +90,11 @@ describe('utils/locator-generation/simple.js', function () {
   describe('#getSimpleSuggestedLocators', function () {
     describe('native context', function () {
       it('should find ID', function () {
-        expect(getSimpleSuggestedLocators({attributes: {'resource-id': 'Resource ID'}}).id).toBe(
+        expect(getSimpleSuggestedLocators({attributes: {'resource-id': 'Resource ID'}}).id).toBe('Resource ID');
+        expect(getSimpleSuggestedLocators({attributes: {id: 'ID'}}).id).toBe('ID');
+        expect(getSimpleSuggestedLocators({attributes: {id: 'ID', 'resource-id': 'Resource ID'}}).id).toBe(
           'Resource ID',
         );
-        expect(getSimpleSuggestedLocators({attributes: {id: 'ID'}}).id).toBe('ID');
-        expect(
-          getSimpleSuggestedLocators({attributes: {id: 'ID', 'resource-id': 'Resource ID'}}).id,
-        ).toBe('Resource ID');
       });
 
       it('should not find ID if ID is not unique', function () {
@@ -122,14 +110,10 @@ describe('utils/locator-generation/simple.js', function () {
       });
 
       it('should find accessibility id', function () {
-        expect(
-          getSimpleSuggestedLocators({attributes: {'content-desc': 'Content Desc'}})[
-            'accessibility id'
-          ],
-        ).toBe('Content Desc');
-        expect(getSimpleSuggestedLocators({attributes: {name: 'Name'}})['accessibility id']).toBe(
-          'Name',
+        expect(getSimpleSuggestedLocators({attributes: {'content-desc': 'Content Desc'}})['accessibility id']).toBe(
+          'Content Desc',
         );
+        expect(getSimpleSuggestedLocators({attributes: {name: 'Name'}})['accessibility id']).toBe('Name');
         expect(
           getSimpleSuggestedLocators(
             {attributes: {'content-desc': 'Name'}},
@@ -139,9 +123,7 @@ describe('utils/locator-generation/simple.js', function () {
           )['accessibility id'],
         ).toBe('Name');
         expect(
-          getSimpleSuggestedLocators({attributes: {'content-desc': 'Content Desc', name: 'Name'}})[
-            'accessibility id'
-          ],
+          getSimpleSuggestedLocators({attributes: {'content-desc': 'Content Desc', name: 'Name'}})['accessibility id'],
         ).toBe('Content Desc');
       });
 
@@ -158,12 +140,8 @@ describe('utils/locator-generation/simple.js', function () {
       });
 
       it('should find class name', function () {
-        expect(getSimpleSuggestedLocators({attributes: {class: 'The Class'}})['class name']).toBe(
-          'The Class',
-        );
-        expect(getSimpleSuggestedLocators({attributes: {type: 'The Type'}})['class name']).toBe(
-          'The Type',
-        );
+        expect(getSimpleSuggestedLocators({attributes: {class: 'The Class'}})['class name']).toBe('The Class');
+        expect(getSimpleSuggestedLocators({attributes: {type: 'The Type'}})['class name']).toBe('The Type');
         expect(
           getSimpleSuggestedLocators(
             {attributes: {type: 'The Class'}},
@@ -172,11 +150,9 @@ describe('utils/locator-generation/simple.js', function () {
           </root>`),
           )['class name'],
         ).toBe('The Class');
-        expect(
-          getSimpleSuggestedLocators({attributes: {class: 'The Class', type: 'The Type'}})[
-            'class name'
-          ],
-        ).toBe('The Type');
+        expect(getSimpleSuggestedLocators({attributes: {class: 'The Class', type: 'The Type'}})['class name']).toBe(
+          'The Type',
+        );
       });
 
       it('should not find class name if class name is not unique', function () {
@@ -192,9 +168,7 @@ describe('utils/locator-generation/simple.js', function () {
       });
 
       it('should not use any non-native context locator strategies', function () {
-        expect(
-          getSimpleSuggestedLocators({tag: 'tag', attributes: {}})['tag name'],
-        ).toBeUndefined();
+        expect(getSimpleSuggestedLocators({tag: 'tag', attributes: {}})['tag name']).toBeUndefined();
       });
     });
 
@@ -217,9 +191,7 @@ describe('utils/locator-generation/simple.js', function () {
       });
 
       it('should find ID', function () {
-        expect(
-          getSimpleSuggestedLocators({attributes: {id: 'ID'}}, null, false)['css selector'],
-        ).toBe('#ID');
+        expect(getSimpleSuggestedLocators({attributes: {id: 'ID'}}, null, false)['css selector']).toBe('#ID');
       });
 
       it('should not find ID if ID is not unique', function () {
@@ -237,9 +209,7 @@ describe('utils/locator-generation/simple.js', function () {
 
       it('should find and escape unique ID with special characters', function () {
         expect(
-          getSimpleSuggestedLocators({attributes: {id: '!@£$#%^&*(-_=/\\.>°§"'}}, null, false)[
-            'css selector'
-          ],
+          getSimpleSuggestedLocators({attributes: {id: '!@£$#%^&*(-_=/\\.>°§"'}}, null, false)['css selector'],
         ).toBe('#\\!\\@£\\$\\#\\%\\^\\&\\*\\(-_\\=\\/\\\\\\.\\>°§\\"');
       });
 

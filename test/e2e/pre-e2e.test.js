@@ -3,50 +3,23 @@ import {join} from 'node:path';
 
 import {fs, logger} from '@appium/support';
 import {retryInterval} from 'asyncbox';
-import {expect} from 'vitest';
+import {afterAll, beforeAll, expect} from 'vitest';
 
 const platform = os.platform();
 const appName = 'inspector';
 const log = logger.getLogger('E2E Test');
 
 describe('E2E tests', function () {
-  before(async function () {
+  beforeAll(async function () {
     let appPath;
     // let args = [];
     if (process.env.SPECTRON_TEST_PROD_BINARIES) {
       if (platform === 'linux') {
-        appPath = join(
-          __dirname,
-          '..',
-          '..',
-          appName,
-          'release',
-          'linux-unpacked',
-          'appium-desktop',
-        );
+        appPath = join(__dirname, '..', '..', appName, 'release', 'linux-unpacked', 'appium-desktop');
       } else if (platform === 'darwin') {
-        appPath = join(
-          __dirname,
-          '..',
-          '..',
-          appName,
-          'release',
-          'mac',
-          'Appium.app',
-          'Contents',
-          'MacOS',
-          'Appium',
-        );
+        appPath = join(__dirname, '..', '..', appName, 'release', 'mac', 'Appium.app', 'Contents', 'MacOS', 'Appium');
       } else if (platform === 'win32') {
-        appPath = join(
-          __dirname,
-          '..',
-          '..',
-          appName,
-          'release',
-          'win-ia32-unpacked',
-          'Appium.exe',
-        );
+        appPath = join(__dirname, '..', '..', appName, 'release', 'win-ia32-unpacked', 'Appium.exe');
       }
     } else {
       appPath = require(join(__dirname, '..', '..', 'node_modules', 'electron'));
@@ -81,7 +54,7 @@ describe('E2E tests', function () {
     log.info(`App ready for automation`);
   });
 
-  after(function () {
+  afterAll(function () {
     if (this.app && this.app.isRunning()) {
       return this.app.stop();
     }

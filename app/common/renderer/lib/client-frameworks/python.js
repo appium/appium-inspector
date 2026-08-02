@@ -71,13 +71,9 @@ driver.quit()`;
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `${localVar} = driver.find_elements(by=${suffixMap[strategy]}, value=${JSON.stringify(
-        locator,
-      )})`;
+      return `${localVar} = driver.find_elements(by=${suffixMap[strategy]}, value=${JSON.stringify(locator)})`;
     } else {
-      return `${localVar} = driver.find_element(by=${suffixMap[strategy]}, value=${JSON.stringify(
-        locator,
-      )})`;
+      return `${localVar} = driver.find_element(by=${suffixMap[strategy]}, value=${JSON.stringify(locator)})`;
     }
   }
 

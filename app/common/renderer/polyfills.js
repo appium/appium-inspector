@@ -1,10 +1,8 @@
 /**
- * The '#local-polyfills' alias is defined in both Vite config files.
- * Since both files define different resolution paths,
- * they cannot be added to tsconfig and eslint configurations
+ * The '#local-polyfills' alias is defined in both Vite config files
  */
 
-import {settings} from '#local-polyfills'; // eslint-disable-line import-x/no-unresolved
+import {settings} from '#local-polyfills';
 
 import {DEFAULT_SETTINGS} from '../shared/setting-defs.js';
 
@@ -19,10 +17,4 @@ export async function setSetting(setting, value) {
   await settings.set(setting, value);
 }
 
-export {
-  loadSessionFileIfOpened,
-  localesPath,
-  openLink,
-  setTheme,
-  updateLanguage,
-} from '#local-polyfills'; // eslint-disable-line import-x/no-unresolved
+export {loadSessionFileIfOpened, localesPath, openLink, setTheme, updateLanguage} from '#local-polyfills';

@@ -4,6 +4,7 @@ import {useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {ROW} from '../../../../constants/antd-types.js';
+
 import styles from './SelectedElement.module.css';
 
 /**
@@ -33,9 +34,7 @@ const SelectedElementActions = (props) => {
           icon={<IconFocus2 size={18} />}
           loading={tapButtonLoadingState}
           id="btnTapElement"
-          onClick={() =>
-            applyClientMethod({methodName: 'elementClick', elementId: selectedElementId})
-          }
+          onClick={() => applyClientMethod({methodName: 'elementClick', elementId: selectedElementId})}
         />
       </Tooltip>
       <Space.Compact className={styles.elementKeyInputActions}>
@@ -65,9 +64,7 @@ const SelectedElementActions = (props) => {
             disabled={elementActionsDisabled}
             id="btnClearElement"
             icon={<IconEraser size={18} />}
-            onClick={() =>
-              applyClientMethod({methodName: 'elementClear', elementId: selectedElementId})
-            }
+            onClick={() => applyClientMethod({methodName: 'elementClear', elementId: selectedElementId})}
           />
         </Tooltip>
       </Space.Compact>

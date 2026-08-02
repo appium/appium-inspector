@@ -2,30 +2,33 @@
   "name": "appium-inspector",
   "version": "2026.7.1",
   "description": "An app inspector for use with an Appium server",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/appium/appium-inspector.git"
-  },
-  "author": {
-    "name": "Appium Developers",
-    "url": "https://github.com/appium"
-  },
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/appium/appium-inspector/issues"
-  },
   "keywords": [
     "appium"
   ],
   "homepage": "https://github.com/appium/appium-inspector",
-  "main": "./dist/main/main.js",
+  "bugs": {
+    "url": "https://github.com/appium/appium-inspector/issues"
+  },
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Appium Developers",
+    "url": "https://github.com/appium"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appium/appium-inspector.git"
+  },
+  "bin": {
+    "electron": "./node_modules/.bin/electron"
+  },
   "type": "module",
+  "main": "./dist/main/main.js",
   "scripts": {
-    "lint": "eslint . --fix",
-    "prettier": "prettier . -w",
-    "test": "npm run test:lint && npm run test:unit && npm run test:integration",
-    "test:lint": "eslint .",
-    "test:format": "prettier . -c",
+    "lint": "oxlint -c oxlint.config.mjs .",
+    "lint:fix": "oxlint -c oxlint.config.mjs --fix .",
+    "format": "oxfmt -c oxfmt.config.mjs .",
+    "format:check": "oxfmt -c oxfmt.config.mjs --check .",
+    "test": "npm run lint && npm run test:unit && npm run test:integration",
     "test:unit": "vitest run unit",
     "test:integration": "vitest run integration",
     "test:e2e": "echo 'Currently not functional - TODO: fixme'",
@@ -54,14 +57,6 @@
     "postversion": "git pull --tags && git push && git push --tags",
     "crowdin-sync": "node ./scripts/crowdin-sync-translations.mjs",
     "crowdin-update": "node ./scripts/crowdin-update-resources.mjs"
-  },
-  "prettier": {
-    "bracketSpacing": false,
-    "printWidth": 100,
-    "singleQuote": true
-  },
-  "bin": {
-    "electron": "./node_modules/.bin/electron"
   },
   "dependencies": {
     "@ant-design/icons": "6.3.2",
@@ -92,11 +87,10 @@
   },
   "devDependencies": {
     "@appium/docutils": "2.5.2",
-    "@appium/eslint-config-appium-ts": "3.2.4",
     "@appium/fake-driver": "6.2.2",
+    "@appium/oxc-config": "1.1.0",
     "@appium/support": "7.2.6",
     "@appium/tsconfig": "1.2.0",
-    "@eslint-react/eslint-plugin": "5.18.0",
     "@tomjs/electron-devtools-installer": "4.0.1",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
@@ -106,11 +100,6 @@
     "electron": "41.10.3",
     "electron-builder": "26.15.3",
     "electron-vite": "6.0.0-beta.1",
-    "eslint": "10.8.0",
-    "eslint-plugin-react-hooks": "7.1.1",
-    "eslint-plugin-simple-import-sort": "14.0.0",
-    "globals": "17.8.0",
-    "prettier": "3.9.6",
     "rimraf": "6.1.3",
     "vite": "7.3.6",
     "vite-plugin-electron-renderer": "0.14.7",
@@ -120,8 +109,8 @@
     "node": "^20.19.0 || ^22.12.0 || >=24.0.0",
     "npm": ">=10.x"
   },
-  "desktopName": "io.appium.inspector",
   "allowScripts": {
     "electron": true
-  }
+  },
+  "desktopName": "io.appium.inspector"
 }

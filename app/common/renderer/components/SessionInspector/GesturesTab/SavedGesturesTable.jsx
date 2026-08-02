@@ -103,10 +103,7 @@ const SavedGesturesTable = (props) => {
       columns={columns}
       scroll={{y: 'calc(100vh - 32em)'}}
       footer={() => (
-        <SavedGesturesTableFooter
-          showGestureEditor={showGestureEditor}
-          importGestureFiles={importGestureFiles}
-        />
+        <SavedGesturesTableFooter showGestureEditor={showGestureEditor} importGestureFiles={importGestureFiles} />
       )}
     />
   );
