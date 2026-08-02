@@ -5,12 +5,16 @@
 .headerButtons {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: safe center;
   padding: 10px 0;
   gap: 10px;
   width: 100%;
-  height: 50px;
+  min-height: 50px;
   -webkit-app-region: drag;
+}
+
+.headerButtonsSpace {
+  justify-content: center;
 }
 
 .headerButtons :global(.ant-divider-horizontal) {

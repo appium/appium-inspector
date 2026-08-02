@@ -1,6 +1,7 @@
 .screenshotContainer {
   max-width: 500px;
   max-height: calc(100% - 50px);
+  min-width: 200px;
   flex-grow: 1;
   flex-shrink: 2;
   flex-basis: 400px;

@@ -1,4 +1,10 @@
-import {IconDownload, IconFiles, IconFileText} from '@tabler/icons-react';
+import {
+  IconChevronDown,
+  IconChevronUp,
+  IconDownload,
+  IconFiles,
+  IconFileText,
+} from '@tabler/icons-react';
 import {Button, Card, Flex, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
@@ -26,9 +32,12 @@ const AppSourcePanelTitle = () => {
 };
 
 /**
- * Header action buttons for source XML copy and download.
+ * Header action buttons for source XML copy and download, plus (when panels
+ * are stacked) the toggle that collapses/expands the card body while keeping
+ * its header visible - the side-by-side layout already offers a full
+ * collapse via the Splitter divider.
  */
-const AppSourceHeaderButtons = ({sourceXML}) => {
+const AppSourceHeaderButtons = ({sourceXML, collapsible, collapsed, onToggleCollapse}) => {
   const {t} = useTranslation();
 
   return (
@@ -49,6 +58,15 @@ const AppSourceHeaderButtons = ({sourceXML}) => {
           onClick={() => downloadXML(sourceXML)}
         />
       </Tooltip>
+      {collapsible && (
+        <Tooltip title={t(collapsed ? 'Expand Panel' : 'Collapse Panel')}>
+          <Button
+            type="text"
+            icon={collapsed ? <IconChevronDown size={18} /> : <IconChevronUp size={18} />}
+            onClick={onToggleCollapse}
+          />
+        </Tooltip>
+      )}
     </span>
   );
 };
@@ -56,9 +74,19 @@ const AppSourceHeaderButtons = ({sourceXML}) => {
 /**
  * Wrapper card for the app source tree.
  */
-const AppSourceCard = ({sourceXML, children}) => (
-  <Card title={<AppSourcePanelTitle />} extra={<AppSourceHeaderButtons sourceXML={sourceXML} />}>
-    {children}
+const AppSourceCard = ({sourceXML, collapsible, collapsed, onToggleCollapse, children}) => (
+  <Card
+    title={<AppSourcePanelTitle />}
+    extra={
+      <AppSourceHeaderButtons
+        sourceXML={sourceXML}
+        collapsible={collapsible}
+        collapsed={collapsed}
+        onToggleCollapse={onToggleCollapse}
+      />
+    }
+  >
+    {!collapsed && children}
   </Card>
 );
 
