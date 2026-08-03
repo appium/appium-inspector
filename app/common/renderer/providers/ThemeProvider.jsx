@@ -1,5 +1,5 @@
 import {App, ConfigProvider, Layout, theme} from 'antd';
-import {createContext, useState} from 'react';
+import {createContext, useMemo, useState} from 'react';
 
 import {PREFERRED_THEME} from '../../shared/setting-defs.js';
 import Notification from '../components/Notification.jsx';
@@ -85,8 +85,10 @@ export const ThemeProvider = ({children}) => {
     },
   };
 
+  const themeContext = useMemo(() => ({updateTheme, preferredTheme, isDarkTheme}), [preferredTheme, isDarkTheme]);
+
   return (
-    <ThemeContext value={{updateTheme, preferredTheme, isDarkTheme}}>
+    <ThemeContext value={themeContext}>
       <ConfigProvider theme={themeConfig}>
         <App>
           <Layout>{children}</Layout>

@@ -28,8 +28,8 @@ const CapabilityControl = ({cap, onSetCapabilityParam, onPressEnter, isEditingDe
         <Switch
           disabled={isEditingDesiredCaps}
           id={id}
-          checkedChildren={'true'}
-          unCheckedChildren={'false'}
+          checkedChildren="true"
+          unCheckedChildren="false"
           placeholder={t('Value')}
           checked={cap.value}
           onChange={(value) => onSetCapabilityParam(value)}

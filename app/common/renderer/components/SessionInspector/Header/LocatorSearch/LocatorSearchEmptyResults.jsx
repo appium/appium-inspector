@@ -26,13 +26,11 @@ const DisableIdAutocompletionMessage = ({
     !sessionSettings.disableIdLocatorAutocompletion;
 
   return (
-    <>
-      {shouldShowMessage && (
-        <Row>
-          <Alert title={t('idAutocompletionCanBeDisabled')} type={ALERT.INFO} showIcon />
-        </Row>
-      )}
-    </>
+    shouldShowMessage && (
+      <Row>
+        <Alert title={t('idAutocompletionCanBeDisabled')} type={ALERT.INFO} showIcon />
+      </Row>
+    )
   );
 };
 
