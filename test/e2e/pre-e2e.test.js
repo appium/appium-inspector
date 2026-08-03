@@ -49,7 +49,7 @@ describe('E2E tests', function () {
     await retryInterval(20, 1000, async function () {
       const handles = await client.getWindowHandles();
       await client.switchToWindow(handles[0]);
-      expect(await client.getUrl()).toContain('index.html');
+      expect(await client.getUrl()).toContain('index.html'); // oxlint-disable-line vitest/no-standalone-expect -- WIP
     });
     log.info(`App ready for automation`);
   });

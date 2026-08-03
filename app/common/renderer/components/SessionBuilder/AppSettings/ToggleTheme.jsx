@@ -35,7 +35,7 @@ const ToggleTheme = () => {
             <Button
               block
               styles={{root: {height: 'max(40px, 100%)', whiteSpace: 'normal'}}}
-              size={'large'}
+              size="large"
               type={preferredTheme === value ? BUTTON.PRIMARY : BUTTON.DEFAULT}
               icon={icon}
               onClick={() => updateTheme(value)}

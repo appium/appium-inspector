@@ -22,6 +22,8 @@ function testXPath(doc, node, expectedXPath) {
 
 describe('utils/locator-generation/xpath.js', function () {
   describe('#getOptimalXPath', function () {
+    // oxlint-disable vitest/expect-expect -- all tests use the testXPath helper
+
     describe('using only the node itself', function () {
       it('should use a relative xpath if the node has no attributes', function () {
         const doc = xmlToDOM(`<root></root>`);
@@ -368,6 +370,8 @@ describe('utils/locator-generation/xpath.js', function () {
         testXPath(doc, nodes[3], '(/root/parent[2]/node[@id="bar"])[2]');
       });
     });
+
+    // oxlint-enable vitest/expect-expect
 
     describe('when exceptions are thrown', function () {
       it('should keep going if xpath.select throws an exception', function () {
