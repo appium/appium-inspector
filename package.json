@@ -64,7 +64,7 @@
     "@tabler/icons-react": "3.46.0",
     "@wdio/protocols": "9.30.0",
     "@xmldom/xmldom": "0.9.10",
-    "antd": "6.5.2",
+    "antd": "6.5.3",
     "cheerio": "1.2.0",
     "css.escape": "1.5.1",
     "dayjs": "1.11.21",
