@@ -91,6 +91,8 @@
   "Search for element": "要素を検索する",
   "App Source": "アプリのソース",
   "Collapse All": "Collapse All",
+  "Collapse Panel": "Collapse Panel",
+  "Expand Panel": "Expand Panel",
   "Toggle Attributes": "属性の切り替え",
   "Copy XML Source to Clipboard": "XML形式でソースをクリップボードにコピーする",
   "Download Source as .XML File": ".XML ファイルとしてソースをダウンロードする",

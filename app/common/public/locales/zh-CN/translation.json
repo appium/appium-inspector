@@ -91,6 +91,8 @@
   "Search for element": "搜索元素",
   "App Source": "应用源",
   "Collapse All": "折叠全部",
+  "Collapse Panel": "Collapse Panel",
+  "Expand Panel": "Expand Panel",
   "Toggle Attributes": "切换属性",
   "Copy XML Source to Clipboard": "将 XML 源复制到剪贴板",
   "Download Source as .XML File": "下载源文件为 .XML 文件",
