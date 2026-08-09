@@ -91,6 +91,8 @@
   "Search for element": "Поиск элемента",
   "App Source": "Источник приложения",
   "Collapse All": "Свернуть все",
+  "Collapse Panel": "Collapse Panel",
+  "Expand Panel": "Expand Panel",
   "Toggle Attributes": "Свернуть/развернуть атрибуты",
   "Copy XML Source to Clipboard": "Копировать XML в буфер обмена",
   "Download Source as .XML File": "Скачать исходный код как .XML файл",

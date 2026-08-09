@@ -91,6 +91,8 @@
   "Search for element": "Öğe Ara",
   "App Source": "Uygulama kaynağı",
   "Collapse All": "Collapse All",
+  "Collapse Panel": "Collapse Panel",
+  "Expand Panel": "Expand Panel",
   "Toggle Attributes": "Nitelikleri Değiştir",
   "Copy XML Source to Clipboard": "Copy XML Source to Clipboard",
   "Download Source as .XML File": "Download Source as .XML File",

@@ -91,6 +91,8 @@
   "Search for element": "Element 검색하기",
   "App Source": "앱 소스",
   "Collapse All": "모두 접기",
+  "Collapse Panel": "Collapse Panel",
+  "Expand Panel": "Expand Panel",
   "Toggle Attributes": "토글 속성",
   "Copy XML Source to Clipboard": "XML Source 클립보드에 복사",
   "Download Source as .XML File": " .XML File로 다운로드",

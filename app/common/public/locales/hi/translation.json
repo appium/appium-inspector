@@ -91,6 +91,8 @@
   "Search for element": "एलिमेंट की खोज करें",
   "App Source": "App Source",
   "Collapse All": "Collapse All",
+  "Collapse Panel": "Collapse Panel",
+  "Expand Panel": "Expand Panel",
   "Toggle Attributes": "Toggle Attributes",
   "Copy XML Source to Clipboard": "XML स्रोत को क्लिपबोर्ड पर कॉपी करें",
   "Download Source as .XML File": "Download Source as .XML File",

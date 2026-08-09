@@ -91,6 +91,8 @@
   "Search for element": "Procurar pelo elemento",
   "App Source": "Fonte do aplicativo",
   "Collapse All": "Collapse All",
+  "Collapse Panel": "Collapse Panel",
+  "Expand Panel": "Expand Panel",
   "Toggle Attributes": "Alternar atributos",
   "Copy XML Source to Clipboard": "Copiar XML Fonte para Área de Transferência",
   "Download Source as .XML File": "Baixar Fonte como Arquivo .XML",
