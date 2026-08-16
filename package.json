@@ -63,7 +63,7 @@
     "@reduxjs/toolkit": "2.12.0",
     "@tabler/icons-react": "3.46.0",
     "@wdio/protocols": "9.30.1",
-    "@xmldom/xmldom": "0.9.10",
+    "@xmldom/xmldom": "0.9.11",
     "antd": "6.6.0",
     "cheerio": "1.2.0",
     "css.escape": "1.5.1",
