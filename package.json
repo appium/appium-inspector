@@ -95,7 +95,7 @@
     "@tomjs/electron-devtools-installer": "4.0.1",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
-    "@vitejs/plugin-react": "6.0.5",
+    "@vitejs/plugin-react": "6.1.0",
     "asyncbox": "6.4.2",
     "babel-plugin-react-compiler": "1.0.0",
     "electron": "41.10.6",
