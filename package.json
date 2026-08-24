@@ -82,7 +82,7 @@
     "react-refractor": "4.0.0",
     "react-router": "7.18.2",
     "sanitize-filename": "1.6.4",
-    "webdriver": "9.31.1",
+    "webdriver": "9.31.2",
     "xpath": "0.0.34"
   },
   "devDependencies": {
