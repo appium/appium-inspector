@@ -86,7 +86,7 @@
     "xpath": "0.0.34"
   },
   "devDependencies": {
-    "@appium/docutils": "2.5.2",
+    "@appium/docutils": "3.0.0",
     "@appium/fake-driver": "6.2.3",
     "@appium/oxc-config": "1.1.1",
     "@appium/support": "7.2.7",
