@@ -15,7 +15,14 @@ import styles from './SessionInspector.module.css';
  * Tabs shown to the right of the screenshot on the Session Inspector screen.
  */
 const SessionInspectorTabs = (props) => {
-  const {selectedInspectorTab, selectInspectorTab, isGestureEditorVisible, showScreenshot} = props;
+  const {
+    selectedInspectorTab,
+    selectInspectorTab,
+    isGestureEditorVisible,
+    showScreenshot,
+    applyClientMethod,
+    getSupportedSessionMethods,
+  } = props;
 
   const {t} = useTranslation();
 
@@ -30,7 +37,9 @@ const SessionInspectorTabs = (props) => {
       label: t('Commands'),
       key: INSPECTOR_TABS.COMMANDS,
       disabled: !showScreenshot,
-      children: <Commands {...props} />,
+      children: (
+        <Commands applyClientMethod={applyClientMethod} getSupportedSessionMethods={getSupportedSessionMethods} />
+      ),
     },
     {
       label: t('Gestures'),
