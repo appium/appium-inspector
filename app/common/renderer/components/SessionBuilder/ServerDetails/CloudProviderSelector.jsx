@@ -58,7 +58,12 @@ const CloudProviderSelector = (props) => {
                 return (
                   provider && (
                     <Col span={12} key={providerName}>
-                      <Button role="checkbox" style={style} onClick={() => toggleVisibleProvider(providerName)}>
+                      <Button
+                        aria-label={providerName}
+                        role="checkbox"
+                        style={style}
+                        onClick={() => toggleVisibleProvider(providerName)}
+                      >
                         {provider.logo}
                       </Button>
                     </Col>

@@ -20,11 +20,16 @@ const addTick = (pointerKey, pointers, setPointers) => {
  */
 const AddNewTickButton = ({id, pointers, setPointers}) => {
   const {t} = useTranslation();
+  const addLabel = t('Add');
 
   return (
     <div className={styles.tickPlusBtnWrapper}>
-      <Tooltip title={t('Add')}>
-        <Button icon={<IconPlus size={18} />} onClick={() => addTick(id, pointers, setPointers)} />
+      <Tooltip title={addLabel}>
+        <Button
+          aria-label={addLabel}
+          icon={<IconPlus size={18} />}
+          onClick={() => addTick(id, pointers, setPointers)}
+        />
       </Tooltip>
     </div>
   );

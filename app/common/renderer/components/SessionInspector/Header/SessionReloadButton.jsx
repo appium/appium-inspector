@@ -9,10 +9,12 @@ import {BUTTON} from '../../../constants/antd-types.js';
  */
 const SessionReloadButton = ({autoSessionRestart, toggleAutoSessionRestart}) => {
   const {t} = useTranslation();
+  const toggleReloadLabel = t('ToggleRestartSession');
 
   return (
-    <Tooltip title={t('ToggleRestartSession')}>
+    <Tooltip title={toggleReloadLabel}>
       <Button
+        aria-label={toggleReloadLabel}
         id={autoSessionRestart ? 'btnDisableRestartSession' : 'btnEnableRestartSession'}
         icon={<IconRecycle size={16} />}
         type={autoSessionRestart ? BUTTON.PRIMARY : undefined}

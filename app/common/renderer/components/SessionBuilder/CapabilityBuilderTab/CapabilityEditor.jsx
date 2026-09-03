@@ -74,6 +74,8 @@ const CapabilityEditor = (props) => {
   } = props;
 
   const {t} = useTranslation();
+  const addLabel = t('Add');
+  const deleteLabel = t('Delete');
 
   const latestCapFieldRef = useRef(null);
 
@@ -160,8 +162,9 @@ const CapabilityEditor = (props) => {
                         onChange={(e) => setCapabilityParam(cap.id, 'enabled', e.target.checked)}
                       />
                     </Tooltip>
-                    <Tooltip title={t('Delete')} placement="right">
+                    <Tooltip title={deleteLabel} placement="right">
                       <Button
+                        aria-label={deleteLabel}
                         {...{disabled: caps.length <= 1 || isEditingDesiredCaps}}
                         icon={<IconTrash size={18} />}
                         onClick={() => removeCapability(cap.id)}
@@ -182,8 +185,9 @@ const CapabilityEditor = (props) => {
             </Col>
             <Col flex="40px">
               <Form.Item>
-                <Tooltip title={t('Add')} placement="right">
+                <Tooltip title={addLabel} placement="right">
                   <Button
+                    aria-label={addLabel}
                     disabled={isEditingDesiredCaps}
                     id="btnAddDesiredCapability"
                     icon={<IconPlus size={18} />}

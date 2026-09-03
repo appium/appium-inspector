@@ -30,6 +30,10 @@ const CapabilityJSON = (props) => {
   } = props;
 
   const {t} = useTranslation();
+  const editLabel = t('Edit');
+  const cancelLabel = t('Cancel');
+  const saveLabel = t('Save');
+  const editRawLabel = t('Edit Raw JSON');
 
   const getHighlightedCaps = (caps) => {
     const formattedJson = JSON.stringify(getCapsObject(caps), null, 2);
@@ -64,8 +68,9 @@ const CapabilityJSON = (props) => {
       return null;
     } else if (!isEditingDesiredCapsName) {
       return (
-        <Tooltip title={t('Edit')}>
+        <Tooltip title={editLabel}>
           <Button
+            aria-label={editLabel}
             size="small"
             onClick={startDesiredCapsNameEditor}
             icon={<IconEdit size={14} />}
@@ -76,8 +81,9 @@ const CapabilityJSON = (props) => {
     } else {
       return (
         <>
-          <Tooltip title={t('Cancel')}>
+          <Tooltip title={cancelLabel}>
             <Button
+              aria-label={cancelLabel}
               size="small"
               color="danger"
               variant="outlined"
@@ -86,8 +92,9 @@ const CapabilityJSON = (props) => {
               className={styles.capsNameEditorButton}
             />
           </Tooltip>
-          <Tooltip title={t('Save')}>
+          <Tooltip title={saveLabel}>
             <Button
+              aria-label={saveLabel}
               size="small"
               color="primary"
               variant="outlined"
@@ -106,8 +113,9 @@ const CapabilityJSON = (props) => {
       <Card className={styles.formattedCaps} title={setCapsTitle()} extra={setCapsTitleButtons()}>
         <div className={styles.capsEditorControls}>
           {isEditingDesiredCaps && (
-            <Tooltip title={t('Cancel')}>
+            <Tooltip title={cancelLabel}>
               <Button
+                aria-label={cancelLabel}
                 color="danger"
                 variant="outlined"
                 onClick={abortDesiredCapsEditor}
@@ -117,8 +125,9 @@ const CapabilityJSON = (props) => {
             </Tooltip>
           )}
           {isEditingDesiredCaps && (
-            <Tooltip title={t('Save')}>
+            <Tooltip title={saveLabel}>
               <Button
+                aria-label={saveLabel}
                 color="primary"
                 variant="outlined"
                 onClick={() => saveRawDesiredCaps(caps, rawDesiredCaps)}
@@ -128,8 +137,8 @@ const CapabilityJSON = (props) => {
             </Tooltip>
           )}
           {!isEditingDesiredCaps && (
-            <Tooltip title={t('Edit Raw JSON')} placement="topRight">
-              <Button onClick={startDesiredCapsEditor} icon={<IconEdit size={18} />} />
+            <Tooltip title={editRawLabel} placement="topRight">
+              <Button aria-label={editRawLabel} onClick={startDesiredCapsEditor} icon={<IconEdit size={18} />} />
             </Tooltip>
           )}
         </div>

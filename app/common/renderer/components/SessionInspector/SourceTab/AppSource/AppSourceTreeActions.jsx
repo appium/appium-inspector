@@ -18,15 +18,23 @@ const AppSourceTreeActions = ({
   matchingElementsCount,
 }) => {
   const {t} = useTranslation();
+  const collapseLabel = t('Collapse All');
+  const toggleAttrsLabel = t('Toggle Attributes');
 
   return (
     <Row justify="center" type={ROW.FLEX} align="middle" className={styles.treeActions}>
       <Space.Compact>
-        <Tooltip title={t('Collapse All')}>
-          <Button id="btnCollapseAll" icon={<IconFold size={18} />} onClick={collapseAllNodes} />
-        </Tooltip>
-        <Tooltip title={t('Toggle Attributes')}>
+        <Tooltip title={collapseLabel}>
           <Button
+            aria-label={collapseLabel}
+            id="btnCollapseAll"
+            icon={<IconFold size={18} />}
+            onClick={collapseAllNodes}
+          />
+        </Tooltip>
+        <Tooltip title={toggleAttrsLabel}>
+          <Button
+            aria-label={toggleAttrsLabel}
             id="btnToggleAttrs"
             icon={<IconEyeCode size={18} />}
             onClick={toggleShowAttributes}

@@ -16,11 +16,13 @@ const DisplayControlsGroup = ({
   toggleMultiDisplayMode,
 }) => {
   const {t} = useTranslation();
+  const multiDisplayLabel = t('toggleMultiDisplayMode');
 
   return automationName === DRIVERS.UIAUTOMATOR2 ? (
     <Space.Compact>
-      <Tooltip title={t('toggleMultiDisplayMode')}>
+      <Tooltip title={multiDisplayLabel}>
         <Button
+          aria-label={multiDisplayLabel}
           icon={<IconCarouselHorizontal size={18} />}
           type={displays ? BUTTON.PRIMARY : BUTTON.DEFAULT}
           onClick={() => toggleMultiDisplayMode(displays)}

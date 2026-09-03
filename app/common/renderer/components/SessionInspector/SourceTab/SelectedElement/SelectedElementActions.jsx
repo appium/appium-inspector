@@ -21,6 +21,11 @@ const SelectedElementActions = (props) => {
     elementLocatorsData,
   } = props;
   const {t} = useTranslation();
+  const tapLabel = t('Tap');
+  const sendKeysLabel = t('Send Keys');
+  const clearLabel = t('Clear');
+  const getTimingLabel = t('Get Timing');
+
   const sendKeysRef = useRef(null);
 
   const tapButtonLoadingState =
@@ -28,8 +33,9 @@ const SelectedElementActions = (props) => {
 
   return (
     <Row justify="center" type={ROW.FLEX} align="middle" className={styles.selectedElemActions}>
-      <Tooltip title={t('Tap')}>
+      <Tooltip title={tapLabel}>
         <Button
+          aria-label={tapLabel}
           disabled={elementActionsDisabled}
           icon={<IconFocus2 size={18} />}
           loading={tapButtonLoadingState}
@@ -45,8 +51,9 @@ const SelectedElementActions = (props) => {
           allowClear={true}
           onChange={(e) => (sendKeysRef.current = e.target.value)}
         />
-        <Tooltip title={t('Send Keys')}>
+        <Tooltip title={sendKeysLabel}>
           <Button
+            aria-label={sendKeysLabel}
             disabled={elementActionsDisabled}
             id="btnSendKeysToElement"
             icon={<IconSend2 size={18} />}
@@ -59,8 +66,9 @@ const SelectedElementActions = (props) => {
             }
           />
         </Tooltip>
-        <Tooltip title={t('Clear')}>
+        <Tooltip title={clearLabel}>
           <Button
+            aria-label={clearLabel}
             disabled={elementActionsDisabled}
             id="btnClearElement"
             icon={<IconEraser size={18} />}
@@ -68,8 +76,9 @@ const SelectedElementActions = (props) => {
           />
         </Tooltip>
       </Space.Compact>
-      <Tooltip title={t('Get Timing')}>
+      <Tooltip title={getTimingLabel}>
         <Button
+          aria-label={getTimingLabel}
           disabled={elementActionsDisabled}
           id="btnGetTiming"
           icon={<IconStopwatch size={18} />}
