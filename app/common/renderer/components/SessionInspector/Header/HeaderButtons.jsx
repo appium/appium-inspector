@@ -3,7 +3,7 @@ import {Divider, Space} from 'antd';
 import {openLink} from '../../../polyfills.js';
 import ContextControlsGroup from './ContextControlsGroup.jsx';
 import DeviceControlsGroup from './DeviceControlsGroup.jsx';
-import DisplayControlsGroup from './DisplayControlsGroup.jsx';
+import DriverControlsGroup from './DriverControlsGroup.jsx';
 import GeneralControlsGroup from './GeneralControlsGroup.jsx';
 import SessionQuitControlsGroup from './SessionQuitControlsGroup.jsx';
 import SessionReloadButton from './SessionReloadButton.jsx';
@@ -26,11 +26,8 @@ const HeaderButtons = (props) => {
     setContext,
     autoSessionRestart,
     toggleAutoSessionRestart,
-    toggleMultiDisplayMode,
-    displays,
-    setCurrentDisplayId,
-    currentDisplayId,
     automationName,
+    sessionSettings,
     siriCommandValue,
     setSiriCommandValue,
     isSiriCommandModalVisible,
@@ -49,12 +46,10 @@ const HeaderButtons = (props) => {
           isSiriCommandModalVisible={isSiriCommandModalVisible}
           hideSiriCommandModal={hideSiriCommandModal}
         />
-        <DisplayControlsGroup
+        <DriverControlsGroup
           automationName={automationName}
-          displays={displays}
-          currentDisplayId={currentDisplayId}
-          setCurrentDisplayId={setCurrentDisplayId}
-          toggleMultiDisplayMode={toggleMultiDisplayMode}
+          sessionSettings={sessionSettings}
+          applyClientMethod={applyClientMethod}
         />
         <ContextControlsGroup
           selectAppMode={selectAppMode}
