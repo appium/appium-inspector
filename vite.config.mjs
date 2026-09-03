@@ -1,7 +1,6 @@
 import {join} from 'node:path';
 
-import babel from '@rolldown/plugin-babel';
-import react, {reactCompilerPreset} from '@vitejs/plugin-react';
+import react from '@vitejs/plugin-react';
 import {defineConfig} from 'vite';
 
 // https://vitejs.dev/config/
@@ -19,12 +18,7 @@ export default defineConfig(({command}) => {
       'process.argv': [],
       'process.env': {},
     },
-    plugins: [
-      react(),
-      babel({
-        presets: [reactCompilerPreset()],
-      }),
-    ],
+    plugins: [react({compiler: true})],
     resolve: {
       alias: {
         '#local-polyfills': join(import.meta.dirname, 'app', 'web', 'polyfills'),
