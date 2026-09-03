@@ -1,4 +1,4 @@
-import {IconChevronDown, IconChevronUp, IconDownload, IconFiles, IconTag} from '@tabler/icons-react';
+import {IconDownload, IconFiles, IconTag} from '@tabler/icons-react';
 import {Button, Card, Flex, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
@@ -21,24 +21,17 @@ const SelectedElementPanelTitle = () => {
 };
 
 /**
- * Buttons shown in the selected element's wrapper card, plus (when panels
- * are stacked) the toggle that collapses/expands the card body while keeping
- * its header visible - the side-by-side layout already offers a full
- * collapse via the Splitter divider.
+ * Buttons shown in the selected element's wrapper card.
  */
 const SelectedElementHeaderButtons = ({
   elementAttributesData,
   elementActionsDisabled,
   selectedElementId,
   applyClientMethod,
-  collapsible,
-  collapsed,
-  onToggleCollapse,
 }) => {
   const {t} = useTranslation();
   const copyAttrsLabel = t('Copy Attributes to Clipboard');
   const downloadLabel = t('Download Screenshot');
-  const togglePanelLabel = collapsed ? t('Expand Panel') : t('Collapse Panel');
 
   const downloadElementScreenshot = async (elementId) => {
     const elemScreenshot = await applyClientMethod({
@@ -73,16 +66,6 @@ const SelectedElementHeaderButtons = ({
           onClick={() => downloadElementScreenshot(selectedElementId)}
         />
       </Tooltip>
-      {collapsible && (
-        <Tooltip title={togglePanelLabel}>
-          <Button
-            aria-label={togglePanelLabel}
-            type="text"
-            icon={collapsed ? <IconChevronDown size={18} /> : <IconChevronUp size={18} />}
-            onClick={onToggleCollapse}
-          />
-        </Tooltip>
-      )}
     </span>
   );
 };
@@ -95,9 +78,6 @@ const SelectedElementCard = ({
   selectedElementId,
   elementActionsDisabled,
   elementAttributesData,
-  collapsible,
-  collapsed,
-  onToggleCollapse,
   children,
 }) => (
   <Card
@@ -109,13 +89,10 @@ const SelectedElementCard = ({
         elementActionsDisabled={elementActionsDisabled}
         selectedElementId={selectedElementId}
         applyClientMethod={applyClientMethod}
-        collapsible={collapsible}
-        collapsed={collapsed}
-        onToggleCollapse={onToggleCollapse}
       />
     }
   >
-    {!collapsed && children}
+    {children}
   </Card>
 );
 
