@@ -34,6 +34,14 @@ body::-webkit-scrollbar-corner {
   background-color: #662d91 !important;
 }
 
+/*
+Notifications can overlap the app header, whose drag region prevents interactions
+with anything overlapping it, unless excluded
+*/
+.ant-notification-list-content {
+  -webkit-app-region: no-drag;
+}
+
 .ant-spin,
 .ant-spin-container {
   height: 100%;
