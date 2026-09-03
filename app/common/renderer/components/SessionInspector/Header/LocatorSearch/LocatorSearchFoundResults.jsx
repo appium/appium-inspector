@@ -67,21 +67,27 @@ const LocatorSearchResultsElementActions = ({
   applyClientMethod,
 }) => {
   const {t} = useTranslation();
+  const findAndSelectLabel = t('Find and Select in Source');
+  const tapLabel = t('Tap');
+  const sendKeysLabel = t('Send Keys');
+  const clearLabel = t('Clear');
 
   const sendKeysRef = useRef(null);
 
   return (
     <Row justify="center">
       <Space orientation="horizontal" size="small">
-        <Tooltip title={t('Find and Select in Source')} placement="bottom">
+        <Tooltip title={findAndSelectLabel} placement="bottom">
           <Button
+            aria-label={findAndSelectLabel}
             disabled={!locatedElement}
             icon={<IconListSearch size={18} />}
             onClick={() => findLocatedElementInSource(sourceJSON, sourceXML, searchedForElementBounds, locatedElement)}
           />
         </Tooltip>
-        <Tooltip title={t('Tap')} placement="bottom">
+        <Tooltip title={tapLabel} placement="bottom">
           <Button
+            aria-label={tapLabel}
             disabled={!locatedElement}
             icon={<IconFocus2 size={18} />}
             onClick={() => applyClientMethod({methodName: 'elementClick', elementId: locatedElement})}
@@ -95,8 +101,9 @@ const LocatorSearchResultsElementActions = ({
             allowClear={true}
             onChange={(e) => (sendKeysRef.current = e.target.value)}
           />
-          <Tooltip title={t('Send Keys')} placement="bottom">
+          <Tooltip title={sendKeysLabel} placement="bottom">
             <Button
+              aria-label={sendKeysLabel}
               disabled={!locatedElement}
               icon={<IconSend2 size={18} />}
               onClick={() =>
@@ -108,8 +115,9 @@ const LocatorSearchResultsElementActions = ({
               }
             />
           </Tooltip>
-          <Tooltip title={t('Clear')} placement="bottom">
+          <Tooltip title={clearLabel} placement="bottom">
             <Button
+              aria-label={clearLabel}
               disabled={!locatedElement}
               id="btnClearElement"
               icon={<IconEraser size={18} />}

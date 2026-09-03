@@ -10,6 +10,7 @@ import styles from './ErrorMessage.module.css';
 
 const ErrorMessage = ({error, copyTrace}) => {
   const {t} = useTranslation();
+  const copyErrLabel = t('Copy Error Trace');
 
   return (
     <div className={styles.errorMessage}>
@@ -27,8 +28,9 @@ const ErrorMessage = ({error, copyTrace}) => {
             <a onClick={(e) => e.preventDefault() || openLink(LINKS.CREATE_ISSUE)}>{LINKS.CREATE_ISSUE}</a>
             <br />
             {t('Full error trace:')}
-            <Tooltip title={t('Copy Error Trace')}>
+            <Tooltip title={copyErrLabel}>
               <Button
+                aria-label={copyErrLabel}
                 size="small"
                 className={styles.copyTraceBtn}
                 onClick={() => copyTrace(error.stack)}

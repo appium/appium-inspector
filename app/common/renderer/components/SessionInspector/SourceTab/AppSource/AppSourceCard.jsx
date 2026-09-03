@@ -33,19 +33,24 @@ const AppSourcePanelTitle = () => {
  */
 const AppSourceHeaderButtons = ({sourceXML, collapsible, collapsed, onToggleCollapse}) => {
   const {t} = useTranslation();
+  const copyXmlLabel = t('Copy XML Source to Clipboard');
+  const downloadLabel = t('Download Source as .XML File');
+  const togglePanelLabel = collapsed ? t('Expand Panel') : t('Collapse Panel');
 
   return (
     <span>
-      <Tooltip title={t('Copy XML Source to Clipboard')}>
+      <Tooltip title={copyXmlLabel}>
         <Button
+          aria-label={copyXmlLabel}
           type="text"
           id="btnSourceXML"
           icon={<IconFiles size={18} />}
           onClick={() => copyToClipboard(sourceXML)}
         />
       </Tooltip>
-      <Tooltip title={t('Download Source as .XML File')}>
+      <Tooltip title={downloadLabel}>
         <Button
+          aria-label={downloadLabel}
           type="text"
           id="btnDownloadSourceXML"
           icon={<IconDownload size={18} />}
@@ -53,8 +58,9 @@ const AppSourceHeaderButtons = ({sourceXML, collapsible, collapsed, onToggleColl
         />
       </Tooltip>
       {collapsible && (
-        <Tooltip title={t(collapsed ? 'Expand Panel' : 'Collapse Panel')}>
+        <Tooltip title={togglePanelLabel}>
           <Button
+            aria-label={togglePanelLabel}
             type="text"
             icon={collapsed ? <IconChevronDown size={18} /> : <IconChevronUp size={18} />}
             onClick={onToggleCollapse}

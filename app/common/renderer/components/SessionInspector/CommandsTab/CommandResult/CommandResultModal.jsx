@@ -17,21 +17,29 @@ const stringifyValue = (val) => (typeof val === 'object' && val !== null ? JSON.
  */
 const CommandResultModalFooter = ({result, closeCommandModal, setFormatResult, formatResult, isPrimitive}) => {
   const {t} = useTranslation();
+  const tableFormatLabel = t('toggleTableFormatting');
+  const copyLabel = t('copyResultToClipboard');
 
   return (
     <Row>
       <Col span={12}>
         <Space>
-          <Tooltip title={t('toggleTableFormatting')}>
+          <Tooltip title={tableFormatLabel}>
             <Button
+              aria-label={tableFormatLabel}
               icon={<IconTable size={18} />}
               disabled={isPrimitive}
               type={formatResult ? BUTTON.PRIMARY : BUTTON.DEFAULT}
               onClick={() => setFormatResult(!formatResult)}
             />
           </Tooltip>
-          <Tooltip title={t('copyResultToClipboard')}>
-            <Button icon={<IconFiles size={18} />} disabled={formatResult} onClick={() => copyToClipboard(result)} />
+          <Tooltip title={copyLabel}>
+            <Button
+              aria-label={copyLabel}
+              icon={<IconFiles size={18} />}
+              disabled={formatResult}
+              onClick={() => copyToClipboard(result)}
+            />
           </Tooltip>
         </Space>
       </Col>

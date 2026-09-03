@@ -21,6 +21,10 @@ const SavedGestureActionsCell = (props) => {
     applyClientMethod,
   } = props;
   const {t} = useTranslation();
+  const playLabel = t('Play');
+  const editLabel = t('Edit');
+  const exportLabel = t('Export to File');
+  const deleteLabel = t('Delete');
 
   const playGesture = () => {
     const actions = {};
@@ -42,16 +46,26 @@ const SavedGestureActionsCell = (props) => {
 
   return (
     <Space.Compact>
-      <Tooltip zIndex={3} title={t('Play')}>
-        <Button key="play" type="primary" icon={<IconPlayerPlay size={18} />} onClick={() => playGesture()} />
+      <Tooltip zIndex={3} title={playLabel}>
+        <Button
+          aria-label={playLabel}
+          key="play"
+          type="primary"
+          icon={<IconPlayerPlay size={18} />}
+          onClick={() => playGesture()}
+        />
       </Tooltip>
-      <Tooltip zIndex={3} title={t('Edit')}>
-        <Button icon={<IconEdit size={18} />} onClick={() => loadGesture()} />
+      <Tooltip zIndex={3} title={editLabel}>
+        <Button aria-label={editLabel} icon={<IconEdit size={18} />} onClick={() => loadGesture()} />
       </Tooltip>
-      <Tooltip zIndex={3} title={t('Export to File')}>
-        <Button icon={<IconFileExport size={18} />} onClick={() => exportSavedGesture(gesture)} />
+      <Tooltip zIndex={3} title={exportLabel}>
+        <Button
+          aria-label={exportLabel}
+          icon={<IconFileExport size={18} />}
+          onClick={() => exportSavedGesture(gesture)}
+        />
       </Tooltip>
-      <Tooltip zIndex={3} title={t('Delete')}>
+      <Tooltip zIndex={3} title={deleteLabel}>
         <Popconfirm
           zIndex={4}
           title={t('confirmDeletion')}
@@ -60,7 +74,7 @@ const SavedGestureActionsCell = (props) => {
           cancelText={t('Cancel')}
           onConfirm={() => deleteGesture()}
         >
-          <Button icon={<IconTrash size={18} />} />
+          <Button aria-label={deleteLabel} icon={<IconTrash size={18} />} />
         </Popconfirm>
       </Tooltip>
     </Space.Compact>

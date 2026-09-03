@@ -36,6 +36,9 @@ const SelectedElementHeaderButtons = ({
   onToggleCollapse,
 }) => {
   const {t} = useTranslation();
+  const copyAttrsLabel = t('Copy Attributes to Clipboard');
+  const downloadLabel = t('Download Screenshot');
+  const togglePanelLabel = collapsed ? t('Expand Panel') : t('Collapse Panel');
 
   const downloadElementScreenshot = async (elementId) => {
     const elemScreenshot = await applyClientMethod({
@@ -50,8 +53,9 @@ const SelectedElementHeaderButtons = ({
 
   return (
     <span>
-      <Tooltip title={t('Copy Attributes to Clipboard')}>
+      <Tooltip title={copyAttrsLabel}>
         <Button
+          aria-label={copyAttrsLabel}
           type="text"
           disabled={elementActionsDisabled}
           id="btnCopyAttributes"
@@ -59,8 +63,9 @@ const SelectedElementHeaderButtons = ({
           onClick={() => copyToClipboard(JSON.stringify(elementAttributesData))}
         />
       </Tooltip>
-      <Tooltip title={t('Download Screenshot')}>
+      <Tooltip title={downloadLabel}>
         <Button
+          aria-label={downloadLabel}
           type="text"
           disabled={elementActionsDisabled}
           icon={<IconDownload size={18} />}
@@ -69,8 +74,9 @@ const SelectedElementHeaderButtons = ({
         />
       </Tooltip>
       {collapsible && (
-        <Tooltip title={t(collapsed ? 'Expand Panel' : 'Collapse Panel')}>
+        <Tooltip title={togglePanelLabel}>
           <Button
+            aria-label={togglePanelLabel}
             type="text"
             icon={collapsed ? <IconChevronDown size={18} /> : <IconChevronUp size={18} />}
             onClick={onToggleCollapse}

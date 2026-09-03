@@ -13,10 +13,12 @@ import styles from './Header.module.css';
  */
 const NoContextsFoundButton = () => {
   const {t} = useTranslation();
+  const noContextsLabel = t('noAdditionalContextsFound');
 
   return (
-    <Tooltip title={t('noAdditionalContextsFound')} classNames={{root: styles.wideTooltip}}>
+    <Tooltip title={noContextsLabel} classNames={{root: styles.wideTooltip}}>
       <Button
+        aria-label={noContextsLabel}
         disabled
         icon={<IconExclamationCircle size={20} />}
         styles={{root: {backgroundColor: '#faad14', color: '#ffffff'}}}
@@ -30,6 +32,7 @@ const NoContextsFoundButton = () => {
  */
 const ContextDropdown = ({contexts, currentContext, setContext, applyClientMethod, openLink}) => {
   const {t} = useTranslation();
+  const contextLabel = t('contextDropdownInfo');
 
   return (
     <>
@@ -49,13 +52,14 @@ const ContextDropdown = ({contexts, currentContext, setContext, applyClientMetho
       <Tooltip
         title={
           <>
-            {t('contextDropdownInfo')}{' '}
+            {contextLabel}{' '}
             <a onClick={(e) => e.preventDefault() || openLink(LINKS.HYBRID_MODE_DOCS)}>{LINKS.HYBRID_MODE_DOCS}</a>
           </>
         }
         classNames={{root: styles.wideTooltip}}
       >
         <Button
+          aria-label={`${contextLabel} ${LINKS.HYBRID_MODE_DOCS}`}
           disabled
           icon={<IconInfoCircle size={20} />}
           styles={{root: {backgroundColor: 'var(--ant-color-primary)', color: '#ffffff'}}}
@@ -78,18 +82,22 @@ const ContextControlsGroup = ({
   openLink,
 }) => {
   const {t} = useTranslation();
+  const nativeModeLabel = t('Native App Mode');
+  const webModeLabel = t('Web/Hybrid App Mode');
 
   return (
     <Space.Compact>
-      <Tooltip title={t('Native App Mode')}>
+      <Tooltip title={nativeModeLabel}>
         <Button
+          aria-label={nativeModeLabel}
           icon={<IconTriangleSquareCircle size={18} />}
           onClick={() => selectAppMode(APP_MODE.NATIVE)}
           type={appMode === APP_MODE.NATIVE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
         />
       </Tooltip>
-      <Tooltip title={t('Web/Hybrid App Mode')}>
+      <Tooltip title={webModeLabel}>
         <Button
+          aria-label={webModeLabel}
           icon={<IconWorld size={18} />}
           onClick={() => selectAppMode(APP_MODE.WEB_HYBRID)}
           type={appMode === APP_MODE.WEB_HYBRID ? BUTTON.PRIMARY : BUTTON.DEFAULT}

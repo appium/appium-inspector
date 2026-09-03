@@ -9,11 +9,15 @@ import SiriCommandModal from './SiriCommandModal.jsx';
  */
 const AndroidControlsGroup = ({applyClientMethod}) => {
   const {t} = useTranslation();
+  const backLabel = t('Press Back Button');
+  const homeLabel = t('Press Home Button');
+  const appSwitchLabel = t('Press App Switch Button');
 
   return (
     <Space.Compact>
-      <Tooltip title={t('Press Back Button')}>
+      <Tooltip title={backLabel}>
         <Button
+          aria-label={backLabel}
           id="btnPressBackButton"
           icon={<IconChevronLeft size={20} />}
           onClick={() =>
@@ -24,8 +28,9 @@ const AndroidControlsGroup = ({applyClientMethod}) => {
           }
         />
       </Tooltip>
-      <Tooltip title={t('Press Home Button')}>
+      <Tooltip title={homeLabel}>
         <Button
+          aria-label={homeLabel}
           id="btnPressHomeButton"
           icon={<IconCircle size={16} />}
           onClick={() =>
@@ -36,8 +41,9 @@ const AndroidControlsGroup = ({applyClientMethod}) => {
           }
         />
       </Tooltip>
-      <Tooltip title={t('Press App Switch Button')}>
+      <Tooltip title={appSwitchLabel}>
         <Button
+          aria-label={appSwitchLabel}
           id="btnPressAppSwitchButton"
           icon={<IconSquare size={16} />}
           onClick={() =>
@@ -64,11 +70,14 @@ const IosControlsGroup = ({
   hideSiriCommandModal,
 }) => {
   const {t} = useTranslation();
+  const homeLabel = t('Press Home Button');
+  const siriLabel = t('Execute Siri Command');
 
   return (
     <Space.Compact>
-      <Tooltip title={t('Press Home Button')}>
+      <Tooltip title={homeLabel}>
         <Button
+          aria-label={homeLabel}
           id="btnPressHomeButton"
           icon={<IconHome size={18} />}
           onClick={() =>
@@ -79,8 +88,13 @@ const IosControlsGroup = ({
           }
         />
       </Tooltip>
-      <Tooltip title={t('Execute Siri Command')}>
-        <Button id="siriCommand" icon={<IconMessageChatbot size={18} />} onClick={showSiriCommandModal} />
+      <Tooltip title={siriLabel}>
+        <Button
+          aria-label={siriLabel}
+          id="siriCommand"
+          icon={<IconMessageChatbot size={18} />}
+          onClick={showSiriCommandModal}
+        />
       </Tooltip>
       <SiriCommandModal
         siriCommandValue={siriCommandValue}

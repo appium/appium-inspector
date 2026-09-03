@@ -27,12 +27,15 @@ const deleteTick = (pointerKey, tickKey, pointers, setPointers, unselectTick) =>
  */
 const GestureEditorTickCardHeaderButtons = ({tick, pointers, setPointers, selectedTick, selectTick, unselectTick}) => {
   const {t} = useTranslation();
+  const togglePickerLabel = t('toggleMoveActionCoordPicker');
+  const deleteLabel = t('Delete');
 
   return (
     <>
       {tick.type === POINTER_TYPES.POINTER_MOVE && (
-        <Tooltip title={t('toggleMoveActionCoordPicker')}>
+        <Tooltip title={togglePickerLabel}>
           <Button
+            aria-label={togglePickerLabel}
             size="small"
             type={selectedTick === tick.id ? 'primary' : 'text'}
             icon={<IconFocus2 size={18} />}
@@ -40,8 +43,9 @@ const GestureEditorTickCardHeaderButtons = ({tick, pointers, setPointers, select
           />
         </Tooltip>
       )}
-      <Tooltip title={t('Delete')}>
+      <Tooltip title={deleteLabel}>
         <Button
+          aria-label={deleteLabel}
           size="small"
           type="text"
           icon={<IconX size={18} />}

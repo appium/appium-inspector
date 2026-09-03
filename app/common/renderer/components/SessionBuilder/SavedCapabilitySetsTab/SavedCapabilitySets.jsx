@@ -45,6 +45,9 @@ const SavedCapabilitySets = (props) => {
   } = props;
 
   const {t} = useTranslation();
+  const editLabel = t('Edit');
+  const deleteLabel = t('Delete');
+  const exportLabel = t('Export to File');
 
   const handleCapsAndServer = (uuid) => {
     const {
@@ -100,8 +103,9 @@ const SavedCapabilitySets = (props) => {
       width: SAVED_SESSIONS_TABLE_VALUES.ACTIONS_COLUMN_WIDTH,
       render: (_, record) => (
         <Space.Compact>
-          <Tooltip zIndex={3} title={t('Edit')}>
+          <Tooltip zIndex={3} title={editLabel}>
             <Button
+              aria-label={editLabel}
               icon={<IconEdit size={18} />}
               onClick={() => {
                 handleCapsAndServer(record.key);
@@ -109,10 +113,14 @@ const SavedCapabilitySets = (props) => {
               }}
             />
           </Tooltip>
-          <Tooltip zIndex={3} title={t('Export to File')}>
-            <Button icon={<IconFileExport size={18} />} onClick={() => findAndExportSavedSession(record.key)} />
+          <Tooltip zIndex={3} title={exportLabel}>
+            <Button
+              aria-label={exportLabel}
+              icon={<IconFileExport size={18} />}
+              onClick={() => findAndExportSavedSession(record.key)}
+            />
           </Tooltip>
-          <Tooltip zIndex={3} title={t('Delete')}>
+          <Tooltip zIndex={3} title={deleteLabel}>
             <Popconfirm
               zIndex={4}
               title={t('confirmDeletion')}
@@ -120,7 +128,7 @@ const SavedCapabilitySets = (props) => {
               cancelText={t('Cancel')}
               onConfirm={() => deleteSavedSession(record.key)}
             >
-              <Button icon={<IconTrash size={18} />} />
+              <Button aria-label={deleteLabel} icon={<IconTrash size={18} />} />
             </Popconfirm>
           </Tooltip>
         </Space.Compact>

@@ -9,15 +9,16 @@ import ToggleTheme from './ToggleTheme.jsx';
 const AppSettings = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const {t} = useTranslation();
+  const appSettingsLabel = t('App Settings');
 
   return (
     <>
-      <Tooltip title={t('App Settings')}>
-        <Button icon={<IconSettings size={18} />} onClick={() => setModalOpen(true)} />
+      <Tooltip title={appSettingsLabel}>
+        <Button aria-label={appSettingsLabel} icon={<IconSettings size={18} />} onClick={() => setModalOpen(true)} />
       </Tooltip>
 
       <Modal
-        title={t('App Settings')}
+        title={appSettingsLabel}
         styles={{title: {fontSize: '18px'}}}
         open={modalOpen}
         footer={null}
