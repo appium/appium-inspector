@@ -379,3 +379,6 @@ export const COMMAND_DEFINITIONS = {
     },
   },
 };
+
+export const COMMAND_EXECUTE_SCRIPT = 'executeScript';
+export const COMMAND_UPDATE_SETTINGS = 'updateSettings';

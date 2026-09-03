@@ -1,6 +1,7 @@
 import sanitize from 'sanitize-filename';
 
 import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs.js';
+import {COMMAND_UPDATE_SETTINGS} from '../constants/commands.js';
 import {APP_MODE, NATIVE_APP, UNKNOWN_ERROR} from '../constants/session-inspector.js';
 import i18n from '../i18next.js';
 import InspectorDriver from '../lib/appium/inspector-driver.js';
@@ -263,6 +264,11 @@ export function applyClientMethod(params) {
       let args = [variableName, variableIndex];
       args = args.concat(params.args || []);
       dispatch({type: RECORD_ACTION, action: params.methodName, params: args});
+    }
+    // If updating settings, store the updated values
+    if (params.methodName === COMMAND_UPDATE_SETTINGS) {
+      const storeSettingsAction = storeSessionSettings(params.args[0]);
+      await storeSettingsAction(dispatch, getState);
     }
     dispatch({type: METHOD_CALL_DONE});
 

@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 
+import {COMMAND_EXECUTE_SCRIPT} from '../../../constants/commands.js';
 import {adjustParamValueType, transformCommandsMap, transformExecMethodsMap} from '../../../utils/commands-tab.js';
 import {isEmpty, isPlainObject} from '../../../utils/common.js';
 import CommandParametersModal from './CommandParametersModal.jsx';
@@ -10,15 +11,10 @@ import StaticCommandsContent from './StaticCommandsContent.jsx';
 
 import styles from './Commands.module.css';
 
-const COMMAND_EXECUTE_SCRIPT = 'executeScript';
-const COMMAND_UPDATE_SETTINGS = 'updateSettings';
-
 /**
  * Contents of the commands tab.
  */
-const Commands = (props) => {
-  const {applyClientMethod, getSupportedSessionMethods, storeSessionSettings} = props;
-
+const Commands = ({applyClientMethod, getSupportedSessionMethods}) => {
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
   const [driverCommands, setDriverCommands] = useState(null);
   const [driverExecuteMethods, setDriverExecuteMethods] = useState(null);
@@ -82,11 +78,6 @@ const Commands = (props) => {
     const [newCmdName, newCmdParams] = prepareCommand(cmdName, cmdParams, isExecute);
     // Do not await - let the command run in the background without blocking the UI
     runCommand(newCmdName, newCmdParams, !refresh);
-
-    // if updating settings, store the updated values
-    if (newCmdName === COMMAND_UPDATE_SETTINGS) {
-      storeSessionSettings(newCmdParams[0]);
-    }
   };
 
   const clearCurrentCommand = () => {
