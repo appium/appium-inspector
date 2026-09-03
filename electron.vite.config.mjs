@@ -1,7 +1,6 @@
 import {join} from 'node:path';
 
-import babel from '@rolldown/plugin-babel';
-import react, {reactCompilerPreset} from '@vitejs/plugin-react';
+import react from '@vitejs/plugin-react';
 import {defineConfig} from 'electron-vite';
 import renderer from 'vite-plugin-electron-renderer';
 
@@ -39,14 +38,7 @@ export default defineConfig({
       },
     },
     plugins: [
-      react(),
-      /**
-       * `await` is needed until electron-vite adds proper handling:
-       * https://github.com/alex8088/electron-vite/issues/902#issuecomment-4578428342
-       */
-      await babel({
-        presets: [reactCompilerPreset()],
-      }),
+      react({compiler: true}),
       renderer(),
       {
         name: 'strip-node-scheme-side-effect-imports',
