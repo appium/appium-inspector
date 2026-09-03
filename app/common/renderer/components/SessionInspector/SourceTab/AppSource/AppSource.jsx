@@ -5,15 +5,10 @@ import AppSourceTreeWrapper from './AppSourceTreeWrapper.jsx';
  * Shows the app source as a tree with search and attribute toggles.
  */
 const AppSource = (props) => {
-  const {sourceXML, collapsible, collapsed, onToggleCollapse} = props;
+  const {sourceXML} = props;
 
   return (
-    <AppSourceCard
-      sourceXML={sourceXML}
-      collapsible={collapsible}
-      collapsed={collapsed}
-      onToggleCollapse={onToggleCollapse}
-    >
+    <AppSourceCard sourceXML={sourceXML}>
       <AppSourceTreeWrapper {...props} />
     </AppSourceCard>
   );

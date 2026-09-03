@@ -31,9 +31,6 @@ const SelectedElement = (props) => {
     elementInteractionsNotAvailable,
     selectedElementSearchInProgress,
     sessionSettings,
-    collapsible,
-    collapsed,
-    onToggleCollapse,
   } = props;
 
   const elementActionsDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
@@ -63,9 +60,6 @@ const SelectedElement = (props) => {
       selectedElementId={selectedElementId}
       elementAttributesData={elementAttributesData}
       elementActionsDisabled={elementActionsDisabled}
-      collapsible={collapsible}
-      collapsed={collapsed}
-      onToggleCollapse={onToggleCollapse}
     >
       <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="middle">
         <SnapshotMaxDepthReachedMessage selectedElementPath={selectedElementPath} sessionSettings={sessionSettings} />
