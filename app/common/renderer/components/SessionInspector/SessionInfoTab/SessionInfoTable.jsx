@@ -62,6 +62,7 @@ const SessionInfoInnerTable = ({tableData}) => (
 const SessionInfoTable = (props) => {
   const {
     driver,
+    featureCaps,
     getActiveAppId,
     getServerStatus,
     getFlatSessionCaps,
@@ -114,11 +115,10 @@ const SessionInfoTable = (props) => {
   };
 
   useEffect(() => {
-    if (!driver) {
+    if (!sessionStartTime) {
       return;
     }
-    const {isIOS, isAndroid} = driver;
-    getActiveAppId(isIOS, isAndroid);
+    getActiveAppId(featureCaps.automationName);
     getServerStatus();
     getFlatSessionCaps();
 
@@ -126,7 +126,7 @@ const SessionInfoTable = (props) => {
       setSessionLength(Date.now() - sessionStartTime);
     }, 1000);
     return () => clearInterval(intervalRef.current);
-  }, [driver, getActiveAppId, getServerStatus, getFlatSessionCaps, sessionStartTime]);
+  }, [featureCaps, getActiveAppId, getServerStatus, getFlatSessionCaps, sessionStartTime]);
 
   return (
     <Table
