@@ -20,7 +20,6 @@ const HeaderButtons = (props) => {
     showSiriCommandModal,
     applyClientMethod,
     quitSessionAndReturn,
-    driver,
     contexts,
     currentContext,
     setContext,
@@ -38,7 +37,7 @@ const HeaderButtons = (props) => {
     <div className={styles.headerButtons}>
       <Space size="middle" wrap className={styles.headerButtonsSpace}>
         <DeviceControlsGroup
-          driver={driver}
+          featureCaps={featureCaps}
           applyClientMethod={applyClientMethod}
           showSiriCommandModal={showSiriCommandModal}
           siriCommandValue={siriCommandValue}
