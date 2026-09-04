@@ -332,5 +332,7 @@
   "detachFromSession": "Detach from Session",
   "enterSessionID": "Enter session ID for attaching manually",
   "refreshDiscoveredSessions": "Refresh Discovered Sessions",
-  "toggleMultiDisplayMode": "Toggle Multi-Display Mode"
+  "toggleMultiDisplayMode": "Toggle Multi-Display Mode",
+  "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
+  "switchToComposeSubdriver": "Switch to Compose Subdriver"
 }

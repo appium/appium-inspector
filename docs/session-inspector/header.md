@@ -19,7 +19,12 @@ the system buttons, which simulate the equivalent Android or iOS system function
     - The Siri button will open a prompt for input text, which will be used as the Siri command.
       Please note that the command will not work if Siri is disabled.
 
-## Display Switcher
+## Driver-Specific Controls
+
+Certain header buttons correspond to driver-specific functionality, and are only shown in a session
+for that driver.
+
+### Display Switcher
 
 !!! note
 
@@ -41,6 +46,18 @@ and MJPEG screenshot stream).
 
 Pressing the multi-display button while multi-display mode is active will switch to the default
 display and hide the dropdown.
+
+### Subdriver Buttons
+
+!!! note
+
+    This functionality is only supported for the Espresso driver.
+
+![Subdriver Buttons](./assets/images/header/subdriver-buttons.png)
+
+The subdriver buttons allow changing the currently active subdriver. Refer to the
+[Espresso driver documentation](https://appium.github.io/appium-espresso-driver/latest/reference/settings/#driver)
+for more details.
 
 ## Context Switcher
 

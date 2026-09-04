@@ -1,4 +1,4 @@
-import {IconCarouselHorizontal} from '@tabler/icons-react';
+import {IconCarouselHorizontal, IconCoffee, IconJetpack} from '@tabler/icons-react';
 import {Button, Select, Space, Tooltip} from 'antd';
 import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -8,7 +8,7 @@ import {COMMAND_EXECUTE_SCRIPT, COMMAND_UPDATE_SETTINGS} from '../../../constant
 import {DRIVERS} from '../../../constants/common.js';
 
 /**
- * Controls used to switch available displays (Android UiAutomator2 only)
+ * Controls specific to UiAutomator2 driver: switch available displays
  */
 const UiA2ControlsGroup = ({sessionSettings, applyClientMethod}) => {
   const areMultiWindowsEnabled = sessionSettings.enableMultiWindows;
@@ -82,11 +82,69 @@ const UiA2ControlsGroup = ({sessionSettings, applyClientMethod}) => {
 };
 
 /**
+ * Controls specific to Espresso driver: switch subdriver
+ */
+const EspressoControlsGroup = ({sessionSettings, applyClientMethod}) => {
+  /**
+   * The 'driver' setting is always populated,
+   * and is always set to exactly 'espresso' or 'compose'
+   */
+  const currentSubdriver = sessionSettings.driver;
+
+  const {t} = useTranslation();
+  const switchToEspressoLabel = t('switchToEspressoSubdriver');
+  const switchToComposeLabel = t('switchToComposeSubdriver');
+
+  const updateSubdriver = async (subdriverName) => {
+    if (subdriverName !== currentSubdriver) {
+      /**
+       * Disable auto-refresh for updateSettings, since the setting may get updated, but source retrieval
+       * may return an error if no hierarchy is found, causing storeSessionSettings to never get called,
+       * which leaves subdriverName with its old value. But we still want to refresh, so call it explicitly.
+       */
+      await applyClientMethod({
+        methodName: COMMAND_UPDATE_SETTINGS,
+        args: [{driver: subdriverName}],
+        skipRefresh: true,
+      });
+      await applyClientMethod({methodName: 'getPageSource'});
+    }
+  };
+
+  return (
+    <Space.Compact>
+      <Tooltip title={switchToEspressoLabel}>
+        <Button
+          aria-label={switchToEspressoLabel}
+          icon={<IconCoffee size={18} />}
+          onClick={() => updateSubdriver(DRIVERS.ESPRESSO)}
+          type={currentSubdriver === DRIVERS.ESPRESSO ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+        />
+      </Tooltip>
+      <Tooltip title={switchToComposeLabel}>
+        <Button
+          aria-label={switchToComposeLabel}
+          icon={<IconJetpack size={18} />}
+          onClick={() => updateSubdriver(DRIVERS.COMPOSE)}
+          type={currentSubdriver === DRIVERS.COMPOSE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+        />
+      </Tooltip>
+    </Space.Compact>
+  );
+};
+
+/**
  * Controls specific to the driver (automationName)
  */
-const DriverControlsGroup = ({automationName, sessionSettings, applyClientMethod}) =>
-  automationName === DRIVERS.UIAUTOMATOR2 && (
-    <UiA2ControlsGroup sessionSettings={sessionSettings} applyClientMethod={applyClientMethod} />
-  );
+const DriverControlsGroup = ({automationName, sessionSettings, applyClientMethod}) => (
+  <>
+    {automationName === DRIVERS.UIAUTOMATOR2 && (
+      <UiA2ControlsGroup sessionSettings={sessionSettings} applyClientMethod={applyClientMethod} />
+    )}
+    {automationName === DRIVERS.ESPRESSO && (
+      <EspressoControlsGroup sessionSettings={sessionSettings} applyClientMethod={applyClientMethod} />
+    )}
+  </>
+);
 
 export default DriverControlsGroup;

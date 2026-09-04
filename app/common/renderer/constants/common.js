@@ -18,6 +18,7 @@ export const LINKS = {
 export const DRIVERS = {
   UIAUTOMATOR2: 'uiautomator2',
   ESPRESSO: 'espresso',
+  COMPOSE: 'compose', // subdriver of the Espresso driver
   XCUITEST: 'xcuitest',
   FLUTTER: 'flutter',
   MAC2: 'mac2',
