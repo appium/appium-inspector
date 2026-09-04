@@ -86,7 +86,6 @@ import {omit} from '../utils/common.js';
 const INITIAL_STATE = {
   savedGestures: [],
   driver: null,
-  automationName: null,
   keepAliveInterval: null,
   showKeepAlivePrompt: false,
   userWaitTimeout: null,
@@ -99,6 +98,7 @@ const INITIAL_STATE = {
   clientFramework: CLIENT_FRAMEWORKS.JAVA_JUNIT4,
   serverDetails: {},
   sessionCaps: {},
+  featureCaps: {},
   sessionSettings: {},
   isGestureEditorVisible: false,
   isLocatorSearchModalVisible: false,
@@ -283,13 +283,12 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {...state, showBoilerplate: action.show};
 
     case SET_SESSION_DETAILS: {
-      const automationName = action.driver.capabilities.automationName;
       return {
         ...state,
         serverDetails: action.serverDetails,
         driver: action.driver,
         sessionCaps: action.sessionCaps,
-        automationName: automationName && automationName.toLowerCase(),
+        featureCaps: action.featureCaps,
         appMode: action.appMode,
         isUsingMjpegMode: action.isUsingMjpegMode,
       };

@@ -26,7 +26,7 @@ const HeaderButtons = (props) => {
     setContext,
     autoSessionRestart,
     toggleAutoSessionRestart,
-    automationName,
+    featureCaps,
     sessionSettings,
     siriCommandValue,
     setSiriCommandValue,
@@ -47,7 +47,7 @@ const HeaderButtons = (props) => {
           hideSiriCommandModal={hideSiriCommandModal}
         />
         <DriverControlsGroup
-          automationName={automationName}
+          featureCaps={featureCaps}
           sessionSettings={sessionSettings}
           applyClientMethod={applyClientMethod}
         />
