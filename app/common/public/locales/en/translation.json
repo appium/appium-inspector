@@ -334,5 +334,6 @@
   "refreshDiscoveredSessions": "Refresh Discovered Sessions",
   "toggleMultiDisplayMode": "Toggle Multi-Display Mode",
   "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
-  "switchToComposeSubdriver": "Switch to Compose Subdriver"
+  "switchToComposeSubdriver": "Switch to Compose Subdriver",
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
 }
