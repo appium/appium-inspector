@@ -2,6 +2,7 @@ import {IconChevronLeft, IconCircle, IconHome, IconMessageChatbot, IconSquare} f
 import {Button, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
+import {DRIVERS} from '../../../constants/common.js';
 import SiriCommandModal from './SiriCommandModal.jsx';
 
 /**
@@ -59,9 +60,9 @@ const AndroidControlsGroup = ({applyClientMethod}) => {
 };
 
 /**
- * Device controls used for iOS sessions.
+ * Device controls used for iOS/iPadOS/tvOS/watchOS sessions.
  */
-const IosControlsGroup = ({
+const IDeviceControlsGroup = ({
   applyClientMethod,
   showSiriCommandModal,
   siriCommandValue,
@@ -74,28 +75,30 @@ const IosControlsGroup = ({
   const siriLabel = t('Execute Siri Command');
 
   return (
-    <Space.Compact>
-      <Tooltip title={homeLabel}>
-        <Button
-          aria-label={homeLabel}
-          id="btnPressHomeButton"
-          icon={<IconHome size={18} />}
-          onClick={() =>
-            applyClientMethod({
-              methodName: 'executeScript',
-              args: ['mobile:pressButton', [{name: 'home'}]],
-            })
-          }
-        />
-      </Tooltip>
-      <Tooltip title={siriLabel}>
-        <Button
-          aria-label={siriLabel}
-          id="siriCommand"
-          icon={<IconMessageChatbot size={18} />}
-          onClick={showSiriCommandModal}
-        />
-      </Tooltip>
+    <>
+      <Space.Compact>
+        <Tooltip title={homeLabel}>
+          <Button
+            aria-label={homeLabel}
+            id="btnPressHomeButton"
+            icon={<IconHome size={18} />}
+            onClick={() =>
+              applyClientMethod({
+                methodName: 'executeScript',
+                args: ['mobile:pressButton', [{name: 'home'}]],
+              })
+            }
+          />
+        </Tooltip>
+        <Tooltip title={siriLabel}>
+          <Button
+            aria-label={siriLabel}
+            id="siriCommand"
+            icon={<IconMessageChatbot size={18} />}
+            onClick={showSiriCommandModal}
+          />
+        </Tooltip>
+      </Space.Compact>
       <SiriCommandModal
         siriCommandValue={siriCommandValue}
         setSiriCommandValue={setSiriCommandValue}
@@ -103,7 +106,7 @@ const IosControlsGroup = ({
         applyClientMethod={applyClientMethod}
         hideSiriCommandModal={hideSiriCommandModal}
       />
-    </Space.Compact>
+    </>
   );
 };
 
@@ -111,28 +114,29 @@ const IosControlsGroup = ({
  * Controls used for buttons on the device under test.
  */
 const DeviceControlsGroup = ({
-  driver,
+  featureCaps,
   applyClientMethod,
   showSiriCommandModal,
   siriCommandValue,
   setSiriCommandValue,
   isSiriCommandModalVisible,
   hideSiriCommandModal,
-}) =>
-  driver && (
-    <>
-      {driver.isIOS && (
-        <IosControlsGroup
-          applyClientMethod={applyClientMethod}
-          showSiriCommandModal={showSiriCommandModal}
-          siriCommandValue={siriCommandValue}
-          setSiriCommandValue={setSiriCommandValue}
-          isSiriCommandModalVisible={isSiriCommandModalVisible}
-          hideSiriCommandModal={hideSiriCommandModal}
-        />
-      )}
-      {driver.isAndroid && <AndroidControlsGroup applyClientMethod={applyClientMethod} />}
-    </>
-  );
+}) => (
+  <>
+    {featureCaps.automationName === DRIVERS.XCUITEST && (
+      <IDeviceControlsGroup
+        applyClientMethod={applyClientMethod}
+        showSiriCommandModal={showSiriCommandModal}
+        siriCommandValue={siriCommandValue}
+        setSiriCommandValue={setSiriCommandValue}
+        isSiriCommandModalVisible={isSiriCommandModalVisible}
+        hideSiriCommandModal={hideSiriCommandModal}
+      />
+    )}
+    {[DRIVERS.UIAUTOMATOR2, DRIVERS.ESPRESSO].includes(featureCaps.automationName) && (
+      <AndroidControlsGroup applyClientMethod={applyClientMethod} />
+    )}
+  </>
+);
 
 export default DeviceControlsGroup;
