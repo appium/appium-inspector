@@ -1,11 +1,12 @@
 import {IconCarouselHorizontal} from '@tabler/icons-react';
 import {Button, Select, Space, Tooltip} from 'antd';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
 import {COMMAND_EXECUTE_SCRIPT, COMMAND_UPDATE_SETTINGS} from '../../../constants/commands.js';
 import {DRIVERS} from '../../../constants/common.js';
+import {isEmpty} from '../../../utils/common.js';
 
 /**
  * Controls used to switch available displays (Android UiAutomator2 only)
@@ -16,57 +17,43 @@ const UiA2ControlsGroup = ({sessionSettings, applyClientMethod}) => {
 
   const {t} = useTranslation();
   const multiDisplayLabel = t('toggleMultiDisplayMode');
-  // Guards against re-running the initial-state check below more than once
-  const hasCheckedInitialMultiWindowState = useRef(false);
   const [foundDisplays, setFoundDisplays] = useState(null);
 
-  // Allows to set both currentDisplayId and enableMultiWindows, if either differs from their current value.
+  // Sets currentDisplayId and enableMultiWindows in one call, if either differs from their current value.
   // Note: with multiple displays but without enableMultiWindows: true, app source does not match the default display.
   const setDisplayAndMultiWindows = async (displayId, multiWindowMode = areMultiWindowsEnabled) => {
-    const args = [];
+    const newSettingsObj = {};
     if (displayId !== currentDisplayId) {
-      args.push({currentDisplayId: displayId});
+      newSettingsObj.currentDisplayId = displayId;
     }
     if (multiWindowMode !== areMultiWindowsEnabled) {
-      args.push({enableMultiWindows: multiWindowMode});
+      newSettingsObj.enableMultiWindows = multiWindowMode;
     }
-    if (args.length > 0) {
+    if (Object.keys(newSettingsObj).length > 0) {
       await applyClientMethod({
         methodName: COMMAND_UPDATE_SETTINGS,
-        args,
+        args: [newSettingsObj],
       });
     }
   };
 
-  const fetchAndSetDisplays = async () => {
-    const newDisplays = await applyClientMethod({
-      methodName: COMMAND_EXECUTE_SCRIPT,
-      args: ['mobile:listDisplays', []],
-      skipRefresh: true,
-    });
-    setFoundDisplays(newDisplays);
-  };
-
-  const toggleMultiDisplayMode = async () => {
-    if (areMultiWindowsEnabled) {
-      // Toggling off: reset to defaults and clear found displays
-      await setDisplayAndMultiWindows(0, false);
-      return setFoundDisplays(null);
-    }
-    // Toggling on: enable multi window mode, then find + save displays
-    await setDisplayAndMultiWindows(0, true);
-    await fetchAndSetDisplays();
-  };
-
-  // On the initial render, once settings are populated,
-  // and if multi-window mode is enabled, fetch the list of displays
+  // Handler for updating foundDisplays: multi-window mode can be toggled not only with the button below,
+  // but also via capabilities or commands directly
   useEffect(() => {
-    if (hasCheckedInitialMultiWindowState.current || areMultiWindowsEnabled !== true) {
-      return;
+    if (areMultiWindowsEnabled && isEmpty(foundDisplays)) {
+      const retrieveDisplays = async () => {
+        const newDisplays = await applyClientMethod({
+          methodName: COMMAND_EXECUTE_SCRIPT,
+          args: ['mobile:listDisplays', []],
+          skipRefresh: true,
+        });
+        setFoundDisplays(newDisplays);
+      };
+      retrieveDisplays();
+    } else if (areMultiWindowsEnabled === false && !isEmpty(foundDisplays)) {
+      setFoundDisplays(null);
     }
-    hasCheckedInitialMultiWindowState.current = true;
-    fetchAndSetDisplays();
-  }, [areMultiWindowsEnabled, applyClientMethod]);
+  }, [applyClientMethod, areMultiWindowsEnabled, foundDisplays]);
 
   return (
     <Space.Compact>
@@ -75,7 +62,7 @@ const UiA2ControlsGroup = ({sessionSettings, applyClientMethod}) => {
           aria-label={multiDisplayLabel}
           icon={<IconCarouselHorizontal size={18} />}
           type={foundDisplays ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          onClick={() => toggleMultiDisplayMode()}
+          onClick={() => setDisplayAndMultiWindows(0, !areMultiWindowsEnabled)}
         />
       </Tooltip>
       {foundDisplays && (
