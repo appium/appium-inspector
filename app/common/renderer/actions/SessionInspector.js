@@ -2,6 +2,7 @@ import sanitize from 'sanitize-filename';
 
 import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs.js';
 import {COMMAND_UPDATE_SETTINGS} from '../constants/commands.js';
+import {DRIVERS} from '../constants/common.js';
 import {APP_MODE, NATIVE_APP, UNKNOWN_ERROR} from '../constants/session-inspector.js';
 import i18n from '../i18next.js';
 import InspectorDriver from '../lib/appium/inspector-driver.js';
@@ -728,10 +729,10 @@ export function toggleShowCentroids() {
   };
 }
 
-export function getActiveAppId(isIOS, isAndroid) {
+export function getActiveAppId(automationName) {
   return async (dispatch, getState) => {
     try {
-      if (isIOS) {
+      if (automationName === DRIVERS.XCUITEST) {
         const action = applyClientMethod({
           methodName: 'executeScript',
           args: ['mobile:activeAppInfo', []],
@@ -740,7 +741,7 @@ export function getActiveAppId(isIOS, isAndroid) {
         const {bundleId} = await action(dispatch, getState);
         dispatch({type: SET_APP_ID, appId: bundleId});
       }
-      if (isAndroid) {
+      if ([DRIVERS.UIAUTOMATOR2, DRIVERS.ESPRESSO].includes(automationName)) {
         const action = applyClientMethod({
           methodName: 'executeScript',
           args: ['mobile:getCurrentPackage', []],
