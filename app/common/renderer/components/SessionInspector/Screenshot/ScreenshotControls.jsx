@@ -11,6 +11,7 @@ import {Button, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
+import {PLATFORMS_WITHOUT_W3C_ACTIONS} from '../../../constants/common.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
 import {downloadFile} from '../../../utils/file-handling.js';
 
@@ -92,11 +93,15 @@ const ScreenshotInteractionModeControls = ({
   selectScreenshotInteractionMode,
   clearCoordAction,
   isGestureEditorVisible,
+  platformName,
 }) => {
+  // Disable the tap/swipe interaction mode on unsupported platforms
+  const areW3CActionsUnsupported = PLATFORMS_WITHOUT_W3C_ACTIONS.includes(platformName);
+
   const {t} = useTranslation();
   const selectElemLabel = t('Select Elements');
   const tapElemLabel = t('Tap By Element');
-  const tapCoordsLabel = t('Tap/Swipe By Coordinates');
+  const tapCoordsLabel = areW3CActionsUnsupported ? t('w3cActionsUnsupported') : t('Tap/Swipe By Coordinates');
 
   const screenshotInteractionChange = (mode) => {
     clearCoordAction(); // When the action changes, reset the swipe action
@@ -123,13 +128,13 @@ const ScreenshotInteractionModeControls = ({
           disabled={isGestureEditorVisible}
         />
       </Tooltip>
-      <Tooltip title={tapCoordsLabel}>
+      <Tooltip title={tapCoordsLabel} placement={areW3CActionsUnsupported ? 'bottom' : 'top'}>
         <Button
           aria-label={tapCoordsLabel}
           icon={<IconCrosshair size={18} />}
           onClick={() => screenshotInteractionChange(TAP_SWIPE)}
           type={screenshotInteractionMode === TAP_SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          disabled={isGestureEditorVisible}
+          disabled={areW3CActionsUnsupported || isGestureEditorVisible}
         />
       </Tooltip>
     </Space.Compact>
@@ -173,6 +178,7 @@ const ScreenshotControls = (props) => {
     isGestureEditorVisible,
     clearCoordAction,
     applyClientMethod,
+    featureCaps,
   } = props;
 
   return (
@@ -196,6 +202,7 @@ const ScreenshotControls = (props) => {
           selectScreenshotInteractionMode={selectScreenshotInteractionMode}
           clearCoordAction={clearCoordAction}
           isGestureEditorVisible={isGestureEditorVisible}
+          platformName={featureCaps.platformName}
         />
         <DownloadScreenshotButton
           screenshot={screenshot}
