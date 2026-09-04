@@ -6,7 +6,6 @@ import {useTranslation} from 'react-i18next';
 import {BUTTON} from '../../../constants/antd-types.js';
 import {COMMAND_EXECUTE_SCRIPT, COMMAND_UPDATE_SETTINGS} from '../../../constants/commands.js';
 import {DRIVERS} from '../../../constants/common.js';
-import {isEmpty} from '../../../utils/common.js';
 
 /**
  * Controls used to switch available displays (Android UiAutomator2 only)
@@ -40,17 +39,18 @@ const UiA2ControlsGroup = ({sessionSettings, applyClientMethod}) => {
   // Handler for updating foundDisplays: multi-window mode can be toggled not only with the button below,
   // but also via capabilities or commands directly
   useEffect(() => {
-    if (areMultiWindowsEnabled && isEmpty(foundDisplays)) {
-      const retrieveDisplays = async () => {
-        const newDisplays = await applyClientMethod({
-          methodName: COMMAND_EXECUTE_SCRIPT,
-          args: ['mobile:listDisplays', []],
-          skipRefresh: true,
-        });
-        setFoundDisplays(newDisplays);
-      };
+    const retrieveDisplays = async () => {
+      const newDisplays = await applyClientMethod({
+        methodName: COMMAND_EXECUTE_SCRIPT,
+        args: ['mobile:listDisplays', []],
+        skipRefresh: true,
+      });
+      setFoundDisplays(newDisplays ?? []);
+    };
+
+    if (areMultiWindowsEnabled && foundDisplays == null) {
       retrieveDisplays();
-    } else if (areMultiWindowsEnabled === false && !isEmpty(foundDisplays)) {
+    } else if (areMultiWindowsEnabled === false && foundDisplays != null) {
       setFoundDisplays(null);
     }
   }, [applyClientMethod, areMultiWindowsEnabled, foundDisplays]);
