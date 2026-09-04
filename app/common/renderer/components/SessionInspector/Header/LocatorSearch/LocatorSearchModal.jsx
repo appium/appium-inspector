@@ -18,7 +18,7 @@ const LocatorSearchModal = (props) => {
     locatedElements,
     locatorSearchStrategy,
     locatorSearchValue,
-    automationName,
+    featureCaps,
     sessionSettings,
     currentContext,
   } = props;
@@ -59,7 +59,7 @@ const LocatorSearchModal = (props) => {
           locatorSearchValue={locatorSearchValue}
           setLocatorSearchStrategy={setLocatorSearchStrategy}
           locatorSearchStrategy={locatorSearchStrategy}
-          automationName={automationName}
+          automationName={featureCaps.automationName}
           currentContext={currentContext}
         />
       )}
@@ -69,7 +69,7 @@ const LocatorSearchModal = (props) => {
             <LocatorSearchEmptyResults
               locatorSearchStrategy={locatorSearchStrategy}
               locatorSearchValue={locatorSearchValue}
-              automationName={automationName}
+              automationName={featureCaps.automationName}
               sessionSettings={sessionSettings}
             />
           )}

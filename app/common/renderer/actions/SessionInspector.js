@@ -119,7 +119,7 @@ const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
 // Shared by selectElement and tapElement.
 // Returns the computed strategy map.
 function prepareElementSelection(path, dispatch, getState) {
-  const {sourceJSON, sourceXML, expandedPaths, currentContext, automationName} = getState().inspector;
+  const {sourceJSON, sourceXML, expandedPaths, currentContext, featureCaps} = getState().inspector;
   const isNative = currentContext === NATIVE_APP;
   // Set the selected element in the source tree
   const selectedElement = findJSONElementByPath(path, sourceJSON);
@@ -139,7 +139,7 @@ function prepareElementSelection(path, dispatch, getState) {
   dispatch({type: SET_EXPANDED_PATHS, paths: copiedExpandedPaths});
 
   // Calculate the recommended locator strategies
-  const strategyMap = getSuggestedLocators(selectedElement, sourceXML, isNative, automationName);
+  const strategyMap = getSuggestedLocators(selectedElement, sourceXML, isNative, featureCaps.automationName);
   dispatch({type: SET_OPTIMAL_LOCATORS, strategyMap});
 
   return strategyMap;
@@ -404,11 +404,22 @@ export function toggleShowBoilerplate() {
 
 export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, isUsingMjpegMode}) {
   return (dispatch) => {
+    // Extract several capabilities from the finalised set of caps
+    // that may be relevant for enabling specific Inspector features
+    const featureCaps = {};
+    for (const stringCapName of ['automationName', 'browserName', 'platformName']) {
+      featureCaps[stringCapName] = driver.capabilities[stringCapName]?.toLowerCase();
+    }
+    // Convert platformVersion to a float - even if it is in a semver-style format, where conversion
+    // will only retain the first major & minor versions, this is sufficient for feature-gating
+    featureCaps.platformVersion = parseFloat(driver.capabilities.platformVersion, 10) || undefined;
+
     dispatch({
       type: SET_SESSION_DETAILS,
       serverDetails,
       driver,
       sessionCaps,
+      featureCaps,
       appMode,
       isUsingMjpegMode,
     });

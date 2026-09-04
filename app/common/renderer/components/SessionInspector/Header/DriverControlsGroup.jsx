@@ -136,12 +136,12 @@ const EspressoControlsGroup = ({sessionSettings, applyClientMethod}) => {
 /**
  * Controls specific to the driver (automationName)
  */
-const DriverControlsGroup = ({automationName, sessionSettings, applyClientMethod}) => (
+const DriverControlsGroup = ({featureCaps, sessionSettings, applyClientMethod}) => (
   <>
-    {automationName === DRIVERS.UIAUTOMATOR2 && (
+    {featureCaps.automationName === DRIVERS.UIAUTOMATOR2 && (
       <UiA2ControlsGroup sessionSettings={sessionSettings} applyClientMethod={applyClientMethod} />
     )}
-    {automationName === DRIVERS.ESPRESSO && (
+    {featureCaps.automationName === DRIVERS.ESPRESSO && (
       <EspressoControlsGroup sessionSettings={sessionSettings} applyClientMethod={applyClientMethod} />
     )}
   </>
