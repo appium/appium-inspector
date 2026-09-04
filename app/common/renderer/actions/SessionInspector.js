@@ -1,7 +1,7 @@
 import sanitize from 'sanitize-filename';
 
 import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs.js';
-import {COMMAND_UPDATE_SETTINGS} from '../constants/commands.js';
+import {COMMAND_EXECUTE_SCRIPT, COMMAND_UPDATE_SETTINGS} from '../constants/commands.js';
 import {DRIVERS} from '../constants/common.js';
 import {APP_MODE, NATIVE_APP, UNKNOWN_ERROR} from '../constants/session-inspector.js';
 import i18n from '../i18next.js';
@@ -734,7 +734,7 @@ export function getActiveAppId(automationName) {
     try {
       if (automationName === DRIVERS.XCUITEST) {
         const action = applyClientMethod({
-          methodName: 'executeScript',
+          methodName: COMMAND_EXECUTE_SCRIPT,
           args: ['mobile:activeAppInfo', []],
           skipRefresh: true,
         });
@@ -743,7 +743,7 @@ export function getActiveAppId(automationName) {
       }
       if ([DRIVERS.UIAUTOMATOR2, DRIVERS.ESPRESSO].includes(automationName)) {
         const action = applyClientMethod({
-          methodName: 'executeScript',
+          methodName: COMMAND_EXECUTE_SCRIPT,
           args: ['mobile:getCurrentPackage', []],
           skipRefresh: true,
         });

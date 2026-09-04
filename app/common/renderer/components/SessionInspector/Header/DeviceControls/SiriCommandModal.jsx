@@ -1,6 +1,8 @@
 import {Button, Input, Modal, Row} from 'antd';
 import {useTranslation} from 'react-i18next';
 
+import {COMMAND_EXECUTE_SCRIPT} from '../../../../constants/commands.js';
+
 /**
  * Modal used for entering the Siri command to execute (iOS only).
  */
@@ -15,7 +17,7 @@ const SiriCommandModal = ({
 
   const onSubmit = () => {
     applyClientMethod({
-      methodName: 'executeScript',
+      methodName: COMMAND_EXECUTE_SCRIPT,
       args: ['mobile:siriCommand', [{text: siriCommandValue}]],
     });
     hideSiriCommandModal();

@@ -2,8 +2,8 @@ import {Divider, Space} from 'antd';
 
 import {openLink} from '../../../polyfills.js';
 import ContextControlsGroup from './ContextControlsGroup.jsx';
-import DeviceControlsGroup from './DeviceControlsGroup.jsx';
-import DriverControlsGroup from './DriverControlsGroup.jsx';
+import DeviceControlsGroup from './DeviceControls/DeviceControlsGroup.jsx';
+import DriverControlsGroup from './DriverControls/DriverControlsGroup.jsx';
 import GeneralControlsGroup from './GeneralControlsGroup.jsx';
 import SessionQuitControlsGroup from './SessionQuitControlsGroup.jsx';
 import SessionReloadButton from './SessionReloadButton.jsx';
