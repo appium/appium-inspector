@@ -7,8 +7,11 @@ import {BUTTON} from '../../../constants/antd-types.js';
 import {COMMAND_EXECUTE_SCRIPT, COMMAND_UPDATE_SETTINGS} from '../../../constants/commands.js';
 import {DRIVERS} from '../../../constants/common.js';
 
+const UIA2_DISPLAY_CONTROLS_MIN_ANDROID_VER = 11;
+
 /**
  * Controls specific to UiAutomator2 driver: switch available displays
+ * Requires UiAutomator2 6.6.0 or later + Android 11 or later
  */
 const UiA2ControlsGroup = ({sessionSettings, applyClientMethod}) => {
   const areMultiWindowsEnabled = sessionSettings.enableMultiWindows;
@@ -138,9 +141,10 @@ const EspressoControlsGroup = ({sessionSettings, applyClientMethod}) => {
  */
 const DriverControlsGroup = ({featureCaps, sessionSettings, applyClientMethod}) => (
   <>
-    {featureCaps.automationName === DRIVERS.UIAUTOMATOR2 && (
-      <UiA2ControlsGroup sessionSettings={sessionSettings} applyClientMethod={applyClientMethod} />
-    )}
+    {featureCaps.automationName === DRIVERS.UIAUTOMATOR2 &&
+      featureCaps.platformVersion >= UIA2_DISPLAY_CONTROLS_MIN_ANDROID_VER && (
+        <UiA2ControlsGroup sessionSettings={sessionSettings} applyClientMethod={applyClientMethod} />
+      )}
     {featureCaps.automationName === DRIVERS.ESPRESSO && (
       <EspressoControlsGroup sessionSettings={sessionSettings} applyClientMethod={applyClientMethod} />
     )}
