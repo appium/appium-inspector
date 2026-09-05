@@ -16,12 +16,15 @@ generally correspond to a hardware button on an Android, iOS, iPadOS, tvOS or wa
 ![Android Buttons](./assets/images/header/system-buttons-android.png) ![XCUITest Buttons](./assets/images/header/system-buttons-xcuitest.png)
 
 - Android: back / home / app switcher
-- iOS/iPadOS/tvOS/watchOS: buttons dropdown / Siri
-    - The buttons listed in the dropdown correspond to the names supported by the XCUITest driver's
+- iOS/iPadOS/tvOS: buttons dropdown / Siri
+    - The buttons listed in the dropdown correspond to values supported by the XCUITest driver's
       [`mobile: pressButton`](https://appium.github.io/appium-xcuitest-driver/latest/reference/execute-methods/#mobile-pressbutton)
       execute method. The Inspector filters these only by the device category and OS version.
     - The Siri button will open a prompt for input text, which will be used as the Siri command.
       Please note that the command will not work if Siri is disabled.
+- watchOS: buttons dropdown / gestures dropdown / Siri
+    - Gestures listed in the dropdown correspond to values supported by the XCUITest driver's
+      [`mobile: performHandGesture`](https://appium.github.io/appium-xcuitest-driver/latest/reference/execute-methods/#mobile-performhandgesture) execute method
 
 ## Driver-Specific Controls
 
