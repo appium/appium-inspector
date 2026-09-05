@@ -11,11 +11,15 @@
 .inspectorMain {
   display: flex;
   flex: 1;
-  flex-direction: row;
   padding: 1em;
   max-width: 100%;
   min-height: 0;
   overflow-x: auto;
+}
+
+.inspectorSplitter {
+  width: 100%;
+  min-height: 0;
 }
 
 .inspectorMain :global(.ant-card-head-wrapper) {
@@ -41,10 +45,7 @@
 
 .inspectorTabsContainer {
   position: relative;
-  flex-grow: 1;
-  flex-basis: 550px;
-  min-width: 380px;
-  padding-left: 1em;
+  width: 100%;
   display: flex;
   flex-flow: column;
   height: 100%;
