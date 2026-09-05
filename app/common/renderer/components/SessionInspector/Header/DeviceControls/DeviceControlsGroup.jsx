@@ -17,6 +17,7 @@ const DeviceControlsGroup = ({
   <>
     {featureCaps.automationName === DRIVERS.XCUITEST && (
       <IDeviceControls
+        featureCaps={featureCaps}
         applyClientMethod={applyClientMethod}
         showSiriCommandModal={showSiriCommandModal}
         siriCommandValue={siriCommandValue}
