@@ -118,7 +118,7 @@ const IDeviceControls = ({
   hideSiriCommandModal,
 }) => {
   const {t} = useTranslation();
-  const pressButtonLabel = t('Press Button');
+  const pressButtonLabel = t('pressDeviceButton');
   const siriLabel = t('Execute Siri Command');
 
   const platformName = featureCaps.platformName;
