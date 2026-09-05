@@ -73,6 +73,7 @@
   "couldNotObtainScreenshot": "Could not obtain screenshot: {{screenshotError}}",
   "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Execute Siri Command",
+  "performHandGesture": "Perform Hand Gesture",
   "Press Home Button": "Press Home Button",
   "Press Back Button": "Press Back Button",
   "Press App Switch Button": "Press App Switch Button",
