@@ -12,7 +12,9 @@ import {useTranslation} from 'react-i18next';
 import {COMMAND_EXECUTE_SCRIPT} from '../../../../constants/commands.js';
 import {PLATFORMS} from '../../../../constants/common.js';
 import {
-  XCUITEST_BUTTONS as BTNS,
+  XCUITEST_IOS_BUTTONS,
+  XCUITEST_TVOS_BUTTONS,
+  XCUITEST_WATCHOS_BUTTONS,
   XCUITEST_WATCHOS_GESTURES as WATCHOS_GESTURES,
   XCUITEST_IOS_MIN_EXTRA_BUTTONS_VERSION,
   XCUITEST_TVOS_MIN_EXTRA_BUTTONS_VERSION,
@@ -27,68 +29,57 @@ const toDropdownItem = (item) => ({
   label: <span className={inspectorStyles.monoFont}>{item}</span>,
 });
 
-const getIOSButtons = (platformVersion) => {
-  const iosButtons = [BTNS.HOME, BTNS.VOLUME_UP, BTNS.VOLUME_DOWN];
-  if (platformVersion >= XCUITEST_IOS_MIN_EXTRA_BUTTONS_VERSION) {
-    iosButtons.push(BTNS.ACTION, BTNS.CAMERA);
-  }
-  return iosButtons;
-};
+// Per-platform behavior lives here, so callers never need to branch on platformName themselves.
+const PLATFORM_CONFIGS = {
+  [PLATFORMS.IOS]: {
+    icon: <IconDeviceMobile size={18} />,
+    buttons: (platformVersion) => {
+      const buttons = [XCUITEST_IOS_BUTTONS.HOME, XCUITEST_IOS_BUTTONS.VOLUME_UP, XCUITEST_IOS_BUTTONS.VOLUME_DOWN];
+      if (platformVersion >= XCUITEST_IOS_MIN_EXTRA_BUTTONS_VERSION) {
+        buttons.push(XCUITEST_IOS_BUTTONS.ACTION, XCUITEST_IOS_BUTTONS.CAMERA);
+      }
+      return buttons;
+    },
+  },
 
-const getTvOSButtons = (platformVersion) => {
-  const tvOSButtons = [
-    BTNS.HOME,
-    BTNS.UP,
-    BTNS.DOWN,
-    BTNS.LEFT,
-    BTNS.RIGHT,
-    BTNS.MENU,
-    BTNS.PLAY_PAUSE,
-    BTNS.SELECT,
-    BTNS.PAGE_UP,
-    BTNS.PAGE_DOWN,
-    BTNS.GUIDE,
-  ];
-  if (platformVersion >= XCUITEST_TVOS_MIN_EXTRA_BUTTONS_VERSION) {
-    tvOSButtons.push(BTNS.FOUR_COLORS, BTNS.ONE_TWO_THREE, BTNS.TV_PROVIDER);
-  }
-  return tvOSButtons;
-};
+  [PLATFORMS.TVOS]: {
+    icon: <IconDeviceRemote size={18} />,
+    buttons: (platformVersion) => {
+      const buttons = [
+        XCUITEST_TVOS_BUTTONS.HOME,
+        XCUITEST_TVOS_BUTTONS.UP,
+        XCUITEST_TVOS_BUTTONS.DOWN,
+        XCUITEST_TVOS_BUTTONS.LEFT,
+        XCUITEST_TVOS_BUTTONS.RIGHT,
+        XCUITEST_TVOS_BUTTONS.MENU,
+        XCUITEST_TVOS_BUTTONS.PLAY_PAUSE,
+        XCUITEST_TVOS_BUTTONS.SELECT,
+        XCUITEST_TVOS_BUTTONS.PAGE_UP,
+        XCUITEST_TVOS_BUTTONS.PAGE_DOWN,
+        XCUITEST_TVOS_BUTTONS.GUIDE,
+      ];
+      if (platformVersion >= XCUITEST_TVOS_MIN_EXTRA_BUTTONS_VERSION) {
+        buttons.push(
+          XCUITEST_TVOS_BUTTONS.FOUR_COLORS,
+          XCUITEST_TVOS_BUTTONS.ONE_TWO_THREE,
+          XCUITEST_TVOS_BUTTONS.TV_PROVIDER,
+        );
+      }
+      return buttons;
+    },
+  },
 
-const getWatchOSButtons = () => [BTNS.HOME, BTNS.ACTION];
-
-const getBtnDropdownItems = (platformName, platformVersion) => {
-  let platformButtons = [];
-  switch (platformName) {
-    case PLATFORMS.IOS:
-      platformButtons = getIOSButtons(platformVersion);
-      break;
-    case PLATFORMS.TVOS:
-      platformButtons = getTvOSButtons(platformVersion);
-      break;
-    case PLATFORMS.WATCHOS:
-      platformButtons = getWatchOSButtons();
-  }
-  return platformButtons.map(toDropdownItem);
-};
-
-const getGestureDropdownItems = (platformVersion) => {
-  const supportedGestures = [WATCHOS_GESTURES.DOUBLE_TAP];
-  if (platformVersion >= XCUITEST_WATCHOS_MIN_EXTRA_GESTURES_VERSION) {
-    supportedGestures.push(WATCHOS_GESTURES.FLICK);
-  }
-  return supportedGestures.map(toDropdownItem);
-};
-
-const PressButtonIcon = ({platformName}) => {
-  switch (platformName) {
-    case PLATFORMS.IOS:
-      return <IconDeviceMobile size={18} />;
-    case PLATFORMS.TVOS:
-      return <IconDeviceRemote size={18} />;
-    case PLATFORMS.WATCHOS:
-      return <IconDeviceWatch size={18} />;
-  }
+  [PLATFORMS.WATCHOS]: {
+    icon: <IconDeviceWatch size={18} />,
+    buttons: () => Object.values(XCUITEST_WATCHOS_BUTTONS),
+    gestures: (platformVersion) => {
+      const gestures = [WATCHOS_GESTURES.DOUBLE_TAP];
+      if (platformVersion >= XCUITEST_WATCHOS_MIN_EXTRA_GESTURES_VERSION) {
+        gestures.push(WATCHOS_GESTURES.FLICK);
+      }
+      return gestures;
+    },
+  },
 };
 
 /**
@@ -110,6 +101,7 @@ const IDeviceControls = ({
 
   const platformName = featureCaps.platformName;
   const platformVersion = featureCaps.platformVersion;
+  const platformConfig = PLATFORM_CONFIGS[platformName];
 
   const executeInteraction = (methodName, itemName) => {
     applyClientMethod({
@@ -126,11 +118,14 @@ const IDeviceControls = ({
       <Space.Compact>
         <Tooltip title={pressButtonLabel} placement="left">
           <Dropdown
-            menu={{items: getBtnDropdownItems(platformName, platformVersion), onClick: onBtnDropdownItemClick}}
+            menu={{
+              items: platformConfig.buttons(platformVersion).map(toDropdownItem),
+              onClick: onBtnDropdownItemClick,
+            }}
             trigger={['click']}
           >
             <Button aria-label={pressButtonLabel} style={{padding: 4, columnGap: 0}}>
-              <PressButtonIcon platformName={platformName} />
+              {platformConfig.icon}
               <IconChevronDown size={14} />
             </Button>
           </Dropdown>
@@ -138,7 +133,10 @@ const IDeviceControls = ({
         {platformName === PLATFORMS.WATCHOS && (
           <Tooltip title={performGestureLabel} placement="left">
             <Dropdown
-              menu={{items: getGestureDropdownItems(platformVersion), onClick: onGestureDropdownItemClick}}
+              menu={{
+                items: platformConfig.gestures(platformVersion).map(toDropdownItem),
+                onClick: onGestureDropdownItemClick,
+              }}
               trigger={['click']}
             >
               <Button aria-label={performGestureLabel} style={{padding: 4, columnGap: 0}}>

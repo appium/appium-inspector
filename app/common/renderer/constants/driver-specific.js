@@ -1,22 +1,27 @@
 // Constants for driver-specific values
 
 /**
- * All supported values for the XCUITest driver's 'mobile: pressButton' extension.
+ * Supported values for the XCUITest driver's 'mobile: pressButton' extension on iOS.
  * The Inspector only applies constraints for the device category and OS version:
  * limitations for Xcode, device model and simulator/real device currently cannot be implemented
  * @see https://appium.github.io/appium-xcuitest-driver/latest/reference/execute-methods/#mobile-pressbutton
  */
-export const XCUITEST_BUTTONS = {
-  // All devices
+export const XCUITEST_IOS_BUTTONS = {
   HOME: 'home',
-  // iOS 16+ and watchOS 9+ supported devices only
-  ACTION: 'action',
-  // iOS real devices only
+  // Real devices only
   VOLUME_UP: 'volumeup',
   VOLUME_DOWN: 'volumedown',
+  // iOS 16+ supported devices only
+  ACTION: 'action',
   // iOS 16+ supported real devices only
   CAMERA: 'camera',
-  // tvOS only
+};
+
+/**
+ * Supported values for the XCUITest driver's 'mobile: pressButton' extension on tvOS.
+ */
+export const XCUITEST_TVOS_BUTTONS = {
+  HOME: 'home',
   UP: 'up',
   DOWN: 'down',
   LEFT: 'left',
@@ -34,7 +39,16 @@ export const XCUITEST_BUTTONS = {
 };
 
 /**
- * All supported values for the XCUITest driver's 'mobile: performHandGesture' extension.
+ * Supported values for the XCUITest driver's 'mobile: pressButton' extension on watchOS.
+ */
+export const XCUITEST_WATCHOS_BUTTONS = {
+  HOME: 'home',
+  // Supported devices only
+  ACTION: 'action',
+};
+
+/**
+ * Supported values for the XCUITest driver's 'mobile: performHandGesture' extension.
  * @see https://appium.github.io/appium-xcuitest-driver/latest/reference/execute-methods/#mobile-performhandgesture
  */
 export const XCUITEST_WATCHOS_GESTURES = {
