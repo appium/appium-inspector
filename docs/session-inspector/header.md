@@ -9,13 +9,17 @@ device itself, or the [application source](./source.md).
 
 ## Device System Buttons
 
-If using the Inspector with an Android or iOS device, the first button group in the header will be
-the system buttons, which simulate the equivalent Android or iOS system functionality:
+If using the Inspector with the XCUITest, UiAutomator2 or Espresso drivers, the first button group
+in the header provides functionality specific to the device under test. The available buttons
+generally correspond to a hardware button on an Android, iOS, iPadOS, tvOS or watchOS device:
 
-![Android Buttons](./assets/images/header/system-buttons-android.png) ![iOS Buttons](./assets/images/header/system-buttons-ios.png)
+![Android Buttons](./assets/images/header/system-buttons-android.png) ![XCUITest Buttons](./assets/images/header/system-buttons-xcuitest.png)
 
 - Android: back / home / app switcher
-- iOS: home / Siri
+- iOS/iPadOS/tvOS/watchOS: buttons dropdown / Siri
+    - The buttons listed in the dropdown correspond to the names supported by the XCUITest driver's
+      [`mobile: pressButton`](https://appium.github.io/appium-xcuitest-driver/latest/reference/execute-methods/#mobile-pressbutton)
+      execute method. The Inspector filters these only by the device category and OS version.
     - The Siri button will open a prompt for input text, which will be used as the Siri command.
       Please note that the command will not work if Siri is disabled.
 
