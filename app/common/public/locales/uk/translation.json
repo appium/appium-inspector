@@ -71,8 +71,10 @@
   "locatorStrategy": "Стратегія локатора:",
   "selector": "Селектор:",
   "couldNotObtainScreenshot": "Не вдалося отримати скриншот: {{screenshotError}}",
-  "Press Home Button": "Натисніть кнопку \"Додому\"",
+  "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Виконати команду Siri",
+  "performHandGesture": "Perform Hand Gesture",
+  "Press Home Button": "Натисніть кнопку \"Додому\"",
   "Press Back Button": "Натисніть кнопку \"Назад\"",
   "Press App Switch Button": "Натисніть кнопку Перемикача додатку",
   "Command": "Команда",
@@ -332,5 +334,8 @@
   "detachFromSession": "Відʼєднатися від сесії",
   "enterSessionID": "Введіть ідентифікатор сесії для приєднання вручну",
   "refreshDiscoveredSessions": "Оновити відкриті сесії",
-  "toggleMultiDisplayMode": "Перемкнути багатоекранний режим"
+  "toggleMultiDisplayMode": "Перемкнути багатоекранний режим",
+  "switchToEspressoSubdriver": "Перейти на піддрайвер Espresso",
+  "switchToComposeSubdriver": "Перейти на піддрайвер Compose",
+  "w3cActionsUnsupported": "Дії W3C не підтримуються на цій платформі"
 }

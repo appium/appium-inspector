@@ -71,8 +71,10 @@
   "locatorStrategy": "Strategia lokalizacji:",
   "selector": "Selektor:",
   "couldNotObtainScreenshot": "Nie można uzyskać zrzutu ekranu: {{screenshotError}}",
-  "Press Home Button": "Naciśnij przycisk domowy",
+  "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Wykonaj polecenie Siri",
+  "performHandGesture": "Perform Hand Gesture",
+  "Press Home Button": "Naciśnij przycisk domowy",
   "Press Back Button": "Naciśnij przycisk Wstecz",
   "Press App Switch Button": "Naciśnij przycisk przełączania aplikacji",
   "Command": "Komenda",
@@ -332,5 +334,8 @@
   "detachFromSession": "Odłącz od sesji",
   "enterSessionID": "Wprowadź ID sesji, aby dołączyć ręcznie",
   "refreshDiscoveredSessions": "Odśwież wykryte sesje",
-  "toggleMultiDisplayMode": "Przełącz tryb wielu ekranów"
+  "toggleMultiDisplayMode": "Przełącz tryb wielu ekranów",
+  "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
+  "switchToComposeSubdriver": "Switch to Compose Subdriver",
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
 }

@@ -71,8 +71,10 @@
   "locatorStrategy": "Locatorstrategie:",
   "selector": "Selector:",
   "couldNotObtainScreenshot": "Kon screenshot niet verkrijgen: {{screenshotError}}",
-  "Press Home Button": "Druk op Home-knop",
+  "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Voer Siri-opdracht uit",
+  "performHandGesture": "Perform Hand Gesture",
+  "Press Home Button": "Druk op Home-knop",
   "Press Back Button": "Druk op Terug-knop",
   "Press App Switch Button": "Druk op App-wisselknop",
   "Command": "Opdracht",
@@ -332,5 +334,8 @@
   "detachFromSession": "Loskoppelen van sessie",
   "enterSessionID": "Voer sessie-ID in voor handmatig koppelen",
   "refreshDiscoveredSessions": "Ontdekte sessies vernieuwen",
-  "toggleMultiDisplayMode": "Multi-schermmodus in-/uitschakelen"
+  "toggleMultiDisplayMode": "Multi-schermmodus in-/uitschakelen",
+  "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
+  "switchToComposeSubdriver": "Switch to Compose Subdriver",
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
 }
