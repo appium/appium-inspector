@@ -28,17 +28,17 @@ const ScreenshotOuterSpinner = () => (
   </Spin>
 );
 
-// The image itself is scaled purely via CSS ('object-fit: contain' on the <img>), filling whatever
-// space the (resizable) screenshot panel currently has. Here we compute the same fit from the
-// content area's own dimensions and the device's aspect ratio - scaled to fit the available
-// height, capped to a fraction of the window - to report the panel's natural initial width,
-// and compute the ratio for scaling items overlaid on the screenshot (highlighter rectangles, etc.)
+// Calculate the target screenshot panel width (unless changed manually),
+// as well as the scale ratio of the original screenshot width to its target rendered width,
+// which is used to position screenshot overlay items like highlighters and gesture trails.
+// The image itself is rescaled purely using CSS. Scale calculation depends on the original image dimensions,
+// the width of the screenshot panel, and the width/height of the entire Inspector window.
 const updateScreenshotScale = (
   screenshotContentElRef,
   setScaleRatio,
-  windowSize,
-  screenshotPanelSize,
-  onScreenshotSizingChange,
+  rawImageSize,
+  screenshotPanelWidth,
+  suggestScreenshotPanelWidth,
 ) => {
   const screenshotContent = screenshotContentElRef.current;
   if (!screenshotContent) {
@@ -51,19 +51,19 @@ const updateScreenshotScale = (
     return;
   }
 
-  const deviceAspectRatio = windowSize.width / windowSize.height;
-  // the width the image would need in order to fill the available height, preserving aspect ratio
-  const heightFitWidth = availableHeight * deviceAspectRatio;
-  const maxImageWidthFraction = window.innerWidth * WINDOW_DIMENSIONS.MAX_IMAGE_WIDTH_FRACTION;
-  const naturalWidth = Math.min(heightFitWidth, maxImageWidthFraction, windowSize.width);
-  // the Splitter's own resize bar eats into the panel's requested size, so the content area ends
-  // up narrower than what was asked for - compensate by requesting that difference again on top
-  const splitterOverhead = screenshotPanelSize - availableWidth;
-  onScreenshotSizingChange(naturalWidth + splitterOverhead);
-
-  // the image itself never renders wider than the available width or the height-fit width
-  const renderedWidth = Math.min(availableWidth, heightFitWidth);
-  setScaleRatio(windowSize.width / renderedWidth);
+  const imageWidthToFitHeight = (availableHeight * rawImageSize.width) / rawImageSize.height;
+  const maxAllowedImageWidth = window.innerWidth * WINDOW_DIMENSIONS.MAX_IMG_WIDTH_FRACTION;
+  // check rawImageSize width too, since it may be the smallest (e.g. for smartwatches)
+  const bestFitWidth = Math.min(imageWidthToFitHeight, maxAllowedImageWidth, rawImageSize.width);
+  // the Splitter's own resize bar eats into the panel's requested size, so the content area
+  // ends up slightly narrower than requested - add that difference
+  const splitterOverhead = screenshotPanelWidth - availableWidth;
+  suggestScreenshotPanelWidth(bestFitWidth + splitterOverhead);
+  // users are allowed to set the screenshot container width to exceed the image width
+  // (the image size stops increasing once height-bound),
+  // so for the scale ratio, use the container-available and height-fit widths
+  const renderedWidth = Math.min(availableWidth, imageWidthToFitHeight);
+  setScaleRatio(rawImageSize.width / renderedWidth);
 };
 
 /**
@@ -79,8 +79,8 @@ const Screenshot = (props) => {
     isAwaitingMjpegStream,
     setAwaitingMjpegStream,
     windowSize,
-    screenshotPanelSize,
-    onScreenshotSizingChange,
+    screenshotPanelWidth,
+    suggestScreenshotPanelWidth,
   } = props;
 
   const screenshotContentElRef = useRef(null);
@@ -110,11 +110,8 @@ const Screenshot = (props) => {
     [isAwaitingMjpegStream, serverDetails.mjpegScreenshotUrl, setAwaitingMjpegStream],
   );
 
-  /**
-   * Ensures component dimensions are adjusted only once windowSize exists.
-   * Reacts both to window resizes and to the screenshot panel being resized via the Splitter
-   * (which does not trigger a window 'resize' event).
-   */
+  // set up triggers for recalculating of the screenshot image scaling factor:
+  // changes in size for the raw image, MJPEG stream, screenshot panel, and the Inspector window
   useEffect(() => {
     if (!windowSize || !JSON.stringify(windowSize)) {
       return;
@@ -124,16 +121,12 @@ const Screenshot = (props) => {
         screenshotContentElRef,
         setScaleRatio,
         windowSize,
-        screenshotPanelSize,
-        onScreenshotSizingChange,
+        screenshotPanelWidth,
+        suggestScreenshotPanelWidth,
       );
     }, 50);
     debouncedUpdateScale();
     window.addEventListener('resize', debouncedUpdateScale);
-    const resizeObserver = new ResizeObserver(debouncedUpdateScale);
-    if (screenshotContentElRef.current) {
-      resizeObserver.observe(screenshotContentElRef.current);
-    }
     if (isUsingMjpegMode) {
       mjpegStreamCheckIntervalRef.current = setInterval(
         () => checkMjpegStream(debouncedUpdateScale),
@@ -142,14 +135,13 @@ const Screenshot = (props) => {
     }
     return () => {
       window.removeEventListener('resize', debouncedUpdateScale);
-      resizeObserver.disconnect();
       if (mjpegStreamCheckIntervalRef.current) {
         clearInterval(mjpegStreamCheckIntervalRef.current);
         mjpegStreamCheckIntervalRef.current = null;
       }
       debouncedUpdateScale.cancel?.();
     };
-  }, [checkMjpegStream, isUsingMjpegMode, onScreenshotSizingChange, screenshotPanelSize, windowSize]);
+  }, [checkMjpegStream, isUsingMjpegMode, suggestScreenshotPanelWidth, screenshotPanelWidth, windowSize]);
 
   return (
     <div id="screenshotContainer" className={styles.screenshotContainer}>

@@ -10,6 +10,8 @@ import SessionInspectorTabs from './SessionInspectorTabs.jsx';
 
 import styles from './SessionInspector.module.css';
 
+const MAX_SCREENSHOT_WIDTH_PERCENT = `${WINDOW_DIMENSIONS.MAX_SCREENSHOT_PANEL_WIDTH_FRACTION * 100}%`;
+
 // resize width to something sensible for using the inspector on first run
 const resizeWindowOnLaunch = () => {
   const curHeight = window.innerHeight;
@@ -44,30 +46,28 @@ const Inspector = (props) => {
 
   const navigate = useNavigate();
 
-  // tracks the width of the resizable screenshot panel, and its user-adjustable upper limit
-  const [screenshotPanelSize, setScreenshotPanelSize] = useState(WINDOW_DIMENSIONS.INITIAL_SCREENSHOT_PANEL_WIDTH);
-  const [screenshotPanelMax, setScreenshotPanelMax] = useState(undefined);
-  const hasManualScreenshotPanelSize = useRef(false);
+  const [screenshotPanelWidth, setScreenshotPanelWidth] = useState(WINDOW_DIMENSIONS.INITIAL_SCREENSHOT_PANEL_WIDTH_PX);
+  const screenshotPanelResizedManually = useRef(false);
 
-  const handleScreenshotSizingChange = useCallback((naturalWidth) => {
-    // allow zooming in (even past the screenshot's native resolution) up to half of the
-    // Inspector window's width; the image itself never distorts beyond this point
-    const max = window.innerWidth * WINDOW_DIMENSIONS.MAX_SCREENSHOT_PANEL_WIDTH_FRACTION;
-    setScreenshotPanelMax(max);
-    setScreenshotPanelSize((prevSize) => {
-      if (hasManualScreenshotPanelSize.current) {
-        return Math.min(Math.max(prevSize, WINDOW_DIMENSIONS.MIN_SCREENSHOT_PANEL_WIDTH), max);
+  // Triggered when the width of the scaled image or Inspector window changes.
+  const setPanelWidthAutomatically = (suggestedWidth) => {
+    setScreenshotPanelWidth((curWidth) => {
+      if (screenshotPanelResizedManually.current) {
+        // re-enforce the same limits that are already set for Splitter.Panel,
+        // otherwise the panel can go outside these bounds upon Inspector window size change
+        const maxPanelSize = window.innerWidth * WINDOW_DIMENSIONS.MAX_SCREENSHOT_PANEL_WIDTH_FRACTION;
+        return Math.min(Math.max(curWidth, WINDOW_DIMENSIONS.MIN_IMG_WIDTH_PX), maxPanelSize);
       }
-      // ignore sub-pixel differences, otherwise minor rounding/measurement jitter keeps
-      // triggering a resize, which triggers another (slightly different) measurement, forever
-      return Math.abs(naturalWidth - prevSize) < 1 ? prevSize : naturalWidth;
+      // ignore sub-pixel differences to avoid a resizing loop
+      return Math.abs(suggestedWidth - curWidth) < 1 ? curWidth : suggestedWidth;
     });
-  }, []);
+  };
 
-  const handleScreenshotPanelResize = useCallback((sizes) => {
-    hasManualScreenshotPanelSize.current = true;
-    setScreenshotPanelSize(sizes[0]);
-  }, []);
+  // Triggered when manually adjusting the splitter. Only needed to trip the manual resize flag.
+  const setPanelWidthManually = (widths) => {
+    screenshotPanelResizedManually.current = true;
+    setScreenshotPanelWidth(widths[0]);
+  };
 
   const quitSessionAndReturn = useCallback(
     async ({reason, manualQuit = true, detachOnly = false} = {}) => {
@@ -92,25 +92,23 @@ const Inspector = (props) => {
   return (
     <div className={styles.inspectorContainer}>
       <HeaderButtons {...props} quitSessionAndReturn={quitSessionAndReturn} />
-      <div className={styles.inspectorMain}>
-        <Splitter className={styles.inspectorSplitter} onResize={handleScreenshotPanelResize}>
-          <Splitter.Panel
-            min={WINDOW_DIMENSIONS.MIN_SCREENSHOT_PANEL_WIDTH}
-            max={screenshotPanelMax}
-            size={screenshotPanelSize}
-          >
-            <Screenshot
-              {...props}
-              showScreenshot={showScreenshot}
-              screenshotPanelSize={screenshotPanelSize}
-              onScreenshotSizingChange={handleScreenshotSizingChange}
-            />
-          </Splitter.Panel>
-          <Splitter.Panel min={380}>
-            <SessionInspectorTabs {...props} showScreenshot={showScreenshot} />
-          </Splitter.Panel>
-        </Splitter>
-      </div>
+      <Splitter className={styles.inspectorSplitter} onResize={setPanelWidthManually}>
+        <Splitter.Panel
+          min={WINDOW_DIMENSIONS.MIN_IMG_WIDTH_PX}
+          max={MAX_SCREENSHOT_WIDTH_PERCENT}
+          size={screenshotPanelWidth}
+        >
+          <Screenshot
+            {...props}
+            showScreenshot={showScreenshot}
+            screenshotPanelWidth={screenshotPanelWidth}
+            suggestScreenshotPanelWidth={setPanelWidthAutomatically}
+          />
+        </Splitter.Panel>
+        <Splitter.Panel>
+          <SessionInspectorTabs {...props} showScreenshot={showScreenshot} />
+        </Splitter.Panel>
+      </Splitter>
       <SessionExpiryModal
         showKeepAlivePrompt={showKeepAlivePrompt}
         keepSessionAlive={keepSessionAlive}

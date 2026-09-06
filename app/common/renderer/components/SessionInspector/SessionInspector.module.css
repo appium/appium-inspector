@@ -8,47 +8,18 @@
   height: 100%;
 }
 
-.inspectorMain {
-  display: flex;
-  flex: 1;
-  padding: 1em;
-  max-width: 100%;
-  min-height: 0;
-  overflow-x: auto;
-}
-
 .inspectorSplitter {
   width: 100%;
   min-height: 0;
-}
-
-.inspectorMain :global(.ant-card-head-wrapper) {
-  max-height: 48px;
-}
-
-.inspectorMain :global(.ant-card-head) {
-  max-height: 48px;
-  padding: 0px 12px;
-  margin-bottom: 0px;
-}
-
-.inspectorMain :global(.ant-card-body) {
-  height: calc(100% - 54px);
-  padding: 12px;
-  scrollbar-width: none; /* -webkit-scrollbar for Firefox */
-}
-
-.inspectorMain :global(.ant-card-body::-webkit-scrollbar) {
-  background: transparent;
-  width: 14px;
+  padding: 1em;
 }
 
 .inspectorTabsContainer {
   position: relative;
+  height: 100%;
   width: 100%;
   display: flex;
   flex-flow: column;
-  height: 100%;
 }
 
 .inspectorTabsContainer :global(.ant-tabs) {
@@ -67,13 +38,34 @@
   height: 100%;
 }
 
-.interactionTabCard :global(.ant-card-body) {
-  overflow: scroll;
+.inspectorTabsContainer :global(.ant-card-head-wrapper) {
+  max-height: 48px;
+}
+
+.inspectorTabsContainer :global(.ant-card-head) {
+  max-height: 48px;
+  padding: 0px 12px;
+  margin-bottom: 0px;
+}
+
+.inspectorTabsContainer :global(.ant-card-body) {
+  height: calc(100% - 54px);
+  padding: 12px;
+  scrollbar-width: none; /* -webkit-scrollbar for Firefox */
+}
+
+.inspectorTabsContainer :global(.ant-card-body::-webkit-scrollbar) {
+  background: transparent;
+  width: 14px;
 }
 
 .interactionTabCard {
   flex: 2;
   height: 100%;
+}
+
+.interactionTabCard :global(.ant-card-body) {
+  overflow: scroll;
 }
 
 .frameworkDropdown {
