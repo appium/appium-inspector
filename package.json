@@ -74,7 +74,7 @@
     "electron-updater": "6.8.9",
     "i18next": "26.4.1",
     "i18next-fs-backend": "2.6.7",
-    "i18next-http-backend": "4.0.1",
+    "i18next-http-backend": "4.0.2",
     "ky": "1.14.3",
     "react": "19.2.8",
     "react-dom": "19.2.8",
