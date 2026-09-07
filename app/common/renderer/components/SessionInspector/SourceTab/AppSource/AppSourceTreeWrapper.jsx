@@ -1,8 +1,12 @@
 import {Spin, Tree} from 'antd';
-import {useCallback, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
+import {IMPORTANT_SOURCE_ATTRIBUTES} from '../../../../../shared/setting-defs.js';
 import {IMPORTANT_SOURCE_ATTRS} from '../../../../constants/source.js';
+import {getSetting, setSetting} from '../../../../polyfills.js';
+import {log} from '../../../../utils/logger.js';
+import {getVisibleSourceAttributes, sourceElementMatchesSearch} from '../../../../utils/source-attributes.js';
 import AppSourceTree from './AppSourceTree.jsx';
 import AppSourceTreeActions from './AppSourceTreeActions.jsx';
 
@@ -30,19 +34,46 @@ const AppSourceTreeWrapper = ({
 
   const [searchValue, setSearchValue] = useState('');
   const [autoExpandParent, setAutoExpandParent] = useState(true);
+  const [importantAttrs, setImportantAttrs] = useState(IMPORTANT_SOURCE_ATTRS);
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    getSetting(IMPORTANT_SOURCE_ATTRIBUTES)
+      .then((savedAttrs) => {
+        if (active && Array.isArray(savedAttrs) && savedAttrs.every((attr) => typeof attr === 'string')) {
+          setImportantAttrs(savedAttrs);
+        }
+      })
+      .catch((error) => log.error(error))
+      .finally(() => {
+        if (active) {
+          setSettingsLoaded(true);
+        }
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const updateImportantAttrs = async (attrs) => {
+    setImportantAttrs(attrs);
+    await setSetting(IMPORTANT_SOURCE_ATTRIBUTES, attrs);
+  };
 
   const flatten = (elemObj) => [elemObj, ...(elemObj.children?.flatMap(flatten) || [])];
   const flatTreeData = sourceJSON && flatten(sourceJSON);
+  const availableAttrs = [
+    ...new Set([
+      ...IMPORTANT_SOURCE_ATTRS,
+      ...importantAttrs,
+      ...(flatTreeData || []).flatMap((element) => Object.keys(element.attributes)),
+    ]),
+  ].sort();
 
   const elementMatchesSearch = useCallback(
-    (element, value) => {
-      const checkedAttrTexts = Object.entries(element.attributes)
-        .filter(([name]) => IMPORTANT_SOURCE_ATTRS.includes(name) || showSourceAttrs)
-        .map(([name, attrValue]) => name + attrValue);
-      const allCheckedTexts = element.tagName + checkedAttrTexts;
-      return allCheckedTexts.toLowerCase().includes(value.toLowerCase());
-    },
-    [showSourceAttrs],
+    (element, value) => sourceElementMatchesSearch(element, value, importantAttrs, showSourceAttrs),
+    [importantAttrs, showSourceAttrs],
   );
 
   const matchingElements = useMemo(
@@ -77,17 +108,15 @@ const AppSourceTreeWrapper = ({
     const {tagName, attributes} = element;
     let attrs = [];
 
-    for (let attr of Object.keys(attributes)) {
-      if ((IMPORTANT_SOURCE_ATTRS.includes(attr) && attributes[attr]) || showSourceAttrs) {
-        attrs.push(
-          <span key={attr}>
-            &nbsp;
-            <span className={styles.sourceNodeAttrName}>{getHighlightedText(attr)}</span>=&quot;
-            <span className={styles.sourceNodeAttrValue}>{getHighlightedText(attributes[attr])}</span>
-            &quot;
-          </span>,
-        );
-      }
+    for (const [attr, value] of getVisibleSourceAttributes(attributes, importantAttrs, showSourceAttrs)) {
+      attrs.push(
+        <span key={attr}>
+          &nbsp;
+          <span className={styles.sourceNodeAttrName}>{getHighlightedText(attr)}</span>=&quot;
+          <span className={styles.sourceNodeAttrValue}>{getHighlightedText(value)}</span>
+          &quot;
+        </span>,
+      );
     }
 
     return (
@@ -151,6 +180,10 @@ const AppSourceTreeWrapper = ({
               onSearchChange={onSearchChange}
               searchValue={searchValue}
               matchingElementsCount={matchingElements.length}
+              importantAttrs={importantAttrs}
+              availableAttrs={availableAttrs}
+              onImportantAttrsChange={updateImportantAttrs}
+              settingsLoaded={settingsLoaded}
             />
             <AppSourceTree
               treeData={treeData}
