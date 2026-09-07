@@ -94,7 +94,7 @@
     "@appium/tsconfig": "1.2.1",
     "@tomjs/electron-devtools-installer": "4.0.1",
     "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.5",
+    "@types/react-dom": "19.2.7",
     "@vitejs/plugin-react": "6.1.1",
     "asyncbox": "6.4.3",
     "electron": "44.1.1",
