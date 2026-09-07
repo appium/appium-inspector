@@ -22,7 +22,9 @@ generally correspond to a hardware button on an Android, iOS, iPadOS, tvOS or wa
       execute method. The Inspector filters these only by the device category and OS version.
     - The Siri button will open a prompt for input text, which will be used as the Siri command.
       Please note that the command will not work if Siri is disabled.
-- watchOS: buttons dropdown / gestures dropdown / Siri
+- watchOS: buttons dropdown / Digital Crown rotation / gestures dropdown / Siri
+    - Digital Crown rotation is based on the XCUITest driver's 
+      [`mobile: rotateDigitalCrown`](https://appium.github.io/appium-xcuitest-driver/latest/reference/execute-methods/#mobile-rotatedigitalcrown) execute method
     - Gestures listed in the dropdown correspond to values supported by the XCUITest driver's
       [`mobile: performHandGesture`](https://appium.github.io/appium-xcuitest-driver/latest/reference/execute-methods/#mobile-performhandgesture) execute method
 
