@@ -6,6 +6,7 @@ import {COMMAND_EXECUTE_SCRIPT} from '../../../../constants/commands.js';
 import {PLATFORMS} from '../../../../constants/common.js';
 import IDevicePressButtonControls from './IDevicePressButtonControls.jsx';
 import SiriCommandModal from './SiriCommandModal.jsx';
+import WatchOSCrownControls from './WatchOSCrownControls.jsx';
 import WatchOSGestureControls from './WatchOSGestureControls.jsx';
 
 import inspectorStyles from '../../SessionInspector.module.css';
@@ -46,8 +47,11 @@ const IDeviceControls = ({
           executeInteraction={executeInteraction}
         />
         {featureCaps.platformName === PLATFORMS.WATCHOS && (
+          <WatchOSCrownControls executeInteraction={executeInteraction} />
+        )}
+        {featureCaps.platformName === PLATFORMS.WATCHOS && (
           <WatchOSGestureControls
-            featureCaps={featureCaps}
+            platformVersion={featureCaps.platformVersion}
             toDropdownItem={toDropdownItem}
             executeInteraction={executeInteraction}
           />
