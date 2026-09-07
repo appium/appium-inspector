@@ -1,6 +1,9 @@
-import {useCallback, useEffect} from 'react';
+import {bindActionCreators} from '@reduxjs/toolkit';
+import {useCallback, useEffect, useMemo} from 'react';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router';
 
+import * as SessionInspectorActions from '../../actions/SessionInspector.js';
 import {WINDOW_DIMENSIONS} from '../../constants/common.js';
 import HeaderButtons from './Header/HeaderButtons.jsx';
 import Screenshot from './Screenshot/Screenshot.jsx';
@@ -23,7 +26,12 @@ const resizeWindowOnLaunch = () => {
 /**
  * The root component of the Session Inspector screen.
  */
-const Inspector = (props) => {
+const Inspector = () => {
+  const inspector = useSelector((state) => state.inspector, shallowEqual);
+  const dispatch = useDispatch();
+  const actions = useMemo(() => bindActionCreators(SessionInspectorActions, dispatch), [dispatch]);
+  const props = {...inspector, ...actions};
+
   const {
     screenshot,
     screenshotError,
