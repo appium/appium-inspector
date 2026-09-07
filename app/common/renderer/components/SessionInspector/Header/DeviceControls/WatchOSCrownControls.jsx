@@ -50,7 +50,7 @@ const WatchOSCrownControls = ({executeInteraction}) => {
     <Tooltip title={rotateCrownLabel} open={showTooltip} onOpenChange={setShowTooltip}>
       <Popover
         styles={{root: {width: '120px'}}}
-        content={<WatchOSCrownPopoverContents executeInteraction={executeInteraction}/>}
+        content={<WatchOSCrownPopoverContents executeInteraction={executeInteraction} />}
         trigger="click"
         onOpenChange={() => setShowTooltip(false)}
       >
