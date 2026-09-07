@@ -19,7 +19,7 @@ const getSupportedGestures = (platformVersion) => {
 /**
  * Button + dropdown to execute 'mobile: performHandGesture' in watchOS sessions.
  */
-const WatchOSGestureControls = ({featureCaps, toDropdownItem, executeInteraction}) => {
+const WatchOSGestureControls = ({platformVersion, toDropdownItem, executeInteraction}) => {
   const {t} = useTranslation();
   const performGestureLabel = t('performHandGesture');
 
@@ -29,7 +29,7 @@ const WatchOSGestureControls = ({featureCaps, toDropdownItem, executeInteraction
     <Tooltip title={performGestureLabel} open={showTooltip} onOpenChange={setShowTooltip}>
       <Dropdown
         menu={{
-          items: getSupportedGestures(featureCaps.platformVersion).map(toDropdownItem),
+          items: getSupportedGestures(platformVersion).map(toDropdownItem),
           onClick: ({key}) => executeInteraction('mobile:performHandGesture', {name: key}),
         }}
         placement="bottom"
