@@ -95,6 +95,11 @@ The title of each pointer can also be clicked and edited.
 Pointer actions are used to define the behavior of each pointer. Each individual action is presented
 as a rectangular card, and new cards can be freely added and removed.
 
+The left and right arrow buttons at the bottom of each card move the action earlier or later within
+its pointer. The gesture timeline updates immediately, and the action keeps its coordinates,
+duration, and other parameters. The first action cannot move earlier, and the last cannot move
+later. Moving an action turns off the screenshot coordinate picker.
+
 ![Pointer Actions](./assets/images/gestures/gesture-editor-actions.png)
 
 The _Action Type_ dropdown is used to select any of the supported actions: move, pointer down,
