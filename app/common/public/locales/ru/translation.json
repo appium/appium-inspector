@@ -71,8 +71,10 @@
   "locatorStrategy": "Стратегия поиска:",
   "selector": "Селектор:",
   "couldNotObtainScreenshot": "Не удалось получить скриншот: {{screenshotError}}",
-  "Press Home Button": "Нажать кнопку \"Домой\"",
+  "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Выполнить команду Siri",
+  "performHandGesture": "Perform Hand Gesture",
+  "Press Home Button": "Нажать кнопку \"Домой\"",
   "Press Back Button": "Нажать кнопку \"Назад\"",
   "Press App Switch Button": "Нажать кнопку переключателя приложений",
   "Command": "Команда",
@@ -332,5 +334,8 @@
   "detachFromSession": "Отсоединиться от сессии",
   "enterSessionID": "Введите ID сессии для прикрепления вручную",
   "refreshDiscoveredSessions": "Обновить обнаруженные сессии",
-  "toggleMultiDisplayMode": "Переключить режим мультидисплея"
+  "toggleMultiDisplayMode": "Переключить режим мультидисплея",
+  "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
+  "switchToComposeSubdriver": "Switch to Compose Subdriver",
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
 }

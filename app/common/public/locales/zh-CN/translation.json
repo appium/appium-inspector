@@ -71,8 +71,10 @@
   "locatorStrategy": "定位策略:",
   "selector": "选择器：",
   "couldNotObtainScreenshot": "无法获取屏幕截图: {{screenshotError}}",
-  "Press Home Button": "按主页按钮",
+  "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "执行 Siri 命令",
+  "performHandGesture": "Perform Hand Gesture",
+  "Press Home Button": "按主页按钮",
   "Press Back Button": "按返回按钮",
   "Press App Switch Button": "按下应用切换按钮",
   "Command": "Command 键",
@@ -332,5 +334,8 @@
   "detachFromSession": "从会话中分离",
   "enterSessionID": "请输入会话ID以手动连接",
   "refreshDiscoveredSessions": "刷新发现的会话",
-  "toggleMultiDisplayMode": "切换多显示器模式"
+  "toggleMultiDisplayMode": "切换多显示器模式",
+  "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
+  "switchToComposeSubdriver": "Switch to Compose Subdriver",
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
 }

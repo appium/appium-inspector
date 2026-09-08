@@ -71,8 +71,10 @@
   "locatorStrategy": "Konum Belirleme Stratejisi:",
   "selector": "Seçici:",
   "couldNotObtainScreenshot": "Ekran görüntüsü alınamadı: {{screenshotError}}",
-  "Press Home Button": "Ana Ekran Düğmesine Bas",
+  "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Siri Komutunu Çalıştır",
+  "performHandGesture": "Perform Hand Gesture",
+  "Press Home Button": "Ana Ekran Düğmesine Bas",
   "Press Back Button": "Geri Düğmesine Bas",
   "Press App Switch Button": "Uygulama Değiştirme Düğmesine Bas",
   "Command": "Komut",
@@ -332,5 +334,8 @@
   "detachFromSession": "Oturumdan Ayrıl",
   "enterSessionID": "Manuel olarak bağlanmak için oturum ID'sini girin",
   "refreshDiscoveredSessions": "Keşfedilen Oturumları Yenile",
-  "toggleMultiDisplayMode": "Çoklu Ekran Modunu Aç/Kapat"
+  "toggleMultiDisplayMode": "Çoklu Ekran Modunu Aç/Kapat",
+  "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
+  "switchToComposeSubdriver": "Switch to Compose Subdriver",
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
 }

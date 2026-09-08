@@ -71,8 +71,10 @@
   "locatorStrategy": "Locator Strategy:",
   "selector": "Selector:",
   "couldNotObtainScreenshot": "Could not obtain screenshot: {{screenshotError}}",
-  "Press Home Button": "Press Home Button",
+  "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Execute Siri Command",
+  "performHandGesture": "Perform Hand Gesture",
+  "Press Home Button": "Press Home Button",
   "Press Back Button": "Press Back Button",
   "Press App Switch Button": "Press App Switch Button",
   "Command": "Command",
@@ -332,5 +334,8 @@
   "detachFromSession": "Detach from Session",
   "enterSessionID": "Enter session ID for attaching manually",
   "refreshDiscoveredSessions": "Refresh Discovered Sessions",
-  "toggleMultiDisplayMode": "Toggle Multi-Display Mode"
+  "toggleMultiDisplayMode": "Toggle Multi-Display Mode",
+  "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
+  "switchToComposeSubdriver": "Switch to Compose Subdriver",
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
 }

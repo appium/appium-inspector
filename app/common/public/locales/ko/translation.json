@@ -71,8 +71,10 @@
   "locatorStrategy": "Locator Strategy:",
   "selector": "Selector:",
   "couldNotObtainScreenshot": "스크린샷을 가져올 수 없습니다: {{screenshotError}}",
-  "Press Home Button": "홈 버튼 누르기",
+  "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Siri 명령 실행",
+  "performHandGesture": "Perform Hand Gesture",
+  "Press Home Button": "홈 버튼 누르기",
   "Press Back Button": "이전 버튼 누르기",
   "Press App Switch Button": "앱 전환 버튼 누르기",
   "Command": "커맨드",
@@ -332,5 +334,8 @@
   "detachFromSession": "세션 연결 해제",
   "enterSessionID": "수동으로 연결하기 위한 세션 ID 입력",
   "refreshDiscoveredSessions": "발견된 세션 새로고침",
-  "toggleMultiDisplayMode": "다중 디스플레이 모드 토글"
+  "toggleMultiDisplayMode": "다중 디스플레이 모드 토글",
+  "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
+  "switchToComposeSubdriver": "Switch to Compose Subdriver",
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
 }

@@ -71,8 +71,10 @@
   "locatorStrategy": "ロケーター:",
   "selector": "セレクタ:",
   "couldNotObtainScreenshot": "スクリーンショットの取得に失敗しました: {{screenshotError}}",
-  "Press Home Button": "ホームボタンを押す",
+  "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Siri コマンドを実行する",
+  "performHandGesture": "Perform Hand Gesture",
+  "Press Home Button": "ホームボタンを押す",
   "Press Back Button": "戻るボタンを押す",
   "Press App Switch Button": "アプリスイッチボタンを押す",
   "Command": "コマンド",
@@ -332,5 +334,8 @@
   "detachFromSession": "セッションから切断する",
   "enterSessionID": "手動で接続するためのセッションIDを入力する",
   "refreshDiscoveredSessions": "検出されたセッションを更新する",
-  "toggleMultiDisplayMode": "マルチディスプレイモードの切り替え"
+  "toggleMultiDisplayMode": "マルチディスプレイモードの切り替え",
+  "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
+  "switchToComposeSubdriver": "Switch to Compose Subdriver",
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
 }

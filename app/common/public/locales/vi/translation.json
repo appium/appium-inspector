@@ -71,8 +71,10 @@
   "locatorStrategy": "Chiến lược định vị:",
   "selector": "Bộ chọn:",
   "couldNotObtainScreenshot": "Không thể lấy ảnh chụp màn hình: {{screenshotError}}",
-  "Press Home Button": "Nhấn nút Home",
+  "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Thực thi lệnh Siri",
+  "performHandGesture": "Perform Hand Gesture",
+  "Press Home Button": "Nhấn nút Home",
   "Press Back Button": "Nhấn nút Quay lại",
   "Press App Switch Button": "Nhấn nút Chuyển ứng dụng",
   "Command": "Lệnh",
@@ -332,5 +334,8 @@
   "detachFromSession": "Tách khỏi phiên",
   "enterSessionID": "Nhập ID phiên để đính kèm thủ công",
   "refreshDiscoveredSessions": "Làm mới các phiên đã phát hiện",
-  "toggleMultiDisplayMode": "Bật/tắt chế độ đa màn hình"
+  "toggleMultiDisplayMode": "Bật/tắt chế độ đa màn hình",
+  "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
+  "switchToComposeSubdriver": "Switch to Compose Subdriver",
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
 }

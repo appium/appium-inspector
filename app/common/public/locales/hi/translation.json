@@ -71,8 +71,10 @@
   "locatorStrategy": "लोकेटर कार्यनीति:",
   "selector": "चुननेवाला",
   "couldNotObtainScreenshot": "स्क्रीनशॉट प्राप्त नहीं किया जा सका: {{screenshotError}}",
-  "Press Home Button": "होम बटन दबाएं",
+  "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Siri कमांड निष्पादित करें",
+  "performHandGesture": "Perform Hand Gesture",
+  "Press Home Button": "होम बटन दबाएं",
   "Press Back Button": "बैक बटन दबाएं",
   "Press App Switch Button": "ऐप स्विच बटन दबाएं",
   "Command": "कमांड",
@@ -332,5 +334,8 @@
   "detachFromSession": "सत्र से अलग करें",
   "enterSessionID": "मैन्युअल रूप से जोड़ने के लिए सत्र ID दर्ज करें",
   "refreshDiscoveredSessions": "खोजे गए सत्र रीफ्रेश करें",
-  "toggleMultiDisplayMode": "मल्टी-डिस्प्ले मोड टॉगल करें"
+  "toggleMultiDisplayMode": "मल्टी-डिस्प्ले मोड टॉगल करें",
+  "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
+  "switchToComposeSubdriver": "Switch to Compose Subdriver",
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
 }

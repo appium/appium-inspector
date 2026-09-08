@@ -1,9 +1,12 @@
+import {bindActionCreators} from '@reduxjs/toolkit';
 import {IconLink} from '@tabler/icons-react';
 import {Badge, Button, Divider, Space, Spin, Tabs} from 'antd';
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router';
 
+import * as SessionBuilderActions from '../../actions/SessionBuilder.js';
 import {BUTTON} from '../../constants/antd-types.js';
 import {LINKS} from '../../constants/common.js';
 import {ADD_CLOUD_PROVIDER_TAB_KEY, SERVER_TYPES, SESSION_BUILDER_TABS} from '../../constants/session-builder.js';
@@ -28,7 +31,12 @@ import styles from './SessionBuilder.module.css';
 const isCapabilitySetEmpty = (caps) =>
   isEmpty(caps) || (caps.length === 1 && !('name' in caps[0]) && !('value' in caps[0]));
 
-const Session = (props) => {
+const Session = () => {
+  const builder = useSelector((state) => state.builder, shallowEqual);
+  const dispatch = useDispatch();
+  const actions = useMemo(() => bindActionCreators(SessionBuilderActions, dispatch), [dispatch]);
+  const props = {...builder, ...actions};
+
   const {
     tabKey,
     switchTabs,
