@@ -5,9 +5,9 @@ import {Provider} from 'react-redux';
 import {MemoryRouter, Route, Routes} from 'react-router';
 
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.jsx';
+import SessionBuilderPage from './components/SessionBuilder/SessionBuilder.jsx';
+import SessionInspectorPage from './components/SessionInspector/SessionInspector.jsx';
 import Spinner from './components/Spinner/Spinner.jsx';
-import SessionBuilderPage from './containers/SessionBuilderPage.js';
-import SessionInspectorPage from './containers/SessionInspectorPage.js';
 import {ThemeProvider} from './providers/ThemeProvider.jsx';
 import store from './store.js';
 
