@@ -1,8 +1,9 @@
-import {IconFocus2, IconX} from '@tabler/icons-react';
+import {IconArrowLeft, IconArrowRight, IconFocus2, IconX} from '@tabler/icons-react';
 import {Button, Card, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {POINTER_TYPES} from '../../../../constants/gestures.js';
+import {moveGestureTick} from '../../../../utils/gesture-editing.js';
 
 import styles from './GestureEditor.module.css';
 
@@ -56,6 +57,36 @@ const GestureEditorTickCardHeaderButtons = ({tick, pointers, setPointers, select
   );
 };
 
+const GestureEditorTickMoveButton = ({tick, pointers, setPointers, unselectTick, direction}) => {
+  const {t} = useTranslation();
+  const pointer = pointers.find(({ticks}) => ticks.includes(tick));
+  const index = pointer?.ticks.indexOf(tick) ?? -1;
+  const targetIndex = index + direction;
+  const label = t(direction < 0 ? 'moveGestureActionEarlier' : 'moveGestureActionLater');
+
+  const moveTick = () => {
+    const updatedPointers = moveGestureTick(pointers, pointer.id, tick.id, direction);
+    if (updatedPointers !== pointers) {
+      // The coordinate picker uses position-based IDs, so clear it before renumbering.
+      unselectTick();
+      setPointers(updatedPointers);
+    }
+  };
+
+  return (
+    <Tooltip title={label}>
+      <Button
+        aria-label={label}
+        size="small"
+        type="text"
+        icon={direction < 0 ? <IconArrowLeft size={18} /> : <IconArrowRight size={18} />}
+        disabled={index < 0 || targetIndex < 0 || targetIndex >= pointer.ticks.length}
+        onClick={moveTick}
+      />
+    </Tooltip>
+  );
+};
+
 /**
  * Wrapper card for a single tick in the gesture editor.
  */
@@ -63,6 +94,16 @@ const GestureEditorTickCard = ({children, tick, pointers, setPointers, selectedT
   <Card
     hoverable={true}
     className={styles.tickCard}
+    actions={[-1, 1].map((direction) => (
+      <GestureEditorTickMoveButton
+        key={direction}
+        tick={tick}
+        pointers={pointers}
+        setPointers={setPointers}
+        unselectTick={unselectTick}
+        direction={direction}
+      />
+    ))}
     extra={
       <GestureEditorTickCardHeaderButtons
         tick={tick}
