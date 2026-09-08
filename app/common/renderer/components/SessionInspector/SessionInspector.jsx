@@ -1,5 +1,5 @@
-import {Splitter} from 'antd';
 import {bindActionCreators} from '@reduxjs/toolkit';
+import {Splitter} from 'antd';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router';

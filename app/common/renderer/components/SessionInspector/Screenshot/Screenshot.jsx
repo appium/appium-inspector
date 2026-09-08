@@ -105,7 +105,7 @@ const Screenshot = (props) => {
   // set up triggers for recalculating the screenshot image scaling factor, upon changes in size
   // for the raw image, MJPEG stream, screenshot panel, and the Inspector window
   useEffect(() => {
-    if (!windowSize || !JSON.stringify(windowSize)) {
+    if (!windowSize?.width || !windowSize?.height) {
       return;
     }
     const debouncedUpdateScale = debounce(() => {
