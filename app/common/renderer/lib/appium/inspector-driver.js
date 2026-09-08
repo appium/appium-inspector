@@ -489,7 +489,7 @@ export default class InspectorDriver {
       }
     } else if (automationName === DRIVERS.XCUITEST) {
       // mobile:activeAppInfo exists since XCUITest 2.126.0 (pre-Appium 2)
-      const curBundleId = (await this.driver.executeScript('mobile:activeAppInfo', []))?.bundleId;
+      const curBundleId = (await this.driver.executeScript('mobile:activeAppInfo', [])).bundleId;
       if (curBundleId === IOS_SAFARI_BUNDLE_ID) {
         const isLandscape = windowSize.height < windowSize.width;
         // Top bar exists for both portrait and landscape modes
@@ -498,12 +498,12 @@ export default class InspectorDriver {
           selector: isLandscape ? IOS_SAFARI_LANDSCAPE_TABBAR_SELECTOR : IOS_SAFARI_PORTRAIT_TOPBAR_SELECTOR,
         });
         if (topBar.el) {
-          webviewTopOffset = (await topBar.el.getElementRect())?.height;
+          webviewTopOffset = (await topBar.el.getElementRect()).height;
         }
         if (isLandscape) {
           // Landscape mode also has side offsets
           // mobile:deviceScreenInfo exists since XCUITest 3.38.0 (pre-Appium 2)
-          webviewLeftOffset = (await this.driver.executeScript('mobile:deviceScreenInfo', []))?.statusBarSize.height;
+          webviewLeftOffset = (await this.driver.executeScript('mobile:deviceScreenInfo', [])).statusBarSize.height;
         }
       } else {
         // If we have a non-Safari hybrid view, just find the first WebView element
