@@ -487,16 +487,12 @@ export default class InspectorDriver {
         }
       }
     } else if (automationName === DRIVERS.XCUITEST) {
+      // mobile:activeAppInfo exists since XCUITest 2.126.0 (pre-Appium 2)
       const activeAppInfo = await this.driver.executeScript('mobile:activeAppInfo', []);
       if (activeAppInfo?.bundleId === IOS_SAFARI_BUNDLE_ID) {
         // If using Safari, its webview is always offset by the status bar regardless of orientation
-        let statusBarOffset;
-        try {
-          statusBarOffset = (await this.driver.executeScript('mobile:deviceScreenInfo', []))?.statusBarSize.height;
-        } catch {
-          // mobile:deviceScreenInfo exists since XCUITest v3.38.0, so older sessions may not have it
-          statusBarOffset = (await this.driver.getSession())?.statBarHeight;
-        }
+        // mobile:deviceScreenInfo exists since XCUITest 3.38.0 (pre-Appium 2)
+        const statusBarOffset = (await this.driver.executeScript('mobile:deviceScreenInfo', []))?.statusBarSize.height;
         if (windowSize.height > windowSize.width) {
           // Portrait mode only has top offset, which differs depending on tab style (compact/bottom/top)
           webviewTopOffset = statusBarOffset;
