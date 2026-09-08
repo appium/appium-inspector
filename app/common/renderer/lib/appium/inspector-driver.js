@@ -16,9 +16,10 @@ const {TAP, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
 // Selector for the Android webview - includes the correct top and bottom boundaries
 const ANDROID_WEBVIEW_SELECTOR = 'android.webkit.WebView';
 const IOS_SAFARI_BUNDLE_ID = 'com.apple.mobilesafari';
-// iOS Safari portrait tabbar is shown in all tab styles, but only relevant for the top style
-const IOS_SAFARI_PORTRAIT_TABBAR_SELECTOR =
-  '**/XCUIElementTypeOther[`name == "CapsuleViewController"`]/XCUIElementTypeOther';
+// iOS Safari portrait topbar, includes system statusbar and Safari tabbar (in top tab style)
+const IOS_SAFARI_PORTRAIT_TOPBAR_SELECTOR =
+  '**/XCUIElementTypeOther[`name CONTAINS "SafariWindow"`]' +
+  '/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]';
 // iOS Safari landscape tabbar is only shown when scrolled upwards, and is auto-hidden otherwise
 const IOS_SAFARI_LANDSCAPE_TABBAR_SELECTOR = '**/XCUIElementTypeOther[`name == "Toolbar"`]';
 
@@ -488,36 +489,21 @@ export default class InspectorDriver {
       }
     } else if (automationName === DRIVERS.XCUITEST) {
       // mobile:activeAppInfo exists since XCUITest 2.126.0 (pre-Appium 2)
-      const activeAppInfo = await this.driver.executeScript('mobile:activeAppInfo', []);
-      if (activeAppInfo?.bundleId === IOS_SAFARI_BUNDLE_ID) {
-        // If using Safari, its webview is always offset by the status bar regardless of orientation
-        // mobile:deviceScreenInfo exists since XCUITest 3.38.0 (pre-Appium 2)
-        const statusBarOffset = (await this.driver.executeScript('mobile:deviceScreenInfo', []))?.statusBarSize.height;
-        if (windowSize.height > windowSize.width) {
-          // Portrait mode only has top offset, which differs depending on tab style (compact/bottom/top)
-          webviewTopOffset = statusBarOffset;
-          const navBar = await this.fetchElement({
-            strategy: '-ios class chain',
-            selector: IOS_SAFARI_PORTRAIT_TABBAR_SELECTOR,
-          });
-          if (navBar.el) {
-            const {y, height} = await navBar.el.getElementRect();
-            // navbar starts at the top only for the top tab style, and includes statusBarOffset
-            if (y === 0) {
-              webviewTopOffset = height;
-            }
-          }
-        } else {
-          // landscape mode has top and side offsets
-          webviewLeftOffset = statusBarOffset;
-          const toolBar = await this.fetchElement({
-            strategy: '-ios class chain',
-            selector: IOS_SAFARI_LANDSCAPE_TABBAR_SELECTOR,
-          });
-          if (toolBar.el) {
-            const {height} = await toolBar.el.getElementRect();
-            webviewTopOffset = height;
-          }
+      const curBundleId = (await this.driver.executeScript('mobile:activeAppInfo', []))?.bundleId;
+      if (curBundleId === IOS_SAFARI_BUNDLE_ID) {
+        const isLandscape = windowSize.height < windowSize.width;
+        // Top bar exists for both portrait and landscape modes
+        const topBar = await this.fetchElement({
+          strategy: '-ios class chain',
+          selector: isLandscape ? IOS_SAFARI_LANDSCAPE_TABBAR_SELECTOR : IOS_SAFARI_PORTRAIT_TOPBAR_SELECTOR,
+        });
+        if (topBar.el) {
+          webviewTopOffset = (await topBar.el.getElementRect())?.height;
+        }
+        if (isLandscape) {
+          // Landscape mode also has side offsets
+          // mobile:deviceScreenInfo exists since XCUITest 3.38.0 (pre-Appium 2)
+          webviewLeftOffset = (await this.driver.executeScript('mobile:deviceScreenInfo', []))?.statusBarSize.height;
         }
       } else {
         // If we have a non-Safari hybrid view, just find the first WebView element
