@@ -30,42 +30,46 @@ const NoContextsFoundButton = () => {
 /**
  * Dropdown used to switch contexts.
  */
-const ContextDropdown = ({contexts, currentContext, setContext, applyClientMethod, openLink}) => {
+const ContextsDropdown = ({contexts, currentContext, setContext, applyClientMethod}) => (
+  <Select
+    styles={{root: {width: 350}}}
+    value={currentContext}
+    popupMatchSelectWidth={false}
+    onChange={(value) => {
+      setContext(value);
+      applyClientMethod({methodName: 'switchAppiumContext', args: [value]});
+    }}
+    options={contexts.map(({id, title}) => ({
+      value: id,
+      label: title ? `${title} (${id})` : id,
+    }))}
+  />
+);
+
+/**
+ * Element (disabled button) used to provide extra info regarding additional contexts.
+ */
+const ContextInfoButton = ({openLink}) => {
   const {t} = useTranslation();
   const contextLabel = t('contextDropdownInfo');
 
   return (
-    <>
-      <Select
-        styles={{root: {width: 350}}}
-        value={currentContext}
-        popupMatchSelectWidth={false}
-        onChange={(value) => {
-          setContext(value);
-          applyClientMethod({methodName: 'switchAppiumContext', args: [value]});
-        }}
-        options={contexts.map(({id, title}) => ({
-          value: id,
-          label: title ? `${title} (${id})` : id,
-        }))}
+    <Tooltip
+      title={
+        <>
+          {contextLabel}{' '}
+          <a onClick={(e) => e.preventDefault() || openLink(LINKS.HYBRID_MODE_DOCS)}>{LINKS.HYBRID_MODE_DOCS}</a>
+        </>
+      }
+      classNames={{root: styles.wideTooltip}}
+    >
+      <Button
+        aria-label={`${contextLabel} ${LINKS.HYBRID_MODE_DOCS}`}
+        disabled
+        icon={<IconInfoCircle size={20} />}
+        styles={{root: {backgroundColor: 'var(--ant-color-primary)', color: '#ffffff'}}}
       />
-      <Tooltip
-        title={
-          <>
-            {contextLabel}{' '}
-            <a onClick={(e) => e.preventDefault() || openLink(LINKS.HYBRID_MODE_DOCS)}>{LINKS.HYBRID_MODE_DOCS}</a>
-          </>
-        }
-        classNames={{root: styles.wideTooltip}}
-      >
-        <Button
-          aria-label={`${contextLabel} ${LINKS.HYBRID_MODE_DOCS}`}
-          disabled
-          icon={<IconInfoCircle size={20} />}
-          styles={{root: {backgroundColor: 'var(--ant-color-primary)', color: '#ffffff'}}}
-        />
-      </Tooltip>
-    </>
+    </Tooltip>
   );
 };
 
@@ -105,14 +109,14 @@ const ContextControlsGroup = ({
       </Tooltip>
       {contexts && contexts.length === 1 && <NoContextsFoundButton />}
       {contexts && contexts.length > 1 && (
-        <ContextDropdown
+        <ContextsDropdown
           contexts={contexts}
           currentContext={currentContext}
           setContext={setContext}
           applyClientMethod={applyClientMethod}
-          openLink={openLink}
         />
       )}
+      {contexts && contexts.length > 1 && <ContextInfoButton openLink={openLink} />}
     </Space.Compact>
   );
 };
