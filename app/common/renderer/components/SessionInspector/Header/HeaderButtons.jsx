@@ -17,7 +17,6 @@ const HeaderButtons = (props) => {
   const {
     selectAppMode,
     appMode,
-    showSiriCommandModal,
     applyClientMethod,
     quitSessionAndReturn,
     contexts,
@@ -27,24 +26,12 @@ const HeaderButtons = (props) => {
     toggleAutoSessionRestart,
     featureCaps,
     sessionSettings,
-    siriCommandValue,
-    setSiriCommandValue,
-    isSiriCommandModalVisible,
-    hideSiriCommandModal,
   } = props;
 
   return (
     <div className={styles.headerButtons}>
       <Space size="middle" wrap className={styles.headerButtonsSpace}>
-        <DeviceControlsGroup
-          featureCaps={featureCaps}
-          applyClientMethod={applyClientMethod}
-          showSiriCommandModal={showSiriCommandModal}
-          siriCommandValue={siriCommandValue}
-          setSiriCommandValue={setSiriCommandValue}
-          isSiriCommandModalVisible={isSiriCommandModalVisible}
-          hideSiriCommandModal={hideSiriCommandModal}
-        />
+        <DeviceControlsGroup featureCaps={featureCaps} applyClientMethod={applyClientMethod} />
         <DriverControlsGroup
           featureCaps={featureCaps}
           sessionSettings={sessionSettings}
