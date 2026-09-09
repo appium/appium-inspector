@@ -33,7 +33,7 @@ const ScreenshotOuterSpinner = () => (
 // which is used to position screenshot overlay items like highlighters and gesture trails.
 // The image itself is rescaled purely using CSS.
 const updateScreenshotScale = ({sizes, setScaleRatio, suggestScreenshotPanelWidth}) => {
-  if (!sizes.screenshotContent) {
+  if (!sizes.screenshotContent || !sizes.image) {
     return;
   }
 
@@ -43,19 +43,18 @@ const updateScreenshotScale = ({sizes, setScaleRatio, suggestScreenshotPanelWidt
     return;
   }
 
-  const imageWidthToFitHeight = (availableHeight * sizes.rawImage.width) / sizes.rawImage.height;
+  // viewport can have a different ratio from the image (e.g. for webviews), so use the image itself
+  const imageWidthToFitHeight = (availableHeight * sizes.image.naturalWidth) / sizes.image.naturalHeight;
   const maxAllowedImageWidth = window.innerWidth * WINDOW_DIMENSIONS.MAX_IMG_WIDTH_FRACTION;
-  // check rawImage width too, since it may be the smallest (e.g. for smartwatches)
-  const bestFitWidth = Math.min(imageWidthToFitHeight, maxAllowedImageWidth, sizes.rawImage.width);
+  // check image width too, since it may be the smallest (e.g. for smartwatches)
+  const bestFitWidth = Math.min(imageWidthToFitHeight, maxAllowedImageWidth, sizes.image.naturalWidth);
   // the Splitter's own resize bar eats into the panel's requested size, so the content area
   // ends up slightly narrower than requested - add that difference
   const splitterOverhead = sizes.screenshotPanelWidth - availableWidth;
   suggestScreenshotPanelWidth(bestFitWidth + splitterOverhead);
-  // users are allowed to set the screenshot container width to exceed the image width
-  // (the image size stops increasing once height-bound),
-  // so for the scale ratio, use the container-available and height-fit widths
+  // scale ratio is specific to the viewport, so use its width
   const renderedWidth = Math.min(availableWidth, imageWidthToFitHeight);
-  setScaleRatio(sizes.rawImage.width / renderedWidth);
+  setScaleRatio(sizes.viewport.width / renderedWidth);
 };
 
 /**
@@ -75,6 +74,7 @@ const Screenshot = (props) => {
     suggestScreenshotPanelWidth,
   } = props;
 
+  const imageElRef = useRef(null);
   const screenshotContentElRef = useRef(null);
   const mjpegStreamCheckIntervalRef = useRef(null);
 
@@ -111,7 +111,8 @@ const Screenshot = (props) => {
     const debouncedUpdateScale = debounce(() => {
       updateScreenshotScale({
         sizes: {
-          rawImage: windowSize,
+          viewport: windowSize,
+          image: imageElRef.current,
           screenshotContent: screenshotContentElRef.current,
           screenshotPanelWidth,
         },
@@ -141,7 +142,7 @@ const Screenshot = (props) => {
     <div id="screenshotContainer" className={styles.screenshotContainer}>
       <ScreenshotControls {...props} />
       <div className={styles.screenshotContent} ref={screenshotContentElRef}>
-        {showScreenshot && <ScreenshotImgWithOverlays {...props} scaleRatio={scaleRatio} />}
+        {showScreenshot && <ScreenshotImgWithOverlays {...props} scaleRatio={scaleRatio} imageElRef={imageElRef} />}
         {screenshotError && <ScreenshotErrorLabel screenshotError={screenshotError} />}
         {!showScreenshot && <ScreenshotOuterSpinner />}
       </div>

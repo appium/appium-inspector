@@ -59,6 +59,7 @@ const handleSwipeOnScreenshot = async (swipeStartPoint, swipeEndPoint, applyClie
 const ScreenshotImgWithOverlays = (props) => {
   const {
     screenshot,
+    imageElRef,
     windowSize,
     serverDetails,
     isUsingMjpegMode,
@@ -155,7 +156,7 @@ const ScreenshotImgWithOverlays = (props) => {
           {screenshotInteractionMode !== SELECT && screenshotInteractionMode !== TAP_ELEMENT && (
             <CoordinatesContainer x={x} y={y} />
           )}
-          <img src={screenSrc} id="screenshot" />
+          <img src={screenSrc} id="screenshot" ref={imageElRef} />
           {(screenshotInteractionMode === SELECT || screenshotInteractionMode === TAP_ELEMENT) && (
             <ElementOverlays {...props} />
           )}
