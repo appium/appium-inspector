@@ -13,6 +13,19 @@ export const SAVED_CLIENT_FRAMEWORK = 'SAVED_FRAMEWORK';
 export const VISIBLE_PROVIDERS = 'VISIBLE_PROVIDERS';
 export const IMPORTANT_SOURCE_ATTRIBUTES = 'IMPORTANT_SOURCE_ATTRIBUTES';
 
+// Attributes which are listed in the source by default
+export const IMPORTANT_SOURCE_ATTRS = [
+  'name',
+  'content-desc',
+  'resource-id',
+  'AXDescription',
+  'AXIdentifier',
+  'text',
+  'label',
+  'value',
+  'id',
+];
+
 export const DEFAULT_SETTINGS = {
   [PREFERRED_LANGUAGE]: fallbackLng,
   [PREFERRED_THEME]: 'system',
@@ -23,5 +36,5 @@ export const DEFAULT_SETTINGS = {
   [SESSION_SERVER_TYPE]: null,
   [SAVED_CLIENT_FRAMEWORK]: 'java',
   [VISIBLE_PROVIDERS]: null,
-  [IMPORTANT_SOURCE_ATTRIBUTES]: null,
+  [IMPORTANT_SOURCE_ATTRIBUTES]: IMPORTANT_SOURCE_ATTRS,
 };
