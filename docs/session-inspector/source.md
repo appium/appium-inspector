@@ -42,13 +42,6 @@ the tree only shows the class name for each element entry, along with several 'i
 such as `value` and `content-desc`. All non-'important' attributes are hidden by default for ease of
 navigation, but can be revealed with the [Toggle Attributes button](#source-action-buttons).
 
-Use the **Important Attributes** settings button beside **Toggle Attributes** to customize the compact
-view. Select attributes found in the current source, or type an attribute name (for example, Android's
-`hint`) to add it. Remove an attribute to hide it, or clear the selection to show only element names.
-The selection is saved between sessions. **Restore Default Attributes** restores the original list.
-The source search follows the visible attributes; **Toggle Attributes** still reveals and searches all
-attributes regardless of this selection.
-
 All elements in the XML tree are interactable, and clicking on one causes 3 actions:
 
 - The element entry in the XML tree is highlighted
