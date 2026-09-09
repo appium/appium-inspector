@@ -1,10 +1,10 @@
 import {describe, expect, it} from 'vitest';
 
-import {IMPORTANT_SOURCE_ATTRS} from '../../app/common/renderer/constants/source.js';
 import {
   getVisibleSourceAttributes,
   sourceElementMatchesSearch,
 } from '../../app/common/renderer/utils/source-attributes.js';
+import {IMPORTANT_SOURCE_ATTRS} from '../../app/common/shared/setting-defs.js';
 
 const element = {
   tagName: 'android.widget.EditText',
