@@ -40,7 +40,6 @@ const SiriControls = ({executeInteraction}) => {
   return (
     <Tooltip title={siriLabel} open={showTooltip} onOpenChange={setShowTooltip}>
       <Popover
-        // styles={{root: {width: '150px'}}}
         content={<SiriPopoverContents executeInteraction={executeInteraction} />}
         trigger="click"
         onOpenChange={() => setShowTooltip(false)}
