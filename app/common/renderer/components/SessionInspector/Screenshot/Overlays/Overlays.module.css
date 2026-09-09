@@ -95,7 +95,7 @@
   position: absolute;
   background: rgba(255, 250, 205, 0.8);
   color: black;
-  z-index: 100;
+  pointer-events: none;
   padding: 2px;
 }
 
