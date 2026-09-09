@@ -11,10 +11,24 @@ import StaticCommandsContent from './StaticCommandsContent.jsx';
 
 import styles from './Commands.module.css';
 
+const calculateBtnColspan = (breakpoints, curCommandsTabWidth) => {
+  if (!curCommandsTabWidth) {
+    return 1;
+  }
+  for (const entry of breakpoints) {
+    if (curCommandsTabWidth <= entry.maxWidth) {
+      return entry.colspan;
+    }
+  }
+};
+
 /**
  * Contents of the commands tab.
  */
 const Commands = ({applyClientMethod, getSupportedSessionMethods}) => {
+  const tabRef = useRef(null);
+  const [tabWidth, setTabWidth] = useState(null);
+
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
   const [driverCommands, setDriverCommands] = useState(null);
   const [driverExecuteMethods, setDriverExecuteMethods] = useState(null);
@@ -86,6 +100,24 @@ const Commands = ({applyClientMethod, getSupportedSessionMethods}) => {
     curCommandParamValsRef.current = [];
   };
 
+  const getBtnColspan = (bp) => calculateBtnColspan(bp, tabWidth);
+
+  // add an observer for tracking the Commands tab width,
+  // which can be used to set the commands button grid colspan
+  useEffect(() => {
+    const tab = tabRef.current;
+    if (!tab) {
+      return;
+    }
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry.contentRect.width > 0) {
+        setTabWidth(entry.contentRect.width);
+      }
+    });
+    observer.observe(tab);
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     (async () => {
       const {commands, executeMethods} = await getSupportedSessionMethods();
@@ -97,12 +129,13 @@ const Commands = ({applyClientMethod, getSupportedSessionMethods}) => {
 
   return (
     <CommandsTabCard>
-      <div className={styles.commandsContainer}>
+      <div ref={tabRef} className={styles.commandsContainer}>
         {/* do not use ternary operator, as that will show the static list
             while getSupportedSessionMethods is running */}
-        {hasMethodsMap === false && <StaticCommandsContent startCommand={startCommand} />}
+        {hasMethodsMap === false && <StaticCommandsContent getBtnColspan={getBtnColspan} startCommand={startCommand} />}
         {hasMethodsMap && (
           <MethodMapCommandsTabs
+            getBtnColspan={getBtnColspan}
             driverCommands={driverCommands}
             driverExecuteMethods={driverExecuteMethods}
             startCommand={startCommand}
