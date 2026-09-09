@@ -165,7 +165,6 @@ const ElementOverlays = (props) => {
     scaleRatio,
     showCentroids,
     isLocatorSearchModalVisible,
-    isSiriCommandModalVisible,
   } = props;
 
   // In 'Tap By Element' mode, clicking a highlighter immediately taps that element
@@ -180,7 +179,7 @@ const ElementOverlays = (props) => {
   const highlighterCentroids = [];
 
   // Don't show highlighter rects when Search Elements modal is open
-  if (!isLocatorSearchModalVisible && !isSiriCommandModalVisible) {
+  if (!isLocatorSearchModalVisible) {
     const elements = getElements(sourceJSON, scaleRatio);
 
     for (const elem of elements) {

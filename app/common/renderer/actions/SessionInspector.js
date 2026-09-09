@@ -49,9 +49,6 @@ export const SET_SHOW_BOILERPLATE = 'SET_SHOW_BOILERPLATE';
 
 export const SHOW_LOCATOR_SEARCH_MODAL = 'SHOW_LOCATOR_SEARCH_MODAL';
 export const HIDE_LOCATOR_SEARCH_MODAL = 'HIDE_LOCATOR_SEARCH_MODAL';
-export const SHOW_SIRI_COMMAND_MODAL = 'SHOW_SIRI_COMMAND_MODAL';
-export const HIDE_SIRI_COMMAND_MODAL = 'HIDE_SIRI_COMMAND_MODAL';
-export const SET_SIRI_COMMAND_VALUE = 'SET_SIRI_COMMAND_VALUE';
 export const SET_LOCATOR_SEARCH_STRATEGY = 'SET_LOCATOR_SEARCH_STRATEGY';
 export const SET_LOCATOR_SEARCH_VALUE = 'SET_LOCATOR_SEARCH_VALUE';
 export const SEARCHING_FOR_ELEMENTS = 'SEARCHING_FOR_ELEMENTS';
@@ -450,24 +447,6 @@ export function showLocatorSearchModal() {
 export function hideLocatorSearchModal() {
   return (dispatch) => {
     dispatch({type: HIDE_LOCATOR_SEARCH_MODAL});
-  };
-}
-
-export function showSiriCommandModal() {
-  return (dispatch) => {
-    dispatch({type: SHOW_SIRI_COMMAND_MODAL});
-  };
-}
-
-export function hideSiriCommandModal() {
-  return (dispatch) => {
-    dispatch({type: HIDE_SIRI_COMMAND_MODAL});
-  };
-}
-
-export function setSiriCommandValue(siriCommandValue) {
-  return (dispatch) => {
-    dispatch({type: SET_SIRI_COMMAND_VALUE, siriCommandValue});
   };
 }
 

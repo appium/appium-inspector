@@ -20,7 +20,6 @@ import {
   HIDE_GESTURE_EDITOR,
   HIDE_LOCATOR_SEARCH_MODAL,
   HIDE_PROMPT_KEEP_ALIVE,
-  HIDE_SIRI_COMMAND_MODAL,
   METHOD_CALL_DONE,
   METHOD_CALL_REQUESTED,
   PAUSE_RECORDING,
@@ -65,13 +64,11 @@ import {
   SET_SESSION_TIME,
   SET_SHOW_BOILERPLATE,
   SET_SHOW_CENTROIDS,
-  SET_SIRI_COMMAND_VALUE,
   SET_SOURCE_AND_SCREENSHOT,
   SET_USER_WAIT_TIMEOUT,
   SHOW_GESTURE_ACTION,
   SHOW_GESTURE_EDITOR,
   SHOW_LOCATOR_SEARCH_MODAL,
-  SHOW_SIRI_COMMAND_MODAL,
   START_RECORDING,
   STORE_SESSION_SETTINGS,
   TOGGLE_SHOW_ATTRIBUTES,
@@ -102,8 +99,6 @@ const INITIAL_STATE = {
   sessionSettings: {},
   isGestureEditorVisible: false,
   isLocatorSearchModalVisible: false,
-  isSiriCommandModalVisible: false,
-  siriCommandValue: '',
   showCentroids: false,
   locatorSearchStrategy: 'id',
   locatorSearchValue: '',
@@ -310,24 +305,6 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         isLocatorSearchModalVisible: false,
-      };
-
-    case SHOW_SIRI_COMMAND_MODAL:
-      return {
-        ...state,
-        isSiriCommandModalVisible: true,
-      };
-
-    case HIDE_SIRI_COMMAND_MODAL:
-      return {
-        ...state,
-        isSiriCommandModalVisible: false,
-      };
-
-    case SET_SIRI_COMMAND_VALUE:
-      return {
-        ...state,
-        siriCommandValue: action.siriCommandValue,
       };
 
     case SET_LOCATOR_SEARCH_STRATEGY:
