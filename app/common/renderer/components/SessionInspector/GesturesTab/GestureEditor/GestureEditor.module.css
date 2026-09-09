@@ -75,6 +75,19 @@
   flex-shrink: 0;
 }
 
+.tickCard[data-drop-target] {
+  outline: 2px solid var(--ant-color-primary);
+}
+
+.tickDragHandle:not(:disabled) {
+  cursor: grab;
+  touch-action: none;
+}
+
+.tickDragHandle:not(:disabled):active {
+  cursor: grabbing;
+}
+
 .tickPlusBtnWrapper {
   height: 100%;
   display: flex;
