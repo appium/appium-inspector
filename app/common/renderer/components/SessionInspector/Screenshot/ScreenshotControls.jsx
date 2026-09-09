@@ -183,7 +183,7 @@ const ScreenshotControls = (props) => {
 
   return (
     <div className={styles.screenshotControls}>
-      <Space size="small">
+      <Space size="small" wrap className={styles.screenshotControlsSpace}>
         {serverDetails.mjpegScreenshotUrl != null && (
           <ScreenshotCaptureModeControls
             setMjpegState={setMjpegState}

@@ -7,14 +7,19 @@ the current device screen, and also provides several ways of interacting with th
 
 ![Screenshot Panel](./assets/images/screenshot/app-screenshot.png)
 
-## Supported Screenshots
+## Screenshot Size
 
-The panel supports all screenshots regardless of dimensions, in any orientation:
+The panel automatically adjusts its size depending on the screenshot dimensions and orientation:
 
 ![Screenshot Panel in Landscape](./assets/images/screenshot/app-screenshot-landscape.png)
 
-The Inspector will try to automatically adjust how much of the window is taken up by the screenshot.
-Currently, the limit is either the full window height, or 40% of the window width.
+On session startup, if required, the Inspector will try to scale down the screenshot to fit either
+the full window height, or 50% of the window width.
+
+It is also possible to manually adjust the screenshot size using the divider line on the right side
+of the panel. The size can be anywhere between 150px in width, and the aforementioned upper limits.
+This can be especially useful for devices with low resolution screens such as smartwatches, since
+increasing the panel width will also zoom into the image.
 
 For devices with multiple screens, the Inspector will only show a screenshot of the default display,
 however, on supported devices it is possible to switch the active display using [the Display Switcher button](./header.md#display-switcher).
