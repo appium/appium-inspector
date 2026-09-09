@@ -1,4 +1,4 @@
-import {IMPORTANT_SOURCE_ATTRS} from '../constants/source.js';
+import {IMPORTANT_SOURCE_ATTRS} from '../../shared/setting-defs.js';
 
 /** Returns the attributes displayed in a source tree node. */
 export function getVisibleSourceAttributes(attributes, importantAttrs = IMPORTANT_SOURCE_ATTRS, showAll = false) {
