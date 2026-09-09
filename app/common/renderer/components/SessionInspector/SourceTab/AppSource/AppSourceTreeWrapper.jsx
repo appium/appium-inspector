@@ -1,17 +1,17 @@
 import {Spin, Tree} from 'antd';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {IMPORTANT_SOURCE_ATTRIBUTES} from '../../../../../shared/setting-defs.js';
-import {IMPORTANT_SOURCE_ATTRS} from '../../../../constants/source.js';
 import {getSetting, setSetting} from '../../../../polyfills.js';
-import {log} from '../../../../utils/logger.js';
 import {getVisibleSourceAttributes, sourceElementMatchesSearch} from '../../../../utils/source-attributes.js';
 import AppSourceTree from './AppSourceTree.jsx';
 import AppSourceTreeActions from './AppSourceTreeActions.jsx';
 
 import inspectorStyles from '../../SessionInspector.module.css';
 import styles from './AppSource.module.css';
+
+let retrievedAttrs = [...(await getSetting(IMPORTANT_SOURCE_ATTRIBUTES))].sort();
 
 /**
  * Wrapper around source tree + actions, including loading and empty/error states.
@@ -34,42 +34,17 @@ const AppSourceTreeWrapper = ({
 
   const [searchValue, setSearchValue] = useState('');
   const [autoExpandParent, setAutoExpandParent] = useState(true);
-  const [importantAttrs, setImportantAttrs] = useState(IMPORTANT_SOURCE_ATTRS);
-  const [settingsLoaded, setSettingsLoaded] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-    getSetting(IMPORTANT_SOURCE_ATTRIBUTES)
-      .then((savedAttrs) => {
-        if (active && Array.isArray(savedAttrs) && savedAttrs.every((attr) => typeof attr === 'string')) {
-          setImportantAttrs(savedAttrs);
-        }
-      })
-      .catch((error) => log.error(error))
-      .finally(() => {
-        if (active) {
-          setSettingsLoaded(true);
-        }
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
+  const [importantAttrs, setImportantAttrs] = useState(retrievedAttrs);
 
   const updateImportantAttrs = async (attrs) => {
-    setImportantAttrs(attrs);
-    await setSetting(IMPORTANT_SOURCE_ATTRIBUTES, attrs);
+    // Keep the next inspector session in sync with the saved preferences.
+    retrievedAttrs = [...attrs].sort();
+    setImportantAttrs(retrievedAttrs);
+    await setSetting(IMPORTANT_SOURCE_ATTRIBUTES, retrievedAttrs);
   };
 
   const flatten = (elemObj) => [elemObj, ...(elemObj.children?.flatMap(flatten) || [])];
   const flatTreeData = sourceJSON && flatten(sourceJSON);
-  const availableAttrs = [
-    ...new Set([
-      ...IMPORTANT_SOURCE_ATTRS,
-      ...importantAttrs,
-      ...(flatTreeData || []).flatMap((element) => Object.keys(element.attributes)),
-    ]),
-  ].sort();
 
   const elementMatchesSearch = useCallback(
     (element, value) => sourceElementMatchesSearch(element, value, importantAttrs, showSourceAttrs),
@@ -181,9 +156,7 @@ const AppSourceTreeWrapper = ({
               searchValue={searchValue}
               matchingElementsCount={matchingElements.length}
               importantAttrs={importantAttrs}
-              availableAttrs={availableAttrs}
-              onImportantAttrsChange={updateImportantAttrs}
-              settingsLoaded={settingsLoaded}
+              updateImportantAttrs={updateImportantAttrs}
             />
             <AppSourceTree
               treeData={treeData}

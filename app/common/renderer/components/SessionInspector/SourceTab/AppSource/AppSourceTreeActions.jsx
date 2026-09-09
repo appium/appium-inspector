@@ -18,9 +18,7 @@ const AppSourceTreeActions = ({
   searchValue,
   matchingElementsCount,
   importantAttrs,
-  availableAttrs,
-  onImportantAttrsChange,
-  settingsLoaded,
+  updateImportantAttrs,
 }) => {
   const {t} = useTranslation();
   const collapseLabel = t('Collapse All');
@@ -46,12 +44,7 @@ const AppSourceTreeActions = ({
             type={showSourceAttrs ? BUTTON.PRIMARY : BUTTON.DEFAULT}
           />
         </Tooltip>
-        <SourceAttributeSettings
-          importantAttrs={importantAttrs}
-          availableAttrs={availableAttrs}
-          onChange={onImportantAttrsChange}
-          disabled={!settingsLoaded}
-        />
+        <SourceAttributeSettings importantAttrs={importantAttrs} updateImportantAttrs={updateImportantAttrs} />
       </Space.Compact>
       <Space.Compact className={styles.treeSearchInput}>
         <Input

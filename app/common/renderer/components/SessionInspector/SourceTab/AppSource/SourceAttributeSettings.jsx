@@ -3,13 +3,14 @@ import {Button, Modal, Select, Space, Tooltip} from 'antd';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
-import {IMPORTANT_SOURCE_ATTRS} from '../../../../constants/source.js';
+import {IMPORTANT_SOURCE_ATTRS} from '../../../../../shared/setting-defs.js';
 
 /** Choose which source attributes remain visible when the full attribute list is hidden. */
-const SourceAttributeSettings = ({importantAttrs, availableAttrs, onChange, disabled}) => {
+const SourceAttributeSettings = ({importantAttrs, updateImportantAttrs}) => {
   const [modalOpen, setModalOpen] = useState(false);
   const {t} = useTranslation();
-  const label = t('Important Attributes');
+  const label = t('Customize Visible Attributes');
+  const availableAttrs = [...new Set([...IMPORTANT_SOURCE_ATTRS, ...importantAttrs])].sort();
 
   return (
     <>
@@ -18,7 +19,6 @@ const SourceAttributeSettings = ({importantAttrs, availableAttrs, onChange, disa
           aria-label={label}
           id="btnImportantAttrs"
           icon={<IconSettings size={18} />}
-          disabled={disabled}
           onClick={() => setModalOpen(true)}
         />
       </Tooltip>
@@ -33,16 +33,17 @@ const SourceAttributeSettings = ({importantAttrs, availableAttrs, onChange, disa
         <Space orientation="vertical" style={{width: '100%'}}>
           <span>{t('importantAttributesDescription')}</span>
           <Select
-            aria-label={label}
             mode="tags"
             value={importantAttrs}
             options={availableAttrs.map((value) => ({value}))}
-            onChange={onChange}
+            onChange={updateImportantAttrs}
             tokenSeparators={[',']}
             style={{width: '100%'}}
             allowClear
           />
-          <Button onClick={() => onChange([...IMPORTANT_SOURCE_ATTRS])}>{t('Restore Default Attributes')}</Button>
+          <Button onClick={() => updateImportantAttrs([...IMPORTANT_SOURCE_ATTRS])}>
+            {t('Restore Default Attributes')}
+          </Button>
         </Space>
       </Modal>
     </>
