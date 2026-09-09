@@ -1,9 +1,15 @@
 /** Move one action within its pointer and keep the position-based tick IDs consistent. */
-export function moveGestureTick(pointers, pointerId, tickId, direction) {
+export function moveGestureTick(pointers, pointerId, tickId, offset) {
   const pointer = pointers.find(({id}) => id === pointerId);
   const index = pointer?.ticks.findIndex(({id}) => id === tickId) ?? -1;
-  const targetIndex = index + direction;
-  if (index < 0 || ![-1, 1].includes(direction) || targetIndex < 0 || targetIndex >= pointer.ticks.length) {
+  const targetIndex = index + offset;
+  if (
+    index < 0 ||
+    !Number.isInteger(offset) ||
+    offset === 0 ||
+    targetIndex < 0 ||
+    targetIndex >= pointer.ticks.length
+  ) {
     return pointers;
   }
 
