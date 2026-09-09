@@ -38,6 +38,19 @@ describe('moveGestureTick', () => {
     expect(moveGestureTick(result, '1', '1.2', -1)).toEqual(pointers);
   });
 
+  it('moves directly to a non-adjacent position and back without changing the other pointer', () => {
+    const original = structuredClone(pointers);
+    const result = moveGestureTick(pointers, '1', '1.1', 2);
+    expect(result[0].ticks).toEqual([
+      {...pointers[0].ticks[1], id: '1.1'},
+      {...pointers[0].ticks[2], id: '1.2'},
+      {...pointers[0].ticks[0], id: '1.3'},
+    ]);
+    expect(result[1]).toBe(pointers[1]);
+    expect(moveGestureTick(result, '1', '1.3', -2)).toEqual(pointers);
+    expect(pointers).toEqual(original);
+  });
+
   it.each([
     ['1', '1.1', -1],
     ['1', '1.3', 1],
@@ -45,7 +58,11 @@ describe('moveGestureTick', () => {
     ['missing', '1.1', 1],
     ['1', 'missing', 1],
     ['1', '1.1', 0],
-    ['1', '1.1', 2],
+    ['1', '1.1', 3],
+    ['1', '1.3', -3],
+    ['1', '1.1', 0.5],
+    ['1', '1.1', NaN],
+    ['1', '1.1', Infinity],
   ])('ignores unavailable moves for pointer %s, action %s, direction %s', (pointerId, tickId, direction) => {
     expect(moveGestureTick(pointers, pointerId, tickId, direction)).toBe(pointers);
   });
