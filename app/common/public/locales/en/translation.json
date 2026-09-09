@@ -224,6 +224,7 @@
   "toggleMoveActionCoordPicker": "Toggle Setting Coordinates via Clicking on Screenshot",
   "moveGestureActionEarlier": "Move Action Earlier",
   "moveGestureActionLater": "Move Action Later",
+  "dragGestureAction": "Drag Action {{id}} to Reorder",
   "Action Type": "Action Type",
   "Pointer Up": "Pointer Up",
   "Pointer Down": "Pointer Down",
