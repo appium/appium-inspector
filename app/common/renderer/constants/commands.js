@@ -382,3 +382,35 @@ export const COMMAND_DEFINITIONS = {
 
 export const COMMAND_EXECUTE_SCRIPT = 'executeScript';
 export const COMMAND_UPDATE_SETTINGS = 'updateSettings';
+
+/**
+ * Breakpoints used for the grid of command buttons.
+ * For each entry, colspan is the colspan to use for each button,
+ * if the width of the Commands tab in pixels is below maxWidth.
+ * The maxWidth values target around 200px minimum width for a button (including padding).
+ */
+export const COMMANDS_GRID_BREAKPOINTS = [
+  {maxWidth: 400, colspan: 24},
+  {maxWidth: 600, colspan: 12},
+  {maxWidth: 800, colspan: 8},
+  {maxWidth: 1200, colspan: 6},
+  {maxWidth: 1600, colspan: 4},
+  {maxWidth: 2400, colspan: 3},
+  {maxWidth: 4800, colspan: 2},
+  {maxWidth: Number.MAX_SAFE_INTEGER, colspan: 1},
+];
+
+/**
+ * Similar to COMMANDS_GRID_BREAKPOINTS, but due to execute methods having longer names,
+ * these maxWidth values target around 250px minimum width for a button (including padding).
+ */
+export const EXECUTE_METHODS_GRID_BREAKPOINTS = [
+  {maxWidth: 500, colspan: 24},
+  {maxWidth: 750, colspan: 12},
+  {maxWidth: 1000, colspan: 8},
+  {maxWidth: 1500, colspan: 6},
+  {maxWidth: 2000, colspan: 4},
+  {maxWidth: 3000, colspan: 3},
+  {maxWidth: 6000, colspan: 2},
+  {maxWidth: Number.MAX_SAFE_INTEGER, colspan: 1},
+];

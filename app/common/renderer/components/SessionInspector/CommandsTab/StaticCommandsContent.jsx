@@ -1,7 +1,7 @@
 import {Button, Col, Collapse, Row, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import {COMMAND_DEFINITIONS, TOP_LEVEL_COMMANDS} from '../../../constants/commands.js';
+import {COMMAND_DEFINITIONS, COMMANDS_GRID_BREAKPOINTS, TOP_LEVEL_COMMANDS} from '../../../constants/commands.js';
 
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
@@ -9,10 +9,10 @@ import styles from './Commands.module.css';
 /**
  * Button rows used for the static list of driver commands.
  */
-const StaticCommandsRow = ({startCommand, commands}) => (
+const StaticCommandsRow = ({btnColspan, startCommand, commands}) => (
   <Row>
     {Object.entries(commands).map(([cmdName, cmdDetails]) => (
-      <Col key={cmdName} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
+      <Col key={cmdName} span={btnColspan}>
         <div className={styles.btnContainer}>
           <Button onClick={() => startCommand({name: cmdName, details: cmdDetails})}>
             <span className={inspectorStyles.monoFont}>{cmdName}</span>
@@ -44,13 +44,15 @@ const StaticCommandsCollapseGroups = ({startCommand}) => {
  * Static list of driver commands, shown only for drivers that do not support
  * the listCommands/listExtensions endpoints.
  */
-const StaticCommandsContent = ({startCommand}) => {
+const StaticCommandsContent = ({getBtnColspan, startCommand}) => {
   const {t} = useTranslation();
+
+  const btnColspan = getBtnColspan(COMMANDS_GRID_BREAKPOINTS);
 
   return (
     <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="middle">
       {t('commandsDescription')}
-      <StaticCommandsRow startCommand={startCommand} commands={TOP_LEVEL_COMMANDS} />
+      <StaticCommandsRow btnColspan={btnColspan} startCommand={startCommand} commands={TOP_LEVEL_COMMANDS} />
       <StaticCommandsCollapseGroups startCommand={startCommand} />
     </Space>
   );

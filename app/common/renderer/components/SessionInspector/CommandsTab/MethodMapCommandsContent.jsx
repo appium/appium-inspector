@@ -1,6 +1,8 @@
 import {Button, Col, Divider, Row, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
+import {COMMANDS_GRID_BREAKPOINTS, EXECUTE_METHODS_GRID_BREAKPOINTS} from '../../../constants/commands.js';
+
 import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Commands.module.css';
 
@@ -72,8 +74,10 @@ const MethodMapCommandButton = ({methodName, methodDetails, isExecute, startComm
  * Unlike StaticCommandsContent, we cannot predict the contents of the method map response,
  * and we also want to be able to filter it, so just render all methods in a single grid.
  */
-const MethodMapCommandsContent = ({driverMethods, isExecute, startCommand}) => {
+const MethodMapCommandsContent = ({getBtnColspan, driverMethods, isExecute, startCommand}) => {
   const {t} = useTranslation();
+
+  const btnColspan = getBtnColspan(isExecute ? EXECUTE_METHODS_GRID_BREAKPOINTS : COMMANDS_GRID_BREAKPOINTS);
 
   return (
     <>
@@ -82,7 +86,7 @@ const MethodMapCommandsContent = ({driverMethods, isExecute, startCommand}) => {
       <div className={styles.methodMapGrid}>
         <Row>
           {driverMethods.map(([methodName, methodDetails]) => (
-            <Col key={methodName} xs={12} sm={12} md={12} lg={8} xl={6} xxl={4}>
+            <Col key={methodName} span={btnColspan}>
               <MethodMapCommandButton
                 methodName={methodName}
                 methodDetails={methodDetails}
