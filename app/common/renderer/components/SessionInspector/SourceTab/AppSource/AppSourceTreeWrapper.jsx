@@ -11,7 +11,7 @@ import AppSourceTreeActions from './AppSourceTreeActions.jsx';
 import inspectorStyles from '../../SessionInspector.module.css';
 import styles from './AppSource.module.css';
 
-let retrievedAttrs = [...(await getSetting(IMPORTANT_SOURCE_ATTRIBUTES))].sort();
+let retrievedAttrs = await getSetting(IMPORTANT_SOURCE_ATTRIBUTES);
 
 /**
  * Wrapper around source tree + actions, including loading and empty/error states.
@@ -37,10 +37,11 @@ const AppSourceTreeWrapper = ({
   const [importantAttrs, setImportantAttrs] = useState(retrievedAttrs);
 
   const updateImportantAttrs = async (attrs) => {
-    // Keep the next inspector session in sync with the saved preferences.
-    retrievedAttrs = [...attrs].sort();
-    setImportantAttrs(retrievedAttrs);
-    await setSetting(IMPORTANT_SOURCE_ATTRIBUTES, retrievedAttrs);
+    const sortedAttrs = [...attrs].sort();
+    setImportantAttrs(sortedAttrs);
+    // New sessions remount this component without reloading the module.
+    retrievedAttrs = sortedAttrs;
+    await setSetting(IMPORTANT_SOURCE_ATTRIBUTES, sortedAttrs);
   };
 
   const flatten = (elemObj) => [elemObj, ...(elemObj.children?.flatMap(flatten) || [])];

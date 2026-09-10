@@ -30,7 +30,7 @@ const SourceAttributeSettings = ({importantAttrs, updateImportantAttrs}) => {
         onCancel={() => setModalOpen(false)}
         centered
       >
-        <Space orientation="vertical" style={{width: '100%'}}>
+        <Space orientation="vertical">
           <span>{t('importantAttributesDescription')}</span>
           <Select
             mode="tags"
@@ -38,10 +38,9 @@ const SourceAttributeSettings = ({importantAttrs, updateImportantAttrs}) => {
             options={availableAttrs.map((value) => ({value}))}
             onChange={updateImportantAttrs}
             tokenSeparators={[',']}
-            style={{width: '100%'}}
             allowClear
           />
-          <Button onClick={() => updateImportantAttrs([...IMPORTANT_SOURCE_ATTRS])}>
+          <Button onClick={() => updateImportantAttrs(IMPORTANT_SOURCE_ATTRS)}>
             {t('Restore Default Attributes')}
           </Button>
         </Space>
