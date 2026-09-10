@@ -15,15 +15,15 @@ export const IMPORTANT_SOURCE_ATTRIBUTES = 'IMPORTANT_SOURCE_ATTRIBUTES';
 
 // Attributes which are listed in the source by default
 export const IMPORTANT_SOURCE_ATTRS = [
-  'name',
-  'content-desc',
-  'resource-id',
   'AXDescription',
   'AXIdentifier',
-  'text',
-  'label',
-  'value',
+  'content-desc',
   'id',
+  'label',
+  'name',
+  'resource-id',
+  'text',
+  'value',
 ];
 
 export const DEFAULT_SETTINGS = {
