@@ -1,3 +1,4 @@
+import {DRIVERS} from '../../constants/common.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot.js';
 import {
   APP_MODE,
@@ -14,10 +15,13 @@ const {TAP, SWIPE, GESTURE} = SCREENSHOT_INTERACTION_MODE;
 
 // Selector for the Android webview - includes the correct top and bottom boundaries
 const ANDROID_WEBVIEW_SELECTOR = 'android.webkit.WebView';
-// Selector for the iOS status bar and Safari address bar - not always present
-const IOS_TOP_CONTROLS_SELECTOR =
+const IOS_SAFARI_BUNDLE_ID = 'com.apple.mobilesafari';
+// iOS Safari portrait topbar, includes system statusbar and Safari tabbar (in top tab style)
+const IOS_SAFARI_PORTRAIT_TOPBAR_SELECTOR =
   '**/XCUIElementTypeOther[`name CONTAINS "SafariWindow"`]' +
-  '/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[1]';
+  '/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]';
+// iOS Safari landscape tabbar is only shown when scrolled upwards, and is auto-hidden otherwise
+const IOS_SAFARI_LANDSCAPE_TABBAR_SELECTOR = '**/XCUIElementTypeOther[`name == "Toolbar"`]';
 
 let _instance = null;
 
@@ -307,8 +311,7 @@ export default class InspectorDriver {
   // Additionally, if webview is used, adjust the found element positions to fit screenshot
   // Only called while in hybrid mode
   async getContextUpdate({windowSize}) {
-    let contexts, contextsError, currentContext, currentContextError, webviewTopOffset;
-    let webviewLeftOffset = 0;
+    let contexts, contextsError, currentContext, currentContextError;
 
     if (!(await this.hasContextsCommand())) {
       return {currentContext: null, contexts: []};
@@ -326,12 +329,10 @@ export default class InspectorDriver {
       await this.driver.switchAppiumContext(NATIVE_APP);
     }
 
-    const isAndroid = this.driver.isAndroid;
-
     // Get all available contexts (or the error, if one appears)
     try {
       contexts = await this.driver.executeScript('mobile:getContexts', []);
-      contexts = isAndroid ? this.parseAndroidContexts(contexts) : contexts;
+      contexts = this.driver.isAndroid ? this.parseAndroidContexts(contexts) : contexts;
     } catch (e) {
       contextsError = e;
     }
@@ -339,83 +340,7 @@ export default class InspectorDriver {
     // For webview context, the viewport needs to be recalculated
     // to account for any top and left offsets
     if (currentContext !== NATIVE_APP) {
-      if (isAndroid) {
-        // on Android, find the root webview element and use its X and Y startpoints
-        const webview = await this.fetchElement({
-          strategy: 'class name',
-          selector: ANDROID_WEBVIEW_SELECTOR,
-        });
-        if (webview.el) {
-          const {x, y} = await webview.el.getElementRect();
-          webviewTopOffset = y;
-          webviewLeftOffset = x;
-        } else {
-          // fallback to default top offset value if element retrieval failed
-          try {
-            const systemBars = await this.driver.executeScript('mobile:getSystemBars', []);
-            webviewTopOffset = systemBars.statusBar.height;
-          } catch {
-            try {
-              // to minimize the endpoint call which gets error in newer chromedriver.
-              const sessionDetails = await this.driver.getSession();
-              // in case driver does not support mobile:getSystemBars
-              webviewTopOffset = sessionDetails.viewportRect.top;
-            } catch {}
-          }
-        }
-      } else if (this.driver.isIOS) {
-        const isSafari = this.driver.capabilities?.browserName?.toLowerCase() === 'safari';
-        if (isSafari) {
-          // on iOS, if we're in Safari simply find the top status bar and address bar and use its Y endpoint
-          const topBar = await this.fetchElement({
-            strategy: '-ios class chain',
-            selector: IOS_TOP_CONTROLS_SELECTOR,
-          });
-          if (topBar.el) {
-            const {y, height} = await topBar.el.getElementRect();
-            webviewTopOffset = y + height;
-          }
-          // in landscape mode, there is empty space on both sides (at default zoom level), so add offset for that too
-          if (windowSize.height < windowSize.width) {
-            try {
-              const deviceScreenInfo = await this.driver.executeScript('mobile:deviceScreenInfo', []);
-              webviewLeftOffset = deviceScreenInfo.statusBarSize.height;
-            } catch {
-              try {
-                const sessionDetails = await this.driver.getSession();
-                // in case driver does not support mobile:deviceScreenInfo
-                webviewLeftOffset = sessionDetails.statBarHeight;
-              } catch {}
-            }
-          }
-        } else {
-          // if we have a hybrid view, just find the first WebView element and use its position as
-          // the offset. Unfortunately this strategy doesn't work for Safari
-          const wv = await this.fetchElement({
-            strategy: 'class name',
-            selector: 'XCUIElementTypeWebView',
-          });
-          if (wv.el) {
-            const {x, y} = await wv.el.getElementRect();
-            webviewTopOffset = y;
-            webviewLeftOffset = x;
-          }
-        }
-      }
-
-      // if not using iOS or Android, or if iOS element retrieval failed for any reason
-      // (e.g. bars can be hidden), fallback to default value for the top offset
-      if (webviewTopOffset === undefined) {
-        webviewTopOffset = 0;
-      }
-
-      // Native context calculation part is done - switch back to webview context
-      await this.driver.switchAppiumContext(currentContext);
-
-      // Adjust all elements by the calculated offsets
-      await this.driver.executeScript(`return (${setHtmlElementAttributes}).apply(null, arguments)`, [
-        {isAndroid, webviewTopOffset, webviewLeftOffset},
-      ]);
+      await this.recalculateWebviewViewports(windowSize, currentContext);
     }
 
     return {contexts, contextsError, currentContext, currentContextError};
@@ -528,5 +453,84 @@ export default class InspectorDriver {
       // Add the parsedWebviews, but make sure to filter out all undefined webviews
       ...parsedWebviews.filter(Boolean),
     ];
+  }
+
+  /**
+   * Calculates and applies offsets for the current webview.
+   * Not applicable in non-webview contexts.
+   */
+  async recalculateWebviewViewports(windowSize, currentContext) {
+    let webviewTopOffset, webviewLeftOffset;
+    const automationName = this.driver.capabilities?.automationName?.toLowerCase();
+
+    if ([DRIVERS.UIAUTOMATOR2, DRIVERS.ESPRESSO].includes(automationName)) {
+      // on Android, find the root webview element and use its X and Y startpoints
+      const webview = await this.fetchElement({
+        strategy: 'class name',
+        selector: ANDROID_WEBVIEW_SELECTOR,
+      });
+      if (webview.el) {
+        const {x, y} = await webview.el.getElementRect();
+        webviewTopOffset = y;
+        webviewLeftOffset = x;
+      } else {
+        // fallback to default top offset value if element retrieval failed
+        try {
+          const systemBars = await this.driver.executeScript('mobile:getSystemBars', []);
+          webviewTopOffset = systemBars.statusBar.height;
+        } catch {
+          try {
+            // to minimize the endpoint call which gets error in newer chromedriver.
+            const sessionDetails = await this.driver.getSession();
+            // in case driver does not support mobile:getSystemBars
+            webviewTopOffset = sessionDetails.viewportRect.top;
+          } catch {}
+        }
+      }
+    } else if (automationName === DRIVERS.XCUITEST) {
+      // mobile:activeAppInfo exists since XCUITest 2.126.0 (pre-Appium 2)
+      const curBundleId = (await this.driver.executeScript('mobile:activeAppInfo', [])).bundleId;
+      if (curBundleId === IOS_SAFARI_BUNDLE_ID) {
+        const isLandscape = windowSize.height < windowSize.width;
+        // Top bar exists for both portrait and landscape modes
+        const topBar = await this.fetchElement({
+          strategy: '-ios class chain',
+          selector: isLandscape ? IOS_SAFARI_LANDSCAPE_TABBAR_SELECTOR : IOS_SAFARI_PORTRAIT_TOPBAR_SELECTOR,
+        });
+        if (topBar.el) {
+          webviewTopOffset = (await topBar.el.getElementRect()).height;
+        }
+        if (isLandscape) {
+          // Landscape mode also has side offsets
+          // mobile:deviceScreenInfo exists since XCUITest 3.38.0 (pre-Appium 2)
+          webviewLeftOffset = (await this.driver.executeScript('mobile:deviceScreenInfo', [])).statusBarSize.height;
+        }
+      } else {
+        // If we have a non-Safari hybrid view, just find the first WebView element
+        // and use its position as the offset. Unfortunately this doesn't work for Safari
+        const wv = await this.fetchElement({
+          strategy: 'class name',
+          selector: 'XCUIElementTypeWebView',
+        });
+        if (wv.el) {
+          const {x, y} = await wv.el.getElementRect();
+          webviewTopOffset = y;
+          webviewLeftOffset = x;
+        }
+      }
+    }
+
+    // if not using iOS or Android, or if iOS element retrieval failed for any reason
+    // (e.g. bars can be hidden), fallback to default values
+    webviewTopOffset ??= 0;
+    webviewLeftOffset ??= 0;
+
+    // Native context calculation part is done - switch back to webview context
+    await this.driver.switchAppiumContext(currentContext);
+
+    // Adjust all elements by the calculated offsets
+    await this.driver.executeScript(`return (${setHtmlElementAttributes}).apply(null, arguments)`, [
+      {isAndroid: this.driver.isAndroid, webviewTopOffset, webviewLeftOffset},
+    ]);
   }
 }
