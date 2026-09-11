@@ -340,5 +340,8 @@
   "toggleMultiDisplayMode": "Toggle Multi-Display Mode",
   "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
   "switchToComposeSubdriver": "Switch to Compose Subdriver",
-  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform",
+  "Customize Visible Attributes": "Customize Visible Attributes",
+  "importantAttributesDescription": "Choose which attributes appear in the compact source tree. Select an attribute or type a name to add it. Changes are saved between sessions.",
+  "Restore Default Attributes": "Restore Default Attributes"
 }
