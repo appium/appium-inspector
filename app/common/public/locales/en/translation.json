@@ -222,6 +222,7 @@
   "showMoveActionCoordsInPercentage": "Show Coordinates of Move Actions in Screen Dimension Percentages",
   "showMoveActionCoordsInPixels": "Show Coordinates of Move Actions in Pixels",
   "toggleMoveActionCoordPicker": "Toggle Setting Coordinates via Clicking on Screenshot",
+  "dragGestureAction": "Drag Action {{id}} to Reorder",
   "Action Type": "Action Type",
   "Pointer Up": "Pointer Up",
   "Pointer Down": "Pointer Down",

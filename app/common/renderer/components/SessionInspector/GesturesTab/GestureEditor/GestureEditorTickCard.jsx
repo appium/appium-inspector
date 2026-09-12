@@ -1,4 +1,4 @@
-import {IconFocus2, IconX} from '@tabler/icons-react';
+import {IconFocus2, IconGripVertical, IconX} from '@tabler/icons-react';
 import {Button, Card, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
@@ -59,23 +59,53 @@ const GestureEditorTickCardHeaderButtons = ({tick, pointers, setPointers, select
 /**
  * Wrapper card for a single tick in the gesture editor.
  */
-const GestureEditorTickCard = ({children, tick, pointers, setPointers, selectedTick, selectTick, unselectTick}) => (
-  <Card
-    hoverable={true}
-    className={styles.tickCard}
-    extra={
-      <GestureEditorTickCardHeaderButtons
-        tick={tick}
-        pointers={pointers}
-        setPointers={setPointers}
-        selectedTick={selectedTick}
-        selectTick={selectTick}
-        unselectTick={unselectTick}
-      />
-    }
-  >
-    {children}
-  </Card>
-);
+const GestureEditorTickCard = ({
+  children,
+  tick,
+  dragHandleRef,
+  dragDisabled,
+  isDropTarget,
+  pointers,
+  setPointers,
+  selectedTick,
+  selectTick,
+  unselectTick,
+}) => {
+  const {t} = useTranslation();
+  const dragLabel = t('dragGestureAction', {id: tick.id});
+
+  return (
+    <Card
+      hoverable={true}
+      className={styles.tickCard}
+      data-drop-target={isDropTarget || undefined}
+      title={
+        <Tooltip title={dragLabel}>
+          <Button
+            ref={dragHandleRef}
+            aria-label={dragLabel}
+            className={styles.tickDragHandle}
+            size="small"
+            type="text"
+            disabled={dragDisabled}
+            icon={<IconGripVertical size={18} />}
+          />
+        </Tooltip>
+      }
+      extra={
+        <GestureEditorTickCardHeaderButtons
+          tick={tick}
+          pointers={pointers}
+          setPointers={setPointers}
+          selectedTick={selectedTick}
+          selectTick={selectTick}
+          unselectTick={unselectTick}
+        />
+      }
+    >
+      {children}
+    </Card>
+  );
+};
 
 export default GestureEditorTickCard;

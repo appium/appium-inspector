@@ -95,6 +95,14 @@ The title of each pointer can also be clicked and edited.
 Pointer actions are used to define the behavior of each pointer. Each individual action is presented
 as a rectangular card, and new cards can be freely added and removed.
 
+Drag a card by the grip in its upper-left corner onto another card to move the action to that
+position within its pointer. The destination card is highlighted until the action is dropped.
+To reorder with the keyboard, focus the grip, press Space or Enter to pick it up, use the arrow
+keys to choose a destination, then press Space or Enter to drop it. Press Escape to cancel.
+
+The gesture timeline updates when an action moves, and the action keeps its coordinates, duration,
+and other parameters. Moving an action turns off the screenshot coordinate picker.
+
 ![Pointer Actions](./assets/images/gestures/gesture-editor-actions.png)
 
 The _Action Type_ dropdown is used to select any of the supported actions: move, pointer down,
