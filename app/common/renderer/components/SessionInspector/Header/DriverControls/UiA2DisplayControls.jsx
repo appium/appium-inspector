@@ -59,6 +59,9 @@ const UiA2DisplayControls = ({sessionSettings, applyClientMethod}) => {
     // - displaySelectionVisible is true (i.e. toggled via UI)
     if ((currentDisplayId || displaySelectionVisible) && foundDisplays == null) {
       retrieveDisplays();
+      if (!displaySelectionVisible) {
+        setDisplaySelectionVisible(true);
+      }
     }
   }, [applyClientMethod, currentDisplayId, displaySelectionVisible, foundDisplays]);
 
