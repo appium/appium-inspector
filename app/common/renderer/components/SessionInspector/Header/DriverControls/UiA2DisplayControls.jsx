@@ -54,9 +54,10 @@ const UiA2DisplayControls = ({sessionSettings, applyClientMethod}) => {
       setFoundDisplays(newDisplays ?? []);
     };
 
-    // both undefined (initial value if unset) and 0 return false
+    // display search should run only if it has not run yet, and:
+    // - currentDisplayId is truthy (i.e. set via capabilities/commands), or
+    // - displaySelectionVisible is true (i.e. toggled via UI)
     if ((currentDisplayId || displaySelectionVisible) && foundDisplays == null) {
-      // selection should be on but no data exists yet - call mobile:listDisplays
       retrieveDisplays();
     }
   }, [applyClientMethod, currentDisplayId, displaySelectionVisible, foundDisplays]);
