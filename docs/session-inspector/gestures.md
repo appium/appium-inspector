@@ -100,10 +100,8 @@ position within its pointer. The destination card is highlighted until the actio
 To reorder with the keyboard, focus the grip, press Space or Enter to pick it up, use the arrow
 keys to choose a destination, then press Space or Enter to drop it. Press Escape to cancel.
 
-The left and right arrow buttons at the bottom of each card also move the action one position
-earlier or later. The gesture timeline updates when an action moves, and the action keeps its
-coordinates, duration, and other parameters. The first action cannot move earlier, and the last
-cannot move later. Moving an action turns off the screenshot coordinate picker.
+The gesture timeline updates when an action moves, and the action keeps its coordinates, duration,
+and other parameters. Moving an action turns off the screenshot coordinate picker.
 
 ![Pointer Actions](./assets/images/gestures/gesture-editor-actions.png)
 
