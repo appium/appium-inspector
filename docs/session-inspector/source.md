@@ -77,7 +77,7 @@ By default, the source XML is only updated when a refresh is requested. This can
 
 - interacting with an element (tap/send keys/clear)
 - interacting with the [screenshot](./screenshot.md) (tap/swipe)
-- [simulating system actions](./header.md#device-system-items)
+- [simulating system actions](./header.md#device-system-controls)
 - [executing driver commands](./commands.md) (depends on the command)
 - [executing custom gestures](./gestures.md)
 - [pressing the Refresh button](./header.md#refresh-source-screenshot)
