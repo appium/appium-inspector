@@ -74,7 +74,7 @@ const UiA2DisplayControls = ({sessionSettings, applyClientMethod}) => {
       </Tooltip>
       {displaySelectionVisible && foundDisplays && (
         <Select
-          styles={{root: {width: 250}}}
+          styles={{root: {width: 200}}}
           value={currentDisplayId}
           popupMatchSelectWidth={false}
           onChange={setCurrentDisplay}
