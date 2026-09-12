@@ -71,3 +71,18 @@ export const XCUITEST_TVOS_MIN_EXTRA_BUTTONS_VERSION = 18.1;
  * Minimum watchOS version that supports the flick gesture
  */
 export const XCUITEST_WATCHOS_MIN_EXTRA_GESTURES_VERSION = 26;
+
+export const UIA2_WINDOW_STRATEGIES = {
+  /**
+   * Name of the default active window strategy
+   */
+  FOCUSED: 'focused',
+  /**
+   * Name of the strategy used when 'enableTopmostWindowFromActivePackage' is set, but 'enableMultiWindows' is not set.
+   */
+  TOPMOST: 'topmost',
+  /**
+   * Name of the strategy used when 'enableMultiWindows' is set
+   */
+  ALL: 'all',
+};

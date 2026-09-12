@@ -11,32 +11,38 @@ import {COMMAND_EXECUTE_SCRIPT, COMMAND_UPDATE_SETTINGS} from '../../../../const
  * Requires UiAutomator2 6.6.0 or later + Android 11 or later
  */
 const UiA2DisplayControls = ({sessionSettings, applyClientMethod}) => {
-  const areMultiWindowsEnabled = sessionSettings.enableMultiWindows;
   const currentDisplayId = sessionSettings.currentDisplayId;
 
   const {t} = useTranslation();
   const multiDisplayLabel = t('toggleMultiDisplayMode');
+  const [displaySelectionVisible, setDisplaySelectionVisible] = useState(false);
   const [foundDisplays, setFoundDisplays] = useState(null);
 
-  // Sets currentDisplayId and enableMultiWindows in one call, if either differs from their current value.
-  // Note: with multiple displays but without enableMultiWindows: true, app source does not match the default display.
-  const setDisplayAndMultiWindows = async (displayId, multiWindowMode = areMultiWindowsEnabled) => {
-    const newSettingsObj = {};
+  // Sets currentDisplayId, if it differs from its current value.
+  const setCurrentDisplay = async (displayId) => {
     if (displayId !== currentDisplayId) {
-      newSettingsObj.currentDisplayId = displayId;
-    }
-    if (multiWindowMode !== areMultiWindowsEnabled) {
-      newSettingsObj.enableMultiWindows = multiWindowMode;
-    }
-    if (Object.keys(newSettingsObj).length > 0) {
       await applyClientMethod({
         methodName: COMMAND_UPDATE_SETTINGS,
-        args: [newSettingsObj],
+        args: [
+          {
+            currentDisplayId: displayId,
+          },
+        ],
       });
     }
   };
 
-  // Handler for updating foundDisplays: multi-window mode can be toggled not only with the button below,
+  const toggleDisplaySelectionVisibility = async () => {
+    const selectionShouldBeVisible = !displaySelectionVisible;
+    setDisplaySelectionVisible(selectionShouldBeVisible);
+    if (!selectionShouldBeVisible) {
+      // toggling off, reset to default display and clear stored displays
+      await setCurrentDisplay(0);
+      setFoundDisplays(null);
+    }
+  };
+
+  // Handler for updating foundDisplays: display id can be set not only with the dropdown below,
   // but also via capabilities or commands directly
   useEffect(() => {
     const retrieveDisplays = async () => {
@@ -48,12 +54,12 @@ const UiA2DisplayControls = ({sessionSettings, applyClientMethod}) => {
       setFoundDisplays(newDisplays ?? []);
     };
 
-    if (areMultiWindowsEnabled && foundDisplays == null) {
+    // both undefined (initial value if unset) and 0 return false
+    if ((currentDisplayId || displaySelectionVisible) && foundDisplays == null) {
+      // selection should be on but no data exists yet - call mobile:listDisplays
       retrieveDisplays();
-    } else if (areMultiWindowsEnabled === false && foundDisplays != null) {
-      setFoundDisplays(null);
     }
-  }, [applyClientMethod, areMultiWindowsEnabled, foundDisplays]);
+  }, [applyClientMethod, currentDisplayId, displaySelectionVisible, foundDisplays]);
 
   return (
     <Space.Compact>
@@ -62,15 +68,15 @@ const UiA2DisplayControls = ({sessionSettings, applyClientMethod}) => {
           aria-label={multiDisplayLabel}
           icon={<IconCarouselHorizontal size={18} />}
           type={foundDisplays ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          onClick={() => setDisplayAndMultiWindows(0, !areMultiWindowsEnabled)}
+          onClick={toggleDisplaySelectionVisibility}
         />
       </Tooltip>
-      {foundDisplays && (
+      {displaySelectionVisible && foundDisplays && (
         <Select
           styles={{root: {width: 250}}}
           value={currentDisplayId}
           popupMatchSelectWidth={false}
-          onChange={(value) => setDisplayAndMultiWindows(value)}
+          onChange={setCurrentDisplay}
           options={foundDisplays.map(({id, name}) => ({
             value: id,
             label: name ? `${name} (ID ${id})` : id,
