@@ -5,7 +5,7 @@ hide:
 title: System Requirements
 ---
 
-Since the Inspector is released in [2 versions](../overview.md#formats), the requirements for these
+Since the Inspector is released in [2 formats](../overview.md#formats), the requirements for these
 will differ:
 
 - Desktop app

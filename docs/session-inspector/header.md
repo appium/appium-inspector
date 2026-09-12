@@ -2,15 +2,15 @@
 title: Header
 ---
 
-The header of the Session Inspector contains various buttons that are key to interacting with the
+The header of the Session Inspector contains various items that are key to interacting with the
 device itself, or the [application source](./source.md).
 
 ![Inspector Header](./assets/images/header/app-header.png)
 
-## Device System Buttons
+## Device System Items
 
-If using the Inspector with the XCUITest, UiAutomator2 or Espresso drivers, the first button group
-in the header provides functionality specific to the device under test. The available buttons
+If using the Inspector with the XCUITest, UiAutomator2 or Espresso drivers, the first item group
+in the header provides functionality specific to the device under test. The available items
 generally correspond to a hardware button on an Android, iOS, iPadOS, tvOS or watchOS device:
 
 ![Android Buttons](./assets/images/header/system-buttons-android.png) ![XCUITest Buttons](./assets/images/header/system-buttons-xcuitest.png)
@@ -30,7 +30,7 @@ generally correspond to a hardware button on an Android, iOS, iPadOS, tvOS or wa
 
 ## Driver-Specific Controls
 
-Certain header buttons correspond to driver-specific functionality, and are only shown in a session
+Certain header items correspond to driver-specific functionality, and are only shown in a session
 for that driver.
 
 ### Display Switcher
@@ -139,13 +139,13 @@ list of selectable element IDs:
 
 ![Element Search Results](./assets/images/header/search-results.png)
 
-Selecting any element enables the element action buttons:
+Selecting any element enables the element action items:
 
-| Icon                                                                                     | Description                                                                                                         |
-| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| ![Reveal Element in Source](./assets/images/header/search-reveal-element.png)            | Attempt to select the element in the application source. Note that this may not work if the element ID has changed. |
-| ![Tap Element](./assets/images/header/search-tap-element.png)                            | Tap the element                                                                                                     |
-| ![Send or Clear Element Text](./assets/images/header/search-send-clear-element-text.png) | Enter text to send to the element, or clear its text                                                                |
+| Item | Description |
+| --- | --- |
+| ![Reveal Element in Source](./assets/images/header/search-reveal-element.png) | Attempt to select the element in the application source. Note that this may not work if the element ID has changed. |
+| ![Tap Element](./assets/images/header/search-tap-element.png) | Tap the element |
+| ![Send or Clear Element Text](./assets/images/header/search-send-clear-element-text.png) | Enter text to send to the element, or clear its text |
 
 ## Toggle Recorder
 
@@ -158,7 +158,7 @@ Interactions that can be recorded include:
 
 - Actions for a specific element (tap/send keys/clear)
 - Generic tap/swipe actions on the application screenshot
-- [Mobile device system actions](#device-system-buttons)
+- [Mobile device system actions](#device-system-items)
 - [Driver commands](./commands.md)
 
 !!! note

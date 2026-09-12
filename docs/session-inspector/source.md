@@ -22,25 +22,41 @@ The panel can be divided into 3 parts: header buttons, source actions, and the s
 
 ### Source Header Buttons
 
-| Icon                                                               | Description                               |
-| ------------------------------------------------------------------ | ----------------------------------------- |
-| ![Copy XML Button](./assets/images/source/copy-button.png)         | Copy the application XML to the clipboard |
+| Button | Description |
+| --- | --- |
+| ![Copy XML Button](./assets/images/source/copy-button.png) | Copy the application XML to the clipboard |
 | ![Download XML Button](./assets/images/source/download-button.png) | Download the source as an `.xml` file     |
 
-### Source Action Buttons
+### Source Action Items
 
-| Icon                                                                             | Description                                   |
-| -------------------------------------------------------------------------------- | --------------------------------------------- |
-| ![Collapse All Button](./assets/images/source/collapse-all-button.png)           | Collapse all nodes in the source tree         |
-| ![Toggle Attributes Button](./assets/images/source/toggle-attributes-button.png) | Toggle all non-'important' element attributes |
-| ![Search Source Field](./assets/images/source/search-source.png)                 | Perform a plaintext search in the source XML  |
+| Item | Description |
+| --- | --- |
+| ![Collapse All Button](./assets/images/source/collapse-all-button.png) | Collapse all nodes in the source tree |
+| ![Toggle Attributes Button](./assets/images/source/toggle-attributes-button.png) | Toggle visibility of all element attributes, not just the ones visible by default |
+| ![Customize Visible Attributes Button](./assets/images/source/customize-visible-attributes-button.png) | Customize which element attributes are visible by default |
+| ![Search Source Field](./assets/images/source/search-source.png) | Perform a plaintext search in the source XML |
+
+#### Customize Visible Attributes
+
+Clicking the Customize Visible Attributes button will open a new modal window, which lists all
+attributes that are shown by default.
+
+![Customize Visible Attributes Modal](./assets/images/source/customize-attributes-modal.png)
+
+New attributes can be added by selecting them in the dropdown, or just typing their name. Existing
+attributes can be removed by removing their entry or unselecting them in the dropdown. It is also
+possible to clear all attributes at once, as well as revert to the default list using the Restore
+Default Attributes button.
+
+Changes to the default visible attributes persist between sessions.
 
 ### Source Tree
 
-The application source tree is generated from the XML data returned by the Appium driver. By default,
-the tree only shows the class name for each element entry, along with several 'important' attributes
-such as `value` and `content-desc`. All non-'important' attributes are hidden by default for ease of
-navigation, but can be revealed with the [Toggle Attributes button](#source-action-buttons).
+The application source tree is generated from the XML data returned by the Appium driver. By
+default, the tree shows the class name for each element entry, along with several common attributes
+such as `value` and `content-desc`. All other attributes are hidden by default for ease of
+navigation, but can be revealed with the [Toggle Attributes button](#source-action-items). The
+list of default attributes can also be customized using the [Customize Visible Attributes button](#source-action-items). 
 
 All elements in the XML tree are interactable, and clicking on one causes 3 actions:
 
@@ -61,7 +77,7 @@ By default, the source XML is only updated when a refresh is requested. This can
 
 - interacting with an element (tap/send keys/clear)
 - interacting with the [screenshot](./screenshot.md) (tap/swipe)
-- [simulating system actions](./header.md#device-system-buttons)
+- [simulating system actions](./header.md#device-system-items)
 - [executing driver commands](./commands.md) (depends on the command)
 - [executing custom gestures](./gestures.md)
 - [pressing the Refresh button](./header.md#refresh-source-screenshot)
@@ -93,25 +109,25 @@ box model, and element attributes.
 
 ### Element Header Buttons
 
-| Icon                                                                       | Description                                                              |
-| -------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| ![Copy Attributes Button](./assets/images/source/copy-button.png)          | Copy the element attributes to the clipboard as an array of JSON objects |
-| ![Download Element Screenshot](./assets/images/source/download-button.png) | Download a screenshot of the element as a `.PNG` file                    |
+| Button | Description |
+| --- | --- |
+| ![Copy Attributes Button](./assets/images/source/copy-button.png) | Copy the element attributes to the clipboard as an array of JSON objects |
+| ![Download Element Screenshot](./assets/images/source/download-button.png) | Download a screenshot of the element as a `.PNG` file |
 
-### Element Action Buttons
+### Element Action Items
 
-| Icon                                                                                     | Description                                                                       |
-| ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| ![Tap Element](./assets/images/header/search-tap-element.png)                            | Tap the element                                                                   |
-| ![Send or Clear Element Text](./assets/images/header/search-send-clear-element-text.png) | Enter text to send to the element, or clear its text                              |
-| ![Get Element Timings](./assets/images/source/get-timings-button.png)                    | Run a timing comparison for the [suggested element locators](#suggested-locators) |
+| Item | Description |
+| --- | --- |
+| ![Tap Element](./assets/images/header/search-tap-element.png) | Tap the element |
+| ![Send or Clear Element Text](./assets/images/header/search-send-clear-element-text.png) | Enter text to send to the element, or clear its text |
+| ![Get Element Timings](./assets/images/source/get-timings-button.png) | Run a timing comparison for the [suggested element locators](#suggested-locators) |
 
 ### Suggested Locators
 
 This table lists one or more locator strategies + selectors that can be used to find the element.
 Clicking on a selector copies it to the clipboard.
 
-Pressing the [timing comparison](#element-action-buttons) button executes a search for each of the
+Pressing the [timing comparison](#element-action-items) button executes a search for each of the
 listed strategies + locators, and adds a new table column with the elapsed time until the element
 was returned.
 
