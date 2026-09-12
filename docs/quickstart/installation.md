@@ -2,7 +2,7 @@
 title: Installation
 ---
 
-This step is only relevant if using the Inspector desktop app or Appium plugin formats.
+Installation steps differ depending on the selected distribution format.
 
 ## Appium Plugin
 
@@ -10,13 +10,14 @@ Like all Appium plugins, the Inspector plugin can be installed and activated usi
 [the Appium command line](https://appium.io/docs/en/latest/cli/).
 
 1.  Install the plugin:
-    1. For Appium 3:
+
+    === "For Appium 3"
 
         ```bash
         appium plugin install inspector
         ```
 
-    2. For Appium 2 (last compatible version):
+    === "For Appium 2 (last compatible version)"
 
         ```bash
         appium plugin install --source=npm appium-inspector-plugin@2025.7.3
@@ -84,8 +85,6 @@ winget install AppiumDevelopers.AppiumInspector
 
 ### macOS
 
-#### Manual Download
-
 It is recommended to download the `.dmg` installer file, as it supports [checking for updates](../menu-bar.md#update-checker).
 
 Opening the file will open a simple window, showing icons for the Inspector and the _Applications_ folder.
@@ -130,19 +129,6 @@ These can be handled as described below:
     3. _Control+Click_/click with two fingers on Appium Inspector and click _Open_.
     4. A prompt should appear - click _Open_ again.
     5. After accepting the prompt, the app should open.
-
-#### Homebrew
-
-It is possible to install the Inspector through Homebrew. Please note that this method is only
-community-supported, and is not maintained by the Appium team.
-
-!!! warning
-
-    This method is deprecated and will be disabled on September 1st, 2026, since the app is not notarized.
-
-```sh
-brew install --cask appium-inspector
-```
 
 ### Linux
 
