@@ -73,6 +73,9 @@
   "couldNotObtainScreenshot": "Không thể lấy ảnh chụp màn hình: {{screenshotError}}",
   "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Thực thi lệnh Siri",
+  "rotateDigitalCrown": "Rotate Digital Crown",
+  "Rotations": "Rotations",
+  "Velocity": "Velocity",
   "performHandGesture": "Perform Hand Gesture",
   "Press Home Button": "Nhấn nút Home",
   "Press Back Button": "Nhấn nút Quay lại",
@@ -335,7 +338,14 @@
   "enterSessionID": "Nhập ID phiên để đính kèm thủ công",
   "refreshDiscoveredSessions": "Làm mới các phiên đã phát hiện",
   "toggleMultiDisplayMode": "Bật/tắt chế độ đa màn hình",
+  "toggleActiveWindowSelection": "Toggle Selection of Active Window",
+  "focusedWindow": "Focused Window",
+  "topmostWindow": "Top-Most Window",
+  "allWindows": "All Windows",
   "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
   "switchToComposeSubdriver": "Switch to Compose Subdriver",
-  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform",
+  "Customize Visible Attributes": "Customize Visible Attributes",
+  "importantAttributesDescription": "Choose which attributes appear in the compact source tree. Select an attribute or type a name to add it. Changes are saved between sessions.",
+  "Restore Default Attributes": "Restore Default Attributes"
 }

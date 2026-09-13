@@ -73,6 +73,9 @@
   "couldNotObtainScreenshot": "Kon screenshot niet verkrijgen: {{screenshotError}}",
   "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Voer Siri-opdracht uit",
+  "rotateDigitalCrown": "Rotate Digital Crown",
+  "Rotations": "Rotations",
+  "Velocity": "Velocity",
   "performHandGesture": "Perform Hand Gesture",
   "Press Home Button": "Druk op Home-knop",
   "Press Back Button": "Druk op Terug-knop",
@@ -335,7 +338,14 @@
   "enterSessionID": "Voer sessie-ID in voor handmatig koppelen",
   "refreshDiscoveredSessions": "Ontdekte sessies vernieuwen",
   "toggleMultiDisplayMode": "Multi-schermmodus in-/uitschakelen",
+  "toggleActiveWindowSelection": "Toggle Selection of Active Window",
+  "focusedWindow": "Focused Window",
+  "topmostWindow": "Top-Most Window",
+  "allWindows": "All Windows",
   "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
   "switchToComposeSubdriver": "Switch to Compose Subdriver",
-  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform",
+  "Customize Visible Attributes": "Customize Visible Attributes",
+  "importantAttributesDescription": "Choose which attributes appear in the compact source tree. Select an attribute or type a name to add it. Changes are saved between sessions.",
+  "Restore Default Attributes": "Restore Default Attributes"
 }
