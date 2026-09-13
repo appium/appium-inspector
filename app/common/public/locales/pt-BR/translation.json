@@ -73,6 +73,9 @@
   "couldNotObtainScreenshot": "Não foi possível obter captura de tela: {{screenshotError}}",
   "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Executar Comando Siri",
+  "rotateDigitalCrown": "Rotate Digital Crown",
+  "Rotations": "Rotations",
+  "Velocity": "Velocity",
   "performHandGesture": "Perform Hand Gesture",
   "Press Home Button": "Pressione o botão Home",
   "Press Back Button": "Pressione o botão voltar",
@@ -335,7 +338,14 @@
   "enterSessionID": "Insira a ID de sessão para anexar manualmente",
   "refreshDiscoveredSessions": "Atualizar Sessões Descobertas",
   "toggleMultiDisplayMode": "Ativar/desativar Modo Exibição Múltipla",
+  "toggleActiveWindowSelection": "Toggle Selection of Active Window",
+  "focusedWindow": "Focused Window",
+  "topmostWindow": "Top-Most Window",
+  "allWindows": "All Windows",
   "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
   "switchToComposeSubdriver": "Switch to Compose Subdriver",
-  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform",
+  "Customize Visible Attributes": "Personalizar Atributos Visíveis",
+  "importantAttributesDescription": "Escolha quais atributos aparecem na árvore de origem compacta. Selecione um atributo ou digite um nome para adicioná-lo. As alterações são salvas entre as sessões.",
+  "Restore Default Attributes": "Restaurar Atributos Padrão"
 }

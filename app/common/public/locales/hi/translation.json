@@ -73,6 +73,9 @@
   "couldNotObtainScreenshot": "स्क्रीनशॉट प्राप्त नहीं किया जा सका: {{screenshotError}}",
   "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Siri कमांड निष्पादित करें",
+  "rotateDigitalCrown": "Rotate Digital Crown",
+  "Rotations": "Rotations",
+  "Velocity": "Velocity",
   "performHandGesture": "Perform Hand Gesture",
   "Press Home Button": "होम बटन दबाएं",
   "Press Back Button": "बैक बटन दबाएं",
@@ -335,7 +338,14 @@
   "enterSessionID": "मैन्युअल रूप से जोड़ने के लिए सत्र ID दर्ज करें",
   "refreshDiscoveredSessions": "खोजे गए सत्र रीफ्रेश करें",
   "toggleMultiDisplayMode": "मल्टी-डिस्प्ले मोड टॉगल करें",
+  "toggleActiveWindowSelection": "Toggle Selection of Active Window",
+  "focusedWindow": "Focused Window",
+  "topmostWindow": "Top-Most Window",
+  "allWindows": "All Windows",
   "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
   "switchToComposeSubdriver": "Switch to Compose Subdriver",
-  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform",
+  "Customize Visible Attributes": "Customize Visible Attributes",
+  "importantAttributesDescription": "Choose which attributes appear in the compact source tree. Select an attribute or type a name to add it. Changes are saved between sessions.",
+  "Restore Default Attributes": "Restore Default Attributes"
 }

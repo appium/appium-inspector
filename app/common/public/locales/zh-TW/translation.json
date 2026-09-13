@@ -73,6 +73,9 @@
   "couldNotObtainScreenshot": "無法獲取螢幕截圖: {{screenshotError}}",
   "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "執行 Siri 命令",
+  "rotateDigitalCrown": "Rotate Digital Crown",
+  "Rotations": "Rotations",
+  "Velocity": "Velocity",
   "performHandGesture": "Perform Hand Gesture",
   "Press Home Button": "按主頁按鈕",
   "Press Back Button": "按返回按鈕",
@@ -335,7 +338,14 @@
   "enterSessionID": "請輸入會話ID以手動連線",
   "refreshDiscoveredSessions": "重新整理發現的會話",
   "toggleMultiDisplayMode": "切換多顯示器模式",
+  "toggleActiveWindowSelection": "Toggle Selection of Active Window",
+  "focusedWindow": "Focused Window",
+  "topmostWindow": "Top-Most Window",
+  "allWindows": "All Windows",
   "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
   "switchToComposeSubdriver": "Switch to Compose Subdriver",
-  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform",
+  "Customize Visible Attributes": "Customize Visible Attributes",
+  "importantAttributesDescription": "Choose which attributes appear in the compact source tree. Select an attribute or type a name to add it. Changes are saved between sessions.",
+  "Restore Default Attributes": "Restore Default Attributes"
 }

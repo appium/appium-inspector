@@ -73,6 +73,9 @@
   "couldNotObtainScreenshot": "스크린샷을 가져올 수 없습니다: {{screenshotError}}",
   "pressDeviceButton": "Press Device Button",
   "Execute Siri Command": "Siri 명령 실행",
+  "rotateDigitalCrown": "Rotate Digital Crown",
+  "Rotations": "Rotations",
+  "Velocity": "Velocity",
   "performHandGesture": "Perform Hand Gesture",
   "Press Home Button": "홈 버튼 누르기",
   "Press Back Button": "이전 버튼 누르기",
@@ -335,7 +338,14 @@
   "enterSessionID": "수동으로 연결하기 위한 세션 ID 입력",
   "refreshDiscoveredSessions": "발견된 세션 새로고침",
   "toggleMultiDisplayMode": "다중 디스플레이 모드 토글",
+  "toggleActiveWindowSelection": "Toggle Selection of Active Window",
+  "focusedWindow": "Focused Window",
+  "topmostWindow": "Top-Most Window",
+  "allWindows": "All Windows",
   "switchToEspressoSubdriver": "Switch to Espresso Subdriver",
   "switchToComposeSubdriver": "Switch to Compose Subdriver",
-  "w3cActionsUnsupported": "W3C Actions are not supported on this platform"
+  "w3cActionsUnsupported": "W3C Actions are not supported on this platform",
+  "Customize Visible Attributes": "Customize Visible Attributes",
+  "importantAttributesDescription": "Choose which attributes appear in the compact source tree. Select an attribute or type a name to add it. Changes are saved between sessions.",
+  "Restore Default Attributes": "Restore Default Attributes"
 }
