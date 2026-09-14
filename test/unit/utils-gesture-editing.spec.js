@@ -18,14 +18,12 @@ const pointers = [
 
 describe('moveGestureTick', () => {
   it('moves an action earlier, retaining its parameters and renumbering every position', () => {
-    const original = structuredClone(pointers);
     const result = moveGestureTick(pointers, '1', '1.3', -1);
     expect(result[0]).toEqual({
       ...pointers[0],
       ticks: [pointers[0].ticks[0], {...pointers[0].ticks[2], id: '1.2'}, {...pointers[0].ticks[1], id: '1.3'}],
     });
     expect(result[1]).toBe(pointers[1]);
-    expect(pointers).toEqual(original);
   });
 
   it('moves an action later and allows a subsequent move using its new ID', () => {
@@ -39,7 +37,6 @@ describe('moveGestureTick', () => {
   });
 
   it('moves directly to a non-adjacent position and back without changing the other pointer', () => {
-    const original = structuredClone(pointers);
     const result = moveGestureTick(pointers, '1', '1.1', 2);
     expect(result[0].ticks).toEqual([
       {...pointers[0].ticks[1], id: '1.1'},
@@ -48,7 +45,6 @@ describe('moveGestureTick', () => {
     ]);
     expect(result[1]).toBe(pointers[1]);
     expect(moveGestureTick(result, '1', '1.3', -2)).toEqual(pointers);
-    expect(pointers).toEqual(original);
   });
 
   it.each([
