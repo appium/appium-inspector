@@ -1,27 +1,27 @@
 /** Move one action within its pointer and keep the position-based tick IDs consistent. */
-export function moveGestureTick(pointers, pointerId, tickId, offset) {
+export function moveGestureTick(pointers, pointerId, tickId, tickIndexOffset) {
   const pointer = pointers.find(({id}) => id === pointerId);
-  const index = pointer?.ticks.findIndex(({id}) => id === tickId) ?? -1;
-  const targetIndex = index + offset;
+  const tickIndex = pointer?.ticks.findIndex(({id}) => id === tickId) ?? -1;
+  const targetTickIndex = tickIndex + tickIndexOffset;
   if (
-    index < 0 ||
-    !Number.isInteger(offset) ||
-    offset === 0 ||
-    targetIndex < 0 ||
-    targetIndex >= pointer.ticks.length
+    tickIndex < 0 ||
+    !Number.isInteger(tickIndexOffset) ||
+    tickIndexOffset === 0 ||
+    targetTickIndex < 0 ||
+    targetTickIndex >= pointer.ticks.length
   ) {
     return pointers;
   }
 
-  const ticks = [...pointer.ticks];
-  const [tick] = ticks.splice(index, 1);
-  ticks.splice(targetIndex, 0, tick);
+  const newTicks = [...pointer.ticks];
+  const [movedTick] = newTicks.splice(tickIndex, 1);
+  newTicks.splice(targetTickIndex, 0, movedTick);
 
   return pointers.map((currentPointer) =>
     currentPointer.id === pointerId
       ? {
           ...currentPointer,
-          ticks: ticks.map((currentTick, position) => ({
+          ticks: newTicks.map((currentTick, position) => ({
             ...currentTick,
             id: `${pointerId}.${position + 1}`,
           })),
