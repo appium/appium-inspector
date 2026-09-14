@@ -12,6 +12,7 @@ const AdvancedServerParams = ({server, setServerParam, serverType}) => {
       <Col className={styles.advancedSettingsContainerCol}>
         <div className={styles.advancedSettingsContainer}>
           <Collapse
+            styles={{header: {padding: '8px'}, body: {padding: '8px'}}}
             items={[
               {
                 label: t('Advanced Settings'),

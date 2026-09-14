@@ -148,7 +148,7 @@ const SavedCapabilitySets = (props) => {
                 header: {cell: {padding: '8px 16px'}},
                 section: {height: 'calc(100% - 48px)'},
                 body: {cell: {padding: '8px 16px'}},
-                footer: {padding: '8px 16px'},
+                footer: {padding: '8px 8px'},
               }}
               pagination={false}
               sticky={true}

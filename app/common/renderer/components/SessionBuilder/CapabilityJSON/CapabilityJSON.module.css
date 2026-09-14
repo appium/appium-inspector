@@ -24,21 +24,20 @@
 
 .formattedCaps :global(.ant-card-head-title) {
   padding-right: 6px;
-  height: 65px;
   width: 100%;
   display: flex;
   align-items: center;
 }
 
 .formattedCaps :global(.ant-card-body) {
-  height: calc(100% - 66px);
+  height: calc(100% - 53px);
   padding: 0 14px 0 24px;
   flex: 1;
   overflow-y: auto;
 }
 
 .formattedCaps :global(.ant-card-extra) {
-  padding: 15px 0;
+  padding: 10px 0;
 }
 
 .capsEditorControls {

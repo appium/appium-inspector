@@ -10,7 +10,7 @@ const AttachToSessionInstructions = () => {
   const {t} = useTranslation();
 
   return (
-    <Card>
+    <Card styles={{body: {padding: '6px 8px 12px 8px'}}}>
       <p className={builderStyles.localDesc}>
         {t('connectToExistingSessionInstructions')}
         <br />
