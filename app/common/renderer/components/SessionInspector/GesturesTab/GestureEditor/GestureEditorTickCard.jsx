@@ -70,34 +70,32 @@ const GestureEditorTickCard = ({
   selectedTick,
   selectTick,
   unselectTick,
-}) => {
-  return (
-    <Card
-      className={isDropTarget ? `${styles.tickCard} ${styles.tickCardDropTarget}` : styles.tickCard}
-      // Keep the hidden handle mounted so dnd-kit does not disable the whole single-action card.
-      title={
-        <IconGripVertical
-          size={18}
-          aria-label={tick.id}
-          className={styles.tickDragHandle}
-          ref={dragHandleRef}
-          visibility={dragDisabled ? 'hidden' : undefined}
-        />
-      }
-      extra={
-        <GestureEditorTickCardHeaderButtons
-          tick={tick}
-          pointers={pointers}
-          setPointers={setPointers}
-          selectedTick={selectedTick}
-          selectTick={selectTick}
-          unselectTick={unselectTick}
-        />
-      }
-    >
-      {children}
-    </Card>
-  );
-};
+}) => (
+  <Card
+    className={isDropTarget ? `${styles.tickCard} ${styles.tickCardDropTarget}` : styles.tickCard}
+    // Keep the hidden handle mounted so dnd-kit does not mark the whole card as aria-disabled.
+    title={
+      <IconGripVertical
+        size={18}
+        aria-label={tick.id}
+        className={styles.tickDragHandle}
+        ref={dragHandleRef}
+        visibility={dragDisabled ? 'hidden' : undefined}
+      />
+    }
+    extra={
+      <GestureEditorTickCardHeaderButtons
+        tick={tick}
+        pointers={pointers}
+        setPointers={setPointers}
+        selectedTick={selectedTick}
+        selectTick={selectTick}
+        unselectTick={unselectTick}
+      />
+    }
+  >
+    {children}
+  </Card>
+);
 
 export default GestureEditorTickCard;
