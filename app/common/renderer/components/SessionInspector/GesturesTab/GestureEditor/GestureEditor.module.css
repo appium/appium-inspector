@@ -71,21 +71,14 @@
   flex: 1;
 }
 
-.tickCard :global(.ant-card-actions) {
-  flex-shrink: 0;
-}
-
-.tickCard[data-drop-target] {
+.tickCardDropTarget {
   outline: 2px solid var(--ant-color-primary);
 }
 
-.tickDragHandle:not(:disabled) {
+.tickDragHandle {
+  margin-top: 3px;
   cursor: grab;
   touch-action: none;
-}
-
-.tickDragHandle:not(:disabled):active {
-  cursor: grabbing;
 }
 
 .tickPlusBtnWrapper {

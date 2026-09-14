@@ -1,7 +1,7 @@
 import {Feedback} from '@dnd-kit/dom';
 import {SortableKeyboardPlugin} from '@dnd-kit/dom/sortable';
 import {DragDropProvider} from '@dnd-kit/react';
-import {isSortable, useSortable} from '@dnd-kit/react/sortable';
+import {useSortable} from '@dnd-kit/react/sortable';
 import {IconPlus} from '@tabler/icons-react';
 import {Button, Col, Row, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
@@ -54,13 +54,14 @@ const GestureEditorTick = ({
   unselectTick,
   getDefaultMoveDuration,
 }) => {
+  const dragDisabled = pointer.ticks.length < 2;
   const {ref, handleRef, isDropTarget} = useSortable({
     id: tick.id,
     index,
-    group: pointer.id,
-    disabled: pointer.ticks.length < 2,
-    // Tick IDs describe positions, not stable identities. Commit the new order on drop
-    // instead of optimistically reordering DOM nodes behind React's positional keys.
+    disabled: dragDisabled,
+    // Replace the defaults to remove OptimisticSortingPlugin and commit the new order
+    // only on drop. Disable the drop animation, which is confusing with position-based
+    // tick IDs that are reassigned when the order changes.
     plugins: [SortableKeyboardPlugin, Feedback.configure({dropAnimation: null})],
   });
 
@@ -69,7 +70,7 @@ const GestureEditorTick = ({
       <GestureEditorTickCard
         tick={tick}
         dragHandleRef={handleRef}
-        dragDisabled={pointer.ticks.length < 2}
+        dragDisabled={dragDisabled}
         isDropTarget={isDropTarget}
         pointers={pointers}
         setPointers={setPointers}
@@ -103,22 +104,16 @@ const GestureEditorPointerTabContents = ({
 }) => {
   const handleDragEnd = (event) => {
     const {source, target, activatorEvent} = event.operation;
-    if (!isSortable(source)) {
-      return;
-    }
-    const updatedPointers =
-      !event.canceled && isSortable(target)
-        ? moveGestureTick(pointers, pointer.id, source.id, target.index - source.index)
-        : pointers;
-    if (updatedPointers !== pointers) {
+    if (!event.canceled && Number.isInteger(target?.index) && target.index - source.index !== 0) {
+      const updatedPointers = moveGestureTick(pointers, pointer.id, source.id, target.index - source.index);
       unselectTick();
       setPointers(updatedPointers);
-    }
-    if (activatorEvent instanceof KeyboardEvent) {
-      // The default drop animation restores the old positional ID. Keep keyboard
-      // focus on the moved action instead, or on the source if the drag was canceled.
-      const handle = updatedPointers !== pointers ? target.sortable.draggable.handle : source.handle;
-      requestAnimationFrame(() => handle?.focus());
+      if (activatorEvent instanceof KeyboardEvent) {
+        // SVG handles lose focus after a keyboard drop when dropAnimation is disabled.
+        // Focus the destination handle after React reassigns the position-based IDs.
+        const handle = target.sortable.draggable.handle;
+        requestAnimationFrame(() => handle?.focus());
+      }
     }
   };
 

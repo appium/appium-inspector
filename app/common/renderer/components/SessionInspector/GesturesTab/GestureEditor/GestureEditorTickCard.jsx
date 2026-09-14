@@ -71,26 +71,18 @@ const GestureEditorTickCard = ({
   selectTick,
   unselectTick,
 }) => {
-  const {t} = useTranslation();
-  const dragLabel = t('dragGestureAction', {id: tick.id});
-
   return (
     <Card
-      hoverable={true}
-      className={styles.tickCard}
-      data-drop-target={isDropTarget || undefined}
+      className={isDropTarget ? `${styles.tickCard} ${styles.tickCardDropTarget}` : styles.tickCard}
+      // Keep the hidden handle mounted so dnd-kit does not disable the whole single-action card.
       title={
-        <Tooltip title={dragLabel}>
-          <Button
-            ref={dragHandleRef}
-            aria-label={dragLabel}
-            className={styles.tickDragHandle}
-            size="small"
-            type="text"
-            disabled={dragDisabled}
-            icon={<IconGripVertical size={18} />}
-          />
-        </Tooltip>
+        <IconGripVertical
+          size={18}
+          aria-label={tick.id}
+          className={styles.tickDragHandle}
+          ref={dragHandleRef}
+          visibility={dragDisabled ? 'hidden' : undefined}
+        />
       }
       extra={
         <GestureEditorTickCardHeaderButtons
