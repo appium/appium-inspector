@@ -18,7 +18,7 @@ const CloudProviderSelector = (props) => {
   // Converts list of providers into list of pairs of providers
   const keys = Object.keys(CloudProviders);
   const providersGrid = keys.reduce((rows, key, i) => {
-    if (i % 2 === 0) {
+    if (i % 3 === 0) {
       rows.push([key]);
     } else {
       rows[rows.length - 1].push(key);
@@ -38,11 +38,13 @@ const CloudProviderSelector = (props) => {
   return (
     <Modal
       key="modal"
+      width={{md: '80%', lg: '70%', xl: '60%', xxl: '50%'}}
       className={styles.cloudProviderModal}
       open={isAddingCloudProvider}
       onCancel={stopAddCloudProvider}
       footer={footer}
       title={t('Select Cloud Providers')}
+      centered
     >
       {[
         ...providersGrid.map((row) => (
@@ -57,7 +59,7 @@ const CloudProviderSelector = (props) => {
                 const provider = CloudProviders[providerName];
                 return (
                   provider && (
-                    <Col span={12} key={providerName}>
+                    <Col span={8} key={providerName}>
                       <Button
                         aria-label={providerName}
                         role="checkbox"
