@@ -2,8 +2,6 @@ import {IconHandMove} from '@tabler/icons-react';
 import {Card, Flex} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import inspectorStyles from '../SessionInspector.module.css';
-
 /**
  * Title of the gestures tab card.
  */
@@ -22,7 +20,13 @@ const GesturesTabTitle = () => {
  * Wrapper card for the gestures tab.
  */
 const GesturesTabCard = ({children}) => (
-  <Card title={<GesturesTabTitle />} className={inspectorStyles.interactionTabCard}>
+  <Card
+    title={<GesturesTabTitle />}
+    styles={{
+      header: {padding: '0px 8px 0px 16px', minHeight: '48px'},
+      body: {padding: '12px', height: 'calc(100% - 48px)'},
+    }}
+  >
     {children}
   </Card>
 );

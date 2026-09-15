@@ -177,7 +177,7 @@ const TickCoordsInput = ({tick, getDefaultMoveDuration, pointers, setPointers}) 
  * Contents of a tick card.
  */
 const GestureEditorTickCardContents = ({tick, selectTick, getDefaultMoveDuration, pointers, setPointers}) => (
-  <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="middle">
+  <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="small">
     <TickTypeSelector tick={tick} selectTick={selectTick} pointers={pointers} setPointers={setPointers} />
     {(tick.type === POINTER_MOVE || tick.type === PAUSE) && (
       <TickDurationInput

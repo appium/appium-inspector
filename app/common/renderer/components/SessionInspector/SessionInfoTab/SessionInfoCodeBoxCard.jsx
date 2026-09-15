@@ -53,6 +53,7 @@ const SessionInfoCodeBoxHeaderOptions = ({clientCode, clientFramework, setClient
 const SessionInfoCodeBoxCard = ({clientCode, clientFramework, setClientFramework, children}) => (
   <Card
     title={<SessionInfoCodeBoxPanelTitle />}
+    styles={{header: {padding: '0px 8px 0px 16px', minHeight: '48px'}, body: {padding: '12px'}}}
     extra={
       <SessionInfoCodeBoxHeaderOptions
         clientCode={clientCode}

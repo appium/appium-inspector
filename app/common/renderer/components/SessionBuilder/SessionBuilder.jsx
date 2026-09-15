@@ -126,7 +126,7 @@ const Session = () => {
         <Tabs
           activeKey={serverType}
           onChange={(tab) => handleSelectServerTab(tab)}
-          styles={{root: {paddingBottom: '8px'}}}
+          styles={{root: {paddingBottom: '8px'}, header: {margin: '0px 0px 1em 6px'}, item: {padding: '10px 0px'}}}
           items={[
             {
               label: t('Appium Server'),
@@ -155,6 +155,11 @@ const Session = () => {
         <Tabs
           activeKey={tabKey}
           onChange={switchTabs}
+          styles={{
+            root: {marginTop: '8px', marginBottom: '1em'},
+            header: {margin: '0px 0px 1em 6px'},
+            item: {padding: '10px 0px'},
+          }}
           className={styles.builderTabsCont}
           items={[
             {

@@ -88,7 +88,10 @@ const RecorderTabCard = ({
 }) => (
   <Card
     title={<RecorderTabTitle />}
-    className={inspectorStyles.interactionTabCard}
+    styles={{
+      header: {padding: '0px 8px 0px 16px', minHeight: '48px'},
+      body: {padding: '12px', height: 'calc(100% - 48px)'},
+    }}
     extra={
       <RecorderTabHeaderButtons
         clientFramework={clientFramework}

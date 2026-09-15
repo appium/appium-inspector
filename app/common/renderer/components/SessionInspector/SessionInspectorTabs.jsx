@@ -75,6 +75,7 @@ const SessionInspectorTabs = (props) => {
   return (
     <div className={styles.inspectorTabsContainer}>
       <Tabs
+        styles={{header: {margin: '0px 0px 1em 6px'}, item: {padding: '10px 0px 10px 0px'}}}
         activeKey={selectedInspectorTab}
         size="small"
         onChange={(tab) => selectInspectorTab(tab)}
