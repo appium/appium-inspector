@@ -19,11 +19,6 @@
   font-style: italic;
 }
 
-.sessionHeader {
-  display: flex;
-  justify-content: space-between;
-}
-
 .sessionFooter {
   margin-top: 1em;
   text-align: right;
