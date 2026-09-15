@@ -82,7 +82,7 @@ const MethodMapCommandsContent = ({getBtnColspan, driverMethods, isExecute, star
   return (
     <>
       {isExecute ? t('dynamicExecuteMethodsDescription') : t('dynamicCommandsDescription')}
-      <Divider size="middle" />
+      <Divider size="small" />
       <div className={styles.methodMapGrid}>
         <Row>
           {driverMethods.map(([methodName, methodDetails]) => (

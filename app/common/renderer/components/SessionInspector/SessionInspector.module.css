@@ -12,7 +12,7 @@
   width: 100%;
   flex: 1;
   min-height: 0;
-  padding: 1em;
+  padding: 0px 1em 1em 1em;
 }
 
 .inspectorTabsContainer {
@@ -70,7 +70,7 @@
 }
 
 .frameworkDropdown {
-  width: 150px;
+  width: 180px;
 }
 
 .spaceContainer {

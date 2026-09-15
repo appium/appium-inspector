@@ -34,6 +34,12 @@ body::-webkit-scrollbar-corner {
   background-color: #662d91 !important;
 }
 
+.refractor {
+  margin-bottom: 0;
+  overflow-y: scroll;
+  height: 100%;
+}
+
 .ant-spin,
 .ant-spin-container {
   height: 100%;
