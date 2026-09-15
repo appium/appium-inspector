@@ -133,6 +133,7 @@ const GestureEditorPointerTabs = ({
       onEdit={addOrRemovePointer}
       hideAdd={pointers.length === 5}
       centered={true}
+      destroyOnHidden={true}
       tabBarGutter={10}
       items={pointerTabs}
     />

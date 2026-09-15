@@ -54,6 +54,11 @@
   text-align: center;
 }
 
+.tickCard {
+  display: flex;
+  flex-direction: column;
+}
+
 .tickCard :global(.ant-card-head) {
   min-height: unset;
   padding: 0px;
@@ -62,7 +67,18 @@
 
 .tickCard :global(.ant-card-body) {
   padding-top: 6px;
-  height: calc(100% - 25px);
+  height: auto;
+  flex: 1;
+}
+
+.tickCardDropTarget {
+  outline: 2px solid var(--ant-color-primary);
+}
+
+.tickDragHandle {
+  margin-top: 3px;
+  cursor: grab;
+  touch-action: none;
 }
 
 .tickPlusBtnWrapper {

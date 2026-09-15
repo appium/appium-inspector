@@ -1,4 +1,4 @@
-import {IconFocus2, IconX} from '@tabler/icons-react';
+import {IconFocus2, IconGripVertical, IconX} from '@tabler/icons-react';
 import {Button, Card, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
@@ -59,10 +59,30 @@ const GestureEditorTickCardHeaderButtons = ({tick, pointers, setPointers, select
 /**
  * Wrapper card for a single tick in the gesture editor.
  */
-const GestureEditorTickCard = ({children, tick, pointers, setPointers, selectedTick, selectTick, unselectTick}) => (
+const GestureEditorTickCard = ({
+  children,
+  tick,
+  dragHandleRef,
+  dragDisabled,
+  isDropTarget,
+  pointers,
+  setPointers,
+  selectedTick,
+  selectTick,
+  unselectTick,
+}) => (
   <Card
-    hoverable={true}
-    className={styles.tickCard}
+    className={isDropTarget ? `${styles.tickCard} ${styles.tickCardDropTarget}` : styles.tickCard}
+    // Keep the hidden handle mounted so dnd-kit does not mark the whole card as aria-disabled.
+    title={
+      <IconGripVertical
+        size={18}
+        aria-label={tick.id}
+        className={styles.tickDragHandle}
+        ref={dragHandleRef}
+        visibility={dragDisabled ? 'hidden' : undefined}
+      />
+    }
     extra={
       <GestureEditorTickCardHeaderButtons
         tick={tick}
