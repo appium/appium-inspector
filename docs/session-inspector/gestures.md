@@ -93,7 +93,10 @@ The title of each pointer can also be clicked and edited.
 ### Pointer Actions
 
 Pointer actions are used to define the behavior of each pointer. Each individual action is presented
-as a rectangular card, and new cards can be freely added and removed.
+as a rectangular card, and new cards can be freely added, removed, or reordered using drag-and-drop.
+
+The gesture timeline updates when an action moves, and the action keeps its coordinates, duration,
+and other parameters. Moving an action turns off the screenshot coordinate picker.
 
 ![Pointer Actions](./assets/images/gestures/gesture-editor-actions.png)
 
