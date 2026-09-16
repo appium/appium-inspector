@@ -148,10 +148,9 @@ const SavedCapabilitySets = (props) => {
                 header: {cell: {padding: '8px 16px'}},
                 section: {height: 'calc(100% - 48px)'},
                 body: {cell: {padding: '8px 16px'}},
-                footer: {padding: '8px 8px'},
+                footer: {padding: '8px 8px', borderTop: '1px solid var(--ant-table-border-color)'},
               }}
               pagination={false}
-              sticky={true}
               dataSource={dataSource(savedSessions, t)}
               columns={columns}
               onRow={(row) => ({onClick: () => handleCapsAndServer(row.key)})}

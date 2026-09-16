@@ -95,9 +95,10 @@ const SavedGesturesTable = (props) => {
   return (
     <Table
       styles={{
+        root: {border: '1px solid var(--ant-table-border-color)', borderRadius: '8px'},
         header: {cell: {padding: '8px 16px'}},
         body: {cell: {padding: '8px 16px'}},
-        footer: {padding: '8px 8px'},
+        footer: {padding: '8px', borderTop: '1px solid var(--ant-table-border-color)'},
       }}
       onRow={(row) => ({
         onMouseEnter: () => displayGestureWithID(row.key),
