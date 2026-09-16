@@ -79,7 +79,7 @@ const ServerTabSauce = ({server, setServerParam}) => {
           <Space.Compact block>
             <Space.Addon>{t('Host')}</Space.Addon>
             <Input
-              placeholder={t('localhost')}
+              placeholder="localhost"
               disabled={!server.sauce.useSCProxy}
               value={server.sauce.scHost}
               onChange={(e) => setServerParam('scHost', e.target.value)}
