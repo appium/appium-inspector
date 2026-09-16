@@ -20,11 +20,11 @@ const formatSessionLength = (sessionLength) => {
   return formatMono(`${padTime(hours)}:${padTime(minutes)}:${padTime(seconds)}`);
 };
 
-const tableColumns = [
+const tableColumns = (firstColWidth) => [
   {
     dataIndex: 'property',
     key: 'property',
-    width: 200,
+    width: firstColWidth,
   },
   {
     dataIndex: 'value',
@@ -44,10 +44,10 @@ const innerDataSource = (tableData) =>
 /**
  * Inner table component for session information cells with multiple values.
  */
-const SessionInfoInnerTable = ({tableData}) => (
+const SessionInfoInnerTable = ({tableData, firstColWidth}) => (
   <Table
     className={styles.sessionInnerTable}
-    columns={tableColumns}
+    columns={tableColumns(firstColWidth)}
     dataSource={innerDataSource(tableData)}
     pagination={false}
     showHeader={false}
@@ -99,12 +99,12 @@ const SessionInfoTable = (props) => {
       {
         key: 'server_details',
         property: t('Server Details'),
-        value: <SessionInfoInnerTable tableData={status} />,
+        value: <SessionInfoInnerTable tableData={status} firstColWidth="25%" />,
       },
       {
         key: 'session_details',
         property: t('Session Details'),
-        value: <SessionInfoInnerTable tableData={flatSessionCaps} />,
+        value: <SessionInfoInnerTable tableData={flatSessionCaps} firstColWidth="40%" />,
       },
       {
         key: 'active_appId',
@@ -130,7 +130,7 @@ const SessionInfoTable = (props) => {
 
   return (
     <Table
-      columns={tableColumns}
+      columns={tableColumns('25%')}
       dataSource={outerDataSource()}
       pagination={false}
       showHeader={false}

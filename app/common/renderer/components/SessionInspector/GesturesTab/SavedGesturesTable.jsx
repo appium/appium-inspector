@@ -94,6 +94,12 @@ const SavedGesturesTable = (props) => {
 
   return (
     <Table
+      styles={{
+        root: {border: '1px solid var(--ant-table-border-color)', borderRadius: '8px'},
+        header: {cell: {padding: '8px 16px'}},
+        body: {cell: {padding: '8px 16px'}},
+        footer: {padding: '8px', borderTop: '1px solid var(--ant-table-border-color)'},
+      }}
       onRow={(row) => ({
         onMouseEnter: () => displayGestureWithID(row.key),
         onMouseLeave: () => removeGestureDisplay(),
@@ -101,7 +107,7 @@ const SavedGesturesTable = (props) => {
       pagination={false}
       dataSource={dataSource}
       columns={columns}
-      scroll={{y: 'calc(100vh - 32em)'}}
+      scroll={{y: 'calc(100vh - 27em)'}}
       footer={() => (
         <SavedGesturesTableFooter showGestureEditor={showGestureEditor} importGestureFiles={importGestureFiles} />
       )}

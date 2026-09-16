@@ -61,7 +61,14 @@ const AppSourceHeaderButtons = ({sourceXML}) => {
  * Wrapper card for the app source tree.
  */
 const AppSourceCard = ({sourceXML, children}) => (
-  <Card title={<AppSourcePanelTitle />} extra={<AppSourceHeaderButtons sourceXML={sourceXML} />}>
+  <Card
+    title={<AppSourcePanelTitle />}
+    styles={{
+      header: {padding: '0px 8px 0px 16px', minHeight: '48px'},
+      body: {padding: '12px', height: 'calc(100% - 48px)'},
+    }}
+    extra={<AppSourceHeaderButtons sourceXML={sourceXML} />}
+  >
     {children}
   </Card>
 );

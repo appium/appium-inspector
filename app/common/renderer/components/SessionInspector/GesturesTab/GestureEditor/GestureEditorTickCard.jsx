@@ -75,7 +75,12 @@ const GestureEditorTickCard = ({
 
   return (
     <Card
-      className={isDropTarget ? `${styles.tickCard} ${styles.tickCardDropTarget}` : styles.tickCard}
+      className={isDropTarget && styles.tickCardDropTarget}
+      styles={{
+        root: {display: 'flex', flexDirection: 'column'},
+        header: {padding: '0px', minHeight: 'unset', borderBottom: 'none'},
+        body: {padding: '4px 8px 8px 8px'},
+      }}
       // Keep the hidden handle mounted so dnd-kit does not mark the whole card as aria-disabled.
       title={
         <IconGripVertical

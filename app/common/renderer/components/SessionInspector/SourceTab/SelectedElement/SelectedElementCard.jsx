@@ -5,8 +5,6 @@ import {useTranslation} from 'react-i18next';
 import {downloadFile} from '../../../../utils/file-handling.js';
 import {copyToClipboard} from '../../../../utils/other.js';
 
-import styles from './SelectedElement.module.css';
-
 /**
  * Title of the selected element's wrapper card, with its dedicated icon.
  */
@@ -82,7 +80,10 @@ const SelectedElementCard = ({
 }) => (
   <Card
     title={<SelectedElementPanelTitle />}
-    className={styles.selectedElementCard}
+    styles={{
+      header: {marginBottom: '0px', padding: '0px 8px 0px 16px', minHeight: '48px'},
+      body: {padding: '12px', height: 'calc(100% - 48px)', overflow: 'scroll'},
+    }}
     extra={
       <SelectedElementHeaderButtons
         elementAttributesData={elementAttributesData}

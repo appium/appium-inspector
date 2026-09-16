@@ -119,7 +119,7 @@ const GestureEditorPointerTabContents = ({
 
   return (
     <DragDropProvider onDragEnd={handleDragEnd}>
-      <Row gutter={[24, 24]}>
+      <Row gutter={[24, 24]} style={{margin: '0px'}}>
         {pointer.ticks.map((tick, index) => (
           <GestureEditorTick
             key={tick.id}

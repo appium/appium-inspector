@@ -27,6 +27,7 @@ const MethodMapCommandsTabs = ({getBtnColspan, driverCommands, driverExecuteMeth
     <Tabs
       defaultActiveKey={hasNoCommands ? '2' : '1'}
       size="small"
+      styles={{header: {marginBottom: '8px'}, item: {padding: '10px 0px'}}}
       centered
       items={[
         {

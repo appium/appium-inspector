@@ -123,41 +123,44 @@ const Session = () => {
   return [
     <Spin size="large" spinning={!!newSessionLoading} key="main">
       <div className={styles.sessionContainer}>
-        <div className={styles.sessionHeader}>
-          <Tabs
-            activeKey={serverType}
-            onChange={(tab) => handleSelectServerTab(tab)}
-            className={styles.serverTabs}
-            items={[
-              {
-                label: t('Appium Server'),
-                key: SERVER_TYPES.REMOTE,
-                children: <ServerTabCustom {...props} />,
-              },
-              ...visibleProviders.map((providerName) => {
-                const provider = CloudProviders[providerName];
-                if (!provider) {
-                  return true;
-                }
-                return {
-                  label: <div>{provider.tabhead()}</div>,
-                  key: providerName,
-                  children: provider.tab(props),
-                };
-              }),
-              {
-                label: <span className="addCloudProviderTab">{t('Select Cloud Providers')}</span>,
-                key: ADD_CLOUD_PROVIDER_TAB_KEY,
-              },
-            ]}
-          />
-          <AppSettings />
-        </div>
+        <Tabs
+          activeKey={serverType}
+          onChange={(tab) => handleSelectServerTab(tab)}
+          styles={{root: {paddingBottom: '8px'}, header: {margin: '0px 0px 1em 6px'}, item: {padding: '10px 0px'}}}
+          items={[
+            {
+              label: t('Appium Server'),
+              key: SERVER_TYPES.REMOTE,
+              children: <ServerTabCustom {...props} />,
+            },
+            ...visibleProviders.map((providerName) => {
+              const provider = CloudProviders[providerName];
+              if (!provider) {
+                return true;
+              }
+              return {
+                label: <div>{provider.tabhead()}</div>,
+                key: providerName,
+                children: provider.tab(props),
+              };
+            }),
+            {
+              label: <span className="addCloudProviderTab">{t('Select Cloud Providers')}</span>,
+              key: ADD_CLOUD_PROVIDER_TAB_KEY,
+            },
+          ]}
+          tabBarExtraContent={<AppSettings />}
+        />
         <AdvancedServerParams {...props} />
         <Tabs
           activeKey={tabKey}
           onChange={switchTabs}
-          className={styles.scrollingTabCont}
+          styles={{
+            root: {marginTop: '8px', marginBottom: '1em'},
+            header: {margin: '0px 0px 1em 6px'},
+            item: {padding: '10px 0px'},
+          }}
+          className={styles.builderTabsCont}
           items={[
             {
               label: t('Capability Builder'),
