@@ -10,6 +10,11 @@ import {setupMainWindow} from './windows.js';
 // and this flow only makes sense for the installed Inspector app anyway
 let openFilePath = process.platform === 'darwin' || isDev ? null : process.argv[1];
 
+// Ensures scrollbar visibility mode (always visible or overlay) follows OS preferences.
+// Explicitly required: the default mode is always visible.
+// Reference: https://peter.sh/experiments/chromium-command-line-switches/
+app.commandLine.appendSwitch('enable-features', 'OverlayScrollbar:mode/device');
+
 // Used when opening Inspector through an .appiumsession file (macOS)
 app.on('open-file', (event, filePath) => {
   event.preventDefault();

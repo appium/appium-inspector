@@ -9,15 +9,6 @@ body {
   box-sizing: border-box;
 }
 
-body::-webkit-scrollbar {
-  width: 0px;
-  background: transparent;
-}
-
-body::-webkit-scrollbar-corner {
-  background: transparent;
-}
-
 #root,
 .ant-app,
 .ant-layout {
