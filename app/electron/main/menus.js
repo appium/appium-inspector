@@ -1,5 +1,6 @@
 import {app, dialog, Menu, shell} from 'electron';
 
+import webdriverPackageJson from '../../../node_modules/webdriver/package.json';
 import {isDev, t} from './helpers.js';
 import {checkForUpdates} from './updater.js';
 import {launchNewSessionWindow} from './windows.js';
@@ -27,11 +28,11 @@ export function rebuildMenus(mainWindow) {
 function showAppInfoPopup() {
   dialog.showMessageBox({
     title: t('appiumInspector'),
-    message: t('showAppInfo', {
-      appVersion: app.getVersion(),
-      electronVersion: process.versions.electron,
-      nodejsVersion: process.versions.node,
-    }),
+    message:
+      `Appium Inspector ${app.getVersion()}\n\n` +
+      `WebdriverIO ${webdriverPackageJson.version}\n` +
+      `Electron ${process.versions.electron}\n` +
+      `Node.js ${process.versions.node}`,
   });
 }
 

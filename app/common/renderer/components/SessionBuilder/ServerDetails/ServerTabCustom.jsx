@@ -48,7 +48,7 @@ const ServerTabCustom = ({server, setServerParam}) => {
           value={server.remote.ssl}
           onChange={(e) => setServerParam('ssl', e.target.checked)}
         >
-          {t('SSL')}
+          SSL
         </Checkbox>
       </div>
     </div>
