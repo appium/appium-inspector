@@ -19,7 +19,7 @@
 }
 
 .formattedCapsBody {
-  padding-top: 24px;
+  padding: 24px 0px;
 }
 
 .formattedCaps :global(.ant-card-head-title) {
