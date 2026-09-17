@@ -3,16 +3,12 @@ import {Button, Checkbox, Col, Form, Input, Modal, Row, Select, Space, Splitter,
 import {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
-import {CAPABILITY_TYPES} from '../../../constants/session-builder.js';
+import {CAPABILITY_TYPES, SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT} from '../../../constants/session-builder.js';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
 import CapabilityControl from './CapabilityControl.jsx';
 
 import builderStyles from '../SessionBuilder.module.css';
 import styles from './CapabilityBuilderTab.module.css';
-
-// Below this window width, the JSON preview panel no longer has enough room
-// to sit beside the capability builder panel, so it wraps below it instead.
-const NARROW_LAYOUT_BREAKPOINT = 700;
 
 const whitespaces = /^\s|\s$/;
 
@@ -79,18 +75,14 @@ const CapabilityEditor = (props) => {
 
   const latestCapFieldRef = useRef(null);
 
-  const [isNarrow, setIsNarrow] = useState(window.innerWidth > 0 && window.innerWidth < NARROW_LAYOUT_BREAKPOINT);
+  const [isNarrow, setIsNarrow] = useState(
+    window.innerWidth > 0 && window.innerWidth < SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT,
+  );
 
   const onSaveAsOk = () => saveSession({server, serverType, caps, name: saveAsText}, true);
 
   useEffect(() => {
-    // Deliberately not debounced: Splitter measures its container via its
-    // own ResizeObserver, which can fire before a debounced update here
-    // would land. If that happens while this is still reporting the old
-    // orientation, Splitter reads the wrong axis (width vs height) and
-    // caches a stale container size, leaving panels stuck at the wrong
-    // size until another resize happens to nudge it again.
-    const updateIsNarrow = () => setIsNarrow(window.innerWidth < NARROW_LAYOUT_BREAKPOINT);
+    const updateIsNarrow = () => setIsNarrow(window.innerWidth < SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT);
     window.addEventListener('resize', updateIsNarrow);
     return () => window.removeEventListener('resize', updateIsNarrow);
   }, []);
