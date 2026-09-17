@@ -1,49 +1,36 @@
-.advancedSettingsContainerCol {
-  width: 100%;
-}
-
-.serverRow {
+.serverDetailRow {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.serverHostGroup {
-  flex: 1 1 240px;
-}
-
-.serverPortPathGroup {
-  display: flex;
-  flex: 1 1 400px;
-  gap: 8px;
-}
-
-.serverPortInput {
+.serverPortInputField {
   width: 6em;
 }
 
-.serverPathInput {
-  min-width: 50px;
-}
-
-.perfectoHostPortGroup {
+.serverInputGroup300px, .serverInputGroup400px, .serverInputGroup500px {
   display: flex;
-  flex: 1 1 400px;
   gap: 8px;
 }
 
-.perfectoPathSSLGroup {
-  display: flex;
+.serverInputGroup500px, .serverInputField500px {
+  flex: 1 1 500px;
+}
+
+.serverInputGroup400px, .serverInputField400px {
+  flex: 1 1 400px;
+}
+
+.serverInputGroup300px, .serverInputField300px {
   flex: 1 1 300px;
-  gap: 8px;
 }
 
-.pcloudyItemGroup {
-  flex: 1 1 260px;
+.serverInputField250px {
+  flex: 1 1 250px;
 }
 
-.robotActionsItemGroup {
-  flex: 1 1 400px;
+.advancedSettingsContainerCol {
+  width: 100%;
 }
 
 .advancedSettingsContainer :global(.ant-form-item) {

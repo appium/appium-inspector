@@ -9,8 +9,8 @@ import styles from './ServerDetails.module.css';
 const ServerTabPcloudy = ({server, setServerParam}) => {
   const {t} = useTranslation();
   return (
-    <div className={styles.serverRow}>
-      <div className={styles.pcloudyItemGroup}>
+    <div className={styles.serverDetailRow}>
+      <div className={styles.serverInputField300px}>
         <Space.Compact block>
           <Space.Addon>{t('Pcloudy Host')}</Space.Addon>
           <Input
@@ -21,7 +21,7 @@ const ServerTabPcloudy = ({server, setServerParam}) => {
           />
         </Space.Compact>
       </div>
-      <div className={styles.pcloudyItemGroup}>
+      <div className={styles.serverInputField300px}>
         <Space.Compact block>
           <Space.Addon>{t('Pcloudy User Name')}</Space.Addon>
           <Input
@@ -33,7 +33,7 @@ const ServerTabPcloudy = ({server, setServerParam}) => {
           />
         </Space.Compact>
       </div>
-      <div className={styles.pcloudyItemGroup}>
+      <div className={styles.serverInputField300px}>
         <Space.Compact block>
           <Space.Addon>{t('Pcloudy API Key')}</Space.Addon>
           <Input

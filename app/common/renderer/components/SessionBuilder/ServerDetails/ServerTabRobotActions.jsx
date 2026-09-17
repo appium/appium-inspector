@@ -15,8 +15,8 @@ const robotActionsTokenPlaceholder = (t) => {
 const ServerTabRobotActions = ({server, setServerParam}) => {
   const {t} = useTranslation();
   return (
-    <div className={styles.serverRow}>
-      <div className={styles.robotActionsItemGroup}>
+    <div className={styles.serverDetailRow}>
+      <div className={styles.serverInputField400px}>
         <Space.Compact block>
           <Space.Addon>{t('RobotActions Host')}</Space.Addon>
           <Input
@@ -27,7 +27,7 @@ const ServerTabRobotActions = ({server, setServerParam}) => {
           />
         </Space.Compact>
       </div>
-      <div className={styles.robotActionsItemGroup}>
+      <div className={styles.serverInputField400px}>
         <Space.Compact block>
           <Space.Addon>{t('RobotActions Token')}</Space.Addon>
           <Input

@@ -17,8 +17,8 @@ const perfectoTokenPlaceholder = (t) => {
 const ServerTabPerfecto = ({server, setServerParam}) => {
   const {t} = useTranslation();
   return (
-    <div className={styles.serverRow}>
-      <div className={styles.perfectoHostPortGroup}>
+    <div className={styles.serverDetailRow}>
+      <div className={styles.serverInputGroup500px}>
         <Space.Compact block>
           <Space.Addon>{t('Perfecto Host')}</Space.Addon>
           <Input
@@ -32,14 +32,14 @@ const ServerTabPerfecto = ({server, setServerParam}) => {
           <Space.Addon>{t('Perfecto Port')}</Space.Addon>
           <Input
             id="PerfectoPort"
-            className={styles.serverPortInput}
+            className={styles.serverPortInputField}
             placeholder={portPlaceholder(server)}
             value={server.perfecto.port}
             onChange={(e) => setServerParam('port', e.target.value)}
           />
         </Space.Compact>
       </div>
-      <div className={styles.perfectoPathSSLGroup}>
+      <div className={styles.serverInputGroup400px}>
         <Space.Compact block>
           <Space.Addon>{t('Perfecto Token')}</Space.Addon>
           <Input

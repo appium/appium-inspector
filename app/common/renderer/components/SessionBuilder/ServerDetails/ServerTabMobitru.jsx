@@ -1,7 +1,9 @@
-import {Col, Flex, Input, Row, Space} from 'antd';
+import {Input, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {INPUT} from '../../../constants/antd-types.js';
+
+import styles from './ServerDetails.module.css';
 
 const mobitrWebDriverUrlPlaceholder = (t) => {
   if (process.env.MOBITRU_WEBDRIVER_URL) {
@@ -27,9 +29,8 @@ const mobitruAccessKeyPlaceholder = (t) => {
 const ServerTabMobitru = ({server, setServerParam}) => {
   const {t} = useTranslation();
   return (
-    <Flex gap="small" vertical>
-      <Row gutter={8}>
-        <Col span={24}>
+    <div className={styles.serverDetailRow}>
+      <div className={styles.serverInputField400px}>
           <Space.Compact block>
             <Space.Addon>{t('Mobitru WebDriver URL')}</Space.Addon>
             <Input
@@ -39,10 +40,8 @@ const ServerTabMobitru = ({server, setServerParam}) => {
               onChange={(e) => setServerParam('webDriverUrl', e.target.value)}
             />
           </Space.Compact>
-        </Col>
-      </Row>
-      <Row gutter={8}>
-        <Col span={12}>
+      </div>
+      <div className={styles.serverInputField250px}>
           <Space.Compact block>
             <Space.Addon>{t('Mobitru Billing Unit')}</Space.Addon>
             <Input
@@ -52,8 +51,8 @@ const ServerTabMobitru = ({server, setServerParam}) => {
               onChange={(e) => setServerParam('username', e.target.value)}
             />
           </Space.Compact>
-        </Col>
-        <Col span={12}>
+      </div>
+      <div className={styles.serverInputField400px}>
           <Space.Compact block>
             <Space.Addon>{t('Mobitru Access Key')}</Space.Addon>
             <Input
@@ -64,9 +63,8 @@ const ServerTabMobitru = ({server, setServerParam}) => {
               onChange={(e) => setServerParam('accessKey', e.target.value)}
             />
           </Space.Compact>
-        </Col>
-      </Row>
-    </Flex>
+      </div>
+    </div>
   );
 };
 
