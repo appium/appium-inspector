@@ -2,3 +2,10 @@
   display: flex;
   word-break: break-word;
 }
+
+.discoveredSessionsListControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-around;
+}
