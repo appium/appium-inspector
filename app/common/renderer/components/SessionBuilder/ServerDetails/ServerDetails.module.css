@@ -34,6 +34,23 @@
   flex: 1 1 250px;
 }
 
+.sauceDataCenterGroup {
+  min-width: 490px;
+}
+
+.sauceDataCenterRadioGroup {
+  padding-left: 8px;
+  min-height: 32px;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.addonCheckbox {
+  align-items: center;
+  min-height: 32px;
+}
+
 .advancedSettingsContainerCol {
   width: 100%;
 }
@@ -63,14 +80,4 @@
 .cloudProviderModal :global(.ant-modal-body button img) {
   height: 100%;
   width: 100%;
-}
-
-.addonDataCenterRadioContainer {
-  padding-left: 8px;
-  min-height: 32px;
-}
-
-.addonCheckbox {
-  align-items: center;
-  min-height: 32px;
 }
