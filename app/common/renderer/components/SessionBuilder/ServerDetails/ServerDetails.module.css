@@ -42,6 +42,10 @@
   flex: 1 1 260px;
 }
 
+.robotActionsItemGroup {
+  flex: 1 1 400px;
+}
+
 .advancedSettingsContainer :global(.ant-form-item) {
   margin: 0;
 }
