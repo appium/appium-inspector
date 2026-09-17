@@ -176,26 +176,26 @@ const CapabilityEditor = (props) => {
             </Row>
           ))}
           <Row gutter={8}>
-            <Col flex="auto">
-              <Form.Item>
-                <Checkbox checked={addVendorPrefixes} onChange={(e) => setAddVendorPrefixes(e.target.checked)}>
-                  {t('autoAddPrefixes')}
-                </Checkbox>
-              </Form.Item>
+            <Col span={21}>
+              <Checkbox
+                styles={{root: {minHeight: '32px', alignItems: 'center'}}}
+                checked={addVendorPrefixes}
+                onChange={(e) => setAddVendorPrefixes(e.target.checked)}
+              >
+                {t('autoAddPrefixes')}
+              </Checkbox>
             </Col>
-            <Col flex="40px">
-              <Form.Item>
-                <Tooltip title={addLabel} placement="right">
-                  <Button
-                    aria-label={addLabel}
-                    disabled={isEditingDesiredCaps}
-                    id="btnAddDesiredCapability"
-                    icon={<IconPlus size={18} />}
-                    onClick={addCapability}
-                    className={styles.addCapabilityButton}
-                  />
-                </Tooltip>
-              </Form.Item>
+            <Col span={3}>
+              <Tooltip title={addLabel} placement="right">
+                <Button
+                  aria-label={addLabel}
+                  disabled={isEditingDesiredCaps}
+                  id="btnAddDesiredCapability"
+                  icon={<IconPlus size={18} />}
+                  onClick={addCapability}
+                  className={styles.addCapabilityButton}
+                />
+              </Tooltip>
             </Col>
           </Row>
         </Form>
