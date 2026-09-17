@@ -18,7 +18,7 @@ const ServerTabPerfecto = ({server, setServerParam}) => {
   const {t} = useTranslation();
   return (
     <div className={styles.serverRow}>
-      <div className={styles.serverHostGroup}>
+      <div className={styles.perfectoHostPortGroup}>
         <Space.Compact block>
           <Space.Addon>{t('Perfecto Host')}</Space.Addon>
           <Input
@@ -28,8 +28,6 @@ const ServerTabPerfecto = ({server, setServerParam}) => {
             onChange={(e) => setServerParam('hostname', e.target.value)}
           />
         </Space.Compact>
-      </div>
-      <div className={styles.serverPortPathGroup}>
         <Space.Compact>
           <Space.Addon>{t('Perfecto Port')}</Space.Addon>
           <Input
@@ -40,11 +38,12 @@ const ServerTabPerfecto = ({server, setServerParam}) => {
             onChange={(e) => setServerParam('port', e.target.value)}
           />
         </Space.Compact>
+      </div>
+      <div className={styles.perfectoPathSSLGroup}>
         <Space.Compact block>
           <Space.Addon>{t('Perfecto Token')}</Space.Addon>
           <Input
             id="token"
-            className={styles.serverPathInput}
             placeholder={perfectoTokenPlaceholder(t)}
             value={server.perfecto.token}
             onChange={(e) => setServerParam('token', e.target.value)}

@@ -14,7 +14,7 @@
 
 .serverPortPathGroup {
   display: flex;
-  flex: 2 1 320px;
+  flex: 1 1 400px;
   gap: 8px;
 }
 
@@ -24,6 +24,22 @@
 
 .serverPathInput {
   min-width: 50px;
+}
+
+.perfectoHostPortGroup {
+  display: flex;
+  flex: 1 1 400px;
+  gap: 8px;
+}
+
+.perfectoPathSSLGroup {
+  display: flex;
+  flex: 1 1 300px;
+  gap: 8px;
+}
+
+.pcloudyItemGroup {
+  flex: 1 1 260px;
 }
 
 .advancedSettingsContainer :global(.ant-form-item) {
