@@ -8,15 +8,13 @@
   width: 6em;
 }
 
-.serverInputGroup300px,
 .serverInputGroup400px,
 .serverInputGroup500px {
   display: flex;
   gap: 8px;
 }
 
-.serverInputGroup500px,
-.serverInputField500px {
+.serverInputGroup500px {
   flex: 1 1 500px;
 }
 
@@ -25,7 +23,6 @@
   flex: 1 1 400px;
 }
 
-.serverInputGroup300px,
 .serverInputField300px {
   flex: 1 1 300px;
 }
