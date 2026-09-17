@@ -31,38 +31,38 @@ const ServerTabMobitru = ({server, setServerParam}) => {
   return (
     <div className={styles.serverDetailRow}>
       <div className={styles.serverInputField400px}>
-          <Space.Compact block>
-            <Space.Addon>{t('Mobitru WebDriver URL')}</Space.Addon>
-            <Input
-              id="mobitruWebDriverUrl"
-              placeholder={mobitrWebDriverUrlPlaceholder(t)}
-              value={server.mobitru.webDriverUrl}
-              onChange={(e) => setServerParam('webDriverUrl', e.target.value)}
-            />
-          </Space.Compact>
+        <Space.Compact block>
+          <Space.Addon>{t('Mobitru WebDriver URL')}</Space.Addon>
+          <Input
+            id="mobitruWebDriverUrl"
+            placeholder={mobitrWebDriverUrlPlaceholder(t)}
+            value={server.mobitru.webDriverUrl}
+            onChange={(e) => setServerParam('webDriverUrl', e.target.value)}
+          />
+        </Space.Compact>
       </div>
       <div className={styles.serverInputField250px}>
-          <Space.Compact block>
-            <Space.Addon>{t('Mobitru Billing Unit')}</Space.Addon>
-            <Input
-              id="mobitruBillingUnit"
-              placeholder={mobitruBillingUnitPlaceholder(t)}
-              value={server.mobitru.username}
-              onChange={(e) => setServerParam('username', e.target.value)}
-            />
-          </Space.Compact>
+        <Space.Compact block>
+          <Space.Addon>{t('Mobitru Billing Unit')}</Space.Addon>
+          <Input
+            id="mobitruBillingUnit"
+            placeholder={mobitruBillingUnitPlaceholder(t)}
+            value={server.mobitru.username}
+            onChange={(e) => setServerParam('username', e.target.value)}
+          />
+        </Space.Compact>
       </div>
       <div className={styles.serverInputField400px}>
-          <Space.Compact block>
-            <Space.Addon>{t('Mobitru Access Key')}</Space.Addon>
-            <Input
-              id="mobitruAccessKey"
-              type={INPUT.PASSWORD}
-              placeholder={mobitruAccessKeyPlaceholder(t)}
-              value={server.mobitru.accessKey}
-              onChange={(e) => setServerParam('accessKey', e.target.value)}
-            />
-          </Space.Compact>
+        <Space.Compact block>
+          <Space.Addon>{t('Mobitru Access Key')}</Space.Addon>
+          <Input
+            id="mobitruAccessKey"
+            type={INPUT.PASSWORD}
+            placeholder={mobitruAccessKeyPlaceholder(t)}
+            value={server.mobitru.accessKey}
+            onChange={(e) => setServerParam('accessKey', e.target.value)}
+          />
+        </Space.Compact>
       </div>
     </div>
   );
