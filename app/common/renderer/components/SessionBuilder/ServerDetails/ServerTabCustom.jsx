@@ -8,8 +8,8 @@ import styles from './ServerDetails.module.css';
 const ServerTabCustom = ({server, setServerParam}) => {
   const {t} = useTranslation();
   return (
-    <div className={styles.serverRow}>
-      <div className={styles.serverHostGroup}>
+    <div className={styles.serverDetailRow}>
+      <div className={styles.serverInputField250px}>
         <Space.Compact block>
           <Space.Addon>{t('Remote Host')}</Space.Addon>
           <Input
@@ -20,12 +20,12 @@ const ServerTabCustom = ({server, setServerParam}) => {
           />
         </Space.Compact>
       </div>
-      <div className={styles.serverPortPathGroup}>
+      <div className={styles.serverInputGroup400px}>
         <Space.Compact>
           <Space.Addon>{t('Remote Port')}</Space.Addon>
           <Input
             id="customServerPort"
-            className={styles.serverPortInput}
+            className={styles.serverPortInputField}
             placeholder={DEFAULT_SERVER_PROPS.port}
             value={server.remote.port}
             onChange={(e) => setServerParam('port', e.target.value)}
@@ -35,7 +35,6 @@ const ServerTabCustom = ({server, setServerParam}) => {
           <Space.Addon>{t('Remote Path')}</Space.Addon>
           <Input
             id="customServerPath"
-            className={styles.serverPathInput}
             placeholder={DEFAULT_SERVER_PROPS.path}
             value={server.remote.path}
             onChange={(e) => setServerParam('path', e.target.value)}

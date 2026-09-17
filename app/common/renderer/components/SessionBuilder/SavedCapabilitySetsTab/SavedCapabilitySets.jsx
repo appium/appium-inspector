@@ -1,10 +1,12 @@
 import {IconEdit, IconFileExport, IconTrash} from '@tabler/icons-react';
 import {Button, Card, Popconfirm, Space, Spin, Splitter, Table, Tooltip} from 'antd';
 import dayjs from 'dayjs';
+import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {
   SAVED_SESSIONS_TABLE_VALUES,
+  SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT,
   SESSION_BUILDER_TABS,
   SESSION_FILE_EXTENSION,
 } from '../../../constants/session-builder.js';
@@ -48,6 +50,10 @@ const SavedCapabilitySets = (props) => {
   const editLabel = t('Edit');
   const deleteLabel = t('Delete');
   const exportLabel = t('Export to File');
+
+  const [isNarrow, setIsNarrow] = useState(
+    window.innerWidth > 0 && window.innerWidth < SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT,
+  );
 
   const handleCapsAndServer = (uuid) => {
     const {
@@ -136,9 +142,15 @@ const SavedCapabilitySets = (props) => {
     },
   ];
 
+  useEffect(() => {
+    const updateIsNarrow = () => setIsNarrow(window.innerWidth < SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT);
+    window.addEventListener('resize', updateIsNarrow);
+    return () => window.removeEventListener('resize', updateIsNarrow);
+  }, []);
+
   return (
-    <Splitter>
-      <Splitter.Panel min={430}>
+    <Splitter orientation={isNarrow ? 'vertical' : 'horizontal'}>
+      <Splitter.Panel min={isNarrow ? 150 : 400}>
         <Spin spinning={isUploadingSessionFiles}>
           <Card styles={{root: {height: '100%'}, body: {height: '100%', padding: '2px'}}}>
             <Table
@@ -173,7 +185,7 @@ const SavedCapabilitySets = (props) => {
           </Card>
         </Spin>
       </Splitter.Panel>
-      <Splitter.Panel collapsible min={400}>
+      <Splitter.Panel collapsible min={isNarrow ? 150 : 400}>
         <CapabilityJSON {...props} title={capsUUID ? getSessionById(savedSessions, capsUUID, t).name : null} />
       </Splitter.Panel>
     </Splitter>

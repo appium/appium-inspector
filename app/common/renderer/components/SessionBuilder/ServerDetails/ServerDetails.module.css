@@ -1,33 +1,58 @@
-.advancedSettingsContainerCol {
-  width: 100%;
-}
-
-.serverRow {
+.serverDetailRow {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.serverHostGroup {
-  flex: 1 1 240px;
-}
-
-.serverPortPathGroup {
-  display: flex;
-  flex: 2 1 320px;
-  gap: 8px;
-}
-
-.serverPortInput {
+.serverPortInputField {
   width: 6em;
 }
 
-.serverPathInput {
-  min-width: 50px;
+.serverInputGroup400px,
+.serverInputGroup500px {
+  display: flex;
+  gap: 8px;
 }
 
-.advancedSettingsContainer :global(.ant-form-item) {
-  margin: 0;
+.serverInputGroup500px {
+  flex: 1 1 500px;
+}
+
+.serverInputGroup400px,
+.serverInputField400px {
+  flex: 1 1 400px;
+}
+
+.serverInputField300px {
+  flex: 1 1 300px;
+}
+
+.serverInputField250px {
+  flex: 1 1 250px;
+}
+
+.sauceDataCenterGroup {
+  min-width: 490px;
+}
+
+.sauceDataCenterRadioGroup {
+  padding-left: 8px;
+  min-height: 32px;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.addonCheckbox {
+  align-items: center;
+  min-height: 32px;
+}
+
+.advancedSettingsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding-left: 1em;
 }
 
 .tabText img {
@@ -51,14 +76,4 @@
 .cloudProviderModal :global(.ant-modal-body button img) {
   height: 100%;
   width: 100%;
-}
-
-.addonDataCenterRadioContainer {
-  padding-left: 8px;
-  min-height: 32px;
-}
-
-.addonCheckbox {
-  align-items: center;
-  min-height: 32px;
 }

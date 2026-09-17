@@ -1,7 +1,9 @@
-import {Col, Input, Row, Space} from 'antd';
+import {Input, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {INPUT} from '../../../constants/antd-types.js';
+
+import styles from './ServerDetails.module.css';
 
 const kobitonUsernamePlaceholder = (t) => {
   if (process.env.KOBITON_USERNAME) {
@@ -20,8 +22,8 @@ const kobitonAccessKeyPlaceholder = (t) => {
 const ServerTabKobiton = ({server, setServerParam}) => {
   const {t} = useTranslation();
   return (
-    <Row gutter={8}>
-      <Col span={12}>
+    <div className={styles.serverDetailRow}>
+      <div className={styles.serverInputField300px}>
         <Space.Compact block>
           <Space.Addon>{t('Your Kobiton Username')}</Space.Addon>
           <Input
@@ -31,8 +33,8 @@ const ServerTabKobiton = ({server, setServerParam}) => {
             onChange={(e) => setServerParam('username', e.target.value)}
           />
         </Space.Compact>
-      </Col>
-      <Col span={12}>
+      </div>
+      <div className={styles.serverInputField300px}>
         <Space.Compact block>
           <Space.Addon>{t('Kobiton Access Key')}</Space.Addon>
           <Input
@@ -43,8 +45,8 @@ const ServerTabKobiton = ({server, setServerParam}) => {
             onChange={(e) => setServerParam('accessKey', e.target.value)}
           />
         </Space.Compact>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 };
 

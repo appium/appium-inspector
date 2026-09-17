@@ -10,9 +10,9 @@ const DiscoveredSessions = ({runningAppiumSessions, serverType, loadNewSession})
   const sortedRunningSessions = [...runningAppiumSessions].reverse();
 
   return (
-    <Row gutter={[12, 12]}>
+    <Row gutter={[12, 12]} style={{marginInline: '0px'}}>
       {sortedRunningSessions.map((session) => (
-        <Col xs={12} sm={12} md={12} lg={12} xl={8} xxl={6} key={session.id}>
+        <Col xs={24} sm={24} md={12} lg={12} xl={8} xxl={6} key={session.id}>
           <DiscoveredSessionCard session={session} serverType={serverType} loadNewSession={loadNewSession} />
         </Col>
       ))}
