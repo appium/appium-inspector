@@ -51,12 +51,11 @@
   min-height: 32px;
 }
 
-.advancedSettingsContainerCol {
-  width: 100%;
-}
-
-.advancedSettingsContainer :global(.ant-form-item) {
-  margin: 0;
+.advancedSettingsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding-left: 1em;
 }
 
 .tabText img {
