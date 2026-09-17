@@ -1,4 +1,4 @@
-import {Checkbox, Col, Input, Row, Space} from 'antd';
+import {Checkbox, Input, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {PROVIDER_VALUES} from '../../../constants/session-builder.js';
@@ -17,8 +17,8 @@ const perfectoTokenPlaceholder = (t) => {
 const ServerTabPerfecto = ({server, setServerParam}) => {
   const {t} = useTranslation();
   return (
-    <Row gutter={8}>
-      <Col span={9}>
+    <div className={styles.serverRow}>
+      <div className={styles.serverHostGroup}>
         <Space.Compact block>
           <Space.Addon>{t('Perfecto Host')}</Space.Addon>
           <Input
@@ -28,30 +28,28 @@ const ServerTabPerfecto = ({server, setServerParam}) => {
             onChange={(e) => setServerParam('hostname', e.target.value)}
           />
         </Space.Compact>
-      </Col>
-      <Col span={4}>
-        <Space.Compact block>
+      </div>
+      <div className={styles.serverPortPathGroup}>
+        <Space.Compact>
           <Space.Addon>{t('Perfecto Port')}</Space.Addon>
           <Input
             id="PerfectoPort"
+            className={styles.serverPortInput}
             placeholder={portPlaceholder(server)}
             value={server.perfecto.port}
             onChange={(e) => setServerParam('port', e.target.value)}
           />
         </Space.Compact>
-      </Col>
-      <Col span={9}>
         <Space.Compact block>
           <Space.Addon>{t('Perfecto Token')}</Space.Addon>
           <Input
             id="token"
+            className={styles.serverPathInput}
             placeholder={perfectoTokenPlaceholder(t)}
             value={server.perfecto.token}
             onChange={(e) => setServerParam('token', e.target.value)}
           />
         </Space.Compact>
-      </Col>
-      <Col span={2}>
         <Checkbox
           className={styles.addonCheckbox}
           checked={!!server.perfecto.ssl}
@@ -59,8 +57,8 @@ const ServerTabPerfecto = ({server, setServerParam}) => {
         >
           SSL
         </Checkbox>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 };
 
