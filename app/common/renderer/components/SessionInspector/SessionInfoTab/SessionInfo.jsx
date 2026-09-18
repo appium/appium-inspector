@@ -14,7 +14,12 @@ const SessionInfo = (props) => {
 
   return (
     <SessionInfoTabCard>
-      <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="middle">
+      <Space
+        className={inspectorStyles.spaceContainer}
+        orientation="vertical"
+        size="middle"
+        style={{minWidth: '600px'}}
+      >
         <SessionInfoTable {...props} />
         <SessionInfoCodeBox
           clientFramework={clientFramework}

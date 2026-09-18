@@ -3,6 +3,8 @@ import {Refractor} from 'react-refractor';
 import {CLIENT_FRAMEWORK_MAP} from '../../../lib/client-frameworks/map.js';
 import SessionInfoCodeBoxCard from './SessionInfoCodeBoxCard.jsx';
 
+import styles from './SessionInfo.module.css';
+
 /**
  * Code box with boilerplate code to start a session matching the current one.
  */
@@ -19,7 +21,11 @@ const SessionInfoCodeBox = ({clientFramework, setClientFramework, serverDetails,
       clientFramework={clientFramework}
       setClientFramework={setClientFramework}
     >
-      <Refractor language={ClientFrameworkClass.refractorLang} value={clientCode} />
+      <Refractor
+        className={`refractor ${styles.clientCode}`}
+        language={ClientFrameworkClass.refractorLang}
+        value={clientCode}
+      />
     </SessionInfoCodeBoxCard>
   );
 };
