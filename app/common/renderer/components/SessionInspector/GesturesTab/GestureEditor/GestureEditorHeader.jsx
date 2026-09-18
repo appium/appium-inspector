@@ -1,5 +1,5 @@
 import {IconArrowLeft, IconPlayerPlay} from '@tabler/icons-react';
-import {Button, Col, Input, Row, Space, Tooltip} from 'antd';
+import {Button, Input, Space, Tooltip} from 'antd';
 import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
@@ -73,20 +73,30 @@ const GestureEditorBackButton = ({closeGestureEditor}) => {
 };
 
 /**
- * Editable title of the current gesture.
+ * Editable title and description of the current gesture.
  */
-const GestureEditorTitle = ({name, setName}) => {
+const GestureEditorTitleDesc = ({name, setName, description, setDescription}) => {
   const {t} = useTranslation();
 
   return (
-    <Tooltip title={t('Edit')}>
-      <Input
-        defaultValue={name}
-        className={styles.gestureHeaderTitle}
-        onChange={(e) => setName(e.target.value)}
-        size="small"
-      />
-    </Tooltip>
+    <Space.Compact style={{flex: 1}} orientation="vertical">
+      <Tooltip title={t('Edit')}>
+        <Input
+          defaultValue={name}
+          className={styles.gestureHeaderTitle}
+          onChange={(e) => setName(e.target.value)}
+          size="small"
+        />
+      </Tooltip>
+      <Tooltip title={t('Edit')}>
+        <Input
+          defaultValue={description}
+          className={styles.gestureHeaderDescriptionInput}
+          onChange={(e) => setDescription(e.target.value)}
+          size="small"
+        />
+      </Tooltip>
+    </Space.Compact>
   );
 };
 
@@ -105,7 +115,7 @@ const GestureEditorHeaderButtons = ({
   const playLabel = t('Play');
 
   return (
-    <Space>
+    <Space wrap style={{flex: '1', maxWidth: '350px', alignItems: 'start', justifyContent: 'flex-end'}}>
       <Space.Compact>
         <Tooltip title={t('showMoveActionCoordsInPercentage')}>
           <Button
@@ -139,26 +149,6 @@ const GestureEditorHeaderButtons = ({
         </Button>
       </Space.Compact>
     </Space>
-  );
-};
-
-/**
- * Editable description of the current gesture.
- */
-const GestureEditorDescription = ({description, setDescription}) => {
-  const {t} = useTranslation();
-
-  return (
-    <div className={styles.gestureHeaderDescription}>
-      <Tooltip title={t('Edit')}>
-        <Input
-          defaultValue={description}
-          className={styles.gestureHeaderDescriptionInput}
-          onChange={(e) => setDescription(e.target.value)}
-          size="small"
-        />
-      </Tooltip>
-    </div>
   );
 };
 
@@ -256,27 +246,18 @@ const GestureEditorHeader = (props) => {
   }, [coordType, displayGesture, pointers, windowSize]);
 
   return (
-    <>
-      <Row justify="space-between">
-        <Col flex="32px">
-          <GestureEditorBackButton closeGestureEditor={closeGestureEditor} />
-        </Col>
-        <Col flex="1">
-          <GestureEditorTitle name={name} setName={setName} />
-        </Col>
-        <Col>
-          <GestureEditorHeaderButtons
-            coordType={coordType}
-            switchCoordsType={switchCoordsType}
-            playCurrentGesture={playCurrentGesture}
-            saveCurrentGesture={saveCurrentGesture}
-            saveCurrentGestureAs={saveCurrentGestureAs}
-            loadedGesture={loadedGesture}
-          />
-        </Col>
-      </Row>
-      <GestureEditorDescription description={description} setDescription={setDescription} />
-    </>
+    <div style={{display: 'flex'}}>
+      <GestureEditorBackButton closeGestureEditor={closeGestureEditor} />
+      <GestureEditorTitleDesc name={name} setName={setName} description={description} setDescription={setDescription} />
+      <GestureEditorHeaderButtons
+        coordType={coordType}
+        switchCoordsType={switchCoordsType}
+        playCurrentGesture={playCurrentGesture}
+        saveCurrentGesture={saveCurrentGesture}
+        saveCurrentGestureAs={saveCurrentGestureAs}
+        loadedGesture={loadedGesture}
+      />
+    </div>
   );
 };
 

@@ -29,7 +29,7 @@ const SessionInfoCodeBoxHeaderOptions = ({clientCode, clientFramework, setClient
   const copyLabel = t('Copy code to clipboard');
 
   return (
-    <Space size="middle">
+    <Space size="small">
       <Tooltip title={copyLabel}>
         <Button aria-label={copyLabel} icon={<IconFiles size={18} />} onClick={() => copyToClipboard(clientCode)} />
       </Tooltip>

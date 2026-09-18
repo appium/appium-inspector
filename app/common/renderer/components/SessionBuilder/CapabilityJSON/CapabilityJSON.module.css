@@ -40,6 +40,12 @@
   padding: 10px 0;
 }
 
+.formattedCapsCode {
+  margin-bottom: 0;
+  overflow-y: scroll;
+  height: 100%;
+}
+
 .capsEditorControls {
   position: absolute;
   right: 0;

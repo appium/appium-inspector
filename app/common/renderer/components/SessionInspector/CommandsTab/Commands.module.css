@@ -10,6 +10,13 @@
   width: 100%;
 }
 
+.commandsContainer :global(.ant-tabs-extra-content) {
+  min-width: 90px;
+  max-width: 220px;
+  display: flex;
+  flex: 1 !important;
+}
+
 .btnContainer {
   padding: 8px;
   height: 100%;

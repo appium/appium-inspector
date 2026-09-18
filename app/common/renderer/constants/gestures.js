@@ -1,10 +1,24 @@
-// Columns in the saved gestures table
-export const SAVED_GESTURE_PROPS = {
-  NAME: 'Name',
-  DESCRIPTION: 'Description',
-  CREATED: 'Created',
-  ACTIONS: 'Actions',
+export const SAVED_GESTURES_TABLE_VALUES = {
+  DATE_COLUMN_WIDTH: '105px',
+  ACTIONS_COLUMN_WIDTH: '150px',
 };
+
+/**
+ * Breakpoints used for the grid of gesture ticks.
+ * For each entry, colspan is the colspan to use for each tick card,
+ * if the width of the Gesture Editor tab in pixels is below maxWidth.
+ * The maxWidth values target around 200px minimum width for a button (including padding).
+ */
+export const TICKS_GRID_BREAKPOINTS = [
+  {maxWidth: 400, colspan: 24},
+  {maxWidth: 600, colspan: 12},
+  {maxWidth: 800, colspan: 8},
+  {maxWidth: 1200, colspan: 6},
+  {maxWidth: 1600, colspan: 4},
+  {maxWidth: 2400, colspan: 3},
+  {maxWidth: 4800, colspan: 2},
+  {maxWidth: Number.MAX_SAFE_INTEGER, colspan: 1},
+];
 
 export const POINTER_TYPES = {
   POINTER_UP: 'pointerUp',

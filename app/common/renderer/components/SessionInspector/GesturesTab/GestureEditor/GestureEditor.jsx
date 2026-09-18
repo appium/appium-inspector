@@ -6,6 +6,7 @@ import {
   POINTER_MOVE_COORDS_TYPE,
   POINTER_MOVE_DEFAULT_DURATION,
   POINTER_TYPES,
+  TICKS_GRID_BREAKPOINTS,
 } from '../../../../constants/gestures.js';
 import {percentageToPixels, pixelsToPercentage} from '../../../../utils/other.js';
 import GestureEditorCard from './GestureEditorCard.jsx';
@@ -21,10 +22,12 @@ const {POINTER_MOVE} = POINTER_TYPES;
  * Contents of the gesture editor.
  */
 const GestureEditor = (props) => {
-  const {loadedGesture, tickCoordinates, selectedTick, selectTick, unselectTick, windowSize} = props;
+  const {loadedGesture, tickCoordinates, selectedTick, selectTick, unselectTick, windowSize, getItemColspan} = props;
 
   const [pointers, setPointers] = useState(loadedGesture?.actions ?? DEFAULT_POINTER);
   const [coordType, setCoordType] = useState(POINTER_MOVE_COORDS_TYPE.PERCENTAGES);
+
+  const tickColspan = getItemColspan(TICKS_GRID_BREAKPOINTS);
 
   const getDefaultMoveDuration = useCallback(
     (ticks, tickId, x2, y2, coordFromTap) => {
@@ -121,6 +124,7 @@ const GestureEditor = (props) => {
         selectTick={selectTick}
         unselectTick={unselectTick}
         getDefaultMoveDuration={getDefaultMoveDuration}
+        tickColspan={tickColspan}
       />
     </GestureEditorCard>
   );

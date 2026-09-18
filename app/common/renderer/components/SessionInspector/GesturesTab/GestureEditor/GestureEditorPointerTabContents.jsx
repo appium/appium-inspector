@@ -53,6 +53,7 @@ const GestureEditorTick = ({
   selectTick,
   unselectTick,
   getDefaultMoveDuration,
+  tickColspan,
 }) => {
   const dragDisabled = pointer.ticks.length < 2;
   const {ref, handleRef, isDropTarget} = useSortable({
@@ -66,7 +67,7 @@ const GestureEditorTick = ({
   });
 
   return (
-    <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4} xxxl={3} ref={ref}>
+    <Col span={tickColspan} ref={ref}>
       <GestureEditorTickCard
         tick={tick}
         dragHandleRef={handleRef}
@@ -101,6 +102,7 @@ const GestureEditorPointerTabContents = ({
   selectTick,
   unselectTick,
   getDefaultMoveDuration,
+  tickColspan,
 }) => {
   const handleDragEnd = (event) => {
     const {source, target, activatorEvent} = event.operation;
@@ -132,9 +134,10 @@ const GestureEditorPointerTabContents = ({
             selectTick={selectTick}
             unselectTick={unselectTick}
             getDefaultMoveDuration={getDefaultMoveDuration}
+            tickColspan={tickColspan}
           />
         ))}
-        <Col xs={12} sm={12} md={12} lg={8} xl={6} xxl={4} xxxl={3}>
+        <Col span={tickColspan}>
           <AddNewTickButton id={pointer.id} pointers={pointers} setPointers={setPointers} />
         </Col>
       </Row>

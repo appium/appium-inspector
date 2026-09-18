@@ -47,3 +47,7 @@
   display: flex;
   word-break: break-word;
 }
+
+.clientCode {
+  margin-bottom: 0;
+}

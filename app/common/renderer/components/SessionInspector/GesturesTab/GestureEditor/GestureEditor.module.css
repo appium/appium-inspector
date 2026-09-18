@@ -5,10 +5,6 @@
   border-width: 0px !important;
 }
 
-.gestureHeaderDescription {
-  padding-left: 32px;
-}
-
 .gestureHeaderDescriptionInput {
   font-size: 15px;
   font-weight: 400;
@@ -23,12 +19,6 @@
 
 .timelineTickTitle {
   text-align: center;
-}
-
-.gestureTimeline {
-  width: 90%;
-  margin: -10px 0;
-  min-height: 32px;
 }
 
 .gestureTimeline :global(.ant-steps-item-finish .ant-steps-item-icon),
@@ -47,6 +37,10 @@
 :global(.dark) .gestureTimeline :global(.ant-steps-item-rail-wait) {
   color: #141414;
   border-color: #141414;
+}
+
+.gestureEditorPointerTabs :global(.ant-tabs-nav-operations) {
+  height: 32px;
 }
 
 .tickInputBox {
