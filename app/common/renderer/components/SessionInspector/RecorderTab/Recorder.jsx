@@ -31,26 +31,28 @@ const Recorder = (props) => {
   const clientCode = framework.getCodeString(showBoilerplate);
 
   return (
-    <RecorderTabCard
-      clientFramework={clientFramework}
-      clientCode={clientCode}
-      recordedActions={recordedActions}
-      setClientFramework={setClientFramework}
-      showBoilerplate={showBoilerplate}
-      toggleShowBoilerplate={toggleShowBoilerplate}
-      clearRecording={clearRecording}
-    >
-      {!recordedActions.length && (
-        <div className={styles.noRecordedActions}>{t('enableRecordingAndPerformActions')}</div>
-      )}
-      {!!recordedActions.length && (
-        <Refractor
-          className={`refractor ${inspectorStyles.clientCode}`}
-          language={ClientFrameworkClass.refractorLang}
-          value={clientCode}
-        />
-      )}
-    </RecorderTabCard>
+    <div style={{height: '100%', overflowX: 'scroll'}}>
+      <RecorderTabCard
+        clientFramework={clientFramework}
+        clientCode={clientCode}
+        recordedActions={recordedActions}
+        setClientFramework={setClientFramework}
+        showBoilerplate={showBoilerplate}
+        toggleShowBoilerplate={toggleShowBoilerplate}
+        clearRecording={clearRecording}
+      >
+        {!recordedActions.length && (
+          <div className={styles.noRecordedActions}>{t('enableRecordingAndPerformActions')}</div>
+        )}
+        {!!recordedActions.length && (
+          <Refractor
+            className={`refractor ${inspectorStyles.clientCode}`}
+            language={ClientFrameworkClass.refractorLang}
+            value={clientCode}
+          />
+        )}
+      </RecorderTabCard>
+    </div>
   );
 };
 
