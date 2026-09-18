@@ -18,7 +18,7 @@ const SavedGesturesTableFooter = ({showGestureEditor, importGestureFiles}) => {
   const {t} = useTranslation();
 
   return (
-    <Space.Compact style={{flex: 1, overflowX: 'scroll'}}>
+    <Space.Compact style={{overflowX: 'scroll'}}>
       <Button onClick={showGestureEditor} icon={<IconPlus size={16} />}>
         {t('Create New Gesture')}
       </Button>
