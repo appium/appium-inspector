@@ -55,3 +55,7 @@ since the tab card has a set minwidth due to extra items in the header
   display: flex;
   word-break: break-word;
 }
+
+.clientCode {
+  margin-bottom: 0;
+}

@@ -4,6 +4,7 @@ import {Refractor} from 'react-refractor';
 import {CLIENT_FRAMEWORK_MAP} from '../../../lib/client-frameworks/map.js';
 import RecorderTabCard from './RecorderTabCard.jsx';
 
+import inspectorStyles from '../SessionInspector.module.css';
 import styles from './Recorder.module.css';
 
 /**
@@ -44,7 +45,7 @@ const Recorder = (props) => {
       )}
       {!!recordedActions.length && (
         <Refractor
-          className={`refractor ${styles.clientCode}`}
+          className={`refractor ${inspectorStyles.clientCode}`}
           language={ClientFrameworkClass.refractorLang}
           value={clientCode}
         />

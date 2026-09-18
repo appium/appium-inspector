@@ -1,7 +1,3 @@
 .sessionInnerTable :global(.ant-table-body) {
   margin-left: -32px;
 }
-
-.clientCode {
-  margin-bottom: 0;
-}
