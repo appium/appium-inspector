@@ -78,7 +78,11 @@ const SessionInspectorTabs = (props) => {
       ),
       key: INSPECTOR_TABS.GESTURES,
       disabled: areW3CActionsUnsupported || !showScreenshot,
-      children: isGestureEditorVisible ? <GestureEditor {...props} /> : <SavedGestures {...props} />,
+      children: isGestureEditorVisible ? (
+        <GestureEditor {...props} getItemColspan={getItemColspan} />
+      ) : (
+        <SavedGestures {...props} />
+      ),
     },
     {
       label: t('Recorder'),

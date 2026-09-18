@@ -86,6 +86,7 @@ const GestureEditorPointerTabs = ({
   selectTick,
   unselectTick,
   getDefaultMoveDuration,
+  tickColspan,
 }) => {
   const [activePointerId, setActivePointerId] = useState('1');
 
@@ -110,6 +111,7 @@ const GestureEditorPointerTabs = ({
         selectTick={selectTick}
         unselectTick={unselectTick}
         getDefaultMoveDuration={getDefaultMoveDuration}
+        tickColspan={tickColspan}
       />
     ),
   }));
