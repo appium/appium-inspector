@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 
-import {POINTER_TYPES, SAVED_GESTURE_PROPS} from '../../../constants/gestures.js';
+import {POINTER_TYPES, SAVED_GESTURES_TABLE_VALUES} from '../../../constants/gestures.js';
 import {percentageToPixels} from '../../../utils/other.js';
 import FileUploader from '../../FileUploader.jsx';
 import SavedGestureActionsCell from './SavedGestureActionsCell.jsx';
@@ -16,7 +16,7 @@ const SavedGesturesTableFooter = ({showGestureEditor, importGestureFiles}) => {
   const {t} = useTranslation();
 
   return (
-    <Space.Compact>
+    <Space wrap>
       <Button onClick={showGestureEditor} icon={<IconPlus size={16} />}>
         {t('Create New Gesture')}
       </Button>
@@ -26,7 +26,7 @@ const SavedGesturesTableFooter = ({showGestureEditor, importGestureFiles}) => {
         multiple={true}
         type="application/json"
       />
-    </Space.Compact>
+    </Space>
   );
 };
 
@@ -69,10 +69,10 @@ const SavedGesturesTable = (props) => {
 
   const dataSource = savedGestures.map((gesture) => ({
     key: gesture.id,
-    Name: gesture.name || t('unnamed'),
-    Created: dayjs(gesture.date).format('YYYY-MM-DD'),
-    Description: gesture.description || t('No Description'),
-    Actions: (
+    name: gesture.name || t('unnamed'),
+    created: dayjs(gesture.date).format('YYYY-MM-DD'),
+    description: gesture.description || t('No Description'),
+    actions: (
       <SavedGestureActionsCell
         {...props}
         gesture={gesture}
@@ -82,11 +82,30 @@ const SavedGesturesTable = (props) => {
     ),
   }));
 
-  const columns = Object.keys(SAVED_GESTURE_PROPS).map((key) => ({
-    title: t(SAVED_GESTURE_PROPS[key]),
-    dataIndex: SAVED_GESTURE_PROPS[key],
-    key: SAVED_GESTURE_PROPS[key],
-  }));
+  const columns = [
+    {
+      title: t('Name'),
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: t('Description'),
+      dataIndex: 'description',
+      key: 'description',
+    },
+    {
+      title: t('Created'),
+      dataIndex: 'created',
+      key: 'created',
+      width: SAVED_GESTURES_TABLE_VALUES.DATE_COLUMN_WIDTH,
+    },
+    {
+      title: t('Actions'),
+      dataIndex: 'actions',
+      key: 'actions',
+      width: SAVED_GESTURES_TABLE_VALUES.ACTIONS_COLUMN_WIDTH,
+    },
+  ];
 
   useEffect(() => {
     getSavedGestures();
@@ -107,7 +126,7 @@ const SavedGesturesTable = (props) => {
       pagination={false}
       dataSource={dataSource}
       columns={columns}
-      scroll={{y: 'calc(100vh - 27em)'}}
+      scroll={{x: '500px', y: 'calc(100vh - 27em)'}}
       footer={() => (
         <SavedGesturesTableFooter showGestureEditor={showGestureEditor} importGestureFiles={importGestureFiles} />
       )}

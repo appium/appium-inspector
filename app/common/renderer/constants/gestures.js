@@ -1,9 +1,6 @@
-// Columns in the saved gestures table
-export const SAVED_GESTURE_PROPS = {
-  NAME: 'Name',
-  DESCRIPTION: 'Description',
-  CREATED: 'Created',
-  ACTIONS: 'Actions',
+export const SAVED_GESTURES_TABLE_VALUES = {
+  DATE_COLUMN_WIDTH: '105px',
+  ACTIONS_COLUMN_WIDTH: '150px',
 };
 
 export const POINTER_TYPES = {
