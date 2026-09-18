@@ -32,11 +32,6 @@ create a session.
     If you encounter this issue with a cloud provider, the fix must be applied on the provider side,
     because they are the ones hosting the Appium server.
 
-## Start Session button is cut off
-
-This problem may appear if your computer screen size is too small. Check the
-[System Requirements](./quickstart/requirements.md) for more details.
-
 ## Cannot see full source tree with XCUITest driver + React Native app
 
 This is [a known issue](https://github.com/appium/appium/issues/14825). The problem is caused by

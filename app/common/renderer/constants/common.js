@@ -1,6 +1,4 @@
 export const WINDOW_DIMENSIONS = {
-  MIN_WIDTH: 870,
-  MIN_HEIGHT: 610,
   MIN_IMG_WIDTH_PX: 150,
   // slightly less than the max panel fraction, to avoid the initial image width marginally exceeding it -
   // only applies to devices wide enough to automatically hit this limit

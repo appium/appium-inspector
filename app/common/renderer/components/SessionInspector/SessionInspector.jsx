@@ -15,17 +15,6 @@ import styles from './SessionInspector.module.css';
 
 const MAX_SCREENSHOT_WIDTH_PERCENT = `${WINDOW_DIMENSIONS.MAX_SCREENSHOT_PANEL_WIDTH_FRACTION * 100}%`;
 
-// resize width to something sensible for using the inspector on first run
-const resizeWindowOnLaunch = () => {
-  const curHeight = window.innerHeight;
-  const curWidth = window.innerWidth;
-  if (curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT || curWidth < WINDOW_DIMENSIONS.MIN_WIDTH) {
-    const newWidth = curWidth < WINDOW_DIMENSIONS.MIN_WIDTH ? WINDOW_DIMENSIONS.MIN_WIDTH : curWidth;
-    const newHeight = curHeight < WINDOW_DIMENSIONS.MIN_HEIGHT ? WINDOW_DIMENSIONS.MIN_HEIGHT : curHeight;
-    window.resizeTo(newWidth, newHeight);
-  }
-};
-
 /**
  * The root component of the Session Inspector screen.
  */
@@ -89,7 +78,6 @@ const Inspector = () => {
     (screenshot && !screenshotError) || (isUsingMjpegMode && (!isSourceRefreshOn || !isAwaitingMjpegStream));
 
   useEffect(() => {
-    resizeWindowOnLaunch();
     applyClientMethod({methodName: 'getPageSource'});
     storeSessionSettings();
     getSavedClientFramework();
