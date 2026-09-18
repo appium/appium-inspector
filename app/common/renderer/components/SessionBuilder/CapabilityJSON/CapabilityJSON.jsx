@@ -37,7 +37,7 @@ const CapabilityJSON = (props) => {
 
   const getHighlightedCaps = (caps) => {
     const formattedJson = JSON.stringify(getCapsObject(caps), null, 2);
-    return <Refractor language="json" value={formattedJson} />;
+    return <Refractor className={`refractor ${styles.formattedCapsCode}`} language="json" value={formattedJson} />;
   };
 
   const setCapsTitle = () => {
