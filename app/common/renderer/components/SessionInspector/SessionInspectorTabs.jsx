@@ -1,4 +1,5 @@
 import {Tabs, Tooltip} from 'antd';
+import {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {PLATFORMS_WITHOUT_W3C_ACTIONS} from '../../constants/common.js';
@@ -28,6 +29,9 @@ const SessionInspectorTabs = (props) => {
 
   const {t} = useTranslation();
 
+  const tabsContainerRef = useRef(null);
+  const [tabWidth, setTabWidth] = useState(null);
+
   // Disable the Gestures tab on unsupported platforms
   const areW3CActionsUnsupported = PLATFORMS_WITHOUT_W3C_ACTIONS.includes(featureCaps.platformName);
 
@@ -36,14 +40,18 @@ const SessionInspectorTabs = (props) => {
       label: t('Source'),
       key: INSPECTOR_TABS.SOURCE,
       disabled: !showScreenshot,
-      children: <SourceTab {...props} />,
+      children: <SourceTab {...props} tabWidth={tabWidth} />,
     },
     {
       label: t('Commands'),
       key: INSPECTOR_TABS.COMMANDS,
       disabled: !showScreenshot,
       children: (
-        <Commands applyClientMethod={applyClientMethod} getSupportedSessionMethods={getSupportedSessionMethods} />
+        <Commands
+          applyClientMethod={applyClientMethod}
+          getSupportedSessionMethods={getSupportedSessionMethods}
+          tabWidth={tabWidth}
+        />
       ),
     },
     {
@@ -72,8 +80,23 @@ const SessionInspectorTabs = (props) => {
     },
   ];
 
+  // Single location for keeping track of the tab width, regardless of which one is active
+  useEffect(() => {
+    const container = tabsContainerRef.current;
+    if (!container) {
+      return;
+    }
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry.contentRect.width > 0) {
+        setTabWidth(entry.contentRect.width);
+      }
+    });
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className={styles.inspectorTabsContainer}>
+    <div className={styles.inspectorTabsContainer} ref={tabsContainerRef}>
       <Tabs
         styles={{header: {margin: '0px 0px 1em 6px'}, item: {padding: '10px 0px 10px 0px'}}}
         activeKey={selectedInspectorTab}

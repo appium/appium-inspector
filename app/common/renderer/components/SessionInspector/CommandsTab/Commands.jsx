@@ -25,10 +25,7 @@ const calculateBtnColspan = (breakpoints, curCommandsTabWidth) => {
 /**
  * Contents of the commands tab.
  */
-const Commands = ({applyClientMethod, getSupportedSessionMethods}) => {
-  const tabRef = useRef(null);
-  const [tabWidth, setTabWidth] = useState(null);
-
+const Commands = ({applyClientMethod, getSupportedSessionMethods, tabWidth}) => {
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
   const [driverCommands, setDriverCommands] = useState(null);
   const [driverExecuteMethods, setDriverExecuteMethods] = useState(null);
@@ -102,22 +99,6 @@ const Commands = ({applyClientMethod, getSupportedSessionMethods}) => {
 
   const getBtnColspan = (bp) => calculateBtnColspan(bp, tabWidth);
 
-  // add an observer for tracking the Commands tab width,
-  // which can be used to set the commands button grid colspan
-  useEffect(() => {
-    const tab = tabRef.current;
-    if (!tab) {
-      return;
-    }
-    const observer = new ResizeObserver(([entry]) => {
-      if (entry.contentRect.width > 0) {
-        setTabWidth(entry.contentRect.width);
-      }
-    });
-    observer.observe(tab);
-    return () => observer.disconnect();
-  }, []);
-
   useEffect(() => {
     (async () => {
       const {commands, executeMethods} = await getSupportedSessionMethods();
@@ -129,7 +110,7 @@ const Commands = ({applyClientMethod, getSupportedSessionMethods}) => {
 
   return (
     <CommandsTabCard>
-      <div ref={tabRef} className={styles.commandsContainer}>
+      <div className={styles.commandsContainer}>
         {/* do not use ternary operator, as that will show the static list
             while getSupportedSessionMethods is running */}
         {hasMethodsMap === false && <StaticCommandsContent getBtnColspan={getBtnColspan} startCommand={startCommand} />}
