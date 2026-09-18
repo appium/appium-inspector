@@ -1,5 +1,5 @@
 import {IconPlus} from '@tabler/icons-react';
-import {Button, Space, Table} from 'antd';
+import {Button, Card, Space, Spin, Table} from 'antd';
 import dayjs from 'dayjs';
 import {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -9,6 +9,8 @@ import {percentageToPixels} from '../../../utils/other.js';
 import FileUploader from '../../FileUploader.jsx';
 import SavedGestureActionsCell from './SavedGestureActionsCell.jsx';
 
+import styles from './SavedGestures.module.css';
+
 /**
  * Footer of the table listing the saved gestures.
  */
@@ -16,7 +18,7 @@ const SavedGesturesTableFooter = ({showGestureEditor, importGestureFiles}) => {
   const {t} = useTranslation();
 
   return (
-    <Space wrap>
+    <Space.Compact style={{flex: 1, overflowX: 'scroll'}}>
       <Button onClick={showGestureEditor} icon={<IconPlus size={16} />}>
         {t('Create New Gesture')}
       </Button>
@@ -26,7 +28,7 @@ const SavedGesturesTableFooter = ({showGestureEditor, importGestureFiles}) => {
         multiple={true}
         type="application/json"
       />
-    </Space>
+    </Space.Compact>
   );
 };
 
@@ -54,6 +56,7 @@ const SavedGesturesTable = (props) => {
     removeGestureDisplay,
     getSavedGestures,
     importGestureFiles,
+    isUploadingGestureFiles,
     windowSize,
   } = props;
   const {t} = useTranslation();
@@ -112,25 +115,31 @@ const SavedGesturesTable = (props) => {
   }, [getSavedGestures]);
 
   return (
-    <Table
-      styles={{
-        root: {border: '1px solid var(--ant-table-border-color)', borderRadius: '8px'},
-        header: {cell: {padding: '8px 16px'}},
-        body: {cell: {padding: '8px 16px'}},
-        footer: {padding: '8px', borderTop: '1px solid var(--ant-table-border-color)'},
-      }}
-      onRow={(row) => ({
-        onMouseEnter: () => displayGestureWithID(row.key),
-        onMouseLeave: () => removeGestureDisplay(),
-      })}
-      pagination={false}
-      dataSource={dataSource}
-      columns={columns}
-      scroll={{x: '500px', y: 'calc(100vh - 27em)'}}
-      footer={() => (
-        <SavedGesturesTableFooter showGestureEditor={showGestureEditor} importGestureFiles={importGestureFiles} />
-      )}
-    />
+    <Card styles={{root: {height: '100%'}, body: {height: '100%', padding: '2px'}}}>
+      <Spin spinning={isUploadingGestureFiles}>
+        <Table
+          className={styles.savedGesturesTable}
+          styles={{
+            root: {height: '100%'},
+            header: {cell: {padding: '8px 16px'}},
+            section: {height: 'calc(100% - 49px)'},
+            body: {cell: {padding: '8px 16px'}},
+            footer: {padding: '8px', borderTop: '1px solid var(--ant-table-border-color)', display: 'flex'},
+          }}
+          onRow={(row) => ({
+            onMouseEnter: () => displayGestureWithID(row.key),
+            onMouseLeave: () => removeGestureDisplay(),
+          })}
+          pagination={false}
+          dataSource={dataSource}
+          columns={columns}
+          scroll={{x: '500px', y: 'calc(100% - 37px)'}}
+          footer={() => (
+            <SavedGesturesTableFooter showGestureEditor={showGestureEditor} importGestureFiles={importGestureFiles} />
+          )}
+        />
+      </Spin>
+    </Card>
   );
 };
 

@@ -1,0 +1,3 @@
+.savedGesturesTable :global(.ant-table) {
+  height: 100%;
+}
