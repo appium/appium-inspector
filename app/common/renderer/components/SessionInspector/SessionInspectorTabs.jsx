@@ -13,6 +13,18 @@ import SourceTab from './SourceTab/SourceTab.jsx';
 
 import styles from './SessionInspector.module.css';
 
+// Used for calculating item widths for tabs that use a grid, like Commands and Gesture Editor
+const calculateItemColspan = (breakpoints, curTabWidth) => {
+  if (!curTabWidth) {
+    return 1;
+  }
+  for (const entry of breakpoints) {
+    if (curTabWidth <= entry.maxWidth) {
+      return entry.colspan;
+    }
+  }
+};
+
 /**
  * Tabs shown to the right of the screenshot on the Session Inspector screen.
  */
@@ -35,6 +47,8 @@ const SessionInspectorTabs = (props) => {
   // Disable the Gestures tab on unsupported platforms
   const areW3CActionsUnsupported = PLATFORMS_WITHOUT_W3C_ACTIONS.includes(featureCaps.platformName);
 
+  const getItemColspan = (breakpoints) => calculateItemColspan(breakpoints, tabWidth);
+
   const inspectorTabItems = [
     {
       label: t('Source'),
@@ -50,7 +64,7 @@ const SessionInspectorTabs = (props) => {
         <Commands
           applyClientMethod={applyClientMethod}
           getSupportedSessionMethods={getSupportedSessionMethods}
-          tabWidth={tabWidth}
+          getItemColspan={getItemColspan}
         />
       ),
     },

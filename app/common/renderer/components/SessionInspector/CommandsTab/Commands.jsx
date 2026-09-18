@@ -11,21 +11,10 @@ import StaticCommandsContent from './StaticCommandsContent.jsx';
 
 import styles from './Commands.module.css';
 
-const calculateBtnColspan = (breakpoints, curCommandsTabWidth) => {
-  if (!curCommandsTabWidth) {
-    return 1;
-  }
-  for (const entry of breakpoints) {
-    if (curCommandsTabWidth <= entry.maxWidth) {
-      return entry.colspan;
-    }
-  }
-};
-
 /**
  * Contents of the commands tab.
  */
-const Commands = ({applyClientMethod, getSupportedSessionMethods, tabWidth}) => {
+const Commands = ({applyClientMethod, getSupportedSessionMethods, getItemColspan}) => {
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
   const [driverCommands, setDriverCommands] = useState(null);
   const [driverExecuteMethods, setDriverExecuteMethods] = useState(null);
@@ -97,8 +86,6 @@ const Commands = ({applyClientMethod, getSupportedSessionMethods, tabWidth}) => 
     curCommandParamValsRef.current = [];
   };
 
-  const getBtnColspan = (bp) => calculateBtnColspan(bp, tabWidth);
-
   useEffect(() => {
     (async () => {
       const {commands, executeMethods} = await getSupportedSessionMethods();
@@ -113,10 +100,12 @@ const Commands = ({applyClientMethod, getSupportedSessionMethods, tabWidth}) => 
       <div className={styles.commandsContainer}>
         {/* do not use ternary operator, as that will show the static list
             while getSupportedSessionMethods is running */}
-        {hasMethodsMap === false && <StaticCommandsContent getBtnColspan={getBtnColspan} startCommand={startCommand} />}
+        {hasMethodsMap === false && (
+          <StaticCommandsContent getItemColspan={getItemColspan} startCommand={startCommand} />
+        )}
         {hasMethodsMap && (
           <MethodMapCommandsTabs
-            getBtnColspan={getBtnColspan}
+            getItemColspan={getItemColspan}
             driverCommands={driverCommands}
             driverExecuteMethods={driverExecuteMethods}
             startCommand={startCommand}

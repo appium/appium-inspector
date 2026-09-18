@@ -74,10 +74,10 @@ const MethodMapCommandButton = ({methodName, methodDetails, isExecute, startComm
  * Unlike StaticCommandsContent, we cannot predict the contents of the method map response,
  * and we also want to be able to filter it, so just render all methods in a single grid.
  */
-const MethodMapCommandsContent = ({getBtnColspan, driverMethods, isExecute, startCommand}) => {
+const MethodMapCommandsContent = ({getItemColspan, driverMethods, isExecute, startCommand}) => {
   const {t} = useTranslation();
 
-  const btnColspan = getBtnColspan(isExecute ? EXECUTE_METHODS_GRID_BREAKPOINTS : COMMANDS_GRID_BREAKPOINTS);
+  const btnColspan = getItemColspan(isExecute ? EXECUTE_METHODS_GRID_BREAKPOINTS : COMMANDS_GRID_BREAKPOINTS);
 
   return (
     <>

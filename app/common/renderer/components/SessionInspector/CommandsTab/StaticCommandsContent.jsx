@@ -44,10 +44,10 @@ const StaticCommandsCollapseGroups = ({startCommand}) => {
  * Static list of driver commands, shown only for drivers that do not support
  * the listCommands/listExtensions endpoints.
  */
-const StaticCommandsContent = ({getBtnColspan, startCommand}) => {
+const StaticCommandsContent = ({getItemColspan, startCommand}) => {
   const {t} = useTranslation();
 
-  const btnColspan = getBtnColspan(COMMANDS_GRID_BREAKPOINTS);
+  const btnColspan = getItemColspan(COMMANDS_GRID_BREAKPOINTS);
 
   return (
     <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="middle">
