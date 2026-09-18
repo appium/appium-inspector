@@ -42,7 +42,13 @@ const Recorder = (props) => {
       {!recordedActions.length && (
         <div className={styles.noRecordedActions}>{t('enableRecordingAndPerformActions')}</div>
       )}
-      {!!recordedActions.length && <Refractor className={`refractor ${styles.clientCode}`} language={ClientFrameworkClass.refractorLang} value={clientCode} />}
+      {!!recordedActions.length && (
+        <Refractor
+          className={`refractor ${styles.clientCode}`}
+          language={ClientFrameworkClass.refractorLang}
+          value={clientCode}
+        />
+      )}
     </RecorderTabCard>
   );
 };

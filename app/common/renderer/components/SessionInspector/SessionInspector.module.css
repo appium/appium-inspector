@@ -39,7 +39,7 @@
 allow X-axis scrolling for the entire recorder tab contents,
 since the tab card has a set minwidth due to extra items in the header
 */
-.inspectorTabsContainer :global(.ant-tabs-content[id*="recorder"]) {
+.inspectorTabsContainer :global(.ant-tabs-content[id*='recorder']) {
   overflow-x: scroll;
 }
 
