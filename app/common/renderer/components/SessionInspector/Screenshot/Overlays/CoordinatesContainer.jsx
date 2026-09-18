@@ -6,8 +6,8 @@ import styles from './Overlays.module.css';
  */
 const CoordinatesContainer = ({x, y}) => (
   <div className={styles.coordinatesContainer}>
-    <p>{`X: ${x}`}</p>
-    <p>{`Y: ${y}`}</p>
+    <p>{`X: ${x ?? ''}`}</p>
+    <p>{`Y: ${y ?? ''}`}</p>
   </div>
 );
 
