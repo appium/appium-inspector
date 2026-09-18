@@ -39,6 +39,10 @@
   border-color: #141414;
 }
 
+.gestureEditorPointerTabs :global(.ant-tabs-nav-operations) {
+  height: 32px;
+}
+
 .tickInputBox {
   display: block;
   text-align: center;
