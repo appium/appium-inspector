@@ -11,7 +11,7 @@ import styles from './SourceTab.module.css';
 // against this tab's own container width (not the window's), since the tab
 // shares horizontal space with the screenshot, whose width can vary
 // independently (e.g. portrait vs landscape orientation).
-const NARROW_LAYOUT_BREAKPOINT = 600;
+const NARROW_LAYOUT_BREAKPOINT = 500;
 
 const SourceTab = (props) => {
   const {selectedElement = {}} = props;
@@ -47,12 +47,12 @@ const SourceTab = (props) => {
         <Splitter.Panel
           collapsible={isCollapsible}
           size={hasSelectedElement ? undefined : '100%'}
-          min={isNarrow ? 170 : 210}
+          min={isNarrow ? 200 : 210}
         >
           <AppSource {...props} />
         </Splitter.Panel>
         {hasSelectedElement && (
-          <Splitter.Panel collapsible={isCollapsible} min={isNarrow ? 160 : 250}>
+          <Splitter.Panel collapsible={isCollapsible} min={isNarrow ? 100 : 250}>
             <SelectedElement {...props} />
           </Splitter.Panel>
         )}

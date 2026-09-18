@@ -89,8 +89,9 @@ const RecorderTabCard = ({
   <Card
     title={<RecorderTabTitle />}
     styles={{
+      root: {minWidth: '500px'},
       header: {padding: '0px 8px 0px 16px', minHeight: '48px'},
-      body: {padding: '12px', height: 'calc(100% - 48px)'},
+      body: {padding: '12px', height: 'calc(100% - 48px)', overflowY: 'scroll'},
     }}
     extra={
       <RecorderTabHeaderButtons
