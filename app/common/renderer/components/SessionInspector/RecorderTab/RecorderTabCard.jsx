@@ -40,7 +40,7 @@ const RecorderTabHeaderButtons = ({
   const clearLabel = t('Clear Actions');
 
   return (
-    <Space size="middle">
+    <Space size="small">
       {!!recordedActions.length && (
         <Space.Compact>
           <Tooltip title={toggleBoilerplateLabel}>
