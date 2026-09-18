@@ -21,12 +21,6 @@
   text-align: center;
 }
 
-.gestureTimeline {
-  width: 90%;
-  margin: -10px 0;
-  min-height: 32px;
-}
-
 .gestureTimeline :global(.ant-steps-item-finish .ant-steps-item-icon),
 .gestureTimeline :global(.ant-steps-item-rail-finish) {
   color: var(--timelineColor);

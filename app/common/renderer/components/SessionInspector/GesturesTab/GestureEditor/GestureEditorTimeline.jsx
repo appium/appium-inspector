@@ -47,15 +47,22 @@ const GestureEditorTimeline = ({coordType, pointers}) => {
           },
     );
 
-  return timelinePointers.map((pointer) => (
-    <center key={pointer.id}>
-      <Steps
-        className={styles.gestureTimeline}
-        style={{'--timelineColor': pointer.color}}
-        items={timelineItems(pointer.ticks)}
-      />
-    </center>
-  ));
+  return (
+    <div style={{width: '100%', display: 'flex', flexDirection: 'column', overflowX: 'scroll'}}>
+      <div style={{padding: '0px 20px', minWidth: '300px'}}>
+        {timelinePointers.map((pointer) => (
+          <Steps
+            key={pointer.id}
+            className={styles.gestureTimeline}
+            style={{'--timelineColor': pointer.color}}
+            size="small"
+            responsive={false}
+            items={timelineItems(pointer.ticks)}
+          />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default GestureEditorTimeline;
