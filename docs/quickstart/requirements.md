@@ -13,11 +13,9 @@ will differ:
         - [These requirements are taken from Chrome](https://support.google.com/chrome/a/answer/7100626),
           as the Inspector is built using Electron (which uses Chromium)
     - Around **500MB** of free space is required
-    - The minimum application window size is **890 x 710** pixels
 - Appium server plugin
     - Works in Chrome/Edge/Firefox/Safari, released in 2022 or later
     - Around **6MB** of free space is required
-    - Viewport size of at least **870 x 610** pixels is recommended
 
 ### Appium Server Requirements
 
