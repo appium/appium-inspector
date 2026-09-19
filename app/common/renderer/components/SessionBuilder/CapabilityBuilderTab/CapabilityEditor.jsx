@@ -1,9 +1,9 @@
 import {IconPlus, IconTrash} from '@tabler/icons-react';
 import {Button, Checkbox, Col, Form, Input, Modal, Row, Select, Space, Splitter, Tooltip} from 'antd';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 
-import {CAPABILITY_TYPES, SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT} from '../../../constants/session-builder.js';
+import {CAPABILITY_TYPES} from '../../../constants/session-builder.js';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
 import CapabilityControl from './CapabilityControl.jsx';
 
@@ -52,6 +52,7 @@ const handleSetType = (setCapabilityParam, cap, typeVal) => {
 
 const CapabilityEditor = (props) => {
   const {
+    isNarrow,
     setCapabilityParam,
     caps,
     addCapability,
@@ -75,17 +76,7 @@ const CapabilityEditor = (props) => {
 
   const latestCapFieldRef = useRef(null);
 
-  const [isNarrow, setIsNarrow] = useState(
-    window.innerWidth > 0 && window.innerWidth < SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT,
-  );
-
   const onSaveAsOk = () => saveSession({server, serverType, caps, name: saveAsText}, true);
-
-  useEffect(() => {
-    const updateIsNarrow = () => setIsNarrow(window.innerWidth < SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT);
-    window.addEventListener('resize', updateIsNarrow);
-    return () => window.removeEventListener('resize', updateIsNarrow);
-  }, []);
 
   // if we have more than one cap and the most recent cap name is empty,
   // it means we've just added a new cap field, so focus that input element

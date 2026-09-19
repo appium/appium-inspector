@@ -1,12 +1,10 @@
 import {IconEdit, IconFileExport, IconTrash} from '@tabler/icons-react';
 import {Button, Card, Popconfirm, Space, Spin, Splitter, Table, Tooltip} from 'antd';
 import dayjs from 'dayjs';
-import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {
   SAVED_SESSIONS_TABLE_VALUES,
-  SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT,
   SESSION_BUILDER_TABS,
   SESSION_FILE_EXTENSION,
 } from '../../../constants/session-builder.js';
@@ -37,6 +35,7 @@ const getSessionById = (savedSessions, id, t) => {
 
 const SavedCapabilitySets = (props) => {
   const {
+    isNarrow,
     savedSessions,
     exportSavedSession,
     deleteSavedSession,
@@ -50,10 +49,6 @@ const SavedCapabilitySets = (props) => {
   const editLabel = t('Edit');
   const deleteLabel = t('Delete');
   const exportLabel = t('Export to File');
-
-  const [isNarrow, setIsNarrow] = useState(
-    window.innerWidth > 0 && window.innerWidth < SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT,
-  );
 
   const handleCapsAndServer = (uuid) => {
     const {
@@ -141,12 +136,6 @@ const SavedCapabilitySets = (props) => {
       ),
     },
   ];
-
-  useEffect(() => {
-    const updateIsNarrow = () => setIsNarrow(window.innerWidth < SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT);
-    window.addEventListener('resize', updateIsNarrow);
-    return () => window.removeEventListener('resize', updateIsNarrow);
-  }, []);
 
   return (
     <Splitter orientation={isNarrow ? 'vertical' : 'horizontal'}>
