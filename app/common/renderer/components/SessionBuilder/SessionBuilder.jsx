@@ -1,7 +1,7 @@
 import {bindActionCreators} from '@reduxjs/toolkit';
 import {IconLink} from '@tabler/icons-react';
 import {Badge, Button, Divider, Space, Spin, Tabs} from 'antd';
-import {useCallback, useEffect, useMemo} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router';
@@ -9,7 +9,12 @@ import {useNavigate} from 'react-router';
 import * as SessionBuilderActions from '../../actions/SessionBuilder.js';
 import {BUTTON} from '../../constants/antd-types.js';
 import {LINKS} from '../../constants/common.js';
-import {ADD_CLOUD_PROVIDER_TAB_KEY, SERVER_TYPES, SESSION_BUILDER_TABS} from '../../constants/session-builder.js';
+import {
+  ADD_CLOUD_PROVIDER_TAB_KEY,
+  SERVER_TYPES,
+  SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT,
+  SESSION_BUILDER_TABS,
+} from '../../constants/session-builder.js';
 import {openLink} from '../../polyfills.js';
 import {isEmpty} from '../../utils/common.js';
 import {log} from '../../utils/logger.js';
@@ -67,6 +72,10 @@ const Session = () => {
   const navigate = useNavigate();
   const {t} = useTranslation();
 
+  const [isNarrow, setIsNarrow] = useState(
+    window.innerWidth > 0 && window.innerWidth < SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT,
+  );
+
   const isAttaching = tabKey === 'attach';
 
   const handleSelectServerTab = async (tab) => {
@@ -120,6 +129,12 @@ const Session = () => {
     switchTabs,
   ]);
 
+  useEffect(() => {
+    const updateIsNarrow = () => setIsNarrow(window.innerWidth < SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT);
+    window.addEventListener('resize', updateIsNarrow);
+    return () => window.removeEventListener('resize', updateIsNarrow);
+  }, []);
+
   return [
     <Spin size="large" spinning={!!newSessionLoading} key="main">
       <div className={styles.sessionContainer}>
@@ -166,7 +181,7 @@ const Session = () => {
               label: t('Capability Builder'),
               key: SESSION_BUILDER_TABS.CAPS_BUILDER,
               className: styles.scrollingTab,
-              children: <CapabilityEditor {...props} />,
+              children: <CapabilityEditor {...props} isNarrow={isNarrow} />,
             },
             {
               label: (
@@ -176,7 +191,7 @@ const Session = () => {
               ),
               key: SESSION_BUILDER_TABS.SAVED_CAPS,
               className: styles.scrollingTab,
-              children: <SavedCapabilitySets {...props} />,
+              children: <SavedCapabilitySets {...props} isNarrow={isNarrow} />,
             },
             {
               label: t('attachToSession'),
