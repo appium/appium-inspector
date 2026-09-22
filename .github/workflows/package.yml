@@ -52,13 +52,42 @@ jobs:
         id: tag
         run: echo "tag=$(git tag --points-at HEAD)" >> "$GITHUB_OUTPUT"
 
-  electron:
-    name: Upload Electron App
+  windows:
+    name: Build Windows App
     needs: tag-version
-    strategy:
-      matrix:
-        image: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.image }}
+    runs-on: windows-latest
+
+    env:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ needs.tag-version.outputs.tag }}
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v7.0.0
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      - name: Install dependencies (Node.js)
+        run: npm ci
+      - name: Build Electron app
+        run: npm run build:electron
+      - name: Package app
+        run: npx electron-builder build --x64 --arm64 --publish always
+      - name: Upload built packages
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: artifact-windows-latest
+          path: release/
+
+  macos:
+    name: Build macOS App
+    needs: tag-version
+    runs-on: macos-latest
 
     env:
       CSC_IDENTITY_AUTO_DISCOVERY: true
@@ -77,14 +106,43 @@ jobs:
           cache: 'npm'
       - name: Install dependencies (Node.js)
         run: npm ci
-      - name: Build electron app
+      - name: Build Electron app
         run: npm run build:electron
-      - name: build package
+      - name: Package app
         run: npx electron-builder build --x64 --arm64 --publish always
       - name: Upload built packages
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: artifact-${{ matrix.image }}
+          name: artifact-macos-latest
+          path: release/
+
+  linux:
+    name: Build Linux App
+    needs: tag-version
+    runs-on: ubuntu-latest
+
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ needs.tag-version.outputs.tag }}
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v7.0.0
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      - name: Install dependencies (Node.js)
+        run: npm ci
+      - name: Build Electron app
+        run: npm run build:electron
+      - name: Package app
+        run: npx electron-builder build --x64 --arm64 --publish always
+      - name: Upload built packages
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: artifact-ubuntu-latest
           path: release/
 
   plugin:
