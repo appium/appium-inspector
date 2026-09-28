@@ -1,7 +1,11 @@
 import {useEffect, useRef, useState} from 'react';
 
 import {COMMAND_EXECUTE_SCRIPT} from '../../../constants/commands.js';
-import {adjustParamValueType, transformCommandsMap, transformExecMethodsMap} from '../../../utils/commands-tab.js';
+import {
+  adjustCommandParamValueType,
+  transformCommandsMap,
+  transformExecMethodsMap,
+} from '../../../utils/commands-tab.js';
 import {isEmpty, isPlainObject} from '../../../utils/common.js';
 import CommandParametersModal from './CommandParametersModal.jsx';
 import CommandResultModal from './CommandResult/CommandResultModal.jsx';
@@ -14,7 +18,7 @@ import styles from './Commands.module.css';
 /**
  * Contents of the commands tab.
  */
-const Commands = ({applyClientMethod, getSupportedSessionMethods, getItemColspan}) => {
+const Commands = ({applyClientMethod, getSupportedSessionMethods, getWindowHandles, getItemColspan}) => {
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
   const [driverCommands, setDriverCommands] = useState(null);
   const [driverExecuteMethods, setDriverExecuteMethods] = useState(null);
@@ -33,7 +37,9 @@ const Commands = ({applyClientMethod, getSupportedSessionMethods, getItemColspan
 
   const prepareCommand = (cmdName, cmdParams, isExecute) => {
     const adjustedCmdName = isExecute ? COMMAND_EXECUTE_SCRIPT : cmdName;
-    let adjustedCmdParams = curCommandParamValsRef.current.map(adjustParamValueType);
+    let adjustedCmdParams = curCommandParamValsRef.current.map((value, index) =>
+      adjustCommandParamValueType(value, {name: cmdName, isExecute}, cmdParams?.[index]),
+    );
 
     // If we are about to run an execute method,
     // the parameters array needs to be turned into an object,
@@ -117,6 +123,7 @@ const Commands = ({applyClientMethod, getSupportedSessionMethods, getItemColspan
             curCommandParamValsRef={curCommandParamValsRef}
             prepareAndRunCommand={prepareAndRunCommand}
             clearCurrentCommand={clearCurrentCommand}
+            getWindowHandles={getWindowHandles}
           />
         )}
         {commandResult !== undefined && (

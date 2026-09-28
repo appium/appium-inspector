@@ -24,6 +24,46 @@ export function adjustParamValueType(value) {
   }
 }
 
+export const isWindowHandleParameter = (commandDetails, param) =>
+  commandDetails.name === 'switchToWindow' && !commandDetails.isExecute && param?.name === 'handle';
+
+export function adjustCommandParamValueType(value, commandDetails, param) {
+  // Window handles are opaque strings, even when they look like numbers or JSON.
+  return isWindowHandleParameter(commandDetails, param) ? value : adjustParamValueType(value);
+}
+
+/**
+ * Load window suggestions without changing the entered parameter value.
+ * The returned cleanup function ignores results after the modal closes or changes commands.
+ */
+export function loadWindowHandleOptions(commandDetails, getWindowHandles, onChange) {
+  let active = true;
+  const update = (state) => {
+    if (active) {
+      onChange(state);
+    }
+  };
+  const emptyState = {options: [], loading: false, error: false};
+  update(emptyState);
+  if (commandDetails.details.params?.some((param) => isWindowHandleParameter(commandDetails, param))) {
+    update({...emptyState, loading: true});
+    (async () => {
+      try {
+        const handles = await getWindowHandles();
+        if (!Array.isArray(handles) || handles.some((handle) => typeof handle !== 'string')) {
+          throw new Error('Expected an array of window handles');
+        }
+        update({...emptyState, options: [...new Set(handles)].map((value) => ({value}))});
+      } catch {
+        update({...emptyState, error: true});
+      }
+    })();
+  }
+  return () => {
+    active = false;
+  };
+}
+
 /**
  * Filter the array of method key-value pairs to only include methods matching the search query.
  *

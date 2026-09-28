@@ -1,6 +1,8 @@
-import {Input, Modal, Space, Typography} from 'antd';
+import {AutoComplete, Input, Modal, Space, Typography} from 'antd';
+import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
+import {isWindowHandleParameter, loadWindowHandleOptions} from '../../../utils/commands-tab.js';
 import {isEmpty} from '../../../utils/common.js';
 
 import inspectorStyles from '../SessionInspector.module.css';
@@ -26,8 +28,15 @@ const CommandParametersModal = ({
   curCommandParamValsRef,
   prepareAndRunCommand,
   clearCurrentCommand,
+  getWindowHandles,
 }) => {
   const {t} = useTranslation();
+  const [windowHandles, setWindowHandles] = useState({options: [], loading: false, error: false});
+
+  useEffect(
+    () => loadWindowHandleOptions(curCommandDetails, getWindowHandles, setWindowHandles),
+    [curCommandDetails, getWindowHandles],
+  );
 
   return (
     <Modal
@@ -41,9 +50,22 @@ const CommandParametersModal = ({
       {(curCommandDetails.details.params ?? []).map((param, index) => (
         <Space.Compact block key={param.name} className={styles.commandArgInputRow}>
           <Space.Addon>{formatParamInputLabel(param)}</Space.Addon>
-          <Input onChange={(e) => (curCommandParamValsRef.current[index] = e.target.value)} />
+          {isWindowHandleParameter(curCommandDetails, param) ? (
+            <AutoComplete
+              style={{width: '100%'}}
+              options={windowHandles.options}
+              onChange={(value) => (curCommandParamValsRef.current[index] = value)}
+            />
+          ) : (
+            <Input onChange={(e) => (curCommandParamValsRef.current[index] = e.target.value)} />
+          )}
         </Space.Compact>
       ))}
+      {(windowHandles.loading || windowHandles.error) && (
+        <Typography.Text type="secondary" role="status">
+          {t(windowHandles.loading ? 'loadingWindowHandles' : 'windowHandlesLoadFailed')}
+        </Typography.Text>
+      )}
     </Modal>
   );
 };

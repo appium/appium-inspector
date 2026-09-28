@@ -802,6 +802,15 @@ export function getSupportedSessionMethods() {
   };
 }
 
+// Populate command parameter suggestions without recording a command or refreshing the source.
+export function getWindowHandles() {
+  return async (_dispatch, getState) => {
+    const action = executeDriverCommand({methodName: 'getWindowHandles'});
+    const {commandRes} = await action(getState);
+    return commandRes;
+  };
+}
+
 export function setUserWaitTimeout(userWaitTimeout) {
   return (dispatch) => {
     dispatch({type: SET_USER_WAIT_TIMEOUT, userWaitTimeout});

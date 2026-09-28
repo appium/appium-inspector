@@ -36,6 +36,7 @@ const SessionInspectorTabs = (props) => {
     showScreenshot,
     applyClientMethod,
     getSupportedSessionMethods,
+    getWindowHandles,
     featureCaps,
   } = props;
 
@@ -64,6 +65,7 @@ const SessionInspectorTabs = (props) => {
         <Commands
           applyClientMethod={applyClientMethod}
           getSupportedSessionMethods={getSupportedSessionMethods}
+          getWindowHandles={getWindowHandles}
           getItemColspan={getItemColspan}
         />
       ),
