@@ -1,4 +1,4 @@
-import {IconMessageChatbot} from '@tabler/icons-react';
+import {IconVoice} from '@tabler/icons-react';
 import {Button, Form, Input, Popover, Tooltip} from 'antd';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -44,7 +44,7 @@ const SiriControls = ({executeInteraction}) => {
         trigger="click"
         onOpenChange={() => setShowTooltip(false)}
       >
-        <Button aria-label={siriLabel} icon={<IconMessageChatbot size={18} />} />
+        <Button aria-label={siriLabel} icon={<IconVoice size={18} />} />
       </Popover>
     </Tooltip>
   );
