@@ -1,6 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>appium/appium-workflows//renovate/default"],
+  "extends": [
+    "github>appium/appium-workflows//renovate/default",
+    ":pinAllExceptPeerDependencies",
+    "schedule:daily"
+  ],
   "labels": ["dependencies"],
   "packageRules": [
     {
@@ -20,8 +24,5 @@
       "matchPackageNames": ["@appium/base-plugin"],
       "skipArtifactsUpdate": true
     }
-  ],
-  "semanticCommits": "enabled",
-  "schedule": ["after 10pm", "before 5:00am"],
-  "timezone": "America/Vancouver"
+  ]
 }
