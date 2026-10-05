@@ -70,7 +70,7 @@
     "cheerio": "1.2.0",
     "css.escape": "1.5.1",
     "dayjs": "1.11.23",
-    "electron-debug": "4.1.0",
+    "electron-debug": "5.0.0",
     "electron-settings": "4.0.4",
     "electron-updater": "6.8.9",
     "i18next": "26.4.2",
