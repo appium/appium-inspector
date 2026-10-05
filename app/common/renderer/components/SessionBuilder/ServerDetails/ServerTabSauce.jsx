@@ -26,6 +26,7 @@ const ServerTabSauce = ({server, setServerParam}) => {
     {label: t('US-West'), value: 'us-west-1'},
     {label: t('US-East'), value: 'us-east-4'},
     {label: t('EU-Central'), value: 'eu-central-1'},
+    {label: t('Asia-South'), value: 'asia-south-2'},
   ];
 
   return (
