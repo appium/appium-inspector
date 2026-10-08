@@ -79,7 +79,7 @@ jobs:
       - name: Package app
         run: npx electron-builder build --x64 --arm64 --publish always
       - name: Upload built packages
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: artifact-windows-latest
           path: release/
@@ -111,7 +111,7 @@ jobs:
       - name: Package app
         run: npx electron-builder build --x64 --arm64 --publish always
       - name: Upload built packages
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: artifact-macos-latest
           path: release/
@@ -140,7 +140,7 @@ jobs:
       - name: Package app
         run: npx electron-builder build --x64 --arm64 --publish always
       - name: Upload built packages
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: artifact-ubuntu-latest
           path: release/
