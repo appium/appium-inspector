@@ -10,7 +10,7 @@ export default class JavaFramework extends CommonClientFramework {
     if (Array.isArray(jsonVal)) {
       const convertedItems = jsonVal.map((item) => this.getJavaVal(item));
       return `{${convertedItems.join(', ')}}`;
-    } else if (typeof jsonVal === 'object') {
+    } else if (jsonVal !== null && typeof jsonVal === 'object') {
       const convertedItems = Object.entries(jsonVal)
         .filter(([, v]) => v !== undefined)
         .map(([k, v]) => `Map.entry(${JSON.stringify(k)}, ${this.getJavaVal(v)})`);

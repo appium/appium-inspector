@@ -8,7 +8,9 @@ export default class RobotFramework extends CommonClientFramework {
   static refractorLib = refractorRobot;
 
   getRobotVal(jsonVal) {
-    if (typeof jsonVal === 'boolean') {
+    if (jsonVal === null) {
+      return '${None}';
+    } else if (typeof jsonVal === 'boolean') {
       return jsonVal ? '${True}' : '${False}';
     } else if (typeof jsonVal === 'number') {
       return `$\{${jsonVal}}`;

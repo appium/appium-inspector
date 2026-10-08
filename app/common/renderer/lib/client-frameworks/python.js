@@ -8,7 +8,9 @@ export default class PythonFramework extends CommonClientFramework {
   static refractorLib = refractorPython;
 
   getPythonVal(jsonVal) {
-    if (typeof jsonVal === 'boolean') {
+    if (jsonVal === null) {
+      return 'None';
+    } else if (typeof jsonVal === 'boolean') {
       return jsonVal ? 'True' : 'False';
     } else if (Array.isArray(jsonVal)) {
       const convertedItems = jsonVal.map((item) => this.getPythonVal(item));
