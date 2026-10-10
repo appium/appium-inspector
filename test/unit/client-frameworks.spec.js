@@ -47,12 +47,23 @@ describe('client-frameworks', function () {
         const code = buildFramework(Framework).getCodeString(true);
         expect(code).toContain('.amend("appium:app", null)');
         expect(code).toContain(
-          '.amend("goog:chromeOptions", Map.ofEntries(Map.entry("args", {"--headless"}), Map.entry("mobile-emulation", null)))',
+          '.amend("goog:chromeOptions", new HashMap<String, Object>() {{ put("args", {"--headless"}); put("mobile-emulation", null); }})',
         );
         expect(code).toContain(
-          'driver.executeScript("mobile: test", Map.ofEntries(Map.entry("elementId", null), Map.entry("some-key", "value")));',
+          'driver.executeScript("mobile: test", new HashMap<String, Object>() {{ put("elementId", null); put("some-key", "value"); }});',
         );
+        expect(code).not.toContain('Map.entry("mobile-emulation", null)');
+        expect(code).toContain('import java.util.HashMap;\nimport java.util.Map;\n');
       }
+    });
+
+    it('should keep Map.ofEntries for Java maps without null values', function () {
+      const framework = new JavaJUnit5Framework(SERVER_URL, SERVER_URL_PARTS, {
+        'appium:options': {noReset: true, nested: {key: 'value'}},
+      });
+      expect(framework.getCodeString(true)).toContain(
+        '.amend("appium:options", Map.ofEntries(Map.entry("noReset", true), Map.entry("nested", Map.ofEntries(Map.entry("key", "value")))))',
+      );
     });
 
     it('should generate C# code using null', function () {
