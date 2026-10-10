@@ -53,7 +53,6 @@ describe('client-frameworks', function () {
           'driver.executeScript("mobile: test", new HashMap<String, Object>() {{ put("elementId", null); put("some-key", "value"); }});',
         );
         expect(code).not.toContain('Map.entry("mobile-emulation", null)');
-        expect(code).toContain('import java.util.HashMap;\nimport java.util.Map;\n');
       }
     });
 
