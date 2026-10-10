@@ -10,10 +10,14 @@ export default class JavaFramework extends CommonClientFramework {
     if (Array.isArray(jsonVal)) {
       const convertedItems = jsonVal.map((item) => this.getJavaVal(item));
       return `{${convertedItems.join(', ')}}`;
-    } else if (typeof jsonVal === 'object') {
-      const convertedItems = Object.entries(jsonVal)
-        .filter(([, v]) => v !== undefined)
-        .map(([k, v]) => `Map.entry(${JSON.stringify(k)}, ${this.getJavaVal(v)})`);
+    } else if (jsonVal !== null && typeof jsonVal === 'object') {
+      const entries = Object.entries(jsonVal).filter(([, v]) => v !== undefined);
+      // Map.entry and Map.ofEntries throw on null values, so maps holding nulls use a HashMap
+      if (entries.some(([, v]) => v === null)) {
+        const putCalls = entries.map(([k, v]) => `put(${JSON.stringify(k)}, ${this.getJavaVal(v)});`);
+        return `new HashMap<String, Object>() {{ ${putCalls.join(' ')} }}`;
+      }
+      const convertedItems = entries.map(([k, v]) => `Map.entry(${JSON.stringify(k)}, ${this.getJavaVal(v)})`);
       return `Map.ofEntries(${convertedItems.join(', ')})`;
     }
     return JSON.stringify(jsonVal);

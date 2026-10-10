@@ -9,16 +9,23 @@ export default class RubyFramework extends CommonClientFramework {
 
   // Use this instead of JSON.stringify, as it puts quotes around dictionary keys
   getRubyVal(jsonVal) {
-    if (Array.isArray(jsonVal)) {
+    if (jsonVal === null) {
+      return 'nil';
+    } else if (Array.isArray(jsonVal)) {
       const convertedItems = jsonVal.map((item) => this.getRubyVal(item));
       return `[${convertedItems.join(', ')}]`;
     } else if (typeof jsonVal === 'object') {
       const convertedItems = Object.entries(jsonVal)
         .filter(([, v]) => v !== undefined)
-        .map(([k, v]) => `${k}: ${this.getRubyVal(v)}`);
+        .map(([k, v]) => `${this.getRubyKey(k)}: ${this.getRubyVal(v)}`);
       return `{${convertedItems.join(', ')}}`;
     }
     return JSON.stringify(jsonVal);
+  }
+
+  // Keys that are not plain identifiers must be quoted to remain valid symbols
+  getRubyKey(key) {
+    return /^[A-Za-z_][A-Za-z0-9_]*$/.test(key) ? key : JSON.stringify(key);
   }
 
   wrapWithBoilerplate(code) {

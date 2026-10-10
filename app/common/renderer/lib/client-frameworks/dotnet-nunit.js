@@ -11,7 +11,7 @@ export default class DotNetNUnitFramework extends CommonClientFramework {
     if (Array.isArray(jsonVal)) {
       const convertedItems = jsonVal.map((item) => this.getCSharpVal(item));
       return `{${convertedItems.join(', ')}}`;
-    } else if (typeof jsonVal === 'object') {
+    } else if (jsonVal !== null && typeof jsonVal === 'object') {
       const convertedItems = Object.entries(jsonVal).map(([k, v]) => `{${JSON.stringify(k)}, ${this.getCSharpVal(v)}}`);
       return `new Dictionary<string, dynamic> {${convertedItems.join(', ')}}`;
     }
