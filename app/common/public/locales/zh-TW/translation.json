@@ -143,6 +143,7 @@
   "US-West": "美國西部1",
   "US-East": "美國西部4",
   "EU-Central": "歐洲中部1",
+  "Asia-South": "Asia South 2",
   "proxyThroughSC": "透過 Sauce Connect 的 Selenium Relay 代理",
   "text": "文字",
   "boolean": "布林值",

@@ -143,6 +143,7 @@
   "US-West": "US West 1",
   "US-East": "US East",
   "EU-Central": "EU Central 1",
+  "Asia-South": "Asia South 2",
   "proxyThroughSC": "Proxy attraverso il relay selenium di Sauce Connect",
   "text": "testo",
   "boolean": "booleano",
