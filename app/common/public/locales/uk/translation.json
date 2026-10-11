@@ -143,6 +143,7 @@
   "US-West": "Захід США 1",
   "US-East": "Схід США 4",
   "EU-Central": "Центральний ЄС 1",
+  "Asia-South": "Південна Азія 2",
   "proxyThroughSC": "Проксі через Sauce Connect Selenium Relay",
   "text": "текст",
   "boolean": "логічний тип",
