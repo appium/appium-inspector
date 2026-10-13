@@ -40,7 +40,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - name: Use Node.js LTS
-        uses: actions/setup-node@v7.0.0
+        uses: actions/setup-node@v7.1.0
         with:
           node-version: lts/*
           cache: 'npm'
@@ -68,7 +68,7 @@ jobs:
         with:
           ref: ${{ needs.tag-version.outputs.tag }}
       - name: Use Node.js LTS
-        uses: actions/setup-node@v7.0.0
+        uses: actions/setup-node@v7.1.0
         with:
           node-version: lts/*
           cache: 'npm'
@@ -100,7 +100,7 @@ jobs:
         with:
           ref: ${{ needs.tag-version.outputs.tag }}
       - name: Use Node.js LTS
-        uses: actions/setup-node@v7.0.0
+        uses: actions/setup-node@v7.1.0
         with:
           node-version: lts/*
           cache: 'npm'
@@ -129,7 +129,7 @@ jobs:
         with:
           ref: ${{ needs.tag-version.outputs.tag }}
       - name: Use Node.js LTS
-        uses: actions/setup-node@v7.0.0
+        uses: actions/setup-node@v7.1.0
         with:
           node-version: lts/*
           cache: 'npm'
@@ -154,7 +154,7 @@ jobs:
         with:
           ref: ${{ needs.tag-version.outputs.tag }}
       - name: Use Node.js LTS
-        uses: actions/setup-node@v7.0.0
+        uses: actions/setup-node@v7.1.0
         with:
           node-version: lts/*
           cache: 'npm'
