@@ -26,7 +26,8 @@ export default class RobotFramework extends CommonClientFramework {
         return `\\${character}`;
       }
       const code = character.charCodeAt(0);
-      if (!/\s/.test(character) && code >= 0x20 && code !== 0x7f) {
+      const isControl = code < 0x20 || (code >= 0x7f && code <= 0x9f);
+      if (!/\s/.test(character) && !isControl) {
         return character;
       }
       const hex = code.toString(16).padStart(code <= 0xff ? 2 : 4, '0');

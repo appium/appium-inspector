@@ -166,6 +166,14 @@ describe('client-frameworks', function () {
       expect(framework.getRobotVal(value)).toBe(expected);
     });
 
+    it.each(Array.from({length: 33}, (_, index) => 0x7f + index))(
+      'should encode C1/DEL control U+%i as literal data',
+      function (code) {
+        const framework = new RobotFramework(SERVER_URL, SERVER_URL_PARTS, {});
+        expect(framework.getRobotVal(String.fromCharCode(code))).toBe(`\\x${code.toString(16)}`);
+      },
+    );
+
     it('should escape keys at every dictionary boundary', function () {
       const framework = new RobotFramework(SERVER_URL, SERVER_URL_PARTS, {'a=b': {'${None}': ' a=b '}});
       const code = framework.getCodeString(true);
