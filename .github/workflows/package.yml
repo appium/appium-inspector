@@ -56,13 +56,6 @@ jobs:
     name: Build Windows App
     needs: tag-version
     runs-on: windows-latest
-
-    env:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - uses: actions/checkout@v7.0.1
         with:
@@ -78,6 +71,11 @@ jobs:
         run: npm run build:electron
       - name: Package app
         run: npx electron-builder build --x64 --arm64 --publish always
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload built packages
         uses: actions/upload-artifact@v7.0.2
         with:
@@ -88,13 +86,6 @@ jobs:
     name: Build macOS App
     needs: tag-version
     runs-on: macos-latest
-
-    env:
-      CSC_IDENTITY_AUTO_DISCOVERY: true
-      CSC_LINK: ${{ secrets.CSC_LINK }}
-      CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - uses: actions/checkout@v7.0.1
         with:
@@ -110,6 +101,13 @@ jobs:
         run: npm run build:electron
       - name: Package app
         run: npx electron-builder build --x64 --arm64 --publish always
+        env:
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload built packages
         uses: actions/upload-artifact@v7.0.2
         with:
@@ -120,10 +118,6 @@ jobs:
     name: Build Linux App
     needs: tag-version
     runs-on: ubuntu-latest
-
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - uses: actions/checkout@v7.0.1
         with:
@@ -139,6 +133,8 @@ jobs:
         run: npm run build:electron
       - name: Package app
         run: npx electron-builder build --x64 --arm64 --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload built packages
         uses: actions/upload-artifact@v7.0.2
         with:
