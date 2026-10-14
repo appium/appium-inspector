@@ -9,7 +9,8 @@ export default class JavaFramework extends CommonClientFramework {
   getJavaVal(jsonVal) {
     if (Array.isArray(jsonVal)) {
       const convertedItems = jsonVal.map((item) => this.getJavaVal(item));
-      return `{${convertedItems.join(', ')}}`;
+      // The explicit array keeps empty and single-null lists safe from varargs ambiguity.
+      return `Arrays.asList(new Object[] {${convertedItems.join(', ')}})`;
     } else if (jsonVal !== null && typeof jsonVal === 'object') {
       const entries = Object.entries(jsonVal).filter(([, v]) => v !== undefined);
       // Map.entry and Map.ofEntries throw on null values, so maps holding nulls use a HashMap

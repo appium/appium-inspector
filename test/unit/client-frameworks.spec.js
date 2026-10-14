@@ -47,7 +47,7 @@ describe('client-frameworks', function () {
         const code = buildFramework(Framework).getCodeString(true);
         expect(code).toContain('.amend("appium:app", null)');
         expect(code).toContain(
-          '.amend("goog:chromeOptions", new HashMap<String, Object>() {{ put("args", {"--headless"}); put("mobile-emulation", null); }})',
+          '.amend("goog:chromeOptions", new HashMap<String, Object>() {{ put("args", Arrays.asList(new Object[] {"--headless"})); put("mobile-emulation", null); }})',
         );
         expect(code).toContain(
           'driver.executeScript("mobile: test", new HashMap<String, Object>() {{ put("elementId", null); put("some-key", "value"); }});',
@@ -69,7 +69,7 @@ describe('client-frameworks', function () {
       const code = buildFramework(DotNetNUnitFramework).getCodeString(true);
       expect(code).toContain('options.AddAdditionalAppiumOption("appium:app", null);');
       expect(code).toContain(
-        'options.AddAdditionalAppiumOption("goog:chromeOptions", new Dictionary<string, dynamic> {{"args", {"--headless"}}, {"mobile-emulation", null}});',
+        'options.AddAdditionalAppiumOption("goog:chromeOptions", new Dictionary<string, dynamic> {{"args", new object[] {"--headless"}}, {"mobile-emulation", null}});',
       );
       expect(code).toContain(
         '_driver.ExecuteScript("mobile: test", new Dictionary<string, dynamic> {{"elementId", null}, {"some-key", "value"}});',
@@ -104,6 +104,51 @@ describe('client-frameworks', function () {
     it('should keep Ruby identifier keys unquoted', function () {
       const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {'appium:options': {noReset: true}});
       expect(framework.getCodeString(true)).toContain('caps["appium:options"] = {noReset: true}');
+    });
+  });
+
+  describe('nested collection values', function () {
+    it('should render nullable Java lists in expression contexts for both JUnit variants', function () {
+      for (const Framework of [JavaJUnit4Framework, JavaJUnit5Framework]) {
+        const framework = new Framework(SERVER_URL, SERVER_URL_PARTS, {});
+        expect(framework.getJavaVal([null])).toBe('Arrays.asList(new Object[] {null})');
+        expect(framework.getJavaVal([])).toBe('Arrays.asList(new Object[] {})');
+        expect(framework.getJavaVal({items: [null, {nested: [true, 7]}]})).toBe(
+          'Map.ofEntries(Map.entry("items", Arrays.asList(new Object[] {null, Map.ofEntries(Map.entry("nested", Arrays.asList(new Object[] {true, 7})))})))',
+        );
+      }
+    });
+
+    it('should render heterogeneous C# arrays as nullable object array expressions', function () {
+      const framework = new DotNetNUnitFramework(SERVER_URL, SERVER_URL_PARTS, {});
+      expect(framework.getCSharpVal([null, {items: [true, 7]}])).toBe(
+        'new object[] {null, new Dictionary<string, dynamic> {{"items", new object[] {true, 7}}}}',
+      );
+      expect(framework.getCSharpVal([])).toBe('new object[] {}');
+    });
+
+    it('should define nested Robot capability lists and dictionaries before opening the session', function () {
+      const framework = new RobotFramework(SERVER_URL, SERVER_URL_PARTS, {
+        'goog:chromeOptions': {args: ['--headless', null], extra: {flag: true}, none: null},
+      });
+      const code = framework.getCodeString(true);
+      expect(code).toContain('${value0} =    Create List    --headless    ${None}');
+      expect(code).toContain('${value1} =    Create Dictionary    flag=${True}');
+      expect(code).toContain('${value2} =    Create Dictionary    args=${value0}    extra=${value1}    none=${None}');
+      expect(code).toContain('goog:chromeOptions=${value2}');
+      expect(code.indexOf('Create List')).toBeLessThan(code.indexOf('Open Application'));
+      expect(code).not.toContain('[object Object]');
+      expect(framework.getCodeString(true)).toBe(code);
+    });
+
+    it('should build nested Robot script arguments recursively without flattening typed values', function () {
+      const framework = new RobotFramework(SERVER_URL, SERVER_URL_PARTS, {});
+      const code = framework.codeFor_executeScriptWithArgs('mobile: test', [{nested: {items: [null, true, 7]}}]);
+      expect(code).toContain('${value0} =    Create List    ${None}    ${True}    ${7}');
+      expect(code).toContain('${value1} =    Create Dictionary    items=${value0}');
+      expect(code).toContain('&{scriptArgument} =    Create Dictionary    nested=${value1}');
+      expect(code).toContain('Execute Script    mobile: test    ${scriptArgument}');
+      expect(code).not.toContain('[object Object]');
     });
   });
 

@@ -10,7 +10,7 @@ export default class DotNetNUnitFramework extends CommonClientFramework {
   getCSharpVal(jsonVal) {
     if (Array.isArray(jsonVal)) {
       const convertedItems = jsonVal.map((item) => this.getCSharpVal(item));
-      return `{${convertedItems.join(', ')}}`;
+      return `new object[] {${convertedItems.join(', ')}}`;
     } else if (jsonVal !== null && typeof jsonVal === 'object') {
       const convertedItems = Object.entries(jsonVal).map(([k, v]) => `{${JSON.stringify(k)}, ${this.getCSharpVal(v)}}`);
       return `new Dictionary<string, dynamic> {${convertedItems.join(', ')}}`;
@@ -47,6 +47,7 @@ export default class DotNetNUnitFramework extends CommonClientFramework {
     return `// This sample code supports Appium .NET client >=5
 // https://github.com/appium/dotnet-client
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using NUnit.Framework;
 using OpenQA.Selenium;
