@@ -7,6 +7,33 @@ export default class RobotFramework extends CommonClientFramework {
   static refractorLang = 'robot';
   static refractorLib = refractorRobot;
 
+  // User strings must stay in one literal cell, not become Robot syntax or keywords.
+  escapeRobotString(value) {
+    if (value === '') {
+      return '${EMPTY}';
+    }
+    return Array.from(value, (character) => {
+      if (character === '\n') {
+        return '\\n';
+      }
+      if (character === '\r') {
+        return '\\r';
+      }
+      if (character === '\t') {
+        return '\\t';
+      }
+      if ('\\$@&%#=|'.includes(character)) {
+        return `\\${character}`;
+      }
+      const code = character.charCodeAt(0);
+      if (!/\s/.test(character) && code >= 0x20 && code !== 0x7f) {
+        return character;
+      }
+      const hex = code.toString(16).padStart(code <= 0xff ? 2 : 4, '0');
+      return `\\${code <= 0xff ? 'x' : 'u'}${hex}`;
+    }).join('');
+  }
+
   getRobotVal(jsonVal, variables = []) {
     if (jsonVal === null) {
       return '${None}';
@@ -20,17 +47,19 @@ export default class RobotFramework extends CommonClientFramework {
         ? jsonVal.map((value) => this.getRobotVal(value, variables))
         : Object.entries(jsonVal)
             .filter(([, value]) => value !== undefined)
-            .map(([key, value]) => `${key}=${this.getRobotVal(value, variables)}`);
+            .map(([key, value]) => `${this.escapeRobotString(key)}=${this.getRobotVal(value, variables)}`);
       const variable = `$\{value${variables.length}}`;
       variables.push(`${variable} =    Create ${isList ? 'List' : 'Dictionary'}    ${items.join('    ')}`);
       return variable;
     }
-    return jsonVal;
+    return typeof jsonVal === 'string' ? this.escapeRobotString(jsonVal) : jsonVal;
   }
 
   wrapWithBoilerplate(code) {
     const variables = [];
-    const capsParams = Object.entries(this.caps).map(([k, v]) => `${k}=${this.getRobotVal(v, variables)}`);
+    const capsParams = Object.entries(this.caps).map(
+      ([k, v]) => `${this.escapeRobotString(k)}=${this.getRobotVal(v, variables)}`,
+    );
     return `# This sample code supports Appium Robot client >=2
 # pip install robotframework-appiumlibrary
 # Then you can paste this into a file and simply run with Robot
@@ -111,7 +140,7 @@ Tap With Positions    $\{100}    $\{positions}`;
     // change the JSON object into a format accepted by Create Dictionary: a sequence of key=value
     const argsValuesStrings = Object.entries(jsonArg[0])
       .filter(([, v]) => v !== undefined)
-      .map(([k, v]) => `${k}=${this.getRobotVal(v, variables)}`);
+      .map(([k, v]) => `${this.escapeRobotString(k)}=${this.getRobotVal(v, variables)}`);
     variables.push(`&{scriptArgument} =    Create Dictionary    ${argsValuesStrings.join('    ')}`);
     return `${variables.join('\n')}
 ${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;

@@ -152,6 +152,31 @@ describe('client-frameworks', function () {
     });
   });
 
+  describe('Robot literal strings', function () {
+    it.each([
+      ['', '${EMPTY}'],
+      [' alpha    beta ', String.raw`\x20alpha\x20\x20\x20\x20beta\x20`],
+      ['line\r\n\tend', String.raw`line\r\n\tend`],
+      [String.raw`\new\path`, String.raw`\\new\\path`],
+      ['${None} @{items} &{dict} %{HOME}', String.raw`\${None}\x20\@{items}\x20\&{dict}\x20\%{HOME}`],
+      ['# comment|a=b', String.raw`\#\x20comment\|a\=b`],
+      ['ok\n    Fail    injected', String.raw`ok\n\x20\x20\x20\x20Fail\x20\x20\x20\x20injected`],
+    ])('should preserve literal string %j as one inert Robot cell', function (value, expected) {
+      const framework = new RobotFramework(SERVER_URL, SERVER_URL_PARTS, {});
+      expect(framework.getRobotVal(value)).toBe(expected);
+    });
+
+    it('should escape keys at every dictionary boundary', function () {
+      const framework = new RobotFramework(SERVER_URL, SERVER_URL_PARTS, {'a=b': {'${None}': ' a=b '}});
+      const code = framework.getCodeString(true);
+      expect(code).toContain(String.raw`Create Dictionary    \${None}=\x20a\=b\x20`);
+      expect(code).toContain('a\\=b=${value0}');
+      expect(framework.codeFor_executeScriptWithArgs('mobile: test', [{'a=b': {'': ''}}])).toContain(
+        'Create Dictionary    a\\=b=${value0}',
+      );
+    });
+  });
+
   describe('Ruby hash key escaping', function () {
     it('should keep identifier keys bare and single-quote other keys', function () {
       const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {});
