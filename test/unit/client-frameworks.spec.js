@@ -137,5 +137,24 @@ describe('client-frameworks', function () {
         String.raw`caps["goog:chromeOptions"] = {'a\'b': "v1", 'c\\d': "v2"}`,
       );
     });
+
+    it.each([
+      ['line\r\nkey', String.raw`"line\r\nkey"`],
+      ['line\rkey', String.raw`"line\rkey"`],
+      ['line\nkey', String.raw`"line\nkey"`],
+      ["line\r\n\\#{$key_evaluated = true}'", String.raw`"line\r\n\\\#{$key_evaluated = true}'"`],
+    ])('should preserve line-break bytes without enabling interpolation: %j', function (key, expected) {
+      const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {});
+      expect(framework.getRubyKey(key)).toBe(expected);
+    });
+
+    it('should preserve line-break keys inside nested Ruby hashes and arrays', function () {
+      const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {
+        'goog:chromeOptions': {nested: [{'line\r\n#{$key_evaluated = true}': null}]},
+      });
+      expect(framework.getCodeString(true)).toContain(
+        String.raw`caps["goog:chromeOptions"] = {nested: [{"line\r\n\#{$key_evaluated = true}": nil}]}`,
+      );
+    });
   });
 });

@@ -24,13 +24,17 @@ export default class RubyFramework extends CommonClientFramework {
   }
 
   // Keys are emitted as Ruby symbols. Plain identifiers stay bare (`foo:`), while
-  // any other key is single-quoted (`'foo-bar':`) so that `#{...}` stays literal
-  // and is never evaluated. Single-quoted Ruby strings only recognize `\\` and
-  // `\'` as escapes, so backslashes must be escaped before apostrophes.
+  // ordinary non-identifiers are single-quoted so interpolation stays literal.
+  // Ruby normalizes raw CRLF inside strings, so line-break keys need escaped
+  // double quotes, with every # escaped to keep interpolation disabled.
   getRubyKey(key) {
     if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) {
       return key;
     }
+    if (/[\r\n]/.test(key)) {
+      return JSON.stringify(key).replace(/#/g, '\\#');
+    }
+    // Single-quoted Ruby strings only escape backslashes and apostrophes.
     const escaped = key.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     return `'${escaped}'`;
   }
