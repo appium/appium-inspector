@@ -38,8 +38,8 @@ describe('client-frameworks', function () {
     it('should generate Ruby code using nil and quoted keys', function () {
       const code = buildFramework(RubyFramework).getCodeString(true);
       expect(code).toContain('caps["appium:app"] = nil');
-      expect(code).toContain('caps["goog:chromeOptions"] = {args: ["--headless"], "mobile-emulation": nil}');
-      expect(code).toContain(`driver.execute_script 'mobile: test', {elementId: nil, "some-key": "value"}`);
+      expect(code).toContain('caps["goog:chromeOptions"] = {args: ["--headless"], \'mobile-emulation\': nil}');
+      expect(code).toContain(`driver.execute_script 'mobile: test', {elementId: nil, 'some-key': "value"}`);
     });
 
     it('should generate Java code using null', function () {
@@ -97,13 +97,45 @@ describe('client-frameworks', function () {
         'goog:chromeOptions': {mobileEmulation: {'device-name': 'Pixel 7'}},
       });
       expect(framework.getCodeString(true)).toContain(
-        'caps["goog:chromeOptions"] = {mobileEmulation: {"device-name": "Pixel 7"}}',
+        `caps["goog:chromeOptions"] = {mobileEmulation: {'device-name': "Pixel 7"}}`,
       );
     });
 
     it('should keep Ruby identifier keys unquoted', function () {
       const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {'appium:options': {noReset: true}});
       expect(framework.getCodeString(true)).toContain('caps["appium:options"] = {noReset: true}');
+    });
+  });
+
+  describe('Ruby hash key escaping', function () {
+    it('should keep identifier keys bare and single-quote other keys', function () {
+      const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {});
+      expect(framework.getRubyKey('noReset')).toBe('noReset');
+      expect(framework.getRubyKey('_private')).toBe('_private');
+      // A double-quoted Ruby label would evaluate `#{...}` as interpolation.
+      expect(framework.getRubyKey('#{$key_evaluated = true}')).toBe(String.raw`'#{$key_evaluated = true}'`);
+      // Single-quoted Ruby strings only escape backslashes and apostrophes.
+      expect(framework.getRubyKey("a'b")).toBe(String.raw`'a\'b'`);
+      expect(framework.getRubyKey('c\\d')).toBe(String.raw`'c\\d'`);
+    });
+
+    it('should emit interpolation-looking keys as literal single-quoted symbols', function () {
+      const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {
+        'goog:chromeOptions': {'#{$key_evaluated = true}': 'value'},
+      });
+      const code = framework.getCodeString(true);
+      expect(code).toContain(String.raw`caps["goog:chromeOptions"] = {'#{$key_evaluated = true}': "value"}`);
+      // The removed JSON.stringify path emitted a double-quoted label, which Ruby evaluates.
+      expect(code).not.toContain('"#{$key_evaluated = true}":');
+    });
+
+    it('should escape apostrophes and backslashes in generated Ruby keys', function () {
+      const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {
+        'goog:chromeOptions': {"a'b": 'v1', 'c\\d': 'v2'},
+      });
+      expect(framework.getCodeString(true)).toContain(
+        String.raw`caps["goog:chromeOptions"] = {'a\'b': "v1", 'c\\d': "v2"}`,
+      );
     });
   });
 });

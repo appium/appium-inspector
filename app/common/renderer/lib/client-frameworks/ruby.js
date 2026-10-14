@@ -23,9 +23,16 @@ export default class RubyFramework extends CommonClientFramework {
     return JSON.stringify(jsonVal);
   }
 
-  // Keys that are not plain identifiers must be quoted to remain valid symbols
+  // Keys are emitted as Ruby symbols. Plain identifiers stay bare (`foo:`), while
+  // any other key is single-quoted (`'foo-bar':`) so that `#{...}` stays literal
+  // and is never evaluated. Single-quoted Ruby strings only recognize `\\` and
+  // `\'` as escapes, so backslashes must be escaped before apostrophes.
   getRubyKey(key) {
-    return /^[A-Za-z_][A-Za-z0-9_]*$/.test(key) ? key : JSON.stringify(key);
+    if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) {
+      return key;
+    }
+    const escaped = key.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    return `'${escaped}'`;
   }
 
   wrapWithBoilerplate(code) {
