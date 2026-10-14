@@ -1,9 +1,10 @@
 import {IconPlus, IconTrash} from '@tabler/icons-react';
-import {Button, Checkbox, Col, Form, Input, Modal, Row, Select, Space, Splitter, Tooltip} from 'antd';
+import {AutoComplete, Button, Checkbox, Col, Form, Input, Modal, Row, Select, Space, Splitter, Tooltip} from 'antd';
 import {useEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {CAPABILITY_TYPES} from '../../../constants/session-builder.js';
+import {getCapabilitySuggestions} from '../../../utils/capability-suggestions.js';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
 import CapabilityControl from './CapabilityControl.jsx';
 
@@ -50,6 +51,22 @@ const handleSetType = (setCapabilityParam, cap, typeVal) => {
   setCapabilityParam(cap.id, 'value', translatedValue);
 };
 
+// Callback when a suggested capability name is selected
+const handleSelectSuggestion = (setCapabilityParam, cap, suggestion) => {
+  setCapabilityParam(cap.id, 'name', suggestion.name);
+  // Only adjust the type if no value has been entered yet
+  if ((cap.value === undefined || cap.value === '') && cap.type !== suggestion.type) {
+    handleSetType(setCapabilityParam, cap, suggestion.type);
+  }
+};
+
+const getSuggestionOptions = (cap, caps) =>
+  getCapabilitySuggestions(cap.name, caps, cap.id).map((suggestion) => ({
+    value: suggestion.name,
+    label: suggestion.name,
+    suggestion,
+  }));
+
 const CapabilityEditor = (props) => {
   const {
     isNarrow,
@@ -95,15 +112,22 @@ const CapabilityEditor = (props) => {
               <Col span={7}>
                 <Form.Item>
                   <Tooltip title={whitespaceMsg(cap.name, t)} open={whitespaces.test(cap.name)}>
-                    <Input
+                    <AutoComplete
                       disabled={isEditingDesiredCaps}
-                      id={`desiredCapabilityName_${cap.id}`}
-                      placeholder={t('Name')}
                       value={cap.name}
-                      onChange={(e) => setCapabilityParam(cap.id, 'name', e.target.value)}
-                      ref={index === caps.length - 1 ? latestCapFieldRef : null}
-                      className={styles.capsBoxFont}
-                    />
+                      options={getSuggestionOptions(cap, caps)}
+                      onSelect={(_value, option) => handleSelectSuggestion(setCapabilityParam, cap, option.suggestion)}
+                      popupMatchSelectWidth={false}
+                      classNames={{popup: {root: styles.capsBoxFont}}}
+                    >
+                      <Input
+                        id={`desiredCapabilityName_${cap.id}`}
+                        placeholder={t('Name')}
+                        onChange={(e) => setCapabilityParam(cap.id, 'name', e.target.value)}
+                        ref={index === caps.length - 1 ? latestCapFieldRef : null}
+                        className={styles.capsBoxFont}
+                      />
+                    </AutoComplete>
                   </Tooltip>
                 </Form.Item>
               </Col>

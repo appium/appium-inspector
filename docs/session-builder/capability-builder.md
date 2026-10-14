@@ -23,6 +23,13 @@ fields for specifying each capability in parts: its name, value type, and the va
 Changing the name or value of any capability will automatically adjust the contents of
 [the JSON structure](#capability-json-structure) on the right side of the Session Builder.
 
+While typing a capability name, matching names of commonly used capabilities are suggested. The
+typed text can appear anywhere in the name, and the `appium:` prefix is optional. If the
+`platformName` or `appium:automationName` capability is already set, only generic capabilities and
+those for the matching driver (UiAutomator2, Espresso or XCUITest) are suggested, with the latter
+listed first. Selecting a suggestion fills in the full name, and if no value has been entered yet,
+also selects the matching value type. Any other capability name can still be typed in manually.
+
 There are 4 options for the value type:
 
 - text
