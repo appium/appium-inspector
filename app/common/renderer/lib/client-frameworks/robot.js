@@ -2,6 +2,14 @@ import refractorRobot from 'refractor/robotframework';
 
 import CommonClientFramework from './common.js';
 
+// Characters with a short Robot escape: common whitespace and Robot syntax characters
+const ROBOT_ESCAPES = new Map([
+  ['\n', '\\n'],
+  ['\r', '\\r'],
+  ['\t', '\\t'],
+  ...Array.from('\\$@&%#=|', (character) => [character, `\\${character}`]),
+]);
+
 export default class RobotFramework extends CommonClientFramework {
   static readableName = 'Robot Framework';
   static refractorLang = 'robot';
@@ -13,17 +21,8 @@ export default class RobotFramework extends CommonClientFramework {
       return '${EMPTY}';
     }
     return Array.from(value, (character) => {
-      if (character === '\n') {
-        return '\\n';
-      }
-      if (character === '\r') {
-        return '\\r';
-      }
-      if (character === '\t') {
-        return '\\t';
-      }
-      if ('\\$@&%#=|'.includes(character)) {
-        return `\\${character}`;
+      if (ROBOT_ESCAPES.has(character)) {
+        return ROBOT_ESCAPES.get(character);
       }
       const code = character.charCodeAt(0);
       const isControl = code < 0x20 || (code >= 0x7f && code <= 0x9f);
