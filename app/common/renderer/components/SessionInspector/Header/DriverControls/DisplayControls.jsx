@@ -7,10 +7,9 @@ import {BUTTON} from '../../../../constants/antd-types.js';
 import {COMMAND_EXECUTE_SCRIPT, COMMAND_UPDATE_SETTINGS} from '../../../../constants/commands.js';
 
 /**
- * Button + dropdown to switch the available display in UiAutomator2 sessions.
- * Requires UiAutomator2 6.6.0 or later + Android 11 or later
+ * Button + dropdown to switch the available display (UiAutomator2 driver 6.6.0+ only)
  */
-const UiA2DisplayControls = ({sessionSettings, applyClientMethod}) => {
+const DisplayControls = ({sessionSettings, applyClientMethod}) => {
   const currentDisplayId = sessionSettings.currentDisplayId;
 
   const {t} = useTranslation();
@@ -91,4 +90,4 @@ const UiA2DisplayControls = ({sessionSettings, applyClientMethod}) => {
   );
 };
 
-export default UiA2DisplayControls;
+export default DisplayControls;

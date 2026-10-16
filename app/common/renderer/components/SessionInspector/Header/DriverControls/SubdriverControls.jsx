@@ -7,9 +7,9 @@ import {COMMAND_UPDATE_SETTINGS} from '../../../../constants/commands.js';
 import {DRIVERS} from '../../../../constants/common.js';
 
 /**
- * Controls specific to Espresso driver: switch subdriver
+ * Controls for switching the subdriver (Espresso driver only)
  */
-const EspressoControls = ({sessionSettings, applyClientMethod}) => {
+const SubdriverControls = ({sessionSettings, applyClientMethod}) => {
   /**
    * The 'driver' setting is always populated,
    * and is always set to exactly 'espresso' or 'compose'
@@ -58,4 +58,4 @@ const EspressoControls = ({sessionSettings, applyClientMethod}) => {
   );
 };
 
-export default EspressoControls;
+export default SubdriverControls;

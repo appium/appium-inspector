@@ -8,10 +8,9 @@ import {COMMAND_UPDATE_SETTINGS} from '../../../../constants/commands.js';
 import {UIA2_WINDOW_STRATEGIES} from '../../../../constants/driver-specific.js';
 
 /**
- * Button + dropdown to select the window retrieval strategy in UiAutomator2 sessions.
- * Requires UiAutomator2 2.25.1 or later
+ * Button + dropdown to select the window retrieval strategy (UiAutomator2 driver 2.25.1+ only)
  */
-const UiA2WindowControls = ({sessionSettings, applyClientMethod}) => {
+const ActiveWindowControls = ({sessionSettings, applyClientMethod}) => {
   const areMultiWindowsEnabled = sessionSettings.enableMultiWindows;
   const isTopmostWindowUsed = sessionSettings.enableTopmostWindowFromActivePackage;
 
@@ -102,4 +101,4 @@ const UiA2WindowControls = ({sessionSettings, applyClientMethod}) => {
   );
 };
 
-export default UiA2WindowControls;
+export default ActiveWindowControls;
