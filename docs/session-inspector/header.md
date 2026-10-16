@@ -38,7 +38,7 @@ for that driver.
 !!! note
 
     This functionality is only supported for the UiAutomator2 driver `6.6.0`+, on devices
-    running Android 11 or newer.
+    running Android 11 or newer, as well as the XCUITest driver on iOS devices.
 
 ![Multi-Display Button](./assets/images/header/multi-display-button.png)
 
@@ -50,8 +50,8 @@ created, listing all discovered displays.
 
 Selecting a different display in the dropdown will automatically switch the screenshot and app
 source to those of the new display. Most screenshot and element interactions will work as normal,
-though some functionality will still only target the default display (such as device system buttons
-and MJPEG screenshot stream).
+though depending on the driver, some functionality may still only target the default display (such
+as device system buttons and MJPEG screenshot stream).
 
 Pressing the multi-display button while multi-display mode is active will switch to the default
 display and hide the dropdown.
