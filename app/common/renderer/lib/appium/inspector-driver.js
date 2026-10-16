@@ -498,7 +498,11 @@ export default class InspectorDriver {
           selector: isLandscape ? IOS_SAFARI_LANDSCAPE_TABBAR_SELECTOR : IOS_SAFARI_PORTRAIT_TOPBAR_SELECTOR,
         });
         if (topBar.el) {
-          webviewTopOffset = (await topBar.el.getElementRect()).height;
+          const topBarRect = await topBar.el.getElementRect();
+          // iPhone Duo portrait mode moves this top bar to the right side, in which case no top offset is needed
+          if (topBarRect.width > topBarRect.height) {
+            webviewTopOffset = topBarRect.height;
+          }
         }
         if (isLandscape) {
           // Landscape mode also has side offsets
