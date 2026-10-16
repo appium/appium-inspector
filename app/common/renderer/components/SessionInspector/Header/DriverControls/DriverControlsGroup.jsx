@@ -1,23 +1,28 @@
+import {Space} from 'antd';
+
 import {DRIVERS} from '../../../../constants/common.js';
-import EspressoControls from './EspressoControls.jsx';
-import UiAutomator2Controls from './UiAutomator2Controls.jsx';
+import ActiveWindowControls from './ActiveWindowControls.jsx';
+import DisplayControls from './DisplayControls.jsx';
+import SubdriverControls from './SubdriverControls.jsx';
+
+const DISPLAY_CONTROLS_MIN_ANDROID_VER = 11;
 
 /**
  * Controls specific to the driver (automationName)
  */
 const DriverControlsGroup = ({featureCaps, sessionSettings, applyClientMethod}) => (
-  <>
+  <Space.Compact>
+    {featureCaps.automationName === DRIVERS.UIAUTOMATOR2 &&
+      featureCaps.platformVersion >= DISPLAY_CONTROLS_MIN_ANDROID_VER && (
+        <DisplayControls sessionSettings={sessionSettings} applyClientMethod={applyClientMethod} />
+      )}
     {featureCaps.automationName === DRIVERS.UIAUTOMATOR2 && (
-      <UiAutomator2Controls
-        featureCaps={featureCaps}
-        sessionSettings={sessionSettings}
-        applyClientMethod={applyClientMethod}
-      />
+      <ActiveWindowControls sessionSettings={sessionSettings} applyClientMethod={applyClientMethod} />
     )}
     {featureCaps.automationName === DRIVERS.ESPRESSO && (
-      <EspressoControls sessionSettings={sessionSettings} applyClientMethod={applyClientMethod} />
+      <SubdriverControls sessionSettings={sessionSettings} applyClientMethod={applyClientMethod} />
     )}
-  </>
+  </Space.Compact>
 );
 
 export default DriverControlsGroup;
