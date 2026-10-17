@@ -185,7 +185,7 @@ driver.quit`;
   }
 
   codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
-    return `logs = driver.logs.get :${this.getRubyString(logType)}`;
+    return `logs = driver.logs.get :${this.getRubyString(logType.toLowerCase())}`;
   }
 
   // Context

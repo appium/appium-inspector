@@ -94,6 +94,13 @@ describe('client-frameworks', function () {
       expect(code).toContain('Create Dictionary    elementId=${None}    some-key=value');
     });
 
+    it('should pass a top-level null Robot script argument as ${None}', function () {
+      const framework = new RobotFramework(SERVER_URL, SERVER_URL_PARTS, {});
+      expect(framework.codeFor_executeScriptWithArgs('mobile: test', [null])).toBe(
+        'Execute Script    mobile: test    ${None}',
+      );
+    });
+
     it('should generate JavaScript code using null', function () {
       for (const Framework of [JsWdIoFramework, JsOxygenFramework]) {
         const code = buildFramework(Framework).getCodeString(true);
@@ -172,12 +179,20 @@ describe('client-frameworks', function () {
       expect(code).toContain('${value0} =    Create List    ${None}    ${True}    ${7}');
       expect(code).toContain('${value1} =    Create Dictionary    items=${value0}');
       expect(code).toContain('&{scriptArgument} =    Create Dictionary    nested=${value1}');
-      expect(code).toContain('Execute Script    mobile:\\x20test    ${scriptArgument}');
+      expect(code).toContain('Execute Script    mobile: test    ${scriptArgument}');
       expect(code).not.toContain('[object Object]');
     });
   });
 
   describe('Robot literal strings', function () {
+    it('should keep a single interior space in a script command', function () {
+      const framework = new RobotFramework(SERVER_URL, SERVER_URL_PARTS, {});
+      expect(framework.codeFor_executeScriptWithArgs('mobile: scroll', [{direction: 'down'}])).toBe(
+        '&{scriptArgument} =    Create Dictionary    direction=down\n' +
+          'Execute Script    mobile: scroll    ${scriptArgument}',
+      );
+    });
+
     it('should escape script commands as one literal Robot cell', function () {
       const framework = new RobotFramework(SERVER_URL, SERVER_URL_PARTS, {});
       const code = framework.codeFor_executeScriptWithArgs('${command}    #\n\r\t\x7f', [{key: 'value'}]);
@@ -190,11 +205,22 @@ describe('client-frameworks', function () {
 
     it.each([
       ['', '${EMPTY}'],
+      ['mobile: scroll', 'mobile: scroll'],
+      ['alpha  beta', String.raw`alpha\x20\x20beta`],
+      [' alpha', String.raw`\x20alpha`],
+      ['alpha ', String.raw`alpha\x20`],
+      ['alpha\tbeta', String.raw`alpha\tbeta`],
+      ['alpha \tbeta', String.raw`alpha\x20\tbeta`],
+      ['alpha\t beta', String.raw`alpha\t\x20beta`],
+      ['alpha \n beta', String.raw`alpha\x20\n\x20beta`],
+      ['alpha \u00a0 beta', String.raw`alpha\x20\xa0\x20beta`],
+      ['alpha\x00beta', String.raw`alpha\x00beta`],
+      ['😀 beta', '😀 beta'],
       [' alpha    beta ', String.raw`\x20alpha\x20\x20\x20\x20beta\x20`],
       ['line\r\n\tend', String.raw`line\r\n\tend`],
       [String.raw`\new\path`, String.raw`\\new\\path`],
-      ['${None} @{items} &{dict} %{HOME}', String.raw`\${None}\x20\@{items}\x20\&{dict}\x20\%{HOME}`],
-      ['# comment|a=b', String.raw`\#\x20comment\|a\=b`],
+      ['${None} @{items} &{dict} %{HOME}', String.raw`\${None} \@{items} \&{dict} \%{HOME}`],
+      ['# comment|a=b', String.raw`\# comment\|a\=b`],
       ['ok\n    Fail    injected', String.raw`ok\n\x20\x20\x20\x20Fail\x20\x20\x20\x20injected`],
     ])('should preserve literal string %j as one inert Robot cell', function (value, expected) {
       const framework = new RobotFramework(SERVER_URL, SERVER_URL_PARTS, {});
@@ -340,7 +366,7 @@ describe('client-frameworks', function () {
     });
 
     it.each([
-      ['codeFor_getLogs', 'server log', "logs = driver.logs.get :'server log'"],
+      ['codeFor_getLogs', 'Server Log', "logs = driver.logs.get :'server log'"],
       ['codeFor_setOrientation', 'LAND SCAPE', "driver.rotation = :'land scape'"],
     ])('should quote user strings as symbols in %s', function (method, value, expected) {
       const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {});

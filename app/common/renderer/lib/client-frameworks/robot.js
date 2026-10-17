@@ -20,18 +20,31 @@ export default class RobotFramework extends CommonClientFramework {
     if (value === '') {
       return '${EMPTY}';
     }
-    return Array.from(value, (character) => {
-      if (ROBOT_ESCAPES.has(character)) {
-        return ROBOT_ESCAPES.get(character);
-      }
-      const code = character.charCodeAt(0);
-      const isControl = code < 0x20 || (code >= 0x7f && code <= 0x9f);
-      if (!/\s/.test(character) && !isControl) {
-        return character;
-      }
-      const hex = code.toString(16).padStart(code <= 0xff ? 2 : 4, '0');
-      return `\\${code <= 0xff ? 'x' : 'u'}${hex}`;
-    }).join('');
+    const characters = Array.from(value);
+    return characters
+      .map((character, index) => {
+        if (ROBOT_ESCAPES.has(character)) {
+          return ROBOT_ESCAPES.get(character);
+        }
+        // A single interior space is legal in a space-separated Robot cell.
+        if (
+          character === ' ' &&
+          index > 0 &&
+          index < characters.length - 1 &&
+          !/\s/.test(characters[index - 1]) &&
+          !/\s/.test(characters[index + 1])
+        ) {
+          return character;
+        }
+        const code = character.charCodeAt(0);
+        const isControl = code < 0x20 || (code >= 0x7f && code <= 0x9f);
+        if (!/\s/.test(character) && !isControl) {
+          return character;
+        }
+        const hex = code.toString(16).padStart(code <= 0xff ? 2 : 4, '0');
+        return `\\${code <= 0xff ? 'x' : 'u'}${hex}`;
+      })
+      .join('');
   }
 
   getRobotVal(jsonVal, variables = []) {
@@ -136,6 +149,9 @@ Tap With Positions    $\{100}    $\{positions}`;
   }
 
   codeFor_executeScriptWithArgs(scriptCmd, jsonArg, varAssignment = '') {
+    if (jsonArg[0] === null) {
+      return `${varAssignment}Execute Script    ${this.escapeRobotString(scriptCmd)}    $\{None}`;
+    }
     const variables = [];
     // change the JSON object into a format accepted by Create Dictionary: a sequence of key=value
     const argsValuesStrings = Object.entries(jsonArg[0])
