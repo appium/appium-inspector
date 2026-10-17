@@ -9,11 +9,16 @@ export default class JavaFramework extends CommonClientFramework {
   getJavaVal(jsonVal) {
     if (Array.isArray(jsonVal)) {
       const convertedItems = jsonVal.map((item) => this.getJavaVal(item));
-      return `{${convertedItems.join(', ')}}`;
-    } else if (typeof jsonVal === 'object') {
-      const convertedItems = Object.entries(jsonVal)
-        .filter(([, v]) => v !== undefined)
-        .map(([k, v]) => `Map.entry(${JSON.stringify(k)}, ${this.getJavaVal(v)})`);
+      // The explicit array keeps empty and single-null lists safe from varargs ambiguity.
+      return `Arrays.asList(new Object[] {${convertedItems.join(', ')}})`;
+    } else if (jsonVal !== null && typeof jsonVal === 'object') {
+      const entries = Object.entries(jsonVal).filter(([, v]) => v !== undefined);
+      // Map.entry and Map.ofEntries throw on null values, so maps holding nulls use a HashMap
+      if (entries.some(([, v]) => v === null)) {
+        const putCalls = entries.map(([k, v]) => `put(${JSON.stringify(k)}, ${this.getJavaVal(v)});`);
+        return `new HashMap<String, Object>() {{ ${putCalls.join(' ')} }}`;
+      }
+      const convertedItems = entries.map(([k, v]) => `Map.entry(${JSON.stringify(k)}, ${this.getJavaVal(v)})`);
       return `Map.ofEntries(${convertedItems.join(', ')})`;
     }
     return JSON.stringify(jsonVal);
@@ -141,7 +146,8 @@ driver.perform(Arrays.asList(swipe));
 
   codeFor_executeScriptWithArgs(scriptCmd, jsonArg) {
     // Java dictionary needs to use the Map.ofEntries(Map.entry() ...) syntax
-    return `driver.executeScript("${scriptCmd}", ${this.getJavaVal(jsonArg[0])});`;
+    const scriptArgVal = jsonArg[0] === null ? '(Object) null' : this.getJavaVal(jsonArg[0]);
+    return `driver.executeScript("${scriptCmd}", ${scriptArgVal});`;
   }
 
   codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {

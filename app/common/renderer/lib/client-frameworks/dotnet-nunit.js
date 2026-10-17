@@ -10,8 +10,8 @@ export default class DotNetNUnitFramework extends CommonClientFramework {
   getCSharpVal(jsonVal) {
     if (Array.isArray(jsonVal)) {
       const convertedItems = jsonVal.map((item) => this.getCSharpVal(item));
-      return `{${convertedItems.join(', ')}}`;
-    } else if (typeof jsonVal === 'object') {
+      return `new object[] {${convertedItems.join(', ')}}`;
+    } else if (jsonVal !== null && typeof jsonVal === 'object') {
       const convertedItems = Object.entries(jsonVal).map(([k, v]) => `{${JSON.stringify(k)}, ${this.getCSharpVal(v)}}`);
       return `new Dictionary<string, dynamic> {${convertedItems.join(', ')}}`;
     }
@@ -47,6 +47,7 @@ export default class DotNetNUnitFramework extends CommonClientFramework {
     return `// This sample code supports Appium .NET client >=5
 // https://github.com/appium/dotnet-client
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using NUnit.Framework;
 using OpenQA.Selenium;
@@ -162,7 +163,11 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
 
   codeFor_executeScriptWithArgs(scriptCmd, jsonArg) {
     // C# Dictionary accepts a sequence of tuples
-    return `_driver.ExecuteScript(${JSON.stringify(scriptCmd)}, ${this.getCSharpVal(jsonArg[0])});`;
+    const scriptArg = jsonArg[0];
+    const scriptArgVal = this.getCSharpVal(scriptArg);
+    const wrappedScriptArgVal =
+      scriptArg === null || Array.isArray(scriptArg) ? `(object) ${scriptArgVal}` : scriptArgVal;
+    return `_driver.ExecuteScript(${JSON.stringify(scriptCmd)}, ${wrappedScriptArgVal});`;
   }
 
   codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {

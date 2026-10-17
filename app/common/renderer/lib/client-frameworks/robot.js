@@ -2,22 +2,77 @@ import refractorRobot from 'refractor/robotframework';
 
 import CommonClientFramework from './common.js';
 
+// Characters with a short Robot escape: common whitespace and Robot syntax characters
+const ROBOT_ESCAPES = new Map([
+  ['\n', '\\n'],
+  ['\r', '\\r'],
+  ['\t', '\\t'],
+  ...Array.from('\\$@&%#=|', (character) => [character, `\\${character}`]),
+]);
+
 export default class RobotFramework extends CommonClientFramework {
   static readableName = 'Robot Framework';
   static refractorLang = 'robot';
   static refractorLib = refractorRobot;
 
-  getRobotVal(jsonVal) {
-    if (typeof jsonVal === 'boolean') {
+  // User strings must stay in one literal cell, not become Robot syntax or keywords.
+  escapeRobotString(value) {
+    if (value === '') {
+      return '${EMPTY}';
+    }
+    const characters = Array.from(value);
+    return characters
+      .map((character, index) => {
+        if (ROBOT_ESCAPES.has(character)) {
+          return ROBOT_ESCAPES.get(character);
+        }
+        // A single interior space is legal in a space-separated Robot cell.
+        if (
+          character === ' ' &&
+          index > 0 &&
+          index < characters.length - 1 &&
+          !/\s/.test(characters[index - 1]) &&
+          !/\s/.test(characters[index + 1])
+        ) {
+          return character;
+        }
+        const code = character.charCodeAt(0);
+        const isControl = code < 0x20 || (code >= 0x7f && code <= 0x9f);
+        if (!/\s/.test(character) && !isControl) {
+          return character;
+        }
+        const hex = code.toString(16).padStart(code <= 0xff ? 2 : 4, '0');
+        return `\\${code <= 0xff ? 'x' : 'u'}${hex}`;
+      })
+      .join('');
+  }
+
+  getRobotVal(jsonVal, variables = []) {
+    if (jsonVal === null) {
+      return '${None}';
+    } else if (typeof jsonVal === 'boolean') {
       return jsonVal ? '${True}' : '${False}';
     } else if (typeof jsonVal === 'number') {
       return `$\{${jsonVal}}`;
+    } else if (typeof jsonVal === 'object') {
+      const isList = Array.isArray(jsonVal);
+      const items = isList
+        ? jsonVal.map((value) => this.getRobotVal(value, variables))
+        : Object.entries(jsonVal)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => `${this.escapeRobotString(key)}=${this.getRobotVal(value, variables)}`);
+      const variable = `$\{value${variables.length}}`;
+      variables.push(`${variable} =    Create ${isList ? 'List' : 'Dictionary'}    ${items.join('    ')}`);
+      return variable;
     }
-    return jsonVal;
+    return typeof jsonVal === 'string' ? this.escapeRobotString(jsonVal) : jsonVal;
   }
 
   wrapWithBoilerplate(code) {
-    const capsParams = Object.entries(this.caps).map(([k, v]) => `${k}=${this.getRobotVal(v)}`);
+    const variables = [];
+    const capsParams = Object.entries(this.caps).map(
+      ([k, v]) => `${this.escapeRobotString(k)}=${this.getRobotVal(v, variables)}`,
+    );
     return `# This sample code supports Appium Robot client >=2
 # pip install robotframework-appiumlibrary
 # Then you can paste this into a file and simply run with Robot
@@ -33,6 +88,7 @@ Test Teardown     Close Application
 
 *** Test Cases ***
 Test Case Name
+${this.indent(variables.join('\n'), 4)}
     Open Application    ${this.serverUrl}    ${capsParams.join('    ')}
 ${this.indent(code, 4)}
 `;
@@ -93,12 +149,17 @@ Tap With Positions    $\{100}    $\{positions}`;
   }
 
   codeFor_executeScriptWithArgs(scriptCmd, jsonArg, varAssignment = '') {
+    if (jsonArg[0] === null) {
+      return `${varAssignment}Execute Script    ${this.escapeRobotString(scriptCmd)}    $\{None}`;
+    }
+    const variables = [];
     // change the JSON object into a format accepted by Create Dictionary: a sequence of key=value
     const argsValuesStrings = Object.entries(jsonArg[0])
       .filter(([, v]) => v !== undefined)
-      .map(([k, v]) => `${k}=${this.getRobotVal(v)}`);
-    return `&{scriptArgument} =    Create Dictionary    ${argsValuesStrings.join('    ')}
-${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
+      .map(([k, v]) => `${this.escapeRobotString(k)}=${this.getRobotVal(v, variables)}`);
+    variables.push(`&{scriptArgument} =    Create Dictionary    ${argsValuesStrings.join('    ')}`);
+    return `${variables.join('\n')}
+${varAssignment}Execute Script    ${this.escapeRobotString(scriptCmd)}    $\{scriptArgument}`;
   }
 
   codeFor_updateSettings() {
