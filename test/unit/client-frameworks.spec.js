@@ -37,9 +37,9 @@ describe('client-frameworks', function () {
 
     it('should generate Ruby code using nil and quoted keys', function () {
       const code = buildFramework(RubyFramework).getCodeString(true);
-      expect(code).toContain('caps["appium:app"] = nil');
-      expect(code).toContain('caps["goog:chromeOptions"] = {args: ["--headless"], \'mobile-emulation\': nil}');
-      expect(code).toContain(`driver.execute_script 'mobile: test', {elementId: nil, 'some-key': "value"}`);
+      expect(code).toContain("caps['appium:app'] = nil");
+      expect(code).toContain("caps['goog:chromeOptions'] = {args: ['--headless'], 'mobile-emulation': nil}");
+      expect(code).toContain(`driver.execute_script 'mobile: test', {elementId: nil, 'some-key': 'value'}`);
     });
 
     it('should generate Java code using null', function () {
@@ -97,13 +97,13 @@ describe('client-frameworks', function () {
         'goog:chromeOptions': {mobileEmulation: {'device-name': 'Pixel 7'}},
       });
       expect(framework.getCodeString(true)).toContain(
-        `caps["goog:chromeOptions"] = {mobileEmulation: {'device-name': "Pixel 7"}}`,
+        `caps['goog:chromeOptions'] = {mobileEmulation: {'device-name': 'Pixel 7'}}`,
       );
     });
 
     it('should keep Ruby identifier keys unquoted', function () {
       const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {'appium:options': {noReset: true}});
-      expect(framework.getCodeString(true)).toContain('caps["appium:options"] = {noReset: true}');
+      expect(framework.getCodeString(true)).toContain("caps['appium:options'] = {noReset: true}");
     });
   });
 
@@ -215,7 +215,7 @@ describe('client-frameworks', function () {
         'goog:chromeOptions': {'#{$key_evaluated = true}': 'value'},
       });
       const code = framework.getCodeString(true);
-      expect(code).toContain(String.raw`caps["goog:chromeOptions"] = {'#{$key_evaluated = true}': "value"}`);
+      expect(code).toContain(String.raw`caps['goog:chromeOptions'] = {'#{$key_evaluated = true}': 'value'}`);
       // The removed JSON.stringify path emitted a double-quoted label, which Ruby evaluates.
       expect(code).not.toContain('"#{$key_evaluated = true}":');
     });
@@ -225,7 +225,7 @@ describe('client-frameworks', function () {
         'goog:chromeOptions': {"a'b": 'v1', 'c\\d': 'v2'},
       });
       expect(framework.getCodeString(true)).toContain(
-        String.raw`caps["goog:chromeOptions"] = {'a\'b': "v1", 'c\\d': "v2"}`,
+        String.raw`caps['goog:chromeOptions'] = {'a\'b': 'v1', 'c\\d': 'v2'}`,
       );
     });
 
@@ -244,7 +244,80 @@ describe('client-frameworks', function () {
         'goog:chromeOptions': {nested: [{'line\r\n#{$key_evaluated = true}': null}]},
       });
       expect(framework.getCodeString(true)).toContain(
-        String.raw`caps["goog:chromeOptions"] = {nested: [{"line\r\n\#{$key_evaluated = true}": nil}]}`,
+        String.raw`caps['goog:chromeOptions'] = {nested: [{"line\r\n\#{$key_evaluated = true}": nil}]}`,
+      );
+    });
+  });
+
+  describe('Ruby literal strings', function () {
+    it.each([
+      ['', "''"],
+      ['#{system("id")}', String.raw`'#{system("id")}'`],
+      ['#@x #$x', "'#@x #$x'"],
+      ["a'b", String.raw`'a\'b'`],
+      [String.raw`c\d`, String.raw`'c\\d'`],
+      ['line\n#{x}', String.raw`"line\n\#{x}"`],
+      ['line\r#@x #$x', String.raw`"line\r\#@x \#$x"`],
+      ["line\r\n\\#{x}'", String.raw`"line\r\n\\\#{x}'"`],
+    ])('should preserve string value %j without interpolation', function (value, expected) {
+      const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {value});
+      expect(framework.getRubyVal(value)).toBe(expected);
+      expect(framework.getCodeString(true)).toContain(`caps['value'] = ${expected}`);
+    });
+
+    it('should keep top-level capability keys and nested values literal', function () {
+      const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {
+        'a#{x}': '#{system("id")}',
+        'line\n#{x}': {items: ["a'b", 'line\n#{x}', 7, true, false, null]},
+      });
+      const code = framework.getCodeString(true);
+      expect(code).toContain(String.raw`caps['a#{x}'] = '#{system("id")}'`);
+      expect(code).toContain(String.raw`caps["line\n\#{x}"] = {items: ['a\'b', "line\n\#{x}", 7, true, false, nil]}`);
+    });
+
+    it.each([
+      ['codeFor_elementSendKeys', ['el1', 0], 'el1[0].send_keys'],
+      ['codeFor_executeScriptNoArgs', [], 'driver.execute_script'],
+      ['codeFor_switchAppiumContext', [null, null], 'driver.context ='],
+      ['codeFor_installApp', [null, null], 'driver.install_app'],
+      ['codeFor_isAppInstalled', [null, null], 'is_app_installed = driver.app_installed?'],
+      ['codeFor_activateApp', [null, null], 'driver.activate_app'],
+      ['codeFor_terminateApp', [null, null], 'driver.terminate_app'],
+      ['codeFor_removeApp', [null, null], 'driver.remove_app'],
+      ['codeFor_queryAppState', [null, null], 'app_state = driver.query_app_state'],
+      ['codeFor_pullFile', [null, null], 'driver.pull_file'],
+      ['codeFor_pullFolder', [null, null], 'driver.pull_folder'],
+      ['codeFor_navigateTo', [null, null], 'driver.get'],
+      ['codeFor_switchToWindow', [null, null], 'driver.switch_to.window'],
+    ])('should escape user strings in %s', function (method, args, prefix) {
+      const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {});
+      const value = "a'\\#{x} #@x #$x";
+      expect(framework[method](...args, value)).toBe(`${prefix} ${String.raw`'a\'\\#{x} #@x #$x'`}`);
+    });
+
+    it('should escape locators, script arguments, settings and both file arguments', function () {
+      const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {});
+      expect(framework.codeFor_findAndAssign('id', "a'b\\#{x}", 'el1', false)).toBe(
+        String.raw`el1 = driver.find_element :id, 'a\'b\\#{x}'`,
+      );
+      expect(framework.codeFor_findAndAssign('id', 'line\n#{x}', 'els', true)).toBe(
+        String.raw`els = driver.find_elements :id, "line\n\#{x}"`,
+      );
+      expect(framework.codeFor_executeScriptWithArgs("a'b", ['#{system("id")}'])).toBe(
+        String.raw`driver.execute_script 'a\'b', '#{system("id")}'`,
+      );
+      expect(framework.codeFor_updateSettings(null, null, {value: '#@x #$x'})).toBe(
+        "driver.update_settings {value: '#@x #$x'}",
+      );
+      expect(framework.codeFor_pushFile(null, null, "a'b", 'line\n#{x}')).toBe(
+        String.raw`driver.push_file 'a\'b', "line\n\#{x}"`,
+      );
+    });
+
+    it('should escape the server URL in the boilerplate', function () {
+      const framework = new RubyFramework("http://localhost/a'b/#{x}", SERVER_URL_PARTS, {});
+      expect(framework.getCodeString(true)).toContain(
+        String.raw`core = Appium::Core.for url: 'http://localhost/a\'b/#{x}', caps: caps`,
       );
     });
   });
