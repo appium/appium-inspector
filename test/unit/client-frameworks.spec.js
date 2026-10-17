@@ -26,6 +26,18 @@ function buildFramework(Framework) {
 
 describe('client-frameworks', function () {
   describe('with null values and non-identifier keys', function () {
+    it('should preserve a top-level null script argument in Java and C#', function () {
+      for (const [Framework, expected] of [
+        [JavaJUnit4Framework, 'driver.executeScript("mobile: test", (Object) null);'],
+        [JavaJUnit5Framework, 'driver.executeScript("mobile: test", (Object) null);'],
+        [DotNetNUnitFramework, '_driver.ExecuteScript("mobile: test", (object) null);'],
+      ]) {
+        const framework = buildFramework(Framework);
+        framework.actions[0].params[3] = [null];
+        expect(framework.getCodeString(true)).toContain(expected);
+      }
+    });
+
     it('should generate Python code using None', function () {
       const code = buildFramework(PythonFramework).getCodeString(true);
       expect(code).toContain(
@@ -160,12 +172,22 @@ describe('client-frameworks', function () {
       expect(code).toContain('${value0} =    Create List    ${None}    ${True}    ${7}');
       expect(code).toContain('${value1} =    Create Dictionary    items=${value0}');
       expect(code).toContain('&{scriptArgument} =    Create Dictionary    nested=${value1}');
-      expect(code).toContain('Execute Script    mobile: test    ${scriptArgument}');
+      expect(code).toContain('Execute Script    mobile:\\x20test    ${scriptArgument}');
       expect(code).not.toContain('[object Object]');
     });
   });
 
   describe('Robot literal strings', function () {
+    it('should escape script commands as one literal Robot cell', function () {
+      const framework = new RobotFramework(SERVER_URL, SERVER_URL_PARTS, {});
+      const code = framework.codeFor_executeScriptWithArgs('${command}    #\n\r\t\x7f', [{key: 'value'}]);
+      expect(code).toBe(
+        '&{scriptArgument} =    Create Dictionary    key=value\n' +
+          String.raw`Execute Script    \${command}\x20\x20\x20\x20\#\n\r\t\x7f` +
+          '    ${scriptArgument}',
+      );
+    });
+
     it.each([
       ['', '${EMPTY}'],
       [' alpha    beta ', String.raw`\x20alpha\x20\x20\x20\x20beta\x20`],

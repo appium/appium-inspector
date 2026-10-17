@@ -143,7 +143,7 @@ Tap With Positions    $\{100}    $\{positions}`;
       .map(([k, v]) => `${this.escapeRobotString(k)}=${this.getRobotVal(v, variables)}`);
     variables.push(`&{scriptArgument} =    Create Dictionary    ${argsValuesStrings.join('    ')}`);
     return `${variables.join('\n')}
-${varAssignment}Execute Script    ${scriptCmd}    $\{scriptArgument}`;
+${varAssignment}Execute Script    ${this.escapeRobotString(scriptCmd)}    $\{scriptArgument}`;
   }
 
   codeFor_updateSettings() {

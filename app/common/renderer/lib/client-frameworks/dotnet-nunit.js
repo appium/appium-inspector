@@ -165,7 +165,8 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
     // C# Dictionary accepts a sequence of tuples
     const scriptArg = jsonArg[0];
     const scriptArgVal = this.getCSharpVal(scriptArg);
-    const wrappedScriptArgVal = Array.isArray(scriptArg) ? `(object) ${scriptArgVal}` : scriptArgVal;
+    const wrappedScriptArgVal =
+      scriptArg === null || Array.isArray(scriptArg) ? `(object) ${scriptArgVal}` : scriptArgVal;
     return `_driver.ExecuteScript(${JSON.stringify(scriptCmd)}, ${wrappedScriptArgVal});`;
   }
 
