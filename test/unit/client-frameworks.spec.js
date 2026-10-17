@@ -259,6 +259,9 @@ describe('client-frameworks', function () {
       ['line\n#{x}', String.raw`"line\n\#{x}"`],
       ['line\r#@x #$x', String.raw`"line\r\#@x \#$x"`],
       ["line\r\n\\#{x}'", String.raw`"line\r\n\\\#{x}'"`],
+      ['a\ud83d\nb', '"a\ud83d\\nb"'],
+      ['a\udc00\rb', '"a\udc00\\rb"'],
+      ['line\n"quoted"', String.raw`"line\n\"quoted\""`],
     ])('should preserve string value %j without interpolation', function (value, expected) {
       const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {value});
       expect(framework.getRubyVal(value)).toBe(expected);
@@ -307,11 +310,19 @@ describe('client-frameworks', function () {
         String.raw`driver.execute_script 'a\'b', '#{system("id")}'`,
       );
       expect(framework.codeFor_updateSettings(null, null, {value: '#@x #$x'})).toBe(
-        "driver.update_settings {value: '#@x #$x'}",
+        "driver.update_settings({value: '#@x #$x'})",
       );
       expect(framework.codeFor_pushFile(null, null, "a'b", 'line\n#{x}')).toBe(
         String.raw`driver.push_file 'a\'b', "line\n\#{x}"`,
       );
+    });
+
+    it.each([
+      ['codeFor_getLogs', 'server log', "logs = driver.logs.get :'server log'"],
+      ['codeFor_setOrientation', 'LAND SCAPE', "driver.rotation = :'land scape'"],
+    ])('should quote user strings as symbols in %s', function (method, value, expected) {
+      const framework = new RubyFramework(SERVER_URL, SERVER_URL_PARTS, {});
+      expect(framework[method](null, null, value)).toBe(expected);
     });
 
     it('should escape the server URL in the boilerplate', function () {

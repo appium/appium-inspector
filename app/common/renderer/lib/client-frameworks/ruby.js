@@ -29,7 +29,13 @@ export default class RubyFramework extends CommonClientFramework {
   // double quotes, with every # escaped to keep interpolation disabled.
   getRubyString(str) {
     if (/[\r\n]/.test(str)) {
-      return JSON.stringify(str).replace(/#/g, '\\#');
+      const escaped = str
+        .replace(/\\/g, '\\\\')
+        .replace(/"/g, '\\"')
+        .replace(/#/g, '\\#')
+        .replace(/\r/g, '\\r')
+        .replace(/\n/g, '\\n');
+      return `"${escaped}"`;
     }
     // Single-quoted Ruby strings only escape backslashes and apostrophes.
     const escaped = str.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
@@ -137,7 +143,7 @@ driver.quit`;
   }
 
   codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
-    return `driver.update_settings ${this.getRubyVal(settingsJson)}`;
+    return `driver.update_settings(${this.getRubyVal(settingsJson)})`;
   }
 
   codeFor_getSettings() {
@@ -179,7 +185,7 @@ driver.quit`;
   }
 
   codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
-    return `logs = driver.logs.get :${logType.toLowerCase()}`;
+    return `logs = driver.logs.get :${this.getRubyString(logType)}`;
   }
 
   // Context
@@ -215,7 +221,7 @@ driver.quit`;
   }
 
   codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
-    return `driver.rotation = :${orientation.toLowerCase()}`;
+    return `driver.rotation = :${this.getRubyString(orientation.toLowerCase())}`;
   }
 
   codeFor_getGeoLocation() {
