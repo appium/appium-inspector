@@ -127,6 +127,19 @@ describe('client-frameworks', function () {
       expect(framework.getCSharpVal([])).toBe('new object[] {}');
     });
 
+    it('should preserve top-level C# array script arguments as one params argument', function () {
+      const framework = new DotNetNUnitFramework(SERVER_URL, SERVER_URL_PARTS, {});
+      expect(framework.codeFor_executeScriptWithArgs('mobile: test', [[1, 2]])).toBe(
+        '_driver.ExecuteScript("mobile: test", (object) new object[] {1, 2});',
+      );
+      expect(framework.codeFor_executeScriptWithArgs('mobile: test', ['value'])).toBe(
+        '_driver.ExecuteScript("mobile: test", "value");',
+      );
+      expect(framework.codeFor_executeScriptWithArgs('mobile: test', [{key: 'value'}])).toBe(
+        '_driver.ExecuteScript("mobile: test", new Dictionary<string, dynamic> {{"key", "value"}});',
+      );
+    });
+
     it('should define nested Robot capability lists and dictionaries before opening the session', function () {
       const framework = new RobotFramework(SERVER_URL, SERVER_URL_PARTS, {
         'goog:chromeOptions': {args: ['--headless', null], extra: {flag: true}, none: null},
