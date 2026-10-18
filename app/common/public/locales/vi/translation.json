@@ -326,6 +326,7 @@
   "enterSessionID": "Nhập ID phiên để đính kèm thủ công",
   "refreshDiscoveredSessions": "Làm mới các phiên đã phát hiện",
   "toggleMultiDisplayMode": "Bật/tắt chế độ đa màn hình",
+  "defaultDisplay": "Default Display",
   "toggleActiveWindowSelection": "Toggle Selection of Active Window",
   "focusedWindow": "Focused Window",
   "topmostWindow": "Top-Most Window",

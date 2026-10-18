@@ -326,6 +326,7 @@
   "enterSessionID": "Manuel olarak bağlanmak için oturum ID'sini girin",
   "refreshDiscoveredSessions": "Keşfedilen Oturumları Yenile",
   "toggleMultiDisplayMode": "Çoklu Ekran Modunu Aç/Kapat",
+  "defaultDisplay": "Default Display",
   "toggleActiveWindowSelection": "Toggle Selection of Active Window",
   "focusedWindow": "Focused Window",
   "topmostWindow": "Top-Most Window",

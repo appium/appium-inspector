@@ -326,6 +326,7 @@
   "enterSessionID": "手動で接続するためのセッションIDを入力する",
   "refreshDiscoveredSessions": "検出されたセッションを更新する",
   "toggleMultiDisplayMode": "マルチディスプレイモードの切り替え",
+  "defaultDisplay": "Default Display",
   "toggleActiveWindowSelection": "Toggle Selection of Active Window",
   "focusedWindow": "Focused Window",
   "topmostWindow": "Top-Most Window",

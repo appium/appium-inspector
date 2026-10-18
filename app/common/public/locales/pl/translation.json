@@ -326,6 +326,7 @@
   "enterSessionID": "Wprowadź ID sesji, aby dołączyć ręcznie",
   "refreshDiscoveredSessions": "Odśwież wykryte sesje",
   "toggleMultiDisplayMode": "Przełącz tryb wielu ekranów",
+  "defaultDisplay": "Default Display",
   "toggleActiveWindowSelection": "Toggle Selection of Active Window",
   "focusedWindow": "Focused Window",
   "topmostWindow": "Top-Most Window",

@@ -326,6 +326,7 @@
   "enterSessionID": "मैन्युअल रूप से जोड़ने के लिए सत्र ID दर्ज करें",
   "refreshDiscoveredSessions": "खोजे गए सत्र रीफ्रेश करें",
   "toggleMultiDisplayMode": "मल्टी-डिस्प्ले मोड टॉगल करें",
+  "defaultDisplay": "Default Display",
   "toggleActiveWindowSelection": "Toggle Selection of Active Window",
   "focusedWindow": "Focused Window",
   "topmostWindow": "Top-Most Window",

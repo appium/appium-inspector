@@ -326,6 +326,7 @@
   "enterSessionID": "Voer sessie-ID in voor handmatig koppelen",
   "refreshDiscoveredSessions": "Ontdekte sessies vernieuwen",
   "toggleMultiDisplayMode": "Multi-schermmodus in-/uitschakelen",
+  "defaultDisplay": "Default Display",
   "toggleActiveWindowSelection": "Toggle Selection of Active Window",
   "focusedWindow": "Focused Window",
   "topmostWindow": "Top-Most Window",
