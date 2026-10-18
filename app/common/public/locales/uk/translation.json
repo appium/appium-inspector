@@ -326,6 +326,7 @@
   "enterSessionID": "Введіть ідентифікатор сесії для приєднання вручну",
   "refreshDiscoveredSessions": "Оновити відкриті сесії",
   "toggleMultiDisplayMode": "Перемкнути багатоекранний режим",
+  "defaultDisplay": "Типовий дисплей",
   "toggleActiveWindowSelection": "Перемкнути вибору активного вікна",
   "focusedWindow": "Зафокушене вікно",
   "topmostWindow": "Найвище вікно",

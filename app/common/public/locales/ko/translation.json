@@ -326,6 +326,7 @@
   "enterSessionID": "수동으로 연결하기 위한 세션 ID 입력",
   "refreshDiscoveredSessions": "발견된 세션 새로고침",
   "toggleMultiDisplayMode": "다중 디스플레이 모드 토글",
+  "defaultDisplay": "Default Display",
   "toggleActiveWindowSelection": "Toggle Selection of Active Window",
   "focusedWindow": "Focused Window",
   "topmostWindow": "Top-Most Window",

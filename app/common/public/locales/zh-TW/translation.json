@@ -326,6 +326,7 @@
   "enterSessionID": "請輸入會話ID以手動連線",
   "refreshDiscoveredSessions": "重新整理發現的會話",
   "toggleMultiDisplayMode": "切換多顯示器模式",
+  "defaultDisplay": "Default Display",
   "toggleActiveWindowSelection": "Toggle Selection of Active Window",
   "focusedWindow": "Focused Window",
   "topmostWindow": "Top-Most Window",

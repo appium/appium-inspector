@@ -326,6 +326,7 @@
   "enterSessionID": "Inserisci l'ID sessione per il collegamento manuale",
   "refreshDiscoveredSessions": "Aggiorna le sessioni rilevate",
   "toggleMultiDisplayMode": "Attiva/disattiva la modalità multi-schermo",
+  "defaultDisplay": "Default Display",
   "toggleActiveWindowSelection": "Toggle Selection of Active Window",
   "focusedWindow": "Focused Window",
   "topmostWindow": "Top-Most Window",

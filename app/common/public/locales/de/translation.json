@@ -326,6 +326,7 @@
   "enterSessionID": "Session-ID zum manuellen Anhängen eingeben",
   "refreshDiscoveredSessions": "Erkannte Sessions aktualisieren",
   "toggleMultiDisplayMode": "Multi-Display-Modus ein-/ausschalten",
+  "defaultDisplay": "Default Display",
   "toggleActiveWindowSelection": "Toggle Selection of Active Window",
   "focusedWindow": "Focused Window",
   "topmostWindow": "Top-Most Window",

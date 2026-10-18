@@ -326,6 +326,7 @@
   "enterSessionID": "Введите ID сессии для прикрепления вручную",
   "refreshDiscoveredSessions": "Обновить обнаруженные сессии",
   "toggleMultiDisplayMode": "Переключить режим мультидисплея",
+  "defaultDisplay": "Default Display",
   "toggleActiveWindowSelection": "Переключить выбор активного окна",
   "focusedWindow": "Окно в фокусе",
   "topmostWindow": "Самое верхнее окно",
