@@ -77,7 +77,7 @@ Pressing the button will reveal a new dropdown with 3 options.
 - All Windows: this strategy includes all accessible windows in the page source. It corresponds to the
   `enableMultiWindows` driver setting being set to `true`.
 
-Refer to the [UiAutomator2 Multi-Window Testing guide](https://github.com/appium/appium-uiautomator2-driver/blob/master/docs/android-multiwindow.md)
+Refer to the [UiAutomator2 Multi-Window Testing guide](https://appium.github.io/appium-uiautomator2-driver/latest/guides/multiwindow/)
 for more information.
 
 Pressing the window switcher button while the dropdown is visible will revert to the default

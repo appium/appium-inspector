@@ -12,10 +12,10 @@ export const LINKS = {
   CAPS_DOCS: 'https://appium.io/docs/en/latest/guides/caps/',
   ADD_CAPS_DOCS:
     'https://appium.github.io/appium-inspector/latest/quickstart/starting-a-session/#adding-session-details',
-  HYBRID_MODE_DOCS: 'https://appium.github.io/appium.io/docs/en/writing-running-appium/web/hybrid/',
+  HYBRID_MODE_DOCS: 'https://appium.io/docs/en/latest/guides/context/',
   CLASS_CHAIN_DOCS: 'https://github.com/facebookarchive/WebDriverAgent/wiki/Class-Chain-Queries-Construction-Rules',
   PREDICATE_DOCS: 'https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules',
-  UIAUTOMATOR_DOCS: 'https://github.com/appium/appium-uiautomator2-driver/blob/master/docs/uiautomator-uiselector.md',
+  UIAUTOMATOR_DOCS: 'https://appium.github.io/appium-uiautomator2-driver/latest/guides/uiautomator-locator-strategy/',
 };
 
 // Known values of 'automationName'
