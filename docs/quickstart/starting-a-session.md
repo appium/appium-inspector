@@ -61,7 +61,7 @@ driver that you want to use. Here are some basic capability sets not specific to
     }
     ```
 
-    Refer to the [UiAutomator2 driver capabilities documentation](https://github.com/appium/appium-uiautomator2-driver#general)
+    Refer to the [UiAutomator2 driver capabilities documentation](https://appium.github.io/appium-uiautomator2-driver/latest/reference/capabilities/)
     for more details.
 
 === "XCUITest"
@@ -86,7 +86,7 @@ driver that you want to use. Here are some basic capability sets not specific to
     }
     ```
 
-    Refer to the [Mac2 driver capabilities documentation](https://github.com/appium/appium-mac2-driver#capabilities)
+    Refer to the [Mac2 driver capabilities documentation](https://appium.github.io/appium-mac2-driver/latest/reference/capabilities/)
     for more details.
 
 Now that the capabilities are set, the session can be launched!
