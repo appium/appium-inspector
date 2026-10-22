@@ -476,6 +476,7 @@ export default class InspectorDriver {
       } else {
         // fallback to default top offset value if element retrieval failed
         try {
+          // mobile:getSystemBars exists since UiA2 2.21 / Espresso 2.23 (Appium 2)
           const systemBars = await this.driver.executeScript('mobile:getSystemBars', []);
           webviewTopOffset = systemBars.statusBar.height;
         } catch {
