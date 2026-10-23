@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semgrep SAST report</title>
+<!--
+  Template for .github/scripts/semgrep_report.py. The PR scan job replaces the
+  data placeholder below with that PR's results (labels against the master
+  baseline) and uploads the page as an artifact linked from the job summary.
+  Any copy (or this template) can also load a downloaded semgrep-master-results
+  artifact in the browser to show the master results. Everything is inline so
+  the file works offline.
+-->
+<style>
+body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; margin: 0; background: #f4f6fa;
+  color: #1f2430; line-height: 1.45; }
+a { color: #0b6bcb; }
+.hero { background: #1f2a44; color: #ffffff; padding: 1.4rem 2rem; }
+.hero h1 { margin: 0; font-size: 1.6rem; }
+.hero .sub { color: #b8c2d9; margin-top: 0.3rem; font-size: 0.9rem; word-break: break-word; }
+nav { position: sticky; top: 0; background: #ffffff; border-bottom: 1px solid #d9dde3; padding: 0.5rem 2rem;
+  z-index: 5; display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.85rem; }
+nav a { color: #1f3a5f; text-decoration: none; }
+nav a:hover { text-decoration: underline; }
+main { max-width: 1200px; margin: 0 auto; padding: 1.5rem 1rem 3rem 1rem; }
+h2 { margin: 2.2rem 0 0.6rem 0; font-size: 1.25rem; padding-bottom: 0.4rem; border-bottom: 2px solid #e3e6ec; }
+h3 { margin: 0 0 0.6rem 0; font-size: 1rem; }
+.intro, .muted { color: #6b7280; }
+.muted { font-size: 0.85rem; }
+.banner { border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 1rem; border: 1px solid; }
+.banner.warn { background: #fdf0cf; border-color: #e9c46a; color: #7a5a00; }
+.banner.info { background: #e8f1fb; border-color: #b6d3f2; color: #1f3a5f; }
+.dstrip { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.8rem;
+  background: #ffffff; border: 1px solid #e3e6ec; border-radius: 8px; padding: 0.9rem 1rem; margin-bottom: 1rem; }
+.dstrip .k { color: #6b7280; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.dstrip .v { font-weight: 600; word-break: break-all; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; margin-bottom: 1rem; }
+.tile { background: #ffffff; border: 1px solid #e3e6ec; border-top-width: 4px; border-radius: 8px; padding: 0.8rem 1rem; }
+.tile .n { font-size: 2rem; font-weight: 700; }
+.tile .t { font-weight: 600; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.tile .by { color: #6b7280; font-size: 0.75rem; margin-top: 0.2rem; }
+.tile.zero .n { color: #b8bcc6; }
+.tile.Critical { border-top-color: #7b0a02; } .tile.High { border-top-color: #c0392b; }
+.tile.Medium { border-top-color: #d68910; } .tile.Low { border-top-color: #2e86c1; }
+.tile.NEW { border-top-color: #c0392b; } .tile.FIXED { border-top-color: #17612b; }
+.tile.UNVERIFIED { border-top-color: #d68910; } .tile.OLD { border-top-color: #9ca3af; }
+table { border-collapse: collapse; width: 100%; background: #ffffff; border: 1px solid #e3e6ec;
+  font-size: 0.85rem; margin-bottom: 1rem; }
+th, td { border-bottom: 1px solid #eceff3; padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
+th { color: #6b7280; font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; background: #f7f8fb; }
+tbody tr:nth-child(even) { background: #fafbfd; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+tr.total td { font-weight: 700; background: #f7f8fb; }
+.table-wrap { overflow-x: auto; }
+.badge { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;
+  padding: 0.15rem 0.5rem; border-radius: 3px; color: #ffffff; white-space: nowrap; }
+.badge.Critical { background: #7b0a02; } .badge.High { background: #c0392b; }
+.badge.Medium { background: #d68910; } .badge.Low { background: #2e86c1; }
+.chip { display: inline-block; padding: 0.1rem 0.5rem; border-radius: 99px; font-size: 0.72rem; font-weight: 600;
+  white-space: nowrap; }
+.chip.NEW { background: #fbe0e0; color: #8a1f1f; } .chip.FIXED { background: #dff3e4; color: #17612b; }
+.chip.UNVERIFIED { background: #fdf0cf; color: #7a5a00; } .chip.OLD { background: #eef0f4; color: #4b5563; }
+.chip.mode { background: #dfe7f5; color: #1f3a5f; }
+.sevfilter { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.6rem; font-size: 0.85rem; }
+.sevfilter .k { color: #6b7280; font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; margin-right: 0.2rem; }
+.sevbtn { border-radius: 99px; padding: 0.25rem 0.7rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem; }
+.sevbtn .dot { width: 9px; height: 9px; border-radius: 50%; background: #9ca3af; }
+.sevbtn .cnt { color: #6b7280; font-weight: 400; font-variant-numeric: tabular-nums; }
+.sevbtn.Critical .dot { background: #7b0a02; } .sevbtn.High .dot { background: #c0392b; }
+.sevbtn.Medium .dot { background: #d68910; } .sevbtn.Low .dot { background: #2e86c1; }
+.sevbtn.on { color: #ffffff; border-color: transparent; background: #1f3a5f; }
+.sevbtn.on .cnt { color: #dfe7f5; }
+.sevbtn.on .dot { box-shadow: 0 0 0 2px #ffffff; }
+.sevbtn.Critical.on { background: #7b0a02; } .sevbtn.High.on { background: #c0392b; }
+.sevbtn.Medium.on { background: #d68910; } .sevbtn.Low.on { background: #2e86c1; }
+#level-tiles .tile { cursor: pointer; }
+#level-tiles .tile:hover { box-shadow: 0 1px 4px rgba(31, 42, 68, 0.15); }
+#level-tiles .tile.on { outline: 2px solid #1f3a5f; outline-offset: -1px; }
+#level-tiles .tile:focus-visible { outline: 2px solid #0b6bcb; outline-offset: 2px; }
+.rule { font-family: ui-monospace, Menlo, monospace; font-size: 0.78rem; word-break: break-all; }
+.loc { font-family: ui-monospace, Menlo, monospace; font-size: 0.78rem; word-break: break-all; }
+.msg { max-width: 460px; }
+.tools { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
+.tools input, .tools select { background: #ffffff; color: #1f2430; border: 1px solid #cfd4dc; border-radius: 6px;
+  padding: 0.4rem 0.6rem; min-width: 200px; font: inherit; font-size: 0.85rem; }
+button { background: #ffffff; color: #1f2430; border: 1px solid #cfd4dc; border-radius: 6px; padding: 0.35rem 0.7rem;
+  cursor: pointer; font: inherit; font-size: 0.85rem; }
+button:disabled { color: #b8bcc6; cursor: default; }
+.pager { display: flex; justify-content: space-between; align-items: center; color: #6b7280; gap: 0.5rem;
+  flex-wrap: wrap; font-size: 0.85rem; }
+.twocol { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 0.8rem; }
+.box { background: #ffffff; border: 1px solid #e3e6ec; border-radius: 8px; padding: 0.9rem 1rem; }
+.brow { display: grid; grid-template-columns: minmax(0, 1fr) 120px 44px; gap: 0.6rem; align-items: center;
+  font-size: 0.8rem; margin: 0.25rem 0; }
+.brow .lbl { font-family: ui-monospace, Menlo, monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar { background: #eef0f4; border-radius: 3px; height: 10px; display: block; }
+.bar i { display: block; height: 100%; border-radius: 3px; background: #1f3a5f; }
+.brow .c { text-align: right; font-variant-numeric: tabular-nums; }
+.empty { color: #6b7280; font-style: italic; }
+ul.about { padding-left: 1.2rem; }
+ul.about li { margin: 0.25rem 0; }
+body.mode-master .pr-only { display: none; }
+.loadbar { background: #ffffff; border: 1px dashed #b6c0cf; border-radius: 8px; padding: 0.8rem 1rem;
+  margin-bottom: 1rem; display: flex; gap: 0.6rem 1rem; flex-wrap: wrap; align-items: center; font-size: 0.85rem; }
+.loadbar.drag { border-color: #0b6bcb; background: #e8f1fb; }
+.loadbar .grow { flex: 1 1 320px; }
+.loadbar .btn { display: inline-block; background: #1f3a5f; color: #ffffff; border-radius: 6px; padding: 0.4rem 0.8rem;
+  cursor: pointer; font-weight: 600; }
+.loadbar .btn:focus-within { outline: 2px solid #0b6bcb; outline-offset: 2px; }
+.loadbar input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.loadbar code { font-size: 0.8rem; }
+#load-msg { flex-basis: 100%; }
+#load-msg:empty { display: none; }
+.error { color: #8a1f1f; font-weight: 600; }
+@media (max-width: 640px) {
+  .hero, nav { padding-left: 1rem; padding-right: 1rem; }
+  .brow { grid-template-columns: minmax(0, 1fr) 70px 36px; }
+}
+</style>
+</head>
+<body>
+<div class="hero"><h1 id="title">Semgrep SAST report</h1><div class="sub" id="sub"></div></div>
+<nav>
+  <a href="#summary">Summary</a>
+  <a href="#comparison" class="pr-only">PR comparison</a>
+  <a href="#findings">Findings</a>
+  <a href="#breakdown">Breakdown</a>
+  <a href="#about">About</a>
+  <a href="#loadbar">Load master artifact</a>
+</nav>
+<main>
+  <div class="loadbar" id="loadbar">
+    <div class="grow"><b>View master results</b> &middot; <span class="muted">Load the
+      <code>semgrep-master-results</code> artifact (the downloaded .zip, or the <code>semgrep-master.json</code>
+      inside it), or drop it on this page. It is read in your browser; nothing is uploaded.</span></div>
+    <label class="btn">Load artifact<input type="file" id="file" accept=".zip,.json,application/zip,application/json"></label>
+    <button id="back" hidden>Back to PR results</button>
+    <div id="load-msg" class="muted" role="status"></div>
+  </div>
+  <div id="banner"></div>
+
+  <section id="summary">
+    <h2>Summary</h2>
+    <div class="dstrip" id="dstrip"></div>
+    <div class="tiles" id="level-tiles" title="Click a severity to filter the findings table"></div>
+  </section>
+
+  <section id="comparison" class="pr-only">
+    <h2>PR comparison</h2>
+    <p class="intro">Every finding in the code after merge, labelled against the master baseline.</p>
+    <div class="tiles" id="label-tiles"></div>
+    <div class="table-wrap"><table id="matrix"></table></div>
+  </section>
+
+  <section id="findings">
+    <h2>Findings</h2>
+    <div class="tools">
+      <input id="f-q" placeholder="Filter by file, rule or message..." aria-label="Filter findings">
+      <select id="f-label" class="pr-only" aria-label="Label"><option value="">All labels</option></select>
+    </div>
+    <div class="sevfilter" id="f-levels" role="group" aria-label="Filter by severity"></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th class="pr-only">Label</th><th>Level</th><th>Rule</th><th>Location</th><th>Message</th><th>CWE</th>
+        </tr></thead>
+        <tbody id="f-body"></tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <span id="f-count"></span><span id="f-page"></span>
+      <span><button id="f-prev">Prev</button> <button id="f-next">Next</button></span>
+    </div>
+  </section>
+
+  <section id="breakdown">
+    <h2>Breakdown</h2>
+    <p class="muted" id="breakdown-note"></p>
+    <div class="twocol">
+      <div class="box"><h3>Top rules</h3><div id="top-rules"></div></div>
+      <div class="box"><h3>Top files</h3><div id="top-files"></div></div>
+    </div>
+  </section>
+
+  <section id="about">
+    <h2>About this report</h2>
+    <ul class="about" id="about-list"></ul>
+  </section>
+</main>
+
+<script>window.SEMGREP = /*__SEMGREP_DATA__*/null;</script>
+<script>
+(function () {
+  var LEVELS = ['Critical', 'High', 'Medium', 'Low'];
+  var LABELS = ['NEW', 'FIXED', 'UNVERIFIED', 'OLD'];
+  var PER_PAGE = 15;
+  var ORIGINAL = window.SEMGREP;
+  var D = null, rows = [], page = 0, isPR = false, levelSet = {};
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function when(s) {
+    if (!s) { return '-'; }
+    var d = new Date(s);
+    return isNaN(d) ? esc(s) : d.toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
+  }
+  function short(sha) { return sha ? String(sha).slice(0, 12) : '-'; }
+  // Only http(s) links; data loaded from a file must not inject other schemes.
+  function link(href, text) {
+    return href && /^https?:\/\//i.test(href) ?
+      '<a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(text) + '</a>' : esc(text);
+  }
+  function repoUrl(path) { return D.server_url + '/' + D.repo + (path || ''); }
+  function item(k, v) { return '<div><div class="k">' + esc(k) + '</div><div class="v">' + v + '</div></div>'; }
+  function showReport(on) {
+    [].forEach.call(document.querySelectorAll('main > section, nav'), function (el) {
+      el.style.display = on ? '' : 'none';
+    });
+  }
+
+  // ---- master artifact -> master view ----
+  function levelFrom(f) {
+    var sev = String(f.severity || '').toUpperCase();
+    if (sev === 'ERROR') { return String(f.impact || '').toUpperCase() === 'HIGH' ? 'Critical' : 'High'; }
+    return { CRITICAL: 'Critical', HIGH: 'High', WARNING: 'Medium', MEDIUM: 'Medium' }[sev] || 'Low';
+  }
+  function baselineToView(b, fileName) {
+    if (!b || !Array.isArray(b.findings) || !b.master_sha) {
+      throw new Error('This is not a Semgrep master baseline (semgrep-master.json).');
+    }
+    var findings = b.findings.map(function (f) {
+      var lv = LEVELS.indexOf(f.level) > -1 ? f.level : levelFrom(f);
+      return { label: null, level: lv, rule: String(f.rule), rule_short: String(f.rule).split('.').pop(),
+        path: String(f.path), line: f.line, message: String(f.message || ''), cwe: [].concat(f.cwe || []),
+        sha: b.master_sha };
+    }).sort(function (a, c) {
+      return LEVELS.indexOf(a.level) - LEVELS.indexOf(c.level) || (a.path < c.path ? -1 : a.path > c.path ? 1 : 0);
+    });
+    var counts = {};
+    LEVELS.forEach(function (l) { counts[l] = 0; });
+    findings.forEach(function (f) { counts[f.level]++; });
+    return { mode: 'master', repo: String(b.repo || ''), server_url: 'https://github.com', run_url: b.run_url || '',
+      generated_at: b.scanned_at, rulesets: b.rulesets || [], semgrep_version: b.semgrep_version || '',
+      source_file: fileName || '',
+      master: { branch: b.branch || 'master', sha: b.master_sha, commit_time: b.master_commit_time,
+        scanned_at: b.scanned_at },
+      counts: counts, findings: findings };
+  }
+
+  // Minimal zip reader for the downloaded artifact (stored or deflate entries).
+  function readZipEntry(buf, wanted) {
+    var dv = new DataView(buf), td = new TextDecoder(), eocd = -1;
+    for (var i = buf.byteLength - 22; i >= Math.max(0, buf.byteLength - 65557); i--) {
+      if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+    }
+    if (eocd < 0) { return Promise.reject(new Error('Not a zip file.')); }
+    var count = dv.getUint16(eocd + 10, true), p = dv.getUint32(eocd + 16, true);
+    for (var n = 0; n < count; n++) {
+      if (dv.getUint32(p, true) !== 0x02014b50) { return Promise.reject(new Error('Damaged zip file.')); }
+      var method = dv.getUint16(p + 10, true), size = dv.getUint32(p + 20, true);
+      var nameLen = dv.getUint16(p + 28, true), extraLen = dv.getUint16(p + 30, true);
+      var commentLen = dv.getUint16(p + 32, true), offset = dv.getUint32(p + 42, true);
+      var name = td.decode(new Uint8Array(buf, p + 46, nameLen));
+      if (name === wanted || name.slice(-wanted.length - 1) === '/' + wanted) {
+        var start = offset + 30 + dv.getUint16(offset + 26, true) + dv.getUint16(offset + 28, true);
+        var data = new Uint8Array(buf, start, size);
+        if (method === 0) { return Promise.resolve(td.decode(data)); }
+        if (method === 8 && typeof DecompressionStream !== 'undefined') {
+          var stream = new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+          return new Response(stream).arrayBuffer().then(function (out) { return td.decode(out); });
+        }
+        return Promise.reject(new Error('This browser cannot unzip the file; unzip it and load semgrep-master.json.'));
+      }
+      p += 46 + nameLen + extraLen + commentLen;
+    }
+    return Promise.reject(new Error(wanted + ' not found in the zip. Is this the semgrep-master-results artifact?'));
+  }
+
+  function loadFile(file) {
+    var msg = $('load-msg');
+    msg.className = 'muted';
+    msg.textContent = 'Reading ' + file.name + '...';
+    return file.arrayBuffer().then(function (buf) {
+      var head = new Uint8Array(buf, 0, Math.min(2, buf.byteLength));
+      var isZip = head[0] === 0x50 && head[1] === 0x4b;
+      return isZip ? readZipEntry(buf, 'semgrep-master.json') : new TextDecoder().decode(buf);
+    }).then(function (text) {
+      var data;
+      try { data = JSON.parse(text); } catch (e) { throw new Error('The file is not valid JSON.'); }
+      renderAll(baselineToView(data, file.name));
+      msg.textContent = 'Showing master results from ' + file.name + '.';
+    }).catch(function (e) {
+      msg.className = 'error';
+      msg.textContent = e.message;
+    });
+  }
+
+  // ---- full render ----
+  function tiles(names, counts, byText) {
+    return names.map(function (n) {
+      var c = counts[n] || 0;
+      return '<div class="tile ' + n + (c ? '' : ' zero') + '"><div class="t">' + esc(n) + '</div><div class="n">' +
+        c + '</div><div class="by">' + esc(byText(n)) + '</div></div>';
+    }).join('');
+  }
+
+  function renderAll(data) {
+    D = data;
+    isPR = D.mode === 'pr';
+    rows = D.findings.slice();
+    page = 0;
+    document.body.classList.remove('mode-pr', 'mode-master');
+    document.body.classList.add(isPR ? 'mode-pr' : 'mode-master');
+    document.title = (isPR ? 'Semgrep PR #' + D.pr.number : 'Semgrep master baseline') + ' - ' + D.repo;
+    showReport(true);
+    $('back').hidden = !(ORIGINAL && D !== ORIGINAL);
+
+    $('title').textContent = isPR ? 'Semgrep PR scan' : 'Semgrep master baseline';
+    var sub = [D.repo];
+    sub.push(isPR ? 'PR #' + D.pr.number + ' (' + D.pr.head_ref + ' → ' + D.pr.base_ref + ')' :
+      D.master.branch + ' @ ' + short(D.master.sha));
+    sub.push((D.source_file ? 'loaded from file, scanned ' : 'generated ') + when(D.generated_at));
+    $('sub').innerHTML = sub.map(esc).join(' &middot; ');
+
+    var banner;
+    if (isPR && !D.baseline.found) {
+      banner = '<div class="banner warn"><b>Master baseline missing.</b> ' + esc(D.note) + '</div>';
+    } else if (isPR) {
+      banner = '<div class="banner info"><span class="chip mode">PR scan</span> Report only, merge not blocked. ' +
+        'Labels compare this PR (merged into ' + esc(D.pr.base_ref) + ') with the master baseline from ' +
+        when(D.baseline.scanned_at) + '.' + (D.note ? ' ' + esc(D.note) : '') + '</div>';
+    } else {
+      banner = '<div class="banner info"><span class="chip mode">Master baseline</span> Current findings on ' +
+        esc(D.master.branch) + ' from the scheduled/manual Semgrep run' +
+        (D.source_file ? ', loaded from ' + esc(D.source_file) + ' in your browser' : '') + '.</div>';
+    }
+    $('banner').innerHTML = banner;
+
+    var strip = [item('Repository', link(repoUrl(), D.repo))];
+    if (isPR) {
+      strip.push(item('Pull request', link(repoUrl('/pull/' + D.pr.number), '#' + D.pr.number)));
+      strip.push(item('Branches', esc(D.pr.head_ref + ' → ' + D.pr.base_ref)));
+      strip.push(item('Scanned commit (merge)', link(repoUrl('/commit/' + D.pr.merge_sha), short(D.pr.merge_sha))));
+      strip.push(item('Master baseline', D.baseline.found ?
+        link(D.baseline.run_url, short(D.baseline.sha) + ', ' + when(D.baseline.scanned_at)) : 'missing'));
+    } else {
+      strip.push(item('Branch', esc(D.master.branch)));
+      strip.push(item('Commit', link(repoUrl('/commit/' + D.master.sha), short(D.master.sha))));
+      strip.push(item('Commit time', when(D.master.commit_time)));
+      strip.push(item('Scanned at', when(D.master.scanned_at)));
+    }
+    strip.push(item('Semgrep', esc(D.semgrep_version || '-')));
+    strip.push(item('Rulesets', esc((D.rulesets || []).join(', '))));
+    strip.push(item('Workflow run', link(D.run_url, D.run_url ? 'open run' : '-')));
+    $('dstrip').innerHTML = strip.join('');
+
+    $('level-tiles').innerHTML = tiles(LEVELS, D.counts, function () {
+      return isPR ? 'in code after merge' : 'on ' + D.master.branch;
+    }).replace(/<div class="tile (\w+)/g, '<div role="button" tabindex="0" data-level="$1" class="tile $1');
+
+    if (isPR) {
+      $('label-tiles').innerHTML = tiles(LABELS, D.label_counts, function (n) { return D.label_meaning[n]; });
+      var m = '<thead><tr><th>Level</th>' + LABELS.map(function (l) { return '<th class="n">' + l + '</th>'; }).join('') +
+        '<th class="n">After merge</th><th class="n">Master</th></tr></thead><tbody>';
+      D.matrix.forEach(function (row) {
+        var total = row.level === 'Total';
+        m += '<tr' + (total ? ' class="total"' : '') + '><td>' +
+          (total ? 'Total' : '<span class="badge ' + row.level + '">' + row.level + '</span>') + '</td>' +
+          LABELS.map(function (l) { return '<td class="n">' + row.counts[l] + '</td>'; }).join('') +
+          '<td class="n">' + row.after + '</td><td class="n">' + esc(row.master) + '</td></tr>';
+      });
+      $('matrix').innerHTML = m + '</tbody>';
+    } else {
+      $('label-tiles').innerHTML = '';
+      $('matrix').innerHTML = '';
+    }
+
+    $('f-q').value = '';
+    levelSet = {};
+    $('f-label').value = isPR && D.label_counts.NEW ? 'NEW' : '';
+    renderTable();
+    renderBreakdown();
+    renderAbout();
+  }
+
+  function cwe(f) {
+    return [].concat(f.cwe || []).map(function (c) { return esc(String(c).split(':')[0]); }).join(', ') || '-';
+  }
+  function renderTable() {
+    var q = $('f-q').value.toLowerCase(), lb = $('f-label').value;
+    var anyLevel = Object.keys(levelSet).length === 0;
+    var base = rows.filter(function (f) {
+      return (!lb || f.label === lb) &&
+        (!q || (f.path + ' ' + f.rule + ' ' + f.message).toLowerCase().indexOf(q) > -1);
+    });
+    var vis = base.filter(function (f) { return anyLevel || levelSet[f.level]; });
+    renderLevelButtons(base, anyLevel);
+    var pages = Math.max(1, Math.ceil(vis.length / PER_PAGE));
+    if (page >= pages) { page = pages - 1; }
+    var html = vis.slice(page * PER_PAGE, (page + 1) * PER_PAGE).map(function (f) {
+      var href = repoUrl('/blob/' + f.sha + '/' + f.path + '#L' + f.line);
+      return '<tr>' +
+        (isPR ? '<td><span class="chip ' + f.label + '">' + f.label + '</span></td>' : '') +
+        '<td><span class="badge ' + f.level + '">' + f.level + '</span></td>' +
+        '<td class="rule" title="' + esc(f.rule) + '">' + esc(f.rule_short) + '</td>' +
+        '<td class="loc">' + link(href, f.path + ':' + f.line) + '</td>' +
+        '<td class="msg">' + esc(f.message) + '</td>' +
+        '<td>' + cwe(f) + '</td></tr>';
+    }).join('');
+    $('f-body').innerHTML = html ||
+      '<tr><td colspan="' + (isPR ? 6 : 5) + '" class="empty">No findings match.</td></tr>';
+    $('f-count').textContent = vis.length + ' of ' + rows.length + ' findings';
+    $('f-page').textContent = 'Page ' + (page + 1) + ' of ' + pages;
+    $('f-prev').disabled = page === 0;
+    $('f-next').disabled = page >= pages - 1;
+  }
+
+  // Severity buttons: counts follow the other filters; several can be on at once.
+  function renderLevelButtons(base, anyLevel) {
+    var counts = {};
+    base.forEach(function (f) { counts[f.level] = (counts[f.level] || 0) + 1; });
+    $('f-levels').innerHTML = '<span class="k">Severity</span>' +
+      '<button type="button" class="sevbtn' + (anyLevel ? ' on' : '') + '" data-level="" aria-pressed="' +
+      anyLevel + '">All <span class="cnt">' + base.length + '</span></button>' +
+      LEVELS.map(function (l) {
+        var on = !!levelSet[l];
+        return '<button type="button" class="sevbtn ' + l + (on ? ' on' : '') + '" data-level="' + l +
+          '" aria-pressed="' + on + '"><span class="dot"></span>' + l + ' <span class="cnt">' +
+          (counts[l] || 0) + '</span></button>';
+      }).join('');
+    [].forEach.call(document.querySelectorAll('#level-tiles .tile'), function (t) {
+      t.classList[levelSet[t.getAttribute('data-level')] ? 'add' : 'remove']('on');
+    });
+  }
+  function toggleLevel(level) {
+    if (!level) {
+      levelSet = {};
+    } else if (levelSet[level]) {
+      delete levelSet[level];
+    } else {
+      levelSet[level] = true;
+    }
+    resetPage();
+  }
+
+  function renderBreakdown() {
+    var current = rows.filter(function (f) { return f.label !== 'FIXED'; });
+    function top(key) {
+      var counts = {};
+      current.forEach(function (f) { counts[f[key]] = (counts[f[key]] || 0) + 1; });
+      var list = Object.keys(counts).map(function (k) { return [k, counts[k]]; })
+        .sort(function (a, b) { return b[1] - a[1]; }).slice(0, 10);
+      if (!list.length) { return '<p class="empty">No findings.</p>'; }
+      var max = list[0][1];
+      return list.map(function (e) {
+        return '<div class="brow"><span class="lbl" title="' + esc(e[0]) + '">' + esc(e[0]) + '</span>' +
+          '<span class="bar"><i style="width:' + (100 * e[1] / max).toFixed(1) + '%"></i></span>' +
+          '<span class="c">' + e[1] + '</span></div>';
+      }).join('');
+    }
+    $('top-rules').innerHTML = top('rule_short');
+    $('top-files').innerHTML = top('path');
+    $('breakdown-note').textContent = isPR ? 'Findings present after merge (FIXED excluded).' :
+      'Findings currently on ' + D.master.branch + '.';
+  }
+
+  function renderAbout() {
+    var about = [
+      'Scanner: Semgrep OSS CLI ' + (D.semgrep_version || '') + ' with ' + (D.rulesets || []).join(', ') + '.',
+      'Levels: Critical = ERROR with HIGH impact, High = other ERROR, Medium = WARNING, Low = INFO.',
+      'Mobile code (Swift, Kotlin, Objective-C, Java/Android, Xcode files) is excluded via .semgrepignore.',
+      'Code snippets are not stored; findings are matched by a hash of rule, file and matched code.',
+      'Any dashboard can show the master results: download the semgrep-master-results artifact from the ' +
+        'latest master run of the Semgrep Scan workflow and load it above. The file stays in your browser.'
+    ];
+    if (isPR) {
+      about.push('NEW / FIXED are only possible in files this PR changes; findings in untouched files are OLD.');
+      about.push('UNVERIFIED: the file also changed on master after the baseline was taken; the next baseline resolves it.');
+    }
+    $('about-list').innerHTML = about.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('');
+  }
+
+  // ---- one-time wiring ----
+  LABELS.forEach(function (l) { $('f-label').insertAdjacentHTML('beforeend', '<option>' + l + '</option>'); });
+  function resetPage() { page = 0; renderTable(); }
+  $('f-q').addEventListener('input', resetPage);
+  $('f-levels').addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('button[data-level]') : null;
+    if (b) { toggleLevel(b.getAttribute('data-level')); }
+  });
+  // Clicking a severity tile in the summary shows only that severity in the table.
+  function tileFilter(e) {
+    var t = e.target.closest ? e.target.closest('[data-level]') : null;
+    if (!t || (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ')) { return; }
+    e.preventDefault();
+    levelSet = {};
+    levelSet[t.getAttribute('data-level')] = true;
+    resetPage();
+    var target = $('findings');
+    if (target.scrollIntoView) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  }
+  $('level-tiles').addEventListener('click', tileFilter);
+  $('level-tiles').addEventListener('keydown', tileFilter);
+  $('f-label').addEventListener('change', resetPage);
+  $('f-prev').addEventListener('click', function () { if (page > 0) { page--; renderTable(); } });
+  $('f-next').addEventListener('click', function () { page++; renderTable(); });
+  $('file').addEventListener('change', function () {
+    if (this.files && this.files[0]) { loadFile(this.files[0]); }
+    this.value = '';
+  });
+  $('back').addEventListener('click', function () {
+    renderAll(ORIGINAL);
+    $('load-msg').className = 'muted';
+    $('load-msg').textContent = '';
+  });
+  document.addEventListener('dragover', function (e) {
+    e.preventDefault();
+    $('loadbar').classList.add('drag');
+  });
+  document.addEventListener('dragleave', function (e) {
+    if (!e.relatedTarget) { $('loadbar').classList.remove('drag'); }
+  });
+  document.addEventListener('drop', function (e) {
+    e.preventDefault();
+    $('loadbar').classList.remove('drag');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) { loadFile(e.dataTransfer.files[0]); }
+  });
+
+  // Small hook for automated tests of the loader.
+  window.SemgrepDashboard = { readZipEntry: readZipEntry, baselineToView: baselineToView,
+    renderAll: renderAll, loadFile: loadFile };
+
+  if (ORIGINAL) {
+    renderAll(ORIGINAL);
+  } else {
+    showReport(false);
+    $('title').textContent = 'Semgrep SAST report';
+    $('sub').textContent = 'Load a semgrep-master-results artifact to view the master results.';
+  }
+})();
+</script>
+</body>
+</html>

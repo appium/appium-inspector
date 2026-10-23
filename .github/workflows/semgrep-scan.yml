@@ -1,0 +1,201 @@
+name: Semgrep Scan
+
+# Semgrep OSS SAST (report only for now).
+#
+# master-baseline: every 6 hours on master (cron), or a manual run (scan = master)
+#   started from master.
+#   Scans master and replaces the single "semgrep-master-results" artifact with
+#   its findings (new copy uploaded, every other copy deleted; repository default
+#   retention). This is the only writer of the baseline; PR scans only accept an
+#   artifact made by a cron or manual run of this workflow on master. It also
+#   deletes logs of Semgrep Scan runs older than 7 days (logs only).
+# pr-scan: on every PR (any branch into any branch), or a manual run (scan = pr,
+#   pr_number = N) for an open PR. Scans the PR merged into its
+#   target branch once and labels every finding OLD / NEW / FIXED / UNVERIFIED
+#   against the latest master baseline, broken down by Critical / High / Medium /
+#   Low. Results are shown in the job log and summary. The job does not fail on
+#   findings; set SEMGREP_ENFORCE to "true" later to fail on NEW Critical / High /
+#   Medium findings.
+#
+# PR scans also produce an offline HTML dashboard of their results
+# (.github/scripts/semgrep_dashboard.html), uploaded as a separate per-PR
+# artifact and linked from the job log and summary. The master baseline
+# artifact only holds semgrep-master.json.
+#
+# Mobile code is excluded via .semgrepignore. Helper: .github/scripts/semgrep_report.py
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  schedule:
+    - cron: '0 */6 * * *'
+  # Manual run: "master" refreshes the master baseline (start it on master);
+  # "pr" scans an open PR by number, same output as an automatic PR scan.
+  workflow_dispatch:
+    inputs:
+      scan:
+        description: "master = refresh master baseline (run from master); pr = scan an open PR"
+        type: choice
+        options: [master, pr]
+        default: master
+      pr_number:
+        description: "PR number (only for scan = pr)"
+        type: string
+        default: ""
+
+permissions: {}
+
+env:
+  SEMGREP_RULESETS: "p/default p/owasp-top-ten p/secrets"
+  BASELINE_BRANCH: main
+  BASELINE_ARTIFACT: semgrep-master-results
+  BASELINE_WORKFLOW: .github/workflows/semgrep-scan.yml
+
+jobs:
+  pr-scan:
+    if: >-
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'workflow_dispatch' && inputs.scan == 'pr')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    container:
+      image: semgrep/semgrep:1.178.0
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    concurrency:
+      group: semgrep-pr-${{ github.event.pull_request.number || inputs.pr_number }}
+      cancel-in-progress: true
+    env:
+      SEMGREP_ENFORCE: "false"
+      PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+    steps:
+      - name: Check PR number (manual run)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          case "$PR_NUMBER" in
+            ''|*[!0-9]*) echo "::error::Enter the number of an open PR in 'pr_number' (got '$PR_NUMBER')."; exit 1 ;;
+          esac
+
+      # Automatic runs check out the PR merge commit by default; manual runs
+      # check out the same merge commit for the given PR.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && format('refs/pull/{0}/merge', inputs.pr_number) || '' }}
+          fetch-depth: 2
+
+      - name: Mark workspace as safe for git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Resolve PR (manual run)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/semgrep_report.py pr-info --number "$PR_NUMBER"
+
+      - name: Fetch master baseline
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/semgrep_report.py fetch-baseline --out "$RUNNER_TEMP/semgrep-master.json"
+
+      - name: Semgrep scan (state after merge)
+        run: python3 .github/scripts/semgrep_report.py scan --out "$RUNNER_TEMP/semgrep-pr.json"
+
+      - name: Compare with master baseline
+        run: |
+          python3 .github/scripts/semgrep_report.py compare \
+            --results "$RUNNER_TEMP/semgrep-pr.json" \
+            --baseline "$RUNNER_TEMP/semgrep-master.json" \
+            --base-rev HEAD^1 --head-rev HEAD \
+            --dashboard .semgrep-report/semgrep-dashboard.html
+
+      # PR dashboard is its own artifact; it never touches the master baseline.
+      - name: Upload PR dashboard
+        id: pr_dashboard
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: semgrep-pr-dashboard-${{ env.PR_NUMBER }}-${{ github.run_attempt }}
+          path: .semgrep-report/semgrep-dashboard.html
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Link PR dashboard
+        if: always() && steps.pr_dashboard.outputs.artifact-url != ''
+        env:
+          DASHBOARD_URL: ${{ steps.pr_dashboard.outputs.artifact-url }}
+        run: |
+          echo "Semgrep dashboard for this PR: $DASHBOARD_URL"
+          {
+            echo "### Semgrep dashboard"
+            echo "[Open the dashboard for this PR]($DASHBOARD_URL) (download, unzip, open semgrep-dashboard.html; works offline)"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  master-baseline:
+    if: >-
+      github.event_name == 'schedule' ||
+      (github.event_name == 'workflow_dispatch' && inputs.scan == 'master')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    container:
+      image: semgrep/semgrep:1.178.0
+    permissions:
+      contents: read
+      actions: write
+    concurrency:
+      group: semgrep-master-baseline
+      cancel-in-progress: false
+    steps:
+      # The baseline must come from master; a manual run started elsewhere stops here.
+      - name: Require master
+        if: github.ref != format('refs/heads/{0}', env.BASELINE_BRANCH)
+        run: |
+          echo "::error::The master baseline can only be refreshed from $BASELINE_BRANCH. Start the run from $BASELINE_BRANCH (this run: $GITHUB_REF)."
+          exit 1
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Mark workspace as safe for git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      # A manual re-run of an old run would scan an old master commit; skip it so
+      # it cannot replace the newer baseline.
+      - name: Skip stale re-runs
+        id: stale
+        run: |
+          latest=$(git ls-remote origin "refs/heads/$BASELINE_BRANCH" | cut -f1)
+          if [ "$GITHUB_RUN_ATTEMPT" != "1" ] && [ -n "$latest" ] && [ "$latest" != "$GITHUB_SHA" ]; then
+            echo "::notice::Re-run of an old run ($GITHUB_SHA); $BASELINE_BRANCH is now $latest. Baseline left unchanged."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Semgrep scan (master)
+        if: steps.stale.outputs.skip != 'true'
+        run: python3 .github/scripts/semgrep_report.py scan --out "$RUNNER_TEMP/semgrep-master-raw.json"
+
+      - name: Build baseline
+        if: steps.stale.outputs.skip != 'true'
+        run: |
+          mkdir -p .semgrep-baseline
+          python3 .github/scripts/semgrep_report.py build-baseline \
+            --results "$RUNNER_TEMP/semgrep-master-raw.json" \
+            --out .semgrep-baseline/semgrep-master.json
+
+      - name: Upload baseline artifact
+        if: steps.stale.outputs.skip != 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ${{ env.BASELINE_ARTIFACT }}
+          path: .semgrep-baseline/semgrep-master.json
+          # 0 = repository default retention; the single copy is replaced by
+          # each run, so no extra time-based expiry is applied here.
+          retention-days: 0
+          overwrite: true
+          if-no-files-found: error
+
+      - name: Keep only this run's baseline artifact, drop stale caches and old logs
+        if: steps.stale.outputs.skip != 'true'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/semgrep_report.py cleanup --keep-run-id "$GITHUB_RUN_ID"
