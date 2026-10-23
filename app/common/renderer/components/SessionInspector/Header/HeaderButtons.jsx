@@ -26,6 +26,8 @@ const HeaderButtons = (props) => {
     toggleAutoSessionRestart,
     featureCaps,
     sessionSettings,
+    isEmbeddedMode,
+    isSessionExternallyOwned,
   } = props;
 
   return (
@@ -47,11 +49,16 @@ const HeaderButtons = (props) => {
           openLink={openLink}
         />
         <GeneralControlsGroup {...props} />
-        <SessionReloadButton
-          autoSessionRestart={autoSessionRestart}
-          toggleAutoSessionRestart={toggleAutoSessionRestart}
+        {!isEmbeddedMode && (
+          <SessionReloadButton
+            autoSessionRestart={autoSessionRestart}
+            toggleAutoSessionRestart={toggleAutoSessionRestart}
+          />
+        )}
+        <SessionQuitControlsGroup
+          quitSessionAndReturn={quitSessionAndReturn}
+          isSessionExternallyOwned={isSessionExternallyOwned}
         />
-        <SessionQuitControlsGroup quitSessionAndReturn={quitSessionAndReturn} />
       </Space>
       <Divider />
     </div>

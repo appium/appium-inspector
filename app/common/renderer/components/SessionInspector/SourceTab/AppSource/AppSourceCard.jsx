@@ -4,6 +4,9 @@ import {useTranslation} from 'react-i18next';
 
 import {downloadFile} from '../../../../utils/file-handling.js';
 import {copyToClipboard} from '../../../../utils/other.js';
+import ElementExplorer from '../ElementExplorer/ElementExplorer.jsx';
+
+import styles from './AppSource.module.css';
 
 const downloadXML = (sourceXML) => {
   const href = 'data:application/xml;charset=utf-8,' + encodeURIComponent(sourceXML);
@@ -26,15 +29,16 @@ const AppSourcePanelTitle = () => {
 };
 
 /**
- * Header action buttons for source XML copy and download.
+ * Header action buttons for source XML copy, download and embedded element exploration.
  */
-const AppSourceHeaderButtons = ({sourceXML}) => {
+const AppSourceHeaderButtons = ({sourceXML, explorerProps}) => {
   const {t} = useTranslation();
   const copyXmlLabel = t('Copy XML Source to Clipboard');
   const downloadLabel = t('Download Source as .XML File');
 
   return (
-    <span>
+    <Flex gap={4} wrap>
+      {explorerProps?.isEmbeddedMode && <ElementExplorer {...explorerProps} />}
       <Tooltip title={copyXmlLabel}>
         <Button
           aria-label={copyXmlLabel}
@@ -53,21 +57,22 @@ const AppSourceHeaderButtons = ({sourceXML}) => {
           onClick={() => downloadXML(sourceXML)}
         />
       </Tooltip>
-    </span>
+    </Flex>
   );
 };
 
 /**
  * Wrapper card for the app source tree.
  */
-const AppSourceCard = ({sourceXML, children}) => (
+const AppSourceCard = ({sourceXML, children, explorerProps}) => (
   <Card
+    className={explorerProps?.isEmbeddedMode ? styles.embeddedSourceCard : undefined}
     title={<AppSourcePanelTitle />}
     styles={{
       header: {padding: '0px 8px 0px 16px', minHeight: '48px'},
       body: {padding: '12px', height: 'calc(100% - 48px)'},
     }}
-    extra={<AppSourceHeaderButtons sourceXML={sourceXML} />}
+    extra={<AppSourceHeaderButtons sourceXML={sourceXML} explorerProps={explorerProps} />}
   >
     {children}
   </Card>

@@ -1,6 +1,32 @@
 import {STANDARD_W3C_CAPS} from '../constants/session-builder.js';
 
+export const CLIPBOARD_COPY_STATUS = Object.freeze({
+  SUCCESS: 'success',
+  FAILURE: 'failure',
+  UNAVAILABLE: 'unavailable',
+});
+
 export const copyToClipboard = (text) => navigator.clipboard.writeText(text);
+
+export const copyToClipboardSafely = async (text) => {
+  const clipboard = globalThis.navigator?.clipboard;
+  if (typeof clipboard?.writeText !== 'function') {
+    return {
+      status: CLIPBOARD_COPY_STATUS.UNAVAILABLE,
+      error: new Error('Clipboard API is unavailable'),
+    };
+  }
+
+  try {
+    await clipboard.writeText(text);
+    return {status: CLIPBOARD_COPY_STATUS.SUCCESS};
+  } catch (error) {
+    return {
+      status: CLIPBOARD_COPY_STATUS.FAILURE,
+      error: error instanceof Error ? error : new Error(String(error)),
+    };
+  }
+};
 
 /**
  * Generates a random ID string for persistent data like session details or gestures.

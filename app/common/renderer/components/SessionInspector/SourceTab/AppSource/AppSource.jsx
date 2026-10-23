@@ -8,7 +8,7 @@ const AppSource = (props) => {
   const {sourceXML} = props;
 
   return (
-    <AppSourceCard sourceXML={sourceXML}>
+    <AppSourceCard sourceXML={sourceXML} explorerProps={props}>
       <AppSourceTreeWrapper {...props} />
     </AppSourceCard>
   );

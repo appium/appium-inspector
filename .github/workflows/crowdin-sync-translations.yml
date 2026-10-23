@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    if: github.repository == 'appium/appium-inspector'
     name: Update Non-English Translations
     runs-on: ubuntu-latest
     steps:

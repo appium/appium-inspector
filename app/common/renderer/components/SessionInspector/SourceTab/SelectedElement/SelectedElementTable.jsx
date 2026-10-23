@@ -5,9 +5,16 @@ import styles from './SelectedElement.module.css';
 /**
  * Generic table component for displaying selected element data.
  */
-const SelectedElementTable = ({columns, dataSource}) => (
+const SelectedElementTable = ({columns, dataSource, ...tableProps}) => (
   <Row className={styles.selectedElemTableWrapper}>
-    <Table columns={columns} dataSource={dataSource} size="small" scroll={{x: 'max-content'}} pagination={false} />
+    <Table
+      columns={columns}
+      dataSource={dataSource}
+      size="small"
+      scroll={{x: 'max-content'}}
+      pagination={false}
+      {...tableProps}
+    />
   </Row>
 );
 

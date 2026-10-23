@@ -115,6 +115,8 @@ const INITIAL_STATE = {
   showSourceAttrs: false,
   isUploadingGestureFiles: false,
   autoSessionRestart: false,
+  isSessionExternallyOwned: false,
+  isEmbeddedMode: false,
 };
 
 let nextState;
@@ -174,6 +176,7 @@ export default function inspector(state = INITIAL_STATE, action) {
         selectedElement: {
           ...state.selectedElement,
           strategyMap: action.strategyMap,
+          ...(action.locatorCandidates ? {locatorCandidates: action.locatorCandidates} : {}),
         },
       };
 
@@ -286,6 +289,8 @@ export default function inspector(state = INITIAL_STATE, action) {
         featureCaps: action.featureCaps,
         appMode: action.appMode,
         isUsingMjpegMode: action.isUsingMjpegMode,
+        isSessionExternallyOwned: action.isSessionExternallyOwned,
+        isEmbeddedMode: action.isEmbeddedMode,
       };
     }
 

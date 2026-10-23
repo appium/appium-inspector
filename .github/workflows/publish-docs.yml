@@ -12,6 +12,7 @@ on:
 
 jobs:
   build:
+    if: github.repository == 'appium/appium-inspector'
     name: Publish Docs
     runs-on: ubuntu-latest
     steps:

@@ -33,6 +33,7 @@ export default defineConfig({
       rollupOptions: {
         input: {
           main: join(import.meta.dirname, 'app', 'common', 'index.html'),
+          embedded: join(import.meta.dirname, 'app', 'common', 'embedded.html'),
           splash: join(import.meta.dirname, 'app', 'common', 'splash.html'),
         },
       },

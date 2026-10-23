@@ -6,6 +6,52 @@
   gap: 8px;
 }
 
+.recorderSelection,
+.recorderLocatorControls {
+  width: 100%;
+}
+
+.recorderLocatorControls :global(.ant-select) {
+  min-width: 140px;
+}
+
+.recorderLocatorControls :global(.ant-input) {
+  min-width: 120px;
+}
+
+.recorderConfirmationAlert :global(.ant-alert-content) {
+  min-width: 0;
+}
+
+.recorderConfirmationContent {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.recorderConfirmationActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recorderConfirmationActions :global(.ant-btn) {
+  height: auto;
+  min-height: 32px;
+  max-width: 100%;
+  white-space: normal;
+}
+
+@media (max-width: 680px) {
+  .recorderConfirmationActions {
+    flex-direction: column;
+  }
+
+  .recorderConfirmationActions :global(.ant-btn) {
+    width: 100%;
+  }
+}
+
 .elementKeyInputActions {
   max-width: 400px;
   flex: 1;
@@ -25,13 +71,39 @@
   width: 100%;
 }
 
+.selectedElemTableWrapper :global(.locator-candidate-active) > td {
+  background: var(--ant-blue-1);
+}
+
+.selectedElemTableWrapper :global(.ant-table-row[tabindex='0']) {
+  cursor: pointer;
+}
+
+.selectedElemTableWrapper :global(.ant-table-row[tabindex='0']:focus-visible) {
+  outline: 2px solid var(--ant-color-primary);
+  outline-offset: -2px;
+}
+
 .selectedElemTableCells {
   word-wrap: break-all;
   word-break: break-all;
 }
 
 .copyableCell {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  background: none;
   cursor: pointer;
+}
+
+.copyableCell:focus-visible {
+  outline: 2px solid var(--ant-color-primary);
+  outline-offset: 2px;
 }
 
 .selectedElemBoxModelWrapper {

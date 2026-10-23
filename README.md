@@ -35,6 +35,25 @@ When inspecting a mobile app, the Inspector looks like this:
 
 ![Appium Inspector screenshot](./docs/assets/images/session-inspector.png)
 
+## Recorder integration maintained by YOpen Foundation
+
+This fork contains the embedded Inspector used by
+[Appium Recorder](https://github.com/yopenfoundation/appium-recorder).
+The Recorder checks out a fixed commit from
+`https://github.com/yopenfoundation/appium-inspector.git`; it does not follow a moving branch.
+The integration includes session ownership, verified locator candidates, manual element
+adoption, and the selected-element explorer with contextual XPath proposals.
+See [embedded mode](docs/embedded-mode.md) for the protocol and host contract.
+
+When updating this fork, run `npm ci`, `npm test` and `npm run build`, then update
+the Recorder submodule, build/runtime commit pins and packaged asset paths together.
+From the Recorder run `npm run quality`, `npm run inspector:build` and
+`npm run inspector:check` before packaging.
+
+The upstream license, attribution and documentation below are retained. Upstream
+release, documentation publishing and Crowdin workflows run only in
+`appium/appium-inspector`; code validation remains enabled in this fork.
+
 ## Installation
 
 Appium Inspector is released in two formats:

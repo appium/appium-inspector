@@ -4,6 +4,9 @@ import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-d
 import {COMMAND_EXECUTE_SCRIPT, COMMAND_UPDATE_SETTINGS} from '../constants/commands.js';
 import {DRIVERS} from '../constants/common.js';
 import {APP_MODE, NATIVE_APP, UNKNOWN_ERROR} from '../constants/session-inspector.js';
+import {verifyLocatorCandidates} from '../embedded/candidate-verification.js';
+import {EmbeddedProtocolError, emitElementUsed} from '../embedded/protocol.js';
+import {shouldTerminateSession} from '../embedded/session-ownership.js';
 import i18n from '../i18next.js';
 import InspectorDriver from '../lib/appium/inspector-driver.js';
 import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map.js';
@@ -12,6 +15,8 @@ import {debounce, isEmpty, omit} from '../utils/common.js';
 import {downloadFile, readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {parseGestureFileContents} from '../utils/gesturefile-parsing.js';
 import {getSuggestedLocators} from '../utils/locator-generation/common.js';
+import {verifyExplorerCandidate} from '../utils/locator-generation/element-explorer.js';
+import {getEmbeddedLocatorCandidates} from '../utils/locator-generation/embedded-candidates.js';
 import {getOptimalXPath} from '../utils/locator-generation/xpath.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
@@ -117,7 +122,7 @@ const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
 // Shared by selectElement and tapElement.
 // Returns the computed strategy map.
 function prepareElementSelection(path, dispatch, getState) {
-  const {sourceJSON, sourceXML, expandedPaths, currentContext, featureCaps} = getState().inspector;
+  const {sourceJSON, sourceXML, expandedPaths, currentContext, featureCaps, isEmbeddedMode} = getState().inspector;
   const isNative = currentContext === NATIVE_APP;
   // Set the selected element in the source tree
   const selectedElement = findJSONElementByPath(path, sourceJSON);
@@ -138,7 +143,10 @@ function prepareElementSelection(path, dispatch, getState) {
 
   // Calculate the recommended locator strategies
   const strategyMap = getSuggestedLocators(selectedElement, sourceXML, isNative, featureCaps.automationName);
-  dispatch({type: SET_OPTIMAL_LOCATORS, strategyMap});
+  const locatorCandidates = isEmbeddedMode
+    ? getEmbeddedLocatorCandidates(selectedElement, sourceXML, isNative, featureCaps.automationName)
+    : undefined;
+  dispatch({type: SET_OPTIMAL_LOCATORS, strategyMap, locatorCandidates});
 
   return strategyMap;
 }
@@ -187,6 +195,156 @@ export function unselectElement() {
   };
 }
 
+export function useElementInRecorder(strategy, selector, visibleCandidates, options = {}) {
+  return async (_dispatch, getState) => {
+    const {driver, isEmbeddedMode, screenshot, sourceXML, selectedElement, selectedElementId} = getState().inspector;
+    if (!isEmbeddedMode) {
+      throw new EmbeddedProtocolError('NOT_EMBEDDED_MODE', 'Recorder transfer is only available in embedded mode');
+    }
+    if (!selectedElement?.path || typeof strategy !== 'string' || typeof selector !== 'string') {
+      throw new EmbeddedProtocolError(
+        'INVALID_SELECTION',
+        'Select an element and provide a locator strategy and value',
+      );
+    }
+
+    const primary = {
+      strategy: strategy.trim(),
+      selector: selector.trim(),
+    };
+    if (!primary.strategy || !primary.selector) {
+      throw new EmbeddedProtocolError(
+        'INVALID_SELECTION',
+        'Select an element and provide a locator strategy and value',
+      );
+    }
+
+    const selectedElementPath = selectedElement.path;
+    const inspectorDriver = InspectorDriver.instance(driver);
+    const candidates = await verifyLocatorCandidates({
+      primary,
+      proposedCandidates: Array.isArray(visibleCandidates)
+        ? visibleCandidates
+        : selectedElement.locatorCandidates || [],
+      selectedElementId,
+      adoptedElementId: options.adoptedElementId,
+      findElements: async (candidate) => {
+        const result = await inspectorDriver.run({
+          strategy: candidate.strategy,
+          selector: candidate.selector,
+          fetchArray: true,
+        });
+        return result.elements.map(({id}) => id);
+      },
+      onAlternativeError: (candidate, error) => {
+        log.warn(
+          `Omitting locator candidate '${candidate.candidateId}' after Appium verification failed: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        );
+      },
+    });
+    const currentInspector = getState().inspector;
+    if (
+      currentInspector.selectedElement?.path !== selectedElementPath ||
+      currentInspector.selectedElementId !== selectedElementId
+    ) {
+      throw new EmbeddedProtocolError(
+        'SELECTION_CHANGED',
+        'El elemento seleccionado cambió durante la verificación. Confirma nuevamente el locator actual.',
+      );
+    }
+
+    const effectiveElementId = options.adoptedElementId || selectedElementId;
+    const adoptedManualElement = Boolean(options.adoptedElementId && options.adoptedElementId !== selectedElementId);
+    const payload = {
+      ...primary,
+      ...(effectiveElementId ? {elementId: effectiveElementId} : {}),
+      ...(!adoptedManualElement && selectedElement.tagName ? {tag: selectedElement.tagName} : {}),
+      attributes: adoptedManualElement ? {} : selectedElement.attributes || {},
+      candidates,
+      ...(screenshot ? {screenshot} : {}),
+      ...(sourceXML ? {source: sourceXML} : {}),
+    };
+
+    emitElementUsed(payload);
+    return payload;
+  };
+}
+
+/** Verify the catalog node through an independent XML reference before any transfer. */
+export function verifyExplorerLocator(node, candidate, snapshot, {isCurrent = () => true, transfer = false} = {}) {
+  return async (_dispatch, getState) => {
+    const initial = getState().inspector;
+    const {driver, sourceJSON: sourceCapture} = initial;
+    if (!initial.isEmbeddedMode || initial.currentContext !== NATIVE_APP || !driver) {
+      throw new EmbeddedProtocolError('NOT_EMBEDDED_MODE', 'El explorador requiere una sesión nativa embebida.');
+    }
+    const current = () => {
+      const state = getState().inspector;
+      return (
+        isCurrent() &&
+        state.driver === driver &&
+        driver.sessionId === snapshot.sessionId &&
+        state.sourceXML === snapshot.sourceXml &&
+        state.currentContext === snapshot.context &&
+        state.sourceJSON === sourceCapture &&
+        !state.isQuittingSession &&
+        !state.isSessionDone
+      );
+    };
+    const assertCurrent = () => {
+      if (!current()) {
+        throw new EmbeddedProtocolError('STALE_SNAPSHOT', 'La pantalla cambió. Actualiza el explorador.');
+      }
+    };
+    // Redux may still hold the old capture after navigation or an asynchronous device update.
+    // Read the live source without refreshing the store, then verify it again before transfer.
+    const assertLiveSnapshot = async () => {
+      assertCurrent();
+      const context = await driver.getAppiumContext();
+      assertCurrent();
+      if (context !== snapshot.context) {
+        throw new EmbeddedProtocolError('STALE_SNAPSHOT', 'El contexto cambió. Actualiza el explorador.');
+      }
+      const source = await driver.getPageSource();
+      assertCurrent();
+      if (typeof source !== 'string' || source.trim() !== snapshot.sourceXml.trim()) {
+        throw new EmbeddedProtocolError('STALE_SNAPSHOT', 'La pantalla cambió. Actualiza el explorador.');
+      }
+      const finalContext = await driver.getAppiumContext();
+      assertCurrent();
+      if (finalContext !== snapshot.context) {
+        throw new EmbeddedProtocolError('STALE_SNAPSHOT', 'El contexto cambió. Actualiza el explorador.');
+      }
+    };
+    await assertLiveSnapshot();
+    const inspectorDriver = InspectorDriver.instance(driver);
+    const verified = await verifyExplorerCandidate({
+      node,
+      candidate,
+      isCurrent: current,
+      findElements: async ({strategy, selector}) => {
+        const result = await inspectorDriver.run({strategy, selector, fetchArray: true, skipRefresh: true});
+        return result.elements.map(({id}) => id);
+      },
+    });
+    await assertLiveSnapshot();
+    const payload = {
+      strategy: candidate.strategy,
+      selector: candidate.selector,
+      elementId: verified.elementId,
+      tag: node.tag,
+      attributes: node.attributes,
+      candidates: verified.candidates,
+    };
+    if (transfer) {
+      emitElementUsed(payload);
+    }
+    return payload;
+  };
+}
+
 // Selects the element at the given source path and immediately taps it (elementClick),
 // in a single action. Used by the 'Tap By Element' screenshot interaction mode, where
 // every click is a deliberate one-shot action rather than a browsing/hover selection,
@@ -223,6 +381,10 @@ export function unselectCentroid() {
  */
 export function applyClientMethod(params) {
   return async (dispatch, getState) => {
+    if (params.methodName === 'deleteSession' && getState().inspector.isSessionExternallyOwned) {
+      log.warn('Blocked deleteSession for an externally owned session');
+      return;
+    }
     const isRecording =
       params.methodName !== 'deleteSession' &&
       params.methodName !== 'getPageSource' &&
@@ -339,7 +501,7 @@ export function quitSession({reason, manualQuit = true, detachOnly = false} = {}
   return async (dispatch, getState) => {
     const killAction = killKeepAliveLoop();
     killAction(dispatch, getState);
-    if (!detachOnly) {
+    if (shouldTerminateSession({...getState().inspector, detachOnly})) {
       const applyAction = applyClientMethod({methodName: 'deleteSession'});
       await applyAction(dispatch, getState);
     }
@@ -400,7 +562,15 @@ export function toggleShowBoilerplate() {
   };
 }
 
-export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, isUsingMjpegMode}) {
+export function setSessionDetails({
+  serverDetails,
+  driver,
+  sessionCaps,
+  appMode,
+  isUsingMjpegMode,
+  isSessionExternallyOwned = false,
+  isEmbeddedMode = false,
+}) {
   return (dispatch) => {
     // Extract several capabilities from the finalised set of caps
     // that may be relevant for enabling specific Inspector features
@@ -420,6 +590,8 @@ export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, 
       featureCaps,
       appMode,
       isUsingMjpegMode,
+      isSessionExternallyOwned,
+      isEmbeddedMode,
     });
   };
 }
@@ -885,7 +1057,7 @@ export function callClientMethod(params) {
       return res;
     } catch (error) {
       log.error(error);
-      if (getState().inspector.autoSessionRestart) {
+      if (getState().inspector.autoSessionRestart && !getState().inspector.isSessionExternallyOwned) {
         const restartSes = restartSession(error, params);
         return await restartSes(dispatch, getState);
       }

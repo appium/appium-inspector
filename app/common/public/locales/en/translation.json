@@ -261,6 +261,8 @@
   "Session Details": "Session Details",
   "Currently Active App ID": "Currently Active App ID",
   "confirmDeletion": "Are you sure you want to delete this?",
+  "Copy failed": "Copy failed",
+  "Copy to clipboard": "Copy to clipboard",
   "Copied!": "Copied!",
   "Error Fetching Session URL": "Error Fetching Session URL",
   "noRunningSessionsFound": "No running sessions found",

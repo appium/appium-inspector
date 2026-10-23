@@ -36,6 +36,7 @@ nav:
       - quickstart/installation.md
       - quickstart/starting-a-session.md
   - menu-bar.md
+  - embedded-mode.md
   - Session Builder:
       - session-builder/index.md
       - session-builder/app-settings.md

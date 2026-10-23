@@ -12,6 +12,12 @@ export default defineConfig(({command}) => {
       minify: false,
       reportCompressedSize: false,
       target: 'es2022',
+      rollupOptions: {
+        input: {
+          main: join(import.meta.dirname, 'app', 'common', 'index.html'),
+          embedded: join(import.meta.dirname, 'app', 'common', 'embedded.html'),
+        },
+      },
     },
     define: {
       // add empty polyfills for some Node.js primitives

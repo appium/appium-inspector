@@ -75,3 +75,13 @@
 .sourceTree :global(.ant-tree-switcher-line-icon) {
   vertical-align: -0.2em;
 }
+
+.embeddedSourceCard :global(.ant-card-head-wrapper) {
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-block: 8px;
+}
+.embeddedSourceCard :global(.ant-card-extra) {
+  max-width: 100%;
+  margin-inline-start: 0;
+}

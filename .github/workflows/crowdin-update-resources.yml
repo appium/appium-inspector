@@ -11,6 +11,7 @@ on:
 
 jobs:
   build:
+    if: github.repository == 'appium/appium-inspector'
     name: Update English Translation Strings
     runs-on: ubuntu-latest
     steps:

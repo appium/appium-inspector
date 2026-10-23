@@ -407,6 +407,55 @@ export function newSession(originalCaps, attachSessId = null) {
 }
 
 /**
+ * Attach embedded mode to a session owned by the host application.
+ */
+export function attachToExternalSession({serverUrl, sessionId, capabilities, platform}) {
+  return (dispatch) => {
+    const url = new URL(serverUrl);
+    const protocol = url.protocol.slice(0, -1);
+    const port = url.port ? Number.parseInt(url.port, 10) : protocol === 'https' ? 443 : 80;
+    const path = url.pathname || '/';
+    const attachedCapabilities = {
+      ...capabilities,
+      platformName: capabilities.platformName || platform,
+    };
+    const platformName = attachedCapabilities.platformName;
+    const serverOpts = {
+      hostname: url.hostname,
+      port,
+      protocol,
+      path,
+      connectionRetryCount: CONN_RETRIES,
+      connectionRetryTimeout: CONN_TIMEOUT,
+      logLevel: DEFAULT_SERVER_PROPS.logLevel,
+      isMobile: true,
+      isIOS: /iOS/i.test(platformName),
+      isAndroid: /Android/i.test(platformName),
+    };
+    const driver = WDSessionStarter.attachToSession(sessionId, serverOpts, attachedCapabilities);
+    const appMode = String(attachedCapabilities.browserName || '').trim() ? APP_MODE.WEB_HYBRID : APP_MODE.NATIVE;
+    const action = setSessionDetails({
+      serverDetails: {
+        serverUrl,
+        serverUrlParts: {
+          protocol,
+          host: url.hostname,
+          port,
+          path,
+        },
+      },
+      driver,
+      sessionCaps: attachedCapabilities,
+      appMode,
+      isUsingMjpegMode: false,
+      isSessionExternallyOwned: true,
+      isEmbeddedMode: true,
+    });
+    action(dispatch);
+  };
+}
+
+/**
  * Saves the caps and server details
  */
 export function saveSession(sessionParams, checkDuplicateName = false) {

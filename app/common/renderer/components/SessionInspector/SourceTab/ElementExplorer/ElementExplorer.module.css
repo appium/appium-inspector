@@ -1,0 +1,115 @@
+.toolbar,
+.analysis {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 14px;
+}
+.analysis {
+  margin-top: 12px;
+}
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  margin: 16px 0;
+}
+.elementHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+.elementInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+.candidate {
+  min-width: 0;
+}
+.selector {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: monospace;
+  font-size: 12px;
+  margin: 4px 0 !important;
+}
+.attributes summary {
+  cursor: pointer;
+}
+.attributes dl {
+  margin: 8px 0;
+  max-height: 180px;
+  overflow: auto;
+}
+.attributes dl > div {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.8fr) minmax(0, 1.5fr);
+  gap: 12px;
+  padding: 4px 0;
+}
+.attributes dt {
+  font-weight: 600;
+}
+.attributes dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.loading {
+  min-height: 180px;
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+}
+@media (max-width: 700px) {
+  .toolbar,
+  .analysis {
+    flex-wrap: wrap;
+  }
+  .elementHeader {
+    gap: 12px;
+  }
+  .attributes dl > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+}
+.preview {
+  flex-shrink: 0;
+  align-self: flex-start;
+  position: relative;
+  line-height: 0;
+  overflow: hidden;
+  border-radius: 6px;
+}
+.preview img {
+  display: block;
+  max-height: 140px;
+  max-width: 100%;
+  width: auto;
+}
+.previewRect {
+  position: absolute;
+  box-sizing: border-box;
+  border: 2px solid #fa8c16;
+  background: #fa8c1633;
+}
+.frameworkContract {
+  margin-top: 8px;
+}
+
+.launcher {
+  display: inline-flex;
+  max-width: 100%;
+}
+.launchButton {
+  max-width: 100%;
+  height: auto;
+  min-height: 32px;
+  white-space: normal;
+}

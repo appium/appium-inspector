@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 /**
  * Controls used to quit the session.
  */
-const SessionQuitControlsGroup = ({quitSessionAndReturn}) => {
+const SessionQuitControlsGroup = ({quitSessionAndReturn, isSessionExternallyOwned = false}) => {
   const {t} = useTranslation();
   const detachLabel = t('detachFromSession');
   const quitLabel = t('Quit Session');
@@ -20,9 +20,11 @@ const SessionQuitControlsGroup = ({quitSessionAndReturn}) => {
           onClick={() => quitSessionAndReturn({detachOnly: true})}
         />
       </Tooltip>
-      <Tooltip title={quitLabel}>
-        <Button aria-label={quitLabel} id="btnClose" icon={<IconX size={18} />} onClick={quitSessionAndReturn} />
-      </Tooltip>
+      {!isSessionExternallyOwned && (
+        <Tooltip title={quitLabel}>
+          <Button aria-label={quitLabel} id="btnClose" icon={<IconX size={18} />} onClick={quitSessionAndReturn} />
+        </Tooltip>
+      )}
     </Space.Compact>
   );
 };
