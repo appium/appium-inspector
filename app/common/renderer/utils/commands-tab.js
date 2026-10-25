@@ -1,4 +1,8 @@
-import {APPIUM_TO_WD_COMMANDS, COMMANDS_WITH_MISMATCHED_PARAMS} from '../constants/commands.js';
+import {
+  APPIUM_TO_WD_COMMANDS,
+  COMMAND_ARGS_SOURCE_METHODS,
+  COMMANDS_WITH_MISMATCHED_PARAMS,
+} from '../constants/commands.js';
 import {isEmpty, isPlainObject} from './common.js';
 
 /**
@@ -213,4 +217,38 @@ function transformInnerCommandsMap(pathsToCmdsMap) {
     }
   }
   return transformedMap;
+}
+
+/**
+ * Populate parameter dropdown options for commands whose parameter values can be
+ * dynamically retrieved from the active session (e.g. switchToWindow -> getWindowHandles).
+ *
+ * @param {Object} commandDetails command details object ({name, details, isExecute})
+ * @param {Function} [executeDriverCommand] function to execute a side-effect-free driver command
+ * @returns {Promise<Object>} commandDetails with parameter options populated when available
+ */
+export async function enrichCommandDetailsWithOptions(commandDetails, executeDriverCommand) {
+  const argSource = COMMAND_ARGS_SOURCE_METHODS[commandDetails?.name];
+  if (!argSource || typeof executeDriverCommand !== 'function' || isEmpty(commandDetails?.details?.params)) {
+    return commandDetails;
+  }
+
+  try {
+    const {commandRes} = await executeDriverCommand({methodName: argSource.methodName});
+    if (!Array.isArray(commandRes) || isEmpty(commandRes)) {
+      return commandDetails;
+    }
+    const options = commandRes.map(String);
+    return {
+      ...commandDetails,
+      details: {
+        ...commandDetails.details,
+        params: commandDetails.details.params.map((param) =>
+          param.name === argSource.paramName ? {...param, options} : param,
+        ),
+      },
+    };
+  } catch {
+    return commandDetails;
+  }
 }

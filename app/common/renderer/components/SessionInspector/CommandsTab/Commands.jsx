@@ -1,7 +1,12 @@
 import {useEffect, useRef, useState} from 'react';
 
 import {COMMAND_EXECUTE_SCRIPT} from '../../../constants/commands.js';
-import {adjustParamValueType, transformCommandsMap, transformExecMethodsMap} from '../../../utils/commands-tab.js';
+import {
+  adjustParamValueType,
+  enrichCommandDetailsWithOptions,
+  transformCommandsMap,
+  transformExecMethodsMap,
+} from '../../../utils/commands-tab.js';
 import {isEmpty, isPlainObject} from '../../../utils/common.js';
 import CommandParametersModal from './CommandParametersModal.jsx';
 import CommandResultModal from './CommandResult/CommandResultModal.jsx';
@@ -14,7 +19,7 @@ import styles from './Commands.module.css';
 /**
  * Contents of the commands tab.
  */
-const Commands = ({applyClientMethod, getSupportedSessionMethods, getItemColspan}) => {
+const Commands = ({applyClientMethod, executeDriverCommand, getSupportedSessionMethods, getItemColspan}) => {
   const [hasMethodsMap, setHasMethodsMap] = useState(null);
   const [driverCommands, setDriverCommands] = useState(null);
   const [driverExecuteMethods, setDriverExecuteMethods] = useState(null);
@@ -24,10 +29,11 @@ const Commands = ({applyClientMethod, getSupportedSessionMethods, getItemColspan
 
   const [commandResult, setCommandResult] = useState(undefined);
 
-  const startCommand = (commandDetails) => {
-    setCurCommandDetails(commandDetails);
-    if (isEmpty(commandDetails.details.params)) {
-      prepareAndRunCommand(commandDetails);
+  const startCommand = async (commandDetails) => {
+    const enrichedCommandDetails = await enrichCommandDetailsWithOptions(commandDetails, executeDriverCommand);
+    setCurCommandDetails(enrichedCommandDetails);
+    if (isEmpty(enrichedCommandDetails.details.params)) {
+      prepareAndRunCommand(enrichedCommandDetails);
     }
   };
 

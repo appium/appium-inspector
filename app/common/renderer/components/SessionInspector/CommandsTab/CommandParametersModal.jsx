@@ -1,4 +1,4 @@
-import {Input, Modal, Space, Typography} from 'antd';
+import {AutoComplete, Input, Modal, Space, Typography} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {isEmpty} from '../../../utils/common.js';
@@ -41,7 +41,15 @@ const CommandParametersModal = ({
       {(curCommandDetails.details.params ?? []).map((param, index) => (
         <Space.Compact block key={param.name} className={styles.commandArgInputRow}>
           <Space.Addon>{formatParamInputLabel(param)}</Space.Addon>
-          <Input onChange={(e) => (curCommandParamValsRef.current[index] = e.target.value)} />
+          {!isEmpty(param.options) ? (
+            <AutoComplete
+              styles={{root: {width: '100%'}}}
+              options={param.options.map((opt) => ({value: opt, label: opt}))}
+              onChange={(value) => (curCommandParamValsRef.current[index] = value)}
+            />
+          ) : (
+            <Input onChange={(e) => (curCommandParamValsRef.current[index] = e.target.value)} />
+          )}
         </Space.Compact>
       ))}
     </Modal>

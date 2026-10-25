@@ -63,6 +63,7 @@ const SessionInspectorTabs = (props) => {
       children: (
         <Commands
           applyClientMethod={applyClientMethod}
+          executeDriverCommand={props.executeDriverCommand}
           getSupportedSessionMethods={getSupportedSessionMethods}
           getItemColspan={getItemColspan}
         />

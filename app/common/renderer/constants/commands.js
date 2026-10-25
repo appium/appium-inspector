@@ -384,6 +384,17 @@ export const COMMAND_EXECUTE_SCRIPT = 'executeScript';
 export const COMMAND_UPDATE_SETTINGS = 'updateSettings';
 
 /**
+ * Mapping of commands whose parameter options can be dynamically fetched
+ * from another driver command before opening the parameters modal.
+ */
+export const COMMAND_ARGS_SOURCE_METHODS = {
+  switchToWindow: {
+    paramName: 'handle',
+    methodName: 'getWindowHandles',
+  },
+};
+
+/**
  * Breakpoints used for the grid of command buttons.
  * For each entry, colspan is the colspan to use for each button,
  * if the width of the Commands tab in pixels is below maxWidth.

@@ -1,8 +1,9 @@
-import {describe, expect, it} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 
 import {
   adjustParamValueType,
   deepFilterEmpty,
+  enrichCommandDetailsWithOptions,
   extractParamsFromCommandPath,
   filterMethodPairs,
   transformCommandsMap,
@@ -412,6 +413,61 @@ describe('utils/commands-tab.js', function () {
       expect(transformExecMethodsMap(getExecMethodsResponse)).toEqual([
         ['mobile: doThing', {command: 'doThing', info: 'from-plugin'}],
       ]);
+    });
+  });
+
+  describe('#enrichCommandDetailsWithOptions', function () {
+    it('should populate handle options for switchToWindow from getWindowHandles', async function () {
+      const commandDetails = {
+        name: 'switchToWindow',
+        details: {
+          params: [{name: 'handle', required: true}],
+          refresh: true,
+        },
+      };
+      const executeDriverCommand = vi.fn().mockResolvedValue({
+        commandRes: ['CDwindow-1', 'CDwindow-2'],
+      });
+
+      const enriched = await enrichCommandDetailsWithOptions(commandDetails, executeDriverCommand);
+
+      expect(executeDriverCommand).toHaveBeenCalledWith({methodName: 'getWindowHandles'});
+      expect(enriched).toEqual({
+        name: 'switchToWindow',
+        details: {
+          params: [{name: 'handle', required: true, options: ['CDwindow-1', 'CDwindow-2']}],
+          refresh: true,
+        },
+      });
+      // Original object should not be mutated
+      expect(commandDetails.details.params[0].options).toBeUndefined();
+    });
+
+    it('should return commandDetails unchanged if getWindowHandles returns an empty array or fails', async function () {
+      const commandDetails = {
+        name: 'switchToWindow',
+        details: {
+          params: [{name: 'handle', required: true}],
+        },
+      };
+      const emptyExec = vi.fn().mockResolvedValue({commandRes: []});
+      const failingExec = vi.fn().mockRejectedValue(new Error('Not implemented'));
+
+      expect(await enrichCommandDetailsWithOptions(commandDetails, emptyExec)).toBe(commandDetails);
+      expect(await enrichCommandDetailsWithOptions(commandDetails, failingExec)).toBe(commandDetails);
+    });
+
+    it('should not call executeDriverCommand for commands without dynamic argument sources', async function () {
+      const commandDetails = {
+        name: 'navigateTo',
+        details: {
+          params: [{name: 'url', required: true}],
+        },
+      };
+      const executeDriverCommand = vi.fn();
+
+      expect(await enrichCommandDetailsWithOptions(commandDetails, executeDriverCommand)).toBe(commandDetails);
+      expect(executeDriverCommand).not.toHaveBeenCalled();
     });
   });
 });
