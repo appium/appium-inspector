@@ -1,4 +1,4 @@
-import {Alert, Button, Input, Row, Space} from 'antd';
+import {Alert, Button, Input, Row, Space, Table} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {ALERT, BUTTON} from '../../../../constants/antd-types.js';
@@ -80,6 +80,51 @@ const LocatorSearchFormValueInputField = ({locatorSearchValue, setLocatorSearchV
 );
 
 /**
+ * Table listing previous locator strategy and selector searches.
+ */
+const LocatorSearchFormHistoryTable = ({
+  searchHistory,
+  locatorSearchStrategy,
+  locatorSearchValue,
+  selectSearchHistoryEntry,
+}) => {
+  const selectedKey = JSON.stringify([locatorSearchStrategy, locatorSearchValue]);
+
+  return (
+    <Row>
+      <Table
+        pagination={false}
+        className={styles.searchResultsList}
+        dataSource={searchHistory.map(({strategy, selector}) => ({
+          key: JSON.stringify([strategy, selector]),
+          strategy,
+          selector,
+        }))}
+        columns={[
+          {
+            dataIndex: 'strategy',
+            className: styles.searchHistoryStrategyCell,
+          },
+          {
+            dataIndex: 'selector',
+          },
+        ]}
+        showHeader={false}
+        onRow={(row) => ({
+          onClick: () => selectSearchHistoryEntry({strategy: row.strategy, selector: row.selector}),
+        })}
+        rowSelection={{
+          selectedRowKeys: [selectedKey],
+          hideSelectAll: true,
+          columnWidth: 0,
+          renderCell: () => null,
+        }}
+      />
+    </Row>
+  );
+};
+
+/**
  * Input form for locator search related data.
  */
 const LocatorSearchForm = ({
@@ -89,6 +134,9 @@ const LocatorSearchForm = ({
   locatorSearchStrategy,
   automationName,
   currentContext,
+  searchHistory = [],
+  showSearchHistory = false,
+  selectSearchHistoryEntry,
 }) => {
   const {t} = useTranslation();
 
@@ -107,6 +155,17 @@ const LocatorSearchForm = ({
         locatorSearchValue={locatorSearchValue}
         setLocatorSearchValue={setLocatorSearchValue}
       />
+      {showSearchHistory && !!searchHistory.length && (
+        <>
+          {t('searchHistory')}
+          <LocatorSearchFormHistoryTable
+            searchHistory={searchHistory}
+            locatorSearchStrategy={locatorSearchStrategy}
+            locatorSearchValue={locatorSearchValue}
+            selectSearchHistoryEntry={selectSearchHistoryEntry}
+          />
+        </>
+      )}
     </Space>
   );
 };
