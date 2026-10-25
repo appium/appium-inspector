@@ -18,6 +18,7 @@ const HeaderButtons = (props) => {
     selectAppMode,
     appMode,
     applyClientMethod,
+    executeDriverCommand,
     quitSessionAndReturn,
     contexts,
     currentContext,
@@ -31,7 +32,11 @@ const HeaderButtons = (props) => {
   return (
     <div className={styles.headerButtons}>
       <Space size={['middle', 'small']} wrap className={styles.headerButtonsSpace}>
-        <DeviceControlsGroup featureCaps={featureCaps} applyClientMethod={applyClientMethod} />
+        <DeviceControlsGroup
+          featureCaps={featureCaps}
+          applyClientMethod={applyClientMethod}
+          executeDriverCommand={executeDriverCommand}
+        />
         <DriverControlsGroup
           featureCaps={featureCaps}
           sessionSettings={sessionSettings}

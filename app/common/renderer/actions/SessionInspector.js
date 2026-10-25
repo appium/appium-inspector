@@ -908,9 +908,11 @@ export function callClientMethod(params) {
 // Simple alternative to callClientMethod, for when we only want to
 // run the command without any side-effects
 export function executeDriverCommand(params) {
-  return async (getState) => {
+  return async (_dispatch, getState) => {
     const {driver} = getState().inspector;
     params.skipRefresh = true;
+    log.info(`Calling client method with params:`);
+    log.info(params);
     const inspectorDriver = InspectorDriver.instance(driver);
     return await inspectorDriver.run(params);
   };
