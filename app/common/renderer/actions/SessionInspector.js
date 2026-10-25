@@ -16,10 +16,12 @@ import {getOptimalXPath} from '../utils/locator-generation/xpath.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
 import {getRandomId} from '../utils/other.js';
+import {createSnapshot, getScreenshotMimeType, MAX_SNAPSHOT_FILE_SIZE, parseSnapshot} from '../utils/snapshot.js';
 import {findDOMNodeByPath, findJSONElementByPath, xmlToDOM, xmlToJSON} from '../utils/source-parsing.js';
 import {newSession, showError} from './SessionBuilder.js';
 
 export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
+export const LOAD_SNAPSHOT = 'LOAD_SNAPSHOT';
 export const SET_SOURCE_AND_SCREENSHOT = 'SET_SOURCE_AND_SCREENSHOT';
 export const STORE_SESSION_SETTINGS = 'STORE_SESSION_SETTINGS';
 export const SESSION_DONE = 'SESSION_DONE';
@@ -147,6 +149,7 @@ function prepareElementSelection(path, dispatch, getState) {
 // caches the resulting elementId, and returns it (or null if none of them worked).
 // Shared by selectElement (debounced below) and tapElement (called immediately).
 async function resolveElementId(strategyMap, dispatch, getState, path) {
+  const {driver} = getState().inspector;
   for (let [strategy, selector] of strategyMap) {
     // Get the information about the element
     const action = callClientMethod({
@@ -154,6 +157,9 @@ async function resolveElementId(strategyMap, dispatch, getState, path) {
       selector,
     });
     let {elementId} = await action(dispatch, getState);
+    if (!isCurrentSession(getState, driver)) {
+      return null;
+    }
 
     // Set the elementId for the selected element
     // (check first that the selectedElementPath didn't change, to avoid race conditions)
@@ -175,6 +181,12 @@ const debouncedResolveElementId = debounce(resolveElementId, 1000);
 export function selectElement(path) {
   return async (dispatch, getState) => {
     const strategyMap = prepareElementSelection(path, dispatch, getState);
+
+    if (getState().inspector.isSnapshot) {
+      debouncedResolveElementId.cancel();
+      dispatch({type: SET_INTERACTIONS_NOT_AVAILABLE});
+      return;
+    }
 
     // Debounce find element so that if another element is selected shortly after, cancel the previous search
     await debouncedResolveElementId(strategyMap, dispatch, getState, path);
@@ -223,6 +235,10 @@ export function unselectCentroid() {
  */
 export function applyClientMethod(params) {
   return async (dispatch, getState) => {
+    if (getState().inspector.isSnapshot) {
+      throw new Error(i18n.t('snapshotReadOnly'));
+    }
+    const {driver} = getState().inspector;
     const isRecording =
       params.methodName !== 'deleteSession' &&
       params.methodName !== 'getPageSource' &&
@@ -230,6 +246,10 @@ export function applyClientMethod(params) {
       getState().inspector.isRecording;
     dispatch({type: METHOD_CALL_REQUESTED});
     const callAction = callClientMethod(params);
+    const result = await callAction(dispatch, getState);
+    if (!result || !isCurrentSession(getState, driver)) {
+      return;
+    }
     const {
       contexts,
       contextsError,
@@ -246,7 +266,7 @@ export function applyClientMethod(params) {
       variableIndex,
       strategy,
       selector,
-    } = await callAction(dispatch, getState);
+    } = result;
 
     // TODO: Implement recorder code for gestures
     if (isRecording) {
@@ -266,6 +286,9 @@ export function applyClientMethod(params) {
       const storeSettingsAction = storeSessionSettings(params.args[0]);
       await storeSettingsAction(dispatch, getState);
     }
+    if (!isCurrentSession(getState, driver)) {
+      return;
+    }
     dispatch({type: METHOD_CALL_DONE});
 
     if (source) {
@@ -275,6 +298,7 @@ export function applyClientMethod(params) {
         currentContext,
         sourceJSON: xmlToJSON(source),
         sourceXML: source,
+        sourceCapturedAt: new Date().toISOString(),
         screenshot,
         windowSize,
         contextsError,
@@ -337,16 +361,88 @@ export function setExpandedPaths(paths) {
  */
 export function quitSession({reason, manualQuit = true, detachOnly = false} = {}) {
   return async (dispatch, getState) => {
+    const {driver} = getState().inspector;
+    debouncedResolveElementId.cancel();
     const killAction = killKeepAliveLoop();
     killAction(dispatch, getState);
-    if (!detachOnly) {
+    clearTimeout(getState().inspector.userWaitTimeout);
+    if (!detachOnly && !getState().inspector.isSnapshot) {
       const applyAction = applyClientMethod({methodName: 'deleteSession'});
       await applyAction(dispatch, getState);
+      if (!isCurrentSession(getState, driver)) {
+        return;
+      }
     }
     dispatch({type: QUIT_SESSION_DONE});
     InspectorDriver.clearInstance(); // clear the 'cached' driver instance
     if (!manualQuit) {
       showError(new Error(reason || i18n.t('Session has been terminated')), {secs: 0});
+    }
+  };
+}
+
+/**
+ * Open one validated snapshot without creating or attaching to a WebDriver session.
+ * Returns whether the caller may navigate to the inspector.
+ */
+export function openSnapshot(files) {
+  return async (dispatch, getState) => {
+    try {
+      if (hasLiveOrPendingSession(getState)) {
+        throw new Error(i18n.t('snapshotSessionOpenError'));
+      }
+      if (files.length !== 1 || files[0].size > MAX_SNAPSHOT_FILE_SIZE) {
+        throw new Error(i18n.t('snapshotImportError'));
+      }
+      const [{content, error}] = await readTextFromUploadedFiles(files);
+      if (error) {
+        throw new Error(i18n.t('snapshotImportError'));
+      }
+      const snapshot = parseSnapshot(content);
+      const sourceJSON = xmlToJSON(snapshot.sourceXML);
+      // Header validation bounds the image dimensions; decoding also catches corrupt pixel data.
+      // The image source is always the validated inline PNG/JPEG, never a URL from the file.
+      const image = new Image();
+      image.src = `data:${getScreenshotMimeType(snapshot.screenshot)};base64,${snapshot.screenshot}`;
+      try {
+        await image.decode();
+      } catch {
+        throw new Error(i18n.t('snapshotImportError'));
+      }
+      if (hasLiveOrPendingSession(getState)) {
+        throw new Error(i18n.t('snapshotSessionOpenError'));
+      }
+      // Cancel pending work only after validation so a failed import leaves the current view intact.
+      debouncedResolveElementId.cancel();
+      clearInterval(getState().inspector.keepAliveInterval);
+      clearTimeout(getState().inspector.userWaitTimeout);
+      InspectorDriver.clearInstance();
+      dispatch({type: LOAD_SNAPSHOT, snapshot, sourceJSON});
+      return true;
+    } catch (error) {
+      showError(error);
+      return false;
+    }
+  };
+}
+
+/** Save the currently displayed source and screenshot in a portable snapshot file. */
+export function exportSnapshot() {
+  return (_dispatch, getState) => {
+    try {
+      const snapshot = createSnapshot(getState().inspector);
+      const href = URL.createObjectURL(new Blob([JSON.stringify(snapshot, null, 2)], {type: 'application/json'}));
+      const timestamp = snapshot.capturedAt.replaceAll(':', '-');
+      try {
+        downloadFile(href, `appium-snapshot-${timestamp}.json`);
+      } finally {
+        // Let the browser consume the download URL before releasing its backing data.
+        setTimeout(() => URL.revokeObjectURL(href), 0);
+      }
+      return true;
+    } catch (error) {
+      showError(error);
+      return false;
     }
   };
 }
@@ -823,15 +919,25 @@ export function setUserWaitTimeout(userWaitTimeout) {
  */
 export function runKeepAliveLoop() {
   return (dispatch, getState) => {
+    if (getState().inspector.isSnapshot) {
+      return;
+    }
     dispatch({type: SET_LAST_ACTIVE_MOMENT, lastActiveMoment: Date.now()});
     const {driver} = getState().inspector;
 
     const keepAliveInterval = setInterval(async () => {
-      const {lastActiveMoment, showKeepAlivePrompt} = getState().inspector;
+      if (!isCurrentSession(getState, driver)) {
+        clearInterval(keepAliveInterval);
+        return;
+      }
       log.info('Pinging Appium server to keep session active');
       try {
         await driver.getTimeouts(); // Pings the Appium server to keep it alive
       } catch {}
+      if (!isCurrentSession(getState, driver)) {
+        return;
+      }
+      const {lastActiveMoment, showKeepAlivePrompt} = getState().inspector;
       const now = Date.now();
 
       // If the new command limit has been surpassed, prompt user if they want to keep session going
@@ -871,6 +977,9 @@ export function keepSessionAlive() {
 
 export function callClientMethod(params) {
   return async (dispatch, getState) => {
+    if (getState().inspector.isSnapshot) {
+      throw new Error(i18n.t('snapshotReadOnly'));
+    }
     const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} = getState().inspector;
     params.appMode = appMode;
     params.autoSessionRestart = autoSessionRestart;
@@ -891,9 +1000,15 @@ export function callClientMethod(params) {
       action(dispatch, getState);
       const inspectorDriver = InspectorDriver.instance(driver);
       const res = await inspectorDriver.run(params);
+      if (!isCurrentSession(getState, driver)) {
+        return {};
+      }
       res.elementId = res.id;
       return res;
     } catch (error) {
+      if (!isCurrentSession(getState, driver)) {
+        return {};
+      }
       log.error(error);
       if (getState().inspector.autoSessionRestart) {
         const restartSes = restartSession(error, params);
@@ -909,6 +1024,9 @@ export function callClientMethod(params) {
 // run the command without any side-effects
 export function executeDriverCommand(params) {
   return async (getState) => {
+    if (getState().inspector.isSnapshot) {
+      throw new Error(i18n.t('snapshotReadOnly'));
+    }
     const {driver} = getState().inspector;
     params.skipRefresh = true;
     const inspectorDriver = InspectorDriver.instance(driver);
@@ -1095,4 +1213,14 @@ function parseAndValidateGestureFileString(gestureFileString) {
     return null;
   }
   return omit(gestureJSON, ['id', 'date']);
+}
+
+function isCurrentSession(getState, driver) {
+  const inspector = getState().inspector;
+  return !inspector.isSnapshot && inspector.driver === driver;
+}
+
+function hasLiveOrPendingSession(getState) {
+  const {inspector, builder} = getState();
+  return inspector.driver || builder?.newSessionRequested || builder?.newSessionLoading;
 }

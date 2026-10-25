@@ -26,6 +26,7 @@ const SelectedElementHeaderButtons = ({
   elementActionsDisabled,
   selectedElementId,
   applyClientMethod,
+  isSnapshot,
 }) => {
   const {t} = useTranslation();
   const copyAttrsLabel = t('Copy Attributes to Clipboard');
@@ -54,16 +55,18 @@ const SelectedElementHeaderButtons = ({
           onClick={() => copyToClipboard(JSON.stringify(elementAttributesData))}
         />
       </Tooltip>
-      <Tooltip title={downloadLabel}>
-        <Button
-          aria-label={downloadLabel}
-          type="text"
-          disabled={elementActionsDisabled}
-          icon={<IconDownload size={18} />}
-          id="btnDownloadElemScreenshot"
-          onClick={() => downloadElementScreenshot(selectedElementId)}
-        />
-      </Tooltip>
+      {!isSnapshot && (
+        <Tooltip title={downloadLabel}>
+          <Button
+            aria-label={downloadLabel}
+            type="text"
+            disabled={elementActionsDisabled}
+            icon={<IconDownload size={18} />}
+            id="btnDownloadElemScreenshot"
+            onClick={() => downloadElementScreenshot(selectedElementId)}
+          />
+        </Tooltip>
+      )}
     </span>
   );
 };
@@ -77,6 +80,7 @@ const SelectedElementCard = ({
   elementActionsDisabled,
   elementAttributesData,
   children,
+  isSnapshot,
 }) => (
   <Card
     title={<SelectedElementPanelTitle />}
@@ -90,6 +94,7 @@ const SelectedElementCard = ({
         elementActionsDisabled={elementActionsDisabled}
         selectedElementId={selectedElementId}
         applyClientMethod={applyClientMethod}
+        isSnapshot={isSnapshot}
       />
     }
   >

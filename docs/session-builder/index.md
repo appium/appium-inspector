@@ -16,3 +16,6 @@ The user interface here can be divided into several groups:
 - [Capability Builder tab](./capability-builder.md)
 - [Saved Capability Sets tab](./saved-capability-sets.md)
 - [Attaching to Existing Session tab](./attach-to-session.md)
+
+Use **Open Snapshot** in the footer to [inspect saved source and screenshots offline](../session-inspector/snapshots.md),
+without connecting to a server.

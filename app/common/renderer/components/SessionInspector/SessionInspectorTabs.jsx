@@ -37,6 +37,7 @@ const SessionInspectorTabs = (props) => {
     applyClientMethod,
     getSupportedSessionMethods,
     featureCaps,
+    isSnapshot,
   } = props;
 
   const {t} = useTranslation();
@@ -120,7 +121,7 @@ const SessionInspectorTabs = (props) => {
         activeKey={selectedInspectorTab}
         size="small"
         onChange={(tab) => selectInspectorTab(tab)}
-        items={inspectorTabItems}
+        items={isSnapshot ? inspectorTabItems.filter(({key}) => key === INSPECTOR_TABS.SOURCE) : inspectorTabItems}
       />
     </div>
   );

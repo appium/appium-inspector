@@ -31,6 +31,7 @@ const SelectedElement = (props) => {
     elementInteractionsNotAvailable,
     selectedElementSearchInProgress,
     sessionSettings,
+    isSnapshot,
   } = props;
 
   const elementActionsDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
@@ -41,11 +42,13 @@ const SelectedElement = (props) => {
     value,
     name: key,
   }));
-  elementAttributesData.unshift({
-    key: 'elementId',
-    value: selectedElementSearchInProgress ? <ElementIdLoader /> : selectedElementId,
-    name: 'elementId',
-  });
+  if (!isSnapshot) {
+    elementAttributesData.unshift({
+      key: 'elementId',
+      value: selectedElementSearchInProgress ? <ElementIdLoader /> : selectedElementId,
+      name: 'elementId',
+    });
+  }
 
   // Get the data for the strategies table
   const elementLocatorsData = selectedElement.strategyMap.map(([key, selector]) => ({
@@ -60,15 +63,20 @@ const SelectedElement = (props) => {
       selectedElementId={selectedElementId}
       elementAttributesData={elementAttributesData}
       elementActionsDisabled={elementActionsDisabled}
+      isSnapshot={isSnapshot}
     >
       <Space className={inspectorStyles.spaceContainer} orientation="vertical" size="middle">
         <SnapshotMaxDepthReachedMessage selectedElementPath={selectedElementPath} sessionSettings={sessionSettings} />
-        <InteractionsNotAvailableMessage elementInteractionsNotAvailable={elementInteractionsNotAvailable} />
-        <SelectedElementActions
-          {...props}
-          elementActionsDisabled={elementActionsDisabled}
-          elementLocatorsData={elementLocatorsData}
-        />
+        {!isSnapshot && (
+          <InteractionsNotAvailableMessage elementInteractionsNotAvailable={elementInteractionsNotAvailable} />
+        )}
+        {!isSnapshot && (
+          <SelectedElementActions
+            {...props}
+            elementActionsDisabled={elementActionsDisabled}
+            elementLocatorsData={elementLocatorsData}
+          />
+        )}
         <SelectedElementLocatorsTable
           findElementsExecutionTimes={findElementsExecutionTimes}
           isFindingElementsTimes={isFindingElementsTimes}
