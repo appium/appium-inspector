@@ -427,7 +427,7 @@ export function newSession(originalCaps, attachSessId = null) {
 export function saveSession(sessionParams, checkDuplicateName = false) {
   return async (dispatch) => {
     const {server, serverType, caps, name, uuid: foundUUID} = sessionParams;
-    const savedSessions = (await getSetting(SAVED_SESSIONS)) || [];
+    const savedSessions = structuredClone((await getSetting(SAVED_SESSIONS)) || []);
     if (checkDuplicateName) {
       const duplicateSessionNameExists = savedSessions.some((session) => session.name === name);
       if (duplicateSessionNameExists) {

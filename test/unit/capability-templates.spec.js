@@ -168,4 +168,31 @@ describe('capability templates', () => {
     expect(current.capsName).toBe('My template');
     expect(current.isCapsDirty).toBeUndefined();
   });
+
+  it.each([false, true])('does not mutate shared settings when saving a set (overwrite: %s)', async (overwrite) => {
+    const store = createStore();
+    const sharedSettings = store.getState().builder.savedSessions;
+    const original = structuredClone(sharedSettings);
+    getSetting.mockResolvedValueOnce(sharedSettings);
+    const current = store.getState().builder;
+
+    await store.dispatch(
+      saveSession({
+        server: current.server,
+        serverType: current.serverType,
+        caps: [{name: 'platformName', value: 'Changed', type: 'text', enabled: true}],
+        name: 'Saved copy',
+        ...(overwrite ? {uuid: existingSet.uuid} : {}),
+      }),
+    );
+
+    expect(sharedSettings).toEqual(original);
+    const saved = await getSetting(SAVED_SESSIONS);
+    expect(saved).toHaveLength(overwrite ? 1 : 2);
+    expect(saved[overwrite ? 0 : 1].name).toBe('Saved copy');
+    expect(getCapsObject(saved[overwrite ? 0 : 1].caps)).toEqual({platformName: 'Changed'});
+    if (!overwrite) {
+      expect(saved[0]).toEqual(existingSet);
+    }
+  });
 });
