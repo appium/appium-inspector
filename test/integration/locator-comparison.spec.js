@@ -3,7 +3,7 @@ import path from 'node:path';
 import {startServer as startAppiumFakeDriverServer} from '@appium/fake-driver';
 import {afterAll, afterEach, beforeAll, describe, expect, it, vi} from 'vitest';
 
-import {compareLocators} from '../../app/common/renderer/actions/SessionInspector.js';
+import {applyClientMethod, compareLocators} from '../../app/common/renderer/actions/SessionInspector.js';
 import InspectorDriver from '../../app/common/renderer/lib/appium/inspector-driver.js';
 import WDSessionStarter from '../../app/common/renderer/lib/appium/session-starter.js';
 
@@ -40,7 +40,10 @@ describe('Locator comparison through the actual Inspector action and FakeDriver'
       },
     );
   });
-  afterEach(() => vi.restoreAllMocks());
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+  });
   afterAll(async () => {
     try {
       await driver?.deleteSession();
@@ -98,6 +101,60 @@ describe('Locator comparison through the actual Inspector action and FakeDriver'
     expect(results[0]).not.toHaveProperty('error');
     expect(results[1].elementIds).toHaveLength(3);
   });
+
+  it('does not change the selected-element cache or recorder variable counters', async () => {
+    InspectorDriver.clearInstance();
+    const inspector = InspectorDriver.instance(driver);
+    const selected = await inspector.fetchElement(queries()[0]);
+    const cache = inspector.elementCache;
+    const cachedElement = cache[selected.id];
+    const counts = [inspector.elVarCount, inspector.elArrayVarCount];
+
+    const results = await compareLocators(queries())(vi.fn(), state);
+
+    expect(results[0].elementIds).toContain(selected.id);
+    expect(inspector.elementCache).toBe(cache);
+    expect(inspector.elementCache[selected.id]).toBe(cachedElement);
+    expect([inspector.elVarCount, inspector.elArrayVarCount]).toEqual(counts);
+  });
+
+  it.each([false, true])(
+    'keeps subsequent recorded taps valid when the selected element was already recorded: %s',
+    async (alreadyRecorded) => {
+      InspectorDriver.clearInstance();
+      vi.stubGlobal('window', {dispatchEvent: vi.fn()});
+      const inspector = InspectorDriver.instance(driver);
+      const selected = await inspector.fetchElement(queries()[0]);
+      const current = state();
+      current.inspector.assignedVarCache = {};
+      const getState = () => current;
+      const dispatch = vi.fn((action) => {
+        if (action.type === 'ADD_ASSIGNED_VAR_CACHE') {
+          current.inspector.assignedVarCache[action.varName] = true;
+        }
+      });
+      const tap = applyClientMethod({methodName: 'elementClick', elementId: selected.id, skipRefresh: true});
+      if (alreadyRecorded) {
+        await tap(dispatch, getState);
+      }
+
+      await compareLocators(queries())(dispatch, getState);
+      await tap(dispatch, getState);
+
+      const recorded = dispatch.mock.calls.map(([action]) => action).filter(({type}) => type === 'RECORD_ACTION');
+      expect(recorded.filter(({action}) => action === 'findAndAssign')).toEqual([
+        {type: 'RECORD_ACTION', action: 'findAndAssign', params: ['xpath', '//MockListItem', 'el1', false]},
+      ]);
+      expect(recorded.filter(({action}) => action === 'elementClick')).toEqual(
+        Array.from({length: alreadyRecorded ? 2 : 1}, () => ({
+          type: 'RECORD_ACTION',
+          action: 'elementClick',
+          params: ['el1', undefined],
+        })),
+      );
+      expect(inspector.elArrayVarCount).toBe(0);
+    },
+  );
 
   it.each(['abort', 'driver', 'context'])(
     'discards a stale comparison after the first real request (%s)',

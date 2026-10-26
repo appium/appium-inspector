@@ -499,7 +499,13 @@ export function compareLocators(locators, signal) {
       getState().inspector.currentContext === currentContext;
     keepSessionAlive()(dispatch, getState);
     return await compareLocatorQueries(
-      (query) => executeDriverCommand({...query, fetchArray: true})(dispatch, getState),
+      async ({strategy, selector}) => {
+        // Comparison must not replace cached elements or recorder variable names.
+        const start = Date.now();
+        const elements = await driver.findElements(strategy, selector);
+        const executionTime = Date.now() - start;
+        return {elements: elements.map(({elementId}) => ({id: elementId})), executionTime};
+      },
       queries,
       isCurrent,
     );
