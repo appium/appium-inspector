@@ -194,6 +194,23 @@ Interactions that can be recorded include:
 While recording is enabled, the [Recorder tab](./recorder.md) contents are automatically populated
 with Appium client code for all supported interactions.
 
+## Keyboard Shortcuts
+
+The following shortcuts are available during an active Inspector session in the desktop and browser
+versions. On macOS, use the Option key in place of Alt. The letter keys refer to their physical
+keyboard positions, including when Option changes the character produced by the key.
+
+| Shortcut | Action |
+| --- | --- |
+| Alt+R | [Refresh source and screenshot](#refresh-source-screenshot) |
+| Alt+L | [Open locator search](#search-for-element) |
+| Alt+V | [Start or pause recording](#toggle-recorder) |
+
+The shortcuts are also shown in the corresponding button tooltips. They are ignored while typing
+in an input or editor, while a dialog or menu is open, during an in-progress command, and while
+the session is ending. Holding a key does not repeatedly trigger its action. Adding Ctrl, Command
+or Shift to these shortcuts does not trigger an Inspector action.
+
 ## Reload on Disconnect
 
 ![Reload on Disconnect Button](./assets/images/header/reload-on-disconnect-button.png)

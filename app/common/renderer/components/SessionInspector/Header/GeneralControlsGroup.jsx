@@ -1,8 +1,10 @@
 import {IconPlayerPause, IconPlayerPlay, IconRefresh, IconSearch, IconVideo} from '@tabler/icons-react';
 import {Button, Space, Tooltip} from 'antd';
+import {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
+import {registerInspectorShortcuts} from '../../../utils/inspector-shortcuts.js';
 import LocatorSearchModal from './LocatorSearch/LocatorSearchModal.jsx';
 
 /**
@@ -42,9 +44,10 @@ const ManualRefreshButton = ({applyClientMethod}) => {
   const refreshLabel = t('refreshSource');
 
   return (
-    <Tooltip title={refreshLabel}>
+    <Tooltip title={`${refreshLabel} (Alt+R)`}>
       <Button
         aria-label={refreshLabel}
+        aria-keyshortcuts="Alt+R"
         id="btnReload"
         icon={<IconRefresh size={18} />}
         onClick={() => applyClientMethod({methodName: 'getPageSource'})}
@@ -63,9 +66,10 @@ const SearchForElementButton = (props) => {
 
   return (
     <>
-      <Tooltip title={searchLabel}>
+      <Tooltip title={`${searchLabel} (Alt+L)`}>
         <Button
           aria-label={searchLabel}
+          aria-keyshortcuts="Alt+L"
           id="searchForElement"
           icon={<IconSearch size={18} />}
           onClick={showLocatorSearchModal}
@@ -85,9 +89,10 @@ const ToggleRecordingButton = ({isRecording, startRecording, pauseRecording}) =>
   const startLabel = t('Start Recording');
 
   return isRecording ? (
-    <Tooltip title={pauseLabel}>
+    <Tooltip title={`${pauseLabel} (Alt+V)`}>
       <Button
         aria-label={pauseLabel}
+        aria-keyshortcuts="Alt+V"
         id="btnPause"
         icon={<IconVideo size={18} />}
         type={BUTTON.PRIMARY}
@@ -96,8 +101,14 @@ const ToggleRecordingButton = ({isRecording, startRecording, pauseRecording}) =>
       />
     </Tooltip>
   ) : (
-    <Tooltip title={startLabel}>
-      <Button aria-label={startLabel} id="btnStartRecording" icon={<IconVideo size={18} />} onClick={startRecording} />
+    <Tooltip title={`${startLabel} (Alt+V)`}>
+      <Button
+        aria-label={startLabel}
+        aria-keyshortcuts="Alt+V"
+        id="btnStartRecording"
+        icon={<IconVideo size={18} />}
+        onClick={startRecording}
+      />
     </Tooltip>
   );
 };
@@ -114,7 +125,49 @@ const GeneralControlsGroup = (props) => {
     isRecording,
     startRecording,
     pauseRecording,
+    showLocatorSearchModal,
+    driver,
+    methodCallInProgress,
+    isQuittingSession,
+    isSessionDone,
+    isLocatorSearchModalVisible,
+    showKeepAlivePrompt,
+    isGestureEditorVisible,
   } = props;
+
+  useEffect(() => {
+    if (
+      !driver ||
+      methodCallInProgress ||
+      isQuittingSession ||
+      isSessionDone ||
+      isLocatorSearchModalVisible ||
+      showKeepAlivePrompt ||
+      isGestureEditorVisible
+    ) {
+      return;
+    }
+
+    return registerInspectorShortcuts(document, {
+      KeyR: () => applyClientMethod({methodName: 'getPageSource'}),
+      KeyL: showLocatorSearchModal,
+      KeyV: isRecording ? pauseRecording : startRecording,
+    });
+  }, [
+    applyClientMethod,
+    driver,
+    isGestureEditorVisible,
+    isLocatorSearchModalVisible,
+    isQuittingSession,
+    isRecording,
+    isSessionDone,
+    methodCallInProgress,
+    pauseRecording,
+    showKeepAlivePrompt,
+    showLocatorSearchModal,
+    startRecording,
+  ]);
+
   return (
     <Space.Compact>
       {isUsingMjpegMode && (
