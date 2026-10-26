@@ -191,8 +191,6 @@ describe('capability templates', () => {
     expect(saved).toHaveLength(overwrite ? 1 : 2);
     expect(saved[overwrite ? 0 : 1].name).toBe('Saved copy');
     expect(getCapsObject(saved[overwrite ? 0 : 1].caps)).toEqual({platformName: 'Changed'});
-    if (!overwrite) {
-      expect(saved[0]).toEqual(existingSet);
-    }
+    expect(saved.slice(0, -1)).toEqual(overwrite ? [] : [existingSet]);
   });
 });
