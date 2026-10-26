@@ -65,9 +65,7 @@ describe('capability templates', () => {
 
   it.each([
     ['android-native', {platformName: 'Android', 'appium:automationName': 'UiAutomator2'}],
-    ['android-chrome', {platformName: 'Android', 'appium:automationName': 'UiAutomator2', browserName: 'Chrome'}],
     ['ios-native', {platformName: 'iOS', 'appium:automationName': 'XCUITest'}],
-    ['ios-safari', {platformName: 'iOS', 'appium:automationName': 'XCUITest', browserName: 'Safari'}],
   ])('loads %s as a fresh editable set without writing settings', (id, expected) => {
     const store = createStore();
     const previous = store.getState().builder;

@@ -341,15 +341,6 @@
   "Capability Templates": "Capability Templates",
   "Use Template": "Use Template",
   "Select a Template": "Select a Template",
-  "Driver Documentation": "Driver Documentation",
-  "Android (UiAutomator2)": "Android (UiAutomator2)",
-  "Android Chrome (UiAutomator2)": "Android Chrome (UiAutomator2)",
-  "iOS (XCUITest)": "iOS (XCUITest)",
-  "iOS Safari (XCUITest)": "iOS Safari (XCUITest)",
   "capabilityTemplateReplacement": "Using a template replaces the current capabilities. Your saved capability sets and server settings will be kept.",
-  "capabilityTemplateSetup": "These are starting points. Install the matching Appium driver and adjust the capabilities for your device. App paths refer to the Appium server's machine.",
-  "androidNativeTemplateDescription": "Connect an Android device or start an emulator. Add appium:udid to choose a specific device. Add appium:app to install an app, or appium:appPackage to inspect an installed app. Without an app capability, the driver starts on the home screen.",
-  "androidChromeTemplateDescription": "Connect an Android device or start an emulator with Chrome installed. Add appium:udid to choose a specific device.",
-  "iosNativeTemplateDescription": "For a simulator, add appium:deviceName and appium:platformVersion. For a real device, add appium:udid and configure code signing. Add appium:app or appium:bundleId to inspect an app; otherwise the driver starts on the home screen.",
-  "iosSafariTemplateDescription": "For a simulator, add appium:deviceName and appium:platformVersion. For a real device, add appium:udid and configure code signing. Safari must be available on the device."
+  "capabilityTemplateSetup": "These templates are starting points. See the driver documentation for more capability examples."
 }

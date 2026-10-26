@@ -38,27 +38,13 @@ capability sets. Multiple files can be imported at the same time.
 
 ## Capability Templates
 
-The _Use a Template_ button below the list provides starting capabilities for Android with
-UiAutomator2, Android Chrome, iOS with XCUITest, and iOS Safari. Choose a template to preview its
-capabilities and read the device-specific setup notes, then confirm with _Use Template_.
+Capability templates provide starting points for Android (UiAutomator2) and iOS (XCUITest).
+Customize the capabilities for your device and app, and save the set for reuse. Using a template
+does not change existing saved capability sets or server settings.
 
-Loading a template replaces the current capabilities and opens the Capability Builder. It does not
-change the server configuration or overwrite any saved capability set. Use _Save As_ to save your
-customized copy; the built-in templates remain available and unchanged.
-
-These templates provide the platform and driver, plus the browser name for browser sessions. Install
-the matching Appium driver and add capabilities for your environment before starting a session:
-
-- Android needs a connected device or a running emulator. Use `appium:udid` to select a specific device.
-  For native apps, add `appium:app` to install an app or `appium:appPackage` for an installed app.
-  Chrome sessions need Chrome installed on the device.
-- For an iOS simulator, specify `appium:deviceName` and `appium:platformVersion`. For a real iOS
-  device, specify `appium:udid` and configure code signing. For native apps, add `appium:app` or
-  `appium:bundleId`.
-
-Without an app capability, native sessions start on the device's home screen. An `appium:app` path
-refers to the Appium server's machine. Do not combine app capabilities with a browser template.
-The template dialog links to the driver's documentation for further configuration.
+For more examples, see the
+[UiAutomator2 capability sets](https://appium.github.io/appium-uiautomator2-driver/latest/guides/capability-sets/)
+and [XCUITest capability sets](https://appium.github.io/appium-xcuitest-driver/latest/guides/capability-sets/).
 
 ## Saved Capability Set JSON Structure
 

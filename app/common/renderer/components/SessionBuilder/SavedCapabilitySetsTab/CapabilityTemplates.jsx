@@ -42,18 +42,15 @@ const CapabilityTemplates = ({loadCapabilityTemplate}) => {
           style={{width: '100%', marginBottom: 16}}
           value={templateId}
           onChange={setTemplateId}
-          options={CAPABILITY_TEMPLATES.map(({id, name}) => ({value: id, label: t(name)}))}
+          options={CAPABILITY_TEMPLATES.map(({id, name}) => ({value: id, label: name}))}
         />
-        {template && (
-          <>
-            <pre>{JSON.stringify(template.caps, null, 2)}</pre>
-            <Typography.Paragraph>{t(template.description)}</Typography.Paragraph>
-            <Button type="link" onClick={() => openLink(template.documentation)}>
-              {t('Driver Documentation')}
-            </Button>
-          </>
-        )}
+        {template && <pre>{JSON.stringify(template.caps, null, 2)}</pre>}
         <Typography.Paragraph type="secondary">{t('capabilityTemplateSetup')}</Typography.Paragraph>
+        {CAPABILITY_TEMPLATES.map(({id, name, documentation}) => (
+          <Button key={id} type="link" onClick={() => openLink(documentation)}>
+            {name}
+          </Button>
+        ))}
       </Modal>
     </>
   );
