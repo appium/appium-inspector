@@ -1,5 +1,6 @@
 {
   "appiumInspector": "Appium Inspector",
+  "expandSourceBranch": "Expand next {{levels}} levels (up to {{branches}} branches)",
   "Edit": "Edit",
   "Redo": "Redo",
   "Cut": "Cut",

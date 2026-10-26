@@ -5,6 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {IMPORTANT_SOURCE_ATTRIBUTES} from '../../../../../shared/setting-defs.js';
 import {getSetting, setSetting} from '../../../../polyfills.js';
 import {getVisibleSourceAttributes, sourceElementMatchesSearch} from '../../../../utils/source-attributes.js';
+import {expandSourceBranch} from '../../../../utils/source-tree-expansion.js';
 import AppSourceTree from './AppSourceTree.jsx';
 import AppSourceTreeActions from './AppSourceTreeActions.jsx';
 
@@ -134,6 +135,10 @@ const AppSourceTreeWrapper = ({
     setAutoExpandParent(false);
   };
 
+  const expandBranch = (node) => {
+    setExpandedPaths(expandSourceBranch(node, expandedKeys));
+  };
+
   const onSearchChange = (event) => {
     const {value} = event.target;
     setSearchValue(value);
@@ -162,6 +167,7 @@ const AppSourceTreeWrapper = ({
             <AppSourceTree
               treeData={treeData}
               expandNode={expandNode}
+              expandBranch={expandBranch}
               expandedKeys={expandedKeys}
               autoExpandParent={autoExpandParent}
               selectElement={selectElement}

@@ -68,6 +68,12 @@ All elements in the XML tree are interactable, and clicking on one causes 3 acti
 Elements that have one or more child elements have an arrow on their left side, which can be clicked
 to toggle visibility of such child elements.
 
+Right-click an element and choose **Expand next 3 levels (up to 50 branches)** to open several
+nested elements together. The action starts at the next collapsed level within that element's
+branch and preserves expansion elsewhere in the tree. Repeat it to continue deeper or to open
+more branches when the limit is reached. Each click is bounded to avoid expanding a large source
+tree all at once. This does not select the element or run a command on the device.
+
 For supported Appium drivers, the maximum depth of the returned XML tree can be adjusted with the
 `snapshotMaxDepth` setting.
 
