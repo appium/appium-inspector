@@ -10,6 +10,7 @@ import {
 } from '../../../constants/session-builder.js';
 import FileUploader from '../../FileUploader.jsx';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
+import CapabilityTemplates from './CapabilityTemplates.jsx';
 
 import styles from './SavedCapabilitySets.module.css';
 
@@ -43,6 +44,7 @@ const SavedCapabilitySets = (props) => {
     switchTabs,
     importSessionFiles,
     isUploadingSessionFiles,
+    loadCapabilityTemplate,
   } = props;
 
   const {t} = useTranslation();
@@ -163,12 +165,15 @@ const SavedCapabilitySets = (props) => {
               }}
               scroll={{y: 'calc(100% - 37px)'}}
               footer={() => (
-                <FileUploader
-                  title={t('Import from File')}
-                  onUpload={importSessionFiles}
-                  multiple={true}
-                  type={SESSION_FILE_EXTENSION}
-                />
+                <Space wrap>
+                  <FileUploader
+                    title={t('Import from File')}
+                    onUpload={importSessionFiles}
+                    multiple={true}
+                    type={SESSION_FILE_EXTENSION}
+                  />
+                  <CapabilityTemplates loadCapabilityTemplate={loadCapabilityTemplate} />
+                </Space>
               )}
             />
           </Card>

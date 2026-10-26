@@ -13,6 +13,7 @@ import {
   GET_SESSIONS_REQUESTED,
   HIDE_SAVE_AS_MODAL_REQUESTED,
   IS_ADDING_CLOUD_PROVIDER,
+  LOAD_CAPABILITY_TEMPLATE,
   NEW_SESSION_DONE,
   NEW_SESSION_LOADING,
   NEW_SESSION_REQUESTED,
@@ -39,7 +40,7 @@ import {
   SHOW_DESIRED_CAPS_JSON_ERROR,
   SWITCHED_TABS,
 } from '../actions/SessionBuilder.js';
-import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder.js';
+import {CAPABILITY_TYPES, SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder.js';
 import {isPlainObject, omit} from '../utils/common.js';
 import {getRandomId} from '../utils/other.js';
 
@@ -146,6 +147,26 @@ export default function builder(state = INITIAL_STATE, action) {
             : state.visibleProviders,
       };
       return omit(nextState, 'isCapsDirty');
+
+    case LOAD_CAPABILITY_TEMPLATE:
+      return {
+        ...state,
+        caps: action.caps.map((cap) => ({...cap, id: getRandomId(), type: CAPABILITY_TYPES.TEXT, enabled: true})),
+        capsUUID: null,
+        capsName: null,
+        isCapsDirty: true,
+        tabKey: SESSION_BUILDER_TABS.CAPS_BUILDER,
+        isEditingDesiredCapsName: false,
+        desiredCapsName: null,
+        isDuplicateCapsName: false,
+        isEditingDesiredCaps: false,
+        rawDesiredCaps: null,
+        isValidCapsJson: true,
+        isValidatingCapsJson: false,
+        invalidCapsJsonReason: null,
+        showSaveAsModal: false,
+        saveAsText: null,
+      };
 
     case SAVE_SESSION_REQUESTED:
       nextState = {

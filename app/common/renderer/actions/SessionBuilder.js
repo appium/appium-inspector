@@ -7,6 +7,7 @@ import {
   SESSION_SERVER_TYPE,
   VISIBLE_PROVIDERS,
 } from '../../shared/setting-defs.js';
+import {CAPABILITY_TEMPLATES} from '../constants/capability-templates.js';
 import {
   DEFAULT_SESSION_NAME,
   SERVER_TYPES,
@@ -41,6 +42,7 @@ export const ADD_CAPABILITY = 'ADD_CAPABILITY';
 export const REMOVE_CAPABILITY = 'REMOVE_CAPABILITY';
 export const SWITCHED_TABS = 'SWITCHED_TABS';
 export const SET_CAPS_AND_SERVER = 'SET_CAPS_AND_SERVER';
+export const LOAD_CAPABILITY_TEMPLATE = 'LOAD_CAPABILITY_TEMPLATE';
 export const SAVE_AS_MODAL_REQUESTED = 'SAVE_AS_MODAL_REQUESTED';
 export const HIDE_SAVE_AS_MODAL_REQUESTED = 'HIDE_SAVE_AS_MODAL_REQUESTED';
 export const SET_SAVE_AS_TEXT = 'SET_SAVE_AS_TEXT';
@@ -190,6 +192,19 @@ export function showError(e, params = {methodName: null, secs: 5, url: null}) {
 export function setCapsAndServer(server, serverType, caps, uuid, name) {
   return (dispatch) => {
     dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name});
+  };
+}
+
+/** Load an editable, unsaved capability set without changing server settings. */
+export function loadCapabilityTemplate(templateId) {
+  return (dispatch) => {
+    const template = CAPABILITY_TEMPLATES.find(({id}) => id === templateId);
+    if (template) {
+      dispatch({
+        type: LOAD_CAPABILITY_TEMPLATE,
+        caps: Object.entries(template.caps).map(([name, value]) => ({name, value})),
+      });
+    }
   };
 }
 
