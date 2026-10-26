@@ -1,10 +1,8 @@
 import {IconPlayerPause, IconPlayerPlay, IconRefresh, IconSearch, IconVideo} from '@tabler/icons-react';
 import {Button, Space, Tooltip} from 'antd';
-import {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
-import {registerInspectorShortcuts} from '../../../utils/inspector-shortcuts.js';
 import LocatorSearchModal from './LocatorSearch/LocatorSearchModal.jsx';
 
 /**
@@ -125,48 +123,7 @@ const GeneralControlsGroup = (props) => {
     isRecording,
     startRecording,
     pauseRecording,
-    showLocatorSearchModal,
-    driver,
-    methodCallInProgress,
-    isQuittingSession,
-    isSessionDone,
-    isLocatorSearchModalVisible,
-    showKeepAlivePrompt,
-    isGestureEditorVisible,
   } = props;
-
-  useEffect(() => {
-    if (
-      !driver ||
-      methodCallInProgress ||
-      isQuittingSession ||
-      isSessionDone ||
-      isLocatorSearchModalVisible ||
-      showKeepAlivePrompt ||
-      isGestureEditorVisible
-    ) {
-      return;
-    }
-
-    return registerInspectorShortcuts(document, {
-      KeyR: () => applyClientMethod({methodName: 'getPageSource'}),
-      KeyL: showLocatorSearchModal,
-      KeyV: isRecording ? pauseRecording : startRecording,
-    });
-  }, [
-    applyClientMethod,
-    driver,
-    isGestureEditorVisible,
-    isLocatorSearchModalVisible,
-    isQuittingSession,
-    isRecording,
-    isSessionDone,
-    methodCallInProgress,
-    pauseRecording,
-    showKeepAlivePrompt,
-    showLocatorSearchModal,
-    startRecording,
-  ]);
 
   return (
     <Space.Compact>
