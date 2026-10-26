@@ -1,37 +1,28 @@
-export const SOURCE_EXPANSION_LEVELS = 3;
-export const SOURCE_EXPANSION_LIMIT = 50;
+export const MAX_SOURCE_EXPANSION_DEPTH = 10;
+
+export function normalizeSourceExpansionDepth(depth) {
+  return Number.isInteger(depth) && depth >= 1 && depth <= MAX_SOURCE_EXPANSION_DEPTH ? depth : 1;
+}
 
 /**
- * Open the next few collapsed levels of one branch, with a per-click node limit.
+ * Open a configured number of levels starting at the clicked branch.
  * Existing expansion state, including other branches, is preserved.
  */
-export function expandSourceBranch(node, expandedPaths) {
+export function expandSourceBranch(node, expandedPaths, depth = 1) {
   const expanded = new Set(expandedPaths);
   let level = node ? [node] : [];
-  let levelsLeft = SOURCE_EXPANSION_LEVELS;
-  let added = 0;
-  let reachedCollapsedLevel = false;
-
-  while (level.length && levelsLeft > 0 && added < SOURCE_EXPANSION_LIMIT) {
+  for (let levelsLeft = normalizeSourceExpansionDepth(depth); level.length && levelsLeft > 0; levelsLeft--) {
     const nextLevel = [];
     for (const current of level) {
       if (!current.children?.length) {
         continue;
       }
-      if (!expanded.has(current.key)) {
-        expanded.add(current.key);
-        reachedCollapsedLevel = true;
-        added++;
-        if (added === SOURCE_EXPANSION_LIMIT) {
-          break;
+      expanded.add(current.key);
+      if (levelsLeft > 1) {
+        for (const child of current.children) {
+          nextLevel.push(child);
         }
       }
-      for (const child of current.children) {
-        nextLevel.push(child);
-      }
-    }
-    if (reachedCollapsedLevel) {
-      levelsLeft--;
     }
     level = nextLevel;
   }

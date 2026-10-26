@@ -2,10 +2,10 @@ import {Spin, Tree} from 'antd';
 import {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
-import {IMPORTANT_SOURCE_ATTRIBUTES} from '../../../../../shared/setting-defs.js';
+import {IMPORTANT_SOURCE_ATTRIBUTES, SOURCE_EXPANSION_DEPTH} from '../../../../../shared/setting-defs.js';
 import {getSetting, setSetting} from '../../../../polyfills.js';
 import {getVisibleSourceAttributes, sourceElementMatchesSearch} from '../../../../utils/source-attributes.js';
-import {expandSourceBranch} from '../../../../utils/source-tree-expansion.js';
+import {expandSourceBranch, normalizeSourceExpansionDepth} from '../../../../utils/source-tree-expansion.js';
 import AppSourceTree from './AppSourceTree.jsx';
 import AppSourceTreeActions from './AppSourceTreeActions.jsx';
 
@@ -13,6 +13,7 @@ import inspectorStyles from '../../SessionInspector.module.css';
 import styles from './AppSource.module.css';
 
 let retrievedAttrs = await getSetting(IMPORTANT_SOURCE_ATTRIBUTES);
+let retrievedExpansionDepth = normalizeSourceExpansionDepth(await getSetting(SOURCE_EXPANSION_DEPTH));
 
 /**
  * Wrapper around source tree + actions, including loading and empty/error states.
@@ -36,6 +37,14 @@ const AppSourceTreeWrapper = ({
   const [searchValue, setSearchValue] = useState('');
   const [autoExpandParent, setAutoExpandParent] = useState(true);
   const [importantAttrs, setImportantAttrs] = useState(retrievedAttrs);
+  const [expansionDepth, setExpansionDepth] = useState(retrievedExpansionDepth);
+
+  const updateExpansionDepth = async (depth) => {
+    const value = normalizeSourceExpansionDepth(depth);
+    setExpansionDepth(value);
+    retrievedExpansionDepth = value;
+    await setSetting(SOURCE_EXPANSION_DEPTH, value);
+  };
 
   const updateImportantAttrs = async (attrs) => {
     const sortedAttrs = [...attrs].sort();
@@ -125,18 +134,14 @@ const AppSourceTreeWrapper = ({
     [matchingElements, expandedPaths],
   );
 
-  const expandNode = (nextExpandedPaths) => {
-    setExpandedPaths(nextExpandedPaths);
+  const expandNode = (nextExpandedPaths, {expanded, node}) => {
+    setExpandedPaths(expanded ? expandSourceBranch(node, nextExpandedPaths, expansionDepth) : nextExpandedPaths);
     setAutoExpandParent(false);
   };
 
   const collapseAllNodes = () => {
     setExpandedPaths([]);
     setAutoExpandParent(false);
-  };
-
-  const expandBranch = (node) => {
-    setExpandedPaths(expandSourceBranch(node, expandedKeys));
   };
 
   const onSearchChange = (event) => {
@@ -163,11 +168,12 @@ const AppSourceTreeWrapper = ({
               matchingElementsCount={matchingElements.length}
               importantAttrs={importantAttrs}
               updateImportantAttrs={updateImportantAttrs}
+              expansionDepth={expansionDepth}
+              updateExpansionDepth={updateExpansionDepth}
             />
             <AppSourceTree
               treeData={treeData}
               expandNode={expandNode}
-              expandBranch={expandBranch}
               expandedKeys={expandedKeys}
               autoExpandParent={autoExpandParent}
               selectElement={selectElement}

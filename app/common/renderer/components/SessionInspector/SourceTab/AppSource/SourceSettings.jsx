@@ -4,12 +4,13 @@ import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {IMPORTANT_SOURCE_ATTRS} from '../../../../../shared/setting-defs.js';
+import {MAX_SOURCE_EXPANSION_DEPTH} from '../../../../utils/source-tree-expansion.js';
 
-/** Choose which source attributes remain visible when the full attribute list is hidden. */
-const SourceAttributeSettings = ({importantAttrs, updateImportantAttrs}) => {
+/** Configure source expansion and which attributes remain visible in the compact tree. */
+const SourceSettings = ({importantAttrs, updateImportantAttrs, expansionDepth, updateExpansionDepth}) => {
   const [modalOpen, setModalOpen] = useState(false);
   const {t} = useTranslation();
-  const label = t('Customize Visible Attributes');
+  const label = t('Source Settings');
   const availableAttrs = [...new Set([...IMPORTANT_SOURCE_ATTRS, ...importantAttrs])].sort();
 
   return (
@@ -31,8 +32,22 @@ const SourceAttributeSettings = ({importantAttrs, updateImportantAttrs}) => {
         centered
       >
         <Space orientation="vertical">
+          <label htmlFor="sourceExpansionDepth">{t('Source Expansion Depth')}</label>
+          <Select
+            id="sourceExpansionDepth"
+            aria-label={t('Source Expansion Depth')}
+            value={expansionDepth}
+            options={Array.from({length: MAX_SOURCE_EXPANSION_DEPTH}, (_, index) => ({
+              value: index + 1,
+              label: String(index + 1),
+            }))}
+            onChange={updateExpansionDepth}
+          />
+          <span>{t('sourceExpansionDepthDescription')}</span>
+          <span>{t('Customize Visible Attributes')}</span>
           <span>{t('importantAttributesDescription')}</span>
           <Select
+            aria-label={t('Customize Visible Attributes')}
             mode="tags"
             value={importantAttrs}
             options={availableAttrs.map((value) => ({value}))}
@@ -49,4 +64,4 @@ const SourceAttributeSettings = ({importantAttrs, updateImportantAttrs}) => {
   );
 };
 
-export default SourceAttributeSettings;
+export default SourceSettings;

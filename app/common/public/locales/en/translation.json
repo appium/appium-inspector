@@ -1,6 +1,8 @@
 {
   "appiumInspector": "Appium Inspector",
-  "expandSourceBranch": "Expand next {{levels}} levels (up to {{branches}} branches)",
+  "Source Settings": "Source Settings",
+  "Source Expansion Depth": "Source Expansion Depth",
+  "sourceExpansionDepthDescription": "Choose how many levels to open when expanding a source node. Changes apply immediately and are saved between sessions.",
   "Edit": "Edit",
   "Redo": "Redo",
   "Cut": "Cut",
