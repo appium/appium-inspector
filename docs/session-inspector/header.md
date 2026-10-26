@@ -173,6 +173,19 @@ Selecting any element enables the element action items:
 | ![Tap Element](./assets/images/header/search-tap-element.png) | Tap the element |
 | ![Send or Clear Element Text](./assets/images/header/search-send-clear-element-text.png) | Enter text to send to the element, or clear its text |
 
+### Compare Locators
+
+Choose **Compare locators** in the element search window to compare two custom locators. Each
+locator has its own strategy and selector. Press **Compare** to run both searches and see their
+individual times, match counts and element IDs. An invalid locator shows its error alongside the
+other result.
+
+Searches run one after another. The displayed times include the round trip to Appium and any
+implicit wait; they are not isolated server processing times. This comparison does not select,
+interact with or record actions on the found elements. **Back** returns to the ordinary search
+window with its original input. Closing a comparison discards its pending results and prevents
+the second search if it has not started; a request already sent to Appium cannot be cancelled.
+
 ## Toggle Recorder
 
 ![Start Recording Button](./assets/images/header/record-start-button.png) ![Stop Recording Button](./assets/images/header/record-stop-button.png)

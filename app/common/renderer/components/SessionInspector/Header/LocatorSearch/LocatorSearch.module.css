@@ -40,3 +40,22 @@
   height: 32px;
   width: calc(100% - 64px);
 }
+
+.locatorComparisonInput {
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--ant-color-border, #d9d9d9);
+  border-radius: 6px;
+}
+
+.locatorComparisonResult {
+  margin-top: 12px;
+}
+
+.locatorComparisonIds {
+  max-height: 150px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

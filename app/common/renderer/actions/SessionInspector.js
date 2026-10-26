@@ -11,6 +11,7 @@ import {getSetting, setSetting} from '../polyfills.js';
 import {debounce, isEmpty, omit} from '../utils/common.js';
 import {downloadFile, readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {parseGestureFileContents} from '../utils/gesturefile-parsing.js';
+import {compareLocatorQueries} from '../utils/locator-comparison.js';
 import {getSuggestedLocators} from '../utils/locator-generation/common.js';
 import {getOptimalXPath} from '../utils/locator-generation/xpath.js';
 import {log} from '../utils/logger.js';
@@ -485,6 +486,23 @@ export function searchForElement(strategy, selector) {
       dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED});
       showError(error, {methodName: 10});
     }
+  };
+}
+
+export function compareLocators(locators, signal) {
+  return async (dispatch, getState) => {
+    const {driver, currentContext} = getState().inspector;
+    const queries = locators.map(({strategy, selector}) => ({strategy, selector}));
+    const isCurrent = () =>
+      !signal?.aborted &&
+      getState().inspector.driver === driver &&
+      getState().inspector.currentContext === currentContext;
+    keepSessionAlive()(dispatch, getState);
+    return await compareLocatorQueries(
+      (query) => executeDriverCommand({...query, fetchArray: true})(dispatch, getState),
+      queries,
+      isCurrent,
+    );
   };
 }
 

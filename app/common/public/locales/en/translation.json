@@ -1,5 +1,10 @@
 {
   "appiumInspector": "Appium Inspector",
+  "compareLocators": "Compare locators",
+  "Compare": "Compare",
+  "comparisonLocator": "Locator {{number}}",
+  "locatorComparisonFailed": "Search failed",
+  "locatorComparisonTimingDescription": "Searches run one after another. Times include the round trip to the server and any implicit wait.",
   "Edit": "Edit",
   "Redo": "Redo",
   "Cut": "Cut",
