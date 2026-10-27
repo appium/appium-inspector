@@ -889,11 +889,11 @@ export function selectInspectorTab(interaction) {
 }
 
 export function getSupportedSessionMethods() {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     async function safelyCallCommand(methodName) {
       try {
         const action = executeDriverCommand({methodName});
-        const {commandRes} = await action(getState);
+        const {commandRes} = await action(dispatch, getState);
         return commandRes;
       } catch {
         return [];
@@ -1023,12 +1023,14 @@ export function callClientMethod(params) {
 // Simple alternative to callClientMethod, for when we only want to
 // run the command without any side-effects
 export function executeDriverCommand(params) {
-  return async (getState) => {
+  return async (_dispatch, getState) => {
     if (getState().inspector.isSnapshot) {
       throw new Error(i18n.t('snapshotReadOnly'));
     }
     const {driver} = getState().inspector;
     params.skipRefresh = true;
+    log.info(`Calling client method with params:`);
+    log.info(params);
     const inspectorDriver = InspectorDriver.instance(driver);
     return await inspectorDriver.run(params);
   };

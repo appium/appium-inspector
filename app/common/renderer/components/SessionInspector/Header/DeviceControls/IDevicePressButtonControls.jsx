@@ -1,8 +1,9 @@
 import {IconChevronDown, IconDeviceMobile, IconDeviceRemote, IconDeviceWatch} from '@tabler/icons-react';
 import {Button, Dropdown, Tooltip} from 'antd';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
+import {COMMAND_EXECUTE_SCRIPT} from '../../../../constants/commands.js';
 import {PLATFORMS} from '../../../../constants/common.js';
 import {
   XCUITEST_IOS_BUTTONS,
@@ -57,22 +58,48 @@ const PLATFORM_CONFIGS = {
   },
 };
 
+const getSupportedButtons = (platformConfig, platformVersion, retrievedButtons) => {
+  if (!retrievedButtons) {
+    return platformConfig.buttons(platformVersion);
+  }
+  const xctestButtons = retrievedButtons.xctest ?? [];
+  const iohidButtons = retrievedButtons.iohid ?? [];
+  return [...xctestButtons, ...iohidButtons].sort();
+};
+
 /**
  * Button + dropdown to execute 'mobile: pressButton' in iOS/iPadOS/tvOS/watchOS sessions.
  */
-const IDevicePressButtonControls = ({featureCaps, toDropdownItem, executeInteraction}) => {
+const IDevicePressButtonControls = ({featureCaps, toDropdownItem, executeInteraction, executeDriverCommand}) => {
   const {t} = useTranslation();
   const pressButtonLabel = t('pressDeviceButton');
 
   const [showTooltip, setShowTooltip] = useState(false);
+  const [retrievedButtons, setRetrievedButtons] = useState(null);
 
   const platformConfig = PLATFORM_CONFIGS[featureCaps.platformName];
+
+  // Handler for retrieving supported button names from the driver.
+  // mobile:getPressableButtons exists since XCUITest driver 12.20 (Appium 3)
+  useEffect(() => {
+    (async () => {
+      try {
+        const {commandRes} = await executeDriverCommand({
+          methodName: COMMAND_EXECUTE_SCRIPT,
+          args: ['mobile:getPressableButtons', []],
+        });
+        setRetrievedButtons(commandRes ?? {});
+      } catch {
+        // Older driver version that doesn't support mobile:getPressableButtons - ignore
+      }
+    })();
+  }, [executeDriverCommand]);
 
   return (
     <Tooltip title={pressButtonLabel} open={showTooltip} onOpenChange={setShowTooltip}>
       <Dropdown
         menu={{
-          items: platformConfig.buttons(featureCaps.platformVersion).map(toDropdownItem),
+          items: getSupportedButtons(platformConfig, featureCaps.platformVersion, retrievedButtons).map(toDropdownItem),
           onClick: ({key}) => executeInteraction('mobile:pressButton', {name: key}),
         }}
         placement="bottom"

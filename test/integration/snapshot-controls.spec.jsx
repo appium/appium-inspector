@@ -2,7 +2,7 @@ import {createElement} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
-const {rendered} = vi.hoisted(() => ({rendered: {buttons: [], tabs: []}}));
+const {rendered} = vi.hoisted(() => ({rendered: {buttons: [], tabs: [], deviceControls: []}}));
 
 vi.mock('#local-polyfills', () => ({
   settings: {},
@@ -71,7 +71,10 @@ vi.mock('antd', async () => {
   };
 });
 vi.mock('../../app/common/renderer/components/SessionInspector/Header/DeviceControls/DeviceControlsGroup.jsx', () => ({
-  default: () => 'Device controls',
+  default: (props) => {
+    rendered.deviceControls.push(props);
+    return 'Device controls';
+  },
 }));
 vi.mock('../../app/common/renderer/components/SessionInspector/Header/DriverControls/DriverControlsGroup.jsx', () => ({
   default: () => 'Driver controls',
@@ -138,6 +141,7 @@ const baseProps = () => ({
   },
   findElementsExecutionTimes: [],
   applyClientMethod: vi.fn(),
+  executeDriverCommand: vi.fn(),
   exportSnapshot: vi.fn(),
   quitSessionAndReturn: vi.fn(),
 });
@@ -146,6 +150,7 @@ describe('Snapshot inspection controls', () => {
   beforeEach(() => {
     rendered.buttons = [];
     rendered.tabs = [];
+    rendered.deviceControls = [];
   });
 
   it('offers save and close without rendering live session header controls', () => {
@@ -159,6 +164,7 @@ describe('Snapshot inspection controls', () => {
     expect(props.exportSnapshot).toHaveBeenCalledOnce();
     expect(props.quitSessionAndReturn).toHaveBeenCalledOnce();
     expect(props.applyClientMethod).not.toHaveBeenCalled();
+    expect(rendered.deviceControls).toEqual([]);
     for (const control of [
       'Device controls',
       'Driver controls',
@@ -171,8 +177,12 @@ describe('Snapshot inspection controls', () => {
   });
 
   it('keeps live header controls, recording, search and detach available for a session', () => {
-    const markup = render(HeaderButtons, {...baseProps(), isSnapshot: false});
+    const props = {...baseProps(), isSnapshot: false};
+    const markup = render(HeaderButtons, props);
 
+    expect(rendered.deviceControls).toHaveLength(1);
+    expect(rendered.deviceControls[0].executeDriverCommand).toBe(props.executeDriverCommand);
+    expect(rendered.deviceControls[0].applyClientMethod).toBe(props.applyClientMethod);
     expect(buttonLabels()).toEqual([
       'Save Snapshot',
       'refreshSource',

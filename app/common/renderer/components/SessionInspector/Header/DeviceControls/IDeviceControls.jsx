@@ -17,7 +17,7 @@ const toDropdownItem = (item) => ({
 /**
  * Device controls used for iOS/iPadOS/tvOS/watchOS sessions.
  */
-const IDeviceControls = ({featureCaps, applyClientMethod}) => {
+const IDeviceControls = ({featureCaps, applyClientMethod, executeDriverCommand}) => {
   const executeInteraction = (methodName, params) => {
     applyClientMethod({
       methodName: COMMAND_EXECUTE_SCRIPT,
@@ -31,6 +31,7 @@ const IDeviceControls = ({featureCaps, applyClientMethod}) => {
         featureCaps={featureCaps}
         toDropdownItem={toDropdownItem}
         executeInteraction={executeInteraction}
+        executeDriverCommand={executeDriverCommand}
       />
       {featureCaps.platformName === PLATFORMS.WATCHOS && (
         <WatchOSCrownControls executeInteraction={executeInteraction} />

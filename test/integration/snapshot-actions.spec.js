@@ -11,6 +11,7 @@ const {
   startSession,
   createObjectURL,
   revokeObjectURL,
+  log,
 } = vi.hoisted(() => ({
   readFiles: vi.fn(),
   download: vi.fn(),
@@ -21,6 +22,7 @@ const {
   startSession: vi.fn(),
   createObjectURL: vi.fn(),
   revokeObjectURL: vi.fn(),
+  log: {info: vi.fn(), warn: vi.fn(), error: vi.fn()},
 }));
 
 vi.mock('../../app/common/renderer/i18next.js', () => ({default: {t: (key) => key}}));
@@ -33,12 +35,14 @@ vi.mock('../../app/common/renderer/utils/file-handling.js', () => ({
 vi.mock('../../app/common/renderer/lib/appium/inspector-driver.js', () => ({
   default: {clearInstance, instance: () => ({run: runCommand})},
 }));
+vi.mock('../../app/common/renderer/utils/logger.js', () => ({log}));
 
 import {
   applyClientMethod,
   callClientMethod,
   executeDriverCommand,
   exportSnapshot,
+  getSupportedSessionMethods,
   LOAD_SNAPSHOT,
   openSnapshot,
   quitSession,
@@ -393,9 +397,45 @@ describe('Offline snapshot actions', () => {
     const before = store.getState();
     await expect(store.dispatch(applyClientMethod({methodName: 'getPageSource'}))).rejects.toThrow('snapshotReadOnly');
     await expect(store.dispatch(callClientMethod({methodName: 'elementClick'}))).rejects.toThrow('snapshotReadOnly');
-    await expect(executeDriverCommand({methodName: 'getSettings'})(store.getState)).rejects.toThrow('snapshotReadOnly');
+    const params = {methodName: 'getSettings'};
+    await expect(store.dispatch(executeDriverCommand(params))).rejects.toThrow('snapshotReadOnly');
     expect(store.getState()).toBe(before);
     expect(runCommand).not.toHaveBeenCalled();
+    expect(params).toEqual({methodName: 'getSettings'});
+    expect(log.info).not.toHaveBeenCalled();
+    expect(log.warn).not.toHaveBeenCalled();
+    expect(log.error).not.toHaveBeenCalled();
+  });
+
+  it('dispatches a live direct command once without refreshing or changing inspector state', async () => {
+    const store = createStore({...reducer(undefined, {}), driver: {sessionId: 'live-session'}});
+    const before = store.getState();
+    const result = {commandRes: {pressed: true}};
+    runCommand.mockResolvedValue(result);
+
+    expect(await store.dispatch(executeDriverCommand({methodName: 'pressButton', args: ['home']}))).toBe(result);
+    expect(runCommand).toHaveBeenCalledExactlyOnceWith({methodName: 'pressButton', args: ['home'], skipRefresh: true});
+    expect(store.getState()).toBe(before);
+    expect(log.info).toHaveBeenCalledWith({methodName: 'pressButton', args: ['home'], skipRefresh: true});
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('dispatches both supported-method queries and returns their results', async () => {
+    const store = createStore({...reducer(undefined, {}), driver: {sessionId: 'live-session'}});
+    const before = store.getState();
+    const commands = {rest: {base: {'/status': {GET: {command: 'getStatus'}}}}};
+    const executeMethods = {
+      rest: {driver: {'mobile: pressButton': {command: 'mobilePressButton', params: [{name: 'name', required: true}]}}},
+    };
+    runCommand.mockImplementation(async ({methodName}) => ({
+      commandRes: methodName === 'getAppiumCommands' ? commands : executeMethods,
+    }));
+
+    expect(await store.dispatch(getSupportedSessionMethods())).toEqual({commands, executeMethods});
+    expect(runCommand).toHaveBeenCalledTimes(2);
+    expect(runCommand).toHaveBeenCalledWith({methodName: 'getAppiumCommands', skipRefresh: true});
+    expect(runCommand).toHaveBeenCalledWith({methodName: 'getAppiumExtensions', skipRefresh: true});
+    expect(store.getState()).toBe(before);
   });
 
   it('closes a snapshot without deleting a session and allows normal session state afterward', async () => {
