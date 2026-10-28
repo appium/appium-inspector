@@ -104,7 +104,7 @@ function migrateSessionJsonToV2(sessionJSON) {
  * @param {object} sessionJSON session file contents in JSON
  * @returns true if the caps field is valid, otherwise false
  */
-function areSessionCapsValid(sessionJSON) {
+export function areSessionCapsValid(sessionJSON) {
   if (!('caps' in sessionJSON && Array.isArray(sessionJSON.caps))) {
     return logValidationError("'caps' property is missing or not an array");
   }
