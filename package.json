@@ -99,7 +99,7 @@
     "@vitejs/plugin-react": "6.1.2",
     "asyncbox": "6.5.0",
     "electron": "44.9.3",
-    "electron-builder": "26.17.0",
+    "electron-builder": "26.18.0",
     "electron-vite": "6.0.0",
     "oxc-transform-react": "0.152.0",
     "rimraf": "6.1.3",
