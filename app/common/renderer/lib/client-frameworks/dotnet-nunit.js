@@ -65,7 +65,7 @@ public class Tests
     [OneTimeSetUp]
     public void SetUp()
     {
-        var serverUri = new Uri("${this.serverUrl}");
+        var serverUri = new Uri(${this.quote(this.serverUrl)});
         var options = new AppiumOptions();
 ${capStr}
 
@@ -173,7 +173,8 @@ _driver.PerformActions(new List<ActionSequence> { swipe });
   codeFor_updateSettings(varNameIgnore, varIndexIgnore, settingsJson) {
     try {
       const settings = Object.entries(settingsJson).map(
-        ([settingName, settingValue]) => `_driver.SetSetting("${settingName}", ${this.getCSharpVal(settingValue)});`,
+        ([settingName, settingValue]) =>
+          `_driver.SetSetting(${this.quote(settingName)}, ${this.getCSharpVal(settingValue)});`,
       );
       return settings.join('\n');
     } catch {
@@ -227,7 +228,7 @@ let timeouts = new Dictionary<string, TimeSpan>()
   }
 
   codeFor_getLogs(varNameIgnore, varIndexIgnore, logType) {
-    return `let logs = _driver.Manage().Logs.GetLog("${logType}");`;
+    return `let logs = _driver.Manage().Logs.GetLog(${this.quote(logType)});`;
   }
 
   // Context
@@ -241,7 +242,7 @@ let timeouts = new Dictionary<string, TimeSpan>()
   }
 
   codeFor_switchAppiumContext(varNameIgnore, varIndexIgnore, name) {
-    return `_driver.Context = "${name}";`;
+    return `_driver.Context = ${this.quote(name)};`;
   }
 
   // Device Interaction
@@ -263,7 +264,7 @@ let timeouts = new Dictionary<string, TimeSpan>()
   }
 
   codeFor_setOrientation(varNameIgnore, varIndexIgnore, orientation) {
-    return `_driver.Orientation = "${orientation}";`;
+    return `_driver.Orientation = ${this.quote(orientation)};`;
   }
 
   codeFor_getGeoLocation() {
@@ -281,47 +282,47 @@ let timeouts = new Dictionary<string, TimeSpan>()
   // App Management
 
   codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
-    return `_driver.InstallApp("${app}");`;
+    return `_driver.InstallApp(${this.quote(app)});`;
   }
 
   codeFor_isAppInstalled(varNameIgnore, varIndexIgnore, app) {
-    return `var isAppInstalled = _driver.IsAppInstalled("${app}");`;
+    return `var isAppInstalled = _driver.IsAppInstalled(${this.quote(app)});`;
   }
 
   codeFor_activateApp(varNameIgnore, varIndexIgnore, app) {
-    return `_driver.ActivateApp("${app}");`;
+    return `_driver.ActivateApp(${this.quote(app)});`;
   }
 
   codeFor_terminateApp(varNameIgnore, varIndexIgnore, app) {
-    return `_driver.TerminateApp("${app}");`;
+    return `_driver.TerminateApp(${this.quote(app)});`;
   }
 
   codeFor_removeApp(varNameIgnore, varIndexIgnore, app) {
-    return `_driver.RemoveApp("${app}")`;
+    return `_driver.RemoveApp(${this.quote(app)})`;
   }
 
   codeFor_queryAppState(varNameIgnore, varIndexIgnore, app) {
-    return `var appState = _driver.GetAppState("${app}");`;
+    return `var appState = _driver.GetAppState(${this.quote(app)});`;
   }
 
   // File Transfer
 
   codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
-    return `_driver.PushFile("${pathToInstallTo}", "${fileContentString}");`;
+    return `_driver.PushFile(${this.quote(pathToInstallTo)}, ${this.quote(fileContentString)});`;
   }
 
   codeFor_pullFile(varNameIgnore, varIndexIgnore, pathToPullFrom) {
-    return `var fileBase64 = _driver.PullFile("${pathToPullFrom}");`;
+    return `var fileBase64 = _driver.PullFile(${this.quote(pathToPullFrom)});`;
   }
 
   codeFor_pullFolder(varNameIgnore, varIndexIgnore, folderToPullFrom) {
-    return `var folderBase64 = _driver.PullFolder("${folderToPullFrom}");`;
+    return `var folderBase64 = _driver.PullFolder(${this.quote(folderToPullFrom)});`;
   }
 
   // Web
 
   codeFor_navigateTo(varNameIgnore, varIndexIgnore, url) {
-    return `_driver.Url = "${url}";`;
+    return `_driver.Url = ${this.quote(url)};`;
   }
 
   codeFor_getUrl() {
@@ -353,7 +354,7 @@ let timeouts = new Dictionary<string, TimeSpan>()
   }
 
   codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
-    return `_driver.SwitchTo().Window("${handle}");`;
+    return `_driver.SwitchTo().Window(${this.quote(handle)});`;
   }
 
   codeFor_getWindowHandles() {
