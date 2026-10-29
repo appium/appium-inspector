@@ -1,4 +1,4 @@
-import {IconEraser, IconHistory} from '@tabler/icons-react';
+import {IconClockX, IconHistory} from '@tabler/icons-react';
 import {Button, Col, Modal, Row, Space, Tooltip} from 'antd';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -43,7 +43,7 @@ const LocatorSearchModalFooter = ({
                 id="btnToggleSearchHistory"
                 icon={<IconHistory size={18} />}
                 disabled={!searchHistory.length}
-                type={showSearchHistory && searchHistory.length ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+                type={showSearchHistory ? BUTTON.PRIMARY : BUTTON.DEFAULT}
                 onClick={() => setShowSearchHistory(!showSearchHistory)}
               />
             </Tooltip>
@@ -51,7 +51,7 @@ const LocatorSearchModalFooter = ({
               <Button
                 aria-label={clearHistoryLabel}
                 id="btnClearSearchHistory"
-                icon={<IconEraser size={18} />}
+                icon={<IconClockX size={18} />}
                 disabled={!searchHistory.length}
                 onClick={clearSearchHistory}
               />
@@ -91,8 +91,7 @@ const LocatorSearchModal = (props) => {
   const [searchHistory, setSearchHistory] = useState(retrievedSearchHistory);
   const [showSearchHistory, setShowSearchHistory] = useState(false);
 
-  const updateSearchHistory = async (nextEntry) => {
-    const updatedHistory = addLocatorSearchHistoryEntry(searchHistory, nextEntry);
+  const updateSearchHistory = async (updatedHistory) => {
     setSearchHistory(updatedHistory);
     // New sessions remount this component without reloading the module.
     retrievedSearchHistory = updatedHistory;
@@ -100,15 +99,8 @@ const LocatorSearchModal = (props) => {
   };
 
   const clearSearchHistory = async () => {
-    setSearchHistory([]);
     setShowSearchHistory(false);
-    retrievedSearchHistory = [];
-    await setSetting(LOCATOR_SEARCH_HISTORY, []);
-  };
-
-  const selectSearchHistoryEntry = ({strategy, selector}) => {
-    setLocatorSearchStrategy(strategy);
-    setLocatorSearchValue(selector);
+    await updateSearchHistory([]);
   };
 
   const onCancel = () => {
@@ -123,7 +115,11 @@ const LocatorSearchModal = (props) => {
     if (locatedElements) {
       onCancel();
     } else {
-      await updateSearchHistory({strategy: locatorSearchStrategy, selector: locatorSearchValue});
+      const updatedHistory = addLocatorSearchHistoryEntry(searchHistory, {
+        strategy: locatorSearchStrategy,
+        selector: locatorSearchValue,
+      });
+      await updateSearchHistory(updatedHistory);
       searchForElement(locatorSearchStrategy, locatorSearchValue);
     }
   };
@@ -157,7 +153,6 @@ const LocatorSearchModal = (props) => {
           currentContext={currentContext}
           searchHistory={searchHistory}
           showSearchHistory={showSearchHistory}
-          selectSearchHistoryEntry={selectSearchHistoryEntry}
         />
       )}
       {locatedElements && (

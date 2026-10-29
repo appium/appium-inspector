@@ -86,32 +86,32 @@ const LocatorSearchFormHistoryTable = ({
   searchHistory,
   locatorSearchStrategy,
   locatorSearchValue,
-  selectSearchHistoryEntry,
+  setLocatorSearchStrategy,
+  setLocatorSearchValue,
 }) => {
   const selectedKey = JSON.stringify([locatorSearchStrategy, locatorSearchValue]);
+  const columns = [
+    {
+      dataIndex: 'strategy',
+    },
+    {
+      dataIndex: 'selector',
+    },
+  ];
 
   return (
     <Row>
       <Table
         pagination={false}
         className={styles.searchResultsList}
-        dataSource={searchHistory.map(({strategy, selector}) => ({
-          key: JSON.stringify([strategy, selector]),
-          strategy,
-          selector,
-        }))}
-        columns={[
-          {
-            dataIndex: 'strategy',
-            className: styles.searchHistoryStrategyCell,
-          },
-          {
-            dataIndex: 'selector',
-          },
-        ]}
+        dataSource={searchHistory}
+        columns={columns}
         showHeader={false}
         onRow={(row) => ({
-          onClick: () => selectSearchHistoryEntry({strategy: row.strategy, selector: row.selector}),
+          onClick: () => {
+            setLocatorSearchStrategy(row.strategy);
+            setLocatorSearchValue(row.selector);
+          },
         })}
         rowSelection={{
           selectedRowKeys: [selectedKey],
@@ -134,9 +134,8 @@ const LocatorSearchForm = ({
   locatorSearchStrategy,
   automationName,
   currentContext,
-  searchHistory = [],
-  showSearchHistory = false,
-  selectSearchHistoryEntry,
+  searchHistory,
+  showSearchHistory,
 }) => {
   const {t} = useTranslation();
 
@@ -155,14 +154,15 @@ const LocatorSearchForm = ({
         locatorSearchValue={locatorSearchValue}
         setLocatorSearchValue={setLocatorSearchValue}
       />
-      {showSearchHistory && !!searchHistory.length && (
+      {showSearchHistory && (
         <>
           {t('searchHistory')}
           <LocatorSearchFormHistoryTable
             searchHistory={searchHistory}
             locatorSearchStrategy={locatorSearchStrategy}
             locatorSearchValue={locatorSearchValue}
-            selectSearchHistoryEntry={selectSearchHistoryEntry}
+            setLocatorSearchStrategy={setLocatorSearchStrategy}
+            setLocatorSearchValue={setLocatorSearchValue}
           />
         </>
       )}

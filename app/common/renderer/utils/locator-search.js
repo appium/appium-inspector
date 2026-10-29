@@ -13,6 +13,7 @@ export function addLocatorSearchHistoryEntry(
   if (!strategy || !selector) {
     return currentHistory;
   }
-  const filteredHistory = currentHistory.filter((entry) => entry.strategy !== strategy || entry.selector !== selector);
-  return [{strategy, selector}, ...filteredHistory].slice(0, maxEntries);
+  const key = JSON.stringify([strategy, selector]);
+  const filteredHistory = currentHistory.filter((entry) => entry.key !== key);
+  return [{key, strategy, selector}, ...filteredHistory].slice(0, maxEntries);
 }
