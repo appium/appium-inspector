@@ -793,11 +793,11 @@ export function selectInspectorTab(interaction) {
 }
 
 export function getSupportedSessionMethods() {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     async function safelyCallCommand(methodName) {
       try {
         const action = executeDriverCommand({methodName});
-        const {commandRes} = await action(getState);
+        const {commandRes} = await action(dispatch, getState);
         return commandRes;
       } catch {
         return [];
