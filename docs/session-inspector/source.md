@@ -33,13 +33,19 @@ The panel can be divided into 3 parts: header buttons, source actions, and the s
 | --- | --- |
 | ![Collapse All Button](./assets/images/source/collapse-all-button.png) | Collapse all nodes in the source tree |
 | ![Toggle Attributes Button](./assets/images/source/toggle-attributes-button.png) | Toggle visibility of all element attributes, not just the ones visible by default |
-| ![Customize Visible Attributes Button](./assets/images/source/customize-visible-attributes-button.png) | Customize which element attributes are visible by default |
+| ![Source Settings Button](./assets/images/source/customize-visible-attributes-button.png) | Configure source expansion depth and visible attributes |
 | ![Search Source Field](./assets/images/source/search-source.png) | Perform a plaintext search in the source XML |
 
-#### Customize Visible Attributes
+#### Source Settings
 
-Clicking the Customize Visible Attributes button will open a new modal window, which lists all
-attributes that are shown by default.
+Click the Source Settings button to choose the **Source Expansion Depth**, from 1 to 10 levels.
+The default is 1, which opens only the clicked node. Higher values also open its descendants up to
+the chosen depth. You can change this at any time; the next expansion uses the new value without
+changing the current tree. The setting persists between sessions.
+
+##### Customize Visible Attributes
+
+The same settings window lists all attributes that are shown by default.
 
 ![Customize Visible Attributes Modal](./assets/images/source/customize-attributes-modal.png)
 
@@ -67,6 +73,10 @@ All elements in the XML tree are interactable, and clicking on one causes 3 acti
 
 Elements that have one or more child elements have an arrow on their left side, which can be clicked
 to toggle visibility of such child elements.
+
+Use **Source Expansion Depth** in [Source Settings](#source-settings) to open several levels with
+one arrow click. Collapsing a node and expanding other branches continue to work normally. Changing
+the depth does not select an element or run a command on the device.
 
 For supported Appium drivers, the maximum depth of the returned XML tree can be adjusted with the
 `snapshotMaxDepth` setting.
