@@ -7,7 +7,6 @@ import {useNavigate} from 'react-router';
 import * as SessionInspectorActions from '../../actions/SessionInspector.js';
 import {WINDOW_DIMENSIONS} from '../../constants/common.js';
 import HeaderButtons from './Header/HeaderButtons.jsx';
-import InspectorShortcuts from './InspectorShortcuts.jsx';
 import Screenshot from './Screenshot/Screenshot.jsx';
 import SessionExpiryModal from './SessionExpiryModal.jsx';
 import SessionInspectorTabs from './SessionInspectorTabs.jsx';
@@ -87,7 +86,7 @@ const Inspector = () => {
   }, [applyClientMethod, getSavedClientFramework, runKeepAliveLoop, setSessionTime, storeSessionSettings]);
 
   return (
-    <InspectorShortcuts {...props} className={styles.inspectorContainer}>
+    <div className={styles.inspectorContainer}>
       <HeaderButtons {...props} quitSessionAndReturn={quitSessionAndReturn} />
       <Splitter className={styles.inspectorSplitter} onResize={setPanelWidthManually}>
         <Splitter.Panel
@@ -112,7 +111,7 @@ const Inspector = () => {
         quitSessionAndReturn={quitSessionAndReturn}
         setUserWaitTimeout={setUserWaitTimeout}
       />
-    </InspectorShortcuts>
+    </div>
   );
 };
 

@@ -196,8 +196,9 @@ with Appium client code for all supported interactions.
 
 ## Keyboard Shortcuts
 
-The following shortcuts are available during an active Inspector session in the desktop and browser
-versions. On macOS, use the Option key in place of Alt. The letter keys refer to their physical
+The following shortcuts are available when the corresponding button has keyboard focus during an
+active Inspector session. Use Tab to focus a button. On macOS, use the Option key in place of Alt.
+The letter keys refer to their physical
 keyboard positions, including when Option changes the character produced by the key.
 
 | Shortcut | Action |
