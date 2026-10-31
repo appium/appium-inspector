@@ -336,5 +336,15 @@
   "w3cActionsUnsupported": "W3C Actions are not supported on this platform",
   "Customize Visible Attributes": "Customize Visible Attributes",
   "importantAttributesDescription": "Choose which attributes appear in the compact source tree. Select an attribute or type a name to add it. Changes are saved between sessions.",
-  "Restore Default Attributes": "Restore Default Attributes"
+  "Restore Default Attributes": "Restore Default Attributes",
+  "Open Snapshot": "Open Snapshot",
+  "Save Snapshot": "Save Snapshot",
+  "Close Snapshot": "Close Snapshot",
+  "Offline Snapshot": "Offline Snapshot",
+  "offlineSnapshotDescription": "Captured {{capturedAt}}. Browse the source and copy generated locators. Device actions and live locator validation are unavailable.",
+  "snapshotNeedsStillImage": "Switch to Screenshot API before saving a snapshot.",
+  "snapshotReadOnly": "This snapshot is read-only. Open a live session to send device commands.",
+  "snapshotImportError": "Could not open snapshot",
+  "snapshotExportError": "Could not save snapshot",
+  "snapshotSessionOpenError": "Wait for the session to finish starting, then close or detach from it before opening a snapshot."
 }

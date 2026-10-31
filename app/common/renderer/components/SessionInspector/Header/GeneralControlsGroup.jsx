@@ -1,4 +1,11 @@
-import {IconPlayerPause, IconPlayerPlay, IconRefresh, IconSearch, IconVideo} from '@tabler/icons-react';
+import {
+  IconDeviceFloppy,
+  IconPlayerPause,
+  IconPlayerPlay,
+  IconRefresh,
+  IconSearch,
+  IconVideo,
+} from '@tabler/icons-react';
 import {Button, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
@@ -114,23 +121,47 @@ const GeneralControlsGroup = (props) => {
     isRecording,
     startRecording,
     pauseRecording,
+    isSnapshot,
+    exportSnapshot,
+    sourceXML,
+    screenshot,
+    sourceError,
+    screenshotError,
+    methodCallInProgress,
   } = props;
+  const {t} = useTranslation();
+  const saveSnapshotLabel = t('Save Snapshot');
   return (
     <Space.Compact>
-      {isUsingMjpegMode && (
-        <ToggleAutomaticRefreshButton
-          isUsingMjpegMode={isUsingMjpegMode}
-          isSourceRefreshOn={isSourceRefreshOn}
-          setRefreshingState={setRefreshingState}
+      <Tooltip title={isUsingMjpegMode ? t('snapshotNeedsStillImage') : saveSnapshotLabel}>
+        <Button
+          aria-label={saveSnapshotLabel}
+          id="btnSaveSnapshot"
+          icon={<IconDeviceFloppy size={18} />}
+          disabled={
+            !sourceXML || !screenshot || !!sourceError || !!screenshotError || isUsingMjpegMode || methodCallInProgress
+          }
+          onClick={exportSnapshot}
         />
+      </Tooltip>
+      {!isSnapshot && (
+        <>
+          {isUsingMjpegMode && (
+            <ToggleAutomaticRefreshButton
+              isUsingMjpegMode={isUsingMjpegMode}
+              isSourceRefreshOn={isSourceRefreshOn}
+              setRefreshingState={setRefreshingState}
+            />
+          )}
+          <ManualRefreshButton applyClientMethod={applyClientMethod} />
+          <SearchForElementButton {...props} />
+          <ToggleRecordingButton
+            isRecording={isRecording}
+            startRecording={startRecording}
+            pauseRecording={pauseRecording}
+          />
+        </>
       )}
-      <ManualRefreshButton applyClientMethod={applyClientMethod} />
-      <SearchForElementButton {...props} />
-      <ToggleRecordingButton
-        isRecording={isRecording}
-        startRecording={startRecording}
-        pauseRecording={pauseRecording}
-      />
     </Space.Compact>
   );
 };
