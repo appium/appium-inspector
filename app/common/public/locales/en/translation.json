@@ -339,5 +339,10 @@
   "Restore Default Attributes": "Restore Default Attributes",
   "searchHistory": "Search History:",
   "toggleSearchHistory": "Toggle Search History",
-  "clearSearchHistory": "Clear Search History"
+  "clearSearchHistory": "Clear Search History",
+  "Capability Templates": "Capability Templates",
+  "Use Template": "Use Template",
+  "Select a Template": "Select a Template",
+  "capabilityTemplateReplacement": "Select a template to preview its contents below. Applying a template replaces the current capabilities without changing any other session details.",
+  "capabilityTemplateSetup": "This template is a starting point. See the driver documentation for more capability examples."
 }

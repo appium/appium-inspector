@@ -7,7 +7,9 @@ import {
   SESSION_SERVER_TYPE,
   VISIBLE_PROVIDERS,
 } from '../../shared/setting-defs.js';
+import {CAPABILITY_TEMPLATES} from '../constants/capability-templates.js';
 import {
+  CAPABILITY_TYPES,
   DEFAULT_SESSION_NAME,
   SERVER_TYPES,
   SESSION_BUILDER_TABS,
@@ -42,6 +44,7 @@ export const ADD_CAPABILITY = 'ADD_CAPABILITY';
 export const REMOVE_CAPABILITY = 'REMOVE_CAPABILITY';
 export const SWITCHED_TABS = 'SWITCHED_TABS';
 export const SET_CAPS_AND_SERVER = 'SET_CAPS_AND_SERVER';
+export const LOAD_CAPABILITY_TEMPLATE = 'LOAD_CAPABILITY_TEMPLATE';
 export const SAVE_AS_MODAL_REQUESTED = 'SAVE_AS_MODAL_REQUESTED';
 export const HIDE_SAVE_AS_MODAL_REQUESTED = 'HIDE_SAVE_AS_MODAL_REQUESTED';
 export const SET_SAVE_AS_TEXT = 'SET_SAVE_AS_TEXT';
@@ -191,6 +194,26 @@ export function showError(e, params = {methodName: null, secs: 5, url: null}) {
 export function setCapsAndServer(server, serverType, caps, uuid, name) {
   return (dispatch) => {
     dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name});
+  };
+}
+
+/** Replace the current capabilities without changing other session details. */
+export function loadCapabilityTemplate(templateId) {
+  return (dispatch) => {
+    const template = CAPABILITY_TEMPLATES.find(({id}) => id === templateId);
+    if (template) {
+      const caps = Object.entries(template.caps).map(([name, value]) => ({
+        id: getRandomId(),
+        enabled: true,
+        type: CAPABILITY_TYPES.TEXT,
+        name,
+        value,
+      }));
+      dispatch({
+        type: LOAD_CAPABILITY_TEMPLATE,
+        caps,
+      });
+    }
   };
 }
 
@@ -413,7 +436,7 @@ export function newSession(originalCaps, attachSessId = null) {
 export function saveSession(sessionParams, checkDuplicateName = false) {
   return async (dispatch) => {
     const {server, serverType, caps, name, uuid: foundUUID} = sessionParams;
-    const savedSessions = (await getSetting(SAVED_SESSIONS)) || [];
+    const savedSessions = structuredClone(await getSetting(SAVED_SESSIONS)) || [];
     if (checkDuplicateName) {
       const duplicateSessionNameExists = savedSessions.some((session) => session.name === name);
       if (duplicateSessionNameExists) {
