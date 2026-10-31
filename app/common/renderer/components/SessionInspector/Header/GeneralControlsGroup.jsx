@@ -3,6 +3,7 @@ import {Button, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
+import {handleInspectorShortcut} from '../../../utils/inspector-shortcuts.js';
 import LocatorSearchModal from './LocatorSearch/LocatorSearchModal.jsx';
 
 /**
@@ -37,17 +38,22 @@ const ToggleAutomaticRefreshButton = ({isSourceRefreshOn, setRefreshingState}) =
 /**
  * Button for explicitly refreshing the app source/screenshot.
  */
-const ManualRefreshButton = ({applyClientMethod}) => {
+const ManualRefreshButton = ({applyClientMethod, shortcutsBlocked}) => {
   const {t} = useTranslation();
   const refreshLabel = t('refreshSource');
 
   return (
-    <Tooltip title={refreshLabel}>
+    <Tooltip title={`${refreshLabel} (Alt+R)`}>
       <Button
         aria-label={refreshLabel}
+        aria-keyshortcuts="Alt+R"
         id="btnReload"
         icon={<IconRefresh size={18} />}
         onClick={() => applyClientMethod({methodName: 'getPageSource'})}
+        onKeyDown={(event) =>
+          !shortcutsBlocked &&
+          handleInspectorShortcut(event, {KeyR: () => applyClientMethod({methodName: 'getPageSource'})})
+        }
       />
     </Tooltip>
   );
@@ -57,18 +63,20 @@ const ManualRefreshButton = ({applyClientMethod}) => {
  * Button to open the locator search modal.
  */
 const SearchForElementButton = (props) => {
-  const {showLocatorSearchModal} = props;
+  const {showLocatorSearchModal, shortcutsBlocked} = props;
   const {t} = useTranslation();
   const searchLabel = t('Search for element');
 
   return (
     <>
-      <Tooltip title={searchLabel}>
+      <Tooltip title={`${searchLabel} (Alt+L)`}>
         <Button
           aria-label={searchLabel}
+          aria-keyshortcuts="Alt+L"
           id="searchForElement"
           icon={<IconSearch size={18} />}
           onClick={showLocatorSearchModal}
+          onKeyDown={(event) => !shortcutsBlocked && handleInspectorShortcut(event, {KeyL: showLocatorSearchModal})}
         />
       </Tooltip>
       <LocatorSearchModal {...props} />
@@ -79,25 +87,34 @@ const SearchForElementButton = (props) => {
 /**
  * Button for toggling recording of user interactions.
  */
-const ToggleRecordingButton = ({isRecording, startRecording, pauseRecording}) => {
+const ToggleRecordingButton = ({isRecording, startRecording, pauseRecording, shortcutsBlocked}) => {
   const {t} = useTranslation();
   const pauseLabel = t('Pause Recording');
   const startLabel = t('Start Recording');
 
   return isRecording ? (
-    <Tooltip title={pauseLabel}>
+    <Tooltip title={`${pauseLabel} (Alt+V)`}>
       <Button
         aria-label={pauseLabel}
+        aria-keyshortcuts="Alt+V"
         id="btnPause"
         icon={<IconVideo size={18} />}
         type={BUTTON.PRIMARY}
         danger
         onClick={pauseRecording}
+        onKeyDown={(event) => !shortcutsBlocked && handleInspectorShortcut(event, {KeyV: pauseRecording})}
       />
     </Tooltip>
   ) : (
-    <Tooltip title={startLabel}>
-      <Button aria-label={startLabel} id="btnStartRecording" icon={<IconVideo size={18} />} onClick={startRecording} />
+    <Tooltip title={`${startLabel} (Alt+V)`}>
+      <Button
+        aria-label={startLabel}
+        aria-keyshortcuts="Alt+V"
+        id="btnStartRecording"
+        icon={<IconVideo size={18} />}
+        onClick={startRecording}
+        onKeyDown={(event) => !shortcutsBlocked && handleInspectorShortcut(event, {KeyV: startRecording})}
+      />
     </Tooltip>
   );
 };
@@ -114,7 +131,24 @@ const GeneralControlsGroup = (props) => {
     isRecording,
     startRecording,
     pauseRecording,
+    driver,
+    methodCallInProgress,
+    isQuittingSession,
+    isSessionDone,
+    isLocatorSearchModalVisible,
+    showKeepAlivePrompt,
+    isGestureEditorVisible,
   } = props;
+
+  const shortcutsBlocked =
+    !driver ||
+    methodCallInProgress ||
+    isQuittingSession ||
+    isSessionDone ||
+    isLocatorSearchModalVisible ||
+    showKeepAlivePrompt ||
+    isGestureEditorVisible;
+
   return (
     <Space.Compact>
       {isUsingMjpegMode && (
@@ -124,12 +158,13 @@ const GeneralControlsGroup = (props) => {
           setRefreshingState={setRefreshingState}
         />
       )}
-      <ManualRefreshButton applyClientMethod={applyClientMethod} />
-      <SearchForElementButton {...props} />
+      <ManualRefreshButton applyClientMethod={applyClientMethod} shortcutsBlocked={shortcutsBlocked} />
+      <SearchForElementButton {...props} shortcutsBlocked={shortcutsBlocked} />
       <ToggleRecordingButton
         isRecording={isRecording}
         startRecording={startRecording}
         pauseRecording={pauseRecording}
+        shortcutsBlocked={shortcutsBlocked}
       />
     </Space.Compact>
   );
