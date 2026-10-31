@@ -40,7 +40,7 @@ import {
   SHOW_DESIRED_CAPS_JSON_ERROR,
   SWITCHED_TABS,
 } from '../actions/SessionBuilder.js';
-import {CAPABILITY_TYPES, SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder.js';
+import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder.js';
 import {isPlainObject, omit} from '../utils/common.js';
 import {getRandomId} from '../utils/other.js';
 
