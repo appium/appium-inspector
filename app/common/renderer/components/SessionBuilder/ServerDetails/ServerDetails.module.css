@@ -1,3 +1,8 @@
+.serverDetailFirstRow {
+  padding-bottom: 8px;
+}
+
+.serverDetailFirstRow,
 .serverDetailRow {
   display: flex;
   flex-wrap: wrap;
@@ -28,6 +33,7 @@
 }
 
 .serverInputField250px {
+  display: flex;
   flex: 1 1 250px;
 }
 
