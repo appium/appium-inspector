@@ -28,6 +28,7 @@ import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
 import {addVendorPrefixes, getRandomId} from '../utils/other.js';
 import {parseSessionFileContents} from '../utils/sessionfile-parsing.js';
+import {sanitizeUrlState} from '../utils/url-state.js';
 import {quitSession, setSessionDetails} from './SessionInspector.js';
 
 export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
@@ -970,16 +971,29 @@ export function initFromQueryString(loadNewSession) {
     const initialState = url.searchParams.get('state');
     const autoStartSession = url.searchParams.get('autoStart');
 
+    let isStateFromUrl = false;
     if (initialState) {
+      let parsedState;
       try {
-        const state = JSON.parse(initialState);
-        dispatch({type: SET_STATE_FROM_URL, state});
+        parsedState = JSON.parse(initialState);
       } catch {
         showError(new Error('Could not parse initial state from URL'), {secs: 0});
       }
+      if (parsedState !== undefined) {
+        // Anyone can craft this link, so only the parts that cannot reach saved or environment
+        // credentials are applied, and they replace the saved server state (see the reducer)
+        const {state, dropped} = sanitizeUrlState(parsedState);
+        if (dropped.length) {
+          log.warn(`Ignored state from URL that a link may not set: ${dropped.join(', ')}`);
+        }
+        dispatch({type: SET_STATE_FROM_URL, state});
+        isStateFromUrl = true;
+      }
     }
 
-    if (autoStartSession === AUTO_START_URL_PARAM) {
+    // Only a session the link itself describes is started automatically: without state from the
+    // URL, it would run on the saved server, which may be a cloud account with saved credentials
+    if (autoStartSession === AUTO_START_URL_PARAM && isStateFromUrl) {
       // at this point these can only be set using SET_STATE_FROM_URL
       const {attachSessId, caps} = getState().builder;
       if (attachSessId) {

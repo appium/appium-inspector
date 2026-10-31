@@ -40,3 +40,13 @@
   height: 32px;
   width: calc(100% - 64px);
 }
+
+.searchModal :global(.ant-modal-footer) {
+  text-align: unset;
+}
+
+.searchModalFooterRightCol {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

@@ -43,7 +43,7 @@ describe('client-frameworks', function () {
       expect(code).toContain(
         '"appium:app": None,\n\t"goog:chromeOptions": {"args": ["--headless"], "mobile-emulation": None}',
       );
-      expect(code).toContain(`driver.execute_script('mobile: test', {"elementId": None, "some-key": "value"})`);
+      expect(code).toContain(`driver.execute_script("mobile: test", {"elementId": None, "some-key": "value"})`);
       expect(code).not.toContain('null');
     });
 
@@ -378,6 +378,38 @@ describe('client-frameworks', function () {
       expect(framework.getCodeString(true)).toContain(
         String.raw`core = Appium::Core.for url: 'http://localhost/a\'b/#{x}', caps: caps`,
       );
+    });
+  });
+
+  describe('server and app string escaping (JSON-literal generators)', function () {
+    // A context name from the app under test that tries to close the string literal and append code.
+    const HOSTILE = String.raw`a") + os.system("id") + ("`;
+
+    it.each([
+      [PythonFramework, 'driver.switch_to.context('],
+      [JsWdIoFramework, 'await driver.switchAppiumContext('],
+      [JsOxygenFramework, 'mob.setContext('],
+      [JavaJUnit5Framework, 'driver.context('],
+      [DotNetNUnitFramework, '_driver.Context = '],
+    ])('should keep a hostile context name one quoted literal in %o', function (Framework, marker) {
+      const framework = new Framework(SERVER_URL, SERVER_URL_PARTS, {});
+      const line = framework.codeFor_switchAppiumContext(null, null, HOSTILE);
+      // quote() is the single escaper; the generated call must embed exactly its output
+      expect(line).toContain(marker + framework.quote(HOSTILE));
+    });
+
+    it('should escape U+2028/U+2029 line separators that would break a JS string', function () {
+      const framework = new JsWdIoFramework(SERVER_URL, SERVER_URL_PARTS, {});
+      const input = 'a' + String.fromCharCode(0x2028) + 'b' + String.fromCharCode(0x2029) + 'c';
+      const quoted = framework.quote(input);
+      expect(quoted).toBe('"a\\u2028b\\u2029c"');
+    });
+
+    it('should escape both file arguments in Java pushFile', function () {
+      const framework = new JavaJUnit5Framework(SERVER_URL, SERVER_URL_PARTS, {});
+      const line = framework.codeFor_pushFile(null, null, '/sd/a").concat("', 'Zm9v');
+      expect(line).toContain(framework.quote('/sd/a").concat("'));
+      expect(line).toContain(framework.quote('Zm9v'));
     });
   });
 });

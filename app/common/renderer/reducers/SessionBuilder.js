@@ -379,10 +379,14 @@ export default function builder(state = INITIAL_STATE, action) {
       };
 
     case SET_STATE_FROM_URL:
+      // The (sanitized) state from a link replaces the saved server state instead of merging into
+      // it, so a session started from the link only uses the server the link itself describes and
+      // never inherits saved cloud credentials
       return {
         ...state,
-        server: mergeServerState(state.server, action.state.server || {}),
         ...omit(action.state, ['server']),
+        server: mergeServerState(INITIAL_STATE.server, action.state.server || {}),
+        serverType: action.state.serverType || INITIAL_STATE.serverType,
       };
 
     case SET_CAPABILITY_NAME_ERROR:
