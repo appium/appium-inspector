@@ -9,6 +9,7 @@ import {
 } from '../../shared/setting-defs.js';
 import {CAPABILITY_TEMPLATES} from '../constants/capability-templates.js';
 import {
+  CAPABILITY_TYPES,
   DEFAULT_SESSION_NAME,
   SERVER_TYPES,
   SESSION_BUILDER_TABS,
@@ -195,14 +196,21 @@ export function setCapsAndServer(server, serverType, caps, uuid, name) {
   };
 }
 
-/** Load an editable, unsaved capability set without changing server settings. */
+/** Replace the current capabilities without changing other session details. */
 export function loadCapabilityTemplate(templateId) {
   return (dispatch) => {
     const template = CAPABILITY_TEMPLATES.find(({id}) => id === templateId);
     if (template) {
+      const caps = Object.entries(template.caps).map(([name, value]) => ({
+        id: getRandomId(),
+        enabled: true,
+        type: CAPABILITY_TYPES.TEXT,
+        name,
+        value,
+      }));
       dispatch({
         type: LOAD_CAPABILITY_TEMPLATE,
-        caps: Object.entries(template.caps).map(([name, value]) => ({name, value})),
+        caps,
       });
     }
   };
@@ -427,7 +435,7 @@ export function newSession(originalCaps, attachSessId = null) {
 export function saveSession(sessionParams, checkDuplicateName = false) {
   return async (dispatch) => {
     const {server, serverType, caps, name, uuid: foundUUID} = sessionParams;
-    const savedSessions = structuredClone((await getSetting(SAVED_SESSIONS)) || []);
+    const savedSessions = structuredClone(await getSetting(SAVED_SESSIONS)) || [];
     if (checkDuplicateName) {
       const duplicateSessionNameExists = savedSessions.some((session) => session.name === name);
       if (duplicateSessionNameExists) {

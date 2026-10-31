@@ -36,16 +36,6 @@ capability sets. Multiple files can be imported at the same time.
     file details in the [Capability Builder tab](./capability-builder.md), which may be useful if
     you do not want to add it as a saved capability set.
 
-## Capability Templates
-
-Capability templates provide starting points for Android (UiAutomator2) and iOS (XCUITest).
-Customize the capabilities for your device and app, and save the set for reuse. Using a template
-does not change existing saved capability sets or server settings.
-
-For more examples, see the
-[UiAutomator2 capability sets](https://appium.github.io/appium-uiautomator2-driver/latest/guides/capability-sets/)
-and [XCUITest capability sets](https://appium.github.io/appium-xcuitest-driver/latest/guides/capability-sets/).
-
 ## Saved Capability Set JSON Structure
 
 The JSON structure on the right side shows the capabilities of the saved set in JSON format, exactly

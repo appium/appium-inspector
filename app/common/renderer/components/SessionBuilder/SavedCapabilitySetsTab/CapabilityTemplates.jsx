@@ -1,4 +1,5 @@
-import {Button, Modal, Select, Typography} from 'antd';
+import {IconBraces} from '@tabler/icons-react';
+import {Button, Card, Modal, Select, Space} from 'antd';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
@@ -25,7 +26,9 @@ const CapabilityTemplates = ({loadCapabilityTemplate}) => {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>{t('Use a Template')}</Button>
+      <Button icon={<IconBraces size={18} />} onClick={() => setOpen(true)}>
+        {t('Use Template')}
+      </Button>
       <Modal
         open={open}
         title={t('Capability Templates')}
@@ -35,22 +38,28 @@ const CapabilityTemplates = ({loadCapabilityTemplate}) => {
         onOk={loadTemplate}
         onCancel={close}
       >
-        <Typography.Paragraph>{t('capabilityTemplateReplacement')}</Typography.Paragraph>
-        <Select
-          aria-label={t('Select a Template')}
-          placeholder={t('Select a Template')}
-          style={{width: '100%', marginBottom: 16}}
-          value={templateId}
-          onChange={setTemplateId}
-          options={CAPABILITY_TEMPLATES.map(({id, name}) => ({value: id, label: name}))}
-        />
-        {template && <pre>{JSON.stringify(template.caps, null, 2)}</pre>}
-        <Typography.Paragraph type="secondary">{t('capabilityTemplateSetup')}</Typography.Paragraph>
-        {CAPABILITY_TEMPLATES.map(({id, name, documentation}) => (
-          <Button key={id} type="link" onClick={() => openLink(documentation)}>
-            {name}
-          </Button>
-        ))}
+        <Space orientation="vertical" size="middle" style={{width: '100%'}}>
+          <span>{t('capabilityTemplateReplacement')}</span>
+          <Select
+            aria-label={t('Select a Template')}
+            placeholder={t('Select a Template')}
+            style={{width: '100%'}}
+            value={templateId}
+            onChange={setTemplateId}
+            options={CAPABILITY_TEMPLATES.map(({id, name}) => ({value: id, label: name}))}
+          />
+          {template && (
+            <Card size="small">
+              <pre style={{margin: 0, whiteSpace: 'pre-wrap'}}>{JSON.stringify(template.caps, null, 2)}</pre>
+            </Card>
+          )}
+          {template && <span>{t('capabilityTemplateSetup')}</span>}
+          {template && (
+            <Button type="link" onClick={() => openLink(template.documentation)}>
+              {template.name}
+            </Button>
+          )}
+        </Space>
       </Modal>
     </>
   );

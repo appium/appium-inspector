@@ -3,13 +3,13 @@ const XCUITEST_DOCS = 'https://appium.github.io/appium-xcuitest-driver/latest/gu
 
 export const CAPABILITY_TEMPLATES = [
   {
-    id: 'android-native',
+    id: 'android-uiautomator2-native',
     name: 'Android (UiAutomator2)',
     documentation: UIAUTOMATOR2_DOCS,
     caps: {platformName: 'Android', 'appium:automationName': 'UiAutomator2'},
   },
   {
-    id: 'ios-native',
+    id: 'ios-xcuitest-native',
     name: 'iOS (XCUITest)',
     documentation: XCUITEST_DOCS,
     caps: {platformName: 'iOS', 'appium:automationName': 'XCUITest'},

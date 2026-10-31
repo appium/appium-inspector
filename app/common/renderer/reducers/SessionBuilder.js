@@ -151,21 +151,13 @@ export default function builder(state = INITIAL_STATE, action) {
     case LOAD_CAPABILITY_TEMPLATE:
       return {
         ...state,
-        caps: action.caps.map((cap) => ({...cap, id: getRandomId(), type: CAPABILITY_TYPES.TEXT, enabled: true})),
-        capsUUID: null,
-        capsName: null,
+        caps: action.caps,
         isCapsDirty: true,
-        tabKey: SESSION_BUILDER_TABS.CAPS_BUILDER,
-        isEditingDesiredCapsName: false,
-        desiredCapsName: null,
-        isDuplicateCapsName: false,
         isEditingDesiredCaps: false,
         rawDesiredCaps: null,
         isValidCapsJson: true,
         isValidatingCapsJson: false,
         invalidCapsJsonReason: null,
-        showSaveAsModal: false,
-        saveAsText: null,
       };
 
     case SAVE_SESSION_REQUESTED:
