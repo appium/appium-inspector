@@ -1,6 +1,10 @@
 import {describe, expect, it} from 'vitest';
 
-import {DEFAULT_SESSION_NAME, SESSION_FILE_VERSIONS} from '../../app/common/renderer/constants/session-builder.js';
+import {
+  DEFAULT_SESSION_NAME,
+  SAUCE_DATA_CENTERS,
+  SESSION_FILE_VERSIONS,
+} from '../../app/common/renderer/constants/session-builder.js';
 import {
   migrateSessionJSON,
   parseSessionFileContents,
@@ -118,6 +122,24 @@ describe('utils/sessionfile-parsing.js', function () {
         ...capsProp,
         server: {...serverProp.server, advanced: newAdvancedServerProp},
       };
+      expect(validateSessionJSON(session)).toBeNull();
+    });
+
+    it.each(SAUCE_DATA_CENTERS.map(({value}) => value))(
+      'should validate a session with the Sauce Labs data center %s',
+      (dataCenter) => {
+        const session = {...versionProp, ...nameProp, ...capsProp, server: {sauce: {dataCenter}, advanced: {}}};
+        expect(validateSessionJSON(session)).toEqual(session);
+      },
+    );
+
+    it.each([
+      ['points to another host', 'evil.example/'],
+      ['extends an offered one with another host', 'us-west-1.evil.example#'],
+      ['is empty', ''],
+      ['is not a string', 1],
+    ])('should return null if the Sauce Labs data center %s', (_desc, dataCenter) => {
+      const session = {...versionProp, ...nameProp, ...capsProp, server: {sauce: {dataCenter}, advanced: {}}};
       expect(validateSessionJSON(session)).toBeNull();
     });
 

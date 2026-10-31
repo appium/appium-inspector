@@ -2,6 +2,7 @@ import {Checkbox, Input, Radio, Space} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {INPUT} from '../../../constants/antd-types.js';
+import {SAUCE_DATA_CENTERS} from '../../../constants/session-builder.js';
 
 import styles from './ServerDetails.module.css';
 
@@ -22,12 +23,10 @@ const sauceAccessKeyPlaceholder = (t) => {
 const ServerTabSauce = ({server, setServerParam}) => {
   const {t} = useTranslation();
 
-  const dataCenterOptions = [
-    {label: t('US-West'), value: 'us-west-1'},
-    {label: t('US-East'), value: 'us-east-4'},
-    {label: t('EU-Central'), value: 'eu-central-1'},
-    {label: t('Asia-South'), value: 'asia-south-2'},
-  ];
+  const dataCenterOptions = SAUCE_DATA_CENTERS.map(({value, labelKey}) => ({
+    label: t(labelKey),
+    value,
+  }));
 
   return (
     <div className={styles.serverDetailRow}>
@@ -95,6 +94,15 @@ const ServerTabSauce = ({server, setServerParam}) => {
             onChange={(e) => setServerParam('scPort', e.target.value)}
           />
         </Space.Compact>
+        <Checkbox
+          className={styles.addonCheckbox}
+          id="sauceProxySSL"
+          disabled={!server.sauce.useSCProxy}
+          checked={!!server.sauce.scSsl}
+          onChange={(e) => setServerParam('scSsl', e.target.checked)}
+        >
+          SSL
+        </Checkbox>
       </div>
     </div>
   );

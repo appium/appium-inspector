@@ -1,6 +1,7 @@
 import {
   CAPABILITY_TYPES,
   DEFAULT_SESSION_NAME,
+  SAUCE_DATA_CENTERS,
   SERVER_ADVANCED_PARAMS,
   SERVER_TYPES,
   SESSION_FILE_VERSIONS,
@@ -169,6 +170,14 @@ function isSessionServerValid(sessionJSON) {
     if (key !== SERVER_TYPES.ADVANCED) {
       if (!isPlainObject(sessionJSON.server[key])) {
         return logValidationError(`'${key}' server property must be an object`);
+      }
+      // The data center becomes part of the hostname the Sauce Labs credentials are sent to,
+      // so a file may only use one of the data centers the server tab offers
+      if (key === SERVER_TYPES.SAUCE && 'dataCenter' in sessionJSON.server.sauce) {
+        const {dataCenter} = sessionJSON.server.sauce;
+        if (!SAUCE_DATA_CENTERS.some(({value}) => value === dataCenter)) {
+          return logValidationError(`unsupported Sauce Labs data center '${dataCenter}'`);
+        }
       }
       continue;
     }
