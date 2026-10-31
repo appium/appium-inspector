@@ -1,4 +1,4 @@
-import {Alert, Button, Input, Row, Space} from 'antd';
+import {Alert, Button, Input, Row, Space, Table} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {ALERT, BUTTON} from '../../../../constants/antd-types.js';
@@ -80,6 +80,51 @@ const LocatorSearchFormValueInputField = ({locatorSearchValue, setLocatorSearchV
 );
 
 /**
+ * Table listing previous locator strategy and selector searches.
+ */
+const LocatorSearchFormHistoryTable = ({
+  searchHistory,
+  locatorSearchStrategy,
+  locatorSearchValue,
+  setLocatorSearchStrategy,
+  setLocatorSearchValue,
+}) => {
+  const selectedKey = JSON.stringify([locatorSearchStrategy, locatorSearchValue]);
+  const columns = [
+    {
+      dataIndex: 'strategy',
+    },
+    {
+      dataIndex: 'selector',
+    },
+  ];
+
+  return (
+    <Row>
+      <Table
+        pagination={false}
+        className={styles.searchResultsList}
+        dataSource={searchHistory}
+        columns={columns}
+        showHeader={false}
+        onRow={(row) => ({
+          onClick: () => {
+            setLocatorSearchStrategy(row.strategy);
+            setLocatorSearchValue(row.selector);
+          },
+        })}
+        rowSelection={{
+          selectedRowKeys: [selectedKey],
+          hideSelectAll: true,
+          columnWidth: 0,
+          renderCell: () => null,
+        }}
+      />
+    </Row>
+  );
+};
+
+/**
  * Input form for locator search related data.
  */
 const LocatorSearchForm = ({
@@ -89,6 +134,8 @@ const LocatorSearchForm = ({
   locatorSearchStrategy,
   automationName,
   currentContext,
+  searchHistory,
+  showSearchHistory,
 }) => {
   const {t} = useTranslation();
 
@@ -107,6 +154,18 @@ const LocatorSearchForm = ({
         locatorSearchValue={locatorSearchValue}
         setLocatorSearchValue={setLocatorSearchValue}
       />
+      {showSearchHistory && (
+        <>
+          {t('searchHistory')}
+          <LocatorSearchFormHistoryTable
+            searchHistory={searchHistory}
+            locatorSearchStrategy={locatorSearchStrategy}
+            locatorSearchValue={locatorSearchValue}
+            setLocatorSearchStrategy={setLocatorSearchStrategy}
+            setLocatorSearchValue={setLocatorSearchValue}
+          />
+        </>
+      )}
     </Space>
   );
 };
