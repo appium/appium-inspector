@@ -80,3 +80,8 @@ body {
 .ant-splitter-bar {
   margin: 6px;
 }
+
+/* All tables with row selection allow clicking on the row directly. */
+.ant-table-selection-column {
+  padding: 0px !important;
+}

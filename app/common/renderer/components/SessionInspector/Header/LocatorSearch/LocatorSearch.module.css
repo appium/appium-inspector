@@ -26,10 +26,13 @@
 }
 
 .searchResultsList :global(.ant-table-cell) {
-  padding: 4px 6px !important;
   height: 25px;
   text-align: left;
   font-family: monospace;
+}
+
+.searchResultsList :global(.ant-table-cell:not(.ant-table-selection-column)) {
+  padding: 4px 6px !important;
 }
 
 .searchResultsActions {
