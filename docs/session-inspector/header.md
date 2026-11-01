@@ -157,11 +157,18 @@ There is a choice of multiple locator strategies that can be used during search.
 support different locator strategies, and the Inspector will try to hide strategies that are not
 supported by the current driver.
 
-After selecting the locator strategy, entering the selector string, and pressing _Search_, the
-results screen is shown.
+It is also possible to specify the search details using the search history. The Inspector saves up
+to 20 most recent search queries across sessions, and the full list can be toggled using the
+history button in the bottom left corner:
 
-If one or more elements are found, the Inspector will list the element count, time taken, and a
-list of selectable element IDs:
+![Element Search History](./assets/images/header/search-history.png)
+
+Clicking on any recorded entry changes the current locator strategy and selector to those of the
+selected entry. A separate button can also be used to clear the history.
+
+Once the locator strategy and selector string are specified, clicking the search button starts the
+element lookup, after which the results screen is shown. If one or more elements are found, the
+Inspector will list the element count, time taken, and a list of selectable element IDs:
 
 ![Element Search Results](./assets/images/header/search-results.png)
 

@@ -60,7 +60,7 @@ features. Here is a non-exhaustive list of such features:
 - View suggested element locator strategies and selectors to be used in your scripts
 - Compare the speed of different element finding strategies
 - Record your actions directly into Appium client code for 5+ different programming languages
-- Simulate system actions for iOS (home, Siri) and Android (back, home, app switch)
+- Simulate system actions for Android, iOS, tvOS and watchOS
 - Switch to different application contexts
 - Access a library of various Appium driver commands
 
