@@ -336,5 +336,8 @@
   "w3cActionsUnsupported": "Дії W3C не підтримуються на цій платформі",
   "Customize Visible Attributes": "Змінити видимі атрибути",
   "importantAttributesDescription": "Виберіть, які атрибути з’являються у компактному дереві вихідного коду. Виберіть атрибут або введіть назву, щоб додати його. Зміни зберігаються між сесіями.",
-  "Restore Default Attributes": "Відновити атрибути за замовчуванням"
+  "Restore Default Attributes": "Відновити атрибути за замовчуванням",
+  "searchHistory": "Search History:",
+  "toggleSearchHistory": "Toggle Search History",
+  "clearSearchHistory": "Clear Search History"
 }
