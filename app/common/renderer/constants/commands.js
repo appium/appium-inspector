@@ -382,6 +382,8 @@ export const COMMAND_DEFINITIONS = {
 
 export const COMMAND_EXECUTE_SCRIPT = 'executeScript';
 export const COMMAND_UPDATE_SETTINGS = 'updateSettings';
+export const COMMAND_SWITCH_TO_WINDOW = 'switchToWindow';
+export const COMMAND_GET_WINDOW_HANDLES = 'getWindowHandles';
 
 /**
  * Breakpoints used for the grid of command buttons.

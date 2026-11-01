@@ -1,6 +1,7 @@
-import {Input, Modal, Space, Typography} from 'antd';
+import {AutoComplete, Input, Modal, Space, Typography} from 'antd';
 import {useTranslation} from 'react-i18next';
 
+import {COMMAND_SWITCH_TO_WINDOW} from '../../../constants/commands.js';
 import {isEmpty} from '../../../utils/common.js';
 
 import inspectorStyles from '../SessionInspector.module.css';
@@ -24,10 +25,13 @@ const formatParamInputLabel = (param) => {
 const CommandParametersModal = ({
   curCommandDetails,
   curCommandParamValsRef,
+  windowHandles = [],
   prepareAndRunCommand,
   clearCurrentCommand,
 }) => {
   const {t} = useTranslation();
+  const isSwitchToWindow = curCommandDetails.name === COMMAND_SWITCH_TO_WINDOW && !isEmpty(windowHandles);
+  const windowHandleOptions = windowHandles.map((handle) => ({value: handle, label: handle}));
 
   return (
     <Modal
@@ -41,7 +45,15 @@ const CommandParametersModal = ({
       {(curCommandDetails.details.params ?? []).map((param, index) => (
         <Space.Compact block key={param.name} className={styles.commandArgInputRow}>
           <Space.Addon>{formatParamInputLabel(param)}</Space.Addon>
-          <Input onChange={(e) => (curCommandParamValsRef.current[index] = e.target.value)} />
+          {isSwitchToWindow ? (
+            <AutoComplete
+              styles={{root: {flex: 1}}}
+              options={windowHandleOptions}
+              onChange={(value) => (curCommandParamValsRef.current[index] = value)}
+            />
+          ) : (
+            <Input onChange={(e) => (curCommandParamValsRef.current[index] = e.target.value)} />
+          )}
         </Space.Compact>
       ))}
     </Modal>

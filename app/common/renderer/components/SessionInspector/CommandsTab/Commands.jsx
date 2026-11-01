@@ -1,6 +1,10 @@
 import {useEffect, useRef, useState} from 'react';
 
-import {COMMAND_EXECUTE_SCRIPT} from '../../../constants/commands.js';
+import {
+  COMMAND_EXECUTE_SCRIPT,
+  COMMAND_GET_WINDOW_HANDLES,
+  COMMAND_SWITCH_TO_WINDOW,
+} from '../../../constants/commands.js';
 import {adjustParamValueType, transformCommandsMap, transformExecMethodsMap} from '../../../utils/commands-tab.js';
 import {isEmpty, isPlainObject} from '../../../utils/common.js';
 import CommandParametersModal from './CommandParametersModal.jsx';
@@ -20,11 +24,20 @@ const Commands = ({applyClientMethod, getSupportedSessionMethods, getItemColspan
   const [driverExecuteMethods, setDriverExecuteMethods] = useState(null);
 
   const [curCommandDetails, setCurCommandDetails] = useState(null);
+  const [windowHandles, setWindowHandles] = useState([]);
   const curCommandParamValsRef = useRef([]);
 
   const [commandResult, setCommandResult] = useState(undefined);
 
-  const startCommand = (commandDetails) => {
+  const startCommand = async (commandDetails) => {
+    if (commandDetails.name === COMMAND_SWITCH_TO_WINDOW) {
+      const handles = await applyClientMethod({
+        methodName: COMMAND_GET_WINDOW_HANDLES,
+        args: [],
+        skipRefresh: true,
+      });
+      setWindowHandles(Array.isArray(handles) ? handles : []);
+    }
     setCurCommandDetails(commandDetails);
     if (isEmpty(commandDetails.details.params)) {
       prepareAndRunCommand(commandDetails);
@@ -83,6 +96,7 @@ const Commands = ({applyClientMethod, getSupportedSessionMethods, getItemColspan
   const clearCurrentCommand = () => {
     setCommandResult(undefined);
     setCurCommandDetails(null);
+    setWindowHandles([]);
     curCommandParamValsRef.current = [];
   };
 
@@ -115,6 +129,7 @@ const Commands = ({applyClientMethod, getSupportedSessionMethods, getItemColspan
           <CommandParametersModal
             curCommandDetails={curCommandDetails}
             curCommandParamValsRef={curCommandParamValsRef}
+            windowHandles={windowHandles}
             prepareAndRunCommand={prepareAndRunCommand}
             clearCurrentCommand={clearCurrentCommand}
           />
