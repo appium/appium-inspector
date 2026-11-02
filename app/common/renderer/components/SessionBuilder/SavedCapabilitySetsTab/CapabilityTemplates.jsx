@@ -38,7 +38,7 @@ const CapabilityTemplates = ({loadCapabilityTemplate}) => {
         onOk={loadTemplate}
         onCancel={close}
       >
-        <Space orientation="vertical" size="middle" style={{width: '100%'}}>
+        <Space orientation="vertical">
           <span>{t('capabilityTemplateReplacement')}</span>
           <Select
             aria-label={t('Select a Template')}
@@ -53,10 +53,9 @@ const CapabilityTemplates = ({loadCapabilityTemplate}) => {
               <pre style={{margin: 0, whiteSpace: 'pre-wrap'}}>{JSON.stringify(template.caps, null, 2)}</pre>
             </Card>
           )}
-          {template && <span>{t('capabilityTemplateSetup')}</span>}
           {template && (
             <Button type="link" onClick={() => openLink(template.documentation)}>
-              {template.name}
+              {t('capabilityTemplateSetup')}
             </Button>
           )}
         </Space>

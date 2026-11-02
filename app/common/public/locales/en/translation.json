@@ -344,5 +344,5 @@
   "Use Template": "Use Template",
   "Select a Template": "Select a Template",
   "capabilityTemplateReplacement": "Select a template to preview its contents below. Applying a template replaces the current capabilities without changing any other session details.",
-  "capabilityTemplateSetup": "This template is a starting point. See the driver documentation for more capability examples."
+  "capabilityTemplateSetup": "Refer to the driver documentation for more capability examples."
 }
