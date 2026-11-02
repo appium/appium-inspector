@@ -1,5 +1,5 @@
 import {IconSettings} from '@tabler/icons-react';
-import {Button, Modal, Select, Space, Tooltip} from 'antd';
+import {Button, Form, InputNumber, Modal, Select, Tooltip} from 'antd';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
@@ -31,34 +31,39 @@ const SourceSettings = ({importantAttrs, updateImportantAttrs, expansionDepth, u
         onCancel={() => setModalOpen(false)}
         centered
       >
-        <Space orientation="vertical">
-          <label htmlFor="sourceExpansionDepth">{t('Source Expansion Depth')}</label>
-          <Select
-            id="sourceExpansionDepth"
-            aria-label={t('Source Expansion Depth')}
-            value={expansionDepth}
-            options={Array.from({length: MAX_SOURCE_EXPANSION_DEPTH}, (_, index) => ({
-              value: index + 1,
-              label: String(index + 1),
-            }))}
-            onChange={updateExpansionDepth}
-          />
-          <span>{t('sourceExpansionDepthDescription')}</span>
-          <span>{t('Customize Visible Attributes')}</span>
-          <span>{t('importantAttributesDescription')}</span>
-          <Select
-            aria-label={t('Customize Visible Attributes')}
-            mode="tags"
-            value={importantAttrs}
-            options={availableAttrs.map((value) => ({value}))}
-            onChange={updateImportantAttrs}
-            tokenSeparators={[',']}
-            allowClear
-          />
-          <Button onClick={() => updateImportantAttrs(IMPORTANT_SOURCE_ATTRS)}>
-            {t('Restore Default Attributes')}
-          </Button>
-        </Space>
+        <Form styles={{label: {fontSize: '16px'}}} layout="vertical">
+          <Form.Item
+            label={t('Source Expansion Depth')}
+            htmlFor="sourceExpansionDepth"
+            extra={t('sourceExpansionDepthDescription')}
+          >
+            <InputNumber
+              id="sourceExpansionDepth"
+              aria-label={t('Source Expansion Depth')}
+              min={1}
+              max={MAX_SOURCE_EXPANSION_DEPTH}
+              precision={0}
+              value={expansionDepth}
+              onChange={updateExpansionDepth}
+            />
+          </Form.Item>
+          <Form.Item label={t('Customize Visible Attributes')} extra={t('importantAttributesDescription')}>
+            <Select
+              aria-label={t('Customize Visible Attributes')}
+              mode="tags"
+              value={importantAttrs}
+              options={availableAttrs.map((value) => ({value}))}
+              onChange={updateImportantAttrs}
+              tokenSeparators={[',']}
+              allowClear
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button onClick={() => updateImportantAttrs(IMPORTANT_SOURCE_ATTRS)}>
+              {t('Restore Default Attributes')}
+            </Button>
+          </Form.Item>
+        </Form>
       </Modal>
     </>
   );

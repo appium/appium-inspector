@@ -1,8 +1,5 @@
 {
   "appiumInspector": "Appium Inspector",
-  "Source Settings": "Source Settings",
-  "Source Expansion Depth": "Source Expansion Depth",
-  "sourceExpansionDepthDescription": "Choose how many levels to open when expanding a source node. Changes apply immediately and are saved between sessions.",
   "Edit": "Edit",
   "Redo": "Redo",
   "Cut": "Cut",
@@ -338,6 +335,9 @@
   "switchToComposeSubdriver": "Switch to Compose Subdriver",
   "w3cActionsUnsupported": "W3C Actions are not supported on this platform",
   "Customize Visible Attributes": "Customize Visible Attributes",
+  "Source Settings": "Source Settings",
+  "Source Expansion Depth": "Source Expansion Depth",
+  "sourceExpansionDepthDescription": "Choose how many levels to open when expanding a source node. Changes apply immediately and are saved between sessions.",
   "importantAttributesDescription": "Choose which attributes appear in the compact source tree. Select an attribute or type a name to add it. Changes are saved between sessions.",
   "Restore Default Attributes": "Restore Default Attributes",
   "searchHistory": "Search History:",
