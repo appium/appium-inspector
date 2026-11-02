@@ -38,20 +38,19 @@ const ToggleAutomaticRefreshButton = ({isSourceRefreshOn, setRefreshingState}) =
 /**
  * Button for explicitly refreshing the app source/screenshot.
  */
-const ManualRefreshButton = ({applyClientMethod, shortcutsBlocked}) => {
+const ManualRefreshButton = ({applyClientMethod}) => {
   const {t} = useTranslation();
   const refreshLabel = t('refreshSource');
 
   return (
-    <Tooltip title={`${refreshLabel} (Alt+R)`}>
+    <Tooltip title={`${refreshLabel} (Ctrl+Shift+R)`}>
       <Button
         aria-label={refreshLabel}
-        aria-keyshortcuts="Alt+R"
+        aria-keyshortcuts="Control+Shift+R"
         id="btnReload"
         icon={<IconRefresh size={18} />}
         onClick={() => applyClientMethod({methodName: 'getPageSource'})}
         onKeyDown={(event) =>
-          !shortcutsBlocked &&
           handleInspectorShortcut(event, {KeyR: () => applyClientMethod({methodName: 'getPageSource'})})
         }
       />
@@ -63,20 +62,20 @@ const ManualRefreshButton = ({applyClientMethod, shortcutsBlocked}) => {
  * Button to open the locator search modal.
  */
 const SearchForElementButton = (props) => {
-  const {showLocatorSearchModal, shortcutsBlocked} = props;
+  const {showLocatorSearchModal} = props;
   const {t} = useTranslation();
   const searchLabel = t('Search for element');
 
   return (
     <>
-      <Tooltip title={`${searchLabel} (Alt+L)`}>
+      <Tooltip title={`${searchLabel} (Ctrl+Shift+F)`}>
         <Button
           aria-label={searchLabel}
-          aria-keyshortcuts="Alt+L"
+          aria-keyshortcuts="Control+Shift+F"
           id="searchForElement"
           icon={<IconSearch size={18} />}
           onClick={showLocatorSearchModal}
-          onKeyDown={(event) => !shortcutsBlocked && handleInspectorShortcut(event, {KeyL: showLocatorSearchModal})}
+          onKeyDown={(event) => handleInspectorShortcut(event, {KeyF: showLocatorSearchModal})}
         />
       </Tooltip>
       <LocatorSearchModal {...props} />
@@ -87,33 +86,33 @@ const SearchForElementButton = (props) => {
 /**
  * Button for toggling recording of user interactions.
  */
-const ToggleRecordingButton = ({isRecording, startRecording, pauseRecording, shortcutsBlocked}) => {
+const ToggleRecordingButton = ({isRecording, startRecording, pauseRecording}) => {
   const {t} = useTranslation();
   const pauseLabel = t('Pause Recording');
   const startLabel = t('Start Recording');
 
   return isRecording ? (
-    <Tooltip title={`${pauseLabel} (Alt+V)`}>
+    <Tooltip title={`${pauseLabel} (Ctrl+Shift+V)`}>
       <Button
         aria-label={pauseLabel}
-        aria-keyshortcuts="Alt+V"
+        aria-keyshortcuts="Control+Shift+V"
         id="btnPause"
         icon={<IconVideo size={18} />}
         type={BUTTON.PRIMARY}
         danger
         onClick={pauseRecording}
-        onKeyDown={(event) => !shortcutsBlocked && handleInspectorShortcut(event, {KeyV: pauseRecording})}
+        onKeyDown={(event) => handleInspectorShortcut(event, {KeyV: pauseRecording})}
       />
     </Tooltip>
   ) : (
-    <Tooltip title={`${startLabel} (Alt+V)`}>
+    <Tooltip title={`${startLabel} (Ctrl+Shift+V)`}>
       <Button
         aria-label={startLabel}
-        aria-keyshortcuts="Alt+V"
+        aria-keyshortcuts="Control+Shift+V"
         id="btnStartRecording"
         icon={<IconVideo size={18} />}
         onClick={startRecording}
-        onKeyDown={(event) => !shortcutsBlocked && handleInspectorShortcut(event, {KeyV: startRecording})}
+        onKeyDown={(event) => handleInspectorShortcut(event, {KeyV: startRecording})}
       />
     </Tooltip>
   );
@@ -131,23 +130,7 @@ const GeneralControlsGroup = (props) => {
     isRecording,
     startRecording,
     pauseRecording,
-    driver,
-    methodCallInProgress,
-    isQuittingSession,
-    isSessionDone,
-    isLocatorSearchModalVisible,
-    showKeepAlivePrompt,
-    isGestureEditorVisible,
   } = props;
-
-  const shortcutsBlocked =
-    !driver ||
-    methodCallInProgress ||
-    isQuittingSession ||
-    isSessionDone ||
-    isLocatorSearchModalVisible ||
-    showKeepAlivePrompt ||
-    isGestureEditorVisible;
 
   return (
     <Space.Compact>
@@ -158,13 +141,12 @@ const GeneralControlsGroup = (props) => {
           setRefreshingState={setRefreshingState}
         />
       )}
-      <ManualRefreshButton applyClientMethod={applyClientMethod} shortcutsBlocked={shortcutsBlocked} />
-      <SearchForElementButton {...props} shortcutsBlocked={shortcutsBlocked} />
+      <ManualRefreshButton applyClientMethod={applyClientMethod} />
+      <SearchForElementButton {...props} />
       <ToggleRecordingButton
         isRecording={isRecording}
         startRecording={startRecording}
         pauseRecording={pauseRecording}
-        shortcutsBlocked={shortcutsBlocked}
       />
     </Space.Compact>
   );

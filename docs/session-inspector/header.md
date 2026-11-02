@@ -196,21 +196,18 @@ with Appium client code for all supported interactions.
 
 ## Keyboard Shortcuts
 
-The following shortcuts are available when the corresponding button has keyboard focus during an
-active Inspector session. Use Tab to focus a button. On macOS, use the Option key in place of Alt.
-The letter keys refer to their physical
-keyboard positions, including when Option changes the character produced by the key.
+The following shortcuts are available when the corresponding header button has keyboard focus.
+Use Tab to focus a button. The combinations use the physical letter-key positions.
 
 | Shortcut | Action |
 | --- | --- |
-| Alt+R | [Refresh source and screenshot](#refresh-source-screenshot) |
-| Alt+L | [Open locator search](#search-for-element) |
-| Alt+V | [Start or pause recording](#toggle-recorder) |
+| Ctrl+Shift+R | [Refresh source and screenshot](#refresh-source-screenshot) |
+| Ctrl+Shift+F | [Open locator search](#search-for-element) |
+| Ctrl+Shift+V | [Start or pause recording](#toggle-recorder) |
 
-The shortcuts are also shown in the corresponding button tooltips. They are ignored while typing
-in an input or editor, while a dialog or menu is open, during an in-progress command, and while
-the session is ending. Holding a key does not repeatedly trigger its action. Adding Ctrl, Command
-or Shift to these shortcuts does not trigger an Inspector action.
+The shortcuts are also shown in the corresponding button tooltips. Holding a key does not repeatedly
+trigger its action, and an event already consumed by another control is left unchanged. These are
+button-scoped shortcuts, not document-wide shortcuts for other focused fields.
 
 ## Reload on Disconnect
 
