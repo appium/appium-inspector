@@ -3,7 +3,6 @@ import {Button, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
-import {handleInspectorShortcut} from '../../../utils/inspector-shortcuts.js';
 import LocatorSearchModal from './LocatorSearch/LocatorSearchModal.jsx';
 
 /**
@@ -50,9 +49,6 @@ const ManualRefreshButton = ({applyClientMethod}) => {
         id="btnReload"
         icon={<IconRefresh size={18} />}
         onClick={() => applyClientMethod({methodName: 'getPageSource'})}
-        onKeyDown={(event) =>
-          handleInspectorShortcut(event, {KeyR: () => applyClientMethod({methodName: 'getPageSource'})})
-        }
       />
     </Tooltip>
   );
@@ -75,7 +71,6 @@ const SearchForElementButton = (props) => {
           id="searchForElement"
           icon={<IconSearch size={18} />}
           onClick={showLocatorSearchModal}
-          onKeyDown={(event) => handleInspectorShortcut(event, {KeyF: showLocatorSearchModal})}
         />
       </Tooltip>
       <LocatorSearchModal {...props} />
@@ -101,7 +96,6 @@ const ToggleRecordingButton = ({isRecording, startRecording, pauseRecording}) =>
         type={BUTTON.PRIMARY}
         danger
         onClick={pauseRecording}
-        onKeyDown={(event) => handleInspectorShortcut(event, {KeyV: pauseRecording})}
       />
     </Tooltip>
   ) : (
@@ -112,7 +106,6 @@ const ToggleRecordingButton = ({isRecording, startRecording, pauseRecording}) =>
         id="btnStartRecording"
         icon={<IconVideo size={18} />}
         onClick={startRecording}
-        onKeyDown={(event) => handleInspectorShortcut(event, {KeyV: startRecording})}
       />
     </Tooltip>
   );

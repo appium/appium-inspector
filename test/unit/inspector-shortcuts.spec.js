@@ -59,7 +59,7 @@ describe('Inspector keyboard shortcuts', () => {
     expect(action).toHaveBeenCalledTimes(1);
   });
 
-  it('handles an eligible event from an editable control when passed to the button handler', () => {
+  it('handles an eligible event from an editable control', () => {
     const action = vi.fn();
     const focusedElement = {closest: () => ({tagName: 'INPUT'})};
     const event = press({KeyR: action}, {focusedElement});
@@ -68,14 +68,14 @@ describe('Inspector keyboard shortcuts', () => {
     expect(event.defaultPrevented).toBe(true);
   });
 
-  it('does not add a document-wide portal guard to the existing button action', () => {
+  it('handles an eligible event while a portal is visible', () => {
     const ownerDocument = {querySelectorAll: () => [{getClientRects: () => [{}]}]};
     const action = vi.fn();
     expect(press({KeyR: action}, {ownerDocument}).defaultPrevented).toBe(true);
     expect(action).toHaveBeenCalledTimes(1);
   });
 
-  it('ignores hidden portal contents left mounted after closing a dialog', () => {
+  it('handles an eligible event with hidden portal contents still mounted', () => {
     const ownerDocument = {querySelectorAll: () => [{getClientRects: () => []}]};
     const action = vi.fn();
     expect(press({KeyR: action}, {ownerDocument}).defaultPrevented).toBe(true);

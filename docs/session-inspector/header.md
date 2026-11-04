@@ -196,8 +196,8 @@ with Appium client code for all supported interactions.
 
 ## Keyboard Shortcuts
 
-The following shortcuts are available when the corresponding header button has keyboard focus.
-Use Tab to focus a button. The combinations use the physical letter-key positions.
+The following shortcuts are available throughout the app window while the Session Inspector is open.
+The combinations use the physical letter-key positions.
 
 | Shortcut | Action |
 | --- | --- |
@@ -206,8 +206,7 @@ Use Tab to focus a button. The combinations use the physical letter-key position
 | Ctrl+Shift+V | [Start or pause recording](#toggle-recorder) |
 
 The shortcuts are also shown in the corresponding button tooltips. Holding a key does not repeatedly
-trigger its action, and an event already consumed by another control is left unchanged. These are
-button-scoped shortcuts, not document-wide shortcuts for other focused fields.
+trigger its action, and an event already consumed by another control is left unchanged.
 
 ## Reload on Disconnect
 

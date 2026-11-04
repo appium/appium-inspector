@@ -1,5 +1,5 @@
 /**
- * Handle a session button shortcut using its physical key code.
+ * Handle an Inspector shortcut using its physical key code.
  */
 export function handleInspectorShortcut(event, actions) {
   if (
