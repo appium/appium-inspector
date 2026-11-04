@@ -136,15 +136,16 @@ class UiAutomatorGenerator extends LocatorGeneratorBase {
   }
 
   /**
-   * Build an XPath to check uniqueness of an attribute in the new document scope
+   * Build an XPath to check uniqueness of an attribute in the new document scope.
+   * UiSelector attribute methods match elements of any class, so the XPath must not
+   * be limited to the tag name of the node.
    *
-   * @param {Node} domNode - the DOM node in the new scope
    * @param {string} attrName - the attribute name
    * @param {string} attrValue - the attribute value
    * @returns {string} the XPath expression
    */
-  _buildUniquenessXPath(domNode, attrName, attrValue) {
-    return `//${domNode.tagName}[@${attrName}="${attrValue}"]`;
+  _buildUniquenessXPath(attrName, attrValue) {
+    return `//*[@${attrName}="${attrValue}"]`;
   }
 
   /**
@@ -164,7 +165,7 @@ class UiAutomatorGenerator extends LocatorGeneratorBase {
         continue;
       }
 
-      const xpath = this._buildUniquenessXPath(domNode, attrName, attrValue);
+      const xpath = this._buildUniquenessXPath(attrName, attrValue);
       const uiSelector = this._buildUiSelector(attrTranslation, attrValue);
 
       // If the XPath does not parse, move to the next attribute
