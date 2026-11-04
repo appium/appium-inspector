@@ -2,6 +2,7 @@ const UIAUTOMATOR2_DOCS = 'https://appium.github.io/appium-uiautomator2-driver/l
 const ESPRESSO_DOCS = 'https://appium.github.io/appium-espresso-driver/latest/getting-started/#creating-a-session';
 const XCUITEST_DOCS = 'https://appium.github.io/appium-xcuitest-driver/latest/guides/capability-sets/';
 const MAC2_DOCS = 'https://appium.github.io/appium-mac2-driver/latest/getting-started/#creating-a-session';
+const WINCORE_DOCS = 'https://github.com/appium/appium-wincore-driver#examples';
 
 export const CAPABILITY_TEMPLATES = [
   {
@@ -165,5 +166,11 @@ export const CAPABILITY_TEMPLATES = [
     name: 'macOS (Mac2 / Finder)',
     documentation: MAC2_DOCS,
     caps: {platformName: 'mac', 'appium:automationName': 'Mac2'},
+  },
+  {
+    id: 'windows-wincore-basic',
+    name: 'Windows (WinCore / Desktop)',
+    documentation: WINCORE_DOCS,
+    caps: {platformName: 'Windows', 'appium:automationName': 'Wincore', 'appium:app': 'Root'},
   },
 ];
