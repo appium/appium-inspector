@@ -4,7 +4,9 @@ import {Badge, Button, Divider, Space, Spin, Tabs} from 'antd';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
+import {registerLanguage} from 'react-refractor';
 import {useNavigate} from 'react-router';
+import json from 'refractor/json';
 
 import * as SessionBuilderActions from '../../actions/SessionBuilder.js';
 import {BUTTON} from '../../constants/antd-types.js';
@@ -28,6 +30,8 @@ import CloudProviderSelector from './ServerDetails/CloudProviderSelector.jsx';
 import ServerTabCustom from './ServerDetails/ServerTabCustom.jsx';
 
 import styles from './SessionBuilder.module.css';
+
+registerLanguage(json);
 
 // There are 3 possible cases for an empty capability set:
 // * Default Inspector state, which has 1 predefined capability without name or value
