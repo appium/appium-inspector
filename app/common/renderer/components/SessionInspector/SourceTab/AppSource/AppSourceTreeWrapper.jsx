@@ -13,6 +13,7 @@ import inspectorStyles from '../../SessionInspector.module.css';
 import styles from './AppSource.module.css';
 
 let retrievedAttrs = await getSetting(IMPORTANT_SOURCE_ATTRIBUTES);
+// Normalize the saved preference before passing it to the controls or tree.
 let retrievedExpansionDepth = normalizeSourceExpansionDepth(await getSetting(SOURCE_EXPANSION_DEPTH));
 
 /**

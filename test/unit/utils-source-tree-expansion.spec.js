@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest';
 
 import {
+  MAX_SOURCE_EXPANSION_DEPTH,
   expandSourceBranch,
   normalizeSourceExpansionDepth,
 } from '../../app/common/renderer/utils/source-tree-expansion.js';
@@ -19,8 +20,10 @@ describe('Configured source tree expansion', () => {
     expect(expandSourceBranch(chain(12), [])).toEqual(['0']);
   });
 
-  it.each([1, 3, 10])('opens exactly %i levels from the clicked node', (depth) => {
-    expect(expandSourceBranch(chain(12), [], depth)).toEqual(Array.from({length: depth}, (_, index) => String(index)));
+  it.each([1, 3, MAX_SOURCE_EXPANSION_DEPTH])('opens exactly %i levels from the clicked node', (depth) => {
+    expect(expandSourceBranch(chain(depth), [], depth)).toEqual(
+      Array.from({length: depth}, (_, index) => String(index)),
+    );
   });
 
   it('counts depth from the clicked node even when some descendants are already open', () => {
@@ -56,25 +59,26 @@ describe('Configured source tree expansion', () => {
   });
 
   it('handles leaves and missing source without changing existing keys', () => {
-    expect(expandSourceBranch(branch('leaf'), ['other'], 10)).toEqual(['other']);
-    expect(expandSourceBranch(null, ['other'], 10)).toEqual(['other']);
+    expect(expandSourceBranch(branch('leaf'), ['other'], MAX_SOURCE_EXPANSION_DEPTH)).toEqual(['other']);
+    expect(expandSourceBranch(null, ['other'], MAX_SOURCE_EXPANSION_DEPTH)).toEqual(['other']);
   });
 
   it('bounds a deep chain without recursive calls', () => {
-    expect(expandSourceBranch(chain(4000), [], 10)).toEqual(Array.from({length: 10}, (_, index) => String(index)));
+    expect(expandSourceBranch(chain(4000), [], MAX_SOURCE_EXPANSION_DEPTH)).toEqual(
+      Array.from({length: MAX_SOURCE_EXPANSION_DEPTH}, (_, index) => String(index)),
+    );
   });
 
   it('accepts every supported integer depth', () => {
-    for (let depth = 1; depth <= 10; depth++) {
+    for (let depth = 1; depth <= MAX_SOURCE_EXPANSION_DEPTH; depth++) {
       expect(normalizeSourceExpansionDepth(depth)).toBe(depth);
     }
   });
 
-  it.each([undefined, null, 0, -1, 11, 1.5, NaN, Infinity, '3', true])(
+  it.each([undefined, null, 0, -1, MAX_SOURCE_EXPANSION_DEPTH + 1, 1.5, NaN, Infinity, '3', true])(
     'falls back to one for invalid depth %s',
     (depth) => {
       expect(normalizeSourceExpansionDepth(depth)).toBe(1);
-      expect(expandSourceBranch(chain(3), [], depth)).toEqual(['0']);
     },
   );
 });

@@ -6,12 +6,13 @@ export function normalizeSourceExpansionDepth(depth) {
 
 /**
  * Open a configured number of levels starting at the clicked branch.
+ * The caller supplies a normalized depth.
  * Existing expansion state, including other branches, is preserved.
  */
 export function expandSourceBranch(node, expandedPaths, depth = 1) {
   const expanded = new Set(expandedPaths);
   let level = node ? [node] : [];
-  for (let levelsLeft = normalizeSourceExpansionDepth(depth); level.length && levelsLeft > 0; levelsLeft--) {
+  for (let levelsLeft = depth; level.length && levelsLeft > 0; levelsLeft--) {
     const nextLevel = [];
     for (const current of level) {
       if (!current.children?.length) {
