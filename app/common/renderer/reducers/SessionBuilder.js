@@ -13,6 +13,7 @@ import {
   GET_SESSIONS_REQUESTED,
   HIDE_SAVE_AS_MODAL_REQUESTED,
   IS_ADDING_CLOUD_PROVIDER,
+  LOAD_CAPABILITY_TEMPLATE,
   NEW_SESSION_DONE,
   NEW_SESSION_LOADING,
   NEW_SESSION_REQUESTED,
@@ -146,6 +147,18 @@ export default function builder(state = INITIAL_STATE, action) {
             : state.visibleProviders,
       };
       return omit(nextState, 'isCapsDirty');
+
+    case LOAD_CAPABILITY_TEMPLATE:
+      return {
+        ...state,
+        caps: action.caps,
+        isCapsDirty: true,
+        isEditingDesiredCaps: false,
+        rawDesiredCaps: null,
+        isValidCapsJson: true,
+        isValidatingCapsJson: false,
+        invalidCapsJsonReason: null,
+      };
 
     case SAVE_SESSION_REQUESTED:
       nextState = {
