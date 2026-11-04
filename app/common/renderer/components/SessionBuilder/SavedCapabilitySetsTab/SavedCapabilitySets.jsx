@@ -165,7 +165,7 @@ const SavedCapabilitySets = (props) => {
               }}
               scroll={{y: 'calc(100% - 37px)'}}
               footer={() => (
-                <Space wrap>
+                <Space.Compact wrap>
                   <FileUploader
                     title={t('Import from File')}
                     onUpload={importSessionFiles}
@@ -173,7 +173,7 @@ const SavedCapabilitySets = (props) => {
                     type={SESSION_FILE_EXTENSION}
                   />
                   <CapabilityTemplates loadCapabilityTemplate={loadCapabilityTemplate} />
-                </Space>
+                </Space.Compact>
               )}
             />
           </Card>
