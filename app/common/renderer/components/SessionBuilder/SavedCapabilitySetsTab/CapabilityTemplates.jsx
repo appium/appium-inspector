@@ -2,9 +2,23 @@ import {IconBraces} from '@tabler/icons-react';
 import {Button, Card, Modal, Select, Space} from 'antd';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
+import {Refractor} from 'react-refractor';
 
 import {CAPABILITY_TEMPLATES} from '../../../constants/capability-templates.js';
 import {openLink} from '../../../polyfills.js';
+
+import builderStyles from '../SessionBuilder.module.css';
+
+const highlightTemplateSyntax = (caps) => {
+  const formattedJson = JSON.stringify(caps, null, 2);
+  return (
+    <Refractor
+      className={`refractor ${builderStyles.formattedCapabilitiesJson}`}
+      language="json"
+      value={formattedJson}
+    />
+  );
+};
 
 const CapabilityTemplates = ({loadCapabilityTemplate}) => {
   const {t} = useTranslation();
@@ -48,11 +62,7 @@ const CapabilityTemplates = ({loadCapabilityTemplate}) => {
             onChange={setTemplateId}
             options={CAPABILITY_TEMPLATES.map(({id, name}) => ({value: id, label: name}))}
           />
-          {template && (
-            <Card size="small">
-              <pre style={{margin: 0, whiteSpace: 'pre-wrap'}}>{JSON.stringify(template.caps, null, 2)}</pre>
-            </Card>
-          )}
+          {template && <Card size="small">{highlightTemplateSyntax(template.caps)}</Card>}
           {template && (
             <Button type="link" onClick={() => openLink(template.documentation)}>
               {t('capabilityTemplateSetup')}
