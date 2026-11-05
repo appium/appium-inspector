@@ -3,7 +3,7 @@ import {Button, Input, Row, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON, ROW} from '../../../../constants/antd-types.js';
-import SourceAttributeSettings from './SourceAttributeSettings.jsx';
+import SourceSettings from './SourceSettings.jsx';
 
 import styles from './AppSource.module.css';
 
@@ -19,6 +19,8 @@ const AppSourceTreeActions = ({
   matchingElementsCount,
   importantAttrs,
   updateImportantAttrs,
+  expansionDepth,
+  updateExpansionDepth,
 }) => {
   const {t} = useTranslation();
   const collapseLabel = t('Collapse All');
@@ -44,7 +46,12 @@ const AppSourceTreeActions = ({
             type={showSourceAttrs ? BUTTON.PRIMARY : BUTTON.DEFAULT}
           />
         </Tooltip>
-        <SourceAttributeSettings importantAttrs={importantAttrs} updateImportantAttrs={updateImportantAttrs} />
+        <SourceSettings
+          importantAttrs={importantAttrs}
+          updateImportantAttrs={updateImportantAttrs}
+          expansionDepth={expansionDepth}
+          updateExpansionDepth={updateExpansionDepth}
+        />
       </Space.Compact>
       <Space.Compact className={styles.treeSearchInput}>
         <Input
