@@ -33,22 +33,24 @@ The panel can be divided into 3 parts: header buttons, source actions, and the s
 | --- | --- |
 | ![Collapse All Button](./assets/images/source/collapse-all-button.png) | Collapse all nodes in the source tree |
 | ![Toggle Attributes Button](./assets/images/source/toggle-attributes-button.png) | Toggle visibility of all element attributes, not just the ones visible by default |
-| ![Customize Visible Attributes Button](./assets/images/source/customize-visible-attributes-button.png) | Customize which element attributes are visible by default |
+| ![Source Settings Button](./assets/images/source/source-settings-button.png) | Open additional settings for the app source (see below) |
 | ![Search Source Field](./assets/images/source/search-source.png) | Perform a plaintext search in the source XML |
 
-#### Customize Visible Attributes
+#### Source Settings
 
-Clicking the Customize Visible Attributes button will open a new modal window, which lists all
-attributes that are shown by default.
+Clicking the Source Settings button opens a new modal window with more options to configure the
+behavior of the app source. All changes persist between sessions.
 
-![Customize Visible Attributes Modal](./assets/images/source/customize-attributes-modal.png)
+![Source Settings Modal](./assets/images/source/source-settings-modal.png)
 
-New attributes can be added by selecting them in the dropdown, or just typing their name. Existing
-attributes can be removed by removing their entry or unselecting them in the dropdown. It is also
-possible to clear all attributes at once, as well as revert to the default list using the Restore
-Default Attributes button.
-
-Changes to the default visible attributes persist between sessions.
+* _Source Expansion Depth_ allows setting the number of levels of the app source tree that are
+  expanded when expanding a single node. The default value is 1 (expand only the single node), but
+  it can be increased up to 10 (expand the node and its children up to 9 levels deep).
+* _Customize Visible Attributes_ allows changing the element attributes shown in the default
+  (non-expanded) app source. New attributes can be added by selecting them in the dropdown, or just
+  typing their name. Existing attributes can be removed by removing their entry or unselecting them
+  in the dropdown. It is also possible to clear all attributes at once, as well as revert to the
+  default list using the Restore Default Attributes button.
 
 ### Source Tree
 
@@ -56,7 +58,7 @@ The application source tree is generated from the XML data returned by the Appiu
 default, the tree shows the class name for each element entry, along with several common attributes
 such as `value` and `content-desc`. All other attributes are hidden by default for ease of
 navigation, but can be revealed with the [Toggle Attributes button](#source-action-items). The
-list of default attributes can also be customized using the [Customize Visible Attributes button](#source-action-items). 
+list of default attributes can also be customized in the [Source Settings](#source-action-items). 
 
 All elements in the XML tree are interactable, and clicking on one causes 3 actions:
 
@@ -66,7 +68,8 @@ All elements in the XML tree are interactable, and clicking on one causes 3 acti
 - The element details are shown in the [Selected Element panel](#selected-element)
 
 Elements that have one or more child elements have an arrow on their left side, which can be clicked
-to toggle visibility of such child elements.
+to toggle visibility of such child elements. The expansion depth can be configured in the
+[Source Settings](#source-action-items). 
 
 For supported Appium drivers, the maximum depth of the returned XML tree can be adjusted with the
 `snapshotMaxDepth` setting.
