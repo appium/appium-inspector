@@ -201,6 +201,20 @@ Interactions that can be recorded include:
 While recording is enabled, the [Recorder tab](./recorder.md) contents are automatically populated
 with Appium client code for all supported interactions.
 
+## Keyboard Shortcuts
+
+The following shortcuts are available throughout the app window while the Session Inspector is open.
+The combinations use the physical letter-key positions.
+
+| Shortcut | Action |
+| --- | --- |
+| Ctrl+Shift+R | [Refresh source and screenshot](#refresh-source-screenshot) |
+| Ctrl+Shift+F | [Open locator search](#search-for-element) |
+| Ctrl+Shift+V | [Start or pause recording](#toggle-recorder) |
+
+The shortcuts are also shown in the corresponding button tooltips. Holding a key does not repeatedly
+trigger its action, and an event already consumed by another control is left unchanged.
+
 ## Reload on Disconnect
 
 ![Reload on Disconnect Button](./assets/images/header/reload-on-disconnect-button.png)

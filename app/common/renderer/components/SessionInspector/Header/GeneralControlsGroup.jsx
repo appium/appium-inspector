@@ -42,9 +42,10 @@ const ManualRefreshButton = ({applyClientMethod}) => {
   const refreshLabel = t('refreshSource');
 
   return (
-    <Tooltip title={refreshLabel}>
+    <Tooltip title={`${refreshLabel} (Ctrl+Shift+R)`}>
       <Button
         aria-label={refreshLabel}
+        aria-keyshortcuts="Control+Shift+R"
         id="btnReload"
         icon={<IconRefresh size={18} />}
         onClick={() => applyClientMethod({methodName: 'getPageSource'})}
@@ -63,9 +64,10 @@ const SearchForElementButton = (props) => {
 
   return (
     <>
-      <Tooltip title={searchLabel}>
+      <Tooltip title={`${searchLabel} (Ctrl+Shift+F)`}>
         <Button
           aria-label={searchLabel}
+          aria-keyshortcuts="Control+Shift+F"
           id="searchForElement"
           icon={<IconSearch size={18} />}
           onClick={showLocatorSearchModal}
@@ -85,9 +87,10 @@ const ToggleRecordingButton = ({isRecording, startRecording, pauseRecording}) =>
   const startLabel = t('Start Recording');
 
   return isRecording ? (
-    <Tooltip title={pauseLabel}>
+    <Tooltip title={`${pauseLabel} (Ctrl+Shift+V)`}>
       <Button
         aria-label={pauseLabel}
+        aria-keyshortcuts="Control+Shift+V"
         id="btnPause"
         icon={<IconVideo size={18} />}
         type={BUTTON.PRIMARY}
@@ -96,8 +99,14 @@ const ToggleRecordingButton = ({isRecording, startRecording, pauseRecording}) =>
       />
     </Tooltip>
   ) : (
-    <Tooltip title={startLabel}>
-      <Button aria-label={startLabel} id="btnStartRecording" icon={<IconVideo size={18} />} onClick={startRecording} />
+    <Tooltip title={`${startLabel} (Ctrl+Shift+V)`}>
+      <Button
+        aria-label={startLabel}
+        aria-keyshortcuts="Control+Shift+V"
+        id="btnStartRecording"
+        icon={<IconVideo size={18} />}
+        onClick={startRecording}
+      />
     </Tooltip>
   );
 };
@@ -115,6 +124,7 @@ const GeneralControlsGroup = (props) => {
     startRecording,
     pauseRecording,
   } = props;
+
   return (
     <Space.Compact>
       {isUsingMjpegMode && (
