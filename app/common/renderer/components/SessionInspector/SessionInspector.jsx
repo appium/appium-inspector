@@ -40,6 +40,10 @@ const Inspector = () => {
     runKeepAliveLoop,
     setSessionTime,
     storeSessionSettings,
+    showLocatorSearchModal,
+    isRecording,
+    startRecording,
+    pauseRecording,
   } = props;
 
   const navigate = useNavigate();
@@ -87,7 +91,13 @@ const Inspector = () => {
   }, [applyClientMethod, getSavedClientFramework, runKeepAliveLoop, setSessionTime, storeSessionSettings]);
 
   return (
-    <InspectorShortcuts {...props} className={styles.inspectorContainer}>
+    <InspectorShortcuts
+      applyClientMethod={applyClientMethod}
+      showLocatorSearchModal={showLocatorSearchModal}
+      isRecording={isRecording}
+      startRecording={startRecording}
+      pauseRecording={pauseRecording}
+    >
       <HeaderButtons {...props} quitSessionAndReturn={quitSessionAndReturn} />
       <Splitter className={styles.inspectorSplitter} onResize={setPanelWidthManually}>
         <Splitter.Panel

@@ -45,51 +45,19 @@ Session Builder screen. This is the place where your session
     Appium has several mandatory capabilities (see above link). Attempting to start a new session
     without any capabilities will not work.
 
-You can enter these capabilities [one by one on the left side](../session-builder/capability-builder.md#capability-fields),
-or you can [edit the whole capability set in JSON format on the right](../session-builder/capability-builder.md#capability-json-structure).
-Choose your preferred input method.
+There are multiple ways to set the session capabilities:
 
-So then, what capabilities should be entered? This depends on your target platform, and the Appium
-driver that you want to use. Here are some basic capability sets not specific to any app:
+* Enter them [one by one on the left side](../session-builder/capability-builder.md#capability-fields)
+* [Edit the whole capability set in JSON format on the right](../session-builder/capability-builder.md#capability-json-structure)
+* [Import capabilities from an `.appiumsession` file](../session-builder/saved-capability-sets.md#import-from-file)
+  in the Saved Capability Sets tab
+* [Apply one of the built-in capability templates](../session-builder/saved-capability-sets.md#use-template)
+  in the Saved Capability Sets tab
 
-=== "UiAutomator2"
+You may also want to consult the documentation of your target driver, which should provide a list
+of all its supported capabilities, as well as some basic examples. 
 
-    ```json
-    {
-      "platformName": "Android",
-      "appium:automationName": "UiAutomator2"
-    }
-    ```
-
-    Refer to the [UiAutomator2 driver capabilities documentation](https://appium.github.io/appium-uiautomator2-driver/latest/reference/capabilities/)
-    for more details.
-
-=== "XCUITest"
-
-    ```json
-    {
-      "platformName": "iOS",
-      "appium:automationName": "XCUITest",
-      "appium:udid": "<device udid>"
-    }
-    ```
-
-    Refer to the [XCUITest driver capabilities documentation](https://appium.github.io/appium-xcuitest-driver/latest/capabilities)
-    for more details.
-
-=== "Mac2"
-
-    ```json
-    {
-      "platformName": "Mac",
-      "appium:automationName": "Mac2"
-    }
-    ```
-
-    Refer to the [Mac2 driver capabilities documentation](https://appium.github.io/appium-mac2-driver/latest/reference/capabilities/)
-    for more details.
-
-Now that the capabilities are set, the session can be launched!
+Once the capabilities are set, the session can be launched!
 
 ## Launching the Session
 

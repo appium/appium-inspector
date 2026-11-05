@@ -2,10 +2,13 @@ import {useEffect} from 'react';
 
 import {handleInspectorShortcut} from '../../utils/inspector-shortcuts.js';
 
-/** Listen for shortcuts anywhere in the window while the Inspector is mounted. */
+import styles from './SessionInspector.module.css';
+
+/**
+ * Listen for keyboard shortcuts anywhere in the Session Inspector.
+ */
 const InspectorShortcuts = ({
   children,
-  className,
   applyClientMethod,
   showLocatorSearchModal,
   isRecording,
@@ -23,7 +26,7 @@ const InspectorShortcuts = ({
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [applyClientMethod, showLocatorSearchModal, isRecording, startRecording, pauseRecording]);
 
-  return <div className={className}>{children}</div>;
+  return <div className={styles.inspectorContainer}>{children}</div>;
 };
 
 export default InspectorShortcuts;

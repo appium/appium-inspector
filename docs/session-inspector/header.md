@@ -142,14 +142,16 @@ some time to retrieve, disabling its retrieval allows for more seamless device i
 ![Refresh Button](./assets/images/header/refresh-button.png)
 
 This button triggers a manual refresh of the application screenshot and source, thereby retrieving
-the latest data.
+the latest data. It can also be triggered using the _Ctrl+Shift+R_ keyboard shortcut.
 
 ## Search for Element
 
 ![Search Button](./assets/images/header/search-button.png)
 
 This button opens a new modal window, which can be used to search for elements within the current
-application XML source. Searching requires providing the element details:
+application XML source. The modal can also be opened using the _Ctrl+Shift+F_ keyboard shortcut.
+
+Searching requires providing the element details:
 
 ![Element Search Window](./assets/images/header/search-inputs.png)
 
@@ -185,7 +187,7 @@ Selecting any element enables the element action items:
 ![Start Recording Button](./assets/images/header/record-start-button.png) ![Stop Recording Button](./assets/images/header/record-stop-button.png)
 
 This button allows to enable or disable recording of various user interactions with the application,
-and translate them into code that can be used with various [Appium clients](https://appium.io/docs/en/latest/ecosystem/clients/).
+and translate them into code that can be used with various [Appium clients](https://appium.io/docs/en/latest/ecosystem/clients/). Recording can also be toggled using the _Ctrl+Shift+V_ keyboard shortcut.
 
 Interactions that can be recorded include:
 
@@ -200,20 +202,6 @@ Interactions that can be recorded include:
 
 While recording is enabled, the [Recorder tab](./recorder.md) contents are automatically populated
 with Appium client code for all supported interactions.
-
-## Keyboard Shortcuts
-
-The following shortcuts are available throughout the app window while the Session Inspector is open.
-The combinations use the physical letter-key positions.
-
-| Shortcut | Action |
-| --- | --- |
-| Ctrl+Shift+R | [Refresh source and screenshot](#refresh-source-screenshot) |
-| Ctrl+Shift+F | [Open locator search](#search-for-element) |
-| Ctrl+Shift+V | [Start or pause recording](#toggle-recorder) |
-
-The shortcuts are also shown in the corresponding button tooltips. Holding a key does not repeatedly
-trigger its action, and an event already consumed by another control is left unchanged.
 
 ## Reload on Disconnect
 
