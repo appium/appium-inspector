@@ -19,15 +19,20 @@ export class SaucelabsVendor extends BaseVendor {
       {name: 'Access Key', val: accessKey},
     ]);
 
+    // The ondemand endpoints are HTTPS: the first request carries the credentials as Basic
+    // auth, so it must never go over plaintext. The data center is checked against the offered
+    // ones when a session file is imported (see sessionfile-parsing.js).
     const dataCenter = String(sauce.dataCenter ?? '');
     let host = `ondemand.${dataCenter}.saucelabs.com`;
-    let port: number | string = 80;
+    let port: number | string = 443;
+    let https = true;
     if (sauce.useSCProxy) {
       host = (sauce.scHost as string | undefined) || 'localhost';
       port = parseInt(String(sauce.scPort), 10) || 4445;
+      // The Sauce Connect proxy is spoken to over HTTP unless the user enables SSL for it
+      https = !!sauce.scSsl;
     }
     const path = '/wd/hub';
-    const https = false;
     this._saveProperties(sauce, {host, path, port, https, username, accessKey});
 
     if (!(this._sessionCaps[SAUCE_OPTIONS_CAP] as {name?: unknown} | undefined)?.name) {

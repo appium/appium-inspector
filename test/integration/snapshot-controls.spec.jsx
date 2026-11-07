@@ -191,6 +191,9 @@ describe('Snapshot inspection controls', () => {
       'detachFromSession',
       'Quit Session',
     ]);
+    expect(button('refreshSource')['aria-keyshortcuts']).toBe('Control+Shift+R');
+    expect(button('Search for element')['aria-keyshortcuts']).toBe('Control+Shift+F');
+    expect(button('Start Recording')['aria-keyshortcuts']).toBe('Control+Shift+V');
     for (const control of [
       'Device controls',
       'Driver controls',

@@ -8,6 +8,7 @@ import {useNavigate} from 'react-router';
 import * as SessionInspectorActions from '../../actions/SessionInspector.js';
 import {WINDOW_DIMENSIONS} from '../../constants/common.js';
 import HeaderButtons from './Header/HeaderButtons.jsx';
+import InspectorShortcuts from './InspectorShortcuts.jsx';
 import Screenshot from './Screenshot/Screenshot.jsx';
 import SessionExpiryModal from './SessionExpiryModal.jsx';
 import SessionInspectorTabs from './SessionInspectorTabs.jsx';
@@ -43,6 +44,10 @@ const Inspector = () => {
     isSnapshot,
     snapshotCapturedAt,
     driver,
+    showLocatorSearchModal,
+    isRecording,
+    startRecording,
+    pauseRecording,
   } = props;
 
   const navigate = useNavigate();
@@ -102,7 +107,14 @@ const Inspector = () => {
   ]);
 
   return (
-    <div className={styles.inspectorContainer}>
+    <InspectorShortcuts
+      isSnapshot={isSnapshot}
+      applyClientMethod={applyClientMethod}
+      showLocatorSearchModal={showLocatorSearchModal}
+      isRecording={isRecording}
+      startRecording={startRecording}
+      pauseRecording={pauseRecording}
+    >
       <HeaderButtons {...props} quitSessionAndReturn={quitSessionAndReturn} />
       {isSnapshot && (
         <Alert
@@ -137,7 +149,7 @@ const Inspector = () => {
           setUserWaitTimeout={setUserWaitTimeout}
         />
       )}
-    </div>
+    </InspectorShortcuts>
   );
 };
 

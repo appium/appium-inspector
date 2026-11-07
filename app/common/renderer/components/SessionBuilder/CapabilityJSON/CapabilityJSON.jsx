@@ -1,16 +1,13 @@
 import {IconDeviceFloppy, IconEdit, IconX} from '@tabler/icons-react';
 import {Alert, Button, Card, Input, Row, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
-import {Refractor, registerLanguage} from 'react-refractor';
-import json from 'refractor/json';
+import {Refractor} from 'react-refractor';
 
 import {getCapsObject} from '../../../actions/SessionBuilder.js';
 import {ALERT} from '../../../constants/antd-types.js';
 
 import builderStyles from '../SessionBuilder.module.css';
 import styles from './CapabilityJSON.module.css';
-
-registerLanguage(json);
 
 const CapabilityJSON = (props) => {
   const {
@@ -37,7 +34,13 @@ const CapabilityJSON = (props) => {
 
   const getHighlightedCaps = (caps) => {
     const formattedJson = JSON.stringify(getCapsObject(caps), null, 2);
-    return <Refractor className={`refractor ${styles.formattedCapsCode}`} language="json" value={formattedJson} />;
+    return (
+      <Refractor
+        className={`refractor ${builderStyles.formattedCapabilitiesJson}`}
+        language="json"
+        value={formattedJson}
+      />
+    );
   };
 
   const setCapsTitle = () => {

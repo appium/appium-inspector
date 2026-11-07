@@ -44,6 +44,17 @@ export const SERVER_TYPES = {
   ASTROFARM: 'astrofarm',
 };
 
+// The Sauce Labs data centers offered in the server tab, in display order. Each value becomes
+// part of the ondemand hostname, so this list is also the allowlist the Sauce vendor validates
+// a session's data center against (see lib/vendor/saucelabs.ts) -- the single source for both
+// the UI options and that guard, so a new data center is added in one place.
+export const SAUCE_DATA_CENTERS = [
+  {value: 'us-west-1', labelKey: 'US-West'},
+  {value: 'us-east-4', labelKey: 'US-East'},
+  {value: 'eu-central-1', labelKey: 'EU-Central'},
+  {value: 'asia-south-2', labelKey: 'Asia-South'},
+];
+
 export const SAVED_SESSIONS_TABLE_VALUES = {
   DATE_COLUMN_WIDTH: '105px',
   ACTIONS_COLUMN_WIDTH: '124px',

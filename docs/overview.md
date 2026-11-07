@@ -49,18 +49,18 @@ In addition to page source and screenshot inspection, the Inspector provides man
 features. Here is a non-exhaustive list of such features:
 
 - Easily define Appium server connection details and capabilities
-- Save server details and capability sets for future sessions
-- Connect to 10+ different cloud platforms
+- Save, import, and export server details and capability sets for future sessions
+- Connect to 15+ different cloud platforms
 - Attach to an existing Appium session
 - Interact with the application through its screenshot (click/tap, swipe)
-- Create and save custom gestures
+- Create, save, import, and export custom gestures
 - Select elements directly through the application screenshot
 - Search for elements using supported locator strategies and your own selectors
 - Interact with elements (click/tap, send keys, clear)
 - View suggested element locator strategies and selectors to be used in your scripts
 - Compare the speed of different element finding strategies
 - Record your actions directly into Appium client code for 5+ different programming languages
-- Simulate system actions for iOS (home, Siri) and Android (back, home, app switch)
+- Simulate system actions for Android, iOS, tvOS and watchOS
 - Switch to different application contexts
 - Access a library of various Appium driver commands
 

@@ -33,7 +33,7 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@appium/base-plugin": "3.3.5"
+    "@appium/base-plugin": "3.3.6"
   },
   "devDependencies": {},
   "peerDependencies": {

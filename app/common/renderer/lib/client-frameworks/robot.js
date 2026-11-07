@@ -89,7 +89,7 @@ Test Teardown     Close Application
 *** Test Cases ***
 Test Case Name
 ${this.indent(variables.join('\n'), 4)}
-    Open Application    ${this.serverUrl}    ${capsParams.join('    ')}
+    Open Application    ${this.escapeRobotString(this.serverUrl)}    ${capsParams.join('    ')}
 ${this.indent(code, 4)}
 `;
   }
@@ -115,7 +115,7 @@ ${this.indent(code, 4)}
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
 
-    return `$\{${localVar}} =    Set Variable     ${suffixMap[strategy]}=${locator}`;
+    return `$\{${localVar}} =    Set Variable     ${suffixMap[strategy]}=${this.escapeRobotString(locator)}`;
   }
 
   codeFor_elementClick(varName, varIndex) {
@@ -127,7 +127,7 @@ ${this.indent(code, 4)}
   }
 
   codeFor_elementSendKeys(varName, varIndex, text) {
-    return `Input Text    $\{${this.getVarName(varName, varIndex)}}    ${text}`;
+    return `Input Text    $\{${this.getVarName(varName, varIndex)}}    ${this.escapeRobotString(text)}`;
   }
 
   codeFor_tap(varNameIgnore, varIndexIgnore, pointerActions) {
@@ -145,7 +145,7 @@ Tap With Positions    $\{100}    $\{positions}`;
   // Top-Level Commands
 
   codeFor_executeScriptNoArgs(scriptCmd) {
-    return `Execute Script    ${scriptCmd}`;
+    return `Execute Script    ${this.escapeRobotString(scriptCmd)}`;
   }
 
   codeFor_executeScriptWithArgs(scriptCmd, jsonArg, varAssignment = '') {
@@ -220,7 +220,7 @@ ${varAssignment}Execute Script    ${this.escapeRobotString(scriptCmd)}    $\{scr
   }
 
   codeFor_switchAppiumContext(varNameIgnore, varIndexIgnore, name) {
-    return `Switch To Context    ${name}`;
+    return `Switch To Context    ${this.escapeRobotString(name)}`;
   }
 
   // Device Interaction
@@ -264,7 +264,7 @@ ${varAssignment}Execute Script    ${this.escapeRobotString(scriptCmd)}    $\{scr
   // App Management
 
   codeFor_installApp(varNameIgnore, varIndexIgnore, app) {
-    return `Install App    ${app}`;
+    return `Install App    ${this.escapeRobotString(app)}`;
   }
 
   codeFor_isAppInstalled() {
@@ -272,15 +272,15 @@ ${varAssignment}Execute Script    ${this.escapeRobotString(scriptCmd)}    $\{scr
   }
 
   codeFor_activateApp(varNameIgnore, varIndexIgnore, app) {
-    return `Activate Application    ${app}`;
+    return `Activate Application    ${this.escapeRobotString(app)}`;
   }
 
   codeFor_terminateApp(varNameIgnore, varIndexIgnore, app) {
-    return `Terminate Application    ${app}`;
+    return `Terminate Application    ${this.escapeRobotString(app)}`;
   }
 
   codeFor_removeApp(varNameIgnore, varIndexIgnore, app) {
-    return `Remove Application    ${app}`;
+    return `Remove Application    ${this.escapeRobotString(app)}`;
   }
 
   codeFor_queryAppState() {
@@ -290,21 +290,21 @@ ${varAssignment}Execute Script    ${this.escapeRobotString(scriptCmd)}    $\{scr
   // File Transfer
 
   codeFor_pushFile(varNameIgnore, varIndexIgnore, pathToInstallTo, fileContentString) {
-    return `Push File    ${pathToInstallTo}    ${fileContentString}`;
+    return `Push File    ${this.escapeRobotString(pathToInstallTo)}    ${this.escapeRobotString(fileContentString)}`;
   }
 
   codeFor_pullFile(varNameIgnore, varIndexIgnore, pathToPullFrom) {
-    return `$\{file_base64} =    Pull File    ${pathToPullFrom}`;
+    return `$\{file_base64} =    Pull File    ${this.escapeRobotString(pathToPullFrom)}`;
   }
 
   codeFor_pullFolder(varNameIgnore, varIndexIgnore, folderToPullFrom) {
-    return `$\{folder_base64} =    Pull Folder    ${folderToPullFrom}`;
+    return `$\{folder_base64} =    Pull Folder    ${this.escapeRobotString(folderToPullFrom)}`;
   }
 
   // Web
 
   codeFor_navigateTo(varNameIgnore, varIndexIgnore, url) {
-    return `Go To Url    ${url}`;
+    return `Go To Url    ${this.escapeRobotString(url)}`;
   }
 
   codeFor_getUrl() {
@@ -336,7 +336,7 @@ ${varAssignment}Execute Script    ${this.escapeRobotString(scriptCmd)}    $\{scr
   }
 
   codeFor_switchToWindow(varNameIgnore, varIndexIgnore, handle) {
-    return `Switch To Window    ${handle}`;
+    return `Switch To Window    ${this.escapeRobotString(handle)}`;
   }
 
   codeFor_getWindowHandles() {

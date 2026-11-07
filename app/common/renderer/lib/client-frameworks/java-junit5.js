@@ -47,7 +47,7 @@ ${this.indent(code, 4)}
     
   private URL getUrl() {
       try {
-        return new URL("${this.serverUrl}");
+        return new URL(${this.quote(this.serverUrl)});
       } catch (MalformedURLException e) {
         e.printStackTrace();
       }

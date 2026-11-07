@@ -26,10 +26,13 @@
 }
 
 .searchResultsList :global(.ant-table-cell) {
-  padding: 4px 6px !important;
   height: 25px;
   text-align: left;
   font-family: monospace;
+}
+
+.searchResultsList :global(.ant-table-cell:not(.ant-table-selection-column)) {
+  padding: 4px 6px !important;
 }
 
 .searchResultsActions {
@@ -39,4 +42,14 @@
 .searchResultsKeyInput {
   height: 32px;
   width: calc(100% - 64px);
+}
+
+.searchModal :global(.ant-modal-footer) {
+  text-align: unset;
+}
+
+.searchModalFooterRightCol {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }

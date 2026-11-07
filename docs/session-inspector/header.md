@@ -142,14 +142,16 @@ some time to retrieve, disabling its retrieval allows for more seamless device i
 ![Refresh Button](./assets/images/header/refresh-button.png)
 
 This button triggers a manual refresh of the application screenshot and source, thereby retrieving
-the latest data.
+the latest data. It can also be triggered using the _Ctrl+Shift+R_ keyboard shortcut.
 
 ## Search for Element
 
 ![Search Button](./assets/images/header/search-button.png)
 
 This button opens a new modal window, which can be used to search for elements within the current
-application XML source. Searching requires providing the element details:
+application XML source. The modal can also be opened using the _Ctrl+Shift+F_ keyboard shortcut.
+
+Searching requires providing the element details:
 
 ![Element Search Window](./assets/images/header/search-inputs.png)
 
@@ -157,11 +159,18 @@ There is a choice of multiple locator strategies that can be used during search.
 support different locator strategies, and the Inspector will try to hide strategies that are not
 supported by the current driver.
 
-After selecting the locator strategy, entering the selector string, and pressing _Search_, the
-results screen is shown.
+It is also possible to specify the search details using the search history. The Inspector saves up
+to 20 most recent search queries across sessions, and the full list can be toggled using the
+history button in the bottom left corner:
 
-If one or more elements are found, the Inspector will list the element count, time taken, and a
-list of selectable element IDs:
+![Element Search History](./assets/images/header/search-history.png)
+
+Clicking on any recorded entry changes the current locator strategy and selector to those of the
+selected entry. A separate button can also be used to clear the history.
+
+Once the locator strategy and selector string are specified, clicking the search button starts the
+element lookup, after which the results screen is shown. If one or more elements are found, the
+Inspector will list the element count, time taken, and a list of selectable element IDs:
 
 ![Element Search Results](./assets/images/header/search-results.png)
 
@@ -178,7 +187,7 @@ Selecting any element enables the element action items:
 ![Start Recording Button](./assets/images/header/record-start-button.png) ![Stop Recording Button](./assets/images/header/record-stop-button.png)
 
 This button allows to enable or disable recording of various user interactions with the application,
-and translate them into code that can be used with various [Appium clients](https://appium.io/docs/en/latest/ecosystem/clients/).
+and translate them into code that can be used with various [Appium clients](https://appium.io/docs/en/latest/ecosystem/clients/). Recording can also be toggled using the _Ctrl+Shift+V_ keyboard shortcut.
 
 Interactions that can be recorded include:
 

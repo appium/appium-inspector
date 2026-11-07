@@ -61,3 +61,9 @@
   color: #ff4d4f;
   font-size: 12px;
 }
+
+.formattedCapabilitiesJson {
+  margin-bottom: 0;
+  overflow-y: scroll;
+  height: 100%;
+}

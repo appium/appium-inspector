@@ -29,6 +29,31 @@ describe('utils/locator-generation/uiautomator.js', function () {
       );
     });
 
+    it('should not treat attributes as unique if nodes with other tag names share them', function () {
+      const doc = xmlToDOM(`<root>
+        <child>
+          <button-node text='OK'>Button</button-node>
+          <text-node text='OK' content-desc='label'>Text</text-node>
+        </child>
+      </root>`);
+      expect(getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('text-node')[0], '0.1')).toBe(
+        'new UiSelector().description("label")',
+      );
+    });
+
+    it('should count nodes with other tag names when calculating the instance index', function () {
+      const doc = xmlToDOM(`<root>
+        <child>
+          <linear-layout resource-id='content'>Linear</linear-layout>
+          <relative-layout resource-id='content'>First</relative-layout>
+          <relative-layout resource-id='content'>Second</relative-layout>
+        </child>
+      </root>`);
+      expect(getOptimalUiAutomatorSelector(doc, doc.getElementsByTagName('relative-layout')[1], '0.2')).toBe(
+        'new UiSelector().resourceId("content").instance(2)',
+      );
+    });
+
     it('should return null if looking for element outside the last direct child of the hierarchy', function () {
       const doc = xmlToDOM(`<root>
         <child>
