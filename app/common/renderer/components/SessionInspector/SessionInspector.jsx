@@ -55,6 +55,7 @@ const Inspector = () => {
 
   const [screenshotPanelWidth, setScreenshotPanelWidth] = useState(WINDOW_DIMENSIONS.INITIAL_SCREENSHOT_PANEL_WIDTH_PX);
   const screenshotPanelResizedManually = useRef(false);
+  const hasInitializedLiveSession = useRef(false);
 
   // Triggered when the width of the scaled image or Inspector window changes.
   const setPanelWidthAutomatically = (suggestedWidth) => {
@@ -88,9 +89,12 @@ const Inspector = () => {
     (screenshot && !screenshotError) || (isUsingMjpegMode && (!isSourceRefreshOn || !isAwaitingMjpegStream));
 
   useEffect(() => {
-    if (isSnapshot || !driver) {
+    if (isSnapshot || !driver || hasInitializedLiveSession.current) {
       return;
     }
+    // Wait for the first live driver, but leave replacement-driver setup to restartSession.
+    // Keep this flag through the temporary null driver while a session is restarting.
+    hasInitializedLiveSession.current = true;
     applyClientMethod({methodName: 'getPageSource'});
     storeSessionSettings();
     getSavedClientFramework();

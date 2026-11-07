@@ -1,16 +1,22 @@
-import {describe, expect, it} from 'vitest';
+import {DOMParser} from '@xmldom/xmldom';
+import {afterEach, describe, expect, it, vi} from 'vitest';
 
 import {APP_MODE, NATIVE_APP} from '../../app/common/renderer/constants/session-inspector.js';
 import {
+  canCreateSnapshot,
   createSnapshot,
   getScreenshotMimeType,
   MAX_SNAPSHOT_FILE_SIZE,
   MAX_SNAPSHOT_IMAGE_SIZE,
   MAX_SNAPSHOT_SOURCE_SIZE,
+  normalizeSnapshotWindowSize,
   parseSnapshot,
+  parseSnapshotForImport,
   SNAPSHOT_FORMAT,
   SNAPSHOT_VERSION,
+  SnapshotError,
 } from '../../app/common/renderer/utils/snapshot.js';
+import {xmlToJSON} from '../../app/common/renderer/utils/source-parsing.js';
 
 const PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aRZsAAAAASUVORK5CYII=';
 const JPEG =
@@ -36,9 +42,13 @@ function parse(overrides) {
 }
 
 describe('utils/snapshot.js', function () {
+  afterEach(() => vi.restoreAllMocks());
+
   it('should identify image types for screenshot rendering and downloads', function () {
     expect(getScreenshotMimeType(PNG)).toBe('image/png');
     expect(getScreenshotMimeType(JPEG)).toBe('image/jpeg');
+    expect(getScreenshotMimeType(` \t${PNG}`)).toBe('image/png');
+    expect(getScreenshotMimeType(` \t${JPEG.replace(/(.{2})/g, '$1\r\n')}`)).toBe('image/jpeg');
   });
   describe('#createSnapshot', function () {
     it('should export the displayed state without connection details or secret capabilities', function () {
@@ -76,6 +86,90 @@ describe('utils/snapshot.js', function () {
         currentContext: NATIVE_APP,
       });
     });
+
+    it('should not reparse, decode, encode, or serialize already displayed content', function () {
+      const state = {...snapshot(), sourceCapturedAt: snapshot().capturedAt};
+      const parseSource = vi.spyOn(DOMParser.prototype, 'parseFromString');
+      const decodeImage = vi.spyOn(globalThis, 'atob');
+      const encodeText = vi.spyOn(TextEncoder.prototype, 'encode');
+      const serialize = vi.spyOn(JSON, 'stringify');
+
+      const result = createSnapshot(state);
+      const canCreate = canCreateSnapshot(state);
+      expect(parseSource).not.toHaveBeenCalled();
+      expect(decodeImage).not.toHaveBeenCalled();
+      expect(encodeText).not.toHaveBeenCalled();
+      expect(serialize).not.toHaveBeenCalled();
+      expect(canCreate).toBe(true);
+      expect(result).toEqual(snapshot());
+    });
+
+    it.each([
+      `<root>${'<a/>'.repeat(10000)}</root>`,
+      `${'<a>'.repeat(257)}${'</a>'.repeat(257)}`,
+      `<root>${'a'.repeat(MAX_SNAPSHOT_SOURCE_SIZE)}</root>`,
+    ])('should not apply untrusted-import source limits to live exports', function (sourceXML) {
+      const result = createSnapshot({...snapshot(), sourceXML});
+      expect(result.sourceXML).toBe(sourceXML);
+      expect(() => parseSnapshot(JSON.stringify(result))).toThrow(/source/);
+    });
+
+    it('should allow exporting already displayed wrapped or padded image data', function () {
+      const screenshot = btoa(atob(PNG) + '\0\0').replace(/(.{20})/g, '$1\r\n');
+      const result = createSnapshot({...snapshot(), screenshot});
+      expect(result.screenshot).toBe(screenshot);
+      expect(parseSnapshot(JSON.stringify(result)).screenshot).toBe(screenshot.replace(/\s/g, ''));
+    });
+
+    it('should share metadata validation with save-button availability', function () {
+      expect(canCreateSnapshot(snapshot())).toBe(true);
+      for (const overrides of [
+        {sourceXML: null},
+        {screenshot: null},
+        {windowSize: {width: 0, height: 100}},
+        {appMode: 'unsupported'},
+        {sourceCapturedAt: 'not-a-timestamp'},
+        {featureCaps: {platformVersion: -1}},
+      ]) {
+        const state = {...snapshot(), ...overrides};
+        expect(canCreateSnapshot(state)).toBe(false);
+        expect(() => createSnapshot(state)).toThrow(SnapshotError);
+      }
+    });
+  });
+
+  describe('#parseSnapshotForImport', function () {
+    it('should reuse the validated DOM and ignore an untrusted precomputed tree', function () {
+      const expectedTree = xmlToJSON(snapshot().sourceXML);
+      const content = JSON.stringify(snapshot({sourceJSON: {injected: true}}));
+      const parseSource = vi.spyOn(DOMParser.prototype, 'parseFromString');
+
+      expect(parseSnapshotForImport(content)).toEqual({snapshot: snapshot(), sourceJSON: expectedTree});
+      expect(parseSource).toHaveBeenCalledTimes(1);
+    });
+
+    it('should reject excessive nesting before recursively converting the validated DOM', function () {
+      const content = JSON.stringify(snapshot({sourceXML: `${'<a>'.repeat(257)}${'</a>'.repeat(257)}`}));
+      expect(() => parseSnapshotForImport(content)).toThrow('deeply nested');
+    });
+  });
+
+  describe('#normalizeSnapshotWindowSize', function () {
+    it('should preserve finite fractional dimensions and omit unrelated metadata', function () {
+      const windowSize = {width: 390.5, height: 844.25, x: 0, y: 0};
+      const expected = {width: 390.5, height: 844.25};
+      expect(normalizeSnapshotWindowSize(windowSize)).toEqual(expected);
+      expect(parse({windowSize}).windowSize).toEqual(expected);
+      expect(createSnapshot({...snapshot(), windowSize}).windowSize).toEqual(expected);
+      expect(canCreateSnapshot({...snapshot(), windowSize})).toBe(true);
+    });
+
+    it.each([null, [], {}, {width: '100', height: 100}, {width: Infinity, height: 100}, {width: NaN, height: 100}])(
+      'should reject dimensions that cannot be used for bounds calculations: %j',
+      function (windowSize) {
+        expect(normalizeSnapshotWindowSize(windowSize)).toBeNull();
+      },
+    );
   });
 
   describe('#parseSnapshot', function () {
@@ -85,6 +179,21 @@ describe('utils/snapshot.js', function () {
 
     it('should accept JPEG screenshots', function () {
       expect(parse({screenshot: JPEG}).screenshot).toBe(JPEG);
+    });
+
+    it.each([PNG, JPEG])('should normalize MIME-style base64 whitespace', function (screenshot) {
+      const wrapped = ` \t\n${screenshot.replace(/(.{20})/g, '$1\r\n')}\t `;
+      expect(parse({screenshot: wrapped}).screenshot).toBe(screenshot);
+    });
+
+    it.each([PNG, JPEG])('should permit bounded image bytes after the image terminator', function (screenshot) {
+      const padded = btoa(atob(screenshot) + '\0\0\r\ntrailing bytes');
+      expect(parse({screenshot: padded}).screenshot).toBe(padded);
+    });
+
+    it.each([PNG, JPEG])('should still reject images without their required terminator', function (screenshot) {
+      const truncated = btoa(atob(screenshot).slice(0, -12));
+      expect(() => parse({screenshot: truncated})).toThrow('image dimensions');
     });
 
     it('should preserve web context and permit the plain HTML doctype', function () {
@@ -128,12 +237,42 @@ describe('utils/snapshot.js', function () {
       },
     );
 
-    it.each(['yesterday', '2026-02-31T12:34:56.000Z', '2026-10-24', null])(
-      'should reject an invalid capture time: %j',
-      function (capturedAt) {
-        expect(() => parse({capturedAt})).toThrow('capture time');
-      },
-    );
+    it.each([
+      '2026-10-24T12:34:56Z',
+      '2026-10-24T12:34:56.1Z',
+      '2026-10-24T12:34:56.12Z',
+      '2026-10-24T12:34:56.123456789Z',
+      '2026-10-24T12:34:56+00:00',
+      '2026-10-24T12:34:56.123456+00:00',
+      '2024-02-29T23:59:59Z',
+    ])('should preserve practical ISO8601 UTC timestamps: %s', function (capturedAt) {
+      const result = parse({capturedAt});
+      expect(result.capturedAt).toBe(capturedAt);
+      expect(createSnapshot({...result, snapshotCapturedAt: capturedAt})).toEqual(result);
+    });
+
+    it.each([
+      'yesterday',
+      '2026-02-31T12:34:56.000Z',
+      '2026-02-29T12:34:56Z',
+      '2026-04-31T12:34:56.123456+00:00',
+      '2026-10-24T24:00:00Z',
+      '2026-10-24T12:34:60Z',
+      '2026-10-24T12:34:56+01:00',
+      '2026-10-24T12:34:56',
+      '2026-10-24T12:34:56.Z',
+      '2026-10-24',
+      null,
+    ])('should reject an invalid capture time: %j', function (capturedAt) {
+      expect(() => parse({capturedAt})).toThrow('capture time');
+    });
+
+    it('should accept a usable driver source that produces only XML warnings', function () {
+      const sourceXML = '<hierarchy><button enabled=true text=Hello /></hierarchy>';
+      const result = parseSnapshotForImport(JSON.stringify(snapshot({sourceXML})));
+      expect(result.snapshot.sourceXML).toBe(sourceXML);
+      expect(result.sourceJSON.children[0].attributes).toEqual({enabled: 'true', text: 'Hello'});
+    });
 
     it.each([
       '',
@@ -155,6 +294,8 @@ describe('utils/snapshot.js', function () {
     });
 
     it('should reject trees too deeply nested for recursive source rendering', function () {
+      const sourceXML = `${'<a>'.repeat(256)}${'</a>'.repeat(256)}`;
+      expect(parseSnapshotForImport(JSON.stringify(snapshot({sourceXML}))).snapshot.sourceXML).toBe(sourceXML);
       expect(() => parse({sourceXML: `${'<a>'.repeat(257)}${'</a>'.repeat(257)}`})).toThrow('deeply nested');
     });
 
@@ -181,6 +322,13 @@ describe('utils/snapshot.js', function () {
       expect(() => parse({screenshot: 'A'.repeat(Math.ceil(MAX_SNAPSHOT_IMAGE_SIZE / 3) * 4 + 4)})).toThrow('20 MiB');
     });
 
+    it('should retain the decoded-image limit for wrapped base64 before decoding', function () {
+      const screenshot = 'A'.repeat(Math.ceil(MAX_SNAPSHOT_IMAGE_SIZE / 3) * 4 + 4).replace(/(.{76})/g, '$1\r\n');
+      const decodeImage = vi.spyOn(globalThis, 'atob');
+      expect(() => parse({screenshot})).toThrow('20 MiB');
+      expect(decodeImage).not.toHaveBeenCalled();
+    });
+
     it('should reject image headers with zero dimensions or excessive decoded pixel counts', function () {
       const zeroWidth = Buffer.from(PNG, 'base64');
       zeroWidth.writeUInt32BE(0, 16);
@@ -196,7 +344,6 @@ describe('utils/snapshot.js', function () {
       {},
       {width: 0, height: 1},
       {width: 1, height: -1},
-      {width: 1.2, height: 100},
       {width: '100', height: 100},
       {width: 100, height: 32769},
     ])('should reject invalid window dimensions: %j', function (windowSize) {
@@ -224,6 +371,16 @@ describe('utils/snapshot.js', function () {
 
     it('should accept snapshots without feature capabilities for unknown drivers', function () {
       expect(parse({featureCaps: undefined}).featureCaps).toEqual({});
+    });
+
+    it('should expose stable error codes for localized import feedback', function () {
+      expect(() => parseSnapshot('{')).toThrow(expect.objectContaining({name: 'SnapshotError', code: 'invalidJSON'}));
+      expect(() => parse({windowSize: {width: 0, height: 100}})).toThrow(
+        expect.objectContaining({code: 'invalidWindowSize'}),
+      );
+      expect(() => parse({sourceXML: '<!DOCTYPE root SYSTEM "file:///etc/passwd"><root/>'})).toThrow(
+        expect.objectContaining({code: 'unsafeSource'}),
+      );
     });
   });
 });

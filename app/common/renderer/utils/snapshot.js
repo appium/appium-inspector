@@ -1,10 +1,11 @@
 import {DOMParser, MIME_TYPE} from '@xmldom/xmldom';
 
 import {APP_MODE, NATIVE_APP} from '../constants/session-inspector.js';
+import {domToJSON} from './source-parsing.js';
 
 export const SNAPSHOT_FORMAT = 'appium-inspector-snapshot';
 export const SNAPSHOT_VERSION = 1;
-// Limits apply to UTF-8 JSON/XML and decoded image bytes, independently of file extensions.
+// Import limits apply to UTF-8 JSON/XML and decoded image bytes, independently of file extensions.
 export const MAX_SNAPSHOT_FILE_SIZE = 50 * 1024 * 1024;
 export const MAX_SNAPSHOT_SOURCE_SIZE = 5 * 1024 * 1024;
 export const MAX_SNAPSHOT_IMAGE_SIZE = 20 * 1024 * 1024;
@@ -13,23 +14,50 @@ const MAX_IMAGE_PIXELS = 40 * 1024 * 1024;
 const MAX_SOURCE_DEPTH = 256;
 const MAX_SOURCE_NODES = 10000;
 
+/** Validation failures have stable codes so callers can display localized messages. */
+export class SnapshotError extends Error {
+  constructor(code, message) {
+    super(message);
+    this.name = 'SnapshotError';
+    this.code = code;
+  }
+}
+
 /** Parses a portable snapshot, rejecting unsupported formats and unsafe or incomplete contents. */
 export function parseSnapshot(content) {
+  return readSnapshot(content).snapshot;
+}
+
+/** Parses and prepares an imported snapshot, reusing the validated XML document for its tree. */
+export function parseSnapshotForImport(content) {
+  const {snapshot, sourceDoc} = readSnapshot(content);
+  return {snapshot, sourceJSON: domToJSON(sourceDoc)};
+}
+
+function readSnapshot(content) {
   if (typeof content !== 'string' || byteLength(content) > MAX_SNAPSHOT_FILE_SIZE) {
-    throw new Error('Snapshot files must be text smaller than 50 MiB.');
+    throw new SnapshotError('fileSize', 'Snapshot files must be text smaller than 50 MiB.');
   }
   let snapshot;
   try {
     snapshot = JSON.parse(content);
   } catch {
-    throw new Error('The snapshot is not valid JSON.');
+    throw new SnapshotError('invalidJSON', 'The snapshot is not valid JSON.');
   }
-  return validateSnapshot(snapshot);
+  if (!isObject(snapshot) || snapshot.format !== SNAPSHOT_FORMAT || snapshot.version !== SNAPSHOT_VERSION) {
+    throw new SnapshotError('unsupportedFormat', 'This is not a supported Appium Inspector snapshot (version 1).');
+  }
+  const normalized = pickSnapshotFields(snapshot);
+  const sourceDoc = validateSource(normalized.sourceXML);
+  normalized.screenshot = validateScreenshot(normalized.screenshot);
+  return {snapshot: normalized, sourceDoc};
 }
 
 /** Creates a snapshot from the currently displayed source and screenshot, excluding connection credentials. */
 export function createSnapshot(inspectorState) {
-  const snapshot = validateSnapshot({
+  // Live state has already been parsed and displayed. Do not reparse its source, decode its
+  // screenshot, apply untrusted-import tree limits, or serialize it before the actual download.
+  return pickSnapshotFields({
     format: SNAPSHOT_FORMAT,
     version: SNAPSHOT_VERSION,
     capturedAt: inspectorState.snapshotCapturedAt || inspectorState.sourceCapturedAt || new Date().toISOString(),
@@ -40,46 +68,57 @@ export function createSnapshot(inspectorState) {
     appMode: inspectorState.appMode || APP_MODE.NATIVE,
     featureCaps: inspectorState.featureCaps,
   });
-  if (byteLength(JSON.stringify(snapshot)) > MAX_SNAPSHOT_FILE_SIZE) {
-    throw new Error('Snapshot files must be smaller than 50 MiB.');
+}
+
+/** Whether the displayed state has the fields needed to save a snapshot. */
+export function canCreateSnapshot(inspectorState) {
+  try {
+    createSnapshot(inspectorState);
+    return true;
+  } catch {
+    return false;
   }
-  return snapshot;
+}
+
+/** Preserve fractional viewport dimensions while discarding unrelated window metadata. */
+export function normalizeSnapshotWindowSize(windowSize) {
+  const {width, height} = windowSize || {};
+  return isWindowDimension(width) && isWindowDimension(height) ? {width, height} : null;
 }
 
 /** Returns the MIME type of a validated inline PNG or JPEG screenshot. */
 export function getScreenshotMimeType(screenshot) {
-  return screenshot.startsWith('/9j/') ? 'image/jpeg' : 'image/png';
+  return /^\s*\/\s*9\s*j\s*\//.test(screenshot) ? 'image/jpeg' : 'image/png';
 }
 
-function validateSnapshot(snapshot) {
-  if (!isObject(snapshot) || snapshot.format !== SNAPSHOT_FORMAT || snapshot.version !== SNAPSHOT_VERSION) {
-    throw new Error('This is not a supported Appium Inspector snapshot (version 1).');
+function pickSnapshotFields(snapshot) {
+  if (!isUtcTimestamp(snapshot.capturedAt)) {
+    throw new SnapshotError('invalidTimestamp', 'The snapshot capture time must be an ISO timestamp in UTC.');
   }
-  if (
-    typeof snapshot.capturedAt !== 'string' ||
-    !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(snapshot.capturedAt) ||
-    !Number.isFinite(Date.parse(snapshot.capturedAt)) ||
-    new Date(snapshot.capturedAt).toISOString() !== snapshot.capturedAt
-  ) {
-    throw new Error('The snapshot capture time must be an ISO timestamp in UTC.');
+  if (typeof snapshot.sourceXML !== 'string' || !snapshot.sourceXML.length) {
+    throw new SnapshotError('sourceSize', 'The snapshot source must be non-empty XML smaller than 5 MiB.');
   }
-  validateSource(snapshot.sourceXML);
-  validateScreenshot(snapshot.screenshot);
-  const {width, height} = snapshot.windowSize || {};
-  if (!isDimension(width) || !isDimension(height)) {
-    throw new Error('The snapshot must include a valid window width and height.');
+  if (typeof snapshot.screenshot !== 'string' || !snapshot.screenshot.length) {
+    throw new SnapshotError(
+      'screenshotSize',
+      'The snapshot screenshot must be a base64 PNG or JPEG smaller than 20 MiB.',
+    );
+  }
+  const windowSize = normalizeSnapshotWindowSize(snapshot.windowSize);
+  if (!windowSize) {
+    throw new SnapshotError('invalidWindowSize', 'The snapshot must include a valid window width and height.');
   }
   if (
     !Object.values(APP_MODE).includes(snapshot.appMode) ||
     typeof snapshot.currentContext !== 'string' ||
-    !snapshot.currentContext.trim() ||
-    snapshot.currentContext.length > 1024
+    snapshot.currentContext.length > 1024 ||
+    !snapshot.currentContext.trim()
   ) {
-    throw new Error('The snapshot must include a valid application mode and context.');
+    throw new SnapshotError('invalidContext', 'The snapshot must include a valid application mode and context.');
   }
   const featureCaps = {};
   if (snapshot.featureCaps !== undefined && !isObject(snapshot.featureCaps)) {
-    throw new Error('The snapshot feature capabilities must be an object.');
+    throw new SnapshotError('invalidFeatureCaps', 'The snapshot feature capabilities must be an object.');
   }
   for (const name of ['automationName', 'platformName', 'browserName']) {
     const value = snapshot.featureCaps?.[name];
@@ -87,14 +126,17 @@ function validateSnapshot(snapshot) {
       continue;
     }
     if (typeof value !== 'string' || value.length > 256) {
-      throw new Error(`The snapshot ${name} must be a string shorter than 256 characters.`);
+      throw new SnapshotError(
+        'invalidFeatureCaps',
+        `The snapshot ${name} must be a string shorter than 256 characters.`,
+      );
     }
     featureCaps[name] = value.toLowerCase();
   }
   const platformVersion = snapshot.featureCaps?.platformVersion;
   if (platformVersion !== undefined) {
     if (typeof platformVersion !== 'number' || !Number.isFinite(platformVersion) || platformVersion < 0) {
-      throw new Error('The snapshot platformVersion must be a non-negative number.');
+      throw new SnapshotError('invalidFeatureCaps', 'The snapshot platformVersion must be a non-negative number.');
     }
     featureCaps.platformVersion = platformVersion;
   }
@@ -106,75 +148,105 @@ function validateSnapshot(snapshot) {
     capturedAt: snapshot.capturedAt,
     sourceXML: snapshot.sourceXML,
     screenshot: snapshot.screenshot,
-    windowSize: {width, height},
+    windowSize,
     currentContext: snapshot.currentContext,
     appMode: snapshot.appMode,
     featureCaps,
   };
 }
 
+function isUtcTimestamp(value) {
+  if (typeof value !== 'string' || value.length > 64) {
+    return false;
+  }
+  const match = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d+))?(?:Z|\+00:00)$/.exec(value);
+  if (!match) {
+    return false;
+  }
+  // Compare calendar fields as well as Date.parse: JavaScript otherwise normalizes dates such
+  // as February 31. Preserve the original precision and UTC spelling in the exported snapshot.
+  const milliseconds = (match[2] || '').padEnd(3, '0').slice(0, 3);
+  const canonical = `${match[1]}.${milliseconds}Z`;
+  const time = Date.parse(canonical);
+  return Number.isFinite(time) && new Date(time).toISOString() === canonical;
+}
+
 function validateSource(sourceXML) {
   if (typeof sourceXML !== 'string' || !sourceXML.trim() || byteLength(sourceXML) > MAX_SNAPSHOT_SOURCE_SIZE) {
-    throw new Error('The snapshot source must be non-empty XML smaller than 5 MiB.');
+    throw new SnapshotError('sourceSize', 'The snapshot source must be non-empty XML smaller than 5 MiB.');
   }
   // A browser's plain HTML doctype is harmless; external identifiers, entity declarations and
   // internal DTD subsets are unnecessary for an Inspector source tree and are not accepted.
   const sourceWithoutHtmlDoctype = sourceXML.replace(/<!DOCTYPE\s+html\s*>/gi, '');
   if (/<!\s*(?:DOCTYPE|ENTITY)\b/i.test(sourceWithoutHtmlDoctype)) {
-    throw new Error('Snapshot source cannot contain DTD or entity declarations.');
+    throw new SnapshotError('unsafeSource', 'Snapshot source cannot contain DTD or entity declarations.');
   }
   let source;
   try {
     source = new DOMParser({
-      onError: () => {
-        throw new Error('Invalid XML');
+      onError: (level) => {
+        // Drivers may emit recoverable XML warnings (for example, unquoted attributes).
+        // Match live inspection for these, but still reject parser errors and fatal errors.
+        if (level !== 'warning') {
+          throw new Error('Invalid XML');
+        }
       },
     }).parseFromString(sourceXML, MIME_TYPE.XML_TEXT);
   } catch {
-    throw new Error('The snapshot source is not valid XML.');
+    throw new SnapshotError('invalidXML', 'The snapshot source is not valid XML.');
   }
   if (!source.documentElement) {
-    throw new Error('The snapshot source must contain a document element.');
+    throw new SnapshotError('invalidXML', 'The snapshot source must contain a document element.');
   }
   // Bound the work performed later by recursive tree rendering and locator generation.
   const pending = [[source.documentElement, 1]];
-  let count = 0;
+  let count = 1;
   while (pending.length) {
     const [node, depth] = pending.pop();
-    if (++count > MAX_SOURCE_NODES || depth > MAX_SOURCE_DEPTH) {
-      throw new Error('The snapshot source tree is too large or deeply nested.');
-    }
     for (let child = node.firstChild; child; child = child.nextSibling) {
       if (child.nodeType === child.ELEMENT_NODE) {
+        if (++count > MAX_SOURCE_NODES || depth >= MAX_SOURCE_DEPTH) {
+          throw new SnapshotError('sourceTreeSize', 'The snapshot source tree is too large or deeply nested.');
+        }
         pending.push([child, depth + 1]);
       }
     }
   }
+  return source;
 }
 
 function validateScreenshot(screenshot) {
+  // The outer file limit bounds whitespace too. Check the normalized encoded length before
+  // decoding so MIME-wrapped base64 cannot bypass the decoded-image resource limit.
+  screenshot = screenshot.replace(/\s/g, '');
   if (
-    typeof screenshot !== 'string' ||
     !screenshot.length ||
     screenshot.length > Math.ceil(MAX_SNAPSHOT_IMAGE_SIZE / 3) * 4 ||
     screenshot.length % 4 !== 0 ||
     !/^[A-Za-z0-9+/]*={0,2}$/.test(screenshot)
   ) {
-    throw new Error('The snapshot screenshot must be a base64 PNG or JPEG smaller than 20 MiB.');
+    throw new SnapshotError(
+      'screenshotSize',
+      'The snapshot screenshot must be a base64 PNG or JPEG smaller than 20 MiB.',
+    );
   }
   let image;
   try {
     image = atob(screenshot);
   } catch {
-    throw new Error('The snapshot screenshot is not valid base64.');
+    throw new SnapshotError('invalidBase64', 'The snapshot screenshot is not valid base64.');
   }
   if (image.length > MAX_SNAPSHOT_IMAGE_SIZE || btoa(image) !== screenshot) {
-    throw new Error('The snapshot screenshot is not valid base64 or is too large.');
+    throw new SnapshotError('invalidBase64', 'The snapshot screenshot is not valid base64 or is too large.');
   }
   const size = pngSize(image) || jpegSize(image);
   if (!size || !isDimension(size.width) || !isDimension(size.height) || size.width * size.height > MAX_IMAGE_PIXELS) {
-    throw new Error('The snapshot screenshot must be a PNG or JPEG with valid image dimensions.');
+    throw new SnapshotError(
+      'invalidImage',
+      'The snapshot screenshot must be a PNG or JPEG with valid image dimensions.',
+    );
   }
+  return screenshot;
 }
 
 function pngSize(image) {
@@ -199,14 +271,16 @@ function pngSize(image) {
     hasImageData ||= type === 'IDAT' && length > 0;
     offset += length + 12;
     if (type === 'IEND') {
-      return length === 0 && hasImageData && offset === image.length ? size : null;
+      // Some screenshot encoders pad the image after IEND. The full decoded payload is still
+      // size-bounded, and it is only rendered with an explicit PNG/JPEG MIME type.
+      return length === 0 && hasImageData ? size : null;
     }
   }
   return null;
 }
 
 function jpegSize(image) {
-  if (!image.startsWith('\xff\xd8') || !image.endsWith('\xff\xd9')) {
+  if (!image.startsWith('\xff\xd8')) {
     return null;
   }
   let offset = 2;
@@ -223,7 +297,7 @@ function jpegSize(image) {
       return null;
     }
     if ([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf].includes(marker)) {
-      return length >= 8
+      return length >= 8 && image.indexOf('\xff\xd9', offset + length) !== -1
         ? {
             width: (image.charCodeAt(offset + 5) << 8) | image.charCodeAt(offset + 6),
             height: (image.charCodeAt(offset + 3) << 8) | image.charCodeAt(offset + 4),
@@ -253,6 +327,10 @@ function isObject(value) {
 
 function isDimension(value) {
   return Number.isInteger(value) && value > 0 && value <= MAX_DIMENSION;
+}
+
+function isWindowDimension(value) {
+  return typeof value === 'number' && Number.isFinite(value) && value > 0 && value <= MAX_DIMENSION;
 }
 
 function byteLength(value) {

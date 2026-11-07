@@ -10,6 +10,7 @@ import {Button, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {BUTTON} from '../../../constants/antd-types.js';
+import {canCreateSnapshot} from '../../../utils/snapshot.js';
 import LocatorSearchModal from './LocatorSearch/LocatorSearchModal.jsx';
 
 /**
@@ -132,10 +133,9 @@ const GeneralControlsGroup = (props) => {
     pauseRecording,
     isSnapshot,
     exportSnapshot,
-    sourceXML,
-    screenshot,
     sourceError,
     screenshotError,
+    windowSizeError,
     methodCallInProgress,
   } = props;
   const {t} = useTranslation();
@@ -148,7 +148,12 @@ const GeneralControlsGroup = (props) => {
           id="btnSaveSnapshot"
           icon={<IconDeviceFloppy size={18} />}
           disabled={
-            !sourceXML || !screenshot || !!sourceError || !!screenshotError || isUsingMjpegMode || methodCallInProgress
+            !canCreateSnapshot(props) ||
+            !!sourceError ||
+            !!screenshotError ||
+            !!windowSizeError ||
+            isUsingMjpegMode ||
+            methodCallInProgress
           }
           onClick={exportSnapshot}
         />

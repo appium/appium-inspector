@@ -125,6 +125,7 @@ const baseProps = () => ({
   sessionSettings: {},
   sourceXML: '<hierarchy><Button text="Login"/></hierarchy>',
   screenshot: 'snapshot-png',
+  windowSize: {width: 100, height: 200},
   showScreenshot: true,
   isUsingMjpegMode: false,
   screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
@@ -210,11 +211,24 @@ describe('Snapshot inspection controls', () => {
     {screenshot: ''},
     {sourceError: new Error('source unavailable')},
     {screenshotError: new Error('screenshot unavailable')},
+    {windowSizeError: new Error('window size unavailable')},
+    {windowSize: undefined},
+    {windowSize: {width: NaN, height: 200}},
+    {windowSize: {width: 100, height: 0}},
+    {windowSize: {width: 32769, height: 200}},
+    {currentContext: 123},
+    {appMode: 'invalid'},
+    {featureCaps: {platformVersion: 'invalid'}},
     {isUsingMjpegMode: true},
     {methodCallInProgress: true},
   ])('does not allow saving incomplete, streaming or changing snapshot data: %o', (overrides) => {
     render(HeaderButtons, {...baseProps(), ...overrides});
     expect(button('Save Snapshot').disabled).toBeTruthy();
+  });
+
+  it('allows finite fractional window dimensions without rounding the coordinate space', () => {
+    render(HeaderButtons, {...baseProps(), windowSize: {width: 100.5, height: 200.25}});
+    expect(button('Save Snapshot').disabled).toBeFalsy();
   });
 
   it('keeps selection, element handles and screenshot download without tap modes', () => {

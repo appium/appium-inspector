@@ -22,6 +22,8 @@ Session Builder.
 Saving uses the currently displayed source and screenshot, without issuing another device command.
 These are separate WebDriver responses and may differ if the application was changing during capture.
 The original capture time is preserved when saving a reopened snapshot.
+The Save button is unavailable while data is changing or required source, image, window dimensions,
+or session metadata are missing. Fractional window dimensions are preserved without rounding.
 
 Snapshots exclude server connection details and full capabilities. Source XML and screenshots can
 still contain application data, including text entered into fields. Review them before sharing.
@@ -61,8 +63,15 @@ To create a normalized web snapshot yourself, preserve the non-native `currentCo
 `browserName` strings, and a numeric `platformVersion`. Driver metadata enables driver-specific
 locator suggestions. Other fields in the file are ignored.
 
+UTC capture timestamps may use `Z` or `+00:00`, with or without fractional seconds. For example,
+`2026-10-24T12:00:00Z` and `2026-10-24T12:00:00.123456+00:00` are supported. Image base64 may contain
+whitespace or line wraps, and PNG/JPEG trailing bytes are accepted within the image size limit.
+
 Imports validate the format version, UTC capture time, XML and image before opening. Files are
 limited to 50 MiB, XML to 5 MiB and decoded images to 20 MiB. Image dimensions must be at most 32768
 per side and 40 megapixels; source trees are limited to 256 levels and 10000 elements. DTDs and
 entity declarations are rejected, except for a plain `<!DOCTYPE html>` declaration. Remote image
 URLs and SVG images are not supported. An invalid file leaves the current screen intact.
+Recoverable XML parser warnings are accepted, but parser errors are rejected. Export does not repeat
+the validation of source and images already displayed in a live session. The size and tree limits
+above apply when opening a file; an exported snapshot exceeding those limits cannot be reopened here.

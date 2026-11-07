@@ -16,7 +16,13 @@ import {getOptimalXPath} from '../utils/locator-generation/xpath.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
 import {getRandomId} from '../utils/other.js';
-import {createSnapshot, getScreenshotMimeType, MAX_SNAPSHOT_FILE_SIZE, parseSnapshot} from '../utils/snapshot.js';
+import {
+  createSnapshot,
+  getScreenshotMimeType,
+  MAX_SNAPSHOT_FILE_SIZE,
+  parseSnapshotForImport,
+  SnapshotError,
+} from '../utils/snapshot.js';
 import {findDOMNodeByPath, findJSONElementByPath, xmlToDOM, xmlToJSON} from '../utils/source-parsing.js';
 import {newSession, showError} from './SessionBuilder.js';
 
@@ -113,6 +119,22 @@ export const SET_AUTO_SESSION_RESTART = 'SET_AUTO_SESSION_RESTART';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
+const SNAPSHOT_DOWNLOAD_URL_LIFETIME = 60 * 1000;
+
+// Guard every driver boundary, including stale callbacks from controls that have unmounted.
+function canSendSessionCommands(getState) {
+  const {isSnapshot, driver} = getState().inspector;
+  return !isSnapshot && !!driver;
+}
+
+function showSnapshotError(error, summaryKey) {
+  log.error(error);
+  const detail =
+    error instanceof SnapshotError
+      ? i18n.t(`snapshotValidation.${error.code}`)
+      : error.snapshotErrorKey && i18n.t(error.snapshotErrorKey);
+  showError(new Error(detail ? `${i18n.t(summaryKey)}: ${detail}` : i18n.t(summaryKey)));
+}
 
 // Sets the selected element in the source tree/state based on its path, and
 // calculates the locator strategies that can later be used to look it up via Appium.
@@ -149,6 +171,9 @@ function prepareElementSelection(path, dispatch, getState) {
 // caches the resulting elementId, and returns it (or null if none of them worked).
 // Shared by selectElement (debounced below) and tapElement (called immediately).
 async function resolveElementId(strategyMap, dispatch, getState, path) {
+  if (!canSendSessionCommands(getState)) {
+    return null;
+  }
   const {driver} = getState().inspector;
   for (let [strategy, selector] of strategyMap) {
     // Get the information about the element
@@ -156,7 +181,7 @@ async function resolveElementId(strategyMap, dispatch, getState, path) {
       strategy,
       selector,
     });
-    let {elementId} = await action(dispatch, getState);
+    const {elementId} = (await action(dispatch, getState)) || {};
     if (!isCurrentSession(getState, driver)) {
       return null;
     }
@@ -205,13 +230,17 @@ export function unselectElement() {
 // so (unlike selectElement) this resolves the element right away instead of debouncing.
 export function tapElement(path) {
   return async (dispatch, getState) => {
+    if (!canSendSessionCommands(getState)) {
+      return;
+    }
+    const {driver} = getState().inspector;
     const strategyMap = prepareElementSelection(path, dispatch, getState);
 
     // Cancel any pending debounced resolution left over from Element Mode, so it can't
     // race with (and overwrite the result of) this immediate resolution.
     debouncedResolveElementId.cancel();
     const elementId = await resolveElementId(strategyMap, dispatch, getState, path);
-    if (elementId) {
+    if (elementId && isCurrentSession(getState, driver)) {
       const tapAction = applyClientMethod({methodName: 'elementClick', elementId});
       await tapAction(dispatch, getState);
     }
@@ -235,8 +264,8 @@ export function unselectCentroid() {
  */
 export function applyClientMethod(params) {
   return async (dispatch, getState) => {
-    if (getState().inspector.isSnapshot) {
-      throw new Error(i18n.t('snapshotReadOnly'));
+    if (!canSendSessionCommands(getState)) {
+      return;
     }
     const {driver} = getState().inspector;
     const isRecording =
@@ -336,7 +365,7 @@ export function restartSession(error, params) {
     await newSes(dispatch, getState);
     await getPageSrc(dispatch, getState);
     await storeSessionSet(dispatch, getState);
-    await getSavedClientFrame(dispatch);
+    await getSavedClientFrame(dispatch, getState);
     runKeepAliveLp(dispatch, getState);
     setSesTime(dispatch);
     dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart: true});
@@ -389,7 +418,7 @@ export function openSnapshot(files) {
   return async (dispatch, getState) => {
     try {
       if (hasLiveOrPendingSession(getState)) {
-        throw new Error(i18n.t('snapshotSessionOpenError'));
+        throw Object.assign(new Error(), {snapshotErrorKey: 'snapshotSessionOpenError'});
       }
       if (files.length !== 1 || files[0].size > MAX_SNAPSHOT_FILE_SIZE) {
         throw new Error(i18n.t('snapshotImportError'));
@@ -398,8 +427,7 @@ export function openSnapshot(files) {
       if (error) {
         throw new Error(i18n.t('snapshotImportError'));
       }
-      const snapshot = parseSnapshot(content);
-      const sourceJSON = xmlToJSON(snapshot.sourceXML);
+      const {snapshot, sourceJSON} = parseSnapshotForImport(content);
       // Header validation bounds the image dimensions; decoding also catches corrupt pixel data.
       // The image source is always the validated inline PNG/JPEG, never a URL from the file.
       const image = new Image();
@@ -410,7 +438,7 @@ export function openSnapshot(files) {
         throw new Error(i18n.t('snapshotImportError'));
       }
       if (hasLiveOrPendingSession(getState)) {
-        throw new Error(i18n.t('snapshotSessionOpenError'));
+        throw Object.assign(new Error(), {snapshotErrorKey: 'snapshotSessionOpenError'});
       }
       // Cancel pending work only after validation so a failed import leaves the current view intact.
       debouncedResolveElementId.cancel();
@@ -420,7 +448,7 @@ export function openSnapshot(files) {
       dispatch({type: LOAD_SNAPSHOT, snapshot, sourceJSON});
       return true;
     } catch (error) {
-      showError(error);
+      showSnapshotError(error, 'snapshotImportError');
       return false;
     }
   };
@@ -437,11 +465,11 @@ export function exportSnapshot() {
         downloadFile(href, `appium-snapshot-${timestamp}.json`);
       } finally {
         // Let the browser consume the download URL before releasing its backing data.
-        setTimeout(() => URL.revokeObjectURL(href), 0);
+        setTimeout(() => URL.revokeObjectURL(href), SNAPSHOT_DOWNLOAD_URL_LIFETIME);
       }
       return true;
     } catch (error) {
-      showError(error);
+      showSnapshotError(error, 'snapshotExportError');
       return false;
     }
   };
@@ -467,9 +495,12 @@ export function clearRecording() {
 }
 
 export function getSavedClientFramework() {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const {driver} = getState().inspector;
     let framework = await getSetting(SAVED_CLIENT_FRAMEWORK);
-    dispatch({type: SET_CLIENT_FRAMEWORK, framework});
+    if (isCurrentSession(getState, driver)) {
+      dispatch({type: SET_CLIENT_FRAMEWORK, framework});
+    }
   };
 }
 
@@ -522,6 +553,10 @@ export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, 
 
 export function storeSessionSettings(updatedSessionSettings = null) {
   return async (dispatch, getState) => {
+    if (!canSendSessionCommands(getState)) {
+      return;
+    }
+    const {driver} = getState().inspector;
     let sessionSettings = updatedSessionSettings;
     if (sessionSettings === null) {
       const action = applyClientMethod({
@@ -530,7 +565,9 @@ export function storeSessionSettings(updatedSessionSettings = null) {
       });
       sessionSettings = await action(dispatch, getState);
     }
-    dispatch({type: STORE_SESSION_SETTINGS, sessionSettings});
+    if (isCurrentSession(getState, driver)) {
+      dispatch({type: STORE_SESSION_SETTINGS, sessionSettings});
+    }
   };
 }
 
@@ -566,11 +603,18 @@ export function setContext(context) {
 
 export function searchForElement(strategy, selector) {
   return async (dispatch, getState) => {
+    if (!canSendSessionCommands(getState)) {
+      return;
+    }
+    const {driver} = getState().inspector;
     const isRecording = getState().inspector.isRecording;
     dispatch({type: SEARCHING_FOR_ELEMENTS});
     try {
       const callAction = callClientMethod({strategy, selector, fetchArray: true});
       let {elements, variableName, executionTime} = await callAction(dispatch, getState);
+      if (!isCurrentSession(getState, driver)) {
+        return;
+      }
       if (isRecording) {
         const findAction = findAndAssign(strategy, selector, variableName, true);
         findAction(dispatch, getState);
@@ -578,6 +622,9 @@ export function searchForElement(strategy, selector) {
       elements = elements.map((el) => el.id);
       dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED, elements, executionTime});
     } catch (error) {
+      if (!isCurrentSession(getState, driver)) {
+        return;
+      }
       dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED});
       showError(error, {methodName: 10});
     }
@@ -589,6 +636,10 @@ export function searchForElement(strategy, selector) {
  */
 export function getFindElementsTimes(findDataSource) {
   return async (dispatch, getState) => {
+    if (!canSendSessionCommands(getState)) {
+      return;
+    }
+    const {driver} = getState().inspector;
     dispatch({type: GET_FIND_ELEMENTS_TIMES});
     try {
       const findElementsExecutionTimes = [];
@@ -596,6 +647,9 @@ export function getFindElementsTimes(findDataSource) {
         const {find, key, selector} = element;
         const action = callClientMethod({strategy: key, selector});
         const {executionTime} = await action(dispatch, getState);
+        if (!isCurrentSession(getState, driver)) {
+          return;
+        }
         findElementsExecutionTimes.push({find, key, selector, time: executionTime});
       }
 
@@ -604,6 +658,9 @@ export function getFindElementsTimes(findDataSource) {
         findElementsExecutionTimes: [...findElementsExecutionTimes].sort((a, b) => a.time - b.time),
       });
     } catch (error) {
+      if (!isCurrentSession(getState, driver)) {
+        return;
+      }
       dispatch({type: GET_FIND_ELEMENTS_TIMES_COMPLETED});
       showError(error, {methodName: 10});
     }
@@ -628,6 +685,10 @@ export function findAndAssign(strategy, selector, variableName, isArray) {
 
 export function selectLocatedElement(elementId) {
   return async (dispatch, getState) => {
+    if (!canSendSessionCommands(getState)) {
+      return;
+    }
+    const {driver} = getState().inspector;
     dispatch({type: SELECT_LOCATED_ELEMENT, elementId});
     dispatch({type: CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS});
     if (elementId) {
@@ -639,6 +700,9 @@ export function selectLocatedElement(elementId) {
           skipRecord: true,
         });
         const {commandRes} = await action(dispatch, getState);
+        if (!isCurrentSession(getState, driver)) {
+          return;
+        }
         dispatch({
           type: SET_SEARCHED_FOR_ELEMENT_BOUNDS,
           location: {x: commandRes.x, y: commandRes.y},
@@ -728,12 +792,16 @@ export function findLocatedElementInSource(sourceJSON, sourceXML, bounds, id) {
   // For each provided path, get its xpath and call Appium findElement
   // Return the path of the element whose ID matches the expected ID
   async function findElementWithMatchingId(foundPaths, dispatch, getState) {
+    const {driver} = getState().inspector;
     const sourceDoc = xmlToDOM(sourceXML);
     for (const path of foundPaths) {
       const domNode = findDOMNodeByPath(path, sourceDoc);
       const xpath = getOptimalXPath(sourceDoc, domNode);
       const action = callClientMethod({strategy: 'xpath', selector: xpath});
-      const {el} = await action(dispatch, getState);
+      const {el} = (await action(dispatch, getState)) || {};
+      if (!isCurrentSession(getState, driver)) {
+        return null;
+      }
       if (el && el.elementId === id) {
         return path;
       }
@@ -742,9 +810,16 @@ export function findLocatedElementInSource(sourceJSON, sourceXML, bounds, id) {
   }
 
   return async (dispatch, getState) => {
+    if (!canSendSessionCommands(getState)) {
+      return;
+    }
+    const {driver} = getState().inspector;
     dispatch({type: FINDING_ELEMENT_IN_SOURCE});
     const foundPaths = findPathsMatchingBounds();
     const foundPath = await filterFoundPaths(foundPaths, dispatch, getState);
+    if (!isCurrentSession(getState, driver)) {
+      return;
+    }
     if (foundPath) {
       const action = selectElement(foundPath);
       await action(dispatch, getState);
@@ -806,6 +881,10 @@ export function toggleShowCentroids() {
 
 export function getActiveAppId(automationName) {
   return async (dispatch, getState) => {
+    if (!canSendSessionCommands(getState)) {
+      return;
+    }
+    const {driver} = getState().inspector;
     try {
       if (automationName === DRIVERS.XCUITEST) {
         // mobile:activeAppInfo exists since XCUITest 2.126.0 (pre-Appium 2)
@@ -814,8 +893,11 @@ export function getActiveAppId(automationName) {
           args: ['mobile:activeAppInfo', []],
           skipRefresh: true,
         });
-        const {bundleId} = await action(dispatch, getState);
-        dispatch({type: SET_APP_ID, appId: bundleId});
+        const appInfo = await action(dispatch, getState);
+        if (!isCurrentSession(getState, driver) || !appInfo) {
+          return;
+        }
+        dispatch({type: SET_APP_ID, appId: appInfo.bundleId});
       }
       if ([DRIVERS.UIAUTOMATOR2, DRIVERS.ESPRESSO].includes(automationName)) {
         // mobile:getCurrentPackage exists since UiA2 2.20 / Espresso 2.23 (Appium 2)
@@ -825,6 +907,9 @@ export function getActiveAppId(automationName) {
           skipRefresh: true,
         });
         const appPackage = await action(dispatch, getState);
+        if (!isCurrentSession(getState, driver) || appPackage === undefined) {
+          return;
+        }
         dispatch({type: SET_APP_ID, appId: appPackage});
       }
     } catch (err) {
@@ -835,24 +920,43 @@ export function getActiveAppId(automationName) {
 
 export function getServerStatus() {
   return async (dispatch, getState) => {
+    if (!canSendSessionCommands(getState)) {
+      return;
+    }
+    const {driver} = getState().inspector;
     const status = applyClientMethod({methodName: 'status', skipRefresh: true});
-    const {build} = await status(dispatch, getState);
-    dispatch({type: SET_SERVER_STATUS, status: build});
+    const result = await status(dispatch, getState);
+    if (!isCurrentSession(getState, driver) || !result) {
+      return;
+    }
+    dispatch({type: SET_SERVER_STATUS, status: result.build});
   };
 }
 
 export function getFlatSessionCaps() {
   return async (dispatch, getState) => {
+    if (!canSendSessionCommands(getState)) {
+      return;
+    }
+    const {driver} = getState().inspector;
     try {
       const action = applyClientMethod({methodName: 'getAppiumSessionCapabilities', skipRefresh: true});
       const getCapsResponse = await action(dispatch, getState);
+      if (!isCurrentSession(getState, driver)) {
+        return;
+      }
       const flatSessionCaps = getCapsResponse.capabilities;
       dispatch({type: SET_FLAT_SESSION_CAPS, flatSessionCaps});
     } catch {
+      if (!isCurrentSession(getState, driver)) {
+        return;
+      }
       // No longer supported since Appium 4
       const action = applyClientMethod({methodName: 'getSession', skipRefresh: true});
       const flatSessionCaps = await action(dispatch, getState);
-      dispatch({type: SET_FLAT_SESSION_CAPS, flatSessionCaps});
+      if (isCurrentSession(getState, driver)) {
+        dispatch({type: SET_FLAT_SESSION_CAPS, flatSessionCaps});
+      }
     }
   };
 }
@@ -890,11 +994,14 @@ export function selectInspectorTab(interaction) {
 
 export function getSupportedSessionMethods() {
   return async (dispatch, getState) => {
+    if (!canSendSessionCommands(getState)) {
+      return {commands: [], executeMethods: []};
+    }
     async function safelyCallCommand(methodName) {
       try {
         const action = executeDriverCommand({methodName});
         const {commandRes} = await action(dispatch, getState);
-        return commandRes;
+        return commandRes || [];
       } catch {
         return [];
       }
@@ -919,9 +1026,10 @@ export function setUserWaitTimeout(userWaitTimeout) {
  */
 export function runKeepAliveLoop() {
   return (dispatch, getState) => {
-    if (getState().inspector.isSnapshot) {
+    if (!canSendSessionCommands(getState)) {
       return;
     }
+    clearInterval(getState().inspector.keepAliveInterval);
     dispatch({type: SET_LAST_ACTIVE_MOMENT, lastActiveMoment: Date.now()});
     const {driver} = getState().inspector;
 
@@ -977,8 +1085,8 @@ export function keepSessionAlive() {
 
 export function callClientMethod(params) {
   return async (dispatch, getState) => {
-    if (getState().inspector.isSnapshot) {
-      throw new Error(i18n.t('snapshotReadOnly'));
+    if (!canSendSessionCommands(getState)) {
+      return {};
     }
     const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} = getState().inspector;
     params.appMode = appMode;
@@ -1024,8 +1132,8 @@ export function callClientMethod(params) {
 // run the command without any side-effects
 export function executeDriverCommand(params) {
   return async (_dispatch, getState) => {
-    if (getState().inspector.isSnapshot) {
-      throw new Error(i18n.t('snapshotReadOnly'));
+    if (!canSendSessionCommands(getState)) {
+      return {};
     }
     const {driver} = getState().inspector;
     params.skipRefresh = true;

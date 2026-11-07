@@ -36,22 +36,36 @@ vi.mock('../../app/common/renderer/lib/appium/inspector-driver.js', () => ({
   default: {clearInstance, instance: () => ({run: runCommand})},
 }));
 vi.mock('../../app/common/renderer/utils/logger.js', () => ({log}));
+vi.mock('../../app/common/renderer/utils/notification.js', () => ({notification: {info: vi.fn()}}));
 
 import {
   applyClientMethod,
   callClientMethod,
   executeDriverCommand,
   exportSnapshot,
+  findLocatedElementInSource,
+  getActiveAppId,
+  getFindElementsTimes,
+  getFlatSessionCaps,
+  getSavedClientFramework,
+  getServerStatus,
   getSupportedSessionMethods,
+  killKeepAliveLoop,
   LOAD_SNAPSHOT,
   openSnapshot,
   quitSession,
   runKeepAliveLoop,
+  searchForElement,
   selectElement,
+  selectLocatedElement,
   SET_AUTO_SESSION_RESTART,
   SET_SESSION_DETAILS,
   SET_SOURCE_AND_SCREENSHOT,
+  storeSessionSettings,
+  tapElement,
 } from '../../app/common/renderer/actions/SessionInspector.js';
+import {DRIVERS} from '../../app/common/renderer/constants/common.js';
+import {getSetting} from '../../app/common/renderer/polyfills.js';
 import reducer from '../../app/common/renderer/reducers/SessionInspector.js';
 import {MAX_SNAPSHOT_FILE_SIZE, parseSnapshot} from '../../app/common/renderer/utils/snapshot.js';
 import {xmlToJSON} from '../../app/common/renderer/utils/source-parsing.js';
@@ -70,6 +84,43 @@ const snapshot = {
   appMode: 'native',
   featureCaps: {automationName: 'uiautomator2', platformName: 'android', platformVersion: 16},
 };
+
+const sessionInfoGetters = [
+  ['server status', getServerStatus, {build: {version: '4.0.0'}}, 'status', {version: '4.0.0'}],
+  [
+    'capabilities',
+    getFlatSessionCaps,
+    {capabilities: {platformName: 'Android'}},
+    'flatSessionCaps',
+    {platformName: 'Android'},
+  ],
+  ['iOS app ID', () => getActiveAppId(DRIVERS.XCUITEST), {bundleId: 'com.example.ios'}, 'appId', 'com.example.ios'],
+  [
+    'UiAutomator2 app ID',
+    () => getActiveAppId(DRIVERS.UIAUTOMATOR2),
+    'com.example.android',
+    'appId',
+    'com.example.android',
+  ],
+  ['Espresso app ID', () => getActiveAppId(DRIVERS.ESPRESSO), 'com.example.espresso', 'appId', 'com.example.espresso'],
+];
+
+const sessionTransitions = [
+  [
+    'a snapshot',
+    async (store) => {
+      await store.dispatch(quitSession({detachOnly: true}));
+      await store.dispatch(openSnapshot([{size: 1000}]));
+    },
+  ],
+  [
+    'a replacement live session',
+    async (store) => {
+      await store.dispatch(quitSession({detachOnly: true}));
+      store.dispatch({type: SET_SESSION_DETAILS, driver: {sessionId: 'replacement'}, featureCaps: {}});
+    },
+  ],
+];
 
 function createStore(inspector, builder) {
   return configureStore({
@@ -184,7 +235,9 @@ describe('Offline snapshot actions', () => {
     expect(readFiles).not.toHaveBeenCalled();
     expect(store.getState().inspector.driver).toBe(driver);
     expect(driver.deleteSession).not.toHaveBeenCalled();
-    expect(showError).toHaveBeenCalledWith(expect.objectContaining({message: 'snapshotSessionOpenError'}));
+    expect(showError).toHaveBeenCalledWith(
+      expect.objectContaining({message: 'snapshotImportError: snapshotSessionOpenError'}),
+    );
   });
 
   it.each(['newSessionRequested', 'newSessionLoading'])('rejects imports while %s is pending', async (flag) => {
@@ -193,7 +246,9 @@ describe('Offline snapshot actions', () => {
     expect(await store.dispatch(openSnapshot([{size: 1000}]))).toBe(false);
     expect(readFiles).not.toHaveBeenCalled();
     expect(store.getState()).toBe(initial);
-    expect(showError).toHaveBeenCalledWith(expect.objectContaining({message: 'snapshotSessionOpenError'}));
+    expect(showError).toHaveBeenCalledWith(
+      expect.objectContaining({message: 'snapshotImportError: snapshotSessionOpenError'}),
+    );
   });
 
   it('does not replace a session that starts while an imported image is decoding', async () => {
@@ -209,7 +264,9 @@ describe('Offline snapshot actions', () => {
     pending.resolve();
     expect(await imported).toBe(false);
     expect(store.getState()).toBe(startingState);
-    expect(showError).toHaveBeenCalledWith(expect.objectContaining({message: 'snapshotSessionOpenError'}));
+    expect(showError).toHaveBeenCalledWith(
+      expect.objectContaining({message: 'snapshotImportError: snapshotSessionOpenError'}),
+    );
   });
 
   it('generates selectors and selection bounds locally without resolving a remote element', async () => {
@@ -354,6 +411,49 @@ describe('Offline snapshot actions', () => {
     expect(startSession).not.toHaveBeenCalled();
   });
 
+  it('finishes automatic restart including saved framework, settings, keep-alive and timer setup', async () => {
+    const caps = [{name: 'platformName', type: 'text', value: 'Android'}];
+    const getTimeouts = vi.fn().mockResolvedValue({});
+    const driver = {sessionId: 'replacement', getTimeouts};
+    const store = createStore(
+      {...reducer(undefined, {}), driver: {sessionId: 'old'}, autoSessionRestart: true},
+      {caps},
+    );
+    const restartedSource = '<hierarchy><button /></hierarchy>';
+    startSession.mockImplementation(() => async (dispatch) => {
+      dispatch({type: SET_SESSION_DETAILS, driver, featureCaps: {}});
+      return true;
+    });
+    vi.mocked(getSetting).mockResolvedValue('jsWdIo');
+    runCommand
+      .mockRejectedValueOnce(Object.assign(new Error('Session disconnected'), {name: 'unknown error'}))
+      .mockResolvedValueOnce({})
+      .mockResolvedValueOnce({source: restartedSource, screenshot, windowSize: snapshot.windowSize})
+      .mockResolvedValueOnce({commandRes: {ignoreUnimportantViews: true}});
+
+    await expect(store.dispatch(applyClientMethod({methodName: 'getPageSource'}))).resolves.toBeUndefined();
+
+    expect(startSession).toHaveBeenCalledExactlyOnceWith(caps);
+    expect(runCommand.mock.calls.map(([params]) => params.methodName)).toEqual([
+      'getPageSource',
+      'deleteSession',
+      'getPageSource',
+      'getSettings',
+    ]);
+    expect(store.getState().inspector).toMatchObject({
+      driver,
+      sourceXML: restartedSource,
+      sessionSettings: {ignoreUnimportantViews: true},
+      clientFramework: 'jsWdIo',
+      sessionStartTime: Date.now(),
+      autoSessionRestart: true,
+      methodCallInProgress: false,
+    });
+    expect(vi.getTimerCount()).toBe(1);
+    await vi.advanceTimersByTimeAsync(20_000);
+    expect(getTimeouts).toHaveBeenCalledOnce();
+  });
+
   it('discards an in-flight element lookup instead of trying more selectors in the snapshot', async () => {
     const pending = Promise.withResolvers();
     const store = createStore({...reducer(undefined, {}), driver: {sessionId: 'old-session'}});
@@ -391,14 +491,24 @@ describe('Offline snapshot actions', () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
-  it('rejects each remote command entry point before sending a request', async () => {
+  it('safely ignores each remote command entry point without rejected promises or state changes', async () => {
     const store = createStore();
     await store.dispatch(openSnapshot([{size: 1000}]));
     const before = store.getState();
-    await expect(store.dispatch(applyClientMethod({methodName: 'getPageSource'}))).rejects.toThrow('snapshotReadOnly');
-    await expect(store.dispatch(callClientMethod({methodName: 'elementClick'}))).rejects.toThrow('snapshotReadOnly');
+    await expect(store.dispatch(applyClientMethod({methodName: 'getPageSource'}))).resolves.toBeUndefined();
+    await expect(store.dispatch(callClientMethod({methodName: 'elementClick'}))).resolves.toEqual({});
     const params = {methodName: 'getSettings'};
-    await expect(store.dispatch(executeDriverCommand(params))).rejects.toThrow('snapshotReadOnly');
+    await expect(store.dispatch(executeDriverCommand(params))).resolves.toEqual({});
+    await expect(store.dispatch(tapElement('0'))).resolves.toBeUndefined();
+    await expect(store.dispatch(searchForElement('id', 'button'))).resolves.toBeUndefined();
+    await expect(store.dispatch(getFindElementsTimes([]))).resolves.toBeUndefined();
+    await expect(store.dispatch(selectLocatedElement('old-element'))).resolves.toBeUndefined();
+    await expect(store.dispatch(findLocatedElementInSource({}, '', null, 'old-element'))).resolves.toBeUndefined();
+    await expect(store.dispatch(storeSessionSettings())).resolves.toBeUndefined();
+    for (const [, getInfo] of sessionInfoGetters) {
+      await expect(store.dispatch(getInfo())).resolves.toBeUndefined();
+    }
+    await expect(store.dispatch(getSupportedSessionMethods())).resolves.toEqual({commands: [], executeMethods: []});
     expect(store.getState()).toBe(before);
     expect(runCommand).not.toHaveBeenCalled();
     expect(params).toEqual({methodName: 'getSettings'});
@@ -406,6 +516,91 @@ describe('Offline snapshot actions', () => {
     expect(log.warn).not.toHaveBeenCalled();
     expect(log.error).not.toHaveBeenCalled();
   });
+
+  it('ignores session-information getters before a live driver is available', async () => {
+    const store = createStore();
+    const before = store.getState();
+
+    for (const [, getInfo] of sessionInfoGetters) {
+      await expect(store.dispatch(getInfo())).resolves.toBeUndefined();
+    }
+
+    expect(store.getState()).toBe(before);
+    expect(runCommand).not.toHaveBeenCalled();
+    expect(showError).not.toHaveBeenCalled();
+    expect(log.error).not.toHaveBeenCalled();
+  });
+
+  it.each(sessionInfoGetters)('stores current live %s', async (_name, getInfo, response, stateKey, expected) => {
+    const store = createStore({...reducer(undefined, {}), driver: {sessionId: 'live'}});
+    runCommand.mockResolvedValue({commandRes: response});
+
+    await store.dispatch(getInfo());
+
+    expect(store.getState().inspector[stateKey]).toEqual(expected);
+    expect(runCommand).toHaveBeenCalledOnce();
+  });
+
+  it.each(
+    sessionInfoGetters.flatMap(([name, getInfo, response]) =>
+      sessionTransitions.map(([destination, transition]) => [name, destination, getInfo, response, transition]),
+    ),
+  )('ignores late %s after switching to %s', async (_name, _destination, getInfo, response, transition) => {
+    const pending = Promise.withResolvers();
+    const store = createStore({...reducer(undefined, {}), driver: {sessionId: 'old'}});
+    runCommand.mockReturnValue(pending.promise);
+    const loading = store.dispatch(getInfo());
+    await transition(store);
+    const before = store.getState();
+
+    pending.resolve({commandRes: response});
+    await expect(loading).resolves.toBeUndefined();
+
+    expect(store.getState()).toBe(before);
+    expect(runCommand).toHaveBeenCalledOnce();
+    expect(showError).not.toHaveBeenCalled();
+    expect(log.error).not.toHaveBeenCalled();
+  });
+
+  it('preserves the capabilities fallback for a current live session', async () => {
+    const store = createStore({...reducer(undefined, {}), driver: {sessionId: 'live'}});
+    const flatSessionCaps = {platformName: 'Android'};
+    runCommand
+      .mockRejectedValueOnce(new Error('Unsupported capabilities command'))
+      .mockResolvedValueOnce({commandRes: flatSessionCaps});
+
+    await store.dispatch(getFlatSessionCaps());
+
+    expect(runCommand.mock.calls.map(([params]) => params.methodName)).toEqual([
+      'getAppiumSessionCapabilities',
+      'getSession',
+    ]);
+    expect(store.getState().inspector.flatSessionCaps).toEqual(flatSessionCaps);
+  });
+
+  it.each(sessionTransitions)(
+    'ignores a capabilities fallback completing after switching to %s',
+    async (_name, transition) => {
+      const pending = Promise.withResolvers();
+      const fallbackStarted = Promise.withResolvers();
+      const store = createStore({...reducer(undefined, {}), driver: {sessionId: 'old'}});
+      runCommand.mockResolvedValueOnce({}).mockImplementationOnce(() => {
+        fallbackStarted.resolve();
+        return pending.promise;
+      });
+      const loading = store.dispatch(getFlatSessionCaps());
+      await fallbackStarted.promise;
+      await transition(store);
+      const before = store.getState();
+
+      pending.resolve({commandRes: {platformName: 'Old platform'}});
+      await expect(loading).resolves.toBeUndefined();
+
+      expect(store.getState()).toBe(before);
+      expect(runCommand).toHaveBeenCalledTimes(2);
+      expect(showError).not.toHaveBeenCalled();
+    },
+  );
 
   it('dispatches a live direct command once without refreshing or changing inspector state', async () => {
     const store = createStore({...reducer(undefined, {}), driver: {sessionId: 'live-session'}});
@@ -499,7 +694,9 @@ describe('Offline snapshot actions', () => {
     expect(filename).toBe('appium-snapshot-2026-10-24T12-00-00.000Z.json');
     expect(runCommand).not.toHaveBeenCalled();
     expect(revokeObjectURL).not.toHaveBeenCalled();
-    await vi.advanceTimersByTimeAsync(0);
+    await vi.advanceTimersByTimeAsync(59_999);
+    expect(revokeObjectURL).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1);
     expect(revokeObjectURL).toHaveBeenCalledWith('blob:snapshot');
   });
 
@@ -510,8 +707,8 @@ describe('Offline snapshot actions', () => {
       throw new Error('Download failed');
     });
     expect(store.dispatch(exportSnapshot())).toBe(false);
-    expect(showError).toHaveBeenCalledWith(expect.objectContaining({message: 'Download failed'}));
-    await vi.advanceTimersByTimeAsync(0);
+    expect(showError).toHaveBeenCalledWith(expect.objectContaining({message: 'snapshotExportError'}));
+    await vi.advanceTimersByTimeAsync(60_000);
     expect(revokeObjectURL).toHaveBeenCalledWith('blob:snapshot');
   });
 
@@ -522,12 +719,52 @@ describe('Offline snapshot actions', () => {
       screenshot,
       windowSize: snapshot.windowSize,
     });
-    const store = createStore();
+    const store = createStore({...reducer(undefined, {}), driver: {sessionId: 'live-session'}});
     await store.dispatch(applyClientMethod({methodName: 'getPageSource'}));
     vi.setSystemTime('2026-10-24T12:00:00.000Z');
     expect(store.dispatch(exportSnapshot())).toBe(true);
     const [blob] = createObjectURL.mock.calls[0];
     const content = await blob.text();
     expect(parseSnapshot(content).capturedAt).toBe('2026-10-24T11:00:00.000Z');
+  });
+
+  it('keeps only one keep-alive interval after repeated startup and clears it on stop', async () => {
+    const getTimeouts = vi.fn().mockResolvedValue({});
+    const store = createStore({...reducer(undefined, {}), driver: {sessionId: 'live', getTimeouts}});
+    store.dispatch(runKeepAliveLoop());
+    store.dispatch(runKeepAliveLoop());
+    expect(vi.getTimerCount()).toBe(1);
+    await vi.advanceTimersByTimeAsync(20_000);
+    expect(getTimeouts).toHaveBeenCalledOnce();
+    store.dispatch(killKeepAliveLoop());
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('ignores stale settings and saved-framework startup results after opening a snapshot', async () => {
+    const settings = Promise.withResolvers();
+    const framework = Promise.withResolvers();
+    const store = createStore({...reducer(undefined, {}), driver: {sessionId: 'old'}});
+    runCommand.mockReturnValue(settings.promise);
+    vi.mocked(getSetting).mockReturnValue(framework.promise);
+    const loadSettings = store.dispatch(storeSessionSettings());
+    const loadFramework = store.dispatch(getSavedClientFramework());
+    await store.dispatch(quitSession({detachOnly: true}));
+    await store.dispatch(openSnapshot([{size: 1000}]));
+    const before = store.getState();
+    settings.resolve({commandRes: {oldSetting: true}});
+    framework.resolve('old-framework');
+    await Promise.all([loadSettings, loadFramework]);
+    expect(store.getState()).toBe(before);
+  });
+
+  it('maps validation errors to translation keys without displaying raw parser messages', async () => {
+    readFiles.mockResolvedValue([{content: '{'}]);
+    const store = createStore();
+    await expect(store.dispatch(openSnapshot([{size: 1}]))).resolves.toBe(false);
+    expect(showError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: 'snapshotImportError: snapshotValidation.invalidJSON',
+      }),
+    );
   });
 });
