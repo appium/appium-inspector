@@ -357,21 +357,5 @@
   "snapshotReadOnly": "This snapshot is read-only. Open a live session to send device commands.",
   "snapshotImportError": "Could not open snapshot",
   "snapshotExportError": "Could not save snapshot",
-  "snapshotSessionOpenError": "Wait for the session to finish starting, then close or detach from it before opening a snapshot.",
-  "snapshotValidation": {
-    "fileSize": "Choose a snapshot file smaller than 50 MiB.",
-    "invalidJSON": "The snapshot file is not valid JSON.",
-    "unsupportedFormat": "Choose a supported Appium Inspector snapshot (version 1).",
-    "invalidTimestamp": "The capture time must be a valid ISO 8601 UTC timestamp.",
-    "sourceSize": "The snapshot source must be non-empty XML smaller than 5 MiB.",
-    "unsafeSource": "Snapshot source cannot contain DTD or entity declarations.",
-    "invalidXML": "The snapshot source is not valid XML.",
-    "sourceTreeSize": "The source tree exceeds the import limit of 10000 elements or 256 levels.",
-    "screenshotSize": "The snapshot must contain a base64 PNG or JPEG smaller than 20 MiB.",
-    "invalidBase64": "The snapshot screenshot is not valid base64.",
-    "invalidImage": "The snapshot screenshot must be a PNG or JPEG with valid image dimensions.",
-    "invalidWindowSize": "The snapshot must include valid window dimensions.",
-    "invalidContext": "The snapshot must include a valid application mode and context.",
-    "invalidFeatureCaps": "The snapshot contains invalid driver or platform metadata."
-  }
+  "snapshotSessionOpenError": "Wait for the session to finish starting, then close or detach from it before opening a snapshot."
 }

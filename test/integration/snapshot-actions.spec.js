@@ -757,14 +757,31 @@ describe('Offline snapshot actions', () => {
     expect(store.getState()).toBe(before);
   });
 
-  it('maps validation errors to translation keys without displaying raw parser messages', async () => {
+  it('logs validation details while displaying a generic snapshot import error', async () => {
     readFiles.mockResolvedValue([{content: '{'}]);
     const store = createStore();
     await expect(store.dispatch(openSnapshot([{size: 1}]))).resolves.toBe(false);
-    expect(showError).toHaveBeenCalledWith(
+    expect(showError).toHaveBeenCalledWith(expect.objectContaining({message: 'snapshotImportError'}));
+    expect(log.error).toHaveBeenCalledWith(
       expect.objectContaining({
-        message: 'snapshotImportError: snapshotValidation.invalidJSON',
+        name: 'SnapshotError',
+        code: 'invalidJSON',
+        message: 'The snapshot is not valid JSON.',
       }),
     );
+  });
+
+  it('logs validation details while displaying a generic snapshot export error', () => {
+    const store = createStore();
+    expect(store.dispatch(exportSnapshot())).toBe(false);
+    expect(showError).toHaveBeenCalledWith(expect.objectContaining({message: 'snapshotExportError'}));
+    expect(log.error).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'SnapshotError',
+        code: 'sourceSize',
+        message: 'The snapshot source must be non-empty XML smaller than 5 MiB.',
+      }),
+    );
+    expect(download).not.toHaveBeenCalled();
   });
 });

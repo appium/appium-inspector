@@ -21,7 +21,6 @@ import {
   getScreenshotMimeType,
   MAX_SNAPSHOT_FILE_SIZE,
   parseSnapshotForImport,
-  SnapshotError,
 } from '../utils/snapshot.js';
 import {findDOMNodeByPath, findJSONElementByPath, xmlToDOM, xmlToJSON} from '../utils/source-parsing.js';
 import {newSession, showError} from './SessionBuilder.js';
@@ -129,10 +128,7 @@ function canSendSessionCommands(getState) {
 
 function showSnapshotError(error, summaryKey) {
   log.error(error);
-  const detail =
-    error instanceof SnapshotError
-      ? i18n.t(`snapshotValidation.${error.code}`)
-      : error.snapshotErrorKey && i18n.t(error.snapshotErrorKey);
+  const detail = error.snapshotErrorKey && i18n.t(error.snapshotErrorKey);
   showError(new Error(detail ? `${i18n.t(summaryKey)}: ${detail}` : i18n.t(summaryKey)));
 }
 

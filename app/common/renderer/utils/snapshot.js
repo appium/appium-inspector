@@ -14,7 +14,7 @@ const MAX_IMAGE_PIXELS = 40 * 1024 * 1024;
 const MAX_SOURCE_DEPTH = 256;
 const MAX_SOURCE_NODES = 10000;
 
-/** Validation failures have stable codes so callers can display localized messages. */
+/** Validation failures retain stable codes and detailed messages for diagnostics. */
 export class SnapshotError extends Error {
   constructor(code, message) {
     super(message);
