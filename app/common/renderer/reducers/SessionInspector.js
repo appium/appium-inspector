@@ -20,6 +20,7 @@ import {
   HIDE_GESTURE_EDITOR,
   HIDE_LOCATOR_SEARCH_MODAL,
   HIDE_PROMPT_KEEP_ALIVE,
+  LOAD_SNAPSHOT,
   METHOD_CALL_DONE,
   METHOD_CALL_REQUESTED,
   PAUSE_RECORDING,
@@ -81,6 +82,7 @@ import {APP_MODE, CLIENT_FRAMEWORKS, INSPECTOR_TABS, NATIVE_APP} from '../consta
 import {omit} from '../utils/common.js';
 
 const INITIAL_STATE = {
+  isSnapshot: false,
   savedGestures: [],
   driver: null,
   keepAliveInterval: null,
@@ -121,6 +123,24 @@ let nextState;
 
 export default function inspector(state = INITIAL_STATE, action) {
   switch (action.type) {
+    case LOAD_SNAPSHOT:
+      return {
+        ...INITIAL_STATE,
+        isSnapshot: true,
+        snapshotCapturedAt: action.snapshot.capturedAt,
+        sourceCapturedAt: action.snapshot.capturedAt,
+        sourceXML: action.snapshot.sourceXML,
+        sourceJSON: action.sourceJSON,
+        screenshot: action.snapshot.screenshot,
+        windowSize: action.snapshot.windowSize,
+        currentContext: action.snapshot.currentContext,
+        contexts: [{id: action.snapshot.currentContext}],
+        appMode: action.snapshot.appMode,
+        featureCaps: action.snapshot.featureCaps,
+        isAwaitingMjpegStream: false,
+        isSourceRefreshOn: false,
+      };
+
     case SET_SOURCE_AND_SCREENSHOT:
       return {
         ...state,
@@ -130,6 +150,7 @@ export default function inspector(state = INITIAL_STATE, action) {
         currentContextError: action.currentContextError,
         sourceJSON: action.sourceJSON,
         sourceXML: action.sourceXML,
+        sourceCapturedAt: action.sourceCapturedAt,
         sourceError: action.sourceError,
         screenshot: action.screenshot,
         screenshotError: action.screenshotError,
@@ -279,7 +300,7 @@ export default function inspector(state = INITIAL_STATE, action) {
 
     case SET_SESSION_DETAILS: {
       return {
-        ...state,
+        ...(state.isSnapshot ? INITIAL_STATE : state),
         serverDetails: action.serverDetails,
         driver: action.driver,
         sessionCaps: action.sessionCaps,

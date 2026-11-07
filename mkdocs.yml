@@ -48,6 +48,7 @@ nav:
       - session-inspector/header.md
       - session-inspector/screenshot.md
       - session-inspector/source.md
+      - session-inspector/snapshots.md
       - session-inspector/commands.md
       - session-inspector/gestures.md
       - session-inspector/recorder.md

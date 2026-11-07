@@ -1,6 +1,7 @@
 import {bindActionCreators} from '@reduxjs/toolkit';
-import {Splitter} from 'antd';
+import {Alert, Splitter} from 'antd';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router';
 
@@ -40,6 +41,9 @@ const Inspector = () => {
     runKeepAliveLoop,
     setSessionTime,
     storeSessionSettings,
+    isSnapshot,
+    snapshotCapturedAt,
+    driver,
     showLocatorSearchModal,
     isRecording,
     startRecording,
@@ -47,6 +51,7 @@ const Inspector = () => {
   } = props;
 
   const navigate = useNavigate();
+  const {t} = useTranslation();
 
   const [screenshotPanelWidth, setScreenshotPanelWidth] = useState(WINDOW_DIMENSIONS.INITIAL_SCREENSHOT_PANEL_WIDTH_PX);
   const screenshotPanelResizedManually = useRef(false);
@@ -83,15 +88,27 @@ const Inspector = () => {
     (screenshot && !screenshotError) || (isUsingMjpegMode && (!isSourceRefreshOn || !isAwaitingMjpegStream));
 
   useEffect(() => {
+    if (isSnapshot || !driver) {
+      return;
+    }
     applyClientMethod({methodName: 'getPageSource'});
     storeSessionSettings();
     getSavedClientFramework();
     runKeepAliveLoop();
     setSessionTime(Date.now());
-  }, [applyClientMethod, getSavedClientFramework, runKeepAliveLoop, setSessionTime, storeSessionSettings]);
+  }, [
+    driver,
+    isSnapshot,
+    applyClientMethod,
+    getSavedClientFramework,
+    runKeepAliveLoop,
+    setSessionTime,
+    storeSessionSettings,
+  ]);
 
   return (
     <InspectorShortcuts
+      isSnapshot={isSnapshot}
       applyClientMethod={applyClientMethod}
       showLocatorSearchModal={showLocatorSearchModal}
       isRecording={isRecording}
@@ -99,6 +116,14 @@ const Inspector = () => {
       pauseRecording={pauseRecording}
     >
       <HeaderButtons {...props} quitSessionAndReturn={quitSessionAndReturn} />
+      {isSnapshot && (
+        <Alert
+          type="info"
+          showIcon
+          title={t('Offline Snapshot')}
+          description={t('offlineSnapshotDescription', {capturedAt: new Date(snapshotCapturedAt).toLocaleString()})}
+        />
+      )}
       <Splitter className={styles.inspectorSplitter} onResize={setPanelWidthManually}>
         <Splitter.Panel
           min={WINDOW_DIMENSIONS.MIN_IMG_WIDTH_PX}
@@ -116,12 +141,14 @@ const Inspector = () => {
           <SessionInspectorTabs {...props} showScreenshot={showScreenshot} />
         </Splitter.Panel>
       </Splitter>
-      <SessionExpiryModal
-        showKeepAlivePrompt={showKeepAlivePrompt}
-        keepSessionAlive={keepSessionAlive}
-        quitSessionAndReturn={quitSessionAndReturn}
-        setUserWaitTimeout={setUserWaitTimeout}
-      />
+      {!isSnapshot && (
+        <SessionExpiryModal
+          showKeepAlivePrompt={showKeepAlivePrompt}
+          keepSessionAlive={keepSessionAlive}
+          quitSessionAndReturn={quitSessionAndReturn}
+          setUserWaitTimeout={setUserWaitTimeout}
+        />
+      )}
     </InspectorShortcuts>
   );
 };

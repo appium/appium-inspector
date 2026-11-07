@@ -5,21 +5,23 @@ import {useTranslation} from 'react-i18next';
 /**
  * Controls used to quit the session.
  */
-const SessionQuitControlsGroup = ({quitSessionAndReturn}) => {
+const SessionQuitControlsGroup = ({quitSessionAndReturn, isSnapshot}) => {
   const {t} = useTranslation();
   const detachLabel = t('detachFromSession');
-  const quitLabel = t('Quit Session');
+  const quitLabel = t(isSnapshot ? 'Close Snapshot' : 'Quit Session');
 
   return (
     <Space.Compact>
-      <Tooltip title={detachLabel}>
-        <Button
-          aria-label={detachLabel}
-          id="btnDetach"
-          icon={<IconPlugConnectedX size={18} />}
-          onClick={() => quitSessionAndReturn({detachOnly: true})}
-        />
-      </Tooltip>
+      {!isSnapshot && (
+        <Tooltip title={detachLabel}>
+          <Button
+            aria-label={detachLabel}
+            id="btnDetach"
+            icon={<IconPlugConnectedX size={18} />}
+            onClick={() => quitSessionAndReturn({detachOnly: true})}
+          />
+        </Tooltip>
+      )}
       <Tooltip title={quitLabel}>
         <Button aria-label={quitLabel} id="btnClose" icon={<IconX size={18} />} onClick={quitSessionAndReturn} />
       </Tooltip>
