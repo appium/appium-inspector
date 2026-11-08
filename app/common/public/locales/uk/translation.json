@@ -335,9 +335,17 @@
   "switchToComposeSubdriver": "Перейти на піддрайвер Compose",
   "w3cActionsUnsupported": "Дії W3C не підтримуються на цій платформі",
   "Customize Visible Attributes": "Змінити видимі атрибути",
+  "Source Settings": "Налаштування вихідного коду",
+  "Source Expansion Depth": "Глибина розширення коду",
+  "sourceExpansionDepthDescription": "Встановіть глибину розширення під час розширення вихідного вузла. Зміни зберігаються між сеансами.",
   "importantAttributesDescription": "Виберіть, які атрибути з’являються у компактному дереві вихідного коду. Виберіть атрибут або введіть назву, щоб додати його. Зміни зберігаються між сесіями.",
   "Restore Default Attributes": "Відновити атрибути за замовчуванням",
-  "searchHistory": "Search History:",
-  "toggleSearchHistory": "Toggle Search History",
-  "clearSearchHistory": "Clear Search History"
+  "searchHistory": "Історія пошуку:",
+  "toggleSearchHistory": "Показати/приховати історію пошуку",
+  "clearSearchHistory": "Очистити історію пошуку",
+  "Capability Templates": "Можливі шаблони",
+  "Use Template": "Використати шаблон",
+  "Select a Template": "Виберіть шаблон",
+  "capabilityTemplateReplacement": "Виберіть шаблон, щоб попередньо переглянути його вміст нижче. Застосування шаблону замінює поточні можливості без зміни будь-яких інших деталей сесії.",
+  "capabilityTemplateSetup": "Зверніться до документації драйвера для отримання додаткових можливих прикладів."
 }

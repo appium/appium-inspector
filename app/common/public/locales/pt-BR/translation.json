@@ -70,7 +70,7 @@
   "couldNotObtainScreenshot": "Não foi possível obter captura de tela: {{screenshotError}}",
   "pressDeviceButton": "Pressione o botão do dispositivo",
   "Execute Siri Command": "Executar Comando Siri",
-  "rotateDigitalCrown": "Rotate Digital Crown",
+  "rotateDigitalCrown": "Girar a Digital Crown",
   "Rotations": "Rotações",
   "Velocity": "Velocidade",
   "performHandGesture": "Executar gesto manual",
@@ -335,9 +335,17 @@
   "switchToComposeSubdriver": "Mudar para o subdriver do Compose",
   "w3cActionsUnsupported": "Ações W3C não são suportadas nesta plataforma",
   "Customize Visible Attributes": "Personalizar Atributos Visíveis",
+  "Source Settings": "Source Settings",
+  "Source Expansion Depth": "Source Expansion Depth",
+  "sourceExpansionDepthDescription": "Set the expansion depth when expanding a source node. Changes are saved between sessions.",
   "importantAttributesDescription": "Escolha quais atributos aparecem na árvore de origem compacta. Selecione um atributo ou digite um nome para adicioná-lo. As alterações são salvas entre as sessões.",
   "Restore Default Attributes": "Restaurar Atributos Padrão",
   "searchHistory": "Histórico de buscas:",
   "toggleSearchHistory": "Alternar Histórico de Busca",
-  "clearSearchHistory": "Limpar histórico de buscas"
+  "clearSearchHistory": "Limpar histórico de buscas",
+  "Capability Templates": "Capability Templates",
+  "Use Template": "Use Template",
+  "Select a Template": "Select a Template",
+  "capabilityTemplateReplacement": "Select a template to preview its contents below. Applying a template replaces the current capabilities without changing any other session details.",
+  "capabilityTemplateSetup": "Refer to the driver documentation for more capability examples."
 }
