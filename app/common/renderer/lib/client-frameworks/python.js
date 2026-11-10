@@ -1,5 +1,6 @@
 import refractorPython from 'refractor/python';
 
+import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
 import CommonClientFramework from './common.js';
 
 export default class PythonFramework extends CommonClientFramework {
@@ -57,25 +58,28 @@ driver.quit()`;
   }
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
-    let suffixMap = {
-      xpath: 'AppiumBy.XPATH',
-      'accessibility id': 'AppiumBy.ACCESSIBILITY_ID',
-      id: 'AppiumBy.ID',
-      'class name': 'AppiumBy.CLASS_NAME',
-      name: 'AppiumBy.NAME',
-      '-android uiautomator': 'AppiumBy.ANDROID_UIAUTOMATOR',
-      '-android datamatcher': 'AppiumBy.ANDROID_DATA_MATCHER',
-      '-android viewtag': 'AppiumBy.ANDROID_VIEWTAG',
-      '-ios predicate string': 'AppiumBy.IOS_PREDICATE',
-      '-ios class chain': 'AppiumBy.IOS_CLASS_CHAIN',
+    const byMap = {
+      [LOCATOR_STRATEGIES.ID]: 'ID',
+      [LOCATOR_STRATEGIES.XPATH]: 'XPATH',
+      [LOCATOR_STRATEGIES.NAME]: 'NAME',
+      [LOCATOR_STRATEGIES.CLASS_NAME]: 'CLASS_NAME',
+      [LOCATOR_STRATEGIES.ACCESSIBILITY_ID]: 'ACCESSIBILITY_ID',
+      [LOCATOR_STRATEGIES.PREDICATE]: 'IOS_PREDICATE',
+      [LOCATOR_STRATEGIES.CLASS_CHAIN]: 'IOS_CLASS_CHAIN',
+      [LOCATOR_STRATEGIES.UIAUTOMATOR]: 'ANDROID_UIAUTOMATOR',
+      // [LOCATOR_STRATEGIES.TEXT]: 'not supported',
+      [LOCATOR_STRATEGIES.VIEWTAG]: 'ANDROID_VIEWTAG',
+      [LOCATOR_STRATEGIES.DATAMATCHER]: 'ANDROID_DATA_MATCHER',
+      [LOCATOR_STRATEGIES.VIEWMATCHER]: 'ANDROID_VIEW_MATCHER',
+      // [LOCATOR_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
     };
-    if (!suffixMap[strategy]) {
+    if (!byMap[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `${localVar} = driver.find_elements(by=${suffixMap[strategy]}, value=${JSON.stringify(locator)})`;
+      return `${localVar} = driver.find_elements(by=AppiumBy.${byMap[strategy]}, value=${JSON.stringify(locator)})`;
     } else {
-      return `${localVar} = driver.find_element(by=${suffixMap[strategy]}, value=${JSON.stringify(locator)})`;
+      return `${localVar} = driver.find_element(by=AppiumBy.${byMap[strategy]}, value=${JSON.stringify(locator)})`;
     }
   }
 

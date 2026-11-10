@@ -1,5 +1,7 @@
 import refractorJava from 'refractor/java';
 
+import {DRIVERS} from '../../constants/common.js';
+import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
 import CommonClientFramework from './common.js';
 
 export default class JavaFramework extends CommonClientFramework {
@@ -26,19 +28,25 @@ export default class JavaFramework extends CommonClientFramework {
 
   getBoilerplateParams() {
     const [pkg, cls] = (() => {
-      if (this.caps.platformName) {
-        switch (this.caps.platformName.toLowerCase()) {
-          case 'ios':
+      const automationName = this.caps['appium:automationName'];
+      if (automationName) {
+        switch (automationName.toLowerCase()) {
+          case DRIVERS.XCUITEST:
             return ['ios', 'IOSDriver'];
-          case 'android':
+          case DRIVERS.UIAUTOMATOR2:
+          case DRIVERS.ESPRESSO:
             return ['android', 'AndroidDriver'];
-          case 'windows':
+          case DRIVERS.WINDOWS:
             return ['windows', 'WindowsDriver'];
-          case 'mac2':
+          case DRIVERS.WINCORE:
+            return ['wincore', 'WincoreDriver'];
+          case DRIVERS.MAC2:
             return ['mac', 'Mac2Driver'];
-          case 'gecko':
+          case DRIVERS.CHROMIUM:
+            return ['chromium', 'ChromiumDriver'];
+          case DRIVERS.GECKO:
             return ['gecko', 'GeckoDriver'];
-          case 'safari':
+          case DRIVERS.SAFARI:
             return ['safari', 'SafariDriver'];
           default:
             return ['unknownPlatform', 'UnknownDriver'];
@@ -61,29 +69,28 @@ export default class JavaFramework extends CommonClientFramework {
   }
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
-    let suffixMap = {
-      xpath: 'xpath',
-      'accessibility id': 'accessibilityId',
-      id: 'id',
-      'class name': 'className',
-      name: 'name',
-      '-android uiautomator': 'androidUIAutomator',
-      '-android datamatcher': 'androidDataMatcher',
-      '-android viewtag': 'androidViewTag',
-      '-ios predicate string': 'iOSNsPredicateString',
-      '-ios class chain': 'iOSClassChain',
+    const byMap = {
+      [LOCATOR_STRATEGIES.ID]: 'id',
+      [LOCATOR_STRATEGIES.XPATH]: 'xpath',
+      [LOCATOR_STRATEGIES.NAME]: 'name',
+      [LOCATOR_STRATEGIES.CLASS_NAME]: 'className',
+      [LOCATOR_STRATEGIES.ACCESSIBILITY_ID]: 'accessibilityId',
+      [LOCATOR_STRATEGIES.PREDICATE]: 'iOSNsPredicateString',
+      [LOCATOR_STRATEGIES.CLASS_CHAIN]: 'iOSClassChain',
+      [LOCATOR_STRATEGIES.UIAUTOMATOR]: 'androidUIAutomator',
+      // [LOCATOR_STRATEGIES.TEXT]: 'not supported',
+      [LOCATOR_STRATEGIES.VIEWTAG]: 'androidViewTag',
+      [LOCATOR_STRATEGIES.DATAMATCHER]: 'androidDataMatcher',
+      [LOCATOR_STRATEGIES.VIEWMATCHER]: 'androidViewMatcher',
+      // [LOCATOR_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
     };
-    if (!suffixMap[strategy]) {
+    if (!byMap[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `WebElements ${localVar} = driver.findElements(AppiumBy.${
-        suffixMap[strategy]
-      }(${JSON.stringify(locator)}));`;
+      return `WebElements ${localVar} = driver.findElements(AppiumBy.${byMap[strategy]}(${JSON.stringify(locator)}));`;
     } else {
-      return `WebElement ${localVar} = driver.findElement(AppiumBy.${suffixMap[strategy]}(${JSON.stringify(
-        locator,
-      )}));`;
+      return `WebElement ${localVar} = driver.findElement(AppiumBy.${byMap[strategy]}(${JSON.stringify(locator)}));`;
     }
   }
 

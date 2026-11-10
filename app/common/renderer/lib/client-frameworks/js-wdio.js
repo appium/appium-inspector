@@ -1,5 +1,6 @@
 import refractorJs from 'refractor/javascript';
 
+import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
 import CommonClientFramework from './common.js';
 
 export default class JsWdIoFramework extends CommonClientFramework {
@@ -39,16 +40,19 @@ main().catch(console.log);`;
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
     // wdio allows to specify strategy as a locator prefix
     const validStrategies = [
-      'xpath',
-      'accessibility id',
-      'id',
-      'class name',
-      'name',
-      '-android uiautomator',
-      '-android datamatcher',
-      '-android viewtag',
-      '-ios predicate string',
-      '-ios class chain',
+      LOCATOR_STRATEGIES.ID,
+      LOCATOR_STRATEGIES.XPATH,
+      LOCATOR_STRATEGIES.NAME,
+      LOCATOR_STRATEGIES.CLASS_NAME,
+      LOCATOR_STRATEGIES.ACCESSIBILITY_ID,
+      LOCATOR_STRATEGIES.PREDICATE,
+      LOCATOR_STRATEGIES.CLASS_CHAIN,
+      LOCATOR_STRATEGIES.UIAUTOMATOR,
+      // LOCATOR_STRATEGIES.TEXT,
+      LOCATOR_STRATEGIES.VIEWTAG,
+      LOCATOR_STRATEGIES.DATAMATCHER,
+      LOCATOR_STRATEGIES.VIEWMATCHER,
+      // LOCATOR_STRATEGIES.WIN_UIAUTOMATION,
     ];
     if (!validStrategies.includes(strategy)) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);

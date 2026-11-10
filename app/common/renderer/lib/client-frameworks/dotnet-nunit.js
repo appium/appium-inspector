@@ -1,5 +1,7 @@
 import refractorCsharp from 'refractor/csharp';
 
+import {DRIVERS} from '../../constants/common.js';
+import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
 import CommonClientFramework from './common.js';
 
 export default class DotNetNUnitFramework extends CommonClientFramework {
@@ -19,16 +21,19 @@ export default class DotNetNUnitFramework extends CommonClientFramework {
   }
 
   wrapWithBoilerplate(code) {
-    let [pkg, cls] = (() => {
-      if (this.caps.platformName) {
-        switch (this.caps.platformName.toLowerCase()) {
-          case 'ios':
+    const [pkg, cls] = (() => {
+      const automationName = this.caps['appium:automationName'];
+      if (automationName) {
+        switch (automationName.toLowerCase()) {
+          case DRIVERS.XCUITEST:
             return ['iOS', 'IOSDriver'];
-          case 'android':
+          case DRIVERS.UIAUTOMATOR2:
+          case DRIVERS.ESPRESSO:
             return ['Android', 'AndroidDriver'];
-          case 'windows':
+          case DRIVERS.WINDOWS:
+          case DRIVERS.WINCORE:
             return ['Windows', 'WindowsDriver'];
-          case 'mac2':
+          case DRIVERS.MAC2:
             return ['Mac', 'MacDriver'];
           default:
             return ['unknownPlatform', 'UnknownDriver'];
@@ -92,25 +97,28 @@ ${this.indent(code, 8)}
   }
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
-    let suffixMap = {
-      xpath: 'XPath',
-      'accessibility id': 'AccessibilityId',
-      id: 'Id',
-      'class name': 'ClassName',
-      name: 'Name',
-      '-android uiautomator': 'AndroidUIAutomator',
-      '-android datamatcher': 'AndroidDataMatcher',
-      // '-android viewtag': 'not supported',
-      '-ios predicate string': 'IosNsPredicate',
-      '-ios class chain': 'IosClassChain',
+    const byMap = {
+      [LOCATOR_STRATEGIES.ID]: 'Id',
+      [LOCATOR_STRATEGIES.XPATH]: 'XPath',
+      [LOCATOR_STRATEGIES.NAME]: 'Name',
+      [LOCATOR_STRATEGIES.CLASS_NAME]: 'ClassName',
+      [LOCATOR_STRATEGIES.ACCESSIBILITY_ID]: 'AccessibilityId',
+      [LOCATOR_STRATEGIES.PREDICATE]: 'IosNsPredicate',
+      [LOCATOR_STRATEGIES.CLASS_CHAIN]: 'IosClassChain',
+      [LOCATOR_STRATEGIES.UIAUTOMATOR]: 'AndroidUIAutomator',
+      // [LOCATOR_STRATEGIES.TEXT]: 'not supported',
+      // [LOCATOR_STRATEGIES.VIEWTAG]: 'not supported',
+      [LOCATOR_STRATEGIES.DATAMATCHER]: 'AndroidDataMatcher',
+      [LOCATOR_STRATEGIES.VIEWMATCHER]: 'AndroidViewMatcher',
+      [LOCATOR_STRATEGIES.WIN_UIAUTOMATION]: 'WindowsAutomation',
     };
-    if (!suffixMap[strategy]) {
+    if (!byMap[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `var ${localVar} = _driver.FindElements(MobileBy.${suffixMap[strategy]}(${JSON.stringify(locator)}));`;
+      return `var ${localVar} = _driver.FindElements(MobileBy.${byMap[strategy]}(${JSON.stringify(locator)}));`;
     } else {
-      return `var ${localVar} = _driver.FindElement(MobileBy.${suffixMap[strategy]}(${JSON.stringify(locator)}));`;
+      return `var ${localVar} = _driver.FindElement(MobileBy.${byMap[strategy]}(${JSON.stringify(locator)}));`;
     }
   }
 

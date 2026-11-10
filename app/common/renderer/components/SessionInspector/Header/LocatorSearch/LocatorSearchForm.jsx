@@ -5,9 +5,9 @@ import {ALERT, BUTTON} from '../../../../constants/antd-types.js';
 import {DRIVERS} from '../../../../constants/common.js';
 import {
   NATIVE_APP,
-  NATIVE_COMMON_LOCATOR_STRATEGY_MAP,
-  NATIVE_DRIVER_LOCATOR_STRATEGY_MAP,
-  WEB_LOCATOR_STRATEGY_MAP,
+  NATIVE_COMMON_LOCATOR_STRATEGY_MAP as COMMON_STRATS,
+  NATIVE_DRIVER_LOCATOR_STRATEGY_MAP as DRIVER_STRATS,
+  WEB_LOCATOR_STRATEGY_MAP as WEB_STRATS,
 } from '../../../../constants/session-inspector.js';
 
 import inspectorStyles from '../../SessionInspector.module.css';
@@ -15,19 +15,22 @@ import styles from './LocatorSearch.module.css';
 
 const locatorStrategies = (automationName, currentContext) => {
   if (currentContext && currentContext !== NATIVE_APP) {
-    return Object.values(WEB_LOCATOR_STRATEGY_MAP);
+    return Object.values(WEB_STRATS);
   }
-  const strategies = Object.values(NATIVE_COMMON_LOCATOR_STRATEGY_MAP);
+  const strategies = Object.values(COMMON_STRATS);
   switch (automationName) {
     case DRIVERS.XCUITEST:
     case DRIVERS.MAC2:
-      strategies.push(NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.PREDICATE, NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.CLASS_CHAIN);
-      break;
-    case DRIVERS.ESPRESSO:
-      strategies.push(NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.DATAMATCHER, NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.VIEWTAG);
+      strategies.push(DRIVER_STRATS.PREDICATE, DRIVER_STRATS.CLASS_CHAIN);
       break;
     case DRIVERS.UIAUTOMATOR2:
-      strategies.push(NATIVE_DRIVER_LOCATOR_STRATEGY_MAP.UIAUTOMATOR);
+      strategies.push(DRIVER_STRATS.UIAUTOMATOR);
+      break;
+    case DRIVERS.ESPRESSO:
+      strategies.push(DRIVER_STRATS.TEXT, DRIVER_STRATS.DATAMATCHER, DRIVER_STRATS.VIEWMATCHER, DRIVER_STRATS.VIEWTAG);
+      break;
+    case DRIVERS.WINCORE:
+      strategies.push(DRIVER_STRATS.WIN_UIAUTOMATION);
       break;
   }
   return strategies;

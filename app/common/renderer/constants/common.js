@@ -27,6 +27,7 @@ export const DRIVERS = {
   FLUTTER: 'flutter',
   MAC2: 'mac2',
   WINDOWS: 'windows',
+  WINCORE: 'wincore',
   CHROMIUM: 'chromium',
   SAFARI: 'safari',
   GECKO: 'gecko',
