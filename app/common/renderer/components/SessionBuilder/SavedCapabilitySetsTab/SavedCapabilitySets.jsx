@@ -151,7 +151,7 @@ const SavedCapabilitySets = (props) => {
                 header: {cell: {padding: '8px 16px'}},
                 section: {height: 'calc(100% - 48px)'},
                 body: {cell: {padding: '8px 16px'}},
-                footer: {padding: '8px 8px', borderTop: '1px solid var(--ant-table-border-color)'},
+                footer: {padding: '8px 8px', borderTop: '1px solid var(--ant-table-border-color)', display: 'flex'},
               }}
               pagination={false}
               dataSource={dataSource(savedSessions, t)}
@@ -165,7 +165,7 @@ const SavedCapabilitySets = (props) => {
               }}
               scroll={{y: 'calc(100% - 37px)'}}
               footer={() => (
-                <Space.Compact wrap>
+                <Space.Compact style={{overflowX: 'scroll'}}>
                   <FileUploader
                     title={t('Import from File')}
                     onUpload={importSessionFiles}
