@@ -14,15 +14,23 @@ Please refer to the [Installation guide](./quickstart/installation.md).
 ## Cannot start a session using plugin version
 
 The reason for this issue is [cross-origin resource sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
-(CORS). The browser will prevent you from connecting to the Appium server if the base URLs of
-the Inspector and the Appium server do not match (typically `127.0.0.1`).
+(CORS). The browser will prevent you from connecting to the Appium server if the base URLs of the
+Inspector and the Appium server do not match (the server typically uses `127.0.0.1`).
 
-If you want to access the Inspector using another base URL (such as `localhost`), you can do so by
-adding the `--allow-cors` flag when starting the server:
+If the base URLs of the server and the Inspector differ (`localhost` is considered different from `127.0.0.1`), CORS must be explicitly allowed when starting the server:
 
-```
-appium --use-plugins=inspector --allow-cors
-```
+=== "Appium 2-3"
+
+    ```sh
+    appium --use-plugins=inspector --allow-cors
+    ```
+
+=== "Appium 4"
+
+    ```sh
+    appium --use-plugins=inspector --allow-insecure='*:cors'
+    # alternatively: appium --use-plugins=inspector --relaxed-security
+    ```
 
 This will instruct the server to sent the correct CORS-related headers, and it should be possible to
 create a session.
@@ -38,12 +46,12 @@ This is [a known issue](https://github.com/appium/appium/issues/14825). The prob
 Apple's XCTest framework, so unfortunately it cannot be resolved from the Appium side. However,
 there are a few suggestions that may help mitigate this:
 
-- Set [the `snapshotMaxDepth` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/)
+- Set [the `snapshotMaxDepth` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/#snapshotmaxdepth)
   to `62` (the maximum stable value)
-- Configure [the `pageSourceExcludedAttributes` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/)
+- Configure [the `pageSourceExcludedAttributes` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/#pagesourceexcludedattributes)
   to exclude some attributes that you may find less relevant (e.g. `"visible,accessible"`)
-- Set [the `customSnapshotTimeout` setting](https://appium.github.io/appium-xcuitest-driver/latest/settings/)
-  to a higher value
+- Set [the `customSnapshotTimeout` setting](https://appium.github.io/appium-xcuitest-driver/v9/reference/settings/)
+  to a higher value (for XCUITest driver version < 8)
 
 If these do not help, then the only remaining solution is to work with the app developers to
 refactor the application code. Some suggestions from the linked issue thread include:
