@@ -1,8 +1,52 @@
 import refractorCsharp from 'refractor/csharp';
 
-import {DRIVERS} from '../../constants/common.js';
+import {DRIVERS, PLATFORMS} from '../../constants/common.js';
 import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
 import CommonClientFramework from './common.js';
+
+const PKG_AND_CLASS_MAP = {
+  IOS: ['iOS', 'IOSDriver'],
+  ANDROID: ['Android', 'AndroidDriver'],
+  WINDOWS: ['Windows', 'WindowsDriver'],
+  MACOS: ['Mac', 'MacDriver'],
+  UNKNOWN: ['unknownPlatform', 'UnknownDriver'],
+};
+
+const getPackageAndClass = (caps) => {
+  const automationName = (caps['appium:automationName'] || caps.automationName)?.toLowerCase();
+  if (automationName) {
+    switch (automationName) {
+      case DRIVERS.XCUITEST:
+        return PKG_AND_CLASS_MAP.IOS;
+      case DRIVERS.UIAUTOMATOR2:
+      case DRIVERS.ESPRESSO:
+        return PKG_AND_CLASS_MAP.ANDROID;
+      case DRIVERS.WINDOWS:
+      case DRIVERS.WINCORE:
+        return PKG_AND_CLASS_MAP.WINDOWS;
+      case DRIVERS.MAC2:
+        return PKG_AND_CLASS_MAP.MACOS;
+      // intentionally omit default to fall through
+    }
+  }
+  const platformName = caps.platformName?.toLowerCase();
+  if (platformName) {
+    switch (platformName) {
+      case PLATFORMS.IOS:
+        return PKG_AND_CLASS_MAP.IOS;
+      case PLATFORMS.ANDROID:
+        return PKG_AND_CLASS_MAP.ANDROID;
+      case PLATFORMS.WINDOWS:
+        return PKG_AND_CLASS_MAP.WINDOWS;
+      case PLATFORMS.MACOS:
+        return PKG_AND_CLASS_MAP.MACOS;
+      default:
+        return PKG_AND_CLASS_MAP.UNKNOWN;
+    }
+  } else {
+    return PKG_AND_CLASS_MAP.UNKNOWN;
+  }
+};
 
 export default class DotNetNUnitFramework extends CommonClientFramework {
   static readableName = '.NET - NUnit';
@@ -21,27 +65,7 @@ export default class DotNetNUnitFramework extends CommonClientFramework {
   }
 
   wrapWithBoilerplate(code) {
-    const [pkg, cls] = (() => {
-      const automationName = this.caps['appium:automationName'];
-      if (automationName) {
-        switch (automationName.toLowerCase()) {
-          case DRIVERS.XCUITEST:
-            return ['iOS', 'IOSDriver'];
-          case DRIVERS.UIAUTOMATOR2:
-          case DRIVERS.ESPRESSO:
-            return ['Android', 'AndroidDriver'];
-          case DRIVERS.WINDOWS:
-          case DRIVERS.WINCORE:
-            return ['Windows', 'WindowsDriver'];
-          case DRIVERS.MAC2:
-            return ['Mac', 'MacDriver'];
-          default:
-            return ['unknownPlatform', 'UnknownDriver'];
-        }
-      } else {
-        return ['unknownPlatform', 'UnknownDriver'];
-      }
-    })();
+    const [pkg, cls] = getPackageAndClass(this.caps);
     let capStr = this.indent(
       Object.entries(this.caps)
         .map(([k, v]) => `options.AddAdditionalAppiumOption(${JSON.stringify(k)}, ${this.getCSharpVal(v)});`)
