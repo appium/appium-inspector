@@ -5,59 +5,35 @@ import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
 import CommonClientFramework from './common.js';
 
 const PKG_AND_CLASS_MAP = {
-  IOS: ['ios', 'IOSDriver'],
   ANDROID: ['android', 'AndroidDriver'],
+  IOS: ['ios', 'IOSDriver'],
+  MACOS: ['mac', 'Mac2Driver'],
   WINDOWS: ['windows', 'WindowsDriver'],
   WINCORE: ['wincore', 'WincoreDriver'],
-  MACOS: ['mac', 'Mac2Driver'],
   CHROMIUM: ['chromium', 'ChromiumDriver'],
-  GECKO: ['gecko', 'GeckoDriver'],
   SAFARI: ['safari', 'SafariDriver'],
+  GECKO: ['gecko', 'GeckoDriver'],
   UNKNOWN: ['unknownPlatform', 'UnknownDriver'],
 };
 
-const getPackageAndClass = (caps) => {
-  const automationName = (caps['appium:automationName'] || caps.automationName)?.toLowerCase();
-  if (automationName) {
-    switch (automationName) {
-      case DRIVERS.XCUITEST:
-        return PKG_AND_CLASS_MAP.IOS;
-      case DRIVERS.UIAUTOMATOR2:
-      case DRIVERS.ESPRESSO:
-        return PKG_AND_CLASS_MAP.ANDROID;
-      case DRIVERS.WINDOWS:
-        return PKG_AND_CLASS_MAP.WINDOWS;
-      case DRIVERS.WINCORE:
-        return PKG_AND_CLASS_MAP.WINCORE;
-      case DRIVERS.MAC2:
-        return PKG_AND_CLASS_MAP.MACOS;
-      case DRIVERS.CHROMIUM:
-        return PKG_AND_CLASS_MAP.CHROMIUM;
-      case DRIVERS.GECKO:
-        return PKG_AND_CLASS_MAP.GECKO;
-      case DRIVERS.SAFARI:
-        return PKG_AND_CLASS_MAP.SAFARI;
-      // intentionally omit default to fall through
-    }
-  }
-  const platformName = caps.platformName?.toLowerCase();
-  if (platformName) {
-    switch (platformName) {
-      case PLATFORMS.IOS:
-        return PKG_AND_CLASS_MAP.IOS;
-      case PLATFORMS.ANDROID:
-        return PKG_AND_CLASS_MAP.ANDROID;
-      case PLATFORMS.WINDOWS:
-        return PKG_AND_CLASS_MAP.WINDOWS;
-      case PLATFORMS.MACOS:
-        return PKG_AND_CLASS_MAP.MACOS;
-      default:
-        return PKG_AND_CLASS_MAP.UNKNOWN;
-    }
-  } else {
-    return PKG_AND_CLASS_MAP.UNKNOWN;
-  }
-};
+const AUTOMATION_NAME_MAP = new Map([
+  [DRIVERS.UIAUTOMATOR2, PKG_AND_CLASS_MAP.ANDROID],
+  [DRIVERS.ESPRESSO, PKG_AND_CLASS_MAP.ANDROID],
+  [DRIVERS.XCUITEST, PKG_AND_CLASS_MAP.IOS],
+  [DRIVERS.MAC2, PKG_AND_CLASS_MAP.MACOS],
+  [DRIVERS.WINDOWS, PKG_AND_CLASS_MAP.WINDOWS],
+  [DRIVERS.WINCORE, PKG_AND_CLASS_MAP.WINCORE],
+  [DRIVERS.CHROMIUM, PKG_AND_CLASS_MAP.CHROMIUM],
+  [DRIVERS.SAFARI, PKG_AND_CLASS_MAP.SAFARI],
+  [DRIVERS.GECKO, PKG_AND_CLASS_MAP.GECKO],
+]);
+
+const PLATFORM_NAME_MAP = new Map([
+  [PLATFORMS.ANDROID, PKG_AND_CLASS_MAP.ANDROID],
+  [PLATFORMS.IOS, PKG_AND_CLASS_MAP.IOS],
+  [PLATFORMS.MACOS, PKG_AND_CLASS_MAP.MACOS],
+  [PLATFORMS.WINDOWS, PKG_AND_CLASS_MAP.WINDOWS],
+]);
 
 export default class JavaFramework extends CommonClientFramework {
   static refractorLang = 'java';
@@ -82,7 +58,7 @@ export default class JavaFramework extends CommonClientFramework {
   }
 
   getBoilerplateParams() {
-    const [pkg, cls] = getPackageAndClass(this.caps);
+    const [pkg, cls] = this.getPackageAndClass(AUTOMATION_NAME_MAP, PLATFORM_NAME_MAP, PKG_AND_CLASS_MAP.UNKNOWN);
     const capStr = this.indent(
       Object.entries(this.caps)
         .map(([k, v]) => `.amend(${JSON.stringify(k)}, ${this.getJavaVal(v)})`)

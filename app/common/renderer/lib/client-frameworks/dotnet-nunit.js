@@ -5,48 +5,34 @@ import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
 import CommonClientFramework from './common.js';
 
 const PKG_AND_CLASS_MAP = {
-  IOS: ['iOS', 'IOSDriver'],
-  ANDROID: ['Android', 'AndroidDriver'],
-  WINDOWS: ['Windows', 'WindowsDriver'],
-  MACOS: ['Mac', 'MacDriver'],
+  ANDROID: ['Appium.Android', 'AndroidDriver'],
+  IOS: ['Appium.iOS', 'IOSDriver'],
+  MACOS: ['Appium.Mac', 'MacDriver'],
+  WINDOWS: ['Appium.Windows', 'WindowsDriver'],
+  CHROMIUM: ['Chromium', 'ChromiumDriver'],
+  SAFARI: ['Safari', 'SafariDriver'],
+  GECKO: ['Firefox', 'FirefoxDriver'],
   UNKNOWN: ['unknownPlatform', 'UnknownDriver'],
 };
 
-const getPackageAndClass = (caps) => {
-  const automationName = (caps['appium:automationName'] || caps.automationName)?.toLowerCase();
-  if (automationName) {
-    switch (automationName) {
-      case DRIVERS.XCUITEST:
-        return PKG_AND_CLASS_MAP.IOS;
-      case DRIVERS.UIAUTOMATOR2:
-      case DRIVERS.ESPRESSO:
-        return PKG_AND_CLASS_MAP.ANDROID;
-      case DRIVERS.WINDOWS:
-      case DRIVERS.WINCORE:
-        return PKG_AND_CLASS_MAP.WINDOWS;
-      case DRIVERS.MAC2:
-        return PKG_AND_CLASS_MAP.MACOS;
-      // intentionally omit default to fall through
-    }
-  }
-  const platformName = caps.platformName?.toLowerCase();
-  if (platformName) {
-    switch (platformName) {
-      case PLATFORMS.IOS:
-        return PKG_AND_CLASS_MAP.IOS;
-      case PLATFORMS.ANDROID:
-        return PKG_AND_CLASS_MAP.ANDROID;
-      case PLATFORMS.WINDOWS:
-        return PKG_AND_CLASS_MAP.WINDOWS;
-      case PLATFORMS.MACOS:
-        return PKG_AND_CLASS_MAP.MACOS;
-      default:
-        return PKG_AND_CLASS_MAP.UNKNOWN;
-    }
-  } else {
-    return PKG_AND_CLASS_MAP.UNKNOWN;
-  }
-};
+const AUTOMATION_NAME_MAP = new Map([
+  [DRIVERS.UIAUTOMATOR2, PKG_AND_CLASS_MAP.ANDROID],
+  [DRIVERS.ESPRESSO, PKG_AND_CLASS_MAP.ANDROID],
+  [DRIVERS.XCUITEST, PKG_AND_CLASS_MAP.IOS],
+  [DRIVERS.MAC2, PKG_AND_CLASS_MAP.MACOS],
+  [DRIVERS.WINDOWS, PKG_AND_CLASS_MAP.WINDOWS],
+  [DRIVERS.WINCORE, PKG_AND_CLASS_MAP.WINDOWS],
+  [DRIVERS.CHROMIUM, PKG_AND_CLASS_MAP.CHROMIUM],
+  [DRIVERS.SAFARI, PKG_AND_CLASS_MAP.SAFARI],
+  [DRIVERS.GECKO, PKG_AND_CLASS_MAP.GECKO],
+]);
+
+const PLATFORM_NAME_MAP = new Map([
+  [PLATFORMS.ANDROID, PKG_AND_CLASS_MAP.ANDROID],
+  [PLATFORMS.IOS, PKG_AND_CLASS_MAP.IOS],
+  [PLATFORMS.MACOS, PKG_AND_CLASS_MAP.MACOS],
+  [PLATFORMS.WINDOWS, PKG_AND_CLASS_MAP.WINDOWS],
+]);
 
 export default class DotNetNUnitFramework extends CommonClientFramework {
   static readableName = '.NET - NUnit';
@@ -65,7 +51,7 @@ export default class DotNetNUnitFramework extends CommonClientFramework {
   }
 
   wrapWithBoilerplate(code) {
-    const [pkg, cls] = getPackageAndClass(this.caps);
+    const [pkg, cls] = this.getPackageAndClass(AUTOMATION_NAME_MAP, PLATFORM_NAME_MAP, PKG_AND_CLASS_MAP.UNKNOWN);
     let capStr = this.indent(
       Object.entries(this.caps)
         .map(([k, v]) => `options.AddAdditionalAppiumOption(${JSON.stringify(k)}, ${this.getCSharpVal(v)});`)
@@ -82,7 +68,7 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Appium;
-using OpenQA.Selenium.Appium.${pkg};
+using OpenQA.Selenium.${pkg};
 using OpenQA.Selenium.Appium.Enums;
 
 namespace AppiumTests;

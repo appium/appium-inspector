@@ -12,6 +12,20 @@ export default class CommonClientFramework {
     this.lastAssignedVar = null;
   }
 
+  // Java and .NET client boilerplates must define imports from client classes
+  // specific to the provided platform/automation name
+  getPackageAndClass(automationNameMap, platformNameMap, defaultPkgClass) {
+    const automationName = (this.caps['appium:automationName'] || this.caps.automationName)?.toLowerCase();
+    if (automationName && automationNameMap.has(automationName)) {
+      return automationNameMap.get(automationName);
+    }
+    const platformName = this.caps.platformName?.toLowerCase();
+    if (platformName && platformNameMap.has(platformName)) {
+      return platformNameMap.get(platformName);
+    }
+    return defaultPkgClass;
+  }
+
   getTapCoordinatesFromPointerActions(pointerActions) {
     const pointerMoveAction = pointerActions[DEFAULT_TAP.POINTER_NAME][0];
     return {x: pointerMoveAction.x, y: pointerMoveAction.y};
