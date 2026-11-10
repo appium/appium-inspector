@@ -1,5 +1,6 @@
 import refractorRobot from 'refractor/robotframework';
 
+import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
 import CommonClientFramework from './common.js';
 
 // Characters with a short Robot escape: common whitespace and Robot syntax characters
@@ -99,23 +100,26 @@ ${this.indent(code, 4)}
   }
 
   codeFor_findAndAssign(strategy, locator, localVar /*, isArray*/) {
-    let suffixMap = {
-      xpath: 'xpath',
-      'accessibility id': 'accessibility_id',
-      id: 'id',
-      'class name': 'class',
-      name: 'name',
-      '-android uiautomator': 'android',
-      // '-android datamatcher': 'unsupported',
-      // '-android viewtag': 'unsupported',
-      '-ios predicate string': 'nsp',
-      '-ios class chain': 'chain',
+    const byMap = {
+      [LOCATOR_STRATEGIES.ID]: 'id',
+      [LOCATOR_STRATEGIES.XPATH]: 'xpath',
+      [LOCATOR_STRATEGIES.NAME]: 'name',
+      [LOCATOR_STRATEGIES.CLASS_NAME]: 'class',
+      [LOCATOR_STRATEGIES.ACCESSIBILITY_ID]: 'accessibility_id',
+      [LOCATOR_STRATEGIES.PREDICATE]: 'predicate',
+      [LOCATOR_STRATEGIES.CLASS_CHAIN]: 'chain',
+      [LOCATOR_STRATEGIES.UIAUTOMATOR]: 'android',
+      // [LOCATOR_STRATEGIES.TEXT]: 'not supported',
+      // [LOCATOR_STRATEGIES.VIEWTAG]: 'not supported',
+      // [LOCATOR_STRATEGIES.DATAMATCHER]: 'not supported',
+      // [LOCATOR_STRATEGIES.VIEWMATCHER]: 'not supported',
+      // [LOCATOR_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
     };
-    if (!suffixMap[strategy]) {
+    if (!byMap[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
 
-    return `$\{${localVar}} =    Set Variable     ${suffixMap[strategy]}=${this.escapeRobotString(locator)}`;
+    return `$\{${localVar}} =    Set Variable     ${byMap[strategy]}=${this.escapeRobotString(locator)}`;
   }
 
   codeFor_elementClick(varName, varIndex) {

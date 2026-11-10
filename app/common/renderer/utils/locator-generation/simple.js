@@ -1,7 +1,7 @@
 import cssEscape from 'css.escape';
 import XPath from 'xpath';
 
-import {LOCATOR_STRATEGIES as STRATS} from '../../constants/session-inspector.js';
+import {LOCATOR_STRATEGIES as STRATEGIES} from '../../constants/session-inspector.js';
 import {isEmpty} from '../common.js';
 
 /**
@@ -11,13 +11,13 @@ import {isEmpty} from '../common.js';
 class SimpleLocatorGenerator {
   // Map of native element attributes to their matching simple (optimal) locator strategies
   static NATIVE_STRATEGY_MAP = [
-    ['name', STRATS.ACCESSIBILITY_ID],
-    ['content-desc', STRATS.ACCESSIBILITY_ID],
-    ['id', STRATS.ID],
-    ['rntestid', STRATS.ID],
-    ['resource-id', STRATS.ID],
-    ['class', STRATS.CLASS_NAME],
-    ['type', STRATS.CLASS_NAME],
+    ['name', STRATEGIES.ACCESSIBILITY_ID],
+    ['content-desc', STRATEGIES.ACCESSIBILITY_ID],
+    ['id', STRATEGIES.ID],
+    ['rntestid', STRATEGIES.ID],
+    ['resource-id', STRATEGIES.ID],
+    ['class', STRATEGIES.CLASS_NAME],
+    ['type', STRATEGIES.CLASS_NAME],
   ];
 
   /**
@@ -57,11 +57,11 @@ class SimpleLocatorGenerator {
     // id (css)
     const idValue = this._attributes?.id;
     if (idValue && areAttrAndValueUnique('id', idValue, this._doc)) {
-      webStrategyMap[STRATS.CSS] = `#${cssEscape(idValue)}`;
+      webStrategyMap[STRATEGIES.CSS] = `#${cssEscape(idValue)}`;
     }
     // tag name
     if (isTagUnique(this._tag, this._doc)) {
-      webStrategyMap[STRATS.TAG_NAME] = this._tag;
+      webStrategyMap[STRATEGIES.TAG_NAME] = this._tag;
     }
     return webStrategyMap;
   }

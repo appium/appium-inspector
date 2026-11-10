@@ -1,5 +1,6 @@
 import refractorRuby from 'refractor/ruby';
 
+import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
 import CommonClientFramework from './common.js';
 
 export default class RubyFramework extends CommonClientFramework {
@@ -75,25 +76,28 @@ driver.quit`;
   }
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
-    let suffixMap = {
-      xpath: ':xpath',
-      'accessibility id': ':accessibility_id',
-      id: ':id',
-      name: ':name',
-      'class name': ':class_name',
-      '-android uiautomator': ':uiautomator',
-      '-android datamatcher': ':datamatcher',
-      '-android viewtag': ':viewtag',
-      '-ios predicate string': ':predicate',
-      '-ios class chain': ':class_chain',
+    const byMap = {
+      [LOCATOR_STRATEGIES.ID]: ':id',
+      [LOCATOR_STRATEGIES.XPATH]: ':xpath',
+      [LOCATOR_STRATEGIES.NAME]: ':name',
+      [LOCATOR_STRATEGIES.CLASS_NAME]: ':class_name',
+      [LOCATOR_STRATEGIES.ACCESSIBILITY_ID]: ':accessibility_id',
+      [LOCATOR_STRATEGIES.PREDICATE]: ':predicate',
+      [LOCATOR_STRATEGIES.CLASS_CHAIN]: ':class_chain',
+      [LOCATOR_STRATEGIES.UIAUTOMATOR]: ':uiautomator',
+      // [LOCATOR_STRATEGIES.TEXT]: 'not supported',
+      [LOCATOR_STRATEGIES.VIEWTAG]: ':viewtag',
+      [LOCATOR_STRATEGIES.DATAMATCHER]: ':data_matcher',
+      [LOCATOR_STRATEGIES.VIEWMATCHER]: ':view_matcher',
+      // [LOCATOR_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
     };
-    if (!suffixMap[strategy]) {
+    if (!byMap[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `${localVar} = driver.find_elements ${suffixMap[strategy]}, ${this.getRubyString(locator)}`;
+      return `${localVar} = driver.find_elements ${byMap[strategy]}, ${this.getRubyString(locator)}`;
     } else {
-      return `${localVar} = driver.find_element ${suffixMap[strategy]}, ${this.getRubyString(locator)}`;
+      return `${localVar} = driver.find_element ${byMap[strategy]}, ${this.getRubyString(locator)}`;
     }
   }
 

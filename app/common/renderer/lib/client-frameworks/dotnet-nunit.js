@@ -1,6 +1,38 @@
 import refractorCsharp from 'refractor/csharp';
 
+import {DRIVERS, PLATFORMS} from '../../constants/common.js';
+import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
 import CommonClientFramework from './common.js';
+
+const PKG_AND_CLASS_MAP = {
+  ANDROID: ['Appium.Android', 'AndroidDriver'],
+  IOS: ['Appium.iOS', 'IOSDriver'],
+  MACOS: ['Appium.Mac', 'MacDriver'],
+  WINDOWS: ['Appium.Windows', 'WindowsDriver'],
+  CHROMIUM: ['Chromium', 'ChromiumDriver'],
+  SAFARI: ['Safari', 'SafariDriver'],
+  GECKO: ['Firefox', 'FirefoxDriver'],
+  UNKNOWN: ['unknownPlatform', 'UnknownDriver'],
+};
+
+const AUTOMATION_NAME_MAP = new Map([
+  [DRIVERS.UIAUTOMATOR2, PKG_AND_CLASS_MAP.ANDROID],
+  [DRIVERS.ESPRESSO, PKG_AND_CLASS_MAP.ANDROID],
+  [DRIVERS.XCUITEST, PKG_AND_CLASS_MAP.IOS],
+  [DRIVERS.MAC2, PKG_AND_CLASS_MAP.MACOS],
+  [DRIVERS.WINDOWS, PKG_AND_CLASS_MAP.WINDOWS],
+  [DRIVERS.WINCORE, PKG_AND_CLASS_MAP.WINDOWS],
+  [DRIVERS.CHROMIUM, PKG_AND_CLASS_MAP.CHROMIUM],
+  [DRIVERS.SAFARI, PKG_AND_CLASS_MAP.SAFARI],
+  [DRIVERS.GECKO, PKG_AND_CLASS_MAP.GECKO],
+]);
+
+const PLATFORM_NAME_MAP = new Map([
+  [PLATFORMS.ANDROID, PKG_AND_CLASS_MAP.ANDROID],
+  [PLATFORMS.IOS, PKG_AND_CLASS_MAP.IOS],
+  [PLATFORMS.MACOS, PKG_AND_CLASS_MAP.MACOS],
+  [PLATFORMS.WINDOWS, PKG_AND_CLASS_MAP.WINDOWS],
+]);
 
 export default class DotNetNUnitFramework extends CommonClientFramework {
   static readableName = '.NET - NUnit';
@@ -19,24 +51,7 @@ export default class DotNetNUnitFramework extends CommonClientFramework {
   }
 
   wrapWithBoilerplate(code) {
-    let [pkg, cls] = (() => {
-      if (this.caps.platformName) {
-        switch (this.caps.platformName.toLowerCase()) {
-          case 'ios':
-            return ['iOS', 'IOSDriver'];
-          case 'android':
-            return ['Android', 'AndroidDriver'];
-          case 'windows':
-            return ['Windows', 'WindowsDriver'];
-          case 'mac2':
-            return ['Mac', 'MacDriver'];
-          default:
-            return ['unknownPlatform', 'UnknownDriver'];
-        }
-      } else {
-        return ['unknownPlatform', 'UnknownDriver'];
-      }
-    })();
+    const [pkg, cls] = this.getPackageAndClass(AUTOMATION_NAME_MAP, PLATFORM_NAME_MAP, PKG_AND_CLASS_MAP.UNKNOWN);
     let capStr = this.indent(
       Object.entries(this.caps)
         .map(([k, v]) => `options.AddAdditionalAppiumOption(${JSON.stringify(k)}, ${this.getCSharpVal(v)});`)
@@ -53,7 +68,7 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Appium;
-using OpenQA.Selenium.Appium.${pkg};
+using OpenQA.Selenium.${pkg};
 using OpenQA.Selenium.Appium.Enums;
 
 namespace AppiumTests;
@@ -92,25 +107,28 @@ ${this.indent(code, 8)}
   }
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
-    let suffixMap = {
-      xpath: 'XPath',
-      'accessibility id': 'AccessibilityId',
-      id: 'Id',
-      'class name': 'ClassName',
-      name: 'Name',
-      '-android uiautomator': 'AndroidUIAutomator',
-      '-android datamatcher': 'AndroidDataMatcher',
-      // '-android viewtag': 'not supported',
-      '-ios predicate string': 'IosNsPredicate',
-      '-ios class chain': 'IosClassChain',
+    const byMap = {
+      [LOCATOR_STRATEGIES.ID]: 'Id',
+      [LOCATOR_STRATEGIES.XPATH]: 'XPath',
+      [LOCATOR_STRATEGIES.NAME]: 'Name',
+      [LOCATOR_STRATEGIES.CLASS_NAME]: 'ClassName',
+      [LOCATOR_STRATEGIES.ACCESSIBILITY_ID]: 'AccessibilityId',
+      [LOCATOR_STRATEGIES.PREDICATE]: 'IosNsPredicate',
+      [LOCATOR_STRATEGIES.CLASS_CHAIN]: 'IosClassChain',
+      [LOCATOR_STRATEGIES.UIAUTOMATOR]: 'AndroidUIAutomator',
+      // [LOCATOR_STRATEGIES.TEXT]: 'not supported',
+      // [LOCATOR_STRATEGIES.VIEWTAG]: 'not supported',
+      [LOCATOR_STRATEGIES.DATAMATCHER]: 'AndroidDataMatcher',
+      [LOCATOR_STRATEGIES.VIEWMATCHER]: 'AndroidViewMatcher',
+      [LOCATOR_STRATEGIES.WIN_UIAUTOMATION]: 'WindowsAutomation',
     };
-    if (!suffixMap[strategy]) {
+    if (!byMap[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `var ${localVar} = _driver.FindElements(MobileBy.${suffixMap[strategy]}(${JSON.stringify(locator)}));`;
+      return `var ${localVar} = _driver.FindElements(MobileBy.${byMap[strategy]}(${JSON.stringify(locator)}));`;
     } else {
-      return `var ${localVar} = _driver.FindElement(MobileBy.${suffixMap[strategy]}(${JSON.stringify(locator)}));`;
+      return `var ${localVar} = _driver.FindElement(MobileBy.${byMap[strategy]}(${JSON.stringify(locator)}));`;
     }
   }
 

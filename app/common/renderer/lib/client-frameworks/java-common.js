@@ -1,6 +1,39 @@
 import refractorJava from 'refractor/java';
 
+import {DRIVERS, PLATFORMS} from '../../constants/common.js';
+import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
 import CommonClientFramework from './common.js';
+
+const PKG_AND_CLASS_MAP = {
+  ANDROID: ['android', 'AndroidDriver'],
+  IOS: ['ios', 'IOSDriver'],
+  MACOS: ['mac', 'Mac2Driver'],
+  WINDOWS: ['windows', 'WindowsDriver'],
+  WINCORE: ['wincore', 'WincoreDriver'],
+  CHROMIUM: ['chromium', 'ChromiumDriver'],
+  SAFARI: ['safari', 'SafariDriver'],
+  GECKO: ['gecko', 'GeckoDriver'],
+  UNKNOWN: ['unknownPlatform', 'UnknownDriver'],
+};
+
+const AUTOMATION_NAME_MAP = new Map([
+  [DRIVERS.UIAUTOMATOR2, PKG_AND_CLASS_MAP.ANDROID],
+  [DRIVERS.ESPRESSO, PKG_AND_CLASS_MAP.ANDROID],
+  [DRIVERS.XCUITEST, PKG_AND_CLASS_MAP.IOS],
+  [DRIVERS.MAC2, PKG_AND_CLASS_MAP.MACOS],
+  [DRIVERS.WINDOWS, PKG_AND_CLASS_MAP.WINDOWS],
+  [DRIVERS.WINCORE, PKG_AND_CLASS_MAP.WINCORE],
+  [DRIVERS.CHROMIUM, PKG_AND_CLASS_MAP.CHROMIUM],
+  [DRIVERS.SAFARI, PKG_AND_CLASS_MAP.SAFARI],
+  [DRIVERS.GECKO, PKG_AND_CLASS_MAP.GECKO],
+]);
+
+const PLATFORM_NAME_MAP = new Map([
+  [PLATFORMS.ANDROID, PKG_AND_CLASS_MAP.ANDROID],
+  [PLATFORMS.IOS, PKG_AND_CLASS_MAP.IOS],
+  [PLATFORMS.MACOS, PKG_AND_CLASS_MAP.MACOS],
+  [PLATFORMS.WINDOWS, PKG_AND_CLASS_MAP.WINDOWS],
+]);
 
 export default class JavaFramework extends CommonClientFramework {
   static refractorLang = 'java';
@@ -25,28 +58,7 @@ export default class JavaFramework extends CommonClientFramework {
   }
 
   getBoilerplateParams() {
-    const [pkg, cls] = (() => {
-      if (this.caps.platformName) {
-        switch (this.caps.platformName.toLowerCase()) {
-          case 'ios':
-            return ['ios', 'IOSDriver'];
-          case 'android':
-            return ['android', 'AndroidDriver'];
-          case 'windows':
-            return ['windows', 'WindowsDriver'];
-          case 'mac2':
-            return ['mac', 'Mac2Driver'];
-          case 'gecko':
-            return ['gecko', 'GeckoDriver'];
-          case 'safari':
-            return ['safari', 'SafariDriver'];
-          default:
-            return ['unknownPlatform', 'UnknownDriver'];
-        }
-      } else {
-        return ['unknownPlatform', 'UnknownDriver'];
-      }
-    })();
+    const [pkg, cls] = this.getPackageAndClass(AUTOMATION_NAME_MAP, PLATFORM_NAME_MAP, PKG_AND_CLASS_MAP.UNKNOWN);
     const capStr = this.indent(
       Object.entries(this.caps)
         .map(([k, v]) => `.amend(${JSON.stringify(k)}, ${this.getJavaVal(v)})`)
@@ -61,29 +73,28 @@ export default class JavaFramework extends CommonClientFramework {
   }
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
-    let suffixMap = {
-      xpath: 'xpath',
-      'accessibility id': 'accessibilityId',
-      id: 'id',
-      'class name': 'className',
-      name: 'name',
-      '-android uiautomator': 'androidUIAutomator',
-      '-android datamatcher': 'androidDataMatcher',
-      '-android viewtag': 'androidViewTag',
-      '-ios predicate string': 'iOSNsPredicateString',
-      '-ios class chain': 'iOSClassChain',
+    const byMap = {
+      [LOCATOR_STRATEGIES.ID]: 'id',
+      [LOCATOR_STRATEGIES.XPATH]: 'xpath',
+      [LOCATOR_STRATEGIES.NAME]: 'name',
+      [LOCATOR_STRATEGIES.CLASS_NAME]: 'className',
+      [LOCATOR_STRATEGIES.ACCESSIBILITY_ID]: 'accessibilityId',
+      [LOCATOR_STRATEGIES.PREDICATE]: 'iOSNsPredicateString',
+      [LOCATOR_STRATEGIES.CLASS_CHAIN]: 'iOSClassChain',
+      [LOCATOR_STRATEGIES.UIAUTOMATOR]: 'androidUIAutomator',
+      // [LOCATOR_STRATEGIES.TEXT]: 'not supported',
+      [LOCATOR_STRATEGIES.VIEWTAG]: 'androidViewTag',
+      [LOCATOR_STRATEGIES.DATAMATCHER]: 'androidDataMatcher',
+      [LOCATOR_STRATEGIES.VIEWMATCHER]: 'androidViewMatcher',
+      // [LOCATOR_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
     };
-    if (!suffixMap[strategy]) {
+    if (!byMap[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `WebElements ${localVar} = driver.findElements(AppiumBy.${
-        suffixMap[strategy]
-      }(${JSON.stringify(locator)}));`;
+      return `WebElements ${localVar} = driver.findElements(AppiumBy.${byMap[strategy]}(${JSON.stringify(locator)}));`;
     } else {
-      return `WebElement ${localVar} = driver.findElement(AppiumBy.${suffixMap[strategy]}(${JSON.stringify(
-        locator,
-      )}));`;
+      return `WebElement ${localVar} = driver.findElement(AppiumBy.${byMap[strategy]}(${JSON.stringify(locator)}));`;
     }
   }
 
