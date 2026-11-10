@@ -37,7 +37,7 @@ npm run dev:electron
     Development mode runs in a separate dev server, so all Inspector sessions are subject to
     [cross-origin resource sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) (CORS)
     issues. In order to avoid this, before requesting a new session in dev mode, ensure your Appium
-    server has been launched with the `--allow-cors` flag.
+    server has been launched with the server flag that allows CORS.
 
 Run tests:
 
