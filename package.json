@@ -98,7 +98,7 @@
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "6.3.0",
     "asyncbox": "6.6.1",
-    "electron": "45.2.3",
+    "electron": "45.3.1",
     "electron-builder": "26.18.0",
     "electron-vite": "6.0.0",
     "oxc-transform-react": "0.156.0",
