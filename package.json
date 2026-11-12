@@ -103,7 +103,7 @@
     "electron-vite": "6.0.0",
     "oxc-transform-react": "0.156.0",
     "rimraf": "6.1.4",
-    "vite": "8.3.6",
+    "vite": "8.3.7",
     "vite-plugin-electron-renderer": "1.0.0",
     "vitest": "5.1.0"
   },
