@@ -36,8 +36,10 @@ for that driver.
 
 !!! note
 
-    This functionality is only supported for the UiAutomator2 driver `6.6.0`+, on devices
-    running Android 11 or newer, as well as the XCUITest driver on iOS devices.
+    This functionality is only supported for:
+
+    * UiAutomator2 driver `6.6.0`+ sessions on devices running Android 11 or newer
+    * XCUITest driver `12.17.0`+ sessions with `platformName: iOS`
 
 ![Multi-Display Button](./assets/images/header/multi-display-button.png)
 
