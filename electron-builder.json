@@ -33,13 +33,7 @@
     ]
   },
   "win": {
-    "target": ["nsis", "zip"],
-    "azureSignOptions": {
-      "publisherName": "CN=OpenJS Foundation, O=OpenJS Foundation, L=San Francisco, S=California, C=US",
-      "endpoint": "https://eus.codesigning.azure.net/",
-      "codeSigningAccountName": "OpenJS-CodeSigning",
-      "certificateProfileName": "Appium"
-    }
+    "target": ["nsis", "zip"]
   },
   "nsis": {
     "allowToChangeInstallationDirectory": true,

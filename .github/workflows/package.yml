@@ -72,9 +72,14 @@ jobs:
       - name: Package app
         run: npx electron-builder build --x64 --arm64 --publish always
         env:
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          # once Azure signing works, replace the CSC_ vars with the AZURE_ vars
+          # and add back azureSignOptions into electron-builder.json
+          CSC_IDENTITY_AUTO_DISCOVERY: true
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          # AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          # AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          # AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload built packages
         uses: actions/upload-artifact@v7.0.2
