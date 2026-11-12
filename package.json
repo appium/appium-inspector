@@ -63,7 +63,7 @@
     "@ant-design/icons": "6.3.4",
     "@dnd-kit/react": "0.5.3",
     "@reduxjs/toolkit": "2.14.0",
-    "@tabler/icons-react": "3.50.0",
+    "@tabler/icons-react": "3.51.0",
     "@wdio/protocols": "9.31.5",
     "@xmldom/xmldom": "0.9.12",
     "antd": "6.7.0",
