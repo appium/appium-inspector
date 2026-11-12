@@ -87,48 +87,9 @@ winget install AppiumDevelopers.AppiumInspector
 
 It is recommended to download the `.dmg` installer file, as it supports [checking for updates](../menu-bar.md#update-checker).
 
-Opening the file will open a simple window, showing icons for the Inspector and the _Applications_ folder.
-Drag-and-drop the Inspector icon over the _Applications_ icon to extract the app.
-
-Since the app [is currently not notarized](https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution),
-macOS will show various security warnings to prevent you from opening the app for the first time.
-These can be handled as described below:
-
-??? info "Handling first-time warnings via command-line (any macOS)"
-
-    Simply open your Terminal app and run the following command:
-
-    ```
-    xattr -cr "/Applications/Appium Inspector.app"
-    ```
-
-    You should now be able to open the app with no warnings.
-
-??? info "Handling first-time warnings via GUI (macOS Sequoia or later)"
-
-    !!! note
-
-        If your Mac has an Apple chip, you can skip these steps by installing Appium Inspector v2024.9.1
-        (which should not show any warnings), then using [the update checker](../menu-bar.md#update-checker)
-        to upgrade to the most recent version.
-
-    1. Upon opening the app, the following warning will be shown. Click _Done_.
-       ![Appium Inspector Open Warning on macOS Sequoia](./assets/images/open-warning-sequoia.png)
-    2. Open macOS Settings -> _Privacy & Security_, then scroll down to the _Security_ section. You should
-    see the info text _"Appium Inspector" was blocked to protect your Mac._
-    3. Click _Open Anyway_.
-    4. A prompt should appear - click _Open Anyway_ again.
-    5. A prompt should appear, requiring you to confirm the action using administrator user credentials.
-    6. After confirming the action, the app should open.
-
-??? info "Handling first-time warnings via GUI (macOS Sonoma or earlier)"
-
-    1. Upon opening the app, the following warning will be shown. Click _OK_.
-       ![Appium Inspector Open Warning on macOS](./assets/images/open-warning-macos.png)
-    2. Open _Finder_ -> _Applications_ and find Appium Inspector.
-    3. _Control+Click_/click with two fingers on Appium Inspector and click _Open_.
-    4. A prompt should appear - click _Open_ again.
-    5. After accepting the prompt, the app should open.
+Opening the file will open a simple window, showing icons for the Inspector and the _Applications_
+folder. Drag-and-drop the Inspector icon over the _Applications_ icon to extract the app, and
+afterwards open it from that folder.
 
 ### Linux
 
