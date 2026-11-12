@@ -35,6 +35,14 @@ If the base URLs of the server and the Inspector differ (`localhost` is consider
 This will instruct the server to sent the correct CORS-related headers, and it should be possible to
 create a session.
 
+!!! note "Appium 4"
+
+    Since Appium 4, the server rejects state-changing requests (such as `POST /session`) that carry
+    an `Origin` header unless CORS is enabled. Browsers send this header even when the Inspector and
+    the server share the same base URL, so the CORS feature must be enabled for the plugin version
+    regardless of the URL used. Without it, session creation fails with the error
+    `Browser-origin requests are not allowed`.
+
 !!! note
 
     If you encounter this issue with a cloud provider, the fix must be applied on the provider side,
