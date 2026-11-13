@@ -30,11 +30,7 @@ extra:
 nav:
   - index.md
   - overview.md
-  - Quickstart:
-      - quickstart/index.md
-      - quickstart/requirements.md
-      - quickstart/installation.md
-      - quickstart/starting-a-session.md
+  - getting-started.md
   - menu-bar.md
   - Session Builder:
       - session-builder/index.md
@@ -54,3 +50,11 @@ nav:
       - session-inspector/session-info.md
   - troubleshooting.md
   - contributing.md
+
+plugins:
+  redirects:
+    redirect_maps:
+      'quickstart/index.md': 'getting-started.md'
+      'quickstart/installation.md': 'getting-started.md#installation'
+      'quickstart/requirements.md': 'getting-started.md#system-requirements'
+      'quickstart/starting-a-session.md': 'getting-started.md#creating-a-session'
