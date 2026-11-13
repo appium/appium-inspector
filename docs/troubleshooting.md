@@ -17,13 +17,13 @@ The reason for this issue is [cross-origin resource sharing](https://developer.m
 (CORS). The browser will prevent you from connecting to the Appium server if the base URLs of the
 Inspector and the Appium server do not match (the server typically uses `127.0.0.1`).
 
-If the base URLs of the server and the Inspector differ (`localhost` is considered different from `127.0.0.1`), CORS must be explicitly allowed when starting the server:
+If the base URLs of the server and the Inspector differ (`localhost` is considered different from
+`127.0.0.1`), CORS must be explicitly allowed when starting the server.
 
-=== "Appium 2-3"
-
-    ```sh
-    appium --use-plugins=inspector --allow-cors
-    ```
+Additionally, since Appium 4, the server rejects state-changing requests (such as `POST /session`)
+that carry an `Origin` header unless CORS is enabled. Browsers send this header even when the
+Inspector and the server share the same base URL, so the CORS feature must be enabled for the
+plugin version _regardless of the Inspector's URL_.
 
 === "Appium 4"
 
@@ -32,21 +32,16 @@ If the base URLs of the server and the Inspector differ (`localhost` is consider
     # alternatively: appium --use-plugins=inspector --relaxed-security
     ```
 
-This will instruct the server to sent the correct CORS-related headers, and it should be possible to
-create a session.
+=== "Appium 2-3"
 
-!!! note "Appium 4"
-
-    Since Appium 4, the server rejects state-changing requests (such as `POST /session`) that carry
-    an `Origin` header unless CORS is enabled. Browsers send this header even when the Inspector and
-    the server share the same base URL, so the CORS feature must be enabled for the plugin version
-    regardless of the URL used. Without it, session creation fails with the error
-    `Browser-origin requests are not allowed`.
+    ```sh
+    appium --use-plugins=inspector --allow-cors
+    ```
 
 !!! note
 
-    If you encounter this issue with a cloud provider, the fix must be applied on the provider side,
-    because they are the ones hosting the Appium server.
+    If you encounter this issue with a cloud provider, any changes must be applied on the provider
+    side, because they are the ones hosting the Appium server.
 
 ## Cannot see full source tree with XCUITest driver + React Native app
 
