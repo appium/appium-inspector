@@ -1849,14 +1849,15 @@
 <ol>
 <li>
 <p>Install the plugin:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">For Appium 3</label><label for="__tabbed_1_2">For Appium 2 (last compatible version)</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Appium 3+</label><label for="__tabbed_1_2">Appium 2</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>appium<span class="w"> </span>plugin<span class="w"> </span>install<span class="w"> </span>inspector
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>appium<span class="w"> </span>plugin<span class="w"> </span>install<span class="w"> </span>--source<span class="o">=</span>npm<span class="w"> </span>appium-inspector-plugin@2025.7.3
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 2025.7.3 is the last version compatible with Appium 2 installs</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>appium<span class="w"> </span>plugin<span class="w"> </span>install<span class="w"> </span>--source<span class="o">=</span>npm<span class="w"> </span>appium-inspector-plugin@2025.7.3
 </span></code></pre></div>
 </div>
 </div>
@@ -1864,12 +1865,25 @@
 </li>
 <li>
 <p>Launch the Appium server with the plugin activated:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>appium<span class="w"> </span>--use-plugins<span class="o">=</span>inspector
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Appium 4</label><label for="__tabbed_2_2">Appium 2-3</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>appium<span class="w"> </span>--use-plugins<span class="o">=</span>inspector<span class="w"> </span>--allow-insecure<span class="o">=</span><span class="s1">'*:cors'</span>
 </span></code></pre></div>
+<p>Appium 4 rejects state-changing requests sent from web pages unless CORS is enabled,
+which includes the Inspector page served by the plugin itself. See
+<a href="../../troubleshooting/#cannot-start-a-session-using-plugin-version">Troubleshooting</a>.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>appium<span class="w"> </span>--use-plugins<span class="o">=</span>inspector
+</span></code></pre></div>
+</div>
+</div>
+</div>
 </li>
 <li>
 <p>Open the Inspector URL in your web browser:
-    <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>http://127.0.0.1:4723/inspector
+    <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>http://127.0.0.1:4723/inspector
 </span></code></pre></div></p>
 </li>
 </ol>
@@ -1910,7 +1924,7 @@ to open it without any warnings.</p>
 <h4 id="winget">WinGet<a class="headerlink" href="#winget" title="Permanent link">&para;</a></h4>
 <p>It is possible to install the Inspector through WinGet. Please note that this method is only
 community-supported, and is not maintained by the Appium team.</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>winget<span class="w"> </span>install<span class="w"> </span>AppiumDevelopers.AppiumInspector
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>winget<span class="w"> </span>install<span class="w"> </span>AppiumDevelopers.AppiumInspector
 </span></code></pre></div>
 <h3 id="macos">macOS<a class="headerlink" href="#macos" title="Permanent link">&para;</a></h3>
 <p>It is recommended to download the <code>.dmg</code> installer file, as it supports <a href="../../menu-bar/#update-checker">checking for updates</a>.</p>
@@ -1920,10 +1934,10 @@ afterwards open it from that folder.</p>
 <h3 id="linux">Linux<a class="headerlink" href="#linux" title="Permanent link">&para;</a></h3>
 <p>It is recommended to download the <code>.AppImage</code> file, as it supports <a href="../../menu-bar/#update-checker">checking for updates</a>.</p>
 <p>In order to open the file, its executable flag needs to be set first:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>chmod a+x Appium-Inspector-&lt;version&gt;-linux-&lt;arch&gt;.AppImage
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>chmod a+x Appium-Inspector-&lt;version&gt;-linux-&lt;arch&gt;.AppImage
 </span></code></pre></div>
 <p>Afterwards, the app can be opened through the command line:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>./Appium-Inspector-&lt;version&gt;-linux-&lt;arch&gt;.AppImage
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>./Appium-Inspector-&lt;version&gt;-linux-&lt;arch&gt;.AppImage
 </span></code></pre></div>
 
 
@@ -1945,7 +1959,7 @@ afterwards open it from that folder.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 12, 2026 13:05:52 UTC"><span class="timeago" datetime="2026-11-12T13:05:52+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 12, 2026 13:05:52 UTC">2026-11-12</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 13, 2026 10:03:52 UTC"><span class="timeago" datetime="2026-11-13T10:03:52+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 13, 2026 10:03:52 UTC">2026-11-13</span>
   </span>
 
     
