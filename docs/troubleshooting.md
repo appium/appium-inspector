@@ -9,7 +9,7 @@ This page aims to act as a reference for issues that may be encountered when usi
 
 ## Cannot open the app after installation
 
-Please refer to the [Installation guide](./quickstart/installation.md).
+Please refer to the [Installation guide](./getting-started.md#installation).
 
 ## Cannot start a session using plugin version
 
