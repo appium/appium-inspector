@@ -11,25 +11,20 @@ Like all Appium plugins, the Inspector plugin can be installed and activated usi
 
 1.  Install the plugin:
 
-    === "For Appium 3 and 4"
+    === "Appium 3+"
 
         ```bash
         appium plugin install inspector
         ```
 
-    === "For Appium 2 (last compatible version)"
+    === "Appium 2"
 
         ```bash
+        # 2025.7.3 is the last version compatible with Appium 2 installs
         appium plugin install --source=npm appium-inspector-plugin@2025.7.3
         ```
 
 2.  Launch the Appium server with the plugin activated:
-
-    === "Appium 2-3"
-
-        ```bash
-        appium --use-plugins=inspector
-        ```
 
     === "Appium 4"
 
@@ -40,6 +35,12 @@ Like all Appium plugins, the Inspector plugin can be installed and activated usi
         Appium 4 rejects state-changing requests sent from web pages unless CORS is enabled,
         which includes the Inspector page served by the plugin itself. See
         [Troubleshooting](../troubleshooting.md#cannot-start-a-session-using-plugin-version).
+
+    === "Appium 2-3"
+
+        ```bash
+        appium --use-plugins=inspector
+        ```
 
 3.  Open the Inspector URL in your web browser:
     ```
