@@ -69,17 +69,20 @@ jobs:
         run: npm ci
       - name: Build Electron app
         run: npm run build:electron
+      # Log in to Azure via OIDC so Artifact Signing can authenticate
+      # through the Azure CLI credential
+      - name: Azure login
+        uses: azure/login@v3.1.0
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       - name: Package app
         run: npx electron-builder build --x64 --arm64 --publish always
+        # fail fast instead of hanging on an interactive login prompt
+        # if Azure authentication is not available
+        timeout-minutes: 30
         env:
-          # once Azure signing works, replace the CSC_ vars with the AZURE_ vars
-          # and add back azureSignOptions into electron-builder.json
-          CSC_IDENTITY_AUTO_DISCOVERY: true
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          # AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          # AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          # AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload built packages
         uses: actions/upload-artifact@v7.0.2
