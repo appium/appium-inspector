@@ -347,5 +347,15 @@
   "Use Template": "Use Template",
   "Select a Template": "Select a Template",
   "capabilityTemplateReplacement": "Select a template to preview its contents below. Applying a template replaces the current capabilities without changing any other session details.",
-  "capabilityTemplateSetup": "Refer to the driver documentation for more capability examples."
+  "capabilityTemplateSetup": "Refer to the driver documentation for more capability examples.",
+  "Open Snapshot": "Open Snapshot",
+  "Save Snapshot": "Save Snapshot",
+  "Close Snapshot": "Close Snapshot",
+  "Offline Snapshot": "Offline Snapshot",
+  "offlineSnapshotDescription": "Captured {{capturedAt}}. Browse the source and copy generated locators. Device actions and live locator validation are unavailable.",
+  "snapshotNeedsStillImage": "Switch to Screenshot API before saving a snapshot.",
+  "snapshotReadOnly": "This snapshot is read-only. Open a live session to send device commands.",
+  "snapshotImportError": "Could not open snapshot",
+  "snapshotExportError": "Could not save snapshot",
+  "snapshotSessionOpenError": "Wait for the session to finish starting, then close or detach from it before opening a snapshot."
 }

@@ -15,6 +15,7 @@ The user interface here can be divided into several groups:
 - [Header (buttons and more)](./header.md)
 - [The Screenshot panel](./screenshot.md)
 - [Source tab](./source.md)
+- [Offline snapshots](./snapshots.md)
 - [Commands tab](./commands.md)
 - [Gestures tab](./gestures.md)
 - [Recorder tab](./recorder.md)

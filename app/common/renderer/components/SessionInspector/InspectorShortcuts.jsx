@@ -9,6 +9,7 @@ import styles from './SessionInspector.module.css';
  */
 const InspectorShortcuts = ({
   children,
+  isSnapshot,
   applyClientMethod,
   showLocatorSearchModal,
   isRecording,
@@ -16,6 +17,9 @@ const InspectorShortcuts = ({
   pauseRecording,
 }) => {
   useEffect(() => {
+    if (isSnapshot) {
+      return;
+    }
     const actions = {
       KeyR: () => applyClientMethod({methodName: 'getPageSource'}),
       KeyF: showLocatorSearchModal,
@@ -24,7 +28,7 @@ const InspectorShortcuts = ({
     const onKeyDown = (event) => handleInspectorShortcut(event, actions);
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [applyClientMethod, showLocatorSearchModal, isRecording, startRecording, pauseRecording]);
+  }, [isSnapshot, applyClientMethod, showLocatorSearchModal, isRecording, startRecording, pauseRecording]);
 
   return <div className={styles.inspectorContainer}>{children}</div>;
 };
