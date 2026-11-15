@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import {AppiumProtocol, MJsonWProtocol, WebDriverProtocol} from '@wdio/protocols';
+import {AppiumProtocol, WebDriverProtocol} from '@wdio/protocols';
 
 import {AVOID_CMDS, BROWSER_PROPERTIES} from '../../constants/webdriver.js';
 import {getElementFromResponse} from './session-element.js';
@@ -80,7 +80,7 @@ export default class WDSessionDriver {
 
 // Walk through the webdriver protocol methods and add them to WDSessionDriver
 // (except for element methods and edge cases)
-for (const proto of [WebDriverProtocol, MJsonWProtocol, AppiumProtocol]) {
+for (const proto of [WebDriverProtocol, AppiumProtocol]) {
   for (const [, methods] of Object.entries(proto)) {
     for (const [, cmdData] of Object.entries(methods)) {
       const cmdName = cmdData.command;

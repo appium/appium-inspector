@@ -14,7 +14,7 @@ export const BROWSER_PROPERTIES = [
   'sessionId',
   'options',
   'commandList',
-  'isW3C',
+  // 'isW3C', // removed since WDIO v10
   'isChrome',
   'isFirefox',
   'isBidi',
