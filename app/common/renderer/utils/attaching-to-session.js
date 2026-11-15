@@ -63,7 +63,8 @@ const getKeySessionCaps = (caps, serverType) => {
 export const getSessionInfo = (session, serverType) => {
   let timestamp;
   if ('created' in session && session.created !== undefined) {
-    // Add the timestamp for Appium 3+ sessions
+    // Add the timestamp for standard Appium sessions.
+    // May not exist for Grid or TestMu AI-based sessions
     timestamp = new Date(session.created).toJSON();
   }
 

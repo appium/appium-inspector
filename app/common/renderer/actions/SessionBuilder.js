@@ -82,9 +82,7 @@ export const SESSION_UPLOAD_REQUESTED = 'SESSION_UPLOAD_REQUESTED';
 export const SESSION_UPLOAD_DONE = 'SESSION_UPLOAD_DONE';
 
 const CAPS_NEW_COMMAND = 'appium:newCommandTimeout';
-const CAPS_CONNECT_HARDWARE_KEYBOARD = 'appium:connectHardwareKeyboard';
 const CAPS_NATIVE_WEB_SCREENSHOT = 'appium:nativeWebScreenshot';
-const CAPS_ENSURE_WEBVIEW_HAVE_PAGES = 'appium:ensureWebviewsHavePages';
 const CAPS_INCLUDE_SAFARI_IN_WEBVIEWS = 'appium:includeSafariInWebviews';
 
 const AUTO_START_URL_PARAM = '1'; // what should be passed in to ?autoStart= to turn it on
@@ -319,12 +317,6 @@ export function newSession(originalCaps, attachSessId = null) {
       sessionCaps[CAPS_NEW_COMMAND] = NEW_COMMAND_TIMEOUT_SEC;
     }
 
-    // If someone didn't specify connectHardwareKeyboard, set it to true by
-    // default
-    if (sessionCaps[CAPS_CONNECT_HARDWARE_KEYBOARD] === undefined) {
-      sessionCaps[CAPS_CONNECT_HARDWARE_KEYBOARD] = true;
-    }
-
     let driver;
     try {
       if (attachSessId) {
@@ -356,10 +348,8 @@ export function newSession(originalCaps, attachSessId = null) {
             throw new Error(i18n.t('attachSessionNotRunning', {attachSessId}), {cause: err});
           }
         }
-        // Chrome MJSONWP mode returns "platform" instead of "platformName"
-        const platformName = attachedSessionCaps.platformName || attachedSessionCaps.platform;
-        serverOpts.isIOS = Boolean(platformName.match(/iOS/i));
-        serverOpts.isAndroid = Boolean(platformName.match(/Android/i));
+        serverOpts.isIOS = Boolean(attachedSessionCaps.platformName.match(/iOS/i));
+        serverOpts.isAndroid = Boolean(attachedSessionCaps.platformName.match(/Android/i));
         driver = WDSessionStarter.attachToSession(attachSessId, serverOpts, attachedSessionCaps);
       } else {
         driver = await WDSessionStarter.newSession(serverOpts, sessionCaps);
@@ -1057,17 +1047,15 @@ async function retrieveVendorProperties({server, serverType, sessionCaps}) {
 }
 
 async function fetchAllSessions(baseUrl, headers) {
-  const appiumSessionsEndpoint = `${baseUrl}appium/sessions`; // Appium 3+
-  const oldAppiumSessionsEndpoint = `${baseUrl}sessions`; // Appium 1-2
+  const appiumSessionsEndpoint = `${baseUrl}appium/sessions`;
   const seleniumSessionsEndpoint = `${baseUrl}status`;
 
-  const [appiumSessions, oldAppiumSessions, seleniumSessions] = await Promise.all([
+  const [appiumSessions, seleniumSessions] = await Promise.all([
     fetchSessionsWithFallback(appiumSessionsEndpoint, headers),
-    fetchSessionsWithFallback(oldAppiumSessionsEndpoint, headers),
     fetchSessionsWithFallback(seleniumSessionsEndpoint, headers, formatSeleniumGridSessions),
   ]);
 
-  return [...appiumSessions, ...oldAppiumSessions, ...seleniumSessions];
+  return [...appiumSessions, ...seleniumSessions];
 }
 
 /**
@@ -1105,8 +1093,6 @@ async function fetchTestMuAISessions(host, headers) {
 function addCustomCaps(caps) {
   const {platformName = ''} = caps;
   const androidCustomCaps = {};
-  // @TODO: remove when this is defaulted in the newest Appium 1.8.x release
-  androidCustomCaps[CAPS_ENSURE_WEBVIEW_HAVE_PAGES] = true;
   // Make sure the screenshot is taken of the whole screen when the ChromeDriver is used
   androidCustomCaps[CAPS_NATIVE_WEB_SCREENSHOT] = true;
 
