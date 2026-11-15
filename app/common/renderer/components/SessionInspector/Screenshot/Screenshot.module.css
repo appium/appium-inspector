@@ -49,3 +49,7 @@
   flex-direction: column;
   height: 100%;
 }
+
+.screenshotImg {
+  user-select: none;
+}

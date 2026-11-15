@@ -156,7 +156,7 @@ const ScreenshotImgWithOverlays = (props) => {
           {screenshotInteractionMode !== SELECT && screenshotInteractionMode !== TAP_ELEMENT && (
             <CoordinatesContainer x={x} y={y} />
           )}
-          <img src={screenSrc} id="screenshot" ref={imageElRef} />
+          <img className={styles.screenshotImg} draggable={false} src={screenSrc} id="screenshot" ref={imageElRef} />
           {(screenshotInteractionMode === SELECT || screenshotInteractionMode === TAP_ELEMENT) && (
             <ElementOverlays {...props} />
           )}
