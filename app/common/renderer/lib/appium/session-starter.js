@@ -37,8 +37,7 @@ export default class WDSessionStarter {
     if (!sessionId) {
       throw new Error("Can't attach to a session without a session id");
     }
-    const isW3C = true;
-    const safeServerOpts = {sessionId, isW3C, ...DEFAULT_SERVER_PROPS, ...serverOpts, capabilities};
+    const safeServerOpts = {sessionId, ...DEFAULT_SERVER_PROPS, ...serverOpts, capabilities};
     const sessionClient = webdriver.attachToSession(safeServerOpts);
     return new WDSessionDriver(sessionClient);
   }

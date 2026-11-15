@@ -51,7 +51,7 @@ versions depending on your target Appium server version:
 | --- | --- |
 | Appium 4 | >= 2026.11.5 |
 | Appium 3 | >= 2025.3.1 |
-| Appium 2 | >= 2021.8.5 |
+| Appium 2 | 2021.8.5 - 2026.11.6 |
 | Appium 1 | <= 2024.12.1 |
 
 If setting up your own server, make sure to also install the **Appium driver(s)** for your target

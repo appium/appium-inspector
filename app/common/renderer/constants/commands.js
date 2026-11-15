@@ -29,7 +29,7 @@ export const APPIUM_TO_WD_COMMANDS = {
   createNewWindow: 'createWindow',
   getWindowHandles: 'getWindowHandles',
   printPage: 'printPage',
-  setFrame: 'switchToFrame',
+  setFrame: 'switchToFrame', // internal-only since WDIO v10
   switchToParentFrame: 'switchToParentFrame',
   getWindowRect: 'getWindowRect',
   setWindowRect: 'setWindowRect',
@@ -53,7 +53,7 @@ export const APPIUM_TO_WD_COMMANDS = {
   getName: 'getElementTagName',
   getElementRect: 'getElementRect',
   elementEnabled: 'isElementEnabled',
-  click: 'elementClick', // also WDIO touchClick (removed in Appium 3)
+  click: 'elementClick',
   clear: 'elementClear',
   setValue: 'elementSendKeys',
   getPageSource: 'getPageSource',
@@ -89,10 +89,6 @@ export const APPIUM_TO_WD_COMMANDS = {
   removeAllAuthCredentials: 'removeAllCredentials',
   removeAuthCredential: 'removeCredential',
   setUserAuthVerified: 'setUserVerified',
-  // WDIO MJSONWP commands
-  // https://webdriver.io/docs/api/mjsonwp
-  getNetworkConnection: 'getNetworkConnection',
-  setNetworkConnection: 'setNetworkConnection',
   // WDIO Appium protocol commands (includes some JSONWP/MJSONWP)
   // https://webdriver.io/docs/api/appium
   getLog: 'getLogs',
@@ -104,6 +100,8 @@ export const APPIUM_TO_WD_COMMANDS = {
   listCommands: 'getAppiumCommands',
   listExtensions: 'getAppiumExtensions',
   getAppiumSessionCapabilities: 'getAppiumSessionCapabilities',
+  startRecordingScreen: 'startRecordingScreen', // driver-only
+  stopRecordingScreen: 'stopRecordingScreen', // driver-only
   setRotation: 'rotateDevice',
   installApp: 'installApp',
   activateApp: 'activateApp',
@@ -132,62 +130,6 @@ export const APPIUM_TO_WD_COMMANDS = {
   setOrientation: 'setOrientation',
   setGeoLocation: 'setGeoLocation',
   getGeoLocation: 'getGeoLocation',
-  // WDIO Appium protocol commands removed in Appium 3
-  mobileShake: 'appiumShake',
-  lock: 'appiumLock',
-  unlock: 'appiumUnlock',
-  isLocked: 'appiumIsLocked',
-  startRecordingScreen: 'startRecordingScreen', // moved to drivers
-  stopRecordingScreen: 'stopRecordingScreen', // moved to drivers
-  getPerformanceDataTypes: 'appiumGetPerformanceDataTypes',
-  getPerformanceData: 'appiumGetPerformanceData',
-  pressKeyCode: 'appiumPressKeyCode',
-  longPressKeyCode: 'appiumLongPressKeyCode',
-  keyevent: 'appiumSendKeyEvent',
-  getCurrentActivity: 'appiumGetCurrentActivity',
-  getCurrentPackage: 'appiumGetCurrentPackage',
-  toggleFlightMode: 'appiumToggleAirplaneMode',
-  toggleData: 'appiumToggleData',
-  toggleWiFi: 'appiumToggleWiFi',
-  toggleLocationServices: 'appiumToggleLocationServices',
-  networkSpeed: 'appiumToggleNetworkSpeed',
-  openNotifications: 'appiumOpenNotifications',
-  startActivity: 'appiumStartActivity',
-  getSystemBars: 'appiumGetSystemBars',
-  getDisplayDensity: 'appiumGetDisplayDensity',
-  touchId: 'appiumTouchId',
-  toggleEnrollTouchId: 'appiumToggleEnrollTouchId',
-  launchApp: 'appiumLaunchApp',
-  closeApp: 'appiumCloseApp',
-  background: 'appiumBackground',
-  endCoverage: 'endCoverage',
-  getStrings: 'appiumGetStrings',
-  setValueImmediate: 'setValueImmediate',
-  replaceValue: 'replaceValue',
-  receiveAsyncResponse: 'receiveAsyncResponse',
-  gsmCall: 'appiumGsmCall',
-  gsmSignal: 'appiumGsmSignal',
-  powerCapacity: 'appiumPowerCapacity',
-  powerAC: 'appiumPowerAC',
-  gsmVoice: 'appiumGsmVoice',
-  sendSMS: 'appiumSendSms',
-  fingerprint: 'appiumFingerPrint',
-  setClipboard: 'appiumSetClipboard',
-  getClipboard: 'appiumGetClipboard',
-  performTouch: 'touchPerform',
-  performMultiAction: 'multiTouchPerform',
-  implicitWait: 'implicitWait',
-  getLocationInView: 'getLocationInView',
-  keys: 'sendKeys',
-  asyncScriptTimeout: 'asyncScriptTimeout',
-  submit: 'submit',
-  getSize: 'getElementSize',
-  getLocation: 'getElementLocation',
-  touchDown: 'touchDown',
-  touchUp: 'touchUp',
-  touchMove: 'touchMove',
-  touchLongClick: 'touchLongClick',
-  flick: 'touchFlick',
 };
 
 /**
@@ -226,13 +168,6 @@ export const COMMANDS_WITH_MISMATCHED_PARAMS = {
     {name: 'pageRanges', required: false},
   ],
   getDeviceTime: [], // only GET endpoint is supported
-  stopRecordingScreen: [
-    // options separated into components
-    {name: 'remotePath', required: false},
-    {name: 'username', required: false},
-    {name: 'password', required: false},
-    {name: 'method', required: false},
-  ],
 };
 
 /**
