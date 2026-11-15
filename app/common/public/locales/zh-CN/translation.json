@@ -61,7 +61,7 @@
   "frameworkNotSupported": "框架 \"{{framework}}\" 不受支持",
   "findElementFailure": "找不到 '{{methodName}}' 的元素。请刷新页面并重试。",
   "Could not start session": "无法启动会话",
-  "couldNotConnect": "无法连接到 Appium 服务器： URL '{{url}}'. 请检查服务器是否正在运行 并且 URL 是否正确 (正确的 URLs 可以在Appium的服务器日志开头中找到). 如果你使用的是Inspector的web版本，确保服务器以'--allow-cors'选项启动",
+  "couldNotConnect": "Could not connect to Appium server URL '{{url}}'. Please check if the server is running and the URL is correct (valid URLs can be found at the start of the Appium server log). If you are using the Inspector's browser version, ensure the server is configured to allow CORS.",
   "Invalid URL:": "无效链接",
   "experitestAccessKey": "AccessKey",
   "experitestUrl": "Url",

@@ -61,7 +61,7 @@
   "frameworkNotSupported": "ఫ్రేమ్‌వర్క్ '{{framework}}'కి మద్దతు లేదు",
   "findElementFailure": "'{{methodName}}' కోసం మూలకాన్ని కనుగొనడంలో విఫలమైంది. దయచేసి పేజీని రిఫ్రెష్ చేసి, మళ్లీ ప్రయత్నించండి.",
   "Could not start session": "సెషన్‌ను ప్రారంభించడం సాధ్యపడలేదు",
-  "couldNotConnect": "Could not connect to Appium server URL '{{url}}'. Please check if the server is running and the URL is correct (valid URLs can be found at the start of the Appium server log). If you are using the Inspector's browser version, ensure the server has been started with '--allow-cors'.",
+  "couldNotConnect": "Could not connect to Appium server URL '{{url}}'. Please check if the server is running and the URL is correct (valid URLs can be found at the start of the Appium server log). If you are using the Inspector's browser version, ensure the server is configured to allow CORS.",
   "Invalid URL:": "Invalid URL:",
   "experitestAccessKey": "Experitest యాక్సెస్‌కీ",
   "experitestUrl": "Experitest యొక్క Url",

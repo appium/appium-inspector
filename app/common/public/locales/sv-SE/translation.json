@@ -61,7 +61,7 @@
   "frameworkNotSupported": "Ramverket '{{framework}}' stöds inte",
   "findElementFailure": "Det gick inte att hitta elementet för '{{methodName}}'. Uppdatera sidan och försök igen.",
   "Could not start session": "Det gick inte att starta sessionen",
-  "couldNotConnect": "Det gick inte att ansluta till Appium-serverns URL '{{url}}'. Kontrollera att servern körs och att URL-adressen är korrekt (giltiga URL-adresser finns i början av Appium-serverns logg). Om du använder Inspectors webbläsarversion, se till att servern har startats med '--allow-cors'.",
+  "couldNotConnect": "Could not connect to Appium server URL '{{url}}'. Please check if the server is running and the URL is correct (valid URLs can be found at the start of the Appium server log). If you are using the Inspector's browser version, ensure the server is configured to allow CORS.",
   "Invalid URL:": "Ogiltig URL:",
   "experitestAccessKey": "Experitest-åtkomstnyckel",
   "experitestUrl": "Experitest-Url",

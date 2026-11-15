@@ -61,7 +61,7 @@
   "frameworkNotSupported": "Framework '{{framework}}' không được hỗ trợ",
   "findElementFailure": "Không tìm thấy phần tử cho '{{methodName}}'. Vui lòng làm mới trang và thử lại.",
   "Could not start session": "Không thể bắt đầu phiên",
-  "couldNotConnect": "Không thể kết nối tới URL máy chủ Appium '{{url}}'. Vui lòng kiểm tra xem máy chủ có đang chạy và URL có chính xác không (URL hợp lệ có thể được tìm thấy ở đầu nhật ký máy chủ Appium). Nếu bạn đang sử dụng phiên bản trình duyệt của Inspector, hãy đảm bảo máy chủ đã được khởi động với '--allow-cors'.",
+  "couldNotConnect": "Could not connect to Appium server URL '{{url}}'. Please check if the server is running and the URL is correct (valid URLs can be found at the start of the Appium server log). If you are using the Inspector's browser version, ensure the server is configured to allow CORS.",
   "Invalid URL:": "URL không hợp lệ:",
   "experitestAccessKey": "Experitest AccessKey",
   "experitestUrl": "Experitest Url",

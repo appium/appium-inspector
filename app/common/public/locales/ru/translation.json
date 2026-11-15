@@ -61,7 +61,7 @@
   "frameworkNotSupported": "Фреймворк '{{framework}}' не поддерживается",
   "findElementFailure": "Не удалось найти элемент для '{{methodName}}'. Пожалуйста, обновите страницу и повторите попытку.",
   "Could not start session": "Не удалось запустить сессию",
-  "couldNotConnect": "Не удалось подключиться к URL сервера Appium '{{url}}'. Пожалуйста, проверьте, работает ли сервер и правилен ли URL. Корректные адреса можно найти в начале журнала сервера Appium. Если используется версия браузера Inspector, убедитесь, что сервер запущен с флагом --allow-cors.",
+  "couldNotConnect": "Could not connect to Appium server URL '{{url}}'. Please check if the server is running and the URL is correct (valid URLs can be found at the start of the Appium server log). If you are using the Inspector's browser version, ensure the server is configured to allow CORS.",
   "Invalid URL:": "Негодный URL:",
   "experitestAccessKey": "Ключ доступа к Experitest",
   "experitestUrl": "URL Experitest",

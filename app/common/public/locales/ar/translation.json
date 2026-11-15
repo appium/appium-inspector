@@ -61,7 +61,7 @@
   "frameworkNotSupported": "الإطار '{{framework}}' غير مدعوم",
   "findElementFailure": "تعذر العثور على عنصر لـ '{{methodName}}'. يُرجى تحديث الصفحة والمحاولة مرة أخرى.",
   "Could not start session": "تعذر بَدْء الجلسة",
-  "couldNotConnect": "تعذر الاتصال بعنوان URL لخادم Appium '{{url}}'. يُرجى التحقق من أن الخادم قيد التشغيل وأن عنوان URL صحيح (يمكن العثور على عناوين URL الصالحة في بداية سجل خادم Appium). إذا كنت تستخدم إصدار المتصفح من Inspector، فتأكد من تشغيل الخادم باستخدام '--allow-cors'.",
+  "couldNotConnect": "Could not connect to Appium server URL '{{url}}'. Please check if the server is running and the URL is correct (valid URLs can be found at the start of the Appium server log). If you are using the Inspector's browser version, ensure the server is configured to allow CORS.",
   "Invalid URL:": "عنوان URL غير صالح:",
   "experitestAccessKey": "مفتاح وصول Experitest",
   "experitestUrl": "عنوان Url لـ Experitest",

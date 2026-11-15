@@ -61,7 +61,7 @@
   "frameworkNotSupported": "'{{framework}}' çerçevesi desteklenmiyor",
   "findElementFailure": "'{{methodName}}' için öğe bulunamadı. Lütfen sayfayı yenileyip tekrar deneyin.",
   "Could not start session": "Oturum başlatılamadı",
-  "couldNotConnect": "Appium sunucu URL'sine '{{url}}' bağlanılamadı. Lütfen sunucunun çalışır durumda olduğunu ve URL'nin doğru olduğunu kontrol edin (geçerli URL'ler Appium sunucu günlüğünün başında bulunabilir). Inspector'ın tarayıcı sürümünü kullanıyorsanız, sunucunun '--allow-cors' ile başlatıldığından emin olun.",
+  "couldNotConnect": "Could not connect to Appium server URL '{{url}}'. Please check if the server is running and the URL is correct (valid URLs can be found at the start of the Appium server log). If you are using the Inspector's browser version, ensure the server is configured to allow CORS.",
   "Invalid URL:": "Geçersiz URL:",
   "experitestAccessKey": "Experitest AccessKey",
   "experitestUrl": "Experitest Url",
