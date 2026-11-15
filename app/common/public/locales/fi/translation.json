@@ -61,7 +61,7 @@
   "frameworkNotSupported": "Viitekehystä '{{framework}}' ei tueta",
   "findElementFailure": "Elementin etsiminen epäonnistui metodille '{{methodName}}'. Päivitä sivu ja yritä uudelleen.",
   "Could not start session": "Istuntoa ei voitu käynnistää",
-  "couldNotConnect": "Appium-palvelimen URL-osoitteeseen '{{url}}' ei voitu muodostaa yhteyttä. Tarkista, että palvelin on käynnissä ja URL-osoite on oikea (kelvolliset URL-osoitteet löytyvät Appium-palvelimen lokin alusta). Jos käytössä on Inspectorin selainversio, varmista, että palvelin on käynnistetty valinnalla '--allow-cors'.",
+  "couldNotConnect": "Could not connect to Appium server URL '{{url}}'. Please check if the server is running and the URL is correct (valid URLs can be found at the start of the Appium server log). If you are using the Inspector's browser version, ensure the server is configured to allow CORS.",
   "Invalid URL:": "Virheellinen URL-osoite:",
   "experitestAccessKey": "Experitest-käyttöavain",
   "experitestUrl": "Experitest-osoite",

@@ -61,7 +61,7 @@
   "frameworkNotSupported": "'{{framework}}' keretrendszer nem támogatott",
   "findElementFailure": "'{{methodName}}': nem található elem. Frissítse az oldalt, majd próbálja újra.",
   "Could not start session": "Munkamenet elindítása nem lehetséges",
-  "couldNotConnect": "Nem sikerült csatlakozni az Appium szerver URL-jéhez: '{{url}}'. Ellenőrizze, hogy a szerver fut-e, és az URL helyes-e (az érvényes URL-ek az Appium szerver naplójának elején találhatók). Az Inspector böngészős verziójának használatakor győződjön meg arról, hogy a szerver az '--allow-cors' kapcsolóval lett elindítva.",
+  "couldNotConnect": "Could not connect to Appium server URL '{{url}}'. Please check if the server is running and the URL is correct (valid URLs can be found at the start of the Appium server log). If you are using the Inspector's browser version, ensure the server is configured to allow CORS.",
   "Invalid URL:": "Érvénytelen URL:",
   "experitestAccessKey": "Experitest hozzáférési kulcs",
   "experitestUrl": "Experitest Url",

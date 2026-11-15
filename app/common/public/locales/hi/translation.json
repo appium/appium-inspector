@@ -61,7 +61,7 @@
   "frameworkNotSupported": "फ्रेमवर्क '{{framework}}' समर्थित नहीं है",
   "findElementFailure": "{{methodName}} के लिए तत्व खोजने में विफल। कृपया पृष्ठ ताज़ा करें और पुनः प्रयास करें।",
   "Could not start session": "सत्र शुरू नहीं हो सका",
-  "couldNotConnect": "Appium सर्वर URL '{{url}}' से कनेक्ट नहीं हो सका। कृपया जांचें कि सर्वर चल रहा है और URL सही है (मान्य URL Appium सर्वर लॉग की शुरुआत में मिल सकते हैं)। यदि आप इंस्पेक्टर के ब्राउज़र वर्शन का उपयोग कर रहे हैं, तो सुनिश्चित करें कि सर्वर '--allow-cors' के साथ शुरू किया गया है।",
+  "couldNotConnect": "Could not connect to Appium server URL '{{url}}'. Please check if the server is running and the URL is correct (valid URLs can be found at the start of the Appium server log). If you are using the Inspector's browser version, ensure the server is configured to allow CORS.",
   "Invalid URL:": "अमान्य URL:",
   "experitestAccessKey": "Experitest AccessKey",
   "experitestUrl": "Experitest Url",

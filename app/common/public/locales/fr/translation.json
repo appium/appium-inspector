@@ -61,7 +61,7 @@
   "frameworkNotSupported": "Framework '{{framework}}' non pris en charge",
   "findElementFailure": "Impossible de trouver l'élément correspondant à '{{methodName}}'. Veuillez rafraîchir la page et réessayer.",
   "Could not start session": "Impossible de démarrer la session",
-  "couldNotConnect": "Impossible de se connecter à l'URL du serveur Appium '{{url}}'. Veuillez vérifier que le serveur est en cours d'exécution et que l'URL est correcte (les URL valides se trouvent au début du journal du serveur Appium). Si vous utilisez la version navigateur de l'Inspecteur, assurez-vous que le serveur a été démarré avec '--allow-cors'.",
+  "couldNotConnect": "Could not connect to Appium server URL '{{url}}'. Please check if the server is running and the URL is correct (valid URLs can be found at the start of the Appium server log). If you are using the Inspector's browser version, ensure the server is configured to allow CORS.",
   "Invalid URL:": "URL invalide :",
   "experitestAccessKey": "Experitest AccessKey",
   "experitestUrl": "Experitest Url",

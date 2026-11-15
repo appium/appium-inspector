@@ -61,7 +61,7 @@
   "frameworkNotSupported": "フレームワーク '{{framework}}' がサポートされていません",
   "findElementFailure": "'{{methodName}}' の要素検索に失敗しました。ページを更新しやり直してください。",
   "Could not start session": "セッションを開始できませんでした。",
-  "couldNotConnect": "'{{url}}' に接続できませんでした。 Appiumサーバーが起動、URLが正しいかどうかを確認してください(Appiumサーバーログの先頭に有効なURLが表示されています）。 Browser版Appium Inspectorを使用している場合は、サーバーが '--allow-cors' で起動されていることを確認してください。",
+  "couldNotConnect": "Could not connect to Appium server URL '{{url}}'. Please check if the server is running and the URL is correct (valid URLs can be found at the start of the Appium server log). If you are using the Inspector's browser version, ensure the server is configured to allow CORS.",
   "Invalid URL:": "無効なURLです：",
   "experitestAccessKey": "ExperitestのAccessKey",
   "experitestUrl": "ExperitestのURL",
