@@ -1,7 +1,7 @@
-import {Alert, Button, Input, Row, Space, Table} from 'antd';
+import {Button, Input, Row, Space, Table} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import {ALERT, BUTTON} from '../../../../constants/antd-types.js';
+import {BUTTON} from '../../../../constants/antd-types.js';
 import {DRIVERS} from '../../../../constants/common.js';
 import {
   NATIVE_APP,
@@ -63,16 +63,6 @@ const LocatorSearchFormStrategySelector = ({
     ))}
   </Row>
 );
-
-/**
- * Info message shown when the session has no defined automationName,
- * meaning no driver-specific locator strategies are available.
- */
-const LocatorSearchFormMissingAutomationNameMessage = ({automationName}) => {
-  const {t} = useTranslation();
-
-  return !automationName && <Alert title={t('missingAutomationNameForStrategies')} type={ALERT.INFO} showIcon />;
-};
 
 /**
  * Selector input field for locator search.
@@ -156,7 +146,6 @@ const LocatorSearchForm = ({
         locatorSearchStrategy={locatorSearchStrategy}
         setLocatorSearchStrategy={setLocatorSearchStrategy}
       />
-      <LocatorSearchFormMissingAutomationNameMessage automationName={automationName} />
       {t('selector')}
       <LocatorSearchFormValueInputField
         locatorSearchValue={locatorSearchValue}

@@ -1047,7 +1047,7 @@ async function retrieveVendorProperties({server, serverType, sessionCaps}) {
 }
 
 async function fetchAllSessions(baseUrl, headers) {
-  const appiumSessionsEndpoint = `${baseUrl}appium/sessions`; // Appium 3+
+  const appiumSessionsEndpoint = `${baseUrl}appium/sessions`;
   const seleniumSessionsEndpoint = `${baseUrl}status`;
 
   const [appiumSessions, seleniumSessions] = await Promise.all([

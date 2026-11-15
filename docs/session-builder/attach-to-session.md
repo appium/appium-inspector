@@ -17,16 +17,15 @@ There are 2 ways of attaching to a session:
 
 !!! warning
 
-    Discovering sessions from servers running Appium 3 or later requires the server to have enabled
-    the `session_discovery` [insecure feature](https://appium.io/docs/en/latest/guides/security/).
-    Note that, even if session discovery is disabled, it is still possible to manually attach to a
-    session using its ID.
+    Discovering sessions requires the server to have enabled the `session_discovery`
+    [insecure feature](https://appium.io/docs/en/latest/guides/security/). Note that manually
+    attaching to a session using its ID is supported even when session discovery is disabled.
 
 Session discovery is run automatically upon switching to the Attach to Session tab, but there is
 also a dedicated button for refreshing the list of discovered sessions.
 
 If the server has no active sessions, or the discovery process failed (for example, if the target
-server is running Appium 3 or later with session discovery disabled), an empty indicator is shown:
+server has session discovery disabled), an empty indicator is shown:
 
 ![No Found Sessions](assets/images/attach-to-session/no-found-sessions.png)
 
