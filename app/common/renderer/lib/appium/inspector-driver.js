@@ -476,18 +476,9 @@ export default class InspectorDriver {
         webviewLeftOffset = x;
       } else {
         // fallback to default top offset value if element retrieval failed
-        try {
-          // mobile:getSystemBars exists since UiA2 2.21 / Espresso 2.23 (Appium 2)
-          const systemBars = await this.driver.executeScript('mobile:getSystemBars', []);
-          webviewTopOffset = systemBars.statusBar.height;
-        } catch {
-          try {
-            // to minimize the endpoint call which gets error in newer chromedriver.
-            const sessionDetails = await this.driver.getSession();
-            // in case driver does not support mobile:getSystemBars
-            webviewTopOffset = sessionDetails.viewportRect.top;
-          } catch {}
-        }
+        // mobile:getSystemBars exists since UiA2 2.21 / Espresso 2.23 (Appium 2)
+        const systemBars = await this.driver.executeScript('mobile:getSystemBars', []);
+        webviewTopOffset = systemBars.statusBar.height;
       }
     } else if (automationName === DRIVERS.XCUITEST) {
       // mobile:activeAppInfo exists since XCUITest 2.126.0 (pre-Appium 2)
