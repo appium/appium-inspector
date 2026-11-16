@@ -93,7 +93,6 @@ export const APPIUM_TO_WD_COMMANDS = {
   // https://webdriver.io/docs/api/appium
   getLog: 'getLogs',
   getLogTypes: 'getLogTypes',
-  getSession: 'getSession',
   getCurrentContext: 'getAppiumContext',
   getContexts: 'getAppiumContexts',
   setContext: 'switchAppiumContext',
@@ -121,13 +120,17 @@ export const APPIUM_TO_WD_COMMANDS = {
   getLogEvents: 'getEvents',
   logCustomEvent: 'logEvent',
   compareImages: 'compareImages', // images-plugin
-  availableIMEEngines: 'availableIMEEngines',
-  getActiveIMEEngine: 'getActiveIMEEngine',
-  isIMEActivated: 'isIMEActivated',
-  deactivateIMEEngine: 'deactivateIMEEngine',
-  activateIMEEngine: 'activateIMEEngine',
   getOrientation: 'getOrientation',
   setOrientation: 'setOrientation',
+  // WDIO Appium protocol commands removed in Appium 4
+  // (others were already removed in WDIO v10)
+  // https://webdriver.io/docs/api/appium
+  getSession: 'getSession',
+  availableIMEEngines: 'availableIMEEngines', // driver-only since Appium 4
+  getActiveIMEEngine: 'getActiveIMEEngine', // driver-only since Appium 4
+  isIMEActivated: 'isIMEActivated', // driver-only since Appium 4
+  deactivateIMEEngine: 'deactivateIMEEngine', // driver-only since Appium 4
+  activateIMEEngine: 'activateIMEEngine', // driver-only since Appium 4
   setGeoLocation: 'setGeoLocation',
   getGeoLocation: 'getGeoLocation',
 };

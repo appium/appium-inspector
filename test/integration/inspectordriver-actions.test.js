@@ -119,16 +119,16 @@ describe('InspectorDriver actions', function () {
         expect(screenshot).toBeTruthy();
       }
     });
-    it('should call "setGeolocation" method and get result plus source and screenshot', async function () {
+    it('should call "updateSettings" method and get result plus source and screenshot', async function () {
       const res = await inspectorDriver.executeMethod({
-        methodName: 'setGeoLocation',
-        args: [{latitude: 100, longitude: 200, altitude: 0}],
+        methodName: 'updateSettings',
+        args: [{first: 100, second: 200}],
       });
       expect(res.screenshot).toBeTruthy();
       expect(res.source).toBeTruthy();
-      const getGeoLocationRes = await inspectorDriver.executeMethod({methodName: 'getGeoLocation'});
-      expect(getGeoLocationRes.commandRes.latitude).toBe(100);
-      expect(getGeoLocationRes.commandRes.longitude).toBe(200);
+      const getSettingsRes = await inspectorDriver.executeMethod({methodName: 'getSettings'});
+      expect(getSettingsRes.commandRes.first).toBe(100);
+      expect(getSettingsRes.commandRes.second).toBe(200);
     });
   });
   describe('parseAndroidContexts methods', function () {
