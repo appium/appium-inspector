@@ -19,10 +19,10 @@ standalone desktop app, or Appium server plugin.
 
 === "Appium Server Plugin"
 
+    - Node.js `^22.23.4 || ^24.22.1 || >=26.12.1`
     - Appium
-    - Node.js `^20.19.0 || ^22.12.0 || >=24.0.0`
     - Chrome/Edge/Firefox/Safari, released in 2022 or later
-    - Around 9MB of free space
+    - Around 10MB of free space
 
     Make sure to use a plugin version that is compatible with your Appium server version. This only
     refers to the Appium versions under which the plugin _can be installed_, _not_ the Appium
