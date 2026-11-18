@@ -27,36 +27,43 @@ const HeaderButtons = (props) => {
     toggleAutoSessionRestart,
     featureCaps,
     sessionSettings,
+    isSnapshot,
   } = props;
 
   return (
     <div className={styles.headerButtons}>
       <Space size={['middle', 'small']} wrap className={styles.headerButtonsSpace}>
-        <DeviceControlsGroup
-          featureCaps={featureCaps}
-          applyClientMethod={applyClientMethod}
-          executeDriverCommand={executeDriverCommand}
-        />
-        <DriverControlsGroup
-          featureCaps={featureCaps}
-          sessionSettings={sessionSettings}
-          applyClientMethod={applyClientMethod}
-        />
-        <ContextControlsGroup
-          selectAppMode={selectAppMode}
-          appMode={appMode}
-          contexts={contexts}
-          currentContext={currentContext}
-          setContext={setContext}
-          applyClientMethod={applyClientMethod}
-          openLink={openLink}
-        />
+        {!isSnapshot && (
+          <>
+            <DeviceControlsGroup
+              featureCaps={featureCaps}
+              applyClientMethod={applyClientMethod}
+              executeDriverCommand={executeDriverCommand}
+            />
+            <DriverControlsGroup
+              featureCaps={featureCaps}
+              sessionSettings={sessionSettings}
+              applyClientMethod={applyClientMethod}
+            />
+            <ContextControlsGroup
+              selectAppMode={selectAppMode}
+              appMode={appMode}
+              contexts={contexts}
+              currentContext={currentContext}
+              setContext={setContext}
+              applyClientMethod={applyClientMethod}
+              openLink={openLink}
+            />
+          </>
+        )}
         <GeneralControlsGroup {...props} />
-        <SessionReloadButton
-          autoSessionRestart={autoSessionRestart}
-          toggleAutoSessionRestart={toggleAutoSessionRestart}
-        />
-        <SessionQuitControlsGroup quitSessionAndReturn={quitSessionAndReturn} />
+        {!isSnapshot && (
+          <SessionReloadButton
+            autoSessionRestart={autoSessionRestart}
+            toggleAutoSessionRestart={toggleAutoSessionRestart}
+          />
+        )}
+        <SessionQuitControlsGroup quitSessionAndReturn={quitSessionAndReturn} isSnapshot={isSnapshot} />
       </Space>
       <Divider />
     </div>

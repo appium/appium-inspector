@@ -9,6 +9,7 @@ import {useNavigate} from 'react-router';
 import json from 'refractor/json';
 
 import * as SessionBuilderActions from '../../actions/SessionBuilder.js';
+import {openSnapshot} from '../../actions/SessionInspector.js';
 import {BUTTON} from '../../constants/antd-types.js';
 import {LINKS} from '../../constants/common.js';
 import {
@@ -20,6 +21,7 @@ import {
 import {openLink} from '../../polyfills.js';
 import {isEmpty} from '../../utils/common.js';
 import {log} from '../../utils/logger.js';
+import FileUploader from '../FileUploader.jsx';
 import AppSettings from './AppSettings/AppSettings.jsx';
 import AttachToSession from './AttachToSessionTab/AttachToSession.jsx';
 import CapabilityEditor from './CapabilityBuilderTab/CapabilityEditor.jsx';
@@ -102,6 +104,12 @@ const Session = () => {
     },
     [navigate, newSession, showError, t],
   );
+
+  const loadSnapshot = async (files) => {
+    if (await dispatch(openSnapshot(files))) {
+      navigate('/inspector', {replace: true});
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -207,6 +215,7 @@ const Session = () => {
         />
         <Divider />
         <div className={styles.sessionFooter}>
+          <FileUploader type=".appium-snapshot.json,.json" title={t('Open Snapshot')} onUpload={loadSnapshot} />
           <Button
             type="link"
             className={styles.desiredCapsLink}

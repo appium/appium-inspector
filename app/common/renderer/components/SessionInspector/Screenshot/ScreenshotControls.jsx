@@ -14,14 +14,16 @@ import {BUTTON} from '../../../constants/antd-types.js';
 import {PLATFORMS_WITHOUT_W3C_ACTIONS} from '../../../constants/common.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
 import {downloadFile} from '../../../utils/file-handling.js';
+import {getScreenshotMimeType} from '../../../utils/snapshot.js';
 
 import styles from './Screenshot.module.css';
 
 const {SELECT, TAP_SWIPE, TAP_ELEMENT} = SCREENSHOT_INTERACTION_MODE;
 
 const downloadScreenshot = (screenshot) => {
-  const href = `data:image/png;base64,${screenshot}`;
-  const filename = `appium-inspector-${new Date().toJSON()}.png`;
+  const mimeType = getScreenshotMimeType(screenshot);
+  const href = `data:${mimeType};base64,${screenshot}`;
+  const filename = `appium-inspector-${new Date().toJSON()}.${mimeType === 'image/jpeg' ? 'jpg' : 'png'}`;
   downloadFile(href, filename);
 };
 
@@ -94,6 +96,7 @@ const ScreenshotInteractionModeControls = ({
   clearCoordAction,
   isGestureEditorVisible,
   platformName,
+  isSnapshot,
 }) => {
   // Disable the tap/swipe interaction mode on unsupported platforms
   const areW3CActionsUnsupported = PLATFORMS_WITHOUT_W3C_ACTIONS.includes(platformName);
@@ -119,24 +122,28 @@ const ScreenshotInteractionModeControls = ({
           disabled={isGestureEditorVisible}
         />
       </Tooltip>
-      <Tooltip title={tapElemLabel}>
-        <Button
-          aria-label={tapElemLabel}
-          icon={<IconSquarePlus size={18} />}
-          onClick={() => screenshotInteractionChange(TAP_ELEMENT)}
-          type={screenshotInteractionMode === TAP_ELEMENT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          disabled={isGestureEditorVisible}
-        />
-      </Tooltip>
-      <Tooltip title={tapCoordsLabel} placement={areW3CActionsUnsupported ? 'bottom' : 'top'}>
-        <Button
-          aria-label={tapCoordsLabel}
-          icon={<IconCrosshair size={18} />}
-          onClick={() => screenshotInteractionChange(TAP_SWIPE)}
-          type={screenshotInteractionMode === TAP_SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
-          disabled={areW3CActionsUnsupported || isGestureEditorVisible}
-        />
-      </Tooltip>
+      {!isSnapshot && (
+        <>
+          <Tooltip title={tapElemLabel}>
+            <Button
+              aria-label={tapElemLabel}
+              icon={<IconSquarePlus size={18} />}
+              onClick={() => screenshotInteractionChange(TAP_ELEMENT)}
+              type={screenshotInteractionMode === TAP_ELEMENT ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+              disabled={isGestureEditorVisible}
+            />
+          </Tooltip>
+          <Tooltip title={tapCoordsLabel} placement={areW3CActionsUnsupported ? 'bottom' : 'top'}>
+            <Button
+              aria-label={tapCoordsLabel}
+              icon={<IconCrosshair size={18} />}
+              onClick={() => screenshotInteractionChange(TAP_SWIPE)}
+              type={screenshotInteractionMode === TAP_SWIPE ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+              disabled={areW3CActionsUnsupported || isGestureEditorVisible}
+            />
+          </Tooltip>
+        </>
+      )}
     </Space.Compact>
   );
 };
@@ -179,6 +186,7 @@ const ScreenshotControls = (props) => {
     clearCoordAction,
     applyClientMethod,
     featureCaps,
+    isSnapshot,
   } = props;
 
   return (
@@ -203,6 +211,7 @@ const ScreenshotControls = (props) => {
           clearCoordAction={clearCoordAction}
           isGestureEditorVisible={isGestureEditorVisible}
           platformName={featureCaps.platformName}
+          isSnapshot={isSnapshot}
         />
         <DownloadScreenshotButton
           screenshot={screenshot}
