@@ -4,6 +4,7 @@ import {fallbackLng} from './i18next.config.js';
 
 export const PREFERRED_LANGUAGE = 'PREFERRED_LANGUAGE';
 export const PREFERRED_THEME = 'PREFERRED_THEME';
+export const PREFER_SOURCE_FIRST = 'PREFER_SOURCE_FIRST';
 export const SAVED_SESSIONS = 'SAVED_SESSIONS';
 export const SET_SAVED_GESTURES = 'SET_SAVED_GESTURES';
 export const SERVER_ARGS = 'SERVER_ARGS';
@@ -31,6 +32,7 @@ export const IMPORTANT_SOURCE_ATTRS = [
 export const DEFAULT_SETTINGS = {
   [PREFERRED_LANGUAGE]: fallbackLng,
   [PREFERRED_THEME]: 'system',
+  [PREFER_SOURCE_FIRST]: false,
   [SAVED_SESSIONS]: [],
   [SET_SAVED_GESTURES]: [],
   [SERVER_ARGS]: null,

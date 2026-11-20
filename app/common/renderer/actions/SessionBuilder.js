@@ -1,6 +1,7 @@
 import sanitize from 'sanitize-filename';
 
 import {
+  PREFER_SOURCE_FIRST,
   SAVED_SESSIONS,
   SERVER_ARGS,
   SESSION_SERVER_PARAMS,
@@ -18,6 +19,7 @@ import {
 import {APP_MODE} from '../constants/session-inspector.js';
 import {DEFAULT_SERVER_PROPS} from '../constants/webdriver.js';
 import i18n from '../i18next.js';
+import InspectorDriver from '../lib/appium/inspector-driver.js';
 import WDSessionStarter from '../lib/appium/session-starter.js';
 import {VENDOR_MAP} from '../lib/vendor/map.js';
 import {getSetting, loadSessionFileIfOpened, setSetting} from '../polyfills.js';
@@ -317,6 +319,7 @@ export function newSession(originalCaps, attachSessId = null) {
       sessionCaps[CAPS_NEW_COMMAND] = NEW_COMMAND_TIMEOUT_SEC;
     }
 
+    const preferSourceFirst = await getSetting(PREFER_SOURCE_FIRST).catch(() => false);
     let driver;
     try {
       if (attachSessId) {
@@ -396,6 +399,7 @@ export function newSession(originalCaps, attachSessId = null) {
       mjpegScreenshotUrl = `${protocol}://${host}:${mjpegScreenshotPort}`;
     }
 
+    InspectorDriver.instance(driver).preferSourceFirst = preferSourceFirst === true;
     const action = setSessionDetails({
       serverDetails: {
         username,

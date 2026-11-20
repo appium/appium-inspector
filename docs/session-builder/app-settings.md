@@ -23,3 +23,9 @@ available languages with community-provided translations!
 
     Most languages only include partial translations. You can help by providing your translations on
     [Crowdin](https://crowdin.com/project/appium-desktop)!
+
+## Refresh order
+
+By default, the Inspector requests the screenshot first when refreshing a session. Enable
+**Request page source before screenshot** to reverse the order. This can help when the app changes
+screens while the Inspector retrieves the page source.

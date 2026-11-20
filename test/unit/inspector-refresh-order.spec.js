@@ -1,0 +1,78 @@
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+
+import {REFRESH_DELAY_MILLIS} from '../../app/common/renderer/constants/session-inspector.js';
+import InspectorDriver from '../../app/common/renderer/lib/appium/inspector-driver.js';
+
+describe('InspectorDriver refresh order', function () {
+  const source = '<hierarchy/>';
+  const screenshot = 'screenshot';
+  const windowSize = {x: 0, y: 0, width: 320, height: 640};
+  let driver, inspector;
+
+  beforeEach(function () {
+    vi.useFakeTimers();
+    driver = {
+      client: {capabilities: {platformName: 'iOS'}},
+      getPageSource: vi.fn().mockResolvedValue(source),
+      takeScreenshot: vi.fn().mockResolvedValue(screenshot),
+      getWindowRect: vi.fn().mockResolvedValue(windowSize),
+    };
+    inspector = new InspectorDriver(driver);
+  });
+
+  afterEach(function () {
+    vi.useRealTimers();
+  });
+
+  it('requests the screenshot first and starts the source without waiting for the screenshot by default', async function () {
+    const pendingScreenshot = Promise.withResolvers();
+    driver.takeScreenshot.mockReturnValue(pendingScreenshot.promise);
+    const refresh = inspector.run({methodName: 'getPageSource'});
+    await vi.advanceTimersByTimeAsync(REFRESH_DELAY_MILLIS);
+
+    expect(driver.takeScreenshot).toHaveBeenCalledBefore(driver.getPageSource);
+    expect(driver.getPageSource).toHaveBeenCalledOnce();
+    pendingScreenshot.resolve(screenshot);
+    expect(await refresh).toEqual({source, screenshot, windowSize, commandRes: {}});
+  });
+
+  it('waits for the page source response before requesting the screenshot when enabled', async function () {
+    inspector.preferSourceFirst = true;
+    const pendingSource = Promise.withResolvers();
+    driver.getPageSource.mockReturnValue(pendingSource.promise);
+    const refresh = inspector.run({methodName: 'getPageSource'});
+    await vi.advanceTimersByTimeAsync(REFRESH_DELAY_MILLIS);
+
+    expect(driver.getPageSource).toHaveBeenCalledOnce();
+    expect(driver.takeScreenshot).not.toHaveBeenCalled();
+    pendingSource.resolve(source);
+    expect(await refresh).toEqual({source, screenshot, windowSize, commandRes: {}});
+    expect(driver.takeScreenshot).toHaveBeenCalledOnce();
+    expect(driver.getPageSource).toHaveBeenCalledOnce();
+  });
+
+  it('refreshes the window size while the source is pending if screenshots are skipped', async function () {
+    inspector.preferSourceFirst = true;
+    const pendingSource = Promise.withResolvers();
+    driver.getPageSource.mockReturnValue(pendingSource.promise);
+    const refresh = inspector.run({methodName: 'getPageSource', skipScreenshot: true});
+    await vi.advanceTimersByTimeAsync(REFRESH_DELAY_MILLIS);
+
+    expect(driver.getPageSource).toHaveBeenCalledOnce();
+    expect(driver.getWindowRect).toHaveBeenCalledOnce();
+    pendingSource.resolve(source);
+    expect(await refresh).toEqual({source, windowSize, commandRes: {}});
+    expect(driver.takeScreenshot).not.toHaveBeenCalled();
+  });
+
+  it('still returns the screenshot if the source request reports an error in source-first mode', async function () {
+    inspector.preferSourceFirst = true;
+    const sourceError = new Error('Page source unavailable');
+    driver.getPageSource.mockRejectedValue(sourceError);
+    const refresh = inspector.run({methodName: 'getPageSource'});
+    await vi.advanceTimersByTimeAsync(REFRESH_DELAY_MILLIS);
+
+    expect(await refresh).toEqual({sourceError, screenshot, windowSize, commandRes: {}});
+    expect(driver.getPageSource).toHaveBeenCalledOnce();
+  });
+});
