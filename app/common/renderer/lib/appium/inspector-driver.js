@@ -43,6 +43,7 @@ class WebdriverUnknownError extends Error {
 export default class InspectorDriver {
   constructor(driver) {
     this.driver = driver;
+    this.preferSourceFirst = false;
     this.elementCache = {};
     this.elVarCount = 0;
     this.elArrayVarCount = 0;
@@ -177,13 +178,12 @@ export default class InspectorDriver {
     // Give the source/screenshot time to change
     await new Promise((resolve) => setTimeout(resolve, REFRESH_DELAY_MILLIS));
 
-    const screenshotPromise = skipScreenshot ? {} : this.getScreenshotUpdate();
-    const windowSizePromise = this.getWindowUpdate();
-    const sourcePromise = this.getSourceUpdate();
+    // In source-first mode, wait for the source response before requesting the screenshot.
+    const earlySource = this.preferSourceFirst && !skipScreenshot ? await this.getSourceUpdate() : undefined;
     const [screenshotUpdate, windowSizeUpdate, sourceUpdate] = await Promise.all([
-      screenshotPromise,
-      windowSizePromise,
-      sourcePromise,
+      skipScreenshot ? {} : this.getScreenshotUpdate(),
+      this.getWindowUpdate(),
+      earlySource ?? this.getSourceUpdate(),
     ]);
     // only do context updates if user has selected web/hybrid mode (takes forever)
     const contextUpdate = appMode === APP_MODE.WEB_HYBRID ? await this.getContextUpdate(windowSizeUpdate) : {};
