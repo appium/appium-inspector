@@ -400,7 +400,7 @@ export function toggleShowBoilerplate() {
   };
 }
 
-export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, isUsingMjpegMode}) {
+export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, isUsingMjpegMode, preferSourceFirst}) {
   return (dispatch) => {
     // Extract several capabilities from the finalised set of caps
     // that may be relevant for enabling specific Inspector features
@@ -420,6 +420,7 @@ export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, 
       featureCaps,
       appMode,
       isUsingMjpegMode,
+      preferSourceFirst,
     });
   };
 }
@@ -871,7 +872,8 @@ export function keepSessionAlive() {
 
 export function callClientMethod(params) {
   return async (dispatch, getState) => {
-    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} = getState().inspector;
+    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart, preferSourceFirst} =
+      getState().inspector;
     params.appMode = appMode;
     params.autoSessionRestart = autoSessionRestart;
 
@@ -890,7 +892,7 @@ export function callClientMethod(params) {
       const action = keepSessionAlive();
       action(dispatch, getState);
       const inspectorDriver = InspectorDriver.instance(driver);
-      const res = await inspectorDriver.run(params);
+      const res = await inspectorDriver.run({...params, preferSourceFirst});
       res.elementId = res.id;
       return res;
     } catch (error) {

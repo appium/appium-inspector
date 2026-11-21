@@ -28,4 +28,5 @@ available languages with community-provided translations!
 
 By default, the Inspector requests the screenshot first when refreshing a session. Enable
 **Request page source before screenshot** to reverse the order. This can help when the app changes
-screens while the Inspector retrieves the page source.
+screens while the Inspector retrieves the page source. The change applies the next time you start
+or attach to a session in the Inspector.

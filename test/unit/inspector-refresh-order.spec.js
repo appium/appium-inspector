@@ -36,14 +36,14 @@ describe('InspectorDriver refresh order', function () {
     expect(await refresh).toEqual({source, screenshot, windowSize, commandRes: {}});
   });
 
-  it('waits for the page source response before requesting the screenshot when enabled', async function () {
-    inspector.preferSourceFirst = true;
+  it('refreshes the window while waiting for the source before requesting the screenshot', async function () {
     const pendingSource = Promise.withResolvers();
     driver.getPageSource.mockReturnValue(pendingSource.promise);
-    const refresh = inspector.run({methodName: 'getPageSource'});
+    const refresh = inspector.run({methodName: 'getPageSource', preferSourceFirst: true});
     await vi.advanceTimersByTimeAsync(REFRESH_DELAY_MILLIS);
 
     expect(driver.getPageSource).toHaveBeenCalledOnce();
+    expect(driver.getWindowRect).toHaveBeenCalledOnce();
     expect(driver.takeScreenshot).not.toHaveBeenCalled();
     pendingSource.resolve(source);
     expect(await refresh).toEqual({source, screenshot, windowSize, commandRes: {}});
@@ -52,10 +52,9 @@ describe('InspectorDriver refresh order', function () {
   });
 
   it('refreshes the window size while the source is pending if screenshots are skipped', async function () {
-    inspector.preferSourceFirst = true;
     const pendingSource = Promise.withResolvers();
     driver.getPageSource.mockReturnValue(pendingSource.promise);
-    const refresh = inspector.run({methodName: 'getPageSource', skipScreenshot: true});
+    const refresh = inspector.run({methodName: 'getPageSource', skipScreenshot: true, preferSourceFirst: true});
     await vi.advanceTimersByTimeAsync(REFRESH_DELAY_MILLIS);
 
     expect(driver.getPageSource).toHaveBeenCalledOnce();
@@ -66,10 +65,9 @@ describe('InspectorDriver refresh order', function () {
   });
 
   it('still returns the screenshot if the source request reports an error in source-first mode', async function () {
-    inspector.preferSourceFirst = true;
     const sourceError = new Error('Page source unavailable');
     driver.getPageSource.mockRejectedValue(sourceError);
-    const refresh = inspector.run({methodName: 'getPageSource'});
+    const refresh = inspector.run({methodName: 'getPageSource', preferSourceFirst: true});
     await vi.advanceTimersByTimeAsync(REFRESH_DELAY_MILLIS);
 
     expect(await refresh).toEqual({sourceError, screenshot, windowSize, commandRes: {}});

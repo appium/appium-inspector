@@ -43,7 +43,6 @@ class WebdriverUnknownError extends Error {
 export default class InspectorDriver {
   constructor(driver) {
     this.driver = driver;
-    this.preferSourceFirst = false;
     this.elementCache = {};
     this.elVarCount = 0;
     this.elArrayVarCount = 0;
@@ -69,6 +68,7 @@ export default class InspectorDriver {
       args = [], // Optional. Arguments passed to method
       skipRefresh = false, // Optional. Do we want the updated source and screenshot?
       skipScreenshot = false, // Optional. Do we want to skip getting screenshot alone?
+      preferSourceFirst = false, // Optional. Do we wait for the source before requesting the screenshot?
       appMode = APP_MODE.NATIVE, // Optional. Whether we're in a native or hybrid mode
     } = params;
 
@@ -99,6 +99,7 @@ export default class InspectorDriver {
           args,
           skipRefresh,
           skipScreenshot,
+          preferSourceFirst,
           appMode,
         });
       } else {
@@ -108,6 +109,7 @@ export default class InspectorDriver {
           args,
           skipRefresh,
           skipScreenshot,
+          preferSourceFirst,
           appMode,
         });
       }
@@ -124,7 +126,7 @@ export default class InspectorDriver {
     return res;
   }
 
-  async executeMethod({elementId, methodName, args, skipRefresh, skipScreenshot, appMode}) {
+  async executeMethod({elementId, methodName, args, skipRefresh, skipScreenshot, preferSourceFirst, appMode}) {
     let cachedEl;
     let res = {};
     if (!Array.isArray(args) && args !== undefined) {
@@ -165,7 +167,7 @@ export default class InspectorDriver {
       }
     }
 
-    const refreshUpdate = skipRefresh ? {} : await this.handleRefresh(skipScreenshot, appMode);
+    const refreshUpdate = skipRefresh ? {} : await this.handleRefresh(skipScreenshot, appMode, preferSourceFirst);
 
     return {
       ...cachedEl,
@@ -174,14 +176,23 @@ export default class InspectorDriver {
     };
   }
 
-  async handleRefresh(skipScreenshot, appMode) {
+  async handleRefresh(skipScreenshot, appMode, preferSourceFirst) {
     // Give the source/screenshot time to change
     await new Promise((resolve) => setTimeout(resolve, REFRESH_DELAY_MILLIS));
 
-    // In source-first mode, wait for the source response before requesting the screenshot.
-    const earlySource = this.preferSourceFirst && !skipScreenshot ? await this.getSourceUpdate() : undefined;
+    // Only the screenshot depends on the source response in source-first mode.
+    const earlySource = preferSourceFirst && !skipScreenshot ? this.getSourceUpdate() : undefined;
+    const requestScreenshot = async () => {
+      if (skipScreenshot) {
+        return {};
+      }
+      if (earlySource) {
+        await earlySource;
+      }
+      return this.getScreenshotUpdate();
+    };
     const [screenshotUpdate, windowSizeUpdate, sourceUpdate] = await Promise.all([
-      skipScreenshot ? {} : this.getScreenshotUpdate(),
+      requestScreenshot(),
       this.getWindowUpdate(),
       earlySource ?? this.getSourceUpdate(),
     ]);

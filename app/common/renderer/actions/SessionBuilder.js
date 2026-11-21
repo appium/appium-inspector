@@ -19,7 +19,6 @@ import {
 import {APP_MODE} from '../constants/session-inspector.js';
 import {DEFAULT_SERVER_PROPS} from '../constants/webdriver.js';
 import i18n from '../i18next.js';
-import InspectorDriver from '../lib/appium/inspector-driver.js';
 import WDSessionStarter from '../lib/appium/session-starter.js';
 import {VENDOR_MAP} from '../lib/vendor/map.js';
 import {getSetting, loadSessionFileIfOpened, setSetting} from '../polyfills.js';
@@ -319,9 +318,9 @@ export function newSession(originalCaps, attachSessId = null) {
       sessionCaps[CAPS_NEW_COMMAND] = NEW_COMMAND_TIMEOUT_SEC;
     }
 
-    const preferSourceFirst = await getSetting(PREFER_SOURCE_FIRST).catch(() => false);
-    let driver;
+    let driver, preferSourceFirst;
     try {
+      preferSourceFirst = await getSetting(PREFER_SOURCE_FIRST);
       if (attachSessId) {
         // When attaching to a session id, webdriver does not fully populate client information, so
         // we should supplement by attaching session capabilities that we are attaching to, if they
@@ -399,7 +398,6 @@ export function newSession(originalCaps, attachSessId = null) {
       mjpegScreenshotUrl = `${protocol}://${host}:${mjpegScreenshotPort}`;
     }
 
-    InspectorDriver.instance(driver).preferSourceFirst = preferSourceFirst === true;
     const action = setSessionDetails({
       serverDetails: {
         username,
@@ -418,6 +416,7 @@ export function newSession(originalCaps, attachSessId = null) {
       sessionCaps,
       appMode,
       isUsingMjpegMode: mjpegScreenshotUrl !== null,
+      preferSourceFirst,
     });
     action(dispatch);
     return true;
