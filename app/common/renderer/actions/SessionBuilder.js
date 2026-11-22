@@ -318,9 +318,8 @@ export function newSession(originalCaps, attachSessId = null) {
       sessionCaps[CAPS_NEW_COMMAND] = NEW_COMMAND_TIMEOUT_SEC;
     }
 
-    let driver, preferSourceFirst;
+    let driver;
     try {
-      preferSourceFirst = await getSetting(PREFER_SOURCE_FIRST);
       if (attachSessId) {
         // When attaching to a session id, webdriver does not fully populate client information, so
         // we should supplement by attaching session capabilities that we are attaching to, if they
@@ -416,7 +415,7 @@ export function newSession(originalCaps, attachSessId = null) {
       sessionCaps,
       appMode,
       isUsingMjpegMode: mjpegScreenshotUrl !== null,
-      preferSourceFirst,
+      preferSourceFirst: await getSetting(PREFER_SOURCE_FIRST),
     });
     action(dispatch);
     return true;

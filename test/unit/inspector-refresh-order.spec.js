@@ -36,18 +36,17 @@ describe('InspectorDriver refresh order', function () {
     expect(await refresh).toEqual({source, screenshot, windowSize, commandRes: {}});
   });
 
-  it('refreshes the window while waiting for the source before requesting the screenshot', async function () {
+  it('requests the source first and starts the screenshot and window requests while it is pending', async function () {
     const pendingSource = Promise.withResolvers();
     driver.getPageSource.mockReturnValue(pendingSource.promise);
     const refresh = inspector.run({methodName: 'getPageSource', preferSourceFirst: true});
     await vi.advanceTimersByTimeAsync(REFRESH_DELAY_MILLIS);
 
-    expect(driver.getPageSource).toHaveBeenCalledOnce();
+    expect(driver.getPageSource).toHaveBeenCalledBefore(driver.takeScreenshot);
     expect(driver.getWindowRect).toHaveBeenCalledOnce();
-    expect(driver.takeScreenshot).not.toHaveBeenCalled();
+    expect(driver.takeScreenshot).toHaveBeenCalledOnce();
     pendingSource.resolve(source);
     expect(await refresh).toEqual({source, screenshot, windowSize, commandRes: {}});
-    expect(driver.takeScreenshot).toHaveBeenCalledOnce();
     expect(driver.getPageSource).toHaveBeenCalledOnce();
   });
 
