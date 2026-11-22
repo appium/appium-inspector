@@ -124,7 +124,6 @@
   "noAdditionalContextsFound": "沒有檢測到其他環境",
   "contextDropdownInfo": "檢測到多個上下文；某些元素可能只有在切換到不同的上下文後才能訪問。請注意，Appium Inspector 中的 webview 檢查不如 Chrome 或 Safari 的開發者工具準確。更多資訊，請參見：",
   "idAutocompletionCanBeDisabled": "請求的 id 選擇器沒有包名字首。此 Appium 會話啟用了包名自動完成功能，這可能是找不到元素的原因。要禁用此行為，請將 'disableIdLocatorAutocompletion' 設定更改為 'true'。",
-  "missingAutomationNameForStrategies": "可能有更多的定位器策略。要檢視它們，請在啟動會話時新增名為“appium:automationName”的capability選項。 注意，在Appium 2中這種能力是強制性的。",
   "snapshotMaxDepthReached": "此元素位於最大源深度 {{selectedElementDepth}}，因此不顯示其子元素（如果有）。要顯示它們，請將 'snapshotMaxDepth' 設定更改為大於 {{selectedElementDepth}} 的值。檢視驅動程式文件以瞭解支援的最大值。",
   "Tap": "點選",
   "Gathering initial app source…": "收集初始應用源…",

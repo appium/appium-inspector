@@ -124,7 +124,6 @@
   "noAdditionalContextsFound": "Hiçbir ek bağlam algılanmadı",
   "contextDropdownInfo": "Birden fazla bağlam algılandı; belirli öğelere yalnızca farklı bir bağlama geçtikten sonra erişilebilir. Appium Inspector'daki web görünümü denetiminin Chrome veya Safari'nin DevTools'una göre daha az doğru olduğunu unutmayın. Daha fazla bilgi için bakınız:",
   "idAutocompletionCanBeDisabled": "İstenen id seçicisinin paket adı ön eki yok. Bu Appium oturumunda paket adı otomatik tamamlama etkin, öğe bulunamamasının nedeni bu olabilir. Bu davranışı devre dışı bırakmak için 'disableIdLocatorAutocompletion' ayarını 'true' olarak değiştirin.",
-  "missingAutomationNameForStrategies": "Ek konum belirleme stratejileri mevcut olabilir. Bunları görüntülemek için oturumu başlatırken 'appium:automationName' özelliğini ekleyin. Bu yeteneğin Appium 2'de zorunlu olduğunu unutmayın.",
   "snapshotMaxDepthReached": "Bu öğe, kaynağın en fazla derinliği olan {{selectedElementDepth}} konumundadır, bu nedenle alt öğeleri (varsa) gösterilmez. Bunları görüntülemek için, 'snapshotMaxDepth' ayarını {{selectedElementDepth}} değerinden büyük bir değere değiştirin. Desteklenen maksimum değer için sürücü belgelerinize bakın.",
   "Tap": "Zamanla",
   "Gathering initial app source…": "Başlangıç uygulama kaynağı toplanıyor…",

@@ -124,7 +124,6 @@
   "noAdditionalContextsFound": "Không phát hiện thêm ngữ cảnh nào",
   "contextDropdownInfo": "Đã phát hiện nhiều ngữ cảnh; một số phần tử có thể chỉ truy cập được sau khi chuyển sang ngữ cảnh khác. Lưu ý rằng việc kiểm tra webview trong Appium Inspector kém chính xác hơn so với DevTools của Chrome hoặc Safari. Để biết thêm thông tin, xem:",
   "idAutocompletionCanBeDisabled": "Bộ chọn id được yêu cầu không có tiền tố tên gói. Phiên Appium này đã bật tính năng tự động hoàn thành tên gói, đây có thể là lý do không tìm thấy phần tử nào. Để tắt hành vi này, hãy đổi cài đặt 'disableIdLocatorAutocompletion' thành 'true'.",
-  "missingAutomationNameForStrategies": "Có thể có thêm các chiến lược định vị khác. Để xem chúng, hãy thêm capability 'appium:automationName' khi khởi chạy phiên. Lưu ý rằng capability này là bắt buộc trong Appium 2.",
   "snapshotMaxDepthReached": "Phần tử này nằm ở độ sâu nguồn tối đa {{selectedElementDepth}}, do đó các phần tử con của nó (nếu có) không được hiển thị. Để hiển thị chúng, hãy đổi cài đặt 'snapshotMaxDepth' thành giá trị lớn hơn {{selectedElementDepth}}. Kiểm tra tài liệu driver của bạn để biết giá trị tối đa được hỗ trợ.",
   "Tap": "Chạm",
   "Gathering initial app source…": "Đang thu thập nguồn ứng dụng ban đầu…",

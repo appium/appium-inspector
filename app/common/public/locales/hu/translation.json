@@ -124,7 +124,6 @@
   "noAdditionalContextsFound": "Nem észlelhető további kontextus",
   "contextDropdownInfo": "Több kontextus is észlelhető; bizonyos elemek csak másik kontextusra váltás után érhetők el. Megjegyzés: a webnézetek vizsgálata az Appium Inspectorban kevésbé pontos, mint a Chrome vagy a Safari DevTools eszközeivel. További információ:",
   "idAutocompletionCanBeDisabled": "A kért id szelektorhoz nem tartozik csomagnév-előtag. Ennél az Appium munkamenetnél engedélyezve van a csomagnév automatikus kiegészítése, ami oka lehet annak, hogy nem található elem. A viselkedés kikapcsolásához állítsa a 'disableIdLocatorAutocompletion' beállítást 'true' értékre.",
-  "missingAutomationNameForStrategies": "További lokátor-stratégiák lehetnek elérhetők. Megtekintésükhöz az 'appium:automationName' capability-t kell hozzáadni a munkamenet indításakor. Ez a capability az Appium 2-ben kötelező.",
   "snapshotMaxDepthReached": "Ez az elem a maximális forrásmélységen, {{selectedElementDepth}} szinten található, ezért gyermekelemei (ha vannak) nem jelennek meg. Megjelenítésükhöz állítsa a 'snapshotMaxDepth' beállítást olyan értékre, amely nagyobb, mint {{selectedElementDepth}}. A támogatott maximális értéket a driver dokumentációjában találja.",
   "Tap": "Koppintás",
   "Gathering initial app source…": "Az alkalmazás kezdeti forrásának lekérése…",
