@@ -180,20 +180,15 @@ export default class InspectorDriver {
     // Give the source/screenshot time to change
     await new Promise((resolve) => setTimeout(resolve, REFRESH_DELAY_MILLIS));
 
-    let screenshotUpdate, windowSizeUpdate, sourceUpdate;
-    if (preferSourceFirst && !skipScreenshot) {
-      [sourceUpdate, screenshotUpdate, windowSizeUpdate] = await Promise.all([
-        this.getSourceUpdate(),
-        this.getScreenshotUpdate(),
-        this.getWindowUpdate(),
-      ]);
-    } else {
-      [screenshotUpdate, windowSizeUpdate, sourceUpdate] = await Promise.all([
-        skipScreenshot ? {} : this.getScreenshotUpdate(),
-        this.getWindowUpdate(),
-        this.getSourceUpdate(),
-      ]);
-    }
+    const earlySourcePromise = preferSourceFirst && !skipScreenshot ? this.getSourceUpdate() : undefined;
+    const screenshotPromise = skipScreenshot ? {} : this.getScreenshotUpdate();
+    const windowSizePromise = this.getWindowUpdate();
+    const sourcePromise = earlySourcePromise ?? this.getSourceUpdate();
+    const [screenshotUpdate, windowSizeUpdate, sourceUpdate] = await Promise.all([
+      screenshotPromise,
+      windowSizePromise,
+      sourcePromise,
+    ]);
     // only do context updates if user has selected web/hybrid mode (takes forever)
     const contextUpdate = appMode === APP_MODE.WEB_HYBRID ? await this.getContextUpdate(windowSizeUpdate) : {};
     return {

@@ -7,10 +7,13 @@ import {getSetting, setSetting} from '../../../polyfills.js';
 
 let retrievedPreference = await getSetting(PREFER_SOURCE_FIRST);
 
+/**
+ * Lets users choose whether to request the page source before the screenshot.
+ */
 const RefreshOrder = () => {
   const {t} = useTranslation();
   const [preferSourceFirst, setPreferSourceFirst] = useState(retrievedPreference);
-  const label = t('Request page source before screenshot');
+  const label = t('requestPageSourceBeforeScreenshot');
 
   const changeRefreshOrder = async (checked) => {
     await setSetting(PREFER_SOURCE_FIRST, checked);
