@@ -124,7 +124,6 @@
   "noAdditionalContextsFound": "追加のコンテキストはありません",
   "contextDropdownInfo": "複数のコンテキストが検出されています。特定の要素は、適切なコンテキストに切り替えた後に操作可能です。 Appium Inspector のWebviewサポートはChromeまたはSafariのDevToolsよりも正確ではないことに注意してください。詳細については、次を参照してください：",
   "idAutocompletionCanBeDisabled": "要求された id セレクターにはパッケージ名の接頭辞がありません。 このAppiumセッションにはパッケージ名の自動補完が有効なため、自動補完により要素が見つからなかった可能性があります。 この自動補完機能を無効にするには、'appium:disableIdLocatorAutocompletion' を 'true' に設定してセッションを開始してください。",
-  "missingAutomationNameForStrategies": "追加のロケーターが利用できるかもしれません。これらを表示するには、セッションを起動するときに”appium:automationName\"を追加します。 Appium 2ではこの機能が必須であることに注意してください。",
   "snapshotMaxDepthReached": "この要素はソースの最深部 {{selectedElementDepth}} に位置しますが、子要素は何も表示されていません。取得可能な子要素を表示するには、Settings API から'snapshotMaxDepth' の値を {{selectedElementDepth}} より大きな値変更してください。可能な最大値はドライバーのドキュメントを確認してください。",
   "Tap": "タップ",
   "Gathering initial app source…": "アプリのソースを取得しています…",

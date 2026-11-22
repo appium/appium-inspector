@@ -124,7 +124,6 @@
   "noAdditionalContextsFound": "Ingen flere kontekster er oppdaget",
   "contextDropdownInfo": "Flere kontekster oppdaget. Enkelte elementer er kanskje bare tilgjengelige etter at du bytter til en annen kontekst. Merk at inspeksjon av webvisning i Appium Inspector er mindre nøyaktig enn DevTools i Chrome eller Safari. Du finner mer informasjon her:",
   "idAutocompletionCanBeDisabled": "Den forespurte id-selektoren har ikke prefiks med pakkenavn. Denne Appium-økten har automatisk utfylling av pakkenavn aktivert, noe som kan være årsaken til at ingen elementer ble funnet. Hvis du vil deaktivere denne virkemåten, endrer du innstillingen 'disableIdLocatorAutocompletion' til 'true'.",
-  "missingAutomationNameForStrategies": "Flere locator-strategier kan være tilgjengelige. Legg til capabilityen 'appium:automationName' når du starter økten for å vise dem. Merk at denne capabilityen er obligatorisk i Appium 2.",
   "snapshotMaxDepthReached": "Dette elementet ligger på maksimal kildedybde {{selectedElementDepth}}, så underordnede elementer (hvis noen) vises ikke. Hvis du vil vise dem, endrer du innstillingen 'snapshotMaxDepth' til en verdi som er større enn {{selectedElementDepth}}. Se dokumentasjonen for driveren din for å finne den maksimale verdien som støttes.",
   "Tap": "Trykk",
   "Gathering initial app source…": "Henter første appkilde…",

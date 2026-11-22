@@ -124,7 +124,6 @@
   "noAdditionalContextsFound": "Er zijn geen aanvullende contexten gedetecteerd",
   "contextDropdownInfo": "Er zijn meerdere contexten gedetecteerd; bepaalde elementen zijn mogelijk pas toegankelijk na het wisselen naar een andere context. Houd er rekening mee dat webview-inspectie in Appium Inspector minder nauwkeurig is dan de DevTools van Chrome of Safari. Zie voor meer informatie:",
   "idAutocompletionCanBeDisabled": "De opgevraagde id-selector heeft geen pakketnaamvoorvoegsel. Deze Appium-sessie heeft automatisch aanvullen van pakketnamen ingeschakeld, wat de reden kan zijn waarom er geen elementen zijn gevonden. Om dit gedrag uit te schakelen, wijzigt u de instelling 'disableIdLocatorAutocompletion' naar 'true'.",
-  "missingAutomationNameForStrategies": "Er zijn mogelijk aanvullende locatorstrategieën beschikbaar. Voeg de capability 'appium:automationName' toe bij het starten van de sessie om deze te bekijken. Let op: deze capability is verplicht in Appium 2.",
   "snapshotMaxDepthReached": "Dit element bevindt zich op de maximale brondiepte {{selectedElementDepth}}, waardoor de onderliggende elementen (indien aanwezig) niet worden weergegeven. Wijzig de instelling 'snapshotMaxDepth' naar een waarde groter dan {{selectedElementDepth}} om ze te tonen. Raadpleeg de documentatie van uw driver voor de maximaal ondersteunde waarde.",
   "Tap": "Tik",
   "Gathering initial app source…": "Initiële app-bron wordt verzameld…",

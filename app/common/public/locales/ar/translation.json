@@ -124,7 +124,6 @@
   "noAdditionalContextsFound": "لم يتم اكتشاف سياقات إضافية",
   "contextDropdownInfo": "تم اكتشاف سياقات متعددة؛ قد لا تكون بعض العناصر متاحة إلا بعد التبديل إلى سياق آخر. لاحظ أن فحص webview في Appium Inspector أقل دقة من DevTools في Chrome أو Safari. لمزيد من المعلومات، راجع:",
   "idAutocompletionCanBeDisabled": "محدد المعرّف المطلوب لا يحتوي على بادئة اسم الحزمة. تم تمكين الإكمال التلقائي لاسم الحزمة في جَلسة Appium هذه، وقد يكون هذا سبب عدم العثور على أي عناصر. لتعطيل هذا السلوك، غيّر الإعداد 'disableIdLocatorAutocompletion' إلى 'true'.",
-  "missingAutomationNameForStrategies": "قد تتوفر استراتيجيات محددات مواقع إضافية. لعرضها، أضف القدرة 'appium:automationName' عند بدء الجَلسة. لاحظ أن هذه القدرة إلزامية في Appium 2.",
   "snapshotMaxDepthReached": "يقع هذا العنصر عند أقصى عمق للمصدر {{selectedElementDepth}}، لذلك لا يتم عرض عناصره الفرعية (إن وجدت). لإظهارها، غيّر الإعداد 'snapshotMaxDepth' إلى قيمة أكبر من {{selectedElementDepth}}. راجع وثائق برنامج التشغيل لمعرفة أقصى قيمة مدعومة.",
   "Tap": "نقر",
   "Gathering initial app source…": "جارٍ جمع مصدر التطبيق الأولي…",

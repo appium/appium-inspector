@@ -124,7 +124,6 @@
   "noAdditionalContextsFound": "Muita konteksteja ei ole havaittu",
   "contextDropdownInfo": "Havaittu useita konteksteja; tietyt elementit voivat olla käytettävissä vasta toiseen kontekstiin siirtymisen jälkeen. Huomaa, että Appium Inspector ei tarkastele verkkonäkymiä yhtä tarkasti kuin Chromen tai Safarin DevTools-työkalut. Lisätietoja:",
   "idAutocompletionCanBeDisabled": "Pyydetyssä id-valitsimessa ei ole pakettinimen etuliitettä. Tässä Appium-istunnossa pakettinimen automaattinen täydennys on käytössä, mikä voi olla syy siihen, ettei elementtejä löytynyt. Tämän toiminnan voi poistaa käytöstä muuttamalla asetuksen 'disableIdLocatorAutocompletion' arvoksi 'true'.",
-  "missingAutomationNameForStrategies": "Lisää locator-strategioita voi olla saatavilla. Ne saa näkyviin lisäämällä capabilityn 'appium:automationName' istuntoa käynnistettäessä. Huomaa, että tämä capability on pakollinen Appium 2:ssa.",
   "snapshotMaxDepthReached": "Tämä elementti sijaitsee lähteen enimmäissyvyydellä {{selectedElementDepth}}, joten sen alielementtejä (jos niitä on) ei näytetä. Ne saa näkyviin muuttamalla asetuksen 'snapshotMaxDepth' arvoksi, joka on suurempi kuin {{selectedElementDepth}}. Suurin tuettu arvo selviää ajurin dokumentaatiosta.",
   "Tap": "Napauta",
   "Gathering initial app source…": "Kerätään apin alkuperäistä lähdettä…",

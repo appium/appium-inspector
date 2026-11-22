@@ -124,7 +124,6 @@
   "noAdditionalContextsFound": "Non sono stati rilevati contesti aggiuntivi",
   "contextDropdownInfo": "Rilevati contesti multipli; alcuni elementi potrebbero essere accessibili solo dopo il passaggio a un contesto diverso. Si noti che l'ispezione di visualizzazione web in Appium Inspector è meno accurata rispetto ai DevTools di Chrome o Safari. Per maggiori informazioni, consultare:",
   "idAutocompletionCanBeDisabled": "Il selettore id richiesto non ha un prefisso col nome del pacchetto. Questa sessione Appium ha l'autocompletamento del nome del pacchetto abilitato, il che potrebbe essere il motivo per cui non è stato trovato alcun elemento. Per disabilitare questo comportamento, modifica l'impostazione 'disableIdLocatorAutocompletion' su 'true'.",
-  "missingAutomationNameForStrategies": "Potrebbero essere disponibili strategie di localizzatore aggiuntive. Per visualizzarle, aggiungi la funzionalità 'appium:automationName' all'avvio della sessione. Si noti che questa capability è obbligatoria con Appium2.",
   "snapshotMaxDepthReached": "Questo elemento si trova alla profondità massima del sorgente {{selectedElementDepth}}, pertanto i suoi elementi figli (se presenti) non vengono mostrati. Per visualizzarli, modifica l'impostazione 'snapshotMaxDepth' su un valore maggiore di {{selectedElementDepth}}. Consulta la documentazione del tuo driver per conoscere il valore massimo supportato.",
   "Tap": "Tocco",
   "Gathering initial app source…": "Ottenendo il sorgente iniziale dell'app…",

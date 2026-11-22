@@ -124,7 +124,6 @@
   "noAdditionalContextsFound": "Es wurden keine zusätzlichen Kontexte erkannt",
   "contextDropdownInfo": "Es wurden mehrere Kontexte erkannt; bestimmte Elemente sind möglicherweise erst nach dem Wechsel zu einem anderen Kontext zugänglich. Beachten Sie, dass die WebView-Inspektion in Appium Inspector weniger genau ist als die DevTools von Chrome oder Safari. Weitere Informationen finden Sie hier:",
   "idAutocompletionCanBeDisabled": "Der angeforderte id-Selektor hat kein Präfix für den Paketnamen. Diese Appium-Session hat die automatische Vervollständigung des Paketnamens aktiviert, was der Grund dafür sein könnte, dass keine Elemente gefunden wurden. Um dieses Verhalten zu deaktivieren, ändern Sie die Einstellung 'disableIdLocatorAutocompletion' auf 'true'.",
-  "missingAutomationNameForStrategies": "Es sind möglicherweise zusätzliche Lokator-Strategien verfügbar. Um sie anzuzeigen, fügen Sie beim Starten der Session die Capability 'appium:automationName' hinzu. Beachten Sie, dass diese Capability in Appium 2 obligatorisch ist.",
   "snapshotMaxDepthReached": "Dieses Element befindet sich in der maximalen Quelltiefe {{selectedElementDepth}}, daher werden seine untergeordneten Elemente (falls vorhanden) nicht angezeigt. Um sie anzuzeigen, ändern Sie die Einstellung 'snapshotMaxDepth' auf einen Wert größer als {{selectedElementDepth}}. Prüfen Sie die Dokumentation Ihres Treibers für den maximal unterstützten Wert.",
   "Tap": "Tippen",
   "Gathering initial app source…": "Die Anfangsquelle des Programms wird gesammelt…",
