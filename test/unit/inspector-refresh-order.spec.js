@@ -56,6 +56,7 @@ describe('InspectorDriver refresh order', function () {
     const refresh = inspector.run({methodName: 'getPageSource', skipScreenshot: true, preferSourceFirst: true});
     await vi.advanceTimersByTimeAsync(REFRESH_DELAY_MILLIS);
 
+    expect(driver.getWindowRect).toHaveBeenCalledBefore(driver.getPageSource);
     expect(driver.getPageSource).toHaveBeenCalledOnce();
     expect(driver.getWindowRect).toHaveBeenCalledOnce();
     pendingSource.resolve(source);
