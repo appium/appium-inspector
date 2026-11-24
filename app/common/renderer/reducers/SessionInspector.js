@@ -55,6 +55,7 @@ import {
   SET_LOCATOR_SEARCH_VALUE,
   SET_MJPEG_STATE,
   SET_OPTIMAL_LOCATORS,
+  SET_RECORDED_ACTIONS,
   SET_REFRESHING_STATE,
   SET_SCREENSHOT_INTERACTION_MODE,
   SET_SEARCHED_FOR_ELEMENT_BOUNDS,
@@ -257,6 +258,12 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         recordedActions: [...state.recordedActions, {action: action.action, params: action.params}],
+      };
+
+    case SET_RECORDED_ACTIONS:
+      return {
+        ...state,
+        recordedActions: Array.isArray(action.actions) ? action.actions : [],
       };
 
     case ADD_ASSIGNED_VAR_CACHE:

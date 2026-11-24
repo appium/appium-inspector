@@ -39,3 +39,17 @@ There are also a few management buttons shown next to the language dropdown:
 - The copy button copies the currently recorded code to the clipboard. If enabled, boilerplate code
   is copied as well.
 - The clear button deletes all the currently recorded code. Note that the recording state is not changed.
+
+## Server Recording
+
+When the Appium server runs the
+[Inspector plugin](../getting-started.md#appium-plugin), the
+[Server Recorder](../server-recorder.md) can also record the session on the
+server, including the commands sent by other clients. The Recorder tab then
+shows the server recording status of the session, with buttons to start,
+pause, resume or stop it.
+
+Additional buttons next to the language dropdown load the server recording
+into the tab, keep it in sync while it grows, and download its
+`locators.md` summary. All recordings of the server are also listed in the
+[Recordings tab](../session-builder/recordings.md) of the Session Builder.

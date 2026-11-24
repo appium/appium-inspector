@@ -16,3 +16,4 @@ The user interface here can be divided into several groups:
 - [Capability Builder tab](./capability-builder.md)
 - [Saved Capability Sets tab](./saved-capability-sets.md)
 - [Attaching to Existing Session tab](./attach-to-session.md)
+- [Recordings tab](./recordings.md) (Inspector plugin only)

@@ -23,6 +23,7 @@ import {log} from '../../utils/logger.js';
 import AppSettings from './AppSettings/AppSettings.jsx';
 import AttachToSession from './AttachToSessionTab/AttachToSession.jsx';
 import CapabilityEditor from './CapabilityBuilderTab/CapabilityEditor.jsx';
+import Recordings from './RecordingsTab/Recordings.jsx';
 import SavedCapabilitySets from './SavedCapabilitySetsTab/SavedCapabilitySets.jsx';
 import AdvancedServerParams from './ServerDetails/AdvancedServerParams.jsx';
 import CloudProviders from './ServerDetails/CloudProviders.jsx';
@@ -80,7 +81,8 @@ const Session = () => {
     window.innerWidth > 0 && window.innerWidth < SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT,
   );
 
-  const isAttaching = tabKey === 'attach';
+  // neither attaching nor browsing recordings uses the capability set
+  const isAttaching = tabKey === 'attach' || tabKey === SESSION_BUILDER_TABS.RECORDINGS;
 
   const handleSelectServerTab = async (tab) => {
     const {changeServerType, addCloudProvider} = props;
@@ -202,6 +204,12 @@ const Session = () => {
               key: SESSION_BUILDER_TABS.ATTACH_TO_SESSION,
               className: styles.scrollingTab,
               children: <AttachToSession loadNewSession={loadNewSession} {...props} />,
+            },
+            {
+              label: t('Recordings'),
+              key: SESSION_BUILDER_TABS.RECORDINGS,
+              className: styles.scrollingTab,
+              children: <Recordings server={server} />,
             },
           ]}
         />

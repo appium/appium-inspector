@@ -11,6 +11,10 @@ with your application under test.
 
 - Web-based Appium Inspector interface, accessible via the Appium server's `/inspector` endpoint
 - Full feature parity with standalone Appium Inspector
+- Server Recorder: records what any client (test code, an AI agent, the Inspector) does in a session,
+  with suggested unique locators and generated test code. Controlled with `inspector: *` extension
+  commands or from the Inspector UI. See the
+  [Server Recorder documentation](https://appium.github.io/appium-inspector/latest/server-recorder/).
 
 ## Installation
 

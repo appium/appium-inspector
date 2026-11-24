@@ -37,7 +37,7 @@
     "build": "npm run build:browser && npm run build:electron && npm run build:plugin",
     "build:browser": "vite build",
     "build:browser:url": "vite build --base $PUBLIC_URL",
-    "build:plugin": "vite build --base /inspector --outDir ../../plugins/dist-browser",
+    "build:plugin": "vite build --base /inspector --outDir ../../plugins/dist-browser && vite build --config vite.plugin-lib.config.mjs",
     "build:electron": "electron-vite build",
     "preview:browser": "npm run build:browser && vite preview",
     "preview:plugin": "npm run build:plugin && vite preview --base /inspector --outDir ../../plugins/dist-browser",

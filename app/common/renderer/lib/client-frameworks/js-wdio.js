@@ -37,6 +37,10 @@ main().catch(console.log);`;
     return `// ${comment}`;
   }
 
+  getElementIdExpr(varExpr) {
+    return `${varExpr}.elementId`;
+  }
+
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
     // wdio allows to specify strategy as a locator prefix
     const validStrategies = [

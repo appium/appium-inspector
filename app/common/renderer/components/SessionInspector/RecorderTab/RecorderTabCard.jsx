@@ -1,4 +1,12 @@
-import {IconEraser, IconEyeCode, IconFiles, IconVideo} from '@tabler/icons-react';
+import {
+  IconCloudDownload,
+  IconEraser,
+  IconEyeCode,
+  IconFileDownload,
+  IconFiles,
+  IconRefresh,
+  IconVideo,
+} from '@tabler/icons-react';
 import {Button, Card, Flex, Select, Space, Tooltip} from 'antd';
 import {useTranslation} from 'react-i18next';
 
@@ -33,14 +41,45 @@ const RecorderTabHeaderButtons = ({
   showBoilerplate,
   toggleShowBoilerplate,
   clearRecording,
+  loadServerRecording,
+  downloadServerLocators,
+  isServerSyncOn,
+  toggleServerSync,
 }) => {
   const {t} = useTranslation();
   const toggleBoilerplateLabel = t('Show/Hide Boilerplate Code');
   const copyLabel = t('Copy code to clipboard');
   const clearLabel = t('Clear Actions');
+  const loadServerLabel = t('loadServerRecording');
+  const syncServerLabel = t('syncServerRecording');
+  const downloadLocatorsLabel = t('downloadServerLocators');
 
   return (
     <Space size="small">
+      <Space.Compact>
+        <Tooltip title={loadServerLabel}>
+          <Button
+            aria-label={loadServerLabel}
+            icon={<IconCloudDownload size={18} />}
+            onClick={() => loadServerRecording()}
+          />
+        </Tooltip>
+        <Tooltip title={syncServerLabel}>
+          <Button
+            aria-label={syncServerLabel}
+            icon={<IconRefresh size={18} />}
+            type={isServerSyncOn ? BUTTON.PRIMARY : BUTTON.DEFAULT}
+            onClick={toggleServerSync}
+          />
+        </Tooltip>
+        <Tooltip title={downloadLocatorsLabel}>
+          <Button
+            aria-label={downloadLocatorsLabel}
+            icon={<IconFileDownload size={18} />}
+            onClick={downloadServerLocators}
+          />
+        </Tooltip>
+      </Space.Compact>
       {!!recordedActions.length && (
         <Space.Compact>
           <Tooltip title={toggleBoilerplateLabel}>
@@ -85,6 +124,7 @@ const RecorderTabCard = ({
   showBoilerplate,
   toggleShowBoilerplate,
   clearRecording,
+  ...serverProps
 }) => (
   <Card
     title={<RecorderTabTitle />}
@@ -102,6 +142,7 @@ const RecorderTabCard = ({
         showBoilerplate={showBoilerplate}
         toggleShowBoilerplate={toggleShowBoilerplate}
         clearRecording={clearRecording}
+        {...serverProps}
       />
     }
   >

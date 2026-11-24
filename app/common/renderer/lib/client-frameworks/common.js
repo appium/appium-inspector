@@ -1,6 +1,9 @@
 import {DEFAULT_SWIPE, DEFAULT_TAP} from '../../constants/screenshot.js';
 import {isEmpty} from '../../utils/common.js';
 
+// must match ELEMENT_REF_PREFIX in plugins/recorder.mjs
+export const ELEMENT_REF_PLACEHOLDER = '__SR_ELEMENT_REF_';
+
 export default class CommonClientFramework {
   constructor(serverUrl, serverUrlParts, caps) {
     this.serverUrl = serverUrl;
@@ -124,6 +127,59 @@ export default class CommonClientFramework {
       return '';
     }
     return this.codeFor_findAndAssign(strategy, locator, localVar);
+  }
+
+  // Actions recorded on the server by the Inspector Appium plugin (plugins/recorder.mjs)
+
+  codeFor_comment(text) {
+    return this.addComment(String(text ?? '').replace(/[\r\n\u0085\u2028\u2029]+/g, ' '));
+  }
+
+  /**
+   * Another action's code, commented out line by line, after a note. Used for calls that are kept in
+   * a recording for reference but are not part of the test (e.g. an AI agent's scouting reads).
+   */
+  codeFor_commentedOut(action, params, note) {
+    const genCodeFn = this[`codeFor_${action}`];
+    const code = genCodeFn ? genCodeFn.apply(this, params) : '';
+    const lines = String(code ?? '')
+      .split('\n')
+      .filter((line) => line.trim())
+      .map((line) => this.addComment(line));
+    return [this.codeFor_comment(`${note}:`), ...lines].join('\n');
+  }
+
+  /**
+   * Expression for the WebDriver id of a found element in this language, or null when the
+   * language has no stable way to read it (the recorded id is then kept with a comment).
+   */
+  getElementIdExpr(_varExpr) {
+    return null;
+  }
+
+  /**
+   * Script call whose arguments reference found elements. `jsonArg` holds placeholders
+   * (`__SR_ELEMENT_REF_<n>__`) where element ids were; `elementVars[n]` is `[varName, varIndex]`
+   * (or null when the element has no locator) and `elementIds[n]` the id seen while recording.
+   */
+  codeFor_executeScriptWithElements(scriptCmd, jsonArg, elementVars, elementIds) {
+    let code = this.codeFor_executeScript(null, null, scriptCmd, jsonArg);
+    const notes = [];
+    elementIds.forEach((id, n) => {
+      const placeholder = `${ELEMENT_REF_PLACEHOLDER}${n}__`;
+      const ref = elementVars[n];
+      const varExpr = ref ? this.getVarName(ref[0], ref[1]) : null;
+      const idExpr = varExpr ? this.getElementIdExpr(varExpr) : null;
+      if (idExpr) {
+        code = code.replace(new RegExp(`(["'])${placeholder}\\1`, 'g'), idExpr);
+      } else {
+        code = code.replaceAll(placeholder, JSON.stringify(String(id)).slice(1, -1));
+        notes.push(
+          this.codeFor_comment(`Replace ${this.quote(id)} with the element id of ${varExpr ?? 'the target element'}`),
+        );
+      }
+    });
+    return [...notes, code].join('\n');
   }
 
   // Top-Level Commands

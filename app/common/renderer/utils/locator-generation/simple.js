@@ -18,6 +18,10 @@ class SimpleLocatorGenerator {
     ['resource-id', STRATEGIES.ID],
     ['class', STRATEGIES.CLASS_NAME],
     ['type', STRATEGIES.CLASS_NAME],
+    // Windows UI Automation (windows / wincore drivers). RuntimeId is not used: it changes every run.
+    ['AutomationId', STRATEGIES.ACCESSIBILITY_ID],
+    ['Name', STRATEGIES.NAME],
+    ['ClassName', STRATEGIES.CLASS_NAME],
   ];
 
   /**

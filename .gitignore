@@ -5,6 +5,7 @@ dist-browser
 release
 site
 plugins/package-lock.json
+plugins/lib
 main.map
 
 *.log

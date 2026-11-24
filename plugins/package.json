@@ -20,6 +20,11 @@
   },
   "files": [
     "index.mjs",
+    "recorder.mjs",
+    "locator-upgrade.mjs",
+    "codegen.mjs",
+    "inspector-lib.mjs",
+    "lib",
     "package.json",
     "dist-browser",
     "README.md"

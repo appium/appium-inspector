@@ -16,6 +16,7 @@ import {getOptimalXPath} from '../utils/locator-generation/xpath.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
 import {getRandomId} from '../utils/other.js';
+import {originOfServerUrl, recordingsUrl} from '../utils/server-recordings.js';
 import {findDOMNodeByPath, findJSONElementByPath, xmlToDOM, xmlToJSON} from '../utils/source-parsing.js';
 import {newSession, showError} from './SessionBuilder.js';
 
@@ -45,6 +46,7 @@ export const PAUSE_RECORDING = 'PAUSE_RECORDING';
 export const CLEAR_RECORDING = 'CLEAR_RECORDING';
 export const SET_CLIENT_FRAMEWORK = 'SET_CLIENT_FRAMEWORK';
 export const RECORD_ACTION = 'RECORD_ACTION';
+export const SET_RECORDED_ACTIONS = 'SET_RECORDED_ACTIONS';
 export const SET_SHOW_BOILERPLATE = 'SET_SHOW_BOILERPLATE';
 
 export const SHOW_LOCATOR_SEARCH_MODAL = 'SHOW_LOCATOR_SEARCH_MODAL';
@@ -367,6 +369,58 @@ export function clearRecording() {
   return (dispatch) => {
     dispatch({type: CLEAR_RECORDING});
     dispatch({type: CLEAR_ASSIGNED_VAR_CACHE}); // Get rid of the variable cache
+  };
+}
+
+/**
+ * URL of this session's recording in the Inspector Appium plugin. The plugin's routes live at the
+ * server root, whatever base path the WebDriver endpoints use.
+ */
+export function getServerRecordingUrl(serverUrl, sessionId, suffix = '') {
+  return recordingsUrl(originOfServerUrl(serverUrl), sessionId, suffix);
+}
+
+/**
+ * Replace the recorded actions with the ones the Inspector plugin recorded on the server for this
+ * session: every command any client sent, e.g. an AI agent working through an MCP server.
+ * Returns false (without notifying) when `quiet` is set and the recording is not available.
+ */
+export function loadServerRecording({quiet = false} = {}) {
+  return async (dispatch, getState) => {
+    const {driver, serverDetails} = getState().inspector;
+    if (!driver?.sessionId || !serverDetails?.serverUrl) {
+      return false;
+    }
+    const url = getServerRecordingUrl(serverDetails.serverUrl, driver.sessionId);
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error(res.status === 404 ? i18n.t('serverRecordingNotFound') : `HTTP ${res.status}`);
+      }
+      const {actions} = await res.json();
+      dispatch({type: SET_RECORDED_ACTIONS, actions});
+      dispatch({type: CLEAR_ASSIGNED_VAR_CACHE});
+      return true;
+    } catch (err) {
+      if (!quiet) {
+        notification.error({
+          title: i18n.t('couldNotLoadServerRecording', {url}),
+          description: err.message,
+          duration: 0,
+        });
+      }
+      return false;
+    }
+  };
+}
+
+export function downloadServerLocators() {
+  return (dispatch, getState) => {
+    const {driver, serverDetails} = getState().inspector;
+    if (driver?.sessionId && serverDetails?.serverUrl) {
+      const url = getServerRecordingUrl(serverDetails.serverUrl, driver.sessionId, '/locators.md');
+      downloadFile(url, `locators_${sanitize(driver.sessionId)}.md`);
+    }
   };
 }
 

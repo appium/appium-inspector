@@ -2,6 +2,7 @@ export const SESSION_BUILDER_TABS = {
   CAPS_BUILDER: 'new',
   SAVED_CAPS: 'saved',
   ATTACH_TO_SESSION: 'attach',
+  RECORDINGS: 'recordings',
 };
 
 // Below this window width, the JSON preview panel no longer has enough room

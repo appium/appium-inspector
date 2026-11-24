@@ -39,6 +39,7 @@ nav:
       - session-builder/capability-builder.md
       - session-builder/saved-capability-sets.md
       - session-builder/attach-to-session.md
+      - session-builder/recordings.md
   - Session Inspector:
       - session-inspector/index.md
       - session-inspector/header.md
@@ -48,6 +49,7 @@ nav:
       - session-inspector/gestures.md
       - session-inspector/recorder.md
       - session-inspector/session-info.md
+  - server-recorder.md
   - troubleshooting.md
   - contributing.md
 

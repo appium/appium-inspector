@@ -1,0 +1,70 @@
+.container {
+  padding: 0 4px;
+}
+
+.row {
+  cursor: pointer;
+}
+
+.selectedRow {
+  cursor: pointer;
+  background: var(--ant-control-item-bg-active, rgba(22, 119, 255, 0.08));
+}
+
+.liveTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liveDot {
+    animation: none;
+  }
+}
+
+.frameworkDropdown {
+  width: 180px;
+}
+
+.meta {
+  margin-bottom: 8px !important;
+  word-break: break-all;
+}
+
+.code {
+  margin-bottom: 0;
+  max-height: 420px;
+  overflow: auto;
+}
+
+.locators {
+  max-height: 420px;
+  overflow: auto;
+  font-size: 12px;
+  white-space: pre;
+  margin: 0;
+}
+
+.confirm {
+  max-width: 360px;
+  word-break: break-all;
+}

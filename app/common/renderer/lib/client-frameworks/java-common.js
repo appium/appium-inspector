@@ -72,6 +72,10 @@ export default class JavaFramework extends CommonClientFramework {
     return `// ${comment}`;
   }
 
+  getElementIdExpr(varExpr) {
+    return `((org.openqa.selenium.remote.RemoteWebElement) ${varExpr}).getId()`;
+  }
+
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
     const byMap = {
       [LOCATOR_STRATEGIES.ID]: 'id',

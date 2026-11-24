@@ -57,6 +57,10 @@ driver.quit()`;
     return `# ${comment}`;
   }
 
+  getElementIdExpr(varExpr) {
+    return `${varExpr}.id`;
+  }
+
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
     const byMap = {
       [LOCATOR_STRATEGIES.ID]: 'ID',
