@@ -9,13 +9,11 @@ The application settings can be accessed using the button in the top-right of th
 
 ![App Settings Button](assets/images/app-settings.png)
 
-## Refresh order
+## Refresh Options
 
-By default, the Inspector requests the screenshot first when refreshing a session. Enable
-**Request page source before screenshot** to request the page source first. This can help reduce
-mismatches between the page source and screenshot when the app changes screens during refresh.
-Inspector reads the setting on each refresh. With MJPEG streaming, enabling it requests the
-page source before the window size.
+By default, when refreshing the app source/screenshot, the Inspector requests the screenshot before
+the source. It is possible to reverse this order, which can help reduce potential source/screenshot
+mismatches, in case the screenshot updates while the source is still loading.
 
 ## Theme
 
