@@ -11,8 +11,13 @@ const PLUGIN_ROOT_PATH = '/inspector';
 const RECORDINGS_API_PATH = `${PLUGIN_ROOT_PATH}/api/recordings`;
 const INDEX_HTML = 'index.html';
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'dist-browser');
-// element attributes that tell whether a field hides its text (UIA / wincore, UiAutomator2)
-const PASSWORD_ATTRIBUTES = ['IsPassword', 'password'];
+// element attributes that tell whether a field hides its text, with the value that means it does:
+// IsPassword (UIA / wincore), password (UiAutomator2, Espresso), type (XCUITest secure text fields)
+const PASSWORD_ATTRIBUTES = [
+  ['IsPassword', 'true'],
+  ['password', 'true'],
+  ['type', 'xcuielementtypesecuretextfield'],
+];
 // capability that starts recording with the session: appium:inspectorRecord = true
 const RECORD_CAPABILITY = 'inspectorRecord';
 
@@ -75,15 +80,17 @@ export class AppiumInspectorPlugin extends BasePlugin {
       }
       return result;
     }
-    if (!store.isRecording(sessionId)) {
-      if (!store.get(sessionId) && (this.recorder.recordAll || this.wantsRecording(driver))) {
-        store.start(sessionId, driver.caps);
-      } else {
+    let rec = store.get(sessionId);
+    if (!rec?.active) {
+      if (rec || !(this.recorder.recordAll || this.wantsRecording(driver))) {
         store.noteSession(sessionId, driver.caps);
         return await next();
       }
+      rec = store.start(sessionId, driver.caps);
     }
-    const extra = cmdName === 'setValue' ? {secret: await this.isPasswordField(driver, args[1])} : {};
+    // A paused recording still goes through here: it adds no steps (and suggests no locators), but
+    // keeps tracking finds, so later steps keep their locators, and keeps the page source cache valid.
+    const extra = cmdName === 'setValue' && !rec.paused ? {secret: await this.isPasswordField(driver, args[1])} : {};
     if (this.recorder.suggestLocators) {
       await this.suggestLocators(driver, cmdName, args);
     }
@@ -94,7 +101,10 @@ export class AppiumInspectorPlugin extends BasePlugin {
       this.sourceCache = null;
     }
     try {
-      store.getOrCreate(sessionId, driver.caps).recordCommand(cmdName, args, result, extra);
+      // the recording may have been stopped while the command ran
+      if (rec.active) {
+        rec.recordCommand(cmdName, args, result, extra);
+      }
     } catch (err) {
       this.log.warn(`Recorder could not record '${cmdName}': ${err.message}`);
     }
@@ -262,9 +272,9 @@ export class AppiumInspectorPlugin extends BasePlugin {
     if (!elementId || typeof driver?.getAttribute !== 'function') {
       return false;
     }
-    for (const name of PASSWORD_ATTRIBUTES) {
+    for (const [name, secretValue] of PASSWORD_ATTRIBUTES) {
       try {
-        if (String(await driver.getAttribute(name, elementId)).toLowerCase() === 'true') {
+        if (String(await driver.getAttribute(name, elementId)).toLowerCase() === secretValue) {
           return true;
         }
       } catch {

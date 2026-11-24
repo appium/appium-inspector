@@ -114,7 +114,8 @@ command may have changed the application state.
 ### Password Fields
 
 Text typed into fields that the driver reports as password fields
-(`IsPassword` or `password` attribute) is replaced with `{{PASSWORD}}`.
+(`IsPassword` or `password` attribute, or an iOS
+`XCUIElementTypeSecureTextField`) is replaced with `{{PASSWORD}}`.
 
 ## Saved Recordings
 

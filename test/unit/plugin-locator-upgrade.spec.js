@@ -180,6 +180,60 @@ describe('plugin recording control', function () {
     expect(store.get('cap-test').steps).toHaveLength(1);
   });
 
+  it('keeps tracking finds while paused, so later steps keep their locators', async function () {
+    const plugin = new AppiumInspectorPlugin('inspector', {});
+    const driver = fakeDriver('pause-find-test');
+    const exec = (script) => plugin.execute(async () => null, driver, script, [{}]);
+
+    await exec('inspector: startRecording');
+    await exec('inspector: pauseRecording');
+    await plugin.handle(find('save'), driver, 'findElement', 'accessibility id', 'btnSave');
+    await plugin.handle(async () => null, driver, 'click', 'save'); // paused: not recorded
+    await exec('inspector: resumeRecording');
+    await plugin.handle(async () => null, driver, 'click', 'save');
+
+    const {steps} = store.get('pause-find-test');
+    expect(steps).toHaveLength(1);
+    expect(steps[0].element).toMatchObject({strategy: 'accessibility id', selector: 'btnSave'});
+  });
+
+  it('reads the page source again when a command changed the app while paused', async function () {
+    const plugin = new AppiumInspectorPlugin('inspector', {});
+    const driver = fakeDriver('pause-source-test');
+    const exec = (script) => plugin.execute(async () => null, driver, script, [{}]);
+
+    await exec('inspector: startRecording');
+    await plugin.handle(find('search'), driver, 'findElement', 'xpath', '//Edit');
+    await plugin.handle(async () => XML, driver, 'getPageSource'); // the client read it: cached
+    await exec('inspector: pauseRecording');
+    await plugin.handle(async () => null, driver, 'click', 'save'); // may change the app
+    await exec('inspector: resumeRecording');
+    await plugin.handle(async () => 'abc', driver, 'getText', 'search');
+
+    expect(driver.calls.getPageSource).toBe(1); // not the copy read before the click
+  });
+
+  it('masks text typed into iOS secure text fields', async function () {
+    const plugin = new AppiumInspectorPlugin('inspector', {});
+    plugin.recorder.suggestLocators = false;
+    const driver = {
+      sessionId: 'ios-secret-test',
+      caps: {platformName: 'iOS', automationName: 'XCUITest', inspectorRecord: true},
+      async getAttribute(name) {
+        if (name !== 'type') {
+          throw new Error('unsupported attribute');
+        }
+        return 'XCUIElementTypeSecureTextField';
+      },
+    };
+    await plugin.handle(find('pwd'), driver, 'findElement', 'accessibility id', 'password');
+    await plugin.handle(async () => null, driver, 'setValue', 'hunter2', 'pwd');
+
+    const [step] = store.get('ios-secret-test').steps;
+    expect(step).toMatchObject({action: 'type', value: '{{PASSWORD}}', secret: true});
+    expect(JSON.stringify(store.get('ios-secret-test').toJSON())).not.toContain('hunter2');
+  });
+
   it('rejects unknown code formats with the list of supported ones', async function () {
     const plugin = new AppiumInspectorPlugin('inspector', {});
     const driver = fakeDriver('format-test');

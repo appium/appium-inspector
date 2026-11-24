@@ -665,12 +665,6 @@ export class RecordingStore {
     }
   }
 
-  /** Whether commands of this session are being recorded right now. */
-  isRecording(sessionId) {
-    const rec = this.recordings.get(sessionId);
-    return !!rec && rec.active && !rec.paused;
-  }
-
   /**
    * Start recording a session. A stopped recording is final: continuing it would leave an unmarked gap
    * in the steps, so pause/resume is the way to leave steps out.
