@@ -10,7 +10,8 @@ import {LocatorGeneratorBase} from './base.js';
 class XPathGenerator extends LocatorGeneratorBase {
   // Attributes on nodes that are likely to be unique to the node so we should consider first when
   // suggesting xpath locators. These are considered IN ORDER.
-  static UNIQUE_ATTRIBUTES = ['name', 'content-desc', 'id', 'resource-id', 'accessibility-id'];
+  // (AutomationId and Name are the Windows UI Automation equivalents, used by the windows/wincore drivers)
+  static UNIQUE_ATTRIBUTES = ['name', 'content-desc', 'id', 'resource-id', 'accessibility-id', 'AutomationId', 'Name'];
 
   // Attributes that we should recommend as a fallback but ideally only in conjunction with other
   // attributes

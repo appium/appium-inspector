@@ -45,6 +45,13 @@ describe('utils/locator-generation/xpath.js', function () {
         testXPath(doc, doc.firstChild, '//root[@name="bar"]');
       });
 
+      it('should use Windows UI Automation attributes, preferring AutomationId over Name', function () {
+        const doc = xmlToDOM(`<Window><Button Name='Save' AutomationId='btnSave' ClassName='Button'/></Window>`);
+        testXPath(doc, doc.firstChild.firstChild, '//Button[@AutomationId="btnSave"]');
+        const named = xmlToDOM(`<Window><Button Name='Save' ClassName='Button'/></Window>`);
+        testXPath(named, named.firstChild.firstChild, '//Button[@Name="Save"]');
+      });
+
       it('should use a relative xpath if the node has no unique or maybe-unique attributes', function () {
         const doc = xmlToDOM(`<root non-unique-attr='foo'></root>`);
         testXPath(doc, doc.firstChild, '/root');
