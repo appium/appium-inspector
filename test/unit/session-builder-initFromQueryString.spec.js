@@ -29,10 +29,10 @@ const SAVED_SAUCE = {username: 'saved-user', accessKey: 'saved-key', dataCenter:
 async function runWithUrl(search) {
   vi.resetModules();
   const actions = await import('../../app/common/renderer/actions/SessionBuilder.js');
-  const {default: builder} = await import('../../app/common/renderer/reducers/SessionBuilder.js');
+  const {default: builder, setServer} = await import('../../app/common/renderer/reducers/SessionBuilder.js');
 
   let state = builder(undefined, {type: '@@INIT'});
-  state = builder(state, {type: actions.SET_SERVER, server: {sauce: SAVED_SAUCE}, serverType: 'sauce'});
+  state = builder(state, setServer({server: {sauce: SAVED_SAUCE}, serverType: 'sauce'}));
   const dispatch = (action) => {
     state = builder(state, action);
   };

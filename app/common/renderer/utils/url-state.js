@@ -17,7 +17,7 @@ const hasFieldType = (fields, field, value) => [fields[field]].flat().includes(t
 /**
  * Reduce session builder state supplied through the `?state=` query parameter to the parts a
  * link may set: capabilities, a session id to attach to, and a local or remote server with its
- * advanced options. The result replaces the saved server state (see SET_STATE_FROM_URL), so a
+ * advanced options. The result replaces the saved server state (see setStateFromUrl), so a
  * session started from a link never uses saved cloud credentials.
  *
  * @param {unknown} state parsed `state` query parameter

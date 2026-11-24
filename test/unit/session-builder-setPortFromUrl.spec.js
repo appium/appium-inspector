@@ -3,6 +3,7 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import * as SessionBuilderActions from '../../app/common/renderer/actions/SessionBuilder.js';
 import {SERVER_TYPES} from '../../app/common/renderer/constants/session-builder.js';
 import {DEFAULT_SERVER_PROPS} from '../../app/common/renderer/constants/webdriver.js';
+import {setServerParam} from '../../app/common/renderer/reducers/SessionBuilder.js';
 
 vi.mock('../../app/common/renderer/utils/logger.js', () => ({
   log: {
@@ -70,12 +71,13 @@ describe('SessionBuilder actions', function () {
       const action = SessionBuilderActions.setPortFromUrl();
       await action(mockDispatch, mockGetState);
 
-      expect(mockDispatch).toHaveBeenCalledWith({
-        type: 'SET_SERVER_PARAM',
-        serverType: SERVER_TYPES.REMOTE,
-        name: 'port',
-        value: '1234',
-      });
+      expect(mockDispatch).toHaveBeenCalledWith(
+        setServerParam({
+          serverType: SERVER_TYPES.REMOTE,
+          name: 'port',
+          value: '1234',
+        }),
+      );
     });
 
     it('should extract and set port from default port URL', async function () {
@@ -102,12 +104,13 @@ describe('SessionBuilder actions', function () {
       const action = SessionBuilderActions.setPortFromUrl();
       await action(mockDispatch, mockGetState);
 
-      expect(mockDispatch).toHaveBeenCalledWith({
-        type: 'SET_SERVER_PARAM',
-        serverType: SERVER_TYPES.REMOTE,
-        name: 'port',
-        value: '4723',
-      });
+      expect(mockDispatch).toHaveBeenCalledWith(
+        setServerParam({
+          serverType: SERVER_TYPES.REMOTE,
+          name: 'port',
+          value: '4723',
+        }),
+      );
     });
 
     it('should not set port if window is undefined (electron mode)', async function () {
