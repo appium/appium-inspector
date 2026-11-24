@@ -890,8 +890,8 @@ export function callClientMethod(params) {
       const action = keepSessionAlive();
       action(dispatch, getState);
       const inspectorDriver = InspectorDriver.instance(driver);
-      const preferSourceFirst = await getSetting(PREFER_SOURCE_FIRST);
-      const res = await inspectorDriver.run({...params, preferSourceFirst});
+      params.preferSourceFirst = await getSetting(PREFER_SOURCE_FIRST);
+      const res = await inspectorDriver.run(params);
       res.elementId = res.id;
       return res;
     } catch (error) {
