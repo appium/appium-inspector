@@ -874,6 +874,7 @@ export function callClientMethod(params) {
     const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} = getState().inspector;
     params.appMode = appMode;
     params.autoSessionRestart = autoSessionRestart;
+    params.preferSourceFirst = await getSetting(PREFER_SOURCE_FIRST);
 
     // don't retrieve screenshot if we're already using the mjpeg stream
     if (isUsingMjpegMode) {
@@ -890,7 +891,6 @@ export function callClientMethod(params) {
       const action = keepSessionAlive();
       action(dispatch, getState);
       const inspectorDriver = InspectorDriver.instance(driver);
-      params.preferSourceFirst = await getSetting(PREFER_SOURCE_FIRST);
       const res = await inspectorDriver.run(params);
       res.elementId = res.id;
       return res;

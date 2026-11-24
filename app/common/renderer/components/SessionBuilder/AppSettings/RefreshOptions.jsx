@@ -1,4 +1,4 @@
-import {Form, Switch} from 'antd';
+import {Flex, Form, Switch} from 'antd';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
@@ -8,12 +8,12 @@ import {getSetting, setSetting} from '../../../polyfills.js';
 let retrievedPreference = await getSetting(PREFER_SOURCE_FIRST);
 
 /**
- * Lets users choose whether to request the page source before the screenshot.
+ * Options for customizing the source/screenshot refresh behavior.
  */
-const RefreshOrder = () => {
+const RefreshOptions = () => {
   const {t} = useTranslation();
   const [preferSourceFirst, setPreferSourceFirst] = useState(retrievedPreference);
-  const label = t('requestPageSourceBeforeScreenshot');
+  const orderLabel = t('requestPageSourceBeforeScreenshot');
 
   const changeRefreshOrder = async (checked) => {
     await setSetting(PREFER_SOURCE_FIRST, checked);
@@ -22,10 +22,13 @@ const RefreshOrder = () => {
   };
 
   return (
-    <Form.Item label={label}>
-      <Switch aria-label={label} checked={preferSourceFirst} onChange={changeRefreshOrder} />
+    <Form.Item styles={{root: {marginBottom: '8px'}}} label={t('refreshOptions')}>
+      <Flex gap={4} justify="space-evenly">
+        {orderLabel}
+        <Switch aria-label={orderLabel} checked={preferSourceFirst} onChange={changeRefreshOrder} />
+      </Flex>
     </Form.Item>
   );
 };
 
-export default RefreshOrder;
+export default RefreshOptions;

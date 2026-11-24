@@ -4,7 +4,7 @@ import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
 import ChangeLanguage from './ChangeLanguage.jsx';
-import RefreshOrder from './RefreshOrder.jsx';
+import RefreshOptions from './RefreshOptions.jsx';
 import ToggleTheme from './ToggleTheme.jsx';
 
 const AppSettings = () => {
@@ -27,7 +27,7 @@ const AppSettings = () => {
         centered
       >
         <Form styles={{label: {fontSize: '16px'}}} layout="vertical">
-          <RefreshOrder />
+          <RefreshOptions />
           <ToggleTheme />
           <ChangeLanguage />
         </Form>
