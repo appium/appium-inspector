@@ -68,7 +68,7 @@ export default class InspectorDriver {
       args = [], // Optional. Arguments passed to method
       skipRefresh = false, // Optional. Do we want the updated source and screenshot?
       skipScreenshot = false, // Optional. Do we want to skip getting screenshot alone?
-      preferSourceFirst = false, // Optional. Do we request the source before the screenshot?
+      preferSourceFirst = false, // Optional. Do we request the source before the other refresh requests?
       appMode = APP_MODE.NATIVE, // Optional. Whether we're in a native or hybrid mode
     } = params;
 
@@ -180,7 +180,7 @@ export default class InspectorDriver {
     // Give the source/screenshot time to change
     await new Promise((resolve) => setTimeout(resolve, REFRESH_DELAY_MILLIS));
 
-    const earlySourcePromise = preferSourceFirst && !skipScreenshot ? this.getSourceUpdate() : undefined;
+    const earlySourcePromise = preferSourceFirst ? this.getSourceUpdate() : undefined;
     const screenshotPromise = skipScreenshot ? {} : this.getScreenshotUpdate();
     const windowSizePromise = this.getWindowUpdate();
     const sourcePromise = earlySourcePromise ?? this.getSourceUpdate();

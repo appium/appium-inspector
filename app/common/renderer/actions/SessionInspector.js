@@ -1,6 +1,6 @@
 import sanitize from 'sanitize-filename';
 
-import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs.js';
+import {PREFER_SOURCE_FIRST, SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs.js';
 import {COMMAND_EXECUTE_SCRIPT, COMMAND_UPDATE_SETTINGS} from '../constants/commands.js';
 import {DRIVERS} from '../constants/common.js';
 import {APP_MODE, NATIVE_APP, UNKNOWN_ERROR} from '../constants/session-inspector.js';
@@ -400,7 +400,7 @@ export function toggleShowBoilerplate() {
   };
 }
 
-export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, isUsingMjpegMode, preferSourceFirst}) {
+export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, isUsingMjpegMode}) {
   return (dispatch) => {
     // Extract several capabilities from the finalised set of caps
     // that may be relevant for enabling specific Inspector features
@@ -420,7 +420,6 @@ export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, 
       featureCaps,
       appMode,
       isUsingMjpegMode,
-      preferSourceFirst,
     });
   };
 }
@@ -872,8 +871,7 @@ export function keepSessionAlive() {
 
 export function callClientMethod(params) {
   return async (dispatch, getState) => {
-    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart, preferSourceFirst} =
-      getState().inspector;
+    const {driver, appMode, isUsingMjpegMode, isSourceRefreshOn, autoSessionRestart} = getState().inspector;
     params.appMode = appMode;
     params.autoSessionRestart = autoSessionRestart;
 
@@ -892,6 +890,7 @@ export function callClientMethod(params) {
       const action = keepSessionAlive();
       action(dispatch, getState);
       const inspectorDriver = InspectorDriver.instance(driver);
+      const preferSourceFirst = await getSetting(PREFER_SOURCE_FIRST);
       const res = await inspectorDriver.run({...params, preferSourceFirst});
       res.elementId = res.id;
       return res;

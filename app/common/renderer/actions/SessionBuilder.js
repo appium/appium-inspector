@@ -1,7 +1,6 @@
 import sanitize from 'sanitize-filename';
 
 import {
-  PREFER_SOURCE_FIRST,
   SAVED_SESSIONS,
   SERVER_ARGS,
   SESSION_SERVER_PARAMS,
@@ -415,7 +414,6 @@ export function newSession(originalCaps, attachSessId = null) {
       sessionCaps,
       appMode,
       isUsingMjpegMode: mjpegScreenshotUrl !== null,
-      preferSourceFirst: await getSetting(PREFER_SOURCE_FIRST),
     });
     action(dispatch);
     return true;

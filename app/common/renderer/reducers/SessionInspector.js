@@ -108,7 +108,6 @@ const INITIAL_STATE = {
   searchedForElementBounds: null,
   selectedInspectorTab: INSPECTOR_TABS.SOURCE,
   appMode: APP_MODE.NATIVE,
-  preferSourceFirst: false,
   findElementsExecutionTimes: [],
   isFindingElementsTimes: false,
   isFindingLocatedElementInSource: false,
@@ -287,7 +286,6 @@ export default function inspector(state = INITIAL_STATE, action) {
         featureCaps: action.featureCaps,
         appMode: action.appMode,
         isUsingMjpegMode: action.isUsingMjpegMode,
-        preferSourceFirst: action.preferSourceFirst,
       };
     }
 
