@@ -1,6 +1,6 @@
 import sanitize from 'sanitize-filename';
 
-import {SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs.js';
+import {PREFER_SOURCE_FIRST, SAVED_CLIENT_FRAMEWORK, SET_SAVED_GESTURES} from '../../shared/setting-defs.js';
 import {COMMAND_EXECUTE_SCRIPT, COMMAND_UPDATE_SETTINGS} from '../constants/commands.js';
 import {DRIVERS} from '../constants/common.js';
 import {APP_MODE, NATIVE_APP, UNKNOWN_ERROR} from '../constants/session-inspector.js';
@@ -890,6 +890,7 @@ export function callClientMethod(params) {
       const action = keepSessionAlive();
       action(dispatch, getState);
       const inspectorDriver = InspectorDriver.instance(driver);
+      params.preferSourceFirst = await getSetting(PREFER_SOURCE_FIRST);
       const res = await inspectorDriver.run(params);
       res.elementId = res.id;
       return res;
