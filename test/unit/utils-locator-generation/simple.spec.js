@@ -167,6 +167,30 @@ describe('utils/locator-generation/simple.js', function () {
         ).toBeUndefined();
       });
 
+      it('should find Windows UI Automation locators', function () {
+        const locators = getSimpleSuggestedLocators({
+          attributes: {AutomationId: 'btnSave', Name: 'Save', ClassName: 'Button', RuntimeId: '42.1234.4.5'},
+        });
+        expect(locators['accessibility id']).toBe('btnSave');
+        expect(locators.name).toBe('Save');
+        expect(locators['class name']).toBe('Button');
+        // RuntimeId changes with every run of the application: never suggested
+        expect(locators.id).toBeUndefined();
+      });
+
+      it('should not find Windows UI Automation locators that are not unique', function () {
+        const locators = getSimpleSuggestedLocators(
+          {attributes: {AutomationId: 'btnSave', Name: 'OK', ClassName: 'Button'}},
+          xmlToDOM(`<Window>
+            <Button AutomationId='btnSave' Name='OK' ClassName='Button'></Button>
+            <Button AutomationId='btnCancel' Name='OK' ClassName='Button'></Button>
+          </Window>`),
+        );
+        expect(locators['accessibility id']).toBe('btnSave');
+        expect(locators.name).toBeUndefined();
+        expect(locators['class name']).toBeUndefined();
+      });
+
       it('should not use any non-native context locator strategies', function () {
         expect(getSimpleSuggestedLocators({tag: 'tag', attributes: {}})['tag name']).toBeUndefined();
       });
