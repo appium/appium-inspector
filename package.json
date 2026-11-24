@@ -88,10 +88,10 @@
     "xpath": "0.0.36"
   },
   "devDependencies": {
-    "@appium/docutils": "4.0.0",
-    "@appium/fake-driver": "7.0.0",
-    "@appium/oxc-config": "2.0.0",
-    "@appium/support": "8.0.0",
+    "@appium/docutils": "4.0.1",
+    "@appium/fake-driver": "7.0.1",
+    "@appium/oxc-config": "2.0.1",
+    "@appium/support": "8.0.1",
     "@appium/tsconfig": "2.0.0",
     "@tomjs/electron-devtools-installer": "4.0.1",
     "@types/react": "19.3.0",
