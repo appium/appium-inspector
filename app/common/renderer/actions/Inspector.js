@@ -350,13 +350,22 @@ export function setExpandedPaths(paths) {
 
 /**
  * Quit the session and go back to the new session window
+ *
+ * @param {string} [reason]
+ * @param {boolean} [killedByUser]
+ * @param {{detachOnly?: boolean}} [opts] if detachOnly is true, the inspector only stops
+ * tracking the session; no DELETE /session/:id is sent, so the session stays alive on the server
  */
-export function quitSession(reason, killedByUser = true) {
+export function quitSession(reason, killedByUser = true, {detachOnly = false} = {}) {
   return async (dispatch, getState) => {
     const killAction = killKeepAliveLoop();
     killAction(dispatch, getState);
-    const applyAction = applyClientMethod({methodName: 'quit'});
-    await applyAction(dispatch, getState);
+    if (detachOnly) {
+      InspectorDriver.clearInstance();
+    } else {
+      const applyAction = applyClientMethod({methodName: 'quit'});
+      await applyAction(dispatch, getState);
+    }
     dispatch({type: QUIT_SESSION_DONE});
     if (!killedByUser) {
       showError(new Error(reason || i18n.t('Session has been terminated')), {secs: 0});

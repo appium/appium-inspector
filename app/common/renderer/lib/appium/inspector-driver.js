@@ -26,6 +26,14 @@ export default class InspectorDriver {
     return _instance;
   }
 
+  /**
+   * Drop the cached instance without ending the session on the server
+   * (used when detaching from a session we do not own)
+   */
+  static clearInstance() {
+    _instance = null;
+  }
+
   constructor(driver) {
     this.driver = driver;
     this.elementCache = {};

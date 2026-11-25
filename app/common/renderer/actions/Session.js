@@ -894,7 +894,12 @@ export function bindWindowClose() {
       let {driver} = getState().inspector;
       if (driver) {
         try {
-          const action = quitSession('Window closed');
+          // A session we attached to is owned by someone else (an automation run, HS ACE, ...).
+          // Closing or reloading the page that hosts the inspector (e.g. the HeadSpin Remote page)
+          // must not end it, otherwise the device is released mid-run (PROD-17764).
+          // Only sessions started by the inspector itself are deleted on window close.
+          const detachOnly = Boolean(driver._isAttachedSession);
+          const action = quitSession('Window closed', true, {detachOnly});
           await action(dispatch, getState);
         } finally {
           driver = null;
