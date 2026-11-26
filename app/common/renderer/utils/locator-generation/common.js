@@ -1,5 +1,5 @@
 import {DRIVERS} from '../../constants/common.js';
-import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
+import {ALL_STRATEGIES} from '../../constants/locator-strategies.js';
 import {findDOMNodeByPath, xmlToDOM} from '../source-parsing.js';
 import {getOptimalClassChain} from './class-chain.js';
 import {getOptimalPredicateString} from './predicate.js';
@@ -44,12 +44,12 @@ export function getComplexSuggestedLocators(path, sourceDoc, isNative, automatio
       case DRIVERS.XCUITEST:
       case DRIVERS.MAC2: {
         const optimalClassChain = getOptimalClassChain(sourceDoc, domNode);
-        complexLocators[LOCATOR_STRATEGIES.CLASS_CHAIN] = optimalClassChain ? '**' + optimalClassChain : null;
-        complexLocators[LOCATOR_STRATEGIES.PREDICATE] = getOptimalPredicateString(sourceDoc, domNode);
+        complexLocators[ALL_STRATEGIES.IOS_CLASS_CHAIN] = optimalClassChain ? '**' + optimalClassChain : null;
+        complexLocators[ALL_STRATEGIES.IOS_PREDICATE] = getOptimalPredicateString(sourceDoc, domNode);
         break;
       }
       case DRIVERS.UIAUTOMATOR2: {
-        complexLocators[LOCATOR_STRATEGIES.UIAUTOMATOR] = getOptimalUiAutomatorSelector(sourceDoc, domNode, path);
+        complexLocators[ALL_STRATEGIES.ANDROID_UIAUTOMATOR] = getOptimalUiAutomatorSelector(sourceDoc, domNode, path);
         break;
       }
     }

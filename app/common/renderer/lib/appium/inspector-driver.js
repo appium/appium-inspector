@@ -1,8 +1,8 @@
 import {DRIVERS} from '../../constants/common.js';
+import {ALL_STRATEGIES} from '../../constants/locator-strategies.js';
 import {SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot.js';
 import {
   APP_MODE,
-  LOCATOR_STRATEGIES,
   NATIVE_APP,
   REFRESH_DELAY_MILLIS,
   SESSION_EXPIRED,
@@ -491,7 +491,7 @@ export default class InspectorDriver {
         const isLandscape = windowSize.height < windowSize.width;
         // Top bar exists for both portrait and landscape modes
         const topBar = await this.fetchElement({
-          strategy: LOCATOR_STRATEGIES.CLASS_CHAIN,
+          strategy: ALL_STRATEGIES.IOS_CLASS_CHAIN,
           selector: isLandscape ? IOS_SAFARI_LANDSCAPE_TABBAR_SELECTOR : IOS_SAFARI_PORTRAIT_TOPBAR_SELECTOR,
         });
         if (topBar.el) {

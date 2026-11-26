@@ -1,6 +1,6 @@
 import refractorPython from 'refractor/python';
 
-import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
+import {ALL_STRATEGIES} from '../../constants/locator-strategies.js';
 import CommonClientFramework from './common.js';
 
 export default class PythonFramework extends CommonClientFramework {
@@ -59,19 +59,19 @@ driver.quit()`;
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
     const byMap = {
-      [LOCATOR_STRATEGIES.ID]: 'ID',
-      [LOCATOR_STRATEGIES.XPATH]: 'XPATH',
-      [LOCATOR_STRATEGIES.NAME]: 'NAME',
-      [LOCATOR_STRATEGIES.CLASS_NAME]: 'CLASS_NAME',
-      [LOCATOR_STRATEGIES.ACCESSIBILITY_ID]: 'ACCESSIBILITY_ID',
-      [LOCATOR_STRATEGIES.PREDICATE]: 'IOS_PREDICATE',
-      [LOCATOR_STRATEGIES.CLASS_CHAIN]: 'IOS_CLASS_CHAIN',
-      [LOCATOR_STRATEGIES.UIAUTOMATOR]: 'ANDROID_UIAUTOMATOR',
-      // [LOCATOR_STRATEGIES.TEXT]: 'not supported',
-      [LOCATOR_STRATEGIES.VIEWTAG]: 'ANDROID_VIEWTAG',
-      [LOCATOR_STRATEGIES.DATAMATCHER]: 'ANDROID_DATA_MATCHER',
-      [LOCATOR_STRATEGIES.VIEWMATCHER]: 'ANDROID_VIEW_MATCHER',
-      // [LOCATOR_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
+      [ALL_STRATEGIES.ID]: 'ID',
+      [ALL_STRATEGIES.XPATH]: 'XPATH',
+      [ALL_STRATEGIES.NAME]: 'NAME',
+      [ALL_STRATEGIES.CLASS_NAME]: 'CLASS_NAME',
+      [ALL_STRATEGIES.ACCESSIBILITY_ID]: 'ACCESSIBILITY_ID',
+      [ALL_STRATEGIES.IOS_PREDICATE]: 'IOS_PREDICATE',
+      [ALL_STRATEGIES.IOS_CLASS_CHAIN]: 'IOS_CLASS_CHAIN',
+      [ALL_STRATEGIES.ANDROID_UIAUTOMATOR]: 'ANDROID_UIAUTOMATOR',
+      // [ALL_STRATEGIES.TEXT]: 'not supported',
+      [ALL_STRATEGIES.ANDROID_VIEWTAG]: 'ANDROID_VIEWTAG',
+      [ALL_STRATEGIES.ANDROID_DATAMATCHER]: 'ANDROID_DATA_MATCHER',
+      [ALL_STRATEGIES.ANDROID_VIEWMATCHER]: 'ANDROID_VIEW_MATCHER',
+      // [ALL_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
     };
     if (!byMap[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);

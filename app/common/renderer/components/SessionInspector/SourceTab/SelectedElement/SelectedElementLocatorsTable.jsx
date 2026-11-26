@@ -2,7 +2,7 @@ import {Spin} from 'antd';
 import {useTranslation} from 'react-i18next';
 
 import {LINKS} from '../../../../constants/common.js';
-import {LOCATOR_STRATEGIES} from '../../../../constants/session-inspector.js';
+import {ALL_STRATEGIES} from '../../../../constants/locator-strategies.js';
 import {openLink} from '../../../../polyfills.js';
 import SelectedElementTable from './SelectedElementTable.jsx';
 import SelectedElementTableCell from './SelectedElementTableCell.jsx';
@@ -23,13 +23,13 @@ const modifySuggestedLocatorsData = (suggestedLocatorsData) => {
   const suggestedLocsDataCopy = structuredClone(suggestedLocatorsData);
   for (const locator of suggestedLocsDataCopy) {
     switch (locator.key) {
-      case LOCATOR_STRATEGIES.CLASS_CHAIN:
+      case ALL_STRATEGIES.IOS_CLASS_CHAIN:
         locator.find = locatorStrategyDocsLink(locator.key, LINKS.CLASS_CHAIN_DOCS);
         break;
-      case LOCATOR_STRATEGIES.PREDICATE:
+      case ALL_STRATEGIES.IOS_PREDICATE:
         locator.find = locatorStrategyDocsLink(locator.key, LINKS.PREDICATE_DOCS);
         break;
-      case LOCATOR_STRATEGIES.UIAUTOMATOR:
+      case ALL_STRATEGIES.ANDROID_UIAUTOMATOR:
         locator.find = locatorStrategyDocsLink(locator.key, LINKS.UIAUTOMATOR_DOCS);
         break;
     }

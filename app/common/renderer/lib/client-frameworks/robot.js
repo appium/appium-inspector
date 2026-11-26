@@ -1,6 +1,6 @@
 import refractorRobot from 'refractor/robotframework';
 
-import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
+import {ALL_STRATEGIES} from '../../constants/locator-strategies.js';
 import CommonClientFramework from './common.js';
 
 // Characters with a short Robot escape: common whitespace and Robot syntax characters
@@ -101,19 +101,19 @@ ${this.indent(code, 4)}
 
   codeFor_findAndAssign(strategy, locator, localVar /*, isArray*/) {
     const byMap = {
-      [LOCATOR_STRATEGIES.ID]: 'id',
-      [LOCATOR_STRATEGIES.XPATH]: 'xpath',
-      [LOCATOR_STRATEGIES.NAME]: 'name',
-      [LOCATOR_STRATEGIES.CLASS_NAME]: 'class',
-      [LOCATOR_STRATEGIES.ACCESSIBILITY_ID]: 'accessibility_id',
-      [LOCATOR_STRATEGIES.PREDICATE]: 'predicate',
-      [LOCATOR_STRATEGIES.CLASS_CHAIN]: 'chain',
-      [LOCATOR_STRATEGIES.UIAUTOMATOR]: 'android',
-      // [LOCATOR_STRATEGIES.TEXT]: 'not supported',
-      // [LOCATOR_STRATEGIES.VIEWTAG]: 'not supported',
-      // [LOCATOR_STRATEGIES.DATAMATCHER]: 'not supported',
-      // [LOCATOR_STRATEGIES.VIEWMATCHER]: 'not supported',
-      // [LOCATOR_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
+      [ALL_STRATEGIES.ID]: 'id',
+      [ALL_STRATEGIES.XPATH]: 'xpath',
+      [ALL_STRATEGIES.NAME]: 'name',
+      [ALL_STRATEGIES.CLASS_NAME]: 'class',
+      [ALL_STRATEGIES.ACCESSIBILITY_ID]: 'accessibility_id',
+      [ALL_STRATEGIES.IOS_PREDICATE]: 'predicate',
+      [ALL_STRATEGIES.IOS_CLASS_CHAIN]: 'chain',
+      [ALL_STRATEGIES.ANDROID_UIAUTOMATOR]: 'android',
+      // [ALL_STRATEGIES.TEXT]: 'not supported',
+      // [ALL_STRATEGIES.ANDROID_VIEWTAG]: 'not supported',
+      // [ALL_STRATEGIES.ANDROID_DATAMATCHER]: 'not supported',
+      // [ALL_STRATEGIES.ANDROID_VIEWMATCHER]: 'not supported',
+      // [ALL_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
     };
     if (!byMap[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);

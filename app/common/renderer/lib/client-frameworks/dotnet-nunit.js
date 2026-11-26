@@ -1,7 +1,7 @@
 import refractorCsharp from 'refractor/csharp';
 
 import {DRIVERS, PLATFORMS} from '../../constants/common.js';
-import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
+import {ALL_STRATEGIES} from '../../constants/locator-strategies.js';
 import CommonClientFramework from './common.js';
 
 const PKG_AND_CLASS_MAP = {
@@ -108,19 +108,19 @@ ${this.indent(code, 8)}
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
     const byMap = {
-      [LOCATOR_STRATEGIES.ID]: 'Id',
-      [LOCATOR_STRATEGIES.XPATH]: 'XPath',
-      [LOCATOR_STRATEGIES.NAME]: 'Name',
-      [LOCATOR_STRATEGIES.CLASS_NAME]: 'ClassName',
-      [LOCATOR_STRATEGIES.ACCESSIBILITY_ID]: 'AccessibilityId',
-      [LOCATOR_STRATEGIES.PREDICATE]: 'IosNsPredicate',
-      [LOCATOR_STRATEGIES.CLASS_CHAIN]: 'IosClassChain',
-      [LOCATOR_STRATEGIES.UIAUTOMATOR]: 'AndroidUIAutomator',
-      // [LOCATOR_STRATEGIES.TEXT]: 'not supported',
-      // [LOCATOR_STRATEGIES.VIEWTAG]: 'not supported',
-      [LOCATOR_STRATEGIES.DATAMATCHER]: 'AndroidDataMatcher',
-      [LOCATOR_STRATEGIES.VIEWMATCHER]: 'AndroidViewMatcher',
-      [LOCATOR_STRATEGIES.WIN_UIAUTOMATION]: 'WindowsAutomation',
+      [ALL_STRATEGIES.ID]: 'Id',
+      [ALL_STRATEGIES.XPATH]: 'XPath',
+      [ALL_STRATEGIES.NAME]: 'Name',
+      [ALL_STRATEGIES.CLASS_NAME]: 'ClassName',
+      [ALL_STRATEGIES.ACCESSIBILITY_ID]: 'AccessibilityId',
+      [ALL_STRATEGIES.IOS_PREDICATE]: 'IosNsPredicate',
+      [ALL_STRATEGIES.IOS_CLASS_CHAIN]: 'IosClassChain',
+      [ALL_STRATEGIES.ANDROID_UIAUTOMATOR]: 'AndroidUIAutomator',
+      // [ALL_STRATEGIES.TEXT]: 'not supported',
+      // [ALL_STRATEGIES.ANDROID_VIEWTAG]: 'not supported',
+      [ALL_STRATEGIES.ANDROID_DATAMATCHER]: 'AndroidDataMatcher',
+      [ALL_STRATEGIES.ANDROID_VIEWMATCHER]: 'AndroidViewMatcher',
+      [ALL_STRATEGIES.WIN_UIAUTOMATION]: 'WindowsAutomation',
     };
     if (!byMap[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);

@@ -1,7 +1,7 @@
 import refractorJava from 'refractor/java';
 
 import {DRIVERS, PLATFORMS} from '../../constants/common.js';
-import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
+import {ALL_STRATEGIES} from '../../constants/locator-strategies.js';
 import CommonClientFramework from './common.js';
 
 const PKG_AND_CLASS_MAP = {
@@ -74,19 +74,19 @@ export default class JavaFramework extends CommonClientFramework {
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
     const byMap = {
-      [LOCATOR_STRATEGIES.ID]: 'id',
-      [LOCATOR_STRATEGIES.XPATH]: 'xpath',
-      [LOCATOR_STRATEGIES.NAME]: 'name',
-      [LOCATOR_STRATEGIES.CLASS_NAME]: 'className',
-      [LOCATOR_STRATEGIES.ACCESSIBILITY_ID]: 'accessibilityId',
-      [LOCATOR_STRATEGIES.PREDICATE]: 'iOSNsPredicateString',
-      [LOCATOR_STRATEGIES.CLASS_CHAIN]: 'iOSClassChain',
-      [LOCATOR_STRATEGIES.UIAUTOMATOR]: 'androidUIAutomator',
-      // [LOCATOR_STRATEGIES.TEXT]: 'not supported',
-      [LOCATOR_STRATEGIES.VIEWTAG]: 'androidViewTag',
-      [LOCATOR_STRATEGIES.DATAMATCHER]: 'androidDataMatcher',
-      [LOCATOR_STRATEGIES.VIEWMATCHER]: 'androidViewMatcher',
-      // [LOCATOR_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
+      [ALL_STRATEGIES.ID]: 'id',
+      [ALL_STRATEGIES.XPATH]: 'xpath',
+      [ALL_STRATEGIES.NAME]: 'name',
+      [ALL_STRATEGIES.CLASS_NAME]: 'className',
+      [ALL_STRATEGIES.ACCESSIBILITY_ID]: 'accessibilityId',
+      [ALL_STRATEGIES.IOS_PREDICATE]: 'iOSNsPredicateString',
+      [ALL_STRATEGIES.IOS_CLASS_CHAIN]: 'iOSClassChain',
+      [ALL_STRATEGIES.ANDROID_UIAUTOMATOR]: 'androidUIAutomator',
+      // [ALL_STRATEGIES.TEXT]: 'not supported',
+      [ALL_STRATEGIES.ANDROID_VIEWTAG]: 'androidViewTag',
+      [ALL_STRATEGIES.ANDROID_DATAMATCHER]: 'androidDataMatcher',
+      [ALL_STRATEGIES.ANDROID_VIEWMATCHER]: 'androidViewMatcher',
+      // [ALL_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
     };
     if (!byMap[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
