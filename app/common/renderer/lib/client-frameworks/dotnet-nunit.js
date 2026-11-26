@@ -34,6 +34,30 @@ const PLATFORM_NAME_MAP = new Map([
   [PLATFORMS.WINDOWS, PKG_AND_CLASS_MAP.WINDOWS],
 ]);
 
+const STRATEGY_MAP = {
+  // W3C
+  [ALL_STRATEGIES.CSS]: 'By.CssSelector',
+  [ALL_STRATEGIES.LINK_TEXT]: 'By.LinkText',
+  [ALL_STRATEGIES.PARTIAL_LINK_TEXT]: 'By.PartialLinkText',
+  [ALL_STRATEGIES.TAG_NAME]: 'By.TagName',
+  [ALL_STRATEGIES.XPATH]: 'By.XPath',
+  // Custom
+  [ALL_STRATEGIES.ID]: 'MobileBy.Id',
+  [ALL_STRATEGIES.NAME]: 'MobileBy.Name',
+  [ALL_STRATEGIES.CLASS_NAME]: 'MobileBy.ClassName',
+  [ALL_STRATEGIES.ACCESSIBILITY_ID]: 'MobileBy.AccessibilityId',
+  [ALL_STRATEGIES.IOS_PREDICATE]: 'MobileBy.IosNsPredicate',
+  [ALL_STRATEGIES.IOS_CLASS_CHAIN]: 'MobileBy.IosClassChain',
+  [ALL_STRATEGIES.ANDROID_UIAUTOMATOR]: 'MobileBy.AndroidUIAutomator',
+  // [ALL_STRATEGIES.ANDROID_PREDICATE]: 'not supported',
+  // [ALL_STRATEGIES.ANDROID_CLASS_CHAIN]: 'not supported',
+  // [ALL_STRATEGIES.TEXT]: 'not supported',
+  // [ALL_STRATEGIES.ANDROID_VIEWTAG]: 'not supported',
+  [ALL_STRATEGIES.ANDROID_DATAMATCHER]: 'MobileBy.AndroidDataMatcher',
+  [ALL_STRATEGIES.ANDROID_VIEWMATCHER]: 'MobileBy.AndroidViewMatcher',
+  [ALL_STRATEGIES.WIN_UIAUTOMATION]: 'MobileBy.WindowsAutomation',
+};
+
 export default class DotNetNUnitFramework extends CommonClientFramework {
   static readableName = '.NET - NUnit';
   static refractorLang = 'csharp';
@@ -107,28 +131,13 @@ ${this.indent(code, 8)}
   }
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
-    const byMap = {
-      [ALL_STRATEGIES.ID]: 'Id',
-      [ALL_STRATEGIES.XPATH]: 'XPath',
-      [ALL_STRATEGIES.NAME]: 'Name',
-      [ALL_STRATEGIES.CLASS_NAME]: 'ClassName',
-      [ALL_STRATEGIES.ACCESSIBILITY_ID]: 'AccessibilityId',
-      [ALL_STRATEGIES.IOS_PREDICATE]: 'IosNsPredicate',
-      [ALL_STRATEGIES.IOS_CLASS_CHAIN]: 'IosClassChain',
-      [ALL_STRATEGIES.ANDROID_UIAUTOMATOR]: 'AndroidUIAutomator',
-      // [ALL_STRATEGIES.TEXT]: 'not supported',
-      // [ALL_STRATEGIES.ANDROID_VIEWTAG]: 'not supported',
-      [ALL_STRATEGIES.ANDROID_DATAMATCHER]: 'AndroidDataMatcher',
-      [ALL_STRATEGIES.ANDROID_VIEWMATCHER]: 'AndroidViewMatcher',
-      [ALL_STRATEGIES.WIN_UIAUTOMATION]: 'WindowsAutomation',
-    };
-    if (!byMap[strategy]) {
+    if (!STRATEGY_MAP[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `var ${localVar} = _driver.FindElements(MobileBy.${byMap[strategy]}(${JSON.stringify(locator)}));`;
+      return `var ${localVar} = _driver.FindElements(${STRATEGY_MAP[strategy]}(${JSON.stringify(locator)}));`;
     } else {
-      return `var ${localVar} = _driver.FindElement(MobileBy.${byMap[strategy]}(${JSON.stringify(locator)}));`;
+      return `var ${localVar} = _driver.FindElement(${STRATEGY_MAP[strategy]}(${JSON.stringify(locator)}));`;
     }
   }
 

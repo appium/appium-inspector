@@ -3,6 +3,31 @@ import refractorJs from 'refractor/javascript';
 import {ALL_STRATEGIES} from '../../constants/locator-strategies.js';
 import CommonClientFramework from './common.js';
 
+// oxygen internally uses wdio for element search
+const STRATEGIES = [
+  // W3C
+  ALL_STRATEGIES.CSS,
+  ALL_STRATEGIES.LINK_TEXT,
+  ALL_STRATEGIES.PARTIAL_LINK_TEXT,
+  ALL_STRATEGIES.TAG_NAME,
+  ALL_STRATEGIES.XPATH,
+  // Custom
+  ALL_STRATEGIES.ID,
+  ALL_STRATEGIES.NAME,
+  ALL_STRATEGIES.CLASS_NAME,
+  ALL_STRATEGIES.ACCESSIBILITY_ID,
+  ALL_STRATEGIES.IOS_PREDICATE,
+  ALL_STRATEGIES.IOS_CLASS_CHAIN,
+  ALL_STRATEGIES.ANDROID_UIAUTOMATOR,
+  // ALL_STRATEGIES.ANDROID_PREDICATE,
+  // ALL_STRATEGIES.ANDROID_CLASS_CHAIN,
+  // ALL_STRATEGIES.TEXT,
+  ALL_STRATEGIES.ANDROID_VIEWTAG,
+  ALL_STRATEGIES.ANDROID_DATAMATCHER,
+  ALL_STRATEGIES.ANDROID_VIEWMATCHER,
+  // ALL_STRATEGIES.WIN_UIAUTOMATION,
+];
+
 export default class JsOxygenFramework extends CommonClientFramework {
   static readableName = 'JS - Oxygen HQ';
   static refractorLang = 'js';
@@ -33,23 +58,7 @@ ${code}`;
   }
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
-    // oxygen internally uses wdio for element search
-    const validStrategies = [
-      ALL_STRATEGIES.ID,
-      ALL_STRATEGIES.XPATH,
-      ALL_STRATEGIES.NAME,
-      ALL_STRATEGIES.CLASS_NAME,
-      ALL_STRATEGIES.ACCESSIBILITY_ID,
-      ALL_STRATEGIES.IOS_PREDICATE,
-      ALL_STRATEGIES.IOS_CLASS_CHAIN,
-      ALL_STRATEGIES.ANDROID_UIAUTOMATOR,
-      // ALL_STRATEGIES.TEXT,
-      ALL_STRATEGIES.ANDROID_VIEWTAG,
-      ALL_STRATEGIES.ANDROID_DATAMATCHER,
-      ALL_STRATEGIES.ANDROID_VIEWMATCHER,
-      // ALL_STRATEGIES.WIN_UIAUTOMATION,
-    ];
-    if (!validStrategies.includes(strategy)) {
+    if (!STRATEGIES.includes(strategy)) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {

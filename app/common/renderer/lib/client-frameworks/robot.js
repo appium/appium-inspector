@@ -3,6 +3,30 @@ import refractorRobot from 'refractor/robotframework';
 import {ALL_STRATEGIES} from '../../constants/locator-strategies.js';
 import CommonClientFramework from './common.js';
 
+const STRATEGY_MAP = {
+  // W3C
+  [ALL_STRATEGIES.CSS]: 'css',
+  // [ALL_STRATEGIES.LINK_TEXT]: 'not supported',
+  // [ALL_STRATEGIES.PARTIAL_LINK_TEXT]: 'not supported',
+  // [ALL_STRATEGIES.TAG_NAME]: 'not supported',
+  [ALL_STRATEGIES.XPATH]: 'xpath',
+  // Custom
+  [ALL_STRATEGIES.ID]: 'id',
+  [ALL_STRATEGIES.NAME]: 'name',
+  [ALL_STRATEGIES.CLASS_NAME]: 'class',
+  [ALL_STRATEGIES.ACCESSIBILITY_ID]: 'accessibility_id',
+  [ALL_STRATEGIES.IOS_PREDICATE]: 'predicate',
+  [ALL_STRATEGIES.IOS_CLASS_CHAIN]: 'chain',
+  [ALL_STRATEGIES.ANDROID_UIAUTOMATOR]: 'android',
+  // [ALL_STRATEGIES.ANDROID_PREDICATE]: 'not supported',
+  // [ALL_STRATEGIES.ANDROID_CLASS_CHAIN]: 'not supported',
+  // [ALL_STRATEGIES.TEXT]: 'not supported',
+  // [ALL_STRATEGIES.ANDROID_VIEWTAG]: 'not supported',
+  // [ALL_STRATEGIES.ANDROID_DATAMATCHER]: 'not supported',
+  // [ALL_STRATEGIES.ANDROID_VIEWMATCHER]: 'not supported',
+  // [ALL_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
+};
+
 // Characters with a short Robot escape: common whitespace and Robot syntax characters
 const ROBOT_ESCAPES = new Map([
   ['\n', '\\n'],
@@ -100,26 +124,11 @@ ${this.indent(code, 4)}
   }
 
   codeFor_findAndAssign(strategy, locator, localVar /*, isArray*/) {
-    const byMap = {
-      [ALL_STRATEGIES.ID]: 'id',
-      [ALL_STRATEGIES.XPATH]: 'xpath',
-      [ALL_STRATEGIES.NAME]: 'name',
-      [ALL_STRATEGIES.CLASS_NAME]: 'class',
-      [ALL_STRATEGIES.ACCESSIBILITY_ID]: 'accessibility_id',
-      [ALL_STRATEGIES.IOS_PREDICATE]: 'predicate',
-      [ALL_STRATEGIES.IOS_CLASS_CHAIN]: 'chain',
-      [ALL_STRATEGIES.ANDROID_UIAUTOMATOR]: 'android',
-      // [ALL_STRATEGIES.TEXT]: 'not supported',
-      // [ALL_STRATEGIES.ANDROID_VIEWTAG]: 'not supported',
-      // [ALL_STRATEGIES.ANDROID_DATAMATCHER]: 'not supported',
-      // [ALL_STRATEGIES.ANDROID_VIEWMATCHER]: 'not supported',
-      // [ALL_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
-    };
-    if (!byMap[strategy]) {
+    if (!STRATEGY_MAP[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
 
-    return `$\{${localVar}} =    Set Variable     ${byMap[strategy]}=${this.escapeRobotString(locator)}`;
+    return `$\{${localVar}} =    Set Variable     ${STRATEGY_MAP[strategy]}=${this.escapeRobotString(locator)}`;
   }
 
   codeFor_elementClick(varName, varIndex) {

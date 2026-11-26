@@ -3,6 +3,30 @@ import refractorRuby from 'refractor/ruby';
 import {ALL_STRATEGIES} from '../../constants/locator-strategies.js';
 import CommonClientFramework from './common.js';
 
+const STRATEGY_MAP = {
+  // W3C
+  [ALL_STRATEGIES.CSS]: ':css',
+  [ALL_STRATEGIES.LINK_TEXT]: ':link_text',
+  [ALL_STRATEGIES.PARTIAL_LINK_TEXT]: ':partial_link_text',
+  [ALL_STRATEGIES.TAG_NAME]: ':tag_name',
+  [ALL_STRATEGIES.XPATH]: ':xpath',
+  // Custom
+  [ALL_STRATEGIES.ID]: ':id',
+  [ALL_STRATEGIES.NAME]: ':name',
+  [ALL_STRATEGIES.CLASS_NAME]: ':class_name',
+  [ALL_STRATEGIES.ACCESSIBILITY_ID]: ':accessibility_id',
+  [ALL_STRATEGIES.IOS_PREDICATE]: ':predicate',
+  [ALL_STRATEGIES.IOS_CLASS_CHAIN]: ':class_chain',
+  [ALL_STRATEGIES.ANDROID_UIAUTOMATOR]: ':uiautomator',
+  [ALL_STRATEGIES.ANDROID_PREDICATE]: ':android_predicate_string',
+  [ALL_STRATEGIES.ANDROID_CLASS_CHAIN]: ':android_class_chain',
+  [ALL_STRATEGIES.TEXT]: ':text',
+  [ALL_STRATEGIES.ANDROID_VIEWTAG]: ':viewtag',
+  [ALL_STRATEGIES.ANDROID_DATAMATCHER]: ':data_matcher',
+  [ALL_STRATEGIES.ANDROID_VIEWMATCHER]: ':view_matcher',
+  [ALL_STRATEGIES.WIN_UIAUTOMATION]: ':windows_uiautomation',
+};
+
 export default class RubyFramework extends CommonClientFramework {
   static readableName = 'Ruby';
   static refractorLang = 'ruby';
@@ -76,28 +100,13 @@ driver.quit`;
   }
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
-    const byMap = {
-      [ALL_STRATEGIES.ID]: ':id',
-      [ALL_STRATEGIES.XPATH]: ':xpath',
-      [ALL_STRATEGIES.NAME]: ':name',
-      [ALL_STRATEGIES.CLASS_NAME]: ':class_name',
-      [ALL_STRATEGIES.ACCESSIBILITY_ID]: ':accessibility_id',
-      [ALL_STRATEGIES.IOS_PREDICATE]: ':predicate',
-      [ALL_STRATEGIES.IOS_CLASS_CHAIN]: ':class_chain',
-      [ALL_STRATEGIES.ANDROID_UIAUTOMATOR]: ':uiautomator',
-      // [ALL_STRATEGIES.TEXT]: 'not supported',
-      [ALL_STRATEGIES.ANDROID_VIEWTAG]: ':viewtag',
-      [ALL_STRATEGIES.ANDROID_DATAMATCHER]: ':data_matcher',
-      [ALL_STRATEGIES.ANDROID_VIEWMATCHER]: ':view_matcher',
-      // [ALL_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
-    };
-    if (!byMap[strategy]) {
+    if (!STRATEGY_MAP[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `${localVar} = driver.find_elements ${byMap[strategy]}, ${this.getRubyString(locator)}`;
+      return `${localVar} = driver.find_elements ${STRATEGY_MAP[strategy]}, ${this.getRubyString(locator)}`;
     } else {
-      return `${localVar} = driver.find_element ${byMap[strategy]}, ${this.getRubyString(locator)}`;
+      return `${localVar} = driver.find_element ${STRATEGY_MAP[strategy]}, ${this.getRubyString(locator)}`;
     }
   }
 

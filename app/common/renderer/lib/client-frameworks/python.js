@@ -3,6 +3,30 @@ import refractorPython from 'refractor/python';
 import {ALL_STRATEGIES} from '../../constants/locator-strategies.js';
 import CommonClientFramework from './common.js';
 
+const STRATEGY_MAP = {
+  // W3C
+  [ALL_STRATEGIES.CSS]: 'CSS_SELECTOR',
+  [ALL_STRATEGIES.LINK_TEXT]: 'LINK_TEXT',
+  [ALL_STRATEGIES.PARTIAL_LINK_TEXT]: 'PARTIAL_LINK_TEXT',
+  [ALL_STRATEGIES.TAG_NAME]: 'TAG_NAME',
+  [ALL_STRATEGIES.XPATH]: 'XPATH',
+  // Custom
+  [ALL_STRATEGIES.ID]: 'ID',
+  [ALL_STRATEGIES.NAME]: 'NAME',
+  [ALL_STRATEGIES.CLASS_NAME]: 'CLASS_NAME',
+  [ALL_STRATEGIES.ACCESSIBILITY_ID]: 'ACCESSIBILITY_ID',
+  [ALL_STRATEGIES.IOS_PREDICATE]: 'IOS_PREDICATE',
+  [ALL_STRATEGIES.IOS_CLASS_CHAIN]: 'IOS_CLASS_CHAIN',
+  [ALL_STRATEGIES.ANDROID_UIAUTOMATOR]: 'ANDROID_UIAUTOMATOR',
+  [ALL_STRATEGIES.ANDROID_PREDICATE]: 'ANDROID_PREDICATE',
+  [ALL_STRATEGIES.ANDROID_CLASS_CHAIN]: 'ANDROID_CLASS_CHAIN',
+  [ALL_STRATEGIES.TEXT]: 'ANDROID_TEXT',
+  [ALL_STRATEGIES.ANDROID_VIEWTAG]: 'ANDROID_VIEWTAG',
+  [ALL_STRATEGIES.ANDROID_DATAMATCHER]: 'ANDROID_DATA_MATCHER',
+  [ALL_STRATEGIES.ANDROID_VIEWMATCHER]: 'ANDROID_VIEW_MATCHER',
+  // [ALL_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
+};
+
 export default class PythonFramework extends CommonClientFramework {
   static readableName = 'Python';
   static refractorLang = 'python';
@@ -58,28 +82,13 @@ driver.quit()`;
   }
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
-    const byMap = {
-      [ALL_STRATEGIES.ID]: 'ID',
-      [ALL_STRATEGIES.XPATH]: 'XPATH',
-      [ALL_STRATEGIES.NAME]: 'NAME',
-      [ALL_STRATEGIES.CLASS_NAME]: 'CLASS_NAME',
-      [ALL_STRATEGIES.ACCESSIBILITY_ID]: 'ACCESSIBILITY_ID',
-      [ALL_STRATEGIES.IOS_PREDICATE]: 'IOS_PREDICATE',
-      [ALL_STRATEGIES.IOS_CLASS_CHAIN]: 'IOS_CLASS_CHAIN',
-      [ALL_STRATEGIES.ANDROID_UIAUTOMATOR]: 'ANDROID_UIAUTOMATOR',
-      // [ALL_STRATEGIES.TEXT]: 'not supported',
-      [ALL_STRATEGIES.ANDROID_VIEWTAG]: 'ANDROID_VIEWTAG',
-      [ALL_STRATEGIES.ANDROID_DATAMATCHER]: 'ANDROID_DATA_MATCHER',
-      [ALL_STRATEGIES.ANDROID_VIEWMATCHER]: 'ANDROID_VIEW_MATCHER',
-      // [ALL_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
-    };
-    if (!byMap[strategy]) {
+    if (!STRATEGY_MAP[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `${localVar} = driver.find_elements(by=AppiumBy.${byMap[strategy]}, value=${JSON.stringify(locator)})`;
+      return `${localVar} = driver.find_elements(by=AppiumBy.${STRATEGY_MAP[strategy]}, value=${JSON.stringify(locator)})`;
     } else {
-      return `${localVar} = driver.find_element(by=AppiumBy.${byMap[strategy]}, value=${JSON.stringify(locator)})`;
+      return `${localVar} = driver.find_element(by=AppiumBy.${STRATEGY_MAP[strategy]}, value=${JSON.stringify(locator)})`;
     }
   }
 
