@@ -1,15 +1,23 @@
 import {select as xpathSelect} from 'xpath';
 
+import {DRIVERS} from '../../constants/common.js';
 import {isEmpty} from '../common.js';
 import {LocatorGeneratorBase} from './base.js';
 
 /**
- * Generator for iOS Class Chain locators
+ * Generator for XCUITest & UiAutomator2 Class Chain locators
  * @private
  */
 class ClassChainGenerator extends LocatorGeneratorBase {
-  // Attributes to check when generating class chain locators
-  static CHECKED_ATTRIBUTES = ['name', 'label', 'value'];
+  /**
+   * @param {Document} doc - the document containing the DOM
+   * @param {Node} domNode - the DOM node to generate locators for
+   * @param {string} automationName - name of the driver using this strategy
+   */
+  constructor(doc, domNode, automationName) {
+    super(doc, domNode, null);
+    this._driver = automationName;
+  }
 
   /**
    * Get an optimal class chain for a Node
@@ -35,6 +43,16 @@ class ClassChainGenerator extends LocatorGeneratorBase {
       this._logLocatorError('class chain', error);
       return null;
     }
+  }
+
+  /**
+   * Select the element attributes to use for building the selector, based on the driver.
+   */
+  get _checkedAttributes() {
+    if (this._driver === DRIVERS.UIAUTOMATOR2) {
+      return ['resource-id', 'text', 'content-desc'];
+    }
+    return ['name', 'label', 'value'];
   }
 
   /**
@@ -87,7 +105,7 @@ class ClassChainGenerator extends LocatorGeneratorBase {
    * @returns {string|undefined} the class chain if found, undefined otherwise
    */
   _tryAttributeBasedClassChain() {
-    for (const attrName of ClassChainGenerator.CHECKED_ATTRIBUTES) {
+    for (const attrName of this._checkedAttributes) {
       const attrValue = this._domNode.getAttribute(attrName);
       if (isEmpty(attrValue)) {
         continue;
@@ -134,7 +152,7 @@ class ClassChainGenerator extends LocatorGeneratorBase {
     }
 
     // Recursively build parent path and prepend it
-    const parentGenerator = new ClassChainGenerator(this._doc, this._domNode.parentNode);
+    const parentGenerator = new ClassChainGenerator(this._doc, this._domNode.parentNode, this._driver);
     return parentGenerator.generate() + classChain;
   }
 }
@@ -144,8 +162,9 @@ class ClassChainGenerator extends LocatorGeneratorBase {
  *
  * @param {Document} doc
  * @param {Node} domNode
+ * @param {string} automationName
  * @returns {string|null}
  */
-export function getOptimalClassChain(doc, domNode) {
-  return new ClassChainGenerator(doc, domNode).generate();
+export function getOptimalClassChain(doc, domNode, automationName) {
+  return new ClassChainGenerator(doc, domNode, automationName).generate();
 }
