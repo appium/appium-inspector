@@ -1,5 +1,5 @@
 import {IconPlus, IconTrash} from '@tabler/icons-react';
-import {Button, Checkbox, Col, Form, Input, Modal, Row, Select, Space, Splitter, Tooltip} from 'antd';
+import {Button, Checkbox, Col, Form, Input, Row, Select, Space, Splitter, Tooltip} from 'antd';
 import {useEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 
@@ -7,7 +7,6 @@ import {CAPABILITY_TYPES} from '../../../constants/session-builder.js';
 import CapabilityJSON from '../CapabilityJSON/CapabilityJSON.jsx';
 import CapabilityControl from './CapabilityControl.jsx';
 
-import builderStyles from '../SessionBuilder.module.css';
 import styles from './CapabilityBuilderTab.module.css';
 
 const whitespaces = /^\s|\s$/;
@@ -57,17 +56,9 @@ const CapabilityEditor = (props) => {
     caps,
     addCapability,
     removeCapability,
-    saveSession,
-    hideSaveAsModal,
-    saveAsText,
-    showSaveAsModal,
-    setSaveAsText,
     isEditingDesiredCaps,
     setAddVendorPrefixes,
     addVendorPrefixes,
-    server,
-    serverType,
-    isDuplicateCapsName,
   } = props;
 
   const {t} = useTranslation();
@@ -75,8 +66,6 @@ const CapabilityEditor = (props) => {
   const deleteLabel = t('Delete');
 
   const latestCapFieldRef = useRef(null);
-
-  const onSaveAsOk = () => saveSession({server, serverType, caps, name: saveAsText}, true);
 
   // if we have more than one cap and the most recent cap name is empty,
   // it means we've just added a new cap field, so focus that input element
@@ -185,25 +174,6 @@ const CapabilityEditor = (props) => {
       </Splitter.Panel>
       <Splitter.Panel collapsible>
         <CapabilityJSON {...props} />
-        <Modal
-          open={showSaveAsModal}
-          title={t('Save Capability Set As')}
-          okText={t('Save')}
-          cancelText={t('Cancel')}
-          onCancel={hideSaveAsModal}
-          onOk={onSaveAsOk}
-        >
-          <Space.Compact block>
-            <Space.Addon>{t('Name')}</Space.Addon>
-            <Input
-              onChange={(e) => setSaveAsText(e.target.value)}
-              value={saveAsText}
-              onPressEnter={onSaveAsOk}
-              status={isDuplicateCapsName ? 'error' : ''}
-            />
-          </Space.Compact>
-          {isDuplicateCapsName && <p className={builderStyles.errorMessage}> {t('duplicateCapabilityNameError')}</p>}
-        </Modal>
       </Splitter.Panel>
     </Splitter>
   );

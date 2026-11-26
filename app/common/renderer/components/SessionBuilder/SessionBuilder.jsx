@@ -1,6 +1,6 @@
 import {bindActionCreators} from '@reduxjs/toolkit';
 import {IconLink} from '@tabler/icons-react';
-import {Badge, Button, Divider, Space, Spin, Tabs} from 'antd';
+import {Badge, Button, Divider, Input, Modal, Space, Spin, Tabs} from 'antd';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
@@ -23,6 +23,7 @@ import {log} from '../../utils/logger.js';
 import AppSettings from './AppSettings/AppSettings.jsx';
 import AttachToSession from './AttachToSessionTab/AttachToSession.jsx';
 import CapabilityEditor from './CapabilityBuilderTab/CapabilityEditor.jsx';
+import EnvironmentVariables from './EnvironmentVariablesTab/EnvironmentVariables.jsx';
 import SavedCapabilitySets from './SavedCapabilitySetsTab/SavedCapabilitySets.jsx';
 import AdvancedServerParams from './ServerDetails/AdvancedServerParams.jsx';
 import CloudProviders from './ServerDetails/CloudProviders.jsx';
@@ -53,11 +54,17 @@ const Session = () => {
     server,
     visibleProviders = [],
     caps,
+    envVars = [],
     capsUUID,
     capsName,
     isCapsDirty,
+    isDuplicateCapsName,
     isEditingDesiredCaps,
     requestSaveAsModal,
+    hideSaveAsModal,
+    saveAsText,
+    showSaveAsModal,
+    setSaveAsText,
     saveSession,
     newSession,
     savedSessions,
@@ -80,7 +87,9 @@ const Session = () => {
     window.innerWidth > 0 && window.innerWidth < SESSION_BUILDER_NARROW_LAYOUT_BREAKPOINT,
   );
 
-  const isAttaching = tabKey === 'attach';
+  const isAttaching = tabKey === SESSION_BUILDER_TABS.ATTACH_TO_SESSION;
+
+  const handleSaveAsOk = () => saveSession({server, serverType, caps, envVars, name: saveAsText}, true);
 
   const handleSelectServerTab = async (tab) => {
     const {changeServerType, addCloudProvider} = props;
@@ -190,6 +199,16 @@ const Session = () => {
             {
               label: (
                 <span>
+                  {t('Environment Variables')} <Badge count={envVars.length} offset={[0, -3]} />
+                </span>
+              ),
+              key: SESSION_BUILDER_TABS.ENV_VARS,
+              className: styles.scrollingTab,
+              children: <EnvironmentVariables {...props} />,
+            },
+            {
+              label: (
+                <span>
                   {t('Saved Capability Sets')} <Badge count={savedSessions.length} offset={[0, -3]} />
                 </span>
               ),
@@ -219,7 +238,7 @@ const Session = () => {
             <Space.Compact>
               {capsUUID && (
                 <Button
-                  onClick={() => saveSession({server, serverType, caps, name: capsName, uuid: capsUUID})}
+                  onClick={() => saveSession({server, serverType, caps, envVars, name: capsName, uuid: capsUUID})}
                   disabled={!isCapsDirty || isEditingDesiredCaps}
                 >
                   {t('Save')}
@@ -244,6 +263,26 @@ const Session = () => {
         </div>
       </div>
     </Spin>,
+    <Modal
+      key="SaveAsModal"
+      open={showSaveAsModal}
+      title={t('Save Capability Set As')}
+      okText={t('Save')}
+      cancelText={t('Cancel')}
+      onCancel={hideSaveAsModal}
+      onOk={handleSaveAsOk}
+    >
+      <Space.Compact block>
+        <Space.Addon>{t('Name')}</Space.Addon>
+        <Input
+          onChange={(e) => setSaveAsText(e.target.value)}
+          value={saveAsText}
+          onPressEnter={handleSaveAsOk}
+          status={isDuplicateCapsName ? 'error' : ''}
+        />
+      </Space.Compact>
+      {isDuplicateCapsName && <p className={styles.errorMessage}> {t('duplicateCapabilityNameError')}</p>}
+    </Modal>,
     <CloudProviderSelector key="CloudProviderSelector" {...props} />,
   ];
 };

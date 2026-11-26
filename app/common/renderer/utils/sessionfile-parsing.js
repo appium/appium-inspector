@@ -38,7 +38,8 @@ export function validateSessionJSON(sessionJSON) {
     !sessionJSON ||
     !isSessionNameValid(sessionJSON) ||
     !isSessionServerValid(sessionJSON) ||
-    !areSessionCapsValid(sessionJSON)
+    !areSessionCapsValid(sessionJSON) ||
+    !areSessionEnvVarsValid(sessionJSON)
   ) {
     return null;
   }
@@ -120,6 +121,37 @@ export function areSessionCapsValid(sessionJSON) {
     }
     if (!Object.values(CAPABILITY_TYPES).includes(cap.type)) {
       return logValidationError(`'${cap.type}' is not a valid capability type`);
+    }
+  }
+  return true;
+}
+
+/**
+ * Checks if the optional envVars field in the session file is valid.
+ *
+ * @param {object} sessionJSON session file contents in JSON
+ * @returns true if envVars is absent or valid, otherwise false
+ */
+export function areSessionEnvVarsValid(sessionJSON) {
+  if (!('envVars' in sessionJSON)) {
+    return true;
+  }
+  if (!Array.isArray(sessionJSON.envVars)) {
+    return logValidationError("'envVars' property is not an array");
+  }
+  for (const envVar of sessionJSON.envVars) {
+    if (!isPlainObject(envVar)) {
+      return logValidationError(`environment variable '${JSON.stringify(envVar)}' is not an object`);
+    }
+    for (const prop of ['name', 'value']) {
+      if (!(prop in envVar) || typeof envVar[prop] !== 'string') {
+        return logValidationError(`environment variable '${JSON.stringify(envVar)}' must have string '${prop}'`);
+      }
+    }
+    if ('isSecret' in envVar && typeof envVar.isSecret !== 'boolean') {
+      return logValidationError(
+        `environment variable '${JSON.stringify(envVar)}' 'isSecret' property is not a boolean`,
+      );
     }
   }
   return true;

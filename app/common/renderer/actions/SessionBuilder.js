@@ -23,6 +23,7 @@ import {VENDOR_MAP} from '../lib/vendor/map.js';
 import {getSetting, loadSessionFileIfOpened, setSetting} from '../polyfills.js';
 import {fetchSessionInformation, formatSeleniumGridSessions} from '../utils/attaching-to-session.js';
 import {isEmpty, omit} from '../utils/common.js';
+import {interpolateCapabilities, normalizeEnvVars, prepareEnvVarsForExport} from '../utils/env-vars.js';
 import {downloadFile, readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {log} from '../utils/logger.js';
 import {notification} from '../utils/notification.js';
@@ -42,6 +43,9 @@ export const GET_SAVED_SESSIONS_DONE = 'GET_SAVED_SESSIONS_DONE';
 export const SET_CAPABILITY_PARAM = 'SET_CAPABILITY_PARAM';
 export const ADD_CAPABILITY = 'ADD_CAPABILITY';
 export const REMOVE_CAPABILITY = 'REMOVE_CAPABILITY';
+export const SET_ENV_VAR_PARAM = 'SET_ENV_VAR_PARAM';
+export const ADD_ENV_VAR = 'ADD_ENV_VAR';
+export const REMOVE_ENV_VAR = 'REMOVE_ENV_VAR';
 export const SWITCHED_TABS = 'SWITCHED_TABS';
 export const SET_CAPS_AND_SERVER = 'SET_CAPS_AND_SERVER';
 export const LOAD_CAPABILITY_TEMPLATE = 'LOAD_CAPABILITY_TEMPLATE';
@@ -189,9 +193,9 @@ export function showError(e, params = {methodName: null, secs: 5, url: null}) {
 /**
  * Change the caps object, along with the server details and then go back to the new session tab
  */
-export function setCapsAndServer(server, serverType, caps, uuid, name) {
+export function setCapsAndServer(server, serverType, caps, uuid, name, envVars) {
   return (dispatch) => {
-    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name});
+    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name, envVars});
   };
 }
 
@@ -252,6 +256,33 @@ export function removeCapability(id) {
 }
 
 /**
+ * Push an environment variable to the list
+ */
+export function addEnvVar() {
+  return (dispatch) => {
+    dispatch({type: ADD_ENV_VAR});
+  };
+}
+
+/**
+ * Update a field of an environment variable
+ */
+export function setEnvVarParam(id, name, value) {
+  return (dispatch) => {
+    dispatch({type: SET_ENV_VAR_PARAM, id, name, value});
+  };
+}
+
+/**
+ * Delete an environment variable from the list
+ */
+export function removeEnvVar(id) {
+  return (dispatch) => {
+    dispatch({type: REMOVE_ENV_VAR, id});
+  };
+}
+
+/**
  * Start a new appium session with the given caps
  */
 export function newSession(originalCaps, attachSessId = null) {
@@ -261,15 +292,15 @@ export function newSession(originalCaps, attachSessId = null) {
     // first add vendor prefixes to caps if requested
     let prefixedCaps = originalCaps;
     if (!attachSessId && session.addVendorPrefixes) {
-      const {server, serverType, capsUUID, capsName} = session;
+      const {server, serverType, capsUUID, capsName, envVars} = session;
       prefixedCaps = addVendorPrefixes(originalCaps);
-      setCapsAndServer(server, serverType, prefixedCaps, capsUUID, capsName)(dispatch);
+      setCapsAndServer(server, serverType, prefixedCaps, capsUUID, capsName, envVars)(dispatch);
     }
 
     dispatch({type: NEW_SESSION_REQUESTED});
 
-    let sessionCaps = prefixedCaps ? getCapsObject(prefixedCaps) : {};
-    sessionCaps = addCustomCaps(sessionCaps);
+    const rawSessionCaps = prefixedCaps ? getCapsObject(prefixedCaps) : {};
+    let sessionCaps = addCustomCaps(interpolateCapabilities(rawSessionCaps, session.envVars));
 
     const vendorProperties = await retrieveVendorProperties({
       server: session.server,
@@ -396,6 +427,13 @@ export function newSession(originalCaps, attachSessId = null) {
       mjpegScreenshotUrl = `${protocol}://${host}:${mjpegScreenshotPort}`;
     }
 
+    const displaySessionCaps = addCustomCaps(
+      interpolateCapabilities(rawSessionCaps, session.envVars, {includeSecrets: false}),
+    );
+    if (displaySessionCaps[CAPS_NEW_COMMAND] === undefined) {
+      displaySessionCaps[CAPS_NEW_COMMAND] = NEW_COMMAND_TIMEOUT_SEC;
+    }
+
     const action = setSessionDetails({
       serverDetails: {
         username,
@@ -411,7 +449,7 @@ export function newSession(originalCaps, attachSessId = null) {
         mjpegScreenshotUrl,
       },
       driver,
-      sessionCaps,
+      sessionCaps: displaySessionCaps,
       appMode,
       isUsingMjpegMode: mjpegScreenshotUrl !== null,
     });
@@ -425,7 +463,8 @@ export function newSession(originalCaps, attachSessId = null) {
  */
 export function saveSession(sessionParams, checkDuplicateName = false) {
   return async (dispatch) => {
-    const {server, serverType, caps, name, uuid: foundUUID} = sessionParams;
+    const {server, serverType, caps, envVars = [], name, uuid: foundUUID} = sessionParams;
+    const normalizedEnvVars = normalizeEnvVars(envVars);
     const savedSessions = structuredClone(await getSetting(SAVED_SESSIONS)) || [];
     if (checkDuplicateName) {
       const duplicateSessionNameExists = savedSessions.some((session) => session.name === name);
@@ -444,6 +483,7 @@ export function saveSession(sessionParams, checkDuplicateName = false) {
         name,
         uuid,
         caps,
+        envVars: normalizedEnvVars,
         server,
         serverType,
       };
@@ -454,6 +494,7 @@ export function saveSession(sessionParams, checkDuplicateName = false) {
         if (session.uuid === uuid) {
           session.name = name;
           session.caps = caps;
+          session.envVars = normalizedEnvVars;
           session.server = server;
           session.serverType = serverType;
           break;
@@ -462,7 +503,7 @@ export function saveSession(sessionParams, checkDuplicateName = false) {
     }
     await setSetting(SAVED_SESSIONS, savedSessions);
     await getSavedSessions()(dispatch);
-    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name});
+    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name, envVars: normalizedEnvVars});
     dispatch({type: SAVE_SESSION_DONE});
   };
 }
@@ -696,11 +737,13 @@ export function exportSavedSession(session) {
       [SERVER_TYPES.ADVANCED]: session.server[SERVER_TYPES.ADVANCED],
     };
     const cleanedCaps = session.caps.map((cap) => omit(cap, 'id'));
+    const cleanedEnvVars = prepareEnvVarsForExport(session.envVars);
     const sessionFileDetails = {
       version: SESSION_FILE_VERSIONS.LATEST,
       name: cleanedName,
       server: cleanedServer,
       caps: cleanedCaps,
+      ...(cleanedEnvVars.length > 0 ? {envVars: cleanedEnvVars} : {}),
     };
     const href = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(sessionFileDetails, null, 2))}`;
     const escapedName = sanitize(cleanedName, {replacement: '_'});
@@ -786,9 +829,9 @@ export function abortDesiredCapsNameEditor() {
 
 export function saveDesiredCapsName() {
   return (dispatch, getState) => {
-    const {server, serverType, caps, capsUUID, desiredCapsName} = getState().builder;
+    const {server, serverType, caps, envVars, capsUUID, desiredCapsName} = getState().builder;
     dispatch({type: SAVE_DESIRED_CAPS_NAME, name: desiredCapsName});
-    saveSession({server, serverType, caps, name: desiredCapsName, uuid: capsUUID}, true)(dispatch);
+    saveSession({server, serverType, caps, envVars, name: desiredCapsName, uuid: capsUUID}, true)(dispatch);
   };
 }
 

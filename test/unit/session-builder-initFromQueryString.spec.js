@@ -33,6 +33,15 @@ async function runWithUrl(search) {
 
   let state = builder(undefined, {type: '@@INIT'});
   state = builder(state, {type: actions.SET_SERVER, server: {sauce: SAVED_SAUCE}, serverType: 'sauce'});
+  state = builder(state, {
+    type: actions.SET_CAPS_AND_SERVER,
+    server: state.server,
+    serverType: 'sauce',
+    caps: CAPS,
+    uuid: 'saved-id',
+    name: 'Saved',
+    envVars: [{id: 'e1', name: 'SECRET_KEY', value: 'top-secret', isSecret: true}],
+  });
   const dispatch = (action) => {
     state = builder(state, action);
   };
@@ -100,6 +109,17 @@ describe('SessionBuilder actions', function () {
       const {state, loadNewSession} = await runWithUrl('?autoStart=1');
       expect(loadNewSession).not.toHaveBeenCalled();
       expect(state.server.sauce).toMatchObject(SAVED_SAUCE);
+    });
+
+    it('should clear existing session envVars and drop envVars from the URL state', async function () {
+      const urlState = {
+        caps: CAPS,
+        envVars: [{name: 'INJECTED', value: 'bad', isSecret: false}],
+        serverType: 'remote',
+        server: {remote: {hostname: 'grid.example'}},
+      };
+      const {state} = await runWithUrl(`?state=${encodeURIComponent(JSON.stringify(urlState))}`);
+      expect(state.envVars).toEqual([]);
     });
   });
 });

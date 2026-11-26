@@ -2,6 +2,7 @@ import {
   ABORT_DESIRED_CAPS_EDITOR,
   ABORT_DESIRED_CAPS_NAME_EDITOR,
   ADD_CAPABILITY,
+  ADD_ENV_VAR,
   CHANGE_SERVER_TYPE,
   DELETE_SAVED_SESSION_DONE,
   DELETE_SAVED_SESSION_REQUESTED,
@@ -18,6 +19,7 @@ import {
   NEW_SESSION_LOADING,
   NEW_SESSION_REQUESTED,
   REMOVE_CAPABILITY,
+  REMOVE_ENV_VAR,
   SAVE_AS_MODAL_REQUESTED,
   SAVE_DESIRED_CAPS_NAME,
   SAVE_RAW_DESIRED_CAPS,
@@ -30,6 +32,7 @@ import {
   SET_CAPABILITY_PARAM,
   SET_CAPS_AND_SERVER,
   SET_DESIRED_CAPS_NAME,
+  SET_ENV_VAR_PARAM,
   SET_PROVIDERS,
   SET_RAW_DESIRED_CAPS,
   SET_SAVE_AS_TEXT,
@@ -42,6 +45,7 @@ import {
 } from '../actions/SessionBuilder.js';
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder.js';
 import {isPlainObject, omit} from '../utils/common.js';
+import {normalizeEnvVars} from '../utils/env-vars.js';
 import {getRandomId} from '../utils/other.js';
 
 const visibleProviders = []; // Pull this from the VISIBLE_PROVIDERS setting
@@ -68,6 +72,7 @@ const INITIAL_STATE = {
       enabled: true,
     },
   ],
+  envVars: [],
 
   isCapsDirty: true,
   isDuplicateCapsName: false,
@@ -129,6 +134,34 @@ export default function builder(state = INITIAL_STATE, action) {
         ),
       };
 
+    case ADD_ENV_VAR:
+      return {
+        ...state,
+        isCapsDirty: true,
+        envVars: [...state.envVars, {id: getRandomId(), name: '', value: '', isSecret: true}],
+      };
+
+    case REMOVE_ENV_VAR:
+      return {
+        ...state,
+        envVars: state.envVars.filter((envVar) => envVar.id !== action.id),
+        isCapsDirty: true,
+      };
+
+    case SET_ENV_VAR_PARAM:
+      return {
+        ...state,
+        isCapsDirty: true,
+        envVars: state.envVars.map((envVar) =>
+          envVar.id !== action.id
+            ? envVar
+            : {
+                ...envVar,
+                [action.name]: action.value,
+              },
+        ),
+      };
+
     case SET_CAPS_AND_SERVER:
       nextState = {
         ...state,
@@ -139,6 +172,7 @@ export default function builder(state = INITIAL_STATE, action) {
           enabled: true,
           ...cap,
         })),
+        ...(action.envVars !== undefined ? {envVars: normalizeEnvVars(action.envVars)} : {}),
         capsUUID: action.uuid,
         capsName: action.name,
         visibleProviders:
@@ -381,10 +415,11 @@ export default function builder(state = INITIAL_STATE, action) {
     case SET_STATE_FROM_URL:
       // The (sanitized) state from a link replaces the saved server state instead of merging into
       // it, so a session started from the link only uses the server the link itself describes and
-      // never inherits saved cloud credentials
+      // never inherits saved cloud credentials or session environment variables
       return {
         ...state,
         ...omit(action.state, ['server']),
+        envVars: [],
         server: mergeServerState(INITIAL_STATE.server, action.state.server || {}),
         serverType: action.state.serverType || INITIAL_STATE.serverType,
       };
@@ -404,6 +439,7 @@ export default function builder(state = INITIAL_STATE, action) {
           enabled: true,
           ...cap,
         })),
+        envVars: normalizeEnvVars(action.sessionJSON.envVars || []),
         // reset capsName since we now have an unnamed session
         capsName: null,
         server: {

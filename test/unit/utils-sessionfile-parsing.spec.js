@@ -153,6 +153,34 @@ describe('utils/sessionfile-parsing.js', function () {
       const session = {...versionProp, ...nameProp, ...serverProp, ...newCapsProp};
       expect(validateSessionJSON(session)).toBeNull();
     });
+
+    it('should validate a v2 session with valid envVars', function () {
+      const session = {
+        ...versionProp,
+        ...nameProp,
+        ...serverProp,
+        ...capsProp,
+        envVars: [
+          {name: 'XCODE_ORG_ID', value: '', isSecret: true},
+          {name: 'APP_ENV', value: 'staging', isSecret: false},
+          {name: 'IMPLICIT_SECRET', value: 'abc'},
+        ],
+      };
+      expect(validateSessionJSON(session)).toEqual(session);
+    });
+
+    it.each([
+      ['is not an array', {envVars: 'invalid'}],
+      ['contains a non-object', {envVars: [123]}],
+      ['omits name', {envVars: [{value: 'abc'}]}],
+      ['has a non-string name', {envVars: [{name: 123, value: 'abc'}]}],
+      ['omits value', {envVars: [{name: 'KEY'}]}],
+      ['has a non-string value', {envVars: [{name: 'KEY', value: 123}]}],
+      ['has a non-boolean isSecret', {envVars: [{name: 'KEY', value: 'abc', isSecret: 'yes'}]}],
+    ])('should return null if envVars %s', (_desc, newEnvVarsProp) => {
+      const session = {...versionProp, ...nameProp, ...serverProp, ...capsProp, ...newEnvVarsProp};
+      expect(validateSessionJSON(session)).toBeNull();
+    });
   });
 
   describe('#parseSessionFileContents', function () {

@@ -348,5 +348,9 @@
   "Use Template": "Use Template",
   "Select a Template": "Select a Template",
   "capabilityTemplateReplacement": "Select a template to preview its contents below. Applying a template replaces the current capabilities without changing any other session details.",
-  "capabilityTemplateSetup": "Refer to the driver documentation for more capability examples."
+  "capabilityTemplateSetup": "Refer to the driver documentation for more capability examples.",
+  "Environment Variables": "Environment Variables",
+  "environmentVariablesDescription": "Define variables to reference in capability values using {{placeholder}} syntax. Variables are saved with each capability set. Secret values are masked in the UI and omitted when exporting sessions or generating code.",
+  "duplicateEnvVarNameError": "A variable with the same name already exists",
+  "secretEnvVarTooltip": "Mask value in the UI and omit it from exported session files and generated code"
 }
