@@ -9,6 +9,7 @@ import {HeadspinVendor} from './headspin.js';
 import {KobitonVendor} from './kobiton.js';
 import {LocalVendor} from './local.js';
 import {MobitruVendor} from './mobitru.js';
+import {MozarkVendor} from './mozark.js';
 import {PcloudyVendor} from './pcloudy.js';
 import {PerfectoVendor} from './perfecto.js';
 import {RabbitQAVendor} from './rabbitqa.js';
@@ -48,4 +49,5 @@ export const VENDOR_MAP: Partial<Record<string, VendorConstructor>> = {
   [SERVER_TYPES.RABBITQA]: RabbitQAVendor,
   [SERVER_TYPES.ROBOTACTIONS]: RobotActionsVendor,
   [SERVER_TYPES.ASTROFARM]: AstrofarmVendor,
+  [SERVER_TYPES.MOZARK]: MozarkVendor,
 };
