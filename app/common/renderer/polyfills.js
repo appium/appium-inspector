@@ -8,9 +8,9 @@ import {DEFAULT_SETTINGS} from '../shared/setting-defs.js';
 
 export async function getSetting(setting) {
   if (await settings.has(setting)) {
-    return await settings.get(setting);
+    return structuredClone(await settings.get(setting));
   }
-  return DEFAULT_SETTINGS[setting];
+  return structuredClone(DEFAULT_SETTINGS[setting]);
 }
 
 export async function setSetting(setting, value) {

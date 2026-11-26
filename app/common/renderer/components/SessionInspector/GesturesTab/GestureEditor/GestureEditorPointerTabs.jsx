@@ -21,11 +21,11 @@ const addPointer = (pointers) => {
   return [copiedPointers, pointerId];
 };
 
-const deletePointer = (targetKey, pointers, unselectTick) => {
+export const deletePointer = (targetKey, pointers, unselectTick) => {
   // 'newActivePointerId' variable keeps track of the previous pointer before deleting the current one
   // its default is the first pointer
   let newActivePointerId = '1';
-  const pointersExceptCurrent = pointers.filter((pointer) => pointer.id !== targetKey);
+  const pointersExceptCurrent = structuredClone(pointers).filter((pointer) => pointer.id !== targetKey);
   const newPointers = pointersExceptCurrent.map((pointer, index) => {
     const newPointerId = String(index + 1);
     if (newPointerId !== pointer.id) {

@@ -963,7 +963,7 @@ export function exportSavedGesture(gestureJSON) {
 
 export function saveGesture(gesture) {
   return async (dispatch) => {
-    const savedGestures = (await getSetting(SET_SAVED_GESTURES)) || [];
+    const savedGestures = structuredClone(await getSetting(SET_SAVED_GESTURES)) || [];
 
     if (gesture.id) {
       // Editing an already saved gesture
@@ -976,9 +976,11 @@ export function saveGesture(gesture) {
       }
     } else {
       // Adding a new gesture
-      gesture.id = getRandomId();
-      gesture.date = Date.now();
-      savedGestures.push(gesture);
+      savedGestures.push({
+        ...gesture,
+        id: getRandomId(),
+        date: Date.now(),
+      });
     }
 
     await setSetting(SET_SAVED_GESTURES, savedGestures);
