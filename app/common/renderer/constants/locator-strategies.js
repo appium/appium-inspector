@@ -46,6 +46,20 @@ export const RENDERED_STRATEGIES = Object.fromEntries(
   }),
 );
 
+export const STRATEGY_DOCS = {
+  [CUSTOM_STRATEGIES.ANDROID_UIAUTOMATOR]:
+    'https://appium.github.io/appium-uiautomator2-driver/latest/guides/uiautomator-locator-strategy/',
+  [CUSTOM_STRATEGIES.ANDROID_CLASS_CHAIN]:
+    'https://appium.github.io/appium-uiautomator2-driver/latest/guides/android-class-chain/',
+  [CUSTOM_STRATEGIES.ANDROID_PREDICATE]:
+    'https://appium.github.io/appium-uiautomator2-driver/latest/guides/android-class-chain/#predicate-string-strategy',
+  [CUSTOM_STRATEGIES.ANDROID_DATAMATCHER]:
+    'https://appium.github.io/appium-espresso-driver/latest/guides/datamatcher-selector/',
+  [CUSTOM_STRATEGIES.IOS_CLASS_CHAIN]:
+    'https://appium.github.io/appium-xcuitest-driver/latest/reference/ios-class-chain/',
+  [CUSTOM_STRATEGIES.IOS_PREDICATE]: 'https://appium.github.io/appium-xcuitest-driver/latest/reference/ios-predicate/',
+};
+
 // Driver-specific mapping
 
 // Strategies shown for drivers not specified below
