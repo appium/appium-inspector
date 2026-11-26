@@ -42,6 +42,7 @@ export const SERVER_TYPES = {
   RABBITQA: 'rabbitqa',
   ROBOTACTIONS: 'robotactions',
   ASTROFARM: 'astrofarm',
+  MOZARK: 'mozark',
 };
 
 // The Sauce Labs data centers offered in the server tab, in display order. Each value becomes

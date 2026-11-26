@@ -9,6 +9,8 @@ import HeadSpinLogo from '../../../assets/images/headspin_logo.svg';
 import KobitonLogo from '../../../assets/images/kobiton_logo.svg';
 import KobitonLogoDark from '../../../assets/images/kobiton_logo_dark.svg';
 import MobitruLogo from '../../../assets/images/mobitru_logo.svg';
+import MozarkLogo from '../../../assets/images/mozark_logo.svg';
+import MozarkLogoDark from '../../../assets/images/mozark_logo_dark.svg';
 import PcloudyLogo from '../../../assets/images/pcloudy_logo.svg';
 import PcloudyLogoDark from '../../../assets/images/pcloudy_logo_dark.svg';
 import PerfectoLogo from '../../../assets/images/perfecto_logo.svg';
@@ -41,6 +43,7 @@ import ServerTabFireflinkDeviceFarm from './ServerTabFireflinkDeviceFarm.jsx';
 import ServerTabHeadspin from './ServerTabHeadspin.jsx';
 import ServerTabKobiton from './ServerTabKobiton.jsx';
 import ServerTabMobitru from './ServerTabMobitru.jsx';
+import ServerTabMozark from './ServerTabMozark.jsx';
 import ServerTabPcloudy from './ServerTabPcloudy.jsx';
 import ServerTabPerfecto from './ServerTabPerfecto.jsx';
 import ServerTabRabbitQA from './ServerTabRabbitqa.jsx';
@@ -195,6 +198,13 @@ const providers = {
     logos: {
       light: AstrofarmLogo,
       dark: null,
+    },
+  },
+  [SERVER_TYPES.MOZARK]: {
+    tab: ServerTabMozark,
+    logos: {
+      light: MozarkLogo,
+      dark: MozarkLogoDark,
     },
   },
 };

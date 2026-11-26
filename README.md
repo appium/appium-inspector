@@ -236,6 +236,17 @@ The Inspector has built-in integrations with various cloud service provider plat
       </a>
     </td>
   </tr>
+  <tr>
+    <td align="center" valign="center">
+      <a href="https://mozark.ai">
+        <picture>
+          <source media="(prefers-color-scheme: light)" srcset="app/common/renderer/assets/images/mozark_logo.svg">
+          <source media="(prefers-color-scheme: dark)" srcset="app/common/renderer/assets/images/mozark_logo_dark.svg">
+          <img width="200" height="41" alt="Mozark">
+        </picture>
+      </a>
+    </td>
+  </tr>
 </table>
 
 > [!NOTE]
