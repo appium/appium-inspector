@@ -58,6 +58,8 @@ export const STRATEGY_DOCS = {
   [CUSTOM_STRATEGIES.IOS_CLASS_CHAIN]:
     'https://appium.github.io/appium-xcuitest-driver/latest/reference/ios-class-chain/',
   [CUSTOM_STRATEGIES.IOS_PREDICATE]: 'https://appium.github.io/appium-xcuitest-driver/latest/reference/ios-predicate/',
+  [CUSTOM_STRATEGIES.WIN_UIAUTOMATION]:
+    'https://appium.github.io/appium-wincore-driver/latest/reference/windows-uiautomation/',
 };
 
 // Driver-specific mapping
