@@ -101,7 +101,7 @@ export default class JavaFramework extends CommonClientFramework {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `WebElements ${localVar} = driver.findElements(${STRATEGY_MAP[strategy]}(${JSON.stringify(locator)}));`;
+      return `List<WebElement> ${localVar} = driver.findElements(${STRATEGY_MAP[strategy]}(${JSON.stringify(locator)}));`;
     } else {
       return `WebElement ${localVar} = driver.findElement(${STRATEGY_MAP[strategy]}(${JSON.stringify(locator)}));`;
     }
