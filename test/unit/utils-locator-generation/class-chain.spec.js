@@ -34,7 +34,7 @@ describe('utils/locator-generation/class-chain.js', function () {
         expect(d.getCc(doc, 'child')).toBe(`**/child[\`${d.labelOrText} == "hello"\`]`);
       });
 
-      it(`should the node class instead of tag for UiAutomator2`, function ({skip}) {
+      it(`should match against node class instead of tag for UiAutomator2`, function ({skip}) {
         skip(d.name !== 'UIAutomator2', 'Only relevant for UiAutomator2 driver');
         const doc = xmlToDOM(
           d.wrap(`<node>
