@@ -1,0 +1,21 @@
+.envVarBoxFont {
+  font-family: monospace;
+}
+
+.envVarsForm {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+.envVarsForm :global(.ant-form-item) {
+  margin-bottom: 0.5em;
+}
+
+.envVarsDescription {
+  padding-bottom: 12px;
+}
+
+.addEnvVarButton {
+  float: right;
+}

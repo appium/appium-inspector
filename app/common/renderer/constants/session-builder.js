@@ -1,5 +1,6 @@
 export const SESSION_BUILDER_TABS = {
   CAPS_BUILDER: 'new',
+  ENV_VARS: 'envVars',
   SAVED_CAPS: 'saved',
   ATTACH_TO_SESSION: 'attach',
 };
