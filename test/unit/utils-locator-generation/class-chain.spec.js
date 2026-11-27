@@ -71,6 +71,15 @@ describe('utils/locator-generation/class-chain.js', function () {
         );
         expect(d.getCc(doc, 'grandchild')).toBe('child[1]/grandchild[1]');
       });
+
+      it(`should handle elements whose attributes contain backticks (${d.name})`, function () {
+        const doc = xmlToDOM(
+          d.wrap(`<node>
+            <child class='child' ${d.nameOrId}='TICK\`IS\`\`HERE'></child>
+          </node>`),
+        );
+        expect(d.getCc(doc, 'child')).toBe(`**/child[\`${d.nameOrId} == "TICK\`\`IS\`\`\`\`HERE"\`]`);
+      });
     }
   });
 });

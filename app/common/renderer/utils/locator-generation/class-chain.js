@@ -71,13 +71,15 @@ class ClassChainGenerator extends LocatorGeneratorBase {
 
   /**
    * Build a class chain expression from a single attribute
+   * If the attribute value contains backticks, they must be escaped by doubling
    *
    * @param {string} attrName - the attribute name
    * @param {string} attrValue - the attribute value
    * @returns {string} the class chain expression
    */
   _buildClassChainFromAttribute(attrName, attrValue) {
-    return `**/${this._nodeClass}[\`${attrName} == "${attrValue}"\`]`;
+    const escapedValue = attrValue.includes('`') ? attrValue.replace(/`/g, '``') : attrValue;
+    return `**/${this._nodeClass}[\`${attrName} == "${escapedValue}"\`]`;
   }
 
   /**
@@ -88,7 +90,9 @@ class ClassChainGenerator extends LocatorGeneratorBase {
    * @returns {string} the XPath expression
    */
   _buildUniquenessXPath(attrName, attrValue) {
-    return `//${this._nodeClass}[@${attrName}="${attrValue}"]`;
+    return this._isUiA2
+      ? `//*[@class="${this._nodeClass}" and @${attrName}="${attrValue}"]`
+      : `//${this._nodeClass}[@${attrName}="${attrValue}"]`;
   }
 
   /**
@@ -117,9 +121,12 @@ class ClassChainGenerator extends LocatorGeneratorBase {
       const xpath = this._buildUniquenessXPath(attrName, attrValue);
       let othersWithAttr;
 
-      // If the XPath does not parse, move to the next attribute
+      // If the XPath does not parse or fails, move to the next attribute
       try {
         othersWithAttr = xpathSelect(xpath, this._doc);
+        if (othersWithAttr.length < 1) {
+          continue;
+        }
       } catch {
         continue;
       }
