@@ -41,8 +41,7 @@ export function getComplexSuggestedLocators(path, sourceDoc, isNative, automatio
   const domNode = findDOMNodeByPath(path, sourceDoc);
   if (isNative) {
     if ([DRIVERS.XCUITEST, DRIVERS.MAC2, DRIVERS.UIAUTOMATOR2].includes(automationName)) {
-      const optimalClassChainBase = getOptimalClassChain(sourceDoc, domNode, automationName);
-      const optimalClassChain = optimalClassChainBase ? '**' + optimalClassChainBase : null;
+      const optimalClassChain = getOptimalClassChain(sourceDoc, domNode, automationName);
       const optimalPredicateString = getOptimalPredicateString(sourceDoc, domNode, automationName);
       if (automationName === DRIVERS.UIAUTOMATOR2) {
         complexLocators[ALL_STRATEGIES.ANDROID_CLASS_CHAIN] = optimalClassChain;

@@ -17,6 +17,8 @@ class ClassChainGenerator extends LocatorGeneratorBase {
   constructor(doc, domNode, automationName) {
     super(doc, domNode, null);
     this._driver = automationName;
+    this._isUiA2 = automationName === DRIVERS.UIAUTOMATOR2;
+    this._nodeClass = (this._isUiA2 ? this._domNode.getAttribute('class') : this._domNode.tagName) || '*';
   }
 
   /**
@@ -26,9 +28,14 @@ class ClassChainGenerator extends LocatorGeneratorBase {
    */
   generate() {
     try {
-      // If this isn't an element or is XCUIElementTypeApplication, return empty string
-      if (this._cannotProcessNode()) {
+      // If this isn't an element, return empty string
+      if (!this._isValidElementNode()) {
         return '';
+      }
+
+      // If this is a root node, return null
+      if (this._isRootNode()) {
+        return null;
       }
 
       // Try to find a class chain based on attributes
@@ -49,19 +56,17 @@ class ClassChainGenerator extends LocatorGeneratorBase {
    * Select the element attributes to use for building the selector, based on the driver.
    */
   get _checkedAttributes() {
-    if (this._driver === DRIVERS.UIAUTOMATOR2) {
-      return ['resource-id', 'text', 'content-desc'];
-    }
-    return ['name', 'label', 'value'];
+    return this._isUiA2 ? ['resource-id', 'text', 'content-desc'] : ['name', 'label', 'value'];
   }
 
   /**
-   * Check if the node can be processed for class chain generation
+   * Check if the node is a root node
    *
-   * @returns {boolean} true if the node cannot be processed
+   * @returns {boolean} true if the node is root
    */
-  _cannotProcessNode() {
-    return !this._isValidElementNode() || this._domNode.tagName === 'XCUIElementTypeApplication';
+  _isRootNode() {
+    const rootNodeClass = this._isUiA2 ? 'hierarchy' : 'XCUIElementTypeApplication';
+    return this._nodeClass === rootNodeClass;
   }
 
   /**
@@ -72,8 +77,7 @@ class ClassChainGenerator extends LocatorGeneratorBase {
    * @returns {string} the class chain expression
    */
   _buildClassChainFromAttribute(attrName, attrValue) {
-    const tagName = this._domNode.tagName || '*';
-    return `/${tagName}[\`${attrName} == "${attrValue}"\`]`;
+    return `**/${this._nodeClass}[\`${attrName} == "${attrValue}"\`]`;
   }
 
   /**
@@ -84,8 +88,7 @@ class ClassChainGenerator extends LocatorGeneratorBase {
    * @returns {string} the XPath expression
    */
   _buildUniquenessXPath(attrName, attrValue) {
-    const tagName = this._domNode.tagName || '*';
-    return `//${tagName}[@${attrName}="${attrValue}"]`;
+    return `//${this._nodeClass}[@${attrName}="${attrValue}"]`;
   }
 
   /**
@@ -142,8 +145,8 @@ class ClassChainGenerator extends LocatorGeneratorBase {
    * @returns {string} hierarchical class chain for this node
    */
   _buildHierarchicalClassChain() {
-    let classChain = `/${this._domNode.tagName}`;
-    const siblings = this._getSiblingsWithSameTag();
+    let classChain = this._nodeClass;
+    const siblings = this._isUiA2 ? this._getSiblingsWithSameClass() : this._getSiblingsWithSameTag();
 
     // Add index if there are multiple siblings with the same tag
     if (siblings.length > 1) {
@@ -152,8 +155,24 @@ class ClassChainGenerator extends LocatorGeneratorBase {
     }
 
     // Recursively build parent path and prepend it
-    const parentGenerator = new ClassChainGenerator(this._doc, this._domNode.parentNode, this._driver);
-    return parentGenerator.generate() + classChain;
+    const parentStep = new ClassChainGenerator(this._doc, this._domNode.parentNode, this._driver).generate();
+    if (parentStep === null) {
+      // reached root node - return existing chain without delimiting slash
+      return classChain;
+    }
+    return parentStep + '/' + classChain;
+  }
+
+  /**
+   * Get sibling nodes with the same class name (UiAutomator2 specific)
+   *
+   * @param {Node} targetNode - the node to find siblings for, defaults to the main DOM node if not provided
+   * @returns {Node[]} array of sibling nodes with the same class name
+   */
+  _getSiblingsWithSameClass(targetNode = this._domNode) {
+    const comparatorFn = (childNode) =>
+      childNode.nodeType === 1 && childNode.getAttribute('class') === targetNode.getAttribute('class');
+    return this._getSiblingsWithSameProperty(targetNode, comparatorFn);
   }
 }
 
