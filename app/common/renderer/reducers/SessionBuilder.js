@@ -1,45 +1,5 @@
-import {
-  ABORT_DESIRED_CAPS_EDITOR,
-  ABORT_DESIRED_CAPS_NAME_EDITOR,
-  ADD_CAPABILITY,
-  CHANGE_SERVER_TYPE,
-  DELETE_SAVED_SESSION_DONE,
-  DELETE_SAVED_SESSION_REQUESTED,
-  ENABLE_DESIRED_CAPS_EDITOR,
-  ENABLE_DESIRED_CAPS_NAME_EDITOR,
-  GET_SAVED_SESSIONS_DONE,
-  GET_SAVED_SESSIONS_REQUESTED,
-  GET_SESSIONS_DONE,
-  GET_SESSIONS_REQUESTED,
-  HIDE_SAVE_AS_MODAL_REQUESTED,
-  IS_ADDING_CLOUD_PROVIDER,
-  LOAD_CAPABILITY_TEMPLATE,
-  NEW_SESSION_DONE,
-  NEW_SESSION_LOADING,
-  NEW_SESSION_REQUESTED,
-  REMOVE_CAPABILITY,
-  SAVE_AS_MODAL_REQUESTED,
-  SAVE_DESIRED_CAPS_NAME,
-  SAVE_RAW_DESIRED_CAPS,
-  SAVE_SESSION_DONE,
-  SAVE_SESSION_REQUESTED,
-  SESSION_UPLOAD_DONE,
-  SESSION_UPLOAD_REQUESTED,
-  SET_ADD_VENDOR_PREFIXES,
-  SET_CAPABILITY_NAME_ERROR,
-  SET_CAPABILITY_PARAM,
-  SET_CAPS_AND_SERVER,
-  SET_DESIRED_CAPS_NAME,
-  SET_PROVIDERS,
-  SET_RAW_DESIRED_CAPS,
-  SET_SAVE_AS_TEXT,
-  SET_SERVER,
-  SET_SERVER_PARAM,
-  SET_STATE_FROM_FILE,
-  SET_STATE_FROM_URL,
-  SHOW_DESIRED_CAPS_JSON_ERROR,
-  SWITCHED_TABS,
-} from '../actions/SessionBuilder.js';
+import {createSlice} from '@reduxjs/toolkit';
+
 import {SERVER_TYPES, SESSION_BUILDER_TABS} from '../constants/session-builder.js';
 import {isPlainObject, omit} from '../utils/common.js';
 import {getRandomId} from '../utils/other.js';
@@ -82,355 +42,6 @@ const INITIAL_STATE = {
   isUploadingSessionFiles: false,
 };
 
-let nextState;
-
-export default function builder(state = INITIAL_STATE, action) {
-  switch (action.type) {
-    case NEW_SESSION_REQUESTED:
-      return {
-        ...state,
-        newSessionRequested: true,
-      };
-
-    case NEW_SESSION_LOADING:
-      nextState = {
-        ...state,
-        newSessionLoading: true,
-      };
-      return omit(nextState, 'newSessionRequested');
-
-    case NEW_SESSION_DONE:
-      return omit(state, 'newSessionLoading');
-
-    case ADD_CAPABILITY:
-      return {
-        ...state,
-        caps: [...state.caps, {id: getRandomId(), type: 'text', enabled: true}],
-      };
-
-    case REMOVE_CAPABILITY:
-      return {
-        ...state,
-        caps: state.caps.filter((cap) => cap.id !== action.id),
-        isCapsDirty: true,
-      };
-
-    case SET_CAPABILITY_PARAM:
-      return {
-        ...state,
-        isCapsDirty: true,
-        caps: state.caps.map((cap) =>
-          cap.id !== action.id
-            ? cap
-            : {
-                ...cap,
-                [action.name]: action.value,
-              },
-        ),
-      };
-
-    case SET_CAPS_AND_SERVER:
-      nextState = {
-        ...state,
-        server: {...state.server, ...action.server},
-        serverType: action.serverType,
-        caps: action.caps.map((cap) => ({
-          id: getRandomId(),
-          enabled: true,
-          ...cap,
-        })),
-        capsUUID: action.uuid,
-        capsName: action.name,
-        visibleProviders:
-          action.serverType !== SERVER_TYPES.REMOTE
-            ? [...new Set([...state.visibleProviders, action.serverType])]
-            : state.visibleProviders,
-      };
-      return omit(nextState, 'isCapsDirty');
-
-    case LOAD_CAPABILITY_TEMPLATE:
-      return {
-        ...state,
-        caps: action.caps,
-        isCapsDirty: true,
-        isEditingDesiredCaps: false,
-        rawDesiredCaps: null,
-        isValidCapsJson: true,
-        isValidatingCapsJson: false,
-        invalidCapsJsonReason: null,
-      };
-
-    case SAVE_SESSION_REQUESTED:
-      nextState = {
-        ...state,
-        saveSessionRequested: true,
-      };
-      return omit(nextState, 'showSaveAsModal');
-
-    case SAVE_SESSION_DONE:
-      nextState = {
-        ...state,
-        isEditingDesiredCapsName: false,
-        isDuplicateCapsName: false,
-      };
-      return omit(nextState, ['saveSessionRequested', 'saveAsText']);
-
-    case GET_SAVED_SESSIONS_REQUESTED:
-      return {
-        ...state,
-        getSavedSessionsRequested: true,
-      };
-
-    case GET_SAVED_SESSIONS_DONE:
-      nextState = {
-        ...state,
-        savedSessions: action.savedSessions || [],
-      };
-      return omit(nextState, 'getSavedSessionsRequested');
-
-    case DELETE_SAVED_SESSION_REQUESTED:
-      return {
-        ...state,
-        deletingSession: true,
-      };
-
-    case DELETE_SAVED_SESSION_DONE:
-      return {
-        ...state,
-        deletingSession: false,
-        capsUUID: null,
-        capsName: null,
-      };
-
-    case SWITCHED_TABS:
-      return {
-        ...state,
-        tabKey: action.key,
-      };
-
-    case SAVE_AS_MODAL_REQUESTED:
-      return {
-        ...state,
-        showSaveAsModal: true,
-      };
-
-    case HIDE_SAVE_AS_MODAL_REQUESTED:
-      nextState = {
-        ...state,
-        isDuplicateCapsName: false,
-      };
-      return omit(nextState, ['saveAsText', 'showSaveAsModal']);
-
-    case SET_SAVE_AS_TEXT:
-      return {
-        ...state,
-        saveAsText: action.saveAsText,
-      };
-
-    case CHANGE_SERVER_TYPE:
-      return {
-        ...state,
-        serverType: action.serverType,
-      };
-
-    case SET_SERVER_PARAM:
-      return {
-        ...state,
-        server: {
-          ...state.server,
-          [action.serverType]: {
-            ...state.server[action.serverType],
-            [action.name]: action.value,
-          },
-        },
-        isCapsDirty: true,
-      };
-
-    case SET_SERVER:
-      return {
-        ...state,
-        server: {
-          ...(function extendCurrentServerStateWithNewServerState(currentServerState, newServerState) {
-            // Copy current server state and extend it with new server state
-            const nextServerState = structuredClone(currentServerState || {});
-
-            // Extend each server (sauce, remote, kobiton, etc...)
-            for (let serverName of Object.keys(nextServerState)) {
-              nextServerState[serverName] = {
-                ...(nextServerState[serverName] || {}),
-                ...(newServerState[serverName] || {}),
-              };
-            }
-            return nextServerState;
-          })(state.server, action.server),
-        },
-        serverType: action.serverType || SERVER_TYPES.LOCAL,
-      };
-
-    case GET_SESSIONS_REQUESTED:
-      return {
-        ...state,
-        gettingSessions: true,
-      };
-
-    case GET_SESSIONS_DONE: {
-      return {
-        ...state,
-        gettingSessions: false,
-        attachSessId: action.sessions ? state.attachSessId : null,
-        runningAppiumSessions: action.sessions || [],
-      };
-    }
-
-    case ENABLE_DESIRED_CAPS_NAME_EDITOR:
-      return {
-        ...state,
-        isEditingDesiredCapsName: true,
-        desiredCapsName: state.capsName,
-      };
-
-    case ABORT_DESIRED_CAPS_NAME_EDITOR:
-      return {
-        ...state,
-        isEditingDesiredCapsName: false,
-        isDuplicateCapsName: false,
-        desiredCapsName: null,
-      };
-
-    case SAVE_DESIRED_CAPS_NAME:
-      return {
-        ...state,
-        capsName: action.name,
-      };
-
-    case SET_DESIRED_CAPS_NAME:
-      return {
-        ...state,
-        desiredCapsName: action.desiredCapsName,
-      };
-
-    case ENABLE_DESIRED_CAPS_EDITOR:
-      return {
-        ...state,
-        isEditingDesiredCaps: true,
-        rawDesiredCaps: JSON.stringify(
-          // Translate the caps definition to a proper capabilities JS Object
-          state.caps.reduce(
-            (result, obj) => ({
-              ...result,
-              [obj.name]: obj.value,
-            }),
-            {},
-          ),
-          null,
-          2,
-        ),
-        isValidCapsJson: true,
-        isValidatingCapsJson: false, // Don't start validating JSON until the user has attempted to save the JSON
-      };
-
-    case ABORT_DESIRED_CAPS_EDITOR:
-      return {
-        ...state,
-        isEditingDesiredCaps: false,
-        rawDesiredCaps: null,
-      };
-
-    case SAVE_RAW_DESIRED_CAPS:
-      return {
-        ...state,
-        isEditingDesiredCaps: false,
-        caps: action.caps,
-        isCapsDirty: true,
-      };
-
-    case SHOW_DESIRED_CAPS_JSON_ERROR:
-      return {
-        ...state,
-        invalidCapsJsonReason: action.message,
-        isValidCapsJson: false,
-        isValidatingCapsJson: true,
-      };
-
-    case SET_RAW_DESIRED_CAPS:
-      return {
-        ...state,
-        rawDesiredCaps: action.rawDesiredCaps,
-        isValidCapsJson: action.isValidCapsJson,
-        invalidCapsJsonReason: action.invalidCapsJsonReason,
-      };
-
-    case IS_ADDING_CLOUD_PROVIDER:
-      return {
-        ...state,
-        isAddingCloudProvider: action.isAddingProvider,
-      };
-
-    case SET_PROVIDERS:
-      return {
-        ...state,
-        visibleProviders: action.providers || [],
-      };
-
-    case SET_ADD_VENDOR_PREFIXES:
-      return {
-        ...state,
-        addVendorPrefixes: action.addVendorPrefixes,
-      };
-
-    case SET_STATE_FROM_URL:
-      // The (sanitized) state from a link replaces the saved server state instead of merging into
-      // it, so a session started from the link only uses the server the link itself describes and
-      // never inherits saved cloud credentials
-      return {
-        ...state,
-        ...omit(action.state, ['server']),
-        server: mergeServerState(INITIAL_STATE.server, action.state.server || {}),
-        serverType: action.state.serverType || INITIAL_STATE.serverType,
-      };
-
-    case SET_CAPABILITY_NAME_ERROR:
-      return {
-        ...state,
-        isDuplicateCapsName: true,
-      };
-
-    case SET_STATE_FROM_FILE:
-      return {
-        ...state,
-        // caps will always be defined as per parseSessionFileContents
-        caps: action.sessionJSON.caps.map((cap) => ({
-          id: getRandomId(),
-          enabled: true,
-          ...cap,
-        })),
-        // reset capsName since we now have an unnamed session
-        capsName: null,
-        server: {
-          ...state.server,
-          ...action.sessionJSON.server,
-        },
-        serverType: action.sessionJSON.serverType,
-        visibleProviders: [...new Set([...state.visibleProviders, ...(action.sessionJSON.visibleProviders || [])])],
-      };
-
-    case SESSION_UPLOAD_REQUESTED:
-      return {
-        ...state,
-        isUploadingSessionFiles: true,
-      };
-
-    case SESSION_UPLOAD_DONE:
-      return {
-        ...state,
-        isUploadingSessionFiles: false,
-      };
-
-    default:
-      return {...state};
-  }
-}
-
 // `server` is always exactly two levels deep (serverType -> flat scalar config), so merging
 // each serverType's config one level deep is equivalent to a full recursive deep merge here.
 function mergeServerState(currentServer, incomingServer) {
@@ -440,3 +51,312 @@ function mergeServerState(currentServer, incomingServer) {
   }
   return nextServer;
 }
+
+const builderSlice = createSlice({
+  name: 'builder',
+  initialState: INITIAL_STATE,
+  reducers: {
+    newSessionRequested: (state) => {
+      state.newSessionRequested = true;
+    },
+
+    newSessionLoading: (state) => {
+      state.newSessionLoading = true;
+      delete state.newSessionRequested;
+    },
+
+    newSessionDone: (state) => {
+      delete state.newSessionLoading;
+    },
+
+    addCapability: (state) => {
+      state.caps.push({id: getRandomId(), type: 'text', enabled: true});
+    },
+
+    removeCapability: (state, action) => {
+      state.caps = state.caps.filter((cap) => cap.id !== action.payload);
+      state.isCapsDirty = true;
+    },
+
+    setCapabilityParam: (state, action) => {
+      const {id, name, value} = action.payload;
+      state.isCapsDirty = true;
+      for (const cap of state.caps) {
+        if (cap.id === id) {
+          cap[name] = value;
+        }
+      }
+    },
+
+    setCapsAndServer: (state, action) => {
+      const {server: incomingServer, serverType, caps, uuid, name} = action.payload;
+      state.server = {...state.server, ...incomingServer};
+      state.serverType = serverType;
+      state.caps = caps.map((cap) => ({
+        id: getRandomId(),
+        enabled: true,
+        ...cap,
+      }));
+      state.capsUUID = uuid;
+      state.capsName = name;
+      if (serverType !== SERVER_TYPES.REMOTE) {
+        state.visibleProviders = [...new Set([...state.visibleProviders, serverType])];
+      }
+      delete state.isCapsDirty;
+    },
+
+    loadCapabilityTemplate: (state, action) => {
+      state.caps = action.payload;
+      state.isCapsDirty = true;
+      state.isEditingDesiredCaps = false;
+      state.rawDesiredCaps = null;
+      state.isValidCapsJson = true;
+      state.isValidatingCapsJson = false;
+      state.invalidCapsJsonReason = null;
+    },
+
+    saveSessionRequested: (state) => {
+      state.saveSessionRequested = true;
+      delete state.showSaveAsModal;
+    },
+
+    saveSessionDone: (state) => {
+      state.isEditingDesiredCapsName = false;
+      state.isDuplicateCapsName = false;
+      delete state.saveSessionRequested;
+      delete state.saveAsText;
+    },
+
+    getSavedSessionsRequested: (state) => {
+      state.getSavedSessionsRequested = true;
+    },
+
+    getSavedSessionsDone: (state, action) => {
+      state.savedSessions = action.payload || [];
+      delete state.getSavedSessionsRequested;
+    },
+
+    deleteSavedSessionRequested: (state) => {
+      state.deletingSession = true;
+    },
+
+    deleteSavedSessionDone: (state) => {
+      state.deletingSession = false;
+      state.capsUUID = null;
+      state.capsName = null;
+    },
+
+    switchedTabs: (state, action) => {
+      state.tabKey = action.payload;
+    },
+
+    saveAsModalRequested: (state) => {
+      state.showSaveAsModal = true;
+    },
+
+    hideSaveAsModalRequested: (state) => {
+      state.isDuplicateCapsName = false;
+      delete state.saveAsText;
+      delete state.showSaveAsModal;
+    },
+
+    setSaveAsText: (state, action) => {
+      state.saveAsText = action.payload;
+    },
+
+    changeServerType: (state, action) => {
+      state.serverType = action.payload;
+    },
+
+    setServerParam: (state, action) => {
+      const {serverType, name, value} = action.payload;
+      state.server[serverType] = {
+        ...state.server[serverType],
+        [name]: value,
+      };
+      state.isCapsDirty = true;
+    },
+
+    setServer: (state, action) => {
+      const {server: incomingServer = {}, serverType} = action.payload;
+      for (const serverName of Object.keys(state.server)) {
+        if (incomingServer[serverName]) {
+          state.server[serverName] = {
+            ...state.server[serverName],
+            ...incomingServer[serverName],
+          };
+        }
+      }
+      state.serverType = serverType || SERVER_TYPES.LOCAL;
+    },
+
+    getSessionsRequested: (state) => {
+      state.gettingSessions = true;
+    },
+
+    getSessionsDone: (state, action) => {
+      const sessions = action.payload;
+      state.gettingSessions = false;
+      state.attachSessId = sessions ? state.attachSessId : null;
+      state.runningAppiumSessions = sessions || [];
+    },
+
+    enableDesiredCapsNameEditor: (state) => {
+      state.isEditingDesiredCapsName = true;
+      state.desiredCapsName = state.capsName;
+    },
+
+    abortDesiredCapsNameEditor: (state) => {
+      state.isEditingDesiredCapsName = false;
+      state.isDuplicateCapsName = false;
+      state.desiredCapsName = null;
+    },
+
+    saveDesiredCapsName: (state, action) => {
+      state.capsName = action.payload;
+    },
+
+    setDesiredCapsName: (state, action) => {
+      state.desiredCapsName = action.payload;
+    },
+
+    enableDesiredCapsEditor: (state) => {
+      state.isEditingDesiredCaps = true;
+      state.rawDesiredCaps = JSON.stringify(
+        // Translate the caps definition to a proper capabilities JS Object
+        state.caps.reduce(
+          (result, obj) => ({
+            ...result,
+            [obj.name]: obj.value,
+          }),
+          {},
+        ),
+        null,
+        2,
+      );
+      state.isValidCapsJson = true;
+      state.isValidatingCapsJson = false; // Don't start validating JSON until the user has attempted to save the JSON
+    },
+
+    abortDesiredCapsEditor: (state) => {
+      state.isEditingDesiredCaps = false;
+      state.rawDesiredCaps = null;
+    },
+
+    saveRawDesiredCaps: (state, action) => {
+      state.isEditingDesiredCaps = false;
+      state.caps = action.payload;
+      state.isCapsDirty = true;
+    },
+
+    showDesiredCapsJsonError: (state, action) => {
+      state.invalidCapsJsonReason = action.payload;
+      state.isValidCapsJson = false;
+      state.isValidatingCapsJson = true;
+    },
+
+    setRawDesiredCaps: (state, action) => {
+      const {rawDesiredCaps, isValidCapsJson, invalidCapsJsonReason} = action.payload;
+      state.rawDesiredCaps = rawDesiredCaps;
+      state.isValidCapsJson = isValidCapsJson;
+      state.invalidCapsJsonReason = invalidCapsJsonReason;
+    },
+
+    isAddingCloudProvider: (state, action) => {
+      state.isAddingCloudProvider = action.payload;
+    },
+
+    setProviders: (state, action) => {
+      state.visibleProviders = action.payload || [];
+    },
+
+    setAddVendorPrefixes: (state, action) => {
+      state.addVendorPrefixes = action.payload;
+    },
+
+    setStateFromUrl: (state, action) => {
+      const incomingState = action.payload;
+      // The (sanitized) state from a link replaces the saved server state instead of merging into
+      // it, so a session started from the link only uses the server the link itself describes and
+      // never inherits saved cloud credentials
+      Object.assign(state, omit(incomingState, ['server']));
+      state.server = mergeServerState(structuredClone(INITIAL_STATE.server), incomingState.server || {});
+      state.serverType = incomingState.serverType || INITIAL_STATE.serverType;
+    },
+
+    setCapabilityNameError: (state) => {
+      state.isDuplicateCapsName = true;
+    },
+
+    setStateFromFile: (state, action) => {
+      const sessionJSON = action.payload;
+      // caps will always be defined as per parseSessionFileContents
+      state.caps = sessionJSON.caps.map((cap) => ({
+        id: getRandomId(),
+        enabled: true,
+        ...cap,
+      }));
+      // reset capsName since we now have an unnamed session
+      state.capsName = null;
+      state.server = {
+        ...state.server,
+        ...sessionJSON.server,
+      };
+      state.serverType = sessionJSON.serverType;
+      state.visibleProviders = [...new Set([...state.visibleProviders, ...(sessionJSON.visibleProviders || [])])];
+    },
+
+    sessionUploadRequested: (state) => {
+      state.isUploadingSessionFiles = true;
+    },
+
+    sessionUploadDone: (state) => {
+      state.isUploadingSessionFiles = false;
+    },
+  },
+});
+
+export const {
+  abortDesiredCapsEditor,
+  abortDesiredCapsNameEditor,
+  addCapability,
+  changeServerType,
+  deleteSavedSessionDone,
+  deleteSavedSessionRequested,
+  enableDesiredCapsEditor,
+  enableDesiredCapsNameEditor,
+  getSavedSessionsDone,
+  getSavedSessionsRequested,
+  getSessionsDone,
+  getSessionsRequested,
+  hideSaveAsModalRequested,
+  isAddingCloudProvider,
+  loadCapabilityTemplate,
+  newSessionDone,
+  newSessionLoading,
+  newSessionRequested,
+  removeCapability,
+  saveAsModalRequested,
+  saveDesiredCapsName,
+  saveRawDesiredCaps,
+  saveSessionDone,
+  saveSessionRequested,
+  sessionUploadDone,
+  sessionUploadRequested,
+  setAddVendorPrefixes,
+  setCapabilityNameError,
+  setCapabilityParam,
+  setCapsAndServer,
+  setDesiredCapsName,
+  setProviders,
+  setRawDesiredCaps,
+  setSaveAsText,
+  setServer,
+  setServerParam,
+  setStateFromFile,
+  setStateFromUrl,
+  showDesiredCapsJsonError,
+  switchedTabs,
+} = builderSlice.actions;
+
+export default builderSlice.reducer;

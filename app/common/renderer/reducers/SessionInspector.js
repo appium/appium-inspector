@@ -1,84 +1,7 @@
-import {
-  ADD_ASSIGNED_VAR_CACHE,
-  CLEAR_ASSIGNED_VAR_CACHE,
-  CLEAR_COORD_ACTION,
-  CLEAR_RECORDING,
-  CLEAR_SEARCH_RESULTS,
-  CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS,
-  CLEAR_TAP_COORDINATES,
-  DELETE_SAVED_GESTURES_DONE,
-  DELETE_SAVED_GESTURES_REQUESTED,
-  FINDING_ELEMENT_IN_SOURCE,
-  FINDING_ELEMENT_IN_SOURCE_COMPLETED,
-  GESTURE_UPLOAD_DONE,
-  GESTURE_UPLOAD_REQUESTED,
-  GET_FIND_ELEMENTS_TIMES,
-  GET_FIND_ELEMENTS_TIMES_COMPLETED,
-  GET_SAVED_GESTURES_DONE,
-  GET_SAVED_GESTURES_REQUESTED,
-  HIDE_GESTURE_ACTION,
-  HIDE_GESTURE_EDITOR,
-  HIDE_LOCATOR_SEARCH_MODAL,
-  HIDE_PROMPT_KEEP_ALIVE,
-  METHOD_CALL_DONE,
-  METHOD_CALL_REQUESTED,
-  PAUSE_RECORDING,
-  PROMPT_KEEP_ALIVE,
-  QUIT_SESSION_DONE,
-  QUIT_SESSION_REQUESTED,
-  RECORD_ACTION,
-  REMOVE_LOADED_GESTURE,
-  SEARCHING_FOR_ELEMENTS,
-  SEARCHING_FOR_ELEMENTS_COMPLETED,
-  SELECT_CENTROID,
-  SELECT_ELEMENT,
-  SELECT_INSPECTOR_TAB,
-  SELECT_LOCATED_ELEMENT,
-  SELECT_TICK_ELEMENT,
-  SESSION_DONE,
-  SET_APP_ID,
-  SET_APP_MODE,
-  SET_AUTO_SESSION_RESTART,
-  SET_AWAITING_MJPEG_STREAM,
-  SET_CLIENT_FRAMEWORK,
-  SET_CONTEXT,
-  SET_COORD_END,
-  SET_COORD_START,
-  SET_EXPANDED_PATHS,
-  SET_FLAT_SESSION_CAPS,
-  SET_GESTURE_TAP_COORDS_MODE,
-  SET_INTERACTIONS_NOT_AVAILABLE,
-  SET_KEEP_ALIVE_INTERVAL,
-  SET_LAST_ACTIVE_MOMENT,
-  SET_LOADED_GESTURE,
-  SET_LOCATOR_SEARCH_STRATEGY,
-  SET_LOCATOR_SEARCH_VALUE,
-  SET_MJPEG_STATE,
-  SET_OPTIMAL_LOCATORS,
-  SET_REFRESHING_STATE,
-  SET_SCREENSHOT_INTERACTION_MODE,
-  SET_SEARCHED_FOR_ELEMENT_BOUNDS,
-  SET_SELECTED_ELEMENT_ID,
-  SET_SERVER_STATUS,
-  SET_SESSION_DETAILS,
-  SET_SESSION_TIME,
-  SET_SHOW_BOILERPLATE,
-  SET_SHOW_CENTROIDS,
-  SET_SOURCE_AND_SCREENSHOT,
-  SET_USER_WAIT_TIMEOUT,
-  SHOW_GESTURE_ACTION,
-  SHOW_GESTURE_EDITOR,
-  SHOW_LOCATOR_SEARCH_MODAL,
-  START_RECORDING,
-  STORE_SESSION_SETTINGS,
-  TOGGLE_SHOW_ATTRIBUTES,
-  UNSELECT_CENTROID,
-  UNSELECT_ELEMENT,
-  UNSELECT_TICK_ELEMENT,
-} from '../actions/SessionInspector.js';
+import {createSlice} from '@reduxjs/toolkit';
+
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot.js';
 import {APP_MODE, CLIENT_FRAMEWORKS, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector.js';
-import {omit} from '../utils/common.js';
 
 const INITIAL_STATE = {
   savedGestures: [],
@@ -117,494 +40,454 @@ const INITIAL_STATE = {
   autoSessionRestart: false,
 };
 
-let nextState;
-
-export default function inspector(state = INITIAL_STATE, action) {
-  switch (action.type) {
-    case SET_SOURCE_AND_SCREENSHOT:
-      return {
-        ...state,
-        contexts: action.contexts,
-        contextsError: action.contextsError,
-        currentContext: action.currentContext || NATIVE_APP,
-        currentContextError: action.currentContextError,
-        sourceJSON: action.sourceJSON,
-        sourceXML: action.sourceXML,
-        sourceError: action.sourceError,
-        screenshot: action.screenshot,
-        screenshotError: action.screenshotError,
-        windowSize: action.windowSize,
-        windowSizeError: action.windowSizeError,
-        findElementsExecutionTimes: [],
-      };
-
-    case QUIT_SESSION_REQUESTED:
-      return {
-        ...state,
-        methodCallInProgress: true,
-        isQuittingSession: true,
-      };
-
-    case QUIT_SESSION_DONE:
-      return {
-        ...INITIAL_STATE,
-      };
-
-    case SESSION_DONE:
-      return {
-        ...state,
-        isSessionDone: true,
-        methodCallInProgress: false,
-      };
-
-    case SELECT_ELEMENT:
-      return {
-        ...state,
-        selectedElement: action.selectedElement,
-        selectedElementPath: action.selectedElement.path,
-        selectedElementId: null,
-        selectedElementSearchInProgress: true,
-        elementInteractionsNotAvailable: false,
-        findElementsExecutionTimes: [],
-      };
-
-    case SET_OPTIMAL_LOCATORS:
-      return {
-        ...state,
-        selectedElement: {
-          ...state.selectedElement,
-          strategyMap: action.strategyMap,
-        },
-      };
-
-    case UNSELECT_ELEMENT:
-      return {
-        ...state,
-        selectedElement: undefined,
-        selectedElementPath: null,
-        selectedElementId: null,
-        selectedElementSearchInProgress: false,
-      };
-
-    case SELECT_CENTROID:
-      return {
-        ...state,
-        selectedCentroid: action.path,
-      };
-
-    case UNSELECT_CENTROID:
-      return omit(state, 'selectedCentroid');
-
-    case SET_SELECTED_ELEMENT_ID:
-      return {
-        ...state,
-        selectedElementId: action.elementId,
-        selectedElementSearchInProgress: false,
-        findElementsExecutionTimes: [],
-      };
-
-    case SET_INTERACTIONS_NOT_AVAILABLE:
-      return {
-        ...state,
-        elementInteractionsNotAvailable: true,
-        selectedElementSearchInProgress: false,
-      };
-
-    case METHOD_CALL_REQUESTED:
-      return {
-        ...state,
-        methodCallInProgress: true,
-      };
-
-    case METHOD_CALL_DONE:
-      return {
-        ...state,
-        methodCallInProgress: false,
-      };
-
-    case SET_EXPANDED_PATHS:
-      return {
-        ...state,
-        expandedPaths: action.paths,
-        findElementsExecutionTimes: [],
-      };
-
-    case START_RECORDING:
-      return {
-        ...state,
-        isRecording: true,
-      };
-
-    case PAUSE_RECORDING:
-      return {
-        ...state,
-        isRecording: false,
-      };
-
-    case CLEAR_RECORDING:
-      return {
-        ...state,
-        recordedActions: [],
-      };
-
-    case SET_CLIENT_FRAMEWORK:
-      return {
-        ...state,
-        clientFramework: action.framework,
-      };
-
-    case RECORD_ACTION:
-      return {
-        ...state,
-        recordedActions: [...state.recordedActions, {action: action.action, params: action.params}],
-      };
-
-    case ADD_ASSIGNED_VAR_CACHE:
-      return {
-        ...state,
-        assignedVarCache: {
-          ...state.assignedVarCache,
-          [action.varName]: true,
-        },
-      };
-
-    case CLEAR_ASSIGNED_VAR_CACHE:
-      return {
-        ...state,
-        assignedVarCache: [],
-      };
-
-    case SET_SHOW_BOILERPLATE:
-      return {...state, showBoilerplate: action.show};
-
-    case SET_SESSION_DETAILS: {
-      return {
-        ...state,
-        serverDetails: action.serverDetails,
-        driver: action.driver,
-        sessionCaps: action.sessionCaps,
-        featureCaps: action.featureCaps,
-        appMode: action.appMode,
-        isUsingMjpegMode: action.isUsingMjpegMode,
-      };
-    }
-
-    case STORE_SESSION_SETTINGS:
-      return {
-        ...state,
-        sessionSettings: {...state.sessionSettings, ...action.sessionSettings},
-      };
-
-    case SHOW_LOCATOR_SEARCH_MODAL:
-      return {
-        ...state,
-        isLocatorSearchModalVisible: true,
-      };
-
-    case HIDE_LOCATOR_SEARCH_MODAL:
-      return {
-        ...state,
-        isLocatorSearchModalVisible: false,
-      };
-
-    case SET_LOCATOR_SEARCH_STRATEGY:
-      return {
-        ...state,
-        locatorSearchStrategy: action.locatorSearchStrategy,
-      };
-
-    case SET_LOCATOR_SEARCH_VALUE:
-      return {
-        ...state,
-        locatorSearchValue: action.locatorSearchValue,
-      };
-
-    case SEARCHING_FOR_ELEMENTS:
-      return {
-        ...state,
-        locatedElements: null,
-        locatedElementsExecutionTime: null,
-        locatedElement: null,
-        isSearchingForElements: true,
-      };
-
-    case SEARCHING_FOR_ELEMENTS_COMPLETED:
-      return {
-        ...state,
-        locatedElements: action.elements,
-        locatedElementsExecutionTime: action.executionTime,
-        isSearchingForElements: false,
-      };
-
-    case GET_FIND_ELEMENTS_TIMES:
-      return {
-        ...state,
-        isFindingElementsTimes: true,
-      };
-
-    case GET_FIND_ELEMENTS_TIMES_COMPLETED:
-      return {
-        ...state,
-        findElementsExecutionTimes: action.findElementsExecutionTimes,
-        isFindingElementsTimes: false,
-      };
-
-    case SELECT_LOCATED_ELEMENT:
-      return {
-        ...state,
-        locatedElement: action.elementId,
-      };
-
-    case FINDING_ELEMENT_IN_SOURCE:
-      return {
-        ...state,
-        isFindingLocatedElementInSource: true,
-      };
-
-    case FINDING_ELEMENT_IN_SOURCE_COMPLETED:
-      return {
-        ...state,
-        isFindingLocatedElementInSource: false,
-      };
-
-    case CLEAR_SEARCH_RESULTS:
-      return {
-        ...state,
-        locatedElements: null,
-        isFindingLocatedElementInSource: false,
-      };
-
-    case SET_MJPEG_STATE:
-      return {
-        ...state,
-        isUsingMjpegMode: action.targetMjpegState,
-      };
-
-    case SET_SCREENSHOT_INTERACTION_MODE:
-      return {
-        ...state,
-        screenshotInteractionMode: action.screenshotInteractionMode,
-      };
-
-    case SET_COORD_START:
-      return {
-        ...state,
-        coordStart: {
-          x: action.coordStartX,
-          y: action.coordStartY,
-        },
-      };
-
-    case SET_COORD_END:
-      return {
-        ...state,
-        coordEnd: {
-          x: action.coordEndX,
-          y: action.coordEndY,
-        },
-      };
-
-    case CLEAR_COORD_ACTION:
-      return {
-        ...state,
-        coordStart: null,
-        coordEnd: null,
-      };
-
-    case SET_SEARCHED_FOR_ELEMENT_BOUNDS:
-      return {
-        ...state,
-        searchedForElementBounds: {
-          location: action.location,
-          size: action.size,
-        },
-      };
-
-    case CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS:
-      return {
-        ...state,
-        searchedForElementBounds: null,
-      };
-
-    case PROMPT_KEEP_ALIVE:
-      return {
-        ...state,
-        showKeepAlivePrompt: true,
-      };
-
-    case HIDE_PROMPT_KEEP_ALIVE:
-      return {
-        ...state,
-        showKeepAlivePrompt: false,
-      };
-
-    case SELECT_INSPECTOR_TAB:
-      return {
-        ...state,
-        selectedInspectorTab: action.interaction,
-      };
-
-    case SET_APP_MODE:
-      return {
-        ...state,
-        appMode: action.mode,
-      };
-
-    case SET_SHOW_CENTROIDS:
-      return {
-        ...state,
-        showCentroids: action.show,
-      };
-
-    case SET_CONTEXT:
-      return {
-        ...state,
-        currentContext: action.context,
-      };
-
-    case SET_KEEP_ALIVE_INTERVAL:
-      return {
-        ...state,
-        keepAliveInterval: action.keepAliveInterval,
-      };
-
-    case SET_USER_WAIT_TIMEOUT:
-      return {
-        ...state,
-        userWaitTimeout: action.userWaitTimeout,
-      };
-
-    case SET_LAST_ACTIVE_MOMENT:
-      return {
-        ...state,
-        lastActiveMoment: action.lastActiveMoment,
-      };
-
-    case SET_SESSION_TIME:
-      return {
-        ...state,
-        sessionStartTime: action.sessionStartTime,
-      };
-
-    case SET_APP_ID:
-      return {
-        ...state,
-        appId: action.appId,
-      };
-
-    case SET_SERVER_STATUS:
-      return {
-        ...state,
-        status: action.status,
-      };
-
-    case SET_FLAT_SESSION_CAPS:
-      return {
-        ...state,
-        flatSessionCaps: action.flatSessionCaps,
-      };
-
-    case SET_AWAITING_MJPEG_STREAM:
-      return {...state, isAwaitingMjpegStream: action.isAwaiting};
-
-    case GESTURE_UPLOAD_REQUESTED:
-      return {
-        ...state,
-        isUploadingGestureFiles: true,
-      };
-
-    case GESTURE_UPLOAD_DONE:
-      return {
-        ...state,
-        isUploadingGestureFiles: false,
-      };
-
-    case SHOW_GESTURE_EDITOR:
-      return {
-        ...state,
-        isGestureEditorVisible: true,
-      };
-
-    case HIDE_GESTURE_EDITOR:
-      return {
-        ...state,
-        isGestureEditorVisible: false,
-      };
-
-    case GET_SAVED_GESTURES_REQUESTED:
-      return {
-        ...state,
-        getSavedGesturesRequested: true,
-      };
-
-    case GET_SAVED_GESTURES_DONE:
-      nextState = {
-        ...state,
-        savedGestures: action.savedGestures || [],
-      };
-      return omit(nextState, 'getSavedGesturesRequested');
-
-    case DELETE_SAVED_GESTURES_REQUESTED:
-      return {
-        ...state,
-        deleteGesture: action.deleteGesture,
-      };
-
-    case DELETE_SAVED_GESTURES_DONE:
-      return omit(state, 'deleteGesture');
-
-    case SET_LOADED_GESTURE:
-      return {
-        ...state,
-        loadedGesture: action.loadedGesture,
-      };
-
-    case REMOVE_LOADED_GESTURE:
-      return omit(state, 'loadedGesture');
-
-    case SHOW_GESTURE_ACTION:
-      return {
-        ...state,
-        showGesture: action.showGesture,
-      };
-
-    case HIDE_GESTURE_ACTION:
-      return omit(state, 'showGesture');
-
-    case SELECT_TICK_ELEMENT:
-      return {
-        ...state,
-        selectedTick: action.selectedTick,
-      };
-
-    case UNSELECT_TICK_ELEMENT:
-      return omit(state, 'selectedTick');
-
-    case SET_GESTURE_TAP_COORDS_MODE:
-      return {
-        ...state,
-        tickCoordinates: {
-          x: action.x,
-          y: action.y,
-        },
-      };
-
-    case CLEAR_TAP_COORDINATES:
-      return omit(state, 'tickCoordinates');
-
-    case TOGGLE_SHOW_ATTRIBUTES:
-      return {...state, showSourceAttrs: !state.showSourceAttrs};
-
-    case SET_REFRESHING_STATE:
-      return {...state, isSourceRefreshOn: action.refreshStates.source};
-
-    case SET_AUTO_SESSION_RESTART:
-      return {
-        ...state,
-        autoSessionRestart: action.autoSessionRestart,
-      };
-
-    default:
-      return {...state};
-  }
-}
+const inspectorSlice = createSlice({
+  name: 'inspector',
+  initialState: INITIAL_STATE,
+  reducers: {
+    setSourceAndScreenshot: (state, action) => {
+      const {
+        contexts,
+        contextsError,
+        currentContext,
+        currentContextError,
+        sourceJSON,
+        sourceXML,
+        sourceError,
+        screenshot,
+        screenshotError,
+        windowSize,
+        windowSizeError,
+      } = action.payload;
+      state.contexts = contexts;
+      state.contextsError = contextsError;
+      state.currentContext = currentContext || NATIVE_APP;
+      state.currentContextError = currentContextError;
+      state.sourceJSON = sourceJSON;
+      state.sourceXML = sourceXML;
+      state.sourceError = sourceError;
+      state.screenshot = screenshot;
+      state.screenshotError = screenshotError;
+      state.windowSize = windowSize;
+      state.windowSizeError = windowSizeError;
+      state.findElementsExecutionTimes = [];
+    },
+
+    quitSessionRequested: (state) => {
+      state.methodCallInProgress = true;
+      state.isQuittingSession = true;
+    },
+
+    quitSessionDone: () => INITIAL_STATE,
+
+    sessionDone: (state) => {
+      state.isSessionDone = true;
+      state.methodCallInProgress = false;
+    },
+
+    selectElement: (state, action) => {
+      state.selectedElement = action.payload;
+      state.selectedElementPath = action.payload.path;
+      state.selectedElementId = null;
+      state.selectedElementSearchInProgress = true;
+      state.elementInteractionsNotAvailable = false;
+      state.findElementsExecutionTimes = [];
+    },
+
+    setOptimalLocators: (state, action) => {
+      state.selectedElement = {
+        ...state.selectedElement,
+        strategyMap: action.payload,
+      };
+    },
+
+    unselectElement: (state) => {
+      state.selectedElement = undefined;
+      state.selectedElementPath = null;
+      state.selectedElementId = null;
+      state.selectedElementSearchInProgress = false;
+    },
+
+    selectCentroid: (state, action) => {
+      state.selectedCentroid = action.payload;
+    },
+
+    unselectCentroid: (state) => {
+      delete state.selectedCentroid;
+    },
+
+    setSelectedElementId: (state, action) => {
+      state.selectedElementId = action.payload;
+      state.selectedElementSearchInProgress = false;
+      state.findElementsExecutionTimes = [];
+    },
+
+    setInteractionsNotAvailable: (state) => {
+      state.elementInteractionsNotAvailable = true;
+      state.selectedElementSearchInProgress = false;
+    },
+
+    methodCallRequested: (state) => {
+      state.methodCallInProgress = true;
+    },
+
+    methodCallDone: (state) => {
+      state.methodCallInProgress = false;
+    },
+
+    setExpandedPaths: (state, action) => {
+      state.expandedPaths = action.payload;
+      state.findElementsExecutionTimes = [];
+    },
+
+    startRecording: (state) => {
+      state.isRecording = true;
+    },
+
+    pauseRecording: (state) => {
+      state.isRecording = false;
+    },
+
+    clearRecording: (state) => {
+      state.recordedActions = [];
+    },
+
+    setClientFramework: (state, action) => {
+      state.clientFramework = action.payload;
+    },
+
+    recordAction: (state, action) => {
+      const {action: actionName, params} = action.payload;
+      state.recordedActions.push({action: actionName, params});
+    },
+
+    addAssignedVarCache: (state, action) => {
+      state.assignedVarCache[action.payload] = true;
+    },
+
+    clearAssignedVarCache: (state) => {
+      state.assignedVarCache = {};
+    },
+
+    setShowBoilerplate: (state, action) => {
+      state.showBoilerplate = action.payload;
+    },
+
+    setSessionDetails: (state, action) => {
+      const {serverDetails, driver, sessionCaps, featureCaps, appMode, isUsingMjpegMode} = action.payload;
+      state.serverDetails = serverDetails;
+      state.driver = driver;
+      state.sessionCaps = sessionCaps;
+      state.featureCaps = featureCaps;
+      state.appMode = appMode;
+      state.isUsingMjpegMode = isUsingMjpegMode;
+    },
+
+    storeSessionSettings: (state, action) => {
+      state.sessionSettings = {...state.sessionSettings, ...action.payload};
+    },
+
+    showLocatorSearchModal: (state) => {
+      state.isLocatorSearchModalVisible = true;
+    },
+
+    hideLocatorSearchModal: (state) => {
+      state.isLocatorSearchModalVisible = false;
+    },
+
+    setLocatorSearchStrategy: (state, action) => {
+      state.locatorSearchStrategy = action.payload;
+    },
+
+    setLocatorSearchValue: (state, action) => {
+      state.locatorSearchValue = action.payload;
+    },
+
+    searchingForElements: (state) => {
+      state.locatedElements = null;
+      state.locatedElementsExecutionTime = null;
+      state.locatedElement = null;
+      state.isSearchingForElements = true;
+    },
+
+    searchingForElementsCompleted: (state, action) => {
+      const {elements, executionTime} = action.payload ?? {};
+      state.locatedElements = elements;
+      state.locatedElementsExecutionTime = executionTime;
+      state.isSearchingForElements = false;
+    },
+
+    getFindElementsTimes: (state) => {
+      state.isFindingElementsTimes = true;
+    },
+
+    getFindElementsTimesCompleted: (state, action) => {
+      const {findElementsExecutionTimes} = action.payload ?? {};
+      state.findElementsExecutionTimes = findElementsExecutionTimes;
+      state.isFindingElementsTimes = false;
+    },
+
+    selectLocatedElement: (state, action) => {
+      state.locatedElement = action.payload;
+    },
+
+    findingElementInSource: (state) => {
+      state.isFindingLocatedElementInSource = true;
+    },
+
+    findingElementInSourceCompleted: (state) => {
+      state.isFindingLocatedElementInSource = false;
+    },
+
+    clearSearchResults: (state) => {
+      state.locatedElements = null;
+      state.isFindingLocatedElementInSource = false;
+    },
+
+    setMjpegState: (state, action) => {
+      state.isUsingMjpegMode = action.payload;
+    },
+
+    setScreenshotInteractionMode: (state, action) => {
+      state.screenshotInteractionMode = action.payload;
+    },
+
+    setCoordStart: (state, action) => {
+      const {x, y} = action.payload;
+      state.coordStart = {x, y};
+    },
+
+    setCoordEnd: (state, action) => {
+      const {x, y} = action.payload;
+      state.coordEnd = {x, y};
+    },
+
+    clearCoordAction: (state) => {
+      state.coordStart = null;
+      state.coordEnd = null;
+    },
+
+    setSearchedForElementBounds: (state, action) => {
+      const {location, size} = action.payload;
+      state.searchedForElementBounds = {location, size};
+    },
+
+    clearSearchedForElementBounds: (state) => {
+      state.searchedForElementBounds = null;
+    },
+
+    promptKeepAlive: (state) => {
+      state.showKeepAlivePrompt = true;
+    },
+
+    hidePromptKeepAlive: (state) => {
+      state.showKeepAlivePrompt = false;
+    },
+
+    selectInspectorTab: (state, action) => {
+      state.selectedInspectorTab = action.payload;
+    },
+
+    setAppMode: (state, action) => {
+      state.appMode = action.payload;
+    },
+
+    setShowCentroids: (state, action) => {
+      state.showCentroids = action.payload;
+    },
+
+    setContext: (state, action) => {
+      state.currentContext = action.payload;
+    },
+
+    setKeepAliveInterval: (state, action) => {
+      state.keepAliveInterval = action.payload;
+    },
+
+    setUserWaitTimeout: (state, action) => {
+      state.userWaitTimeout = action.payload;
+    },
+
+    setLastActiveMoment: (state, action) => {
+      state.lastActiveMoment = action.payload;
+    },
+
+    setSessionTime: (state, action) => {
+      state.sessionStartTime = action.payload;
+    },
+
+    setAppId: (state, action) => {
+      state.appId = action.payload;
+    },
+
+    setServerStatus: (state, action) => {
+      state.status = action.payload;
+    },
+
+    setFlatSessionCaps: (state, action) => {
+      state.flatSessionCaps = action.payload;
+    },
+
+    setAwaitingMjpegStream: (state, action) => {
+      state.isAwaitingMjpegStream = action.payload;
+    },
+
+    gestureUploadRequested: (state) => {
+      state.isUploadingGestureFiles = true;
+    },
+
+    gestureUploadDone: (state) => {
+      state.isUploadingGestureFiles = false;
+    },
+
+    showGestureEditor: (state) => {
+      state.isGestureEditorVisible = true;
+    },
+
+    hideGestureEditor: (state) => {
+      state.isGestureEditorVisible = false;
+    },
+
+    getSavedGesturesRequested: (state) => {
+      state.getSavedGesturesRequested = true;
+    },
+
+    getSavedGesturesDone: (state, action) => {
+      state.savedGestures = action.payload || [];
+      delete state.getSavedGesturesRequested;
+    },
+
+    deleteSavedGesturesRequested: (state, action) => {
+      state.deleteGesture = action.payload;
+    },
+
+    deleteSavedGesturesDone: (state) => {
+      delete state.deleteGesture;
+    },
+
+    setLoadedGesture: (state, action) => {
+      state.loadedGesture = action.payload;
+    },
+
+    removeLoadedGesture: (state) => {
+      delete state.loadedGesture;
+    },
+
+    showGestureAction: (state, action) => {
+      state.showGesture = action.payload;
+    },
+
+    hideGestureAction: (state) => {
+      delete state.showGesture;
+    },
+
+    selectTickElement: (state, action) => {
+      state.selectedTick = action.payload;
+    },
+
+    unselectTickElement: (state) => {
+      delete state.selectedTick;
+    },
+
+    setGestureTapCoordsMode: (state, action) => {
+      const {x, y} = action.payload ?? {};
+      state.tickCoordinates = {x, y};
+    },
+
+    clearTapCoordinates: (state) => {
+      delete state.tickCoordinates;
+    },
+
+    toggleShowAttributes: (state) => {
+      state.showSourceAttrs = !state.showSourceAttrs;
+    },
+
+    setRefreshingState: (state, action) => {
+      state.isSourceRefreshOn = action.payload.source;
+    },
+
+    setAutoSessionRestart: (state, action) => {
+      state.autoSessionRestart = action.payload;
+    },
+  },
+});
+
+export const {
+  addAssignedVarCache,
+  clearAssignedVarCache,
+  clearCoordAction,
+  clearRecording,
+  clearSearchResults,
+  clearSearchedForElementBounds,
+  clearTapCoordinates,
+  deleteSavedGesturesDone,
+  deleteSavedGesturesRequested,
+  findingElementInSource,
+  findingElementInSourceCompleted,
+  gestureUploadDone,
+  gestureUploadRequested,
+  getFindElementsTimes,
+  getFindElementsTimesCompleted,
+  getSavedGesturesDone,
+  getSavedGesturesRequested,
+  hideGestureAction,
+  hideGestureEditor,
+  hideLocatorSearchModal,
+  hidePromptKeepAlive,
+  methodCallDone,
+  methodCallRequested,
+  pauseRecording,
+  promptKeepAlive,
+  quitSessionDone,
+  quitSessionRequested,
+  recordAction,
+  removeLoadedGesture,
+  searchingForElements,
+  searchingForElementsCompleted,
+  selectCentroid,
+  selectElement,
+  selectInspectorTab,
+  selectLocatedElement,
+  selectTickElement,
+  sessionDone,
+  setAppId,
+  setAppMode,
+  setAutoSessionRestart,
+  setAwaitingMjpegStream,
+  setClientFramework,
+  setContext,
+  setCoordEnd,
+  setCoordStart,
+  setExpandedPaths,
+  setFlatSessionCaps,
+  setGestureTapCoordsMode,
+  setInteractionsNotAvailable,
+  setKeepAliveInterval,
+  setLastActiveMoment,
+  setLoadedGesture,
+  setLocatorSearchStrategy,
+  setLocatorSearchValue,
+  setMjpegState,
+  setOptimalLocators,
+  setRefreshingState,
+  setScreenshotInteractionMode,
+  setSearchedForElementBounds,
+  setSelectedElementId,
+  setServerStatus,
+  setSessionDetails,
+  setSessionTime,
+  setShowBoilerplate,
+  setShowCentroids,
+  setSourceAndScreenshot,
+  setUserWaitTimeout,
+  showGestureAction,
+  showGestureEditor,
+  showLocatorSearchModal,
+  startRecording,
+  storeSessionSettings,
+  toggleShowAttributes,
+  unselectCentroid,
+  unselectElement,
+  unselectTickElement,
+} = inspectorSlice.actions;
+
+export default inspectorSlice.reducer;

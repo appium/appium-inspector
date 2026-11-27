@@ -21,6 +21,48 @@ import i18n from '../i18next.js';
 import WDSessionStarter from '../lib/appium/session-starter.js';
 import {VENDOR_MAP} from '../lib/vendor/map.js';
 import {getSetting, loadSessionFileIfOpened, setSetting} from '../polyfills.js';
+import {
+  abortDesiredCapsEditor as abortDesiredCapsEditorAction,
+  abortDesiredCapsNameEditor as abortDesiredCapsNameEditorAction,
+  addCapability as addCapabilityAction,
+  changeServerType as changeServerTypeAction,
+  deleteSavedSessionDone,
+  deleteSavedSessionRequested,
+  enableDesiredCapsEditor,
+  enableDesiredCapsNameEditor,
+  getSavedSessionsDone,
+  getSavedSessionsRequested,
+  getSessionsDone,
+  getSessionsRequested,
+  hideSaveAsModalRequested,
+  isAddingCloudProvider,
+  loadCapabilityTemplate as loadCapabilityTemplateAction,
+  newSessionDone,
+  newSessionLoading,
+  newSessionRequested,
+  removeCapability as removeCapabilityAction,
+  saveAsModalRequested,
+  saveDesiredCapsName as saveDesiredCapsNameAction,
+  saveRawDesiredCaps as saveRawDesiredCapsAction,
+  saveSessionDone,
+  saveSessionRequested,
+  sessionUploadDone,
+  sessionUploadRequested,
+  setAddVendorPrefixes as setAddVendorPrefixesAction,
+  setCapabilityNameError,
+  setCapabilityParam as setCapabilityParamAction,
+  setCapsAndServer as setCapsAndServerAction,
+  setDesiredCapsName as setDesiredCapsNameAction,
+  setProviders,
+  setRawDesiredCaps as setRawDesiredCapsAction,
+  setSaveAsText as setSaveAsTextAction,
+  setServer,
+  setServerParam as setServerParamAction,
+  setStateFromFile,
+  setStateFromUrl,
+  showDesiredCapsJsonError,
+  switchedTabs,
+} from '../reducers/SessionBuilder.js';
 import {fetchSessionInformation, formatSeleniumGridSessions} from '../utils/attaching-to-session.js';
 import {isEmpty, omit} from '../utils/common.js';
 import {downloadFile, readTextFromUploadedFiles} from '../utils/file-handling.js';
@@ -30,56 +72,6 @@ import {addVendorPrefixes, getRandomId} from '../utils/other.js';
 import {parseSessionFileContents} from '../utils/sessionfile-parsing.js';
 import {sanitizeUrlState} from '../utils/url-state.js';
 import {quitSession, setSessionDetails} from './SessionInspector.js';
-
-export const NEW_SESSION_REQUESTED = 'NEW_SESSION_REQUESTED';
-export const NEW_SESSION_LOADING = 'NEW_SESSION_LOADING';
-export const NEW_SESSION_DONE = 'NEW_SESSION_DONE';
-export const CHANGE_CAPABILITY = 'CHANGE_CAPABILITY';
-export const SAVE_SESSION_REQUESTED = 'SAVE_SESSION_REQUESTED';
-export const SAVE_SESSION_DONE = 'SAVE_SESSION_DONE';
-export const GET_SAVED_SESSIONS_REQUESTED = 'GET_SAVED_SESSIONS_REQUESTED';
-export const GET_SAVED_SESSIONS_DONE = 'GET_SAVED_SESSIONS_DONE';
-export const SET_CAPABILITY_PARAM = 'SET_CAPABILITY_PARAM';
-export const ADD_CAPABILITY = 'ADD_CAPABILITY';
-export const REMOVE_CAPABILITY = 'REMOVE_CAPABILITY';
-export const SWITCHED_TABS = 'SWITCHED_TABS';
-export const SET_CAPS_AND_SERVER = 'SET_CAPS_AND_SERVER';
-export const LOAD_CAPABILITY_TEMPLATE = 'LOAD_CAPABILITY_TEMPLATE';
-export const SAVE_AS_MODAL_REQUESTED = 'SAVE_AS_MODAL_REQUESTED';
-export const HIDE_SAVE_AS_MODAL_REQUESTED = 'HIDE_SAVE_AS_MODAL_REQUESTED';
-export const SET_SAVE_AS_TEXT = 'SET_SAVE_AS_TEXT';
-export const DELETE_SAVED_SESSION_REQUESTED = 'DELETE_SAVED_SESSION_REQUESTED';
-export const DELETE_SAVED_SESSION_DONE = 'DELETE_SAVED_SESSION_DONE';
-export const CHANGE_SERVER_TYPE = 'CHANGE_SERVER_TYPE';
-export const SET_SERVER_PARAM = 'SET_SERVER_PARAM';
-export const SET_SERVER = 'SET_SERVER';
-
-export const GET_SESSIONS_REQUESTED = 'GET_SESSIONS_REQUESTED';
-export const GET_SESSIONS_DONE = 'GET_SESSIONS_DONE';
-
-export const ENABLE_DESIRED_CAPS_NAME_EDITOR = 'ENABLE_DESIRED_CAPS_NAME_EDITOR';
-export const ABORT_DESIRED_CAPS_NAME_EDITOR = 'ABORT_DESIRED_CAPS_NAME_EDITOR';
-export const SAVE_DESIRED_CAPS_NAME = 'SAVE_DESIRED_CAPS_NAME';
-export const SET_DESIRED_CAPS_NAME = 'SET_DESIRED_CAPS_NAME';
-
-export const ENABLE_DESIRED_CAPS_EDITOR = 'ENABLE_DESIRED_CAPS_EDITOR';
-export const ABORT_DESIRED_CAPS_EDITOR = 'ABORT_DESIRED_CAPS_EDITOR';
-export const SAVE_RAW_DESIRED_CAPS = 'SAVE_RAW_DESIRED_CAPS';
-export const SET_RAW_DESIRED_CAPS = 'SET_RAW_DESIRED_CAPS';
-export const SHOW_DESIRED_CAPS_JSON_ERROR = 'SHOW_DESIRED_CAPS_JSON_ERROR';
-
-export const IS_ADDING_CLOUD_PROVIDER = 'IS_ADDING_CLOUD_PROVIDER';
-
-export const SET_PROVIDERS = 'SET_PROVIDERS';
-
-export const SET_ADD_VENDOR_PREFIXES = 'SET_ADD_VENDOR_PREFIXES';
-
-export const SET_CAPABILITY_NAME_ERROR = 'SET_CAPABILITY_NAME_ERROR';
-export const SET_STATE_FROM_URL = 'SET_STATE_FROM_URL';
-export const SET_STATE_FROM_FILE = 'SET_STATE_FROM_FILE';
-
-export const SESSION_UPLOAD_REQUESTED = 'SESSION_UPLOAD_REQUESTED';
-export const SESSION_UPLOAD_DONE = 'SESSION_UPLOAD_DONE';
 
 const CAPS_NEW_COMMAND = 'appium:newCommandTimeout';
 const CAPS_NATIVE_WEB_SCREENSHOT = 'appium:nativeWebScreenshot';
@@ -191,7 +183,7 @@ export function showError(e, params = {methodName: null, secs: 5, url: null}) {
  */
 export function setCapsAndServer(server, serverType, caps, uuid, name) {
   return (dispatch) => {
-    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name});
+    dispatch(setCapsAndServerAction({server, serverType, caps, uuid, name}));
   };
 }
 
@@ -207,20 +199,8 @@ export function loadCapabilityTemplate(templateId) {
         name,
         value,
       }));
-      dispatch({
-        type: LOAD_CAPABILITY_TEMPLATE,
-        caps,
-      });
+      dispatch(loadCapabilityTemplateAction(caps));
     }
-  };
-}
-
-/**
- * Change a single desired capability
- */
-export function changeCapability(key, value) {
-  return (dispatch) => {
-    dispatch({type: CHANGE_CAPABILITY, key, value});
   };
 }
 
@@ -229,7 +209,7 @@ export function changeCapability(key, value) {
  */
 export function addCapability() {
   return (dispatch) => {
-    dispatch({type: ADD_CAPABILITY});
+    dispatch(addCapabilityAction());
   };
 }
 
@@ -238,7 +218,7 @@ export function addCapability() {
  */
 export function setCapabilityParam(id, name, value) {
   return (dispatch) => {
-    dispatch({type: SET_CAPABILITY_PARAM, id, name, value});
+    dispatch(setCapabilityParamAction({id, name, value}));
   };
 }
 
@@ -247,7 +227,7 @@ export function setCapabilityParam(id, name, value) {
  */
 export function removeCapability(id) {
   return (dispatch) => {
-    dispatch({type: REMOVE_CAPABILITY, id});
+    dispatch(removeCapabilityAction(id));
   };
 }
 
@@ -266,7 +246,7 @@ export function newSession(originalCaps, attachSessId = null) {
       setCapsAndServer(server, serverType, prefixedCaps, capsUUID, capsName)(dispatch);
     }
 
-    dispatch({type: NEW_SESSION_REQUESTED});
+    dispatch(newSessionRequested());
 
     let sessionCaps = prefixedCaps ? getCapsObject(prefixedCaps) : {};
     sessionCaps = addCustomCaps(sessionCaps);
@@ -281,7 +261,7 @@ export function newSession(originalCaps, attachSessId = null) {
       return false;
     }
 
-    dispatch({type: NEW_SESSION_LOADING});
+    dispatch(newSessionLoading());
 
     // Assemble server options from the vendor properties
 
@@ -358,7 +338,7 @@ export function newSession(originalCaps, attachSessId = null) {
       showError(err, {secs: 0, url: serverUrl});
       return false;
     } finally {
-      dispatch({type: NEW_SESSION_DONE});
+      dispatch(newSessionDone());
       // Save the current server settings
       await setSetting(SESSION_SERVER_PARAMS, session.server);
     }
@@ -430,10 +410,10 @@ export function saveSession(sessionParams, checkDuplicateName = false) {
     if (checkDuplicateName) {
       const duplicateSessionNameExists = savedSessions.some((session) => session.name === name);
       if (duplicateSessionNameExists) {
-        return dispatch({type: SET_CAPABILITY_NAME_ERROR});
+        return dispatch(setCapabilityNameError());
       }
     }
-    dispatch({type: SAVE_SESSION_REQUESTED});
+    dispatch(saveSessionRequested());
 
     let uuid = foundUUID;
     if (!uuid) {
@@ -462,8 +442,8 @@ export function saveSession(sessionParams, checkDuplicateName = false) {
     }
     await setSetting(SAVED_SESSIONS, savedSessions);
     await getSavedSessions()(dispatch);
-    dispatch({type: SET_CAPS_AND_SERVER, server, serverType, caps, uuid, name});
-    dispatch({type: SAVE_SESSION_DONE});
+    dispatch(setCapsAndServerAction({server, serverType, caps, uuid, name}));
+    dispatch(saveSessionDone());
   };
 }
 
@@ -472,9 +452,9 @@ export function saveSession(sessionParams, checkDuplicateName = false) {
  */
 export function getSavedSessions() {
   return async (dispatch) => {
-    dispatch({type: GET_SAVED_SESSIONS_REQUESTED});
+    dispatch(getSavedSessionsRequested());
     let savedSessions = await getSetting(SAVED_SESSIONS);
-    dispatch({type: GET_SAVED_SESSIONS_DONE, savedSessions});
+    dispatch(getSavedSessionsDone(savedSessions));
   };
 }
 
@@ -483,7 +463,7 @@ export function getSavedSessions() {
  */
 export function switchTabs(key) {
   return (dispatch, getState) => {
-    dispatch({type: SWITCHED_TABS, key});
+    dispatch(switchedTabs(key));
     // if switching to Attach to Session tab, also retrieve the running sessions
     if (key === SESSION_BUILDER_TABS.ATTACH_TO_SESSION) {
       getRunningSessions()(dispatch, getState);
@@ -496,7 +476,7 @@ export function switchTabs(key) {
  */
 export function requestSaveAsModal() {
   return (dispatch) => {
-    dispatch({type: SAVE_AS_MODAL_REQUESTED});
+    dispatch(saveAsModalRequested());
   };
 }
 
@@ -505,7 +485,7 @@ export function requestSaveAsModal() {
  */
 export function hideSaveAsModal() {
   return (dispatch) => {
-    dispatch({type: HIDE_SAVE_AS_MODAL_REQUESTED});
+    dispatch(hideSaveAsModalRequested());
   };
 }
 
@@ -514,7 +494,7 @@ export function hideSaveAsModal() {
  */
 export function setSaveAsText(saveAsText) {
   return (dispatch) => {
-    dispatch({type: SET_SAVE_AS_TEXT, saveAsText});
+    dispatch(setSaveAsTextAction(saveAsText));
   };
 }
 
@@ -523,12 +503,12 @@ export function setSaveAsText(saveAsText) {
  */
 export function deleteSavedSession(uuid) {
   return async (dispatch) => {
-    dispatch({type: DELETE_SAVED_SESSION_REQUESTED, uuid});
+    dispatch(deleteSavedSessionRequested());
     let savedSessions = await getSetting(SAVED_SESSIONS);
     let newSessions = savedSessions.filter((session) => session.uuid !== uuid);
     await setSetting(SAVED_SESSIONS, newSessions);
-    dispatch({type: DELETE_SAVED_SESSION_DONE});
-    dispatch({type: GET_SAVED_SESSIONS_DONE, savedSessions: newSessions});
+    dispatch(deleteSavedSessionDone());
+    dispatch(getSavedSessionsDone(newSessions));
   };
 }
 
@@ -538,7 +518,7 @@ export function deleteSavedSession(uuid) {
 export function changeServerType(serverType) {
   return async (dispatch) => {
     await setSetting(SESSION_SERVER_TYPE, serverType);
-    dispatch({type: CHANGE_SERVER_TYPE, serverType});
+    dispatch(changeServerTypeAction(serverType));
   };
 }
 
@@ -549,7 +529,7 @@ export function setServerParam(name, value, serverType) {
   return async (dispatch, getState) => {
     serverType = serverType || getState().builder.serverType;
     await setSetting(SESSION_SERVER_TYPE, serverType);
-    dispatch({type: SET_SERVER_PARAM, serverType, name, value});
+    dispatch(setServerParamAction({serverType, name, value}));
   };
 }
 
@@ -563,31 +543,35 @@ export function setLocalServerParams() {
     // Get saved server args from settings and set local server settings to it. If there are no saved args, set local
     // host and port to undefined
     if (serverArgs) {
-      dispatch({
-        type: SET_SERVER_PARAM,
-        serverType: SERVER_TYPES.LOCAL,
-        name: 'port',
-        value: serverArgs.port,
-      });
-      dispatch({
-        type: SET_SERVER_PARAM,
-        serverType: SERVER_TYPES.LOCAL,
-        name: 'hostname',
-        value: 'localhost',
-      });
+      dispatch(
+        setServerParamAction({
+          serverType: SERVER_TYPES.LOCAL,
+          name: 'port',
+          value: serverArgs.port,
+        }),
+      );
+      dispatch(
+        setServerParamAction({
+          serverType: SERVER_TYPES.LOCAL,
+          name: 'hostname',
+          value: 'localhost',
+        }),
+      );
     } else {
-      dispatch({
-        type: SET_SERVER_PARAM,
-        serverType: SERVER_TYPES.LOCAL,
-        name: 'port',
-        value: undefined,
-      });
-      dispatch({
-        type: SET_SERVER_PARAM,
-        serverType: SERVER_TYPES.LOCAL,
-        name: 'hostname',
-        value: undefined,
-      });
+      dispatch(
+        setServerParamAction({
+          serverType: SERVER_TYPES.LOCAL,
+          name: 'port',
+          value: undefined,
+        }),
+      );
+      dispatch(
+        setServerParamAction({
+          serverType: SERVER_TYPES.LOCAL,
+          name: 'hostname',
+          value: undefined,
+        }),
+      );
       if (getState().builder.serverType === 'local') {
         const action = changeServerType('remote');
         await action(dispatch, getState);
@@ -612,7 +596,7 @@ export function setSavedServerParams() {
       if (Object.values(SERVER_TYPES).includes(serverType) && !currentProviders.includes(serverType)) {
         serverType = SERVER_TYPES.REMOTE;
       }
-      dispatch({type: SET_SERVER, server, serverType});
+      dispatch(setServer({server, serverType}));
     }
   };
 }
@@ -634,7 +618,7 @@ export function initFromSessionFile() {
     }
     const sessionJSON = parseAndValidateSessionFileString(sessionFileString);
     if (sessionJSON) {
-      dispatch({type: SET_STATE_FROM_FILE, sessionJSON});
+      dispatch(setStateFromFile(sessionJSON));
       switchTabs(SESSION_BUILDER_TABS.CAPS_BUILDER)(dispatch, getState);
     } else {
       notification.error({
@@ -652,7 +636,7 @@ export function initFromSessionFile() {
  */
 export function importSessionFiles(fileList) {
   return async (dispatch) => {
-    dispatch({type: SESSION_UPLOAD_REQUESTED});
+    dispatch(sessionUploadRequested());
     const sessions = await readTextFromUploadedFiles(fileList);
     const invalidSessionFiles = [];
     const parsedSessions = [];
@@ -674,7 +658,7 @@ export function importSessionFiles(fileList) {
     for (const parsedSession of parsedSessions) {
       await saveSession(parsedSession)(dispatch);
     }
-    dispatch({type: SESSION_UPLOAD_DONE});
+    dispatch(sessionUploadDone());
 
     if (!isEmpty(invalidSessionFiles)) {
       notification.error({
@@ -752,15 +736,15 @@ export function getRunningSessions() {
       return;
     }
 
-    dispatch({type: GET_SESSIONS_REQUESTED});
+    dispatch(getSessionsRequested());
     if (avoidServerTypes.includes(serverType)) {
-      dispatch({type: GET_SESSIONS_DONE});
+      dispatch(getSessionsDone());
       return;
     }
 
     if (serverType === SERVER_TYPES.TESTMUAI) {
       const sessions = await fetchTestMuAISessions(host, headers);
-      dispatch({type: GET_SESSIONS_DONE, sessions});
+      dispatch(getSessionsDone(sessions));
       return;
     }
 
@@ -768,45 +752,45 @@ export function getRunningSessions() {
     const adjPath = path.endsWith('/') ? path : `${path}/`;
     const baseUrl = `${protocol}://${host}:${port}${adjPath}`;
     const sessions = await fetchAllSessions(baseUrl, headers);
-    dispatch({type: GET_SESSIONS_DONE, sessions});
+    dispatch(getSessionsDone(sessions));
   };
 }
 
 export function startDesiredCapsNameEditor() {
   return (dispatch) => {
-    dispatch({type: ENABLE_DESIRED_CAPS_NAME_EDITOR});
+    dispatch(enableDesiredCapsNameEditor());
   };
 }
 
 export function abortDesiredCapsNameEditor() {
   return (dispatch) => {
-    dispatch({type: ABORT_DESIRED_CAPS_NAME_EDITOR});
+    dispatch(abortDesiredCapsNameEditorAction());
   };
 }
 
 export function saveDesiredCapsName() {
   return (dispatch, getState) => {
     const {server, serverType, caps, capsUUID, desiredCapsName} = getState().builder;
-    dispatch({type: SAVE_DESIRED_CAPS_NAME, name: desiredCapsName});
+    dispatch(saveDesiredCapsNameAction(desiredCapsName));
     saveSession({server, serverType, caps, name: desiredCapsName, uuid: capsUUID}, true)(dispatch);
   };
 }
 
 export function setDesiredCapsName(desiredCapsName) {
   return (dispatch) => {
-    dispatch({type: SET_DESIRED_CAPS_NAME, desiredCapsName});
+    dispatch(setDesiredCapsNameAction(desiredCapsName));
   };
 }
 
 export function startDesiredCapsEditor() {
   return (dispatch) => {
-    dispatch({type: ENABLE_DESIRED_CAPS_EDITOR});
+    dispatch(enableDesiredCapsEditor());
   };
 }
 
 export function abortDesiredCapsEditor() {
   return (dispatch) => {
-    dispatch({type: ABORT_DESIRED_CAPS_EDITOR});
+    dispatch(abortDesiredCapsEditorAction());
   };
 }
 
@@ -837,9 +821,9 @@ export function saveRawDesiredCaps(currentCapsArray, rawDesiredCaps) {
         name,
         value,
       }));
-      dispatch({type: SAVE_RAW_DESIRED_CAPS, caps: newCapsArray});
+      dispatch(saveRawDesiredCapsAction(newCapsArray));
     } catch (e) {
-      dispatch({type: SHOW_DESIRED_CAPS_JSON_ERROR, message: e.message});
+      dispatch(showDesiredCapsJsonError(e.message));
     }
   };
 }
@@ -857,19 +841,19 @@ export function setRawDesiredCaps(rawDesiredCaps) {
         invalidCapsJsonReason = e.message;
       }
     }
-    dispatch({type: SET_RAW_DESIRED_CAPS, rawDesiredCaps, isValidCapsJson, invalidCapsJsonReason});
+    dispatch(setRawDesiredCapsAction({rawDesiredCaps, isValidCapsJson, invalidCapsJsonReason}));
   };
 }
 
 export function addCloudProvider() {
   return (dispatch) => {
-    dispatch({type: IS_ADDING_CLOUD_PROVIDER, isAddingProvider: true});
+    dispatch(isAddingCloudProvider(true));
   };
 }
 
 export function stopAddCloudProvider() {
   return (dispatch) => {
-    dispatch({type: IS_ADDING_CLOUD_PROVIDER, isAddingProvider: false});
+    dispatch(isAddingCloudProvider(false));
   };
 }
 
@@ -878,7 +862,7 @@ export function addVisibleProvider(provider) {
     let currentProviders = getState().builder.visibleProviders;
     const providers = [...new Set([...currentProviders, provider])];
     await setSetting(VISIBLE_PROVIDERS, providers);
-    dispatch({type: SET_PROVIDERS, providers});
+    dispatch(setProviders(providers));
   };
 }
 
@@ -891,14 +875,14 @@ export function removeVisibleProvider(provider) {
     }
     const providers = visibleProviders.filter((p) => p !== provider);
     await setSetting(VISIBLE_PROVIDERS, providers);
-    dispatch({type: SET_PROVIDERS, providers});
+    dispatch(setProviders(providers));
   };
 }
 
 export function setVisibleProviders() {
   return async (dispatch) => {
     const providers = await getSetting(VISIBLE_PROVIDERS);
-    dispatch({type: SET_PROVIDERS, providers});
+    dispatch(setProviders(providers));
   };
 }
 
@@ -918,7 +902,7 @@ export function bindWindowClose() {
 
 export function setAddVendorPrefixes(addVendorPrefixes) {
   return (dispatch) => {
-    dispatch({type: SET_ADD_VENDOR_PREFIXES, addVendorPrefixes});
+    dispatch(setAddVendorPrefixesAction(addVendorPrefixes));
   };
 }
 
@@ -976,7 +960,7 @@ export function initFromQueryString(loadNewSession) {
         if (dropped.length) {
           log.warn(`Ignored state from URL that a link may not set: ${dropped.join(', ')}`);
         }
-        dispatch({type: SET_STATE_FROM_URL, state});
+        dispatch(setStateFromUrl(state));
         isStateFromUrl = true;
       }
     }
@@ -984,7 +968,7 @@ export function initFromQueryString(loadNewSession) {
     // Only a session the link itself describes is started automatically: without state from the
     // URL, it would run on the saved server, which may be a cloud account with saved credentials
     if (autoStartSession === AUTO_START_URL_PARAM && isStateFromUrl) {
-      // at this point these can only be set using SET_STATE_FROM_URL
+      // at this point these can only be set using setStateFromUrl
       const {attachSessId, caps} = getState().builder;
       if (attachSessId) {
         return loadNewSession(null, attachSessId);

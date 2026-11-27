@@ -8,6 +8,82 @@ import i18n from '../i18next.js';
 import InspectorDriver from '../lib/appium/inspector-driver.js';
 import {CLIENT_FRAMEWORK_MAP} from '../lib/client-frameworks/map.js';
 import {getSetting, setSetting} from '../polyfills.js';
+import {
+  addAssignedVarCache as addAssignedVarCacheAction,
+  clearAssignedVarCache,
+  clearCoordAction as clearCoordActionAction,
+  clearRecording as clearRecordingAction,
+  clearSearchResults as clearSearchResultsAction,
+  clearSearchedForElementBounds,
+  clearTapCoordinates,
+  deleteSavedGesturesDone,
+  deleteSavedGesturesRequested,
+  findingElementInSource,
+  findingElementInSourceCompleted,
+  gestureUploadDone,
+  gestureUploadRequested,
+  getFindElementsTimes as getFindElementsTimesAction,
+  getFindElementsTimesCompleted,
+  getSavedGesturesDone,
+  getSavedGesturesRequested,
+  hideGestureAction,
+  hideGestureEditor as hideGestureEditorAction,
+  hideLocatorSearchModal as hideLocatorSearchModalAction,
+  hidePromptKeepAlive,
+  methodCallDone,
+  methodCallRequested,
+  pauseRecording as pauseRecordingAction,
+  promptKeepAlive,
+  quitSessionDone,
+  recordAction as recordActionAction,
+  removeLoadedGesture as removeLoadedGestureAction,
+  searchingForElements,
+  searchingForElementsCompleted,
+  selectCentroid as selectCentroidAction,
+  selectElement as selectElementAction,
+  selectInspectorTab as selectInspectorTabAction,
+  selectLocatedElement as selectLocatedElementAction,
+  selectTickElement,
+  setAppId,
+  setAppMode as setAppModeAction,
+  setAutoSessionRestart,
+  setAwaitingMjpegStream as setAwaitingMjpegStreamAction,
+  setClientFramework as setClientFrameworkAction,
+  setContext as setContextAction,
+  setCoordEnd as setCoordEndAction,
+  setCoordStart as setCoordStartAction,
+  setExpandedPaths as setExpandedPathsAction,
+  setFlatSessionCaps,
+  setGestureTapCoordsMode,
+  setInteractionsNotAvailable,
+  setKeepAliveInterval,
+  setLastActiveMoment,
+  setLoadedGesture as setLoadedGestureAction,
+  setLocatorSearchStrategy as setLocatorSearchStrategyAction,
+  setLocatorSearchValue as setLocatorSearchValueAction,
+  setMjpegState as setMjpegStateAction,
+  setOptimalLocators,
+  setRefreshingState as setRefreshingStateAction,
+  setScreenshotInteractionMode,
+  setSearchedForElementBounds,
+  setSelectedElementId,
+  setServerStatus,
+  setSessionDetails as setSessionDetailsAction,
+  setSessionTime as setSessionTimeAction,
+  setShowBoilerplate,
+  setShowCentroids,
+  setSourceAndScreenshot,
+  setUserWaitTimeout as setUserWaitTimeoutAction,
+  showGestureAction,
+  showGestureEditor as showGestureEditorAction,
+  showLocatorSearchModal as showLocatorSearchModalAction,
+  startRecording as startRecordingAction,
+  storeSessionSettings as storeSessionSettingsAction,
+  toggleShowAttributes as toggleShowAttributesAction,
+  unselectCentroid as unselectCentroidAction,
+  unselectElement as unselectElementAction,
+  unselectTickElement,
+} from '../reducers/SessionInspector.js';
 import {debounce, isEmpty, omit} from '../utils/common.js';
 import {downloadFile, readTextFromUploadedFiles} from '../utils/file-handling.js';
 import {parseGestureFileContents} from '../utils/gesturefile-parsing.js';
@@ -18,96 +94,6 @@ import {notification} from '../utils/notification.js';
 import {getRandomId} from '../utils/other.js';
 import {findDOMNodeByPath, findJSONElementByPath, xmlToDOM, xmlToJSON} from '../utils/source-parsing.js';
 import {newSession, showError} from './SessionBuilder.js';
-
-export const SET_SESSION_DETAILS = 'SET_SESSION_DETAILS';
-export const SET_SOURCE_AND_SCREENSHOT = 'SET_SOURCE_AND_SCREENSHOT';
-export const STORE_SESSION_SETTINGS = 'STORE_SESSION_SETTINGS';
-export const SESSION_DONE = 'SESSION_DONE';
-export const SELECT_ELEMENT = 'SELECT_ELEMENT';
-export const UNSELECT_ELEMENT = 'UNSELECT_ELEMENT';
-export const SET_SELECTED_ELEMENT_ID = 'SET_SELECTED_ELEMENT_ID';
-export const SET_INTERACTIONS_NOT_AVAILABLE = 'SET_INTERACTIONS_NOT_AVAILABLE';
-export const METHOD_CALL_REQUESTED = 'METHOD_CALL_REQUESTED';
-export const METHOD_CALL_DONE = 'METHOD_CALL_DONE';
-export const SET_EXPANDED_PATHS = 'SET_EXPANDED_PATHS';
-export const SET_OPTIMAL_LOCATORS = 'SET_OPTIMAL_LOCATORS';
-
-export const SELECT_CENTROID = 'SELECT_CENTROID';
-export const UNSELECT_CENTROID = 'UNSELECT_CENTROID';
-export const SET_SHOW_CENTROIDS = 'SET_SHOW_CENTROIDS';
-
-export const QUIT_SESSION_REQUESTED = 'QUIT_SESSION_REQUESTED';
-export const QUIT_SESSION_DONE = 'QUIT_SESSION_DONE';
-export const SET_SESSION_TIME = 'SET_SESSION_TIME';
-
-export const START_RECORDING = 'START_RECORDING';
-export const PAUSE_RECORDING = 'PAUSE_RECORDING';
-export const CLEAR_RECORDING = 'CLEAR_RECORDING';
-export const SET_CLIENT_FRAMEWORK = 'SET_CLIENT_FRAMEWORK';
-export const RECORD_ACTION = 'RECORD_ACTION';
-export const SET_SHOW_BOILERPLATE = 'SET_SHOW_BOILERPLATE';
-
-export const SHOW_LOCATOR_SEARCH_MODAL = 'SHOW_LOCATOR_SEARCH_MODAL';
-export const HIDE_LOCATOR_SEARCH_MODAL = 'HIDE_LOCATOR_SEARCH_MODAL';
-export const SET_LOCATOR_SEARCH_STRATEGY = 'SET_LOCATOR_SEARCH_STRATEGY';
-export const SET_LOCATOR_SEARCH_VALUE = 'SET_LOCATOR_SEARCH_VALUE';
-export const SEARCHING_FOR_ELEMENTS = 'SEARCHING_FOR_ELEMENTS';
-export const SEARCHING_FOR_ELEMENTS_COMPLETED = 'SEARCHING_FOR_ELEMENTS_COMPLETED';
-export const GET_FIND_ELEMENTS_TIMES = 'GET_FIND_ELEMENTS_TIMES';
-export const GET_FIND_ELEMENTS_TIMES_COMPLETED = 'GET_FIND_ELEMENTS_TIMES_COMPLETED';
-export const SELECT_LOCATED_ELEMENT = 'SELECT_LOCATED_ELEMENT';
-export const FINDING_ELEMENT_IN_SOURCE = 'FINDING_ELEMENT_IN_SOURCE';
-export const FINDING_ELEMENT_IN_SOURCE_COMPLETED = 'FINDING_ELEMENT_IN_SOURCE_COMPLETED';
-export const CLEAR_SEARCH_RESULTS = 'CLEAR_SEARCH_RESULTS';
-export const ADD_ASSIGNED_VAR_CACHE = 'ADD_ASSIGNED_VAR_CACHE';
-export const CLEAR_ASSIGNED_VAR_CACHE = 'CLEAR_ASSIGNED_VAR_CACHE';
-export const SET_MJPEG_STATE = 'SET_MJPEG_STATE';
-export const SET_SCREENSHOT_INTERACTION_MODE = 'SET_SCREENSHOT_INTERACTION_MODE';
-export const SET_APP_MODE = 'SET_APP_MODE';
-export const SET_SEARCHED_FOR_ELEMENT_BOUNDS = 'SET_SEARCHED_FOR_ELEMENT_BOUNDS';
-export const CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS = 'CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS';
-
-export const SET_COORD_START = 'SET_COORD_START';
-export const SET_COORD_END = 'SET_COORD_END';
-export const CLEAR_COORD_ACTION = 'CLEAR_COORD_ACTION';
-export const PROMPT_KEEP_ALIVE = 'PROMPT_KEEP_ALIVE';
-export const HIDE_PROMPT_KEEP_ALIVE = 'HIDE_PROMPT_KEEP_ALIVE';
-
-export const SELECT_INSPECTOR_TAB = 'SELECT_INSPECTOR_TAB';
-
-export const SET_CONTEXT = 'SET_CONTEXT';
-
-export const SET_APP_ID = 'SET_APP_ID';
-export const SET_SERVER_STATUS = 'SET_SERVER_STATUS';
-export const SET_FLAT_SESSION_CAPS = 'SET_FLAT_SESSION_CAPS';
-
-export const SET_KEEP_ALIVE_INTERVAL = 'SET_KEEP_ALIVE_INTERVAL';
-export const SET_USER_WAIT_TIMEOUT = 'SET_USER_WAIT_TIMEOUT';
-export const SET_LAST_ACTIVE_MOMENT = 'SET_LAST_ACTIVE_MOMENT';
-
-export const SET_AWAITING_MJPEG_STREAM = 'SET_AWAITING_MJPEG_STREAM';
-
-export const GESTURE_UPLOAD_REQUESTED = 'GESTURE_UPLOAD_REQUESTED';
-export const GESTURE_UPLOAD_DONE = 'GESTURE_UPLOAD_DONE';
-export const SHOW_GESTURE_EDITOR = 'SHOW_GESTURE_EDITOR';
-export const HIDE_GESTURE_EDITOR = 'HIDE_GESTURE_EDITOR';
-export const GET_SAVED_GESTURES_REQUESTED = 'GET_SAVED_GESTURES_REQUESTED';
-export const GET_SAVED_GESTURES_DONE = 'GET_SAVED_GESTURES_DONE';
-export const DELETE_SAVED_GESTURES_REQUESTED = 'DELETE_SAVED_GESTURES_REQUESTED';
-export const DELETE_SAVED_GESTURES_DONE = 'DELETE_SAVED_GESTURES_DONE';
-export const SET_LOADED_GESTURE = 'SET_LOADED_GESTURE';
-export const REMOVE_LOADED_GESTURE = 'REMOVE_LOADED_GESTURE';
-export const SHOW_GESTURE_ACTION = 'SHOW_GESTURE_ACTION';
-export const HIDE_GESTURE_ACTION = 'HIDE_GESTURE_ACTION';
-export const SELECT_TICK_ELEMENT = 'SELECT_TICK_ELEMENT';
-export const UNSELECT_TICK_ELEMENT = 'UNSELECT_TICK_ELEMENT';
-export const SET_GESTURE_TAP_COORDS_MODE = 'SET_GESTURE_TAP_COORDS_MODE';
-export const CLEAR_TAP_COORDINATES = 'CLEAR_TAP_COORDINATES';
-
-export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
-export const SET_REFRESHING_STATE = 'SET_REFRESHING_STATE';
-
-export const SET_AUTO_SESSION_RESTART = 'SET_AUTO_SESSION_RESTART';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -121,7 +107,7 @@ function prepareElementSelection(path, dispatch, getState) {
   const isNative = currentContext === NATIVE_APP;
   // Set the selected element in the source tree
   const selectedElement = findJSONElementByPath(path, sourceJSON);
-  dispatch({type: SELECT_ELEMENT, selectedElement});
+  dispatch(selectElementAction(selectedElement));
 
   // Expand all of this element's ancestors so that it's visible in the source tree
   // Make a copy of the array to avoid state mutation
@@ -134,11 +120,11 @@ function prepareElementSelection(path, dispatch, getState) {
       copiedExpandedPaths.push(ancestorPath);
     }
   }
-  dispatch({type: SET_EXPANDED_PATHS, paths: copiedExpandedPaths});
+  dispatch(setExpandedPathsAction(copiedExpandedPaths));
 
   // Calculate the recommended locator strategies
   const strategyMap = getSuggestedLocators(selectedElement, sourceXML, isNative, featureCaps.automationName);
-  dispatch({type: SET_OPTIMAL_LOCATORS, strategyMap});
+  dispatch(setOptimalLocators(strategyMap));
 
   return strategyMap;
 }
@@ -158,12 +144,12 @@ async function resolveElementId(strategyMap, dispatch, getState, path) {
     // Set the elementId for the selected element
     // (check first that the selectedElementPath didn't change, to avoid race conditions)
     if (elementId && getState().inspector.selectedElementPath === path) {
-      dispatch({type: SET_SELECTED_ELEMENT_ID, elementId});
+      dispatch(setSelectedElementId(elementId));
       return elementId;
     }
   }
 
-  dispatch({type: SET_INTERACTIONS_NOT_AVAILABLE});
+  dispatch(setInteractionsNotAvailable());
   return null;
 }
 
@@ -183,7 +169,7 @@ export function selectElement(path) {
 
 export function unselectElement() {
   return (dispatch) => {
-    dispatch({type: UNSELECT_ELEMENT});
+    dispatch(unselectElementAction());
   };
 }
 
@@ -208,13 +194,13 @@ export function tapElement(path) {
 
 export function selectCentroid(path) {
   return (dispatch) => {
-    dispatch({type: SELECT_CENTROID, path});
+    dispatch(selectCentroidAction(path));
   };
 }
 
 export function unselectCentroid() {
   return (dispatch) => {
-    dispatch({type: UNSELECT_CENTROID});
+    dispatch(unselectCentroidAction());
   };
 }
 
@@ -228,7 +214,7 @@ export function applyClientMethod(params) {
       params.methodName !== 'getPageSource' &&
       params.methodName !== 'gesture' &&
       getState().inspector.isRecording;
-    dispatch({type: METHOD_CALL_REQUESTED});
+    dispatch(methodCallRequested());
     const callAction = callClientMethod(params);
     const {
       contexts,
@@ -259,30 +245,31 @@ export function applyClientMethod(params) {
       // now record the actual action
       let args = [variableName, variableIndex];
       args = args.concat(params.args || []);
-      dispatch({type: RECORD_ACTION, action: params.methodName, params: args});
+      dispatch(recordActionAction({action: params.methodName, params: args}));
     }
     // If updating settings, store the updated values
     if (params.methodName === COMMAND_UPDATE_SETTINGS) {
       const storeSettingsAction = storeSessionSettings(params.args[0]);
       await storeSettingsAction(dispatch, getState);
     }
-    dispatch({type: METHOD_CALL_DONE});
+    dispatch(methodCallDone());
 
     if (source) {
-      dispatch({
-        type: SET_SOURCE_AND_SCREENSHOT,
-        contexts,
-        currentContext,
-        sourceJSON: xmlToJSON(source),
-        sourceXML: source,
-        screenshot,
-        windowSize,
-        contextsError,
-        currentContextError,
-        sourceError,
-        screenshotError,
-        windowSizeError,
-      });
+      dispatch(
+        setSourceAndScreenshot({
+          contexts,
+          currentContext,
+          sourceJSON: xmlToJSON(source),
+          sourceXML: source,
+          screenshot,
+          windowSize,
+          contextsError,
+          currentContextError,
+          sourceError,
+          screenshotError,
+          windowSizeError,
+        }),
+      );
     }
     window.dispatchEvent(new Event('resize'));
     return commandRes;
@@ -293,7 +280,7 @@ export function restartSession(error, params) {
   return async (dispatch, getState) => {
     if (error?.name !== UNKNOWN_ERROR) {
       showError(error, {methodName: params.methodName, secs: 10});
-      return dispatch({type: METHOD_CALL_DONE});
+      return dispatch(methodCallDone());
     }
     showError(error, {methodName: params.methodName, secs: 3});
     notification.info({
@@ -315,20 +302,20 @@ export function restartSession(error, params) {
     await getSavedClientFrame(dispatch);
     runKeepAliveLp(dispatch, getState);
     setSesTime(dispatch);
-    dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart: true});
-    dispatch({type: METHOD_CALL_DONE});
+    dispatch(setAutoSessionRestart(true));
+    dispatch(methodCallDone());
   };
 }
 
 export function addAssignedVarCache(varName) {
   return (dispatch) => {
-    dispatch({type: ADD_ASSIGNED_VAR_CACHE, varName});
+    dispatch(addAssignedVarCacheAction(varName));
   };
 }
 
 export function setExpandedPaths(paths) {
   return (dispatch) => {
-    dispatch({type: SET_EXPANDED_PATHS, paths});
+    dispatch(setExpandedPathsAction(paths));
   };
 }
 
@@ -343,7 +330,7 @@ export function quitSession({reason, manualQuit = true, detachOnly = false} = {}
       const applyAction = applyClientMethod({methodName: 'deleteSession'});
       await applyAction(dispatch, getState);
     }
-    dispatch({type: QUIT_SESSION_DONE});
+    dispatch(quitSessionDone());
     InspectorDriver.clearInstance(); // clear the 'cached' driver instance
     if (!manualQuit) {
       showError(new Error(reason || i18n.t('Session has been terminated')), {secs: 0});
@@ -353,27 +340,27 @@ export function quitSession({reason, manualQuit = true, detachOnly = false} = {}
 
 export function startRecording() {
   return (dispatch) => {
-    dispatch({type: START_RECORDING});
+    dispatch(startRecordingAction());
   };
 }
 
 export function pauseRecording() {
   return (dispatch) => {
-    dispatch({type: PAUSE_RECORDING});
+    dispatch(pauseRecordingAction());
   };
 }
 
 export function clearRecording() {
   return (dispatch) => {
-    dispatch({type: CLEAR_RECORDING});
-    dispatch({type: CLEAR_ASSIGNED_VAR_CACHE}); // Get rid of the variable cache
+    dispatch(clearRecordingAction());
+    dispatch(clearAssignedVarCache()); // Get rid of the variable cache
   };
 }
 
 export function getSavedClientFramework() {
   return async (dispatch) => {
     let framework = await getSetting(SAVED_CLIENT_FRAMEWORK);
-    dispatch({type: SET_CLIENT_FRAMEWORK, framework});
+    dispatch(setClientFrameworkAction(framework));
   };
 }
 
@@ -383,20 +370,20 @@ export function setClientFramework(framework) {
       throw new Error(i18n.t('frameworkNotSupported', {framework}));
     }
     await setSetting(SAVED_CLIENT_FRAMEWORK, framework);
-    dispatch({type: SET_CLIENT_FRAMEWORK, framework});
+    dispatch(setClientFrameworkAction(framework));
   };
 }
 
 export function recordAction(action, params) {
   return (dispatch) => {
-    dispatch({type: RECORD_ACTION, action, params});
+    dispatch(recordActionAction({action, params}));
   };
 }
 
 export function toggleShowBoilerplate() {
   return (dispatch, getState) => {
     const show = !getState().inspector.showBoilerplate;
-    dispatch({type: SET_SHOW_BOILERPLATE, show});
+    dispatch(setShowBoilerplate(show));
   };
 }
 
@@ -412,15 +399,16 @@ export function setSessionDetails({serverDetails, driver, sessionCaps, appMode, 
     // will only retain the first major & minor versions, this is sufficient for feature-gating
     featureCaps.platformVersion = parseFloat(driver.capabilities.platformVersion, 10) || undefined;
 
-    dispatch({
-      type: SET_SESSION_DETAILS,
-      serverDetails,
-      driver,
-      sessionCaps,
-      featureCaps,
-      appMode,
-      isUsingMjpegMode,
-    });
+    dispatch(
+      setSessionDetailsAction({
+        serverDetails,
+        driver,
+        sessionCaps,
+        featureCaps,
+        appMode,
+        isUsingMjpegMode,
+      }),
+    );
   };
 }
 
@@ -434,44 +422,44 @@ export function storeSessionSettings(updatedSessionSettings = null) {
       });
       sessionSettings = await action(dispatch, getState);
     }
-    dispatch({type: STORE_SESSION_SETTINGS, sessionSettings});
+    dispatch(storeSessionSettingsAction(sessionSettings));
   };
 }
 
 export function showLocatorSearchModal() {
   return (dispatch) => {
-    dispatch({type: SHOW_LOCATOR_SEARCH_MODAL});
+    dispatch(showLocatorSearchModalAction());
   };
 }
 
 export function hideLocatorSearchModal() {
   return (dispatch) => {
-    dispatch({type: HIDE_LOCATOR_SEARCH_MODAL});
+    dispatch(hideLocatorSearchModalAction());
   };
 }
 
 export function setLocatorSearchValue(locatorSearchValue) {
   return (dispatch) => {
-    dispatch({type: SET_LOCATOR_SEARCH_VALUE, locatorSearchValue});
+    dispatch(setLocatorSearchValueAction(locatorSearchValue));
   };
 }
 
 export function setLocatorSearchStrategy(locatorSearchStrategy) {
   return (dispatch) => {
-    dispatch({type: SET_LOCATOR_SEARCH_STRATEGY, locatorSearchStrategy});
+    dispatch(setLocatorSearchStrategyAction(locatorSearchStrategy));
   };
 }
 
 export function setContext(context) {
   return (dispatch) => {
-    dispatch({type: SET_CONTEXT, context});
+    dispatch(setContextAction(context));
   };
 }
 
 export function searchForElement(strategy, selector) {
   return async (dispatch, getState) => {
     const isRecording = getState().inspector.isRecording;
-    dispatch({type: SEARCHING_FOR_ELEMENTS});
+    dispatch(searchingForElements());
     try {
       const callAction = callClientMethod({strategy, selector, fetchArray: true});
       let {elements, variableName, executionTime} = await callAction(dispatch, getState);
@@ -480,9 +468,9 @@ export function searchForElement(strategy, selector) {
         findAction(dispatch, getState);
       }
       elements = elements.map((el) => el.id);
-      dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED, elements, executionTime});
+      dispatch(searchingForElementsCompleted({elements, executionTime}));
     } catch (error) {
-      dispatch({type: SEARCHING_FOR_ELEMENTS_COMPLETED});
+      dispatch(searchingForElementsCompleted());
       showError(error, {methodName: 10});
     }
   };
@@ -493,7 +481,7 @@ export function searchForElement(strategy, selector) {
  */
 export function getFindElementsTimes(findDataSource) {
   return async (dispatch, getState) => {
-    dispatch({type: GET_FIND_ELEMENTS_TIMES});
+    dispatch(getFindElementsTimesAction());
     try {
       const findElementsExecutionTimes = [];
       for (const element of findDataSource) {
@@ -503,12 +491,13 @@ export function getFindElementsTimes(findDataSource) {
         findElementsExecutionTimes.push({find, key, selector, time: executionTime});
       }
 
-      dispatch({
-        type: GET_FIND_ELEMENTS_TIMES_COMPLETED,
-        findElementsExecutionTimes: [...findElementsExecutionTimes].sort((a, b) => a.time - b.time),
-      });
+      dispatch(
+        getFindElementsTimesCompleted({
+          findElementsExecutionTimes: [...findElementsExecutionTimes].sort((a, b) => a.time - b.time),
+        }),
+      );
     } catch (error) {
-      dispatch({type: GET_FIND_ELEMENTS_TIMES_COMPLETED});
+      dispatch(getFindElementsTimesCompleted());
       showError(error, {methodName: 10});
     }
   };
@@ -520,20 +509,21 @@ export function findAndAssign(strategy, selector, variableName, isArray) {
 
     // If this call to 'findAndAssign' for this variable wasn't done already, do it now
     if (!assignedVarCache[variableName]) {
-      dispatch({
-        type: RECORD_ACTION,
-        action: 'findAndAssign',
-        params: [strategy, selector, variableName, isArray],
-      });
-      dispatch({type: ADD_ASSIGNED_VAR_CACHE, varName: variableName});
+      dispatch(
+        recordActionAction({
+          action: 'findAndAssign',
+          params: [strategy, selector, variableName, isArray],
+        }),
+      );
+      dispatch(addAssignedVarCacheAction(variableName));
     }
   };
 }
 
 export function selectLocatedElement(elementId) {
   return async (dispatch, getState) => {
-    dispatch({type: SELECT_LOCATED_ELEMENT, elementId});
-    dispatch({type: CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS});
+    dispatch(selectLocatedElementAction(elementId));
+    dispatch(clearSearchedForElementBounds());
     if (elementId) {
       try {
         const action = callClientMethod({
@@ -543,11 +533,12 @@ export function selectLocatedElement(elementId) {
           skipRecord: true,
         });
         const {commandRes} = await action(dispatch, getState);
-        dispatch({
-          type: SET_SEARCHED_FOR_ELEMENT_BOUNDS,
-          location: {x: commandRes.x, y: commandRes.y},
-          size: {width: commandRes.width, height: commandRes.height},
-        });
+        dispatch(
+          setSearchedForElementBounds({
+            location: {x: commandRes.x, y: commandRes.y},
+            size: {width: commandRes.width, height: commandRes.height},
+          }),
+        );
       } catch {}
     }
   };
@@ -646,7 +637,7 @@ export function findLocatedElementInSource(sourceJSON, sourceXML, bounds, id) {
   }
 
   return async (dispatch, getState) => {
-    dispatch({type: FINDING_ELEMENT_IN_SOURCE});
+    dispatch(findingElementInSource());
     const foundPaths = findPathsMatchingBounds();
     const foundPath = await filterFoundPaths(foundPaths, dispatch, getState);
     if (foundPath) {
@@ -655,39 +646,39 @@ export function findLocatedElementInSource(sourceJSON, sourceXML, bounds, id) {
     } else {
       showError(new Error(i18n.t('findingElementInSourceFailed')), {secs: 8});
     }
-    dispatch({type: FINDING_ELEMENT_IN_SOURCE_COMPLETED});
+    dispatch(findingElementInSourceCompleted());
   };
 }
 
 export function clearSearchResults() {
   return (dispatch) => {
-    dispatch({type: CLEAR_SEARCH_RESULTS});
-    dispatch({type: CLEAR_SEARCHED_FOR_ELEMENT_BOUNDS});
+    dispatch(clearSearchResultsAction());
+    dispatch(clearSearchedForElementBounds());
   };
 }
 
 export function setMjpegState(targetMjpegState) {
   return (dispatch) => {
-    dispatch({type: SET_MJPEG_STATE, targetMjpegState});
+    dispatch(setMjpegStateAction(targetMjpegState));
   };
 }
 
 export function selectScreenshotInteractionMode(screenshotInteractionMode) {
   return (dispatch) => {
-    dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode});
+    dispatch(setScreenshotInteractionMode(screenshotInteractionMode));
   };
 }
 
 export function setRefreshingState(refreshStates) {
   return (dispatch) => {
-    dispatch({type: SET_REFRESHING_STATE, refreshStates});
+    dispatch(setRefreshingStateAction(refreshStates));
   };
 }
 
 export function selectAppMode(mode) {
   return async (dispatch, getState) => {
     const {appMode} = getState().inspector;
-    dispatch({type: SET_APP_MODE, mode});
+    dispatch(setAppModeAction(mode));
     // if we're transitioning to hybrid mode, do a pre-emptive search for contexts
     if (appMode !== mode && mode === APP_MODE.WEB_HYBRID) {
       const action = applyClientMethod({methodName: 'getPageSource'});
@@ -704,7 +695,7 @@ export function toggleShowCentroids() {
   return (dispatch, getState) => {
     const {showCentroids} = getState().inspector;
     const show = !showCentroids;
-    dispatch({type: SET_SHOW_CENTROIDS, show});
+    dispatch(setShowCentroids(show));
   };
 }
 
@@ -719,7 +710,7 @@ export function getActiveAppId(automationName) {
           skipRefresh: true,
         });
         const {bundleId} = await action(dispatch, getState);
-        dispatch({type: SET_APP_ID, appId: bundleId});
+        dispatch(setAppId(bundleId));
       }
       if ([DRIVERS.UIAUTOMATOR2, DRIVERS.ESPRESSO].includes(automationName)) {
         // mobile:getCurrentPackage exists since UiA2 2.20 / Espresso 2.23 (Appium 2)
@@ -729,7 +720,7 @@ export function getActiveAppId(automationName) {
           skipRefresh: true,
         });
         const appPackage = await action(dispatch, getState);
-        dispatch({type: SET_APP_ID, appId: appPackage});
+        dispatch(setAppId(appPackage));
       }
     } catch (err) {
       log.error(`Could not Retrieve Active App ID: ${err}`);
@@ -741,7 +732,7 @@ export function getServerStatus() {
   return async (dispatch, getState) => {
     const status = applyClientMethod({methodName: 'status', skipRefresh: true});
     const {build} = await status(dispatch, getState);
-    dispatch({type: SET_SERVER_STATUS, status: build});
+    dispatch(setServerStatus(build));
   };
 }
 
@@ -751,12 +742,12 @@ export function getFlatSessionCaps() {
       const action = applyClientMethod({methodName: 'getAppiumSessionCapabilities', skipRefresh: true});
       const getCapsResponse = await action(dispatch, getState);
       const flatSessionCaps = getCapsResponse.capabilities;
-      dispatch({type: SET_FLAT_SESSION_CAPS, flatSessionCaps});
+      dispatch(setFlatSessionCaps(flatSessionCaps));
     } catch {
       // No longer supported since Appium 4
       const action = applyClientMethod({methodName: 'getSession', skipRefresh: true});
       const flatSessionCaps = await action(dispatch, getState);
-      dispatch({type: SET_FLAT_SESSION_CAPS, flatSessionCaps});
+      dispatch(setFlatSessionCaps(flatSessionCaps));
     }
   };
 }
@@ -764,31 +755,31 @@ export function getFlatSessionCaps() {
 // Start the session timer once session starts
 export function setSessionTime(time) {
   return (dispatch) => {
-    dispatch({type: SET_SESSION_TIME, sessionStartTime: time});
+    dispatch(setSessionTimeAction(time));
   };
 }
 
 export function setCoordStart(coordStartX, coordStartY) {
   return (dispatch) => {
-    dispatch({type: SET_COORD_START, coordStartX, coordStartY});
+    dispatch(setCoordStartAction({x: coordStartX, y: coordStartY}));
   };
 }
 
 export function setCoordEnd(coordEndX, coordEndY) {
   return (dispatch) => {
-    dispatch({type: SET_COORD_END, coordEndX, coordEndY});
+    dispatch(setCoordEndAction({x: coordEndX, y: coordEndY}));
   };
 }
 
 export function clearCoordAction() {
   return (dispatch) => {
-    dispatch({type: CLEAR_COORD_ACTION});
+    dispatch(clearCoordActionAction());
   };
 }
 
 export function selectInspectorTab(interaction) {
   return (dispatch) => {
-    dispatch({type: SELECT_INSPECTOR_TAB, interaction});
+    dispatch(selectInspectorTabAction(interaction));
   };
 }
 
@@ -814,7 +805,7 @@ export function getSupportedSessionMethods() {
 
 export function setUserWaitTimeout(userWaitTimeout) {
   return (dispatch) => {
-    dispatch({type: SET_USER_WAIT_TIMEOUT, userWaitTimeout});
+    dispatch(setUserWaitTimeoutAction(userWaitTimeout));
   };
 }
 
@@ -823,7 +814,7 @@ export function setUserWaitTimeout(userWaitTimeout) {
  */
 export function runKeepAliveLoop() {
   return (dispatch, getState) => {
-    dispatch({type: SET_LAST_ACTIVE_MOMENT, lastActiveMoment: Date.now()});
+    dispatch(setLastActiveMoment(Date.now()));
     const {driver} = getState().inspector;
 
     const keepAliveInterval = setInterval(async () => {
@@ -836,10 +827,10 @@ export function runKeepAliveLoop() {
 
       // If the new command limit has been surpassed, prompt user if they want to keep session going
       if (now - lastActiveMoment > NO_NEW_COMMAND_LIMIT && !showKeepAlivePrompt) {
-        dispatch({type: PROMPT_KEEP_ALIVE});
+        dispatch(promptKeepAlive());
       }
     }, KEEP_ALIVE_PING_INTERVAL);
-    dispatch({type: SET_KEEP_ALIVE_INTERVAL, keepAliveInterval});
+    dispatch(setKeepAliveInterval(keepAliveInterval));
   };
 }
 
@@ -850,7 +841,7 @@ export function killKeepAliveLoop() {
   return (dispatch, getState) => {
     const {keepAliveInterval} = getState().inspector;
     clearInterval(keepAliveInterval);
-    dispatch({type: SET_KEEP_ALIVE_INTERVAL, keepAliveInterval: null});
+    dispatch(setKeepAliveInterval(null));
   };
 }
 
@@ -860,11 +851,11 @@ export function killKeepAliveLoop() {
 export function keepSessionAlive() {
   return (dispatch, getState) => {
     const {userWaitTimeout} = getState().inspector;
-    dispatch({type: HIDE_PROMPT_KEEP_ALIVE});
-    dispatch({type: SET_LAST_ACTIVE_MOMENT, lastActiveMoment: +new Date()});
+    dispatch(hidePromptKeepAlive());
+    dispatch(setLastActiveMoment(+new Date()));
     if (userWaitTimeout) {
       clearTimeout(userWaitTimeout);
-      dispatch({type: SET_USER_WAIT_TIMEOUT, userWaitTimeout: null});
+      dispatch(setUserWaitTimeoutAction(null));
     }
   };
 }
@@ -901,7 +892,7 @@ export function callClientMethod(params) {
         return await restartSes(dispatch, getState);
       }
       showError(error, {methodName: params.methodName, secs: 10});
-      dispatch({type: METHOD_CALL_DONE});
+      dispatch(methodCallDone());
     }
   };
 }
@@ -921,13 +912,13 @@ export function executeDriverCommand(params) {
 
 export function setAwaitingMjpegStream(isAwaiting) {
   return (dispatch) => {
-    dispatch({type: SET_AWAITING_MJPEG_STREAM, isAwaiting});
+    dispatch(setAwaitingMjpegStreamAction(isAwaiting));
   };
 }
 
 export function importGestureFiles(fileList) {
   return async (dispatch) => {
-    dispatch({type: GESTURE_UPLOAD_REQUESTED});
+    dispatch(gestureUploadRequested());
     const gestures = await readTextFromUploadedFiles(fileList);
     const invalidGestureFiles = [];
     const parsedGestures = [];
@@ -949,7 +940,7 @@ export function importGestureFiles(fileList) {
     for (const parsedGesture of parsedGestures) {
       await saveGesture(parsedGesture)(dispatch);
     }
-    dispatch({type: GESTURE_UPLOAD_DONE});
+    dispatch(gestureUploadDone());
 
     if (!isEmpty(invalidGestureFiles)) {
       notification.error({
@@ -973,7 +964,7 @@ export function exportSavedGesture(gestureJSON) {
 
 export function saveGesture(gesture) {
   return async (dispatch) => {
-    const savedGestures = (await getSetting(SET_SAVED_GESTURES)) || [];
+    const savedGestures = structuredClone(await getSetting(SET_SAVED_GESTURES)) || [];
 
     if (gesture.id) {
       // Editing an already saved gesture
@@ -986,9 +977,11 @@ export function saveGesture(gesture) {
       }
     } else {
       // Adding a new gesture
-      gesture.id = getRandomId();
-      gesture.date = Date.now();
-      savedGestures.push(gesture);
+      savedGestures.push({
+        ...gesture,
+        id: getRandomId(),
+        date: Date.now(),
+      });
     }
 
     await setSetting(SET_SAVED_GESTURES, savedGestures);
@@ -999,58 +992,58 @@ export function saveGesture(gesture) {
 
 export function getSavedGestures() {
   return async (dispatch) => {
-    dispatch({type: GET_SAVED_GESTURES_REQUESTED});
+    dispatch(getSavedGesturesRequested());
     const savedGestures = await getSetting(SET_SAVED_GESTURES);
-    dispatch({type: GET_SAVED_GESTURES_DONE, savedGestures});
+    dispatch(getSavedGesturesDone(savedGestures));
   };
 }
 
 export function deleteSavedGesture(id) {
   return async (dispatch) => {
-    dispatch({type: DELETE_SAVED_GESTURES_REQUESTED, deleteGesture: id});
+    dispatch(deleteSavedGesturesRequested(id));
     const gestures = await getSetting(SET_SAVED_GESTURES);
     const newGestures = gestures.filter((gesture) => gesture.id !== id);
     await setSetting(SET_SAVED_GESTURES, newGestures);
-    dispatch({type: DELETE_SAVED_GESTURES_DONE});
-    dispatch({type: GET_SAVED_GESTURES_DONE, savedGestures: newGestures});
+    dispatch(deleteSavedGesturesDone());
+    dispatch(getSavedGesturesDone(newGestures));
   };
 }
 
 export function showGestureEditor() {
   return (dispatch) => {
-    dispatch({type: SHOW_GESTURE_EDITOR});
-    dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode: 'gesture'});
+    dispatch(showGestureEditorAction());
+    dispatch(setScreenshotInteractionMode('gesture'));
   };
 }
 
 export function hideGestureEditor() {
   return (dispatch) => {
-    dispatch({type: HIDE_GESTURE_EDITOR});
-    dispatch({type: SET_SCREENSHOT_INTERACTION_MODE, screenshotInteractionMode: 'select'});
+    dispatch(hideGestureEditorAction());
+    dispatch(setScreenshotInteractionMode('select'));
   };
 }
 
 export function setLoadedGesture(loadedGesture) {
   return (dispatch) => {
-    dispatch({type: SET_LOADED_GESTURE, loadedGesture});
+    dispatch(setLoadedGestureAction(loadedGesture));
   };
 }
 
 export function removeLoadedGesture() {
   return (dispatch) => {
-    dispatch({type: REMOVE_LOADED_GESTURE});
+    dispatch(removeLoadedGestureAction());
   };
 }
 
 export function displayGesture(showGesture) {
   return (dispatch) => {
-    dispatch({type: SHOW_GESTURE_ACTION, showGesture});
+    dispatch(showGestureAction(showGesture));
   };
 }
 
 export function removeGestureDisplay() {
   return (dispatch) => {
-    dispatch({type: HIDE_GESTURE_ACTION});
+    dispatch(hideGestureAction());
   };
 }
 
@@ -1059,36 +1052,36 @@ export function selectTick(tick) {
     const {tickCoordinates} = getState().inspector;
 
     if (tickCoordinates) {
-      dispatch({type: SET_GESTURE_TAP_COORDS_MODE, x: undefined, y: undefined});
+      dispatch(setGestureTapCoordsMode({x: undefined, y: undefined}));
     }
 
-    dispatch({type: SELECT_TICK_ELEMENT, selectedTick: tick});
+    dispatch(selectTickElement(tick));
   };
 }
 
 export function unselectTick() {
   return (dispatch) => {
-    dispatch({type: CLEAR_TAP_COORDINATES});
-    dispatch({type: UNSELECT_TICK_ELEMENT});
+    dispatch(clearTapCoordinates());
+    dispatch(unselectTickElement());
   };
 }
 
 export function tapTickCoordinates(x, y) {
   return (dispatch) => {
-    dispatch({type: SET_GESTURE_TAP_COORDS_MODE, x, y});
+    dispatch(setGestureTapCoordsMode({x, y}));
   };
 }
 
 export function toggleShowAttributes() {
   return (dispatch) => {
-    dispatch({type: TOGGLE_SHOW_ATTRIBUTES});
+    dispatch(toggleShowAttributesAction());
   };
 }
 
 export function toggleAutoSessionRestart() {
   return (dispatch, getState) => {
     const autoSessionRestart = !getState().inspector.autoSessionRestart;
-    dispatch({type: SET_AUTO_SESSION_RESTART, autoSessionRestart});
+    dispatch(setAutoSessionRestart(autoSessionRestart));
   };
 }
 
