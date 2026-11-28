@@ -1,7 +1,7 @@
 import refractorJava from 'refractor/java';
 
 import {DRIVERS, PLATFORMS} from '../../constants/common.js';
-import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
+import {ALL_STRATEGIES} from '../../constants/locator-strategies.js';
 import CommonClientFramework from './common.js';
 
 const PKG_AND_CLASS_MAP = {
@@ -34,6 +34,30 @@ const PLATFORM_NAME_MAP = new Map([
   [PLATFORMS.MACOS, PKG_AND_CLASS_MAP.MACOS],
   [PLATFORMS.WINDOWS, PKG_AND_CLASS_MAP.WINDOWS],
 ]);
+
+const STRATEGY_MAP = {
+  // W3C
+  [ALL_STRATEGIES.CSS]: 'By.cssSelector',
+  [ALL_STRATEGIES.LINK_TEXT]: 'By.linkText',
+  [ALL_STRATEGIES.PARTIAL_LINK_TEXT]: 'By.partialLinkText',
+  [ALL_STRATEGIES.TAG_NAME]: 'By.tagName',
+  [ALL_STRATEGIES.XPATH]: 'By.xpath',
+  // Custom
+  [ALL_STRATEGIES.ID]: 'AppiumBy.id',
+  [ALL_STRATEGIES.NAME]: 'AppiumBy.name',
+  [ALL_STRATEGIES.CLASS_NAME]: 'AppiumBy.className',
+  [ALL_STRATEGIES.ACCESSIBILITY_ID]: 'AppiumBy.accessibilityId',
+  [ALL_STRATEGIES.IOS_PREDICATE]: 'AppiumBy.iOSNsPredicateString',
+  [ALL_STRATEGIES.IOS_CLASS_CHAIN]: 'AppiumBy.iOSClassChain',
+  [ALL_STRATEGIES.ANDROID_UIAUTOMATOR]: 'AppiumBy.androidUIAutomator',
+  [ALL_STRATEGIES.ANDROID_PREDICATE]: 'AppiumBy.androidPredicateString',
+  [ALL_STRATEGIES.ANDROID_CLASS_CHAIN]: 'AppiumBy.androidClassChain',
+  // [ALL_STRATEGIES.TEXT]: 'not supported',
+  [ALL_STRATEGIES.ANDROID_VIEWTAG]: 'AppiumBy.androidViewTag',
+  [ALL_STRATEGIES.ANDROID_DATAMATCHER]: 'AppiumBy.androidDataMatcher',
+  [ALL_STRATEGIES.ANDROID_VIEWMATCHER]: 'AppiumBy.androidViewMatcher',
+  // [ALL_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
+};
 
 export default class JavaFramework extends CommonClientFramework {
   static refractorLang = 'java';
@@ -73,28 +97,13 @@ export default class JavaFramework extends CommonClientFramework {
   }
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
-    const byMap = {
-      [LOCATOR_STRATEGIES.ID]: 'id',
-      [LOCATOR_STRATEGIES.XPATH]: 'xpath',
-      [LOCATOR_STRATEGIES.NAME]: 'name',
-      [LOCATOR_STRATEGIES.CLASS_NAME]: 'className',
-      [LOCATOR_STRATEGIES.ACCESSIBILITY_ID]: 'accessibilityId',
-      [LOCATOR_STRATEGIES.PREDICATE]: 'iOSNsPredicateString',
-      [LOCATOR_STRATEGIES.CLASS_CHAIN]: 'iOSClassChain',
-      [LOCATOR_STRATEGIES.UIAUTOMATOR]: 'androidUIAutomator',
-      // [LOCATOR_STRATEGIES.TEXT]: 'not supported',
-      [LOCATOR_STRATEGIES.VIEWTAG]: 'androidViewTag',
-      [LOCATOR_STRATEGIES.DATAMATCHER]: 'androidDataMatcher',
-      [LOCATOR_STRATEGIES.VIEWMATCHER]: 'androidViewMatcher',
-      // [LOCATOR_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
-    };
-    if (!byMap[strategy]) {
+    if (!STRATEGY_MAP[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `WebElements ${localVar} = driver.findElements(AppiumBy.${byMap[strategy]}(${JSON.stringify(locator)}));`;
+      return `List<WebElement> ${localVar} = driver.findElements(${STRATEGY_MAP[strategy]}(${JSON.stringify(locator)}));`;
     } else {
-      return `WebElement ${localVar} = driver.findElement(AppiumBy.${byMap[strategy]}(${JSON.stringify(locator)}));`;
+      return `WebElement ${localVar} = driver.findElement(${STRATEGY_MAP[strategy]}(${JSON.stringify(locator)}));`;
     }
   }
 

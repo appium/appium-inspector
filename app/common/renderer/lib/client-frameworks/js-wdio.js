@@ -1,7 +1,32 @@
 import refractorJs from 'refractor/javascript';
 
-import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
+import {ALL_STRATEGIES} from '../../constants/locator-strategies.js';
 import CommonClientFramework from './common.js';
+
+// wdio allows to specify strategy as a locator prefix
+const STRATEGIES = [
+  // W3C
+  ALL_STRATEGIES.CSS,
+  ALL_STRATEGIES.LINK_TEXT,
+  ALL_STRATEGIES.PARTIAL_LINK_TEXT,
+  ALL_STRATEGIES.TAG_NAME,
+  ALL_STRATEGIES.XPATH,
+  // Custom
+  ALL_STRATEGIES.ID,
+  ALL_STRATEGIES.NAME,
+  ALL_STRATEGIES.CLASS_NAME,
+  ALL_STRATEGIES.ACCESSIBILITY_ID,
+  ALL_STRATEGIES.IOS_PREDICATE,
+  ALL_STRATEGIES.IOS_CLASS_CHAIN,
+  ALL_STRATEGIES.ANDROID_UIAUTOMATOR,
+  // ALL_STRATEGIES.ANDROID_PREDICATE,
+  // ALL_STRATEGIES.ANDROID_CLASS_CHAIN,
+  // ALL_STRATEGIES.TEXT,
+  ALL_STRATEGIES.ANDROID_VIEWTAG,
+  ALL_STRATEGIES.ANDROID_DATAMATCHER,
+  ALL_STRATEGIES.ANDROID_VIEWMATCHER,
+  // ALL_STRATEGIES.WIN_UIAUTOMATION,
+];
 
 export default class JsWdIoFramework extends CommonClientFramework {
   static readableName = 'JS/TS - WebdriverIO';
@@ -38,23 +63,7 @@ main().catch(console.log);`;
   }
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
-    // wdio allows to specify strategy as a locator prefix
-    const validStrategies = [
-      LOCATOR_STRATEGIES.ID,
-      LOCATOR_STRATEGIES.XPATH,
-      LOCATOR_STRATEGIES.NAME,
-      LOCATOR_STRATEGIES.CLASS_NAME,
-      LOCATOR_STRATEGIES.ACCESSIBILITY_ID,
-      LOCATOR_STRATEGIES.PREDICATE,
-      LOCATOR_STRATEGIES.CLASS_CHAIN,
-      LOCATOR_STRATEGIES.UIAUTOMATOR,
-      // LOCATOR_STRATEGIES.TEXT,
-      LOCATOR_STRATEGIES.VIEWTAG,
-      LOCATOR_STRATEGIES.DATAMATCHER,
-      LOCATOR_STRATEGIES.VIEWMATCHER,
-      // LOCATOR_STRATEGIES.WIN_UIAUTOMATION,
-    ];
-    if (!validStrategies.includes(strategy)) {
+    if (!STRATEGIES.includes(strategy)) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {

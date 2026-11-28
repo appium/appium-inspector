@@ -1,7 +1,7 @@
 import cssEscape from 'css.escape';
 import XPath from 'xpath';
 
-import {LOCATOR_STRATEGIES as STRATEGIES} from '../../constants/session-inspector.js';
+import {ALL_STRATEGIES as STRATEGIES} from '../../constants/locator-strategies.js';
 import {isEmpty} from '../common.js';
 
 /**

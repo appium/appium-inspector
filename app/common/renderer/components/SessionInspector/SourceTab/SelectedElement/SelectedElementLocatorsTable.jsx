@@ -1,8 +1,7 @@
 import {Spin} from 'antd';
 import {useTranslation} from 'react-i18next';
 
-import {LINKS} from '../../../../constants/common.js';
-import {LOCATOR_STRATEGIES} from '../../../../constants/session-inspector.js';
+import {STRATEGY_DOCS} from '../../../../constants/locator-strategies.js';
 import {openLink} from '../../../../polyfills.js';
 import SelectedElementTable from './SelectedElementTable.jsx';
 import SelectedElementTableCell from './SelectedElementTableCell.jsx';
@@ -22,16 +21,8 @@ const locatorStrategyDocsLink = (name, docsLink) => (
 const modifySuggestedLocatorsData = (suggestedLocatorsData) => {
   const suggestedLocsDataCopy = structuredClone(suggestedLocatorsData);
   for (const locator of suggestedLocsDataCopy) {
-    switch (locator.key) {
-      case LOCATOR_STRATEGIES.CLASS_CHAIN:
-        locator.find = locatorStrategyDocsLink(locator.key, LINKS.CLASS_CHAIN_DOCS);
-        break;
-      case LOCATOR_STRATEGIES.PREDICATE:
-        locator.find = locatorStrategyDocsLink(locator.key, LINKS.PREDICATE_DOCS);
-        break;
-      case LOCATOR_STRATEGIES.UIAUTOMATOR:
-        locator.find = locatorStrategyDocsLink(locator.key, LINKS.UIAUTOMATOR_DOCS);
-        break;
+    if (locator.key in STRATEGY_DOCS) {
+      locator.find = locatorStrategyDocsLink(locator.key, STRATEGY_DOCS[locator.key]);
     }
   }
   return suggestedLocsDataCopy;

@@ -18,18 +18,28 @@ export class LocatorGeneratorBase {
   }
 
   /**
+   * Get sibling nodes with the same property
+   *
+   * @param {Node} targetNode - the node to find siblings for
+   * @param {Function} comparatorFn - function for comparing targetNode to its siblings
+   * @returns {Node[]} array of sibling nodes with the same property
+   */
+  _getSiblingsWithSameProperty(targetNode, comparatorFn) {
+    if (!targetNode.parentNode) {
+      return [];
+    }
+    return Array.prototype.slice.call(targetNode.parentNode.childNodes, 0).filter(comparatorFn);
+  }
+
+  /**
    * Get sibling nodes with the same tag name
    *
    * @param {Node} targetNode - the node to find siblings for, defaults to the main DOM node if not provided
    * @returns {Node[]} array of sibling nodes with the same tag name
    */
   _getSiblingsWithSameTag(targetNode = this._domNode) {
-    if (!targetNode.parentNode) {
-      return [];
-    }
-    return Array.prototype.slice
-      .call(targetNode.parentNode.childNodes, 0)
-      .filter((childNode) => childNode.nodeType === 1 && childNode.tagName === targetNode.tagName);
+    const comparatorFn = (childNode) => childNode.nodeType === 1 && childNode.tagName === targetNode.tagName;
+    return this._getSiblingsWithSameProperty(targetNode, comparatorFn);
   }
 
   /**

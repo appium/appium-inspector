@@ -12,59 +12,6 @@ export const NATIVE_APP = 'NATIVE_APP';
 export const UNKNOWN_ERROR = 'unknown error';
 export const SESSION_EXPIRED = 'Session Expired';
 
-export const LOCATOR_STRATEGIES = {
-  // Standard W3C WebDriver. Native drivers may not support all of these
-  CSS: 'css selector',
-  LINK_TEXT: 'link text',
-  PARTIAL_LINK_TEXT: 'partial link text',
-  TAG_NAME: 'tag name',
-  XPATH: 'xpath',
-  // JSONWP/MJSONWP
-  ID: 'id',
-  NAME: 'name',
-  CLASS_NAME: 'class name',
-  ACCESSIBILITY_ID: 'accessibility id',
-  // XCUITest & Mac2
-  PREDICATE: '-ios predicate string',
-  CLASS_CHAIN: '-ios class chain',
-  // UiAutomator2
-  UIAUTOMATOR: '-android uiautomator',
-  // Espresso
-  TEXT: 'text',
-  VIEWTAG: '-android viewtag',
-  DATAMATCHER: '-android datamatcher',
-  VIEWMATCHER: '-android viewmatcher',
-  // WinCore
-  WIN_UIAUTOMATION: '-windows uiautomation',
-};
-
-export const NATIVE_COMMON_LOCATOR_STRATEGY_MAP = {
-  ID: [LOCATOR_STRATEGIES.ID, 'Id'],
-  XPATH: [LOCATOR_STRATEGIES.XPATH, 'XPath'],
-  NAME: [LOCATOR_STRATEGIES.NAME, 'Name'],
-  CLASS_NAME: [LOCATOR_STRATEGIES.CLASS_NAME, 'Class Name'],
-  ACCESSIBILITY_ID: [LOCATOR_STRATEGIES.ACCESSIBILITY_ID, 'Accessibility ID'],
-};
-
-export const WEB_LOCATOR_STRATEGY_MAP = {
-  CSS: [LOCATOR_STRATEGIES.CSS, 'CSS'],
-  XPATH: [LOCATOR_STRATEGIES.XPATH, 'XPath'],
-  LINK_TEXT: [LOCATOR_STRATEGIES.LINK_TEXT, 'Link Text'],
-  PARTIAL_LINK_TEXT: [LOCATOR_STRATEGIES.PARTIAL_LINK_TEXT, 'Partial Link Text'],
-  TAG_NAME: [LOCATOR_STRATEGIES.TAG_NAME, 'Tag Name'],
-};
-
-export const NATIVE_DRIVER_LOCATOR_STRATEGY_MAP = {
-  PREDICATE: [LOCATOR_STRATEGIES.PREDICATE, 'Predicate String'],
-  CLASS_CHAIN: [LOCATOR_STRATEGIES.CLASS_CHAIN, 'Class Chain'],
-  UIAUTOMATOR: [LOCATOR_STRATEGIES.UIAUTOMATOR, 'UI Automator'],
-  TEXT: [LOCATOR_STRATEGIES.TEXT, 'Text'],
-  VIEWTAG: [LOCATOR_STRATEGIES.VIEWTAG, 'View Tag'],
-  DATAMATCHER: [LOCATOR_STRATEGIES.DATAMATCHER, 'Data Matcher'],
-  VIEWMATCHER: [LOCATOR_STRATEGIES.VIEWMATCHER, 'View Matcher'],
-  WIN_UIAUTOMATION: [LOCATOR_STRATEGIES.WIN_UIAUTOMATION, 'UI Automation'],
-};
-
 export const INSPECTOR_TABS = {
   SOURCE: 'source',
   COMMANDS: 'commands',

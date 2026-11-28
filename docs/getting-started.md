@@ -63,7 +63,7 @@ driver versions are recommended for best compatibility with the latest Inspector
 
 - [Espresso](https://appium.github.io/appium-espresso-driver): `4.0.0` or later
 - [Mac2](https://appium.github.io/appium-mac2-driver): `2.0.0` or later
-- [UiAutomator2](https://appium.github.io/appium-uiautomator2-driver/): `6.6.0` or later
+- [UiAutomator2](https://appium.github.io/appium-uiautomator2-driver/): `10.2.0` or later
 - [WinCore](https://appium.github.io/appium-wincore-driver/): `3.0.0` or later
 - [Windows](https://github.com/appium/appium-windows-driver/): `4.0.0` or later
 - [XCUITest](https://appium.github.io/appium-xcuitest-driver/): `12.20.0` or later

@@ -1,15 +1,25 @@
 import {select as xpathSelect} from 'xpath';
 
+import {DRIVERS} from '../../constants/common.js';
 import {isEmpty} from '../common.js';
 import {LocatorGeneratorBase} from './base.js';
 
 /**
- * Generator for iOS Class Chain locators
+ * Generator for XCUITest & UiAutomator2 Class Chain locators
  * @private
  */
 class ClassChainGenerator extends LocatorGeneratorBase {
-  // Attributes to check when generating class chain locators
-  static CHECKED_ATTRIBUTES = ['name', 'label', 'value'];
+  /**
+   * @param {Document} doc - the document containing the DOM
+   * @param {Node} domNode - the DOM node to generate locators for
+   * @param {string} automationName - name of the driver using this strategy
+   */
+  constructor(doc, domNode, automationName) {
+    super(doc, domNode, null);
+    this._driver = automationName;
+    this._isUiA2 = automationName === DRIVERS.UIAUTOMATOR2;
+    this._nodeClass = (this._isUiA2 ? this._domNode.getAttribute('class') : this._domNode.tagName) || '*';
+  }
 
   /**
    * Get an optimal class chain for a Node
@@ -18,9 +28,14 @@ class ClassChainGenerator extends LocatorGeneratorBase {
    */
   generate() {
     try {
-      // If this isn't an element or is XCUIElementTypeApplication, return empty string
-      if (this._cannotProcessNode()) {
+      // If this isn't an element, return empty string
+      if (!this._isValidElementNode()) {
         return '';
+      }
+
+      // If this is a root node, return null
+      if (this._isRootNode()) {
+        return null;
       }
 
       // Try to find a class chain based on attributes
@@ -38,24 +53,33 @@ class ClassChainGenerator extends LocatorGeneratorBase {
   }
 
   /**
-   * Check if the node can be processed for class chain generation
-   *
-   * @returns {boolean} true if the node cannot be processed
+   * Select the element attributes to use for building the selector, based on the driver.
    */
-  _cannotProcessNode() {
-    return !this._isValidElementNode() || this._domNode.tagName === 'XCUIElementTypeApplication';
+  get _checkedAttributes() {
+    return this._isUiA2 ? ['resource-id', 'text', 'content-desc'] : ['name', 'label', 'value'];
+  }
+
+  /**
+   * Check if the node is a root node
+   *
+   * @returns {boolean} true if the node is root
+   */
+  _isRootNode() {
+    const rootNodeClass = this._isUiA2 ? 'hierarchy' : 'XCUIElementTypeApplication';
+    return this._nodeClass === rootNodeClass;
   }
 
   /**
    * Build a class chain expression from a single attribute
+   * If the attribute value contains backticks, they must be escaped by doubling
    *
    * @param {string} attrName - the attribute name
    * @param {string} attrValue - the attribute value
    * @returns {string} the class chain expression
    */
   _buildClassChainFromAttribute(attrName, attrValue) {
-    const tagName = this._domNode.tagName || '*';
-    return `/${tagName}[\`${attrName} == "${attrValue}"\`]`;
+    const escapedValue = attrValue.includes('`') ? attrValue.replace(/`/g, '``') : attrValue;
+    return `**/${this._nodeClass}[\`${attrName} == "${escapedValue}"\`]`;
   }
 
   /**
@@ -66,8 +90,9 @@ class ClassChainGenerator extends LocatorGeneratorBase {
    * @returns {string} the XPath expression
    */
   _buildUniquenessXPath(attrName, attrValue) {
-    const tagName = this._domNode.tagName || '*';
-    return `//${tagName}[@${attrName}="${attrValue}"]`;
+    return this._isUiA2
+      ? `//*[@class="${this._nodeClass}" and @${attrName}="${attrValue}"]`
+      : `//${this._nodeClass}[@${attrName}="${attrValue}"]`;
   }
 
   /**
@@ -87,7 +112,7 @@ class ClassChainGenerator extends LocatorGeneratorBase {
    * @returns {string|undefined} the class chain if found, undefined otherwise
    */
   _tryAttributeBasedClassChain() {
-    for (const attrName of ClassChainGenerator.CHECKED_ATTRIBUTES) {
+    for (const attrName of this._checkedAttributes) {
       const attrValue = this._domNode.getAttribute(attrName);
       if (isEmpty(attrValue)) {
         continue;
@@ -96,9 +121,12 @@ class ClassChainGenerator extends LocatorGeneratorBase {
       const xpath = this._buildUniquenessXPath(attrName, attrValue);
       let othersWithAttr;
 
-      // If the XPath does not parse, move to the next attribute
+      // If the XPath does not parse or fails, move to the next attribute
       try {
         othersWithAttr = xpathSelect(xpath, this._doc);
+        if (othersWithAttr.length < 1) {
+          continue;
+        }
       } catch {
         continue;
       }
@@ -124,8 +152,8 @@ class ClassChainGenerator extends LocatorGeneratorBase {
    * @returns {string} hierarchical class chain for this node
    */
   _buildHierarchicalClassChain() {
-    let classChain = `/${this._domNode.tagName}`;
-    const siblings = this._getSiblingsWithSameTag();
+    let classChain = this._nodeClass;
+    const siblings = this._isUiA2 ? this._getSiblingsWithSameClass() : this._getSiblingsWithSameTag();
 
     // Add index if there are multiple siblings with the same tag
     if (siblings.length > 1) {
@@ -134,8 +162,24 @@ class ClassChainGenerator extends LocatorGeneratorBase {
     }
 
     // Recursively build parent path and prepend it
-    const parentGenerator = new ClassChainGenerator(this._doc, this._domNode.parentNode);
-    return parentGenerator.generate() + classChain;
+    const parentStep = new ClassChainGenerator(this._doc, this._domNode.parentNode, this._driver).generate();
+    if (parentStep === null) {
+      // reached root node - return existing chain without delimiting slash
+      return classChain;
+    }
+    return parentStep + '/' + classChain;
+  }
+
+  /**
+   * Get sibling nodes with the same class name (UiAutomator2 specific)
+   *
+   * @param {Node} targetNode - the node to find siblings for, defaults to the main DOM node if not provided
+   * @returns {Node[]} array of sibling nodes with the same class name
+   */
+  _getSiblingsWithSameClass(targetNode = this._domNode) {
+    const comparatorFn = (childNode) =>
+      childNode.nodeType === 1 && childNode.getAttribute('class') === targetNode.getAttribute('class');
+    return this._getSiblingsWithSameProperty(targetNode, comparatorFn);
   }
 }
 
@@ -144,8 +188,9 @@ class ClassChainGenerator extends LocatorGeneratorBase {
  *
  * @param {Document} doc
  * @param {Node} domNode
+ * @param {string} automationName
  * @returns {string|null}
  */
-export function getOptimalClassChain(doc, domNode) {
-  return new ClassChainGenerator(doc, domNode).generate();
+export function getOptimalClassChain(doc, domNode, automationName) {
+  return new ClassChainGenerator(doc, domNode, automationName).generate();
 }

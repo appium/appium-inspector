@@ -1,7 +1,31 @@
 import refractorPython from 'refractor/python';
 
-import {LOCATOR_STRATEGIES} from '../../constants/session-inspector.js';
+import {ALL_STRATEGIES} from '../../constants/locator-strategies.js';
 import CommonClientFramework from './common.js';
+
+const STRATEGY_MAP = {
+  // W3C
+  [ALL_STRATEGIES.CSS]: 'CSS_SELECTOR',
+  [ALL_STRATEGIES.LINK_TEXT]: 'LINK_TEXT',
+  [ALL_STRATEGIES.PARTIAL_LINK_TEXT]: 'PARTIAL_LINK_TEXT',
+  [ALL_STRATEGIES.TAG_NAME]: 'TAG_NAME',
+  [ALL_STRATEGIES.XPATH]: 'XPATH',
+  // Custom
+  [ALL_STRATEGIES.ID]: 'ID',
+  [ALL_STRATEGIES.NAME]: 'NAME',
+  [ALL_STRATEGIES.CLASS_NAME]: 'CLASS_NAME',
+  [ALL_STRATEGIES.ACCESSIBILITY_ID]: 'ACCESSIBILITY_ID',
+  [ALL_STRATEGIES.IOS_PREDICATE]: 'IOS_PREDICATE',
+  [ALL_STRATEGIES.IOS_CLASS_CHAIN]: 'IOS_CLASS_CHAIN',
+  [ALL_STRATEGIES.ANDROID_UIAUTOMATOR]: 'ANDROID_UIAUTOMATOR',
+  [ALL_STRATEGIES.ANDROID_PREDICATE]: 'ANDROID_PREDICATE',
+  [ALL_STRATEGIES.ANDROID_CLASS_CHAIN]: 'ANDROID_CLASS_CHAIN',
+  [ALL_STRATEGIES.TEXT]: 'ANDROID_TEXT',
+  [ALL_STRATEGIES.ANDROID_VIEWTAG]: 'ANDROID_VIEWTAG',
+  [ALL_STRATEGIES.ANDROID_DATAMATCHER]: 'ANDROID_DATA_MATCHER',
+  [ALL_STRATEGIES.ANDROID_VIEWMATCHER]: 'ANDROID_VIEW_MATCHER',
+  [ALL_STRATEGIES.WIN_UIAUTOMATION]: 'WINDOWS_UI_AUTOMATION',
+};
 
 export default class PythonFramework extends CommonClientFramework {
   static readableName = 'Python';
@@ -58,28 +82,13 @@ driver.quit()`;
   }
 
   codeFor_findAndAssign(strategy, locator, localVar, isArray) {
-    const byMap = {
-      [LOCATOR_STRATEGIES.ID]: 'ID',
-      [LOCATOR_STRATEGIES.XPATH]: 'XPATH',
-      [LOCATOR_STRATEGIES.NAME]: 'NAME',
-      [LOCATOR_STRATEGIES.CLASS_NAME]: 'CLASS_NAME',
-      [LOCATOR_STRATEGIES.ACCESSIBILITY_ID]: 'ACCESSIBILITY_ID',
-      [LOCATOR_STRATEGIES.PREDICATE]: 'IOS_PREDICATE',
-      [LOCATOR_STRATEGIES.CLASS_CHAIN]: 'IOS_CLASS_CHAIN',
-      [LOCATOR_STRATEGIES.UIAUTOMATOR]: 'ANDROID_UIAUTOMATOR',
-      // [LOCATOR_STRATEGIES.TEXT]: 'not supported',
-      [LOCATOR_STRATEGIES.VIEWTAG]: 'ANDROID_VIEWTAG',
-      [LOCATOR_STRATEGIES.DATAMATCHER]: 'ANDROID_DATA_MATCHER',
-      [LOCATOR_STRATEGIES.VIEWMATCHER]: 'ANDROID_VIEW_MATCHER',
-      // [LOCATOR_STRATEGIES.WIN_UIAUTOMATION]: 'not supported',
-    };
-    if (!byMap[strategy]) {
+    if (!STRATEGY_MAP[strategy]) {
       return this.handleUnsupportedLocatorStrategy(strategy, locator);
     }
     if (isArray) {
-      return `${localVar} = driver.find_elements(by=AppiumBy.${byMap[strategy]}, value=${JSON.stringify(locator)})`;
+      return `${localVar} = driver.find_elements(by=AppiumBy.${STRATEGY_MAP[strategy]}, value=${JSON.stringify(locator)})`;
     } else {
-      return `${localVar} = driver.find_element(by=AppiumBy.${byMap[strategy]}, value=${JSON.stringify(locator)})`;
+      return `${localVar} = driver.find_element(by=AppiumBy.${STRATEGY_MAP[strategy]}, value=${JSON.stringify(locator)})`;
     }
   }
 
