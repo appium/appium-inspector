@@ -122,6 +122,14 @@ The current context can now be switched by selecting the new context in the drop
     The Inspector does not automatically switch the current context if a new one is discovered. This
     must be explicitly done using the dropdown.
 
+## WebDriver Window Switcher
+
+Use the window button to list and switch between top-level windows or tabs exposed by the
+driver. The button is available in browser sessions, active web contexts, and Windows sessions.
+It retrieves a fresh list of window handles each time you open the menu and marks the current
+window when the driver reports it. Selecting a different handle targets that window and refreshes
+the Inspector view if automatic refresh is enabled.
+
 ## Toggle Automatic Source Refresh
 
 ![Pause Source Refresh Button](./assets/images/header/refresh-source-pause.png) ![Resume Source Refresh Button](./assets/images/header/refresh-source-resume.png)

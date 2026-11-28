@@ -230,6 +230,10 @@ export function applyClientMethod(params) {
       getState().inspector.isRecording;
     dispatch({type: METHOD_CALL_REQUESTED});
     const callAction = callClientMethod(params);
+    const result = await callAction(dispatch, getState);
+    if (!result) {
+      return;
+    }
     const {
       contexts,
       contextsError,
@@ -246,7 +250,7 @@ export function applyClientMethod(params) {
       variableIndex,
       strategy,
       selector,
-    } = await callAction(dispatch, getState);
+    } = result;
 
     // TODO: Implement recorder code for gestures
     if (isRecording) {
