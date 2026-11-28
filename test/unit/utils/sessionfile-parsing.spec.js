@@ -4,12 +4,12 @@ import {
   DEFAULT_SESSION_NAME,
   SAUCE_DATA_CENTERS,
   SESSION_FILE_VERSIONS,
-} from '../../app/common/renderer/constants/session-builder.js';
+} from '../../../app/common/renderer/constants/session-builder.js';
 import {
   migrateSessionJSON,
   parseSessionFileContents,
   validateSessionJSON,
-} from '../../app/common/renderer/utils/sessionfile-parsing.js';
+} from '../../../app/common/renderer/utils/sessionfile-parsing.js';
 
 describe('utils/sessionfile-parsing.js', function () {
   describe('#migrateSessionJSON', function () {

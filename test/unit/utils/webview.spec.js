@@ -3,7 +3,7 @@ import {join} from 'node:path';
 
 import {describe, expect, it} from 'vitest';
 
-import {parseHtmlSource} from '../../app/common/renderer/utils/webview.js';
+import {parseHtmlSource} from '../../../app/common/renderer/utils/webview.js';
 
 describe('webview-helpers.js', function () {
   describe('#parseHtmlSource', function () {

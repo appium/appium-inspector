@@ -1,9 +1,9 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
 
-import {SERVER_TYPES} from '../../app/common/renderer/constants/session-builder.js';
-import {VENDOR_MAP} from '../../app/common/renderer/lib/vendor/map.js';
+import {SERVER_TYPES} from '../../../app/common/renderer/constants/session-builder.js';
+import {VENDOR_MAP} from '../../../app/common/renderer/lib/vendor/map.js';
 
-vi.mock('../../app/common/renderer/i18next.js', () => ({
+vi.mock('../../../app/common/renderer/i18next.js', () => ({
   default: {t: (key, opts) => (opts ? `${key} ${JSON.stringify(opts)}` : key)},
 }));
 

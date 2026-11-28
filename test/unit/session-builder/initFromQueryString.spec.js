@@ -1,6 +1,6 @@
 import {afterEach, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 
-vi.mock('../../app/common/renderer/utils/logger.js', () => ({
+vi.mock('../../../app/common/renderer/utils/logger.js', () => ({
   log: {debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn()},
 }));
 vi.mock('i18next', () => ({
@@ -11,7 +11,7 @@ vi.mock('i18next', () => ({
     t: (key) => key,
   },
 }));
-vi.mock('../../app/common/renderer/polyfills.js', () => ({
+vi.mock('../../../app/common/renderer/polyfills.js', () => ({
   setSetting: vi.fn(() => Promise.resolve()),
   getSetting: vi.fn(() => Promise.resolve(null)),
   openLink: vi.fn(),
@@ -28,8 +28,8 @@ const SAVED_SAUCE = {username: 'saved-user', accessKey: 'saved-key', dataCenter:
 // runs the thunk against the real reducer, starting from saved Sauce Labs credentials
 async function runWithUrl(search) {
   vi.resetModules();
-  const actions = await import('../../app/common/renderer/actions/SessionBuilder.js');
-  const {default: builder} = await import('../../app/common/renderer/reducers/SessionBuilder.js');
+  const actions = await import('../../../app/common/renderer/actions/SessionBuilder.js');
+  const {default: builder} = await import('../../../app/common/renderer/reducers/SessionBuilder.js');
 
   let state = builder(undefined, {type: '@@INIT'});
   state = builder(state, {type: actions.SET_SERVER, server: {sauce: SAVED_SAUCE}, serverType: 'sauce'});
@@ -51,8 +51,8 @@ describe('SessionBuilder actions', function () {
     // The first import of the actions module transforms its whole dependency graph; do it once
     // up front so the per-test fresh imports below stay within the default timeout
     beforeAll(async () => {
-      await import('../../app/common/renderer/actions/SessionBuilder.js');
-      await import('../../app/common/renderer/reducers/SessionBuilder.js');
+      await import('../../../app/common/renderer/actions/SessionBuilder.js');
+      await import('../../../app/common/renderer/reducers/SessionBuilder.js');
     }, 60_000);
 
     beforeEach(() => {

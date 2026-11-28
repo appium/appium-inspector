@@ -3,7 +3,7 @@ import {describe, expect, it} from 'vitest';
 import {
   addLocatorSearchHistoryEntry,
   MAX_LOCATOR_SEARCH_HISTORY,
-} from '../../app/common/renderer/utils/locator-search.js';
+} from '../../../app/common/renderer/utils/locator-search.js';
 
 describe('utils/locator-search.js', () => {
   describe('#addLocatorSearchHistoryEntry', () => {

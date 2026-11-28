@@ -1,9 +1,9 @@
 import {describe, expect, it, vi} from 'vitest';
 
-import {SaucelabsVendor} from '../../app/common/renderer/lib/vendor/saucelabs.js';
+import {SaucelabsVendor} from '../../../app/common/renderer/lib/vendor/saucelabs.js';
 
 // Stub the i18n wrapper so the vendor can be imported without the electron/polyfills chain
-vi.mock('../../app/common/renderer/i18next.js', () => ({default: {t: (key) => key}}));
+vi.mock('../../../app/common/renderer/i18next.js', () => ({default: {t: (key) => key}}));
 
 function apply(sauce) {
   return new SaucelabsVendor({sauce: {username: 'user', accessKey: 'key', ...sauce}}, {}).apply();

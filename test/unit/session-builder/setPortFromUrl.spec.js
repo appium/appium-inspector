@@ -1,10 +1,10 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
-import * as SessionBuilderActions from '../../app/common/renderer/actions/SessionBuilder.js';
-import {SERVER_TYPES} from '../../app/common/renderer/constants/session-builder.js';
-import {DEFAULT_SERVER_PROPS} from '../../app/common/renderer/constants/webdriver.js';
+import * as SessionBuilderActions from '../../../app/common/renderer/actions/SessionBuilder.js';
+import {SERVER_TYPES} from '../../../app/common/renderer/constants/session-builder.js';
+import {DEFAULT_SERVER_PROPS} from '../../../app/common/renderer/constants/webdriver.js';
 
-vi.mock('../../app/common/renderer/utils/logger.js', () => ({
+vi.mock('../../../app/common/renderer/utils/logger.js', () => ({
   log: {
     debug: vi.fn(),
     error: vi.fn(),
@@ -18,7 +18,7 @@ vi.mock('i18next', () => ({
     init: vi.fn(),
   },
 }));
-vi.mock('../../app/common/renderer/polyfills.js', () => ({
+vi.mock('../../../app/common/renderer/polyfills.js', () => ({
   setSetting: vi.fn(() => Promise.resolve()),
   getSetting: vi.fn(() => Promise.resolve(null)),
   openLink: vi.fn(),

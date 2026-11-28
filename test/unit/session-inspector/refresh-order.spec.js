@@ -1,7 +1,7 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
-import {REFRESH_DELAY_MILLIS} from '../../app/common/renderer/constants/session-inspector.js';
-import InspectorDriver from '../../app/common/renderer/lib/appium/inspector-driver.js';
+import {REFRESH_DELAY_MILLIS} from '../../../app/common/renderer/constants/session-inspector.js';
+import InspectorDriver from '../../../app/common/renderer/lib/appium/inspector-driver.js';
 
 describe('InspectorDriver refresh order', function () {
   const source = '<hierarchy/>';

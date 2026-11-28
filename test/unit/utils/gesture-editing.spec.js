@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 
-import {moveGestureTick} from '../../app/common/renderer/utils/gesture-editing.js';
+import {moveGestureTick} from '../../../app/common/renderer/utils/gesture-editing.js';
 
 const pointers = [
   {

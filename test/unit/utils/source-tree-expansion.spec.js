@@ -4,7 +4,7 @@ import {
   MAX_SOURCE_EXPANSION_DEPTH,
   expandSourceBranch,
   normalizeSourceExpansionDepth,
-} from '../../app/common/renderer/utils/source-tree-expansion.js';
+} from '../../../app/common/renderer/utils/source-tree-expansion.js';
 
 const branch = (key, children = []) => ({key, children});
 const chain = (depth) => {
