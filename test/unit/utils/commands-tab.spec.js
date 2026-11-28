@@ -7,7 +7,7 @@ import {
   filterMethodPairs,
   transformCommandsMap,
   transformExecMethodsMap,
-} from '../../app/common/renderer/utils/commands-tab.js';
+} from '../../../app/common/renderer/utils/commands-tab.js';
 
 describe('utils/commands-tab.js', function () {
   describe('#adjustParamValueType', function () {

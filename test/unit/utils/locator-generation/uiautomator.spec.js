@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 
-import {getOptimalUiAutomatorSelector} from '../../../app/common/renderer/utils/locator-generation/uiautomator.js';
-import {xmlToDOM} from '../../../app/common/renderer/utils/source-parsing.js';
+import {getOptimalUiAutomatorSelector} from '../../../../app/common/renderer/utils/locator-generation/uiautomator.js';
+import {xmlToDOM} from '../../../../app/common/renderer/utils/source-parsing.js';
 
 describe('utils/locator-generation/uiautomator.js', function () {
   describe('#getOptimalUiAutomatorSelector', function () {

@@ -4,8 +4,8 @@ import {
   areAttrAndValueUnique,
   getSimpleSuggestedLocators,
   isTagUnique,
-} from '../../../app/common/renderer/utils/locator-generation/simple.js';
-import {xmlToDOM} from '../../../app/common/renderer/utils/source-parsing.js';
+} from '../../../../app/common/renderer/utils/locator-generation/simple.js';
+import {xmlToDOM} from '../../../../app/common/renderer/utils/source-parsing.js';
 
 describe('utils/locator-generation/simple.js', function () {
   describe('#isTagUnique', function () {

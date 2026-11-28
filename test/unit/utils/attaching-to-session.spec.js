@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 
-import {SERVER_TYPES} from '../../app/common/renderer/constants/session-builder.js';
-import {formatSeleniumGridSessions, getSessionInfo} from '../../app/common/renderer/utils/attaching-to-session.js';
+import {SERVER_TYPES} from '../../../app/common/renderer/constants/session-builder.js';
+import {formatSeleniumGridSessions, getSessionInfo} from '../../../app/common/renderer/utils/attaching-to-session.js';
 
 describe('utils/attaching-to-session.js', function () {
   describe('#getSessionInfo', function () {

@@ -1,8 +1,8 @@
 import {describe, expect, it} from 'vitest';
 
-import {DRIVERS} from '../../../app/common/renderer/constants/common.js';
-import {getOptimalPredicateString} from '../../../app/common/renderer/utils/locator-generation/predicate.js';
-import {xmlToDOM} from '../../../app/common/renderer/utils/source-parsing.js';
+import {DRIVERS} from '../../../../app/common/renderer/constants/common.js';
+import {getOptimalPredicateString} from '../../../../app/common/renderer/utils/locator-generation/predicate.js';
+import {xmlToDOM} from '../../../../app/common/renderer/utils/source-parsing.js';
 
 const driverEntries = [
   {

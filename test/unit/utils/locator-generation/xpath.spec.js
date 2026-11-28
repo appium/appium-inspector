@@ -1,8 +1,8 @@
 import {describe, expect, it, vi} from 'vitest';
 import * as xpath from 'xpath';
 
-import {getOptimalXPath} from '../../../app/common/renderer/utils/locator-generation/xpath.js';
-import {xmlToDOM} from '../../../app/common/renderer/utils/source-parsing.js';
+import {getOptimalXPath} from '../../../../app/common/renderer/utils/locator-generation/xpath.js';
+import {xmlToDOM} from '../../../../app/common/renderer/utils/source-parsing.js';
 
 // Create identical mock of xpath, so that xpath.select can be modified as needed
 vi.mock('xpath', async (importOriginal) => {

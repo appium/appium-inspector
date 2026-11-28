@@ -1,6 +1,6 @@
 import {describe, expect, it, vi} from 'vitest';
 
-import {handleInspectorShortcut} from '../../app/common/renderer/utils/inspector-shortcuts.js';
+import {handleInspectorShortcut} from '../../../app/common/renderer/utils/inspector-shortcuts.js';
 
 function press(actions, options = {}) {
   const event = new Event('keydown', {cancelable: true});

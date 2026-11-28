@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 
-import {sanitizeUrlState} from '../../app/common/renderer/utils/url-state.js';
+import {sanitizeUrlState} from '../../../app/common/renderer/utils/url-state.js';
 
 const CAPS = [{type: 'text', name: 'platformName', value: 'Android'}];
 
