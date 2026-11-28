@@ -1,5 +1,4 @@
-import {DRIVERS} from '../../constants/common.js';
-import {ALL_STRATEGIES} from '../../constants/locator-strategies.js';
+import {ALL_STRATEGIES, DRIVER_STRATEGIES} from '../../constants/locator-strategies.js';
 import {findDOMNodeByPath, xmlToDOM} from '../source-parsing.js';
 import {getOptimalClassChain} from './class-chain.js';
 import {getOptimalPredicateString} from './predicate.js';
@@ -28,6 +27,24 @@ export function getSuggestedLocators(selectedElement, sourceXML, isNative, autom
 }
 
 /**
+ * Creates a list of all generatable complex locator strategy names and their generator functions
+ *
+ * @param {string} path a dot-separated string of indices
+ * @param {Document} sourceDoc
+ * @param {Node} domNode
+ * @param {string} automationName
+ * @returns {[{strat: string, gen: function}]} list of objects containing a locator strategy and its generator function
+ */
+const createComplexLocatorGenList = (path, sourceDoc, domNode, automationName) => [
+  {strat: ALL_STRATEGIES.IOS_CLASS_CHAIN, gen: () => getOptimalClassChain(sourceDoc, domNode, automationName)},
+  {strat: ALL_STRATEGIES.IOS_PREDICATE, gen: () => getOptimalPredicateString(sourceDoc, domNode, automationName)},
+  {strat: ALL_STRATEGIES.ANDROID_CLASS_CHAIN, gen: () => getOptimalClassChain(sourceDoc, domNode, automationName)},
+  {strat: ALL_STRATEGIES.ANDROID_PREDICATE, gen: () => getOptimalPredicateString(sourceDoc, domNode, automationName)},
+  {strat: ALL_STRATEGIES.ANDROID_UIAUTOMATOR, gen: () => getOptimalUiAutomatorSelector(sourceDoc, domNode, path)},
+  // XPath is excluded since it is always calculated
+];
+
+/**
  * Get suggested selectors for complex locator strategies (multiple attributes, axes, etc.)
  *
  * @param {string} path a dot-separated string of indices
@@ -36,26 +53,18 @@ export function getSuggestedLocators(selectedElement, sourceXML, isNative, autom
  * @param {string} automationName
  * @returns {Record<string, string>} mapping of strategies to selectors
  */
-export function getComplexSuggestedLocators(path, sourceDoc, isNative, automationName) {
+function getComplexSuggestedLocators(path, sourceDoc, isNative, automationName) {
   let complexLocators = {};
   const domNode = findDOMNodeByPath(path, sourceDoc);
   if (isNative) {
-    if ([DRIVERS.XCUITEST, DRIVERS.MAC2, DRIVERS.UIAUTOMATOR2].includes(automationName)) {
-      const optimalClassChain = getOptimalClassChain(sourceDoc, domNode, automationName);
-      const optimalPredicateString = getOptimalPredicateString(sourceDoc, domNode, automationName);
-      if (automationName === DRIVERS.UIAUTOMATOR2) {
-        complexLocators[ALL_STRATEGIES.ANDROID_CLASS_CHAIN] = optimalClassChain;
-        complexLocators[ALL_STRATEGIES.ANDROID_PREDICATE] = optimalPredicateString;
-      } else {
-        complexLocators[ALL_STRATEGIES.IOS_CLASS_CHAIN] = optimalClassChain;
-        complexLocators[ALL_STRATEGIES.IOS_PREDICATE] = optimalPredicateString;
+    const complexLocatorGenList = createComplexLocatorGenList(path, sourceDoc, domNode, automationName);
+    for (const stratPair of complexLocatorGenList) {
+      if (automationName in DRIVER_STRATEGIES && DRIVER_STRATEGIES[automationName].includes(stratPair.strat)) {
+        complexLocators[stratPair.strat] = stratPair.gen();
       }
     }
-    if (automationName === DRIVERS.UIAUTOMATOR2) {
-      complexLocators[ALL_STRATEGIES.ANDROID_UIAUTOMATOR] = getOptimalUiAutomatorSelector(sourceDoc, domNode, path);
-    }
   }
-  complexLocators.xpath = getOptimalXPath(sourceDoc, domNode);
+  complexLocators[ALL_STRATEGIES.XPATH] = getOptimalXPath(sourceDoc, domNode);
 
   // Remove entries for locators where the optimal selector could not be found
   return Object.fromEntries(Object.entries(complexLocators).filter(([, v]) => v != null));
