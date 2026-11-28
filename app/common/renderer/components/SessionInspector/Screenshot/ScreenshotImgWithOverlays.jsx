@@ -4,6 +4,7 @@ import {useState} from 'react';
 import {POINTER_TYPES} from '../../../constants/gestures.js';
 import {DEFAULT_SWIPE, DEFAULT_TAP, SCREENSHOT_INTERACTION_MODE} from '../../../constants/screenshot.js';
 import {INSPECTOR_TABS} from '../../../constants/session-inspector.js';
+import {getScreenshotMimeType} from '../../../utils/snapshot.js';
 import CoordinatesContainer from './Overlays/CoordinatesContainer.jsx';
 import ElementOverlays from './Overlays/ElementOverlays.jsx';
 import GestureTrail from './Overlays/GestureTrail.jsx';
@@ -137,7 +138,9 @@ const ScreenshotImgWithOverlays = (props) => {
     screenshotStyle.cursor = 'crosshair';
   }
 
-  const screenSrc = isUsingMjpegMode ? serverDetails.mjpegScreenshotUrl : `data:image/png;base64,${screenshot}`;
+  const screenSrc = isUsingMjpegMode
+    ? serverDetails.mjpegScreenshotUrl
+    : `data:${getScreenshotMimeType(screenshot)};base64,${screenshot}`;
 
   // Show loading indicator if a method call is in progress, unless using MJPEG mode.
   return (

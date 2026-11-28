@@ -56,6 +56,16 @@ export function findJSONElementByPath(path, sourceJSON) {
  * @returns {Object} source in JSON format
  */
 export function xmlToJSON(sourceXML) {
+  return domToJSON(xmlToDOM(sourceXML));
+}
+
+/**
+ * Translates an already parsed source document to JSON without parsing it again.
+ *
+ * @param {Document} sourceDoc
+ * @returns {Object} source in JSON format
+ */
+export function domToJSON(sourceDoc) {
   const translateRecursively = (domNode, parentPath = '', index = null) => {
     const attributes = {};
     for (let attrIdx = 0; attrIdx < domNode.attributes.length; ++attrIdx) {
@@ -74,7 +84,6 @@ export function xmlToJSON(sourceXML) {
       path,
     };
   };
-  const sourceDoc = xmlToDOM(sourceXML);
   // get the first child element node in the doc. some drivers write their xml differently so we
   // first try to find an element as a direct descended of the doc, then look for one in
   // documentElement
